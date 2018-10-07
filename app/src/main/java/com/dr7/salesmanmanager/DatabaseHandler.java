@@ -829,7 +829,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return maxVoucher;
 
     }
-// hi
+// hello
     public void setMaxSerialNumber(int voucherType, int newSerial) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
