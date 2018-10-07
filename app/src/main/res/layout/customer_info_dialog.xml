@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="20dp"
+    android:paddingHorizontal="20dp"
+    android:paddingStart="20dp"
+    android:paddingVertical="10dp"
+    android:columnCount="2"
+    android:background="@color/layer3"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_cust_balance"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        />
+
+    <EditText
+        android:id="@+id/custBalanceEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:enabled="false"
+        android:text="0.000"
+        android:gravity="center_horizontal"
+        android:textColor="#ffffff" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_max_debit"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        />
+
+    <EditText
+        android:id="@+id/debitLimitEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:text="0.000"
+        android:gravity="center_horizontal"
+        android:enabled="false"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_avail_debit"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        />
+
+    <EditText
+        android:id="@+id/allowedDebitEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:text="0.000"
+        android:gravity="center_horizontal"
+        android:enabled="false"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_last_inv_date"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        />
+
+    <EditText
+        android:id="@+id/lastInvDateEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="date"
+        android:text="30/11/1990"
+        android:gravity="center_horizontal"
+        android:enabled="false"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_total_cust_sale"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        />
+
+    <EditText
+        android:id="@+id/totCustSalesEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:enabled="false"
+        android:text="0.000"
+        android:gravity="center_horizontal"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_gravity="right"
+        android:layout_marginTop="40dp"
+        android:background="@color/ok_button"
+        android:text="@string/app_ok"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
+
+</GridLayout>

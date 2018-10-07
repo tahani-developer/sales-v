@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_cust_check_in"
+        android:orderInCategory="100"
+        android:title="@string/app_sign_in_visit"
+        android:icon="@drawable/enter"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_cust_check_out"
+        android:orderInCategory="100"
+        android:title="@string/app_sign_out_visit"
+        android:icon="@drawable/esc"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_cust"
+        android:orderInCategory="100"
+        android:title="@string/action_add_cust"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

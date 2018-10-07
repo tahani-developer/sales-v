@@ -1,0 +1,211 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:padding="40sp"
+
+    tools:context="com.dr7.salesmanmanager.DiscountFragment"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/server_ip"
+        android:textColor="@color/text_view_color"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/link"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/add_button" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tax_calc_kind"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/taxTalc"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:textColor="@color/totals_color">
+
+            <RadioButton
+                android:id="@+id/excludeRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:checked="true"
+                android:text="@string/exclude"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
+
+            <RadioButton
+                android:id="@+id/includeRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/include"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
+
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/price_by_cust"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="150dp"
+            android:text="@string/price_by_customer"
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vouchers_serial"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/invoice_serial"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/layer1"
+            android:padding="5dp"
+            android:inputType="number"
+            android:hint="@string/invoice_serial_from"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"/>
+
+        <EditText
+            android:id="@+id/return_serial"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/layer1"
+            android:padding="5dp"
+            android:inputType="number"
+            android:hint="@string/return_serial_from"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"/>
+
+        <EditText
+            android:id="@+id/order_serial"
+            android:layout_width="170dp"
+            android:layout_height="35dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/layer1"
+            android:padding="5dp"
+            android:inputType="number"
+            android:hint="@string/order_serial_from"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payments_serial_from"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/payments_serial_cash"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/layer1"
+            android:padding="5dp"
+            android:inputType="number"
+            android:hint="@string/app_cash"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"/>
+
+        <EditText
+            android:id="@+id/payments_serial_cheque"
+            android:layout_width="200dp"
+            android:layout_height="35dp"
+            android:background="@color/text_view_color"
+            android:textColor="@color/layer1"
+            android:padding="5dp"
+            android:inputType="number"
+            android:hint="@string/app_cheque"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/okBut"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@color/add_button"
+            android:text="@string/save"
+            android:textColor="@color/text_view_color"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancelBut"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:background="@color/done_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/text_view_color"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

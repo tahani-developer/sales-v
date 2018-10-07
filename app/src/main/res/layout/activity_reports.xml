@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer2"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:background="@color/layer3"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:paddingStart="50dp"
+        android:paddingLeft="50dp"
+        android:paddingEnd="50dp"
+        android:paddingRight="50dp">
+
+        <Button
+            android:id="@+id/customer_log_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@color/layer4"
+            android:text="@string/customer_log_report"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/transactions_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer5"
+            android:text="@string/transactions_report"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/return_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer4"
+            android:text="@string/payments_details_report"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/stock_request_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer5"
+            android:text="@string/stock_request_report"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</LinearLayout>

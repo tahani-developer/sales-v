@@ -1,0 +1,294 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="20dp"
+    android:paddingHorizontal="20dp"
+    android:paddingStart="20dp"
+    android:paddingVertical="10dp"    android:orientation="vertical"
+    android:background="@color/layer3"
+    tools:context="com.dr7.salesmanmanager.ReceiptVoucher">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/row1"
+        android:layout_marginBottom="5dp"
+        android:background="@color/layer2"
+        >
+        <ImageButton
+            android:id="@+id/ClearForm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/new_inv"
+            android:layout_marginRight="20dp"
+            />
+
+        <ImageButton
+            android:id="@+id/SaveData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/save_btn"
+            android:layout_marginRight="20dp"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/row2"
+        >
+
+        <TextView
+            android:id="@+id/customer_nameVoucher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/cust_name"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <ImageButton
+            android:id="@+id/custInfoImgBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/cust_info" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/row3"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_view_color"
+            android:text="@string/app_amount"
+            android:layout_weight="1"
+            />
+
+        <EditText
+            android:id="@+id/amountEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:imeOptions="flagNavigateNext"
+            android:inputType="numberDecimal"
+            android:layout_weight="1.5"
+            android:textSize="24sp"
+            android:textColor="@color/amountColor"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_view_color"
+            android:text="@string/app_remark"
+            android:layout_weight="1"
+            />
+
+        <EditText
+            android:id="@+id/remarkEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:imeActionLabel="@string/app_done"
+            android:textColor="@color/totals_color"
+            android:layout_weight="8"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_paymentDetails"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/text_view_color"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/row5"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_view_color"
+            android:text="@string/app_paymentType" />
+
+        <Spinner
+            android:id="@+id/paymentTypeSpinner"
+            android:layout_width="200dp"
+            android:padding="3dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:entries="@array/app_paymentTypeList"
+            android:background="@color/layer2"
+            android:gravity="center"
+            android:layout_marginStart="10dp" />
+
+        <Button
+            android:id="@+id/addCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:textColor="@color/text_view_color"
+            android:layout_marginStart="400dp"
+            android:text="@string/add_check"
+            android:layout_marginLeft="400dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="800dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/chequesScroll"
+        >
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/TableCheckData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:background="@color/layer2">
+
+            <TableRow
+                android:background="@color/layer3"
+                android:backgroundTint="@color/layer2"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/check_number"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/app_bank_name"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/check_date"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/check_value"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/cheques_totals"
+        >
+
+        <EditText
+            android:id="@+id/space_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheque_no"
+            android:inputType="number"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            />
+
+
+        <TextView
+            android:id="@+id/Space_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheque_date"
+            android:inputType="date"
+            android:textSize="14sp"
+            android:visibility="visible"
+            android:text="@string/app_total"
+            android:textStyle="bold"
+            android:textColor="@color/text_view_color"
+            />
+
+        <TextView
+            android:id="@+id/chequesTotalsEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheq_val"
+            android:inputType="none"
+            android:textSize="16sp"
+            android:text="@string/app_zero"
+            android:textStyle="bold"
+            android:textColor="@color/amountColor"
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

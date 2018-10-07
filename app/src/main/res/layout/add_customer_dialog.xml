@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="40dp"
+    android:columnCount="2"
+    android:background="@color/layer3"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cust_name"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/custEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:textColor="@color/add_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remark"
+        android:layout_marginTop="10dp"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/remarkEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:layout_marginTop="10dp"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:textColor="@color/add_button" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_columnSpan="2"
+        android:gravity="center_horizontal"
+        >
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:background="@color/done_button"
+            android:text="@string/app_done"
+            android:textColor="@color/text_view_color"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</GridLayout>

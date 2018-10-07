@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="20dp"
+    android:paddingHorizontal="20dp"
+    android:paddingStart="20dp"
+    android:paddingVertical="10dp"
+    android:columnCount="2"
+    android:background="@color/layer3"
+    >
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/app_item_no"
+            android:textColor="@color/text_view_color"
+            android:textSize="24sp" />
+
+    <LinearLayout
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/itemCodeEditText"
+            android:layout_width="450dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:textColor="@color/add_button" />
+
+        <ImageButton
+            android:id="@+id/searchItemsButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/search_btn" />
+        <EditText
+            android:id="@+id/taxPercentText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:textColor="@color/add_button"
+            android:text="16"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:enabled="false"
+            android:focusable="false"
+            android:visibility="invisible"
+            />
+
+
+    </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_desc"
+            android:textSize="24sp"
+            android:textColor="@color/text_view_color"
+            />
+
+    <EditText
+        android:id="@+id/itemDescEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:enabled="false"
+        android:focusable="false"
+        android:text="TESTING ITEM"
+        android:textColor="@color/add_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_unit"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/unitEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:textColor="@color/add_button"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_qty_on_hand"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/qtyOnHandEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:enabled="false"
+        android:focusable="false"
+        android:textColor="@color/add_button"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_qty"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/qtyEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:textColor="@color/add_button" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_price"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/priceEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:textColor="@color/add_button"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_bonus"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/bonusEditText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/edit_text_margin"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionNext"
+        android:inputType="numberDecimal"
+        android:textColor="@color/add_button"
+        />
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_columnSpan="2"
+    android:id="@+id/discLayout"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_line_disc"
+        android:textSize="24sp"
+        android:textColor="@color/text_view_color"
+        />
+
+    <EditText
+        android:id="@+id/lineDiscText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="85dp"
+        android:layout_marginRight="@dimen/edit_text_margin"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+
+        android:textColor="@color/add_button"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/discTypeRadioGroup"
+        android:layout_marginLeft="7dp"
+        >
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/app_disc_type1"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/discValueRadioButton"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/app_disc_type2"
+            android:id="@+id/discPercRadioButton"
+            android:layout_marginLeft="7dp"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            />
+
+    </RadioGroup>
+
+</LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_columnSpan="2"
+        android:gravity="center_horizontal"
+        >
+
+        <Button
+            android:id="@+id/addToListButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@color/add_button"
+            android:text="@string/app_add_to_list"
+            android:textColor="@color/text_view_color"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:background="@color/done_button"
+            android:text="@string/app_done"
+            android:textColor="@color/text_view_color"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+</GridLayout>

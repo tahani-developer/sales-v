@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer2"
+    android:orientation="horizontal"
+    tools:ignore="MissingDefaultResource">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:background="@color/layer3"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:paddingStart="50dp"
+        android:paddingLeft="50dp"
+        android:paddingEnd="50dp"
+        android:paddingRight="50dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/customer_log_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@color/layer4"
+                android:text="@string/customer_log_report"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="43dp"
+                android:layout_marginLeft="43dp"
+                android:background="@drawable/report_image" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/transactions_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer5"
+            android:text="@string/transactions_report"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/return_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer4"
+            android:text="@string/payments_details_report"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/items_balance_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/layer5"
+            android:text="@string/stock_request_report"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</LinearLayout>
