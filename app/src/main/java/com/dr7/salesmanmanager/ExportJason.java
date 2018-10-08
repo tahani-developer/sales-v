@@ -161,6 +161,7 @@ public class ExportJason extends AppCompatActivity {
                 }
 
                 JsonResponse = sb.toString();
+                Log.e("tag", "" + JsonResponse);
 
                 return JsonResponse;
 
@@ -186,13 +187,16 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(s.contains("SUCCESS")){
-                mHandler.updateVoucher();
-                mHandler.updateVoucherDetails();
-                mHandler.updatePayment();
-                mHandler.updatePaymentPaper();
-                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(ExportJason.this , "Failed to export data" , Toast.LENGTH_SHORT).show();
+//                mHandler.updateVoucher();
+//                mHandler.updateVoucherDetails();
+//                mHandler.updatePayment();
+//                mHandler.updatePaymentPaper();
+//                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
+                Log.e("tag", "****Success");
+            } else {
+//                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
+                Log.e("tag", "****Failed to export data");
+            }
             progressDialog.dismiss();
         }
     }

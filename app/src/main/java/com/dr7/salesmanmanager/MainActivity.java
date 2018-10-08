@@ -339,9 +339,8 @@ public class MainActivity extends AppCompatActivity
 
         public void showDialog(Activity activity, String msg) {
             final Dialog dialog = new Dialog(activity);
-            dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
             dialog.setContentView(R.layout.fragment_setting);
 
             final EditText linkEditText = (EditText) dialog.findViewById(R.id.link);
@@ -378,7 +377,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     if (!linkEditText.getText().toString().equals("")) {
-                        String link = linkEditText.getText().toString();
+                        String link = linkEditText.getText().toString().trim();
                         int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
                         int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
                         int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
@@ -408,8 +407,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             dialog.show();
-            Window window = dialog.getWindow();
-            window.setLayout(800, 450);
+
         }
     }
 

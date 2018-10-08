@@ -161,9 +161,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
         try {
             if (item.getDiscType() == 0) {
-                item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
+                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
             } else {
-                item.setAmount(item.getQty() * item.getPrice() - descPerc);
+                item.setAmount(Float.parseFloat(item.getUnit()) *item.getQty() * item.getPrice() - descPerc);
             }
         } catch (NumberFormatException e) {
             item.setAmount(0);
