@@ -187,10 +187,10 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(s);
 
             if(s.contains("SUCCESS")){
-//                mHandler.updateVoucher();
-//                mHandler.updateVoucherDetails();
-//                mHandler.updatePayment();
-//                mHandler.updatePaymentPaper();
+                mHandler.updateVoucher();
+                mHandler.updateVoucherDetails();
+                mHandler.updatePayment();
+                mHandler.updatePaymentPaper();
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Success");
             } else {

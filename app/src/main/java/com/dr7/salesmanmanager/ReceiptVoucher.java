@@ -429,7 +429,7 @@ public class ReceiptVoucher extends Fragment {
 
 
     private void updateLabel(EditText editText) {
-        String myFormat = "dd/mm/yyyy"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         editText.setText(sdf.format(myCalendar.getTime()));
