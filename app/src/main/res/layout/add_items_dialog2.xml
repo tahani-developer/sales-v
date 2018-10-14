@@ -7,16 +7,36 @@
     android:background="@color/layer3"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewItemName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/app_add_items"
-        android:textColor="@color/text_view_color"
-        android:textSize="30sp" />
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        >
+        <TextView
+            android:id="@+id/textViewItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/app_add_items"
+            android:textColor="@color/text_view_color"
+            android:textSize="30sp" />
+
+        <Spinner
+            android:id="@+id/cat"
+            android:layout_width="150dp"
+            android:padding="3dp"
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="200dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/layer3"
+            android:gravity="center" />
+    </LinearLayout>
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

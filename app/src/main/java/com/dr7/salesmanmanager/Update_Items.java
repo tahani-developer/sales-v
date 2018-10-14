@@ -79,7 +79,7 @@ public class Update_Items extends DialogFragment {
         double net_qty = Double.parseDouble(rowToBeUpdated[2]) * Double.parseDouble(rowToBeUpdated[7]) ;
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
-        List<String> units = mHandler.getAllexistingUnits();
+        List<String> units = mHandler.getAllexistingUnits(rowToBeUpdated[0]);
         units.add(0,rowToBeUpdated[7]);
         
         ArrayAdapter<String> unitsList = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, units);

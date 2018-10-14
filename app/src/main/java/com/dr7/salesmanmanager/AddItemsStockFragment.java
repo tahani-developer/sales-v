@@ -14,9 +14,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,11 +72,42 @@ public class AddItemsStockFragment extends DialogFragment {
         else
             jsonItemsList = mHandler.getAllJsonItems2();
 
+        final Spinner categorySpinner = view.findViewById(R.id.cat);
+        List<String> categories = mHandler.getAllExistingCategories();
+        categories.add(0 , "no filter");
+
+        ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
+        categorySpinner.setAdapter(ad);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView2);
         recyclerView.setLayoutManager(linearLayoutManager);
         StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(!categorySpinner.getSelectedItem().toString().equals("no filter")){
+                    ArrayList <Item> filteredList = new ArrayList<>();
+                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
+                        if(jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                            filteredList.add(jsonItemsList.get(k));
+                    }
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         Button doneButton = (Button) view.findViewById(R.id.done);
 

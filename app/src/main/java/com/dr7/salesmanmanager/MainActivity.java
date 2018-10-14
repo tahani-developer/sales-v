@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity
         CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
         customerCheckInFragment.setCancelable(false);
         customerCheckInFragment.setListener(this);
-        customerCheckInFragment.show(getSupportFragmentManager(), "");
+        customerCheckInFragment.show(getFragmentManager(), "");
     }
 
     public void openAddCustomerDialog() {
@@ -281,7 +281,6 @@ public class MainActivity extends AppCompatActivity
         dialog.setCanceledOnTouchOutside(true);
 
         Window window = dialog.getWindow();
-        window.setLayout(730, 330);
 
         final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
         final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
@@ -325,7 +324,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude));
+                            latitude, longitude , Login.salesMan ,0));
                     dialog.dismiss();
                 } else
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();

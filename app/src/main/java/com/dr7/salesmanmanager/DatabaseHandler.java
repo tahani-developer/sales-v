@@ -239,6 +239,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String REMARK7 = "REMARK";
     private static final String LATITUDE7 = "LATITUDE";
     private static final String LONGITUDE7 = "LONGITUDE";
+    private static final String SALESMAN7 = "SALESMAN";
+    private static final String IS_POSTED7 = "IS_POSTED";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -468,7 +470,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + CUST_NAME7 + " TEXT,"
                 + REMARK7 + " TEXT,"
                 + LATITUDE7 + " INTEGER,"
-                + LONGITUDE7 + " INTEGER" + ")";
+                + LONGITUDE7 + " INTEGER,"
+                + SALESMAN7 + " TEXT,"
+                + IS_POSTED7 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_ADDED_CUSTOMER);
 
     }
@@ -794,6 +798,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(REMARK7, customer.getRemark());
         values.put(LATITUDE7, customer.getLatitude());
         values.put(LONGITUDE7, customer.getLongtitude());
+        values.put(SALESMAN7, customer.getSalesMan());
+        values.put(IS_POSTED7, customer.getIsPosted());
 
         db.insert(ADDED_CUSTOMER, null, values);
         db.close();
@@ -1102,10 +1108,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<String> getAllexistingUnits() {
+    public List<String> getAllExistingCategories() {
+        List<String> categories = new ArrayList<>();
+        String selectQuery = "select DISTINCT CateogryID from Items_Master";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        return categories;
+    }
+
+    public List<String> getAllexistingUnits(String itemNo) {
         List<String> units = new ArrayList<>();
         units.add("1");
-        String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details;
+        String selectQuery = "select DISTINCT  ConvRate  from " + Item_Unit_Details + " where ItemNo = '" + itemNo + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1301,6 +1323,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 customer.setRemark(cursor.getString(1));
                 customer.setLatitude(Double.parseDouble(cursor.getString(2)));
                 customer.setLongtitude(Double.parseDouble(cursor.getString(3)));
+                customer.setSalesMan(cursor.getString(4));
+                customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
 
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1355,6 +1379,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(PAYMENTS_PAPER, values,  IS_POSTED + "=" + 0, null);
     }
 
+    public void updateAddedCustomers() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED, 1);
+        db.update(ADDED_CUSTOMER, values,  IS_POSTED + "=" + 0, null);
+    }
 
 
     public void deleteVoucher(int voucherNumber) {

@@ -117,7 +117,6 @@ public class ReceiptVoucher extends Fragment {
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.check_info_dialog);
                 Window window = dialog.getWindow();
-                window.setLayout(700, 250);
 
                 final EditText chNum = (EditText) dialog.findViewById(R.id.editText1);
                 final EditText bank = (EditText) dialog.findViewById(R.id.editText2);

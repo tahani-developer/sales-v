@@ -50,12 +50,12 @@ public class Login extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (!passwordEditText.getText().toString().equals("") && !usernameEditText.getText().toString().equals("")) {
-//                    List<SalesMan> salesMenList = mDHandler.getAllSalesMen();
-                    List<SalesMan> salesMenList = Splashscreen.salesMenList;
+                    List<SalesMan> salesMenList = mDHandler.getAllSalesMen();
+//                    List<SalesMan> salesMenList = Splashscreen.salesMenList;
                     boolean exist = false;
                     int index = 0;
 
-                    if (passwordEditText.getText().toString().equals("1"))
+                    if (passwordEditText.getText().toString().equals("f123f"))
                     {
                         exist = true;
                         index = 1;

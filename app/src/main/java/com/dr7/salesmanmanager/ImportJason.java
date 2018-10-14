@@ -340,7 +340,7 @@ public class ImportJason extends AppCompatActivity{
             progressDialog.dismiss();
 
             if (result != null) {
-                Log.e("Customer", "*****************" + customerPricesList.size());
+                Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
             } else {
                 Toast.makeText(context, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();

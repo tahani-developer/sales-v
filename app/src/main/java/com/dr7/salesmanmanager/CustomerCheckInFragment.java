@@ -1,9 +1,11 @@
 package com.dr7.salesmanmanager;
 
 
+import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
+//import android.support.v4.app.DialogFragment;
+//import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,8 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CustomerCheckInFragment extends DialogFragment {
+public class CustomerCheckInFragment extends DialogFragment
+{
     private static final String TAG = "CustomerCheckInFragment";
     static TextView customerNameTextView, mainTextView, Customer_Name;
     ImageButton findButton;
@@ -73,7 +76,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         customernametest = CustomerListShow.Customer_Name.toString();
 
 
-        mDbHandler = new DatabaseHandler(getContext());
+        mDbHandler = new DatabaseHandler(getActivity());
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override

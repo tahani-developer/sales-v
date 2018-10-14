@@ -75,7 +75,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.add_item_dialog_small);
                 Window window = dialog.getWindow();
-                window.setLayout(500, 450);
 
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
                 final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
@@ -97,7 +96,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if(mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
                     discountLinearLayout.setVisibility(View.INVISIBLE);
 
-                List<String> units = mHandler.getAllexistingUnits();
+                List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
 
                 ArrayAdapter<String> unitsList = new ArrayAdapter<String>(context, R.layout.spinner_style, units);
                 unit.setAdapter(unitsList);

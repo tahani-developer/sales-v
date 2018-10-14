@@ -66,7 +66,7 @@ public class Splashscreen extends Activity {
 //        String ipAddress = mHandler.getAllSettings().get(0).getIpAddress(); // 10.0.0.115
 //        URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
 
-        new JSONTask().execute(URL_TO_HIT);
+//        new JSONTask().execute(URL_TO_HIT);
 
         StartAnimations();
 

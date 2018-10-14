@@ -210,7 +210,6 @@
 
     <string-array name="list_items_dialog">
         <item>Delete</item>
-        <item>Update</item>
         <item>Clear All</item>
     </string-array>
 

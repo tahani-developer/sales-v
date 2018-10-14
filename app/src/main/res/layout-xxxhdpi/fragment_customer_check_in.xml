@@ -2,6 +2,8 @@
     android:id="@+id/discLayout"
     android:layout_width="1100dp"
     android:layout_height="550dp"
+    android:minWidth="1100dp"
+    android:minHeight="550dp"
     android:background="@color/layer3"
     android:orientation="vertical"
     android:padding="20dp">

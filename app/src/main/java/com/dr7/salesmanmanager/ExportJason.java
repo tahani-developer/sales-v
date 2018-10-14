@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -37,7 +38,7 @@ public class ExportJason extends AppCompatActivity {
 
     private Context context;
     private ProgressDialog progressDialog;
-    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper;
+    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -45,6 +46,7 @@ public class ExportJason extends AppCompatActivity {
     public static List<Item> items = new ArrayList<>();
     public static List<Payment> payments = new ArrayList<>();
     public static List<Payment> paymentsPaper = new ArrayList<>();
+    public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     public static List<Voucher> requestVouchers = new ArrayList<>();
     public static List<Item> requestItems = new ArrayList<>();
 
@@ -67,7 +69,7 @@ public class ExportJason extends AppCompatActivity {
                 vouchers.get(i).setIsPosted(1);
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
-        Log.e("hhhhh","**************************" +jsonArrayVouchers.toString());
+
 
         items = mHandler.getAllItems();
         jsonArrayItems = new JSONArray();
@@ -93,6 +95,15 @@ public class ExportJason extends AppCompatActivity {
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
 
+        addedCustomer = mHandler.getAllAddedCustomer();
+        jsonArrayAddedCustomer = new JSONArray();
+        for (int i = 0; i < addedCustomer.size(); i++)
+            if (addedCustomer.get(i).getIsPosted() == 0) {
+                addedCustomer.get(i).setIsPosted(1);
+                jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
+            }
+
+        Log.e("hhhhh","**************************" +jsonArrayAddedCustomer.toString());
         new ExportJason.JSONTask().execute();
 
 
@@ -139,7 +150,8 @@ public class ExportJason extends AppCompatActivity {
                 table1 +="&" + "Sales_Voucher_D=" + jsonArrayItems.toString().trim()
                         // + "&" + "Sales_Voucher_D=" + jsonArrayItems.toString().trim()
                         + "&" + "Payments="        + jsonArrayPayments.toString().trim()
-                        + "&" + "Payments_Checks=" + jsonArrayPaymentsPaper.toString().trim();
+                        + "&" + "Payments_Checks=" + jsonArrayPaymentsPaper.toString().trim()
+                        + "&" + "added_customers=" + jsonArrayAddedCustomer.toString().trim();
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -191,6 +203,7 @@ public class ExportJason extends AppCompatActivity {
                 mHandler.updateVoucherDetails();
                 mHandler.updatePayment();
                 mHandler.updatePaymentPaper();
+                mHandler.updateAddedCustomers();
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Success");
             } else {

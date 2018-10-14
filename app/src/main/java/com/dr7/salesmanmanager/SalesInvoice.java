@@ -311,37 +311,20 @@ public class SalesInvoice extends Fragment {
                                     itemsListView.setAdapter(itemsListAdapter);
                                     calculateTotals();
                                     break;
+//                                case 1:
+//                                    salesInvoiceInterfaceListener.displayUpdateItems();
+//
+//                                    rowToBeUpdated[0] = items.get(position).getItemNo();
+//                                    rowToBeUpdated[1] = items.get(position).getItemName();
+//                                    rowToBeUpdated[2] = items.get(position).getQty() + "";
+//                                    rowToBeUpdated[3] = items.get(position).getPrice() + "";
+//                                    rowToBeUpdated[4] = items.get(position).getBonus() + "";
+//                                    rowToBeUpdated[5] = items.get(position).getDiscPerc().replaceAll("[%:,]","");
+//                                    rowToBeUpdated[6] = items.get(position).getDiscType() + "";
+//                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
+//                                    index = position;
+//                                    break;
                                 case 1:
-
-                                    Update_Items fragment = new Update_Items();
-                                    // fragment.listItems(itemsListView.getSelectedItem().toString());
-                                   /* AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                    builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                                    builder.setCancelable(false);
-                                    builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            salesInvoiceInterfaceListener.displayUpdateItems();
-                                        }
-                                    });
-                                    builder.setNegativeButton(getResources().getString(R.string.app_no), null);
-                                    builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
-                                    AlertDialog alertDialog = builder.create();
-                                    alertDialog.show();*/
-
-                                    salesInvoiceInterfaceListener.displayUpdateItems();
-
-                                    rowToBeUpdated[0] = items.get(position).getItemNo();
-                                    rowToBeUpdated[1] = items.get(position).getItemName();
-                                    rowToBeUpdated[2] = items.get(position).getQty() + "";
-                                    rowToBeUpdated[3] = items.get(position).getPrice() + "";
-                                    rowToBeUpdated[4] = items.get(position).getBonus() + "";
-                                    rowToBeUpdated[5] = items.get(position).getDiscPerc().replaceAll("[%:,]","");
-                                    rowToBeUpdated[6] = items.get(position).getDiscType() + "";
-                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
-                                    index = position;
-                                    break;
-                                case 2:
                                     clearItemsList();
                                     break;
                             }

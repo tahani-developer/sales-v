@@ -15,12 +15,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Reports.PaymentDetailsReport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +69,6 @@ public class AddItemsFragment2 extends DialogFragment {
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
@@ -74,6 +77,12 @@ public class AddItemsFragment2 extends DialogFragment {
         else
             jsonItemsList = mHandler.getAllJsonItems2();
 
+        final Spinner categorySpinner = view.findViewById(R.id.cat);
+        List<String> categories = mHandler.getAllExistingCategories();
+        categories.add(0 , "no filter");
+
+        ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
+        categorySpinner.setAdapter(ad);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
@@ -81,6 +90,29 @@ public class AddItemsFragment2 extends DialogFragment {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
 
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(!categorySpinner.getSelectedItem().toString().equals("no filter")){
+                    ArrayList <Item> filteredList = new ArrayList<>();
+                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
+                        if(jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                            filteredList.add(jsonItemsList.get(k));
+                    }
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         Button done = (Button) view.findViewById(R.id.done);
 
