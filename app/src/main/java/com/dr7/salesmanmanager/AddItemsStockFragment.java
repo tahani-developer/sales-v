@@ -95,10 +95,10 @@ public class AddItemsStockFragment extends DialogFragment {
                         if(jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(k));
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
                     recyclerView.setAdapter(adapter);
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
                     recyclerView.setAdapter(adapter);
                 }
             }
@@ -109,7 +109,7 @@ public class AddItemsStockFragment extends DialogFragment {
             }
         });
 
-        Button doneButton = (Button) view.findViewById(R.id.done);
+        Button doneButton = (Button) view.findViewById(R.id.done2);
 
         doneButton.setOnClickListener(new OnClickListener() {
             @Override

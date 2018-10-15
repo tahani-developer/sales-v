@@ -84,7 +84,7 @@ public class StockRequest extends Fragment {
 
 
         items = new ArrayList<>();
-        itemsListView = (ListView) view.findViewById(R.id.itemsListView);
+        itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
         itemsListAdapter = new ItemsListStockAdapter(getActivity(), items);
         itemsListView.setAdapter(itemsListAdapter);
         itemsListView.setOnItemLongClickListener(onItemLongClickListener);
