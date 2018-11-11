@@ -37,11 +37,11 @@ public class SalesInvoice extends Fragment {
 
 
     public ListView itemsListView;
-    public List<Item> items;
+    public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
-    private ImageButton addItemImgButton2,custInfoImgButton, SaveData;
+    private ImageButton addItemImgButton2, custInfoImgButton, SaveData;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
-    private RadioButton cash , credit ;
+    private RadioButton cash, credit;
     private EditText remarkEditText;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
@@ -57,9 +57,10 @@ public class SalesInvoice extends Fragment {
     private int voucherNumber;
     private int payMethod;
     static int index;
-    static String rowToBeUpdated[] = {"", "", "", "", "", "", "" , ""};
+    static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
-    public static Voucher voucher ;
+    public static Voucher voucher;
+    public static List<Item> itemsList;
 
    /* public static void test2(){
 
@@ -104,8 +105,8 @@ public class SalesInvoice extends Fragment {
         Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
         paymentTermRadioGroup = (RadioGroup) view.findViewById(R.id.paymentTermRadioGroup);
         voucherTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transKindRadioGroup);
-        cash = (RadioButton)  view.findViewById(R.id.cashRadioButton);
-        credit = (RadioButton)  view.findViewById(R.id.creditRadioButton);
+        cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
+        credit = (RadioButton) view.findViewById(R.id.creditRadioButton);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
@@ -116,12 +117,14 @@ public class SalesInvoice extends Fragment {
         taxTextView = (TextView) view.findViewById(R.id.taxTextView);
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
 
+        itemsList = new ArrayList<>();
+
         if (MainActivity.checknum == 1)
             Customer_nameSales.setText(CustomerListShow.Customer_Name.toString());
         else
             Customer_nameSales.setText("Customer Name");
 
-        if (CustomerListShow.CashCredit == 0){
+        if (CustomerListShow.CashCredit == 0) {
             cash.setChecked(true);
             credit.setChecked(false);
         } else {
@@ -259,58 +262,68 @@ public class SalesInvoice extends Fragment {
                             double netSales = Double.parseDouble(netTotalTextView.getText().toString());
 
                             voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                                    salesMan, discountValue, discountPerc , remark, payMethod,
-                                    0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name ,
-                                    CustomerListShow.Customer_Account , Integer.parseInt(voucherYear));
+                                    salesMan, discountValue, discountPerc, remark, payMethod,
+                                    0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+                                    CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
 
                             mDbHandler.addVoucher(voucher);
 
 
                             for (int i = 0; i < items.size(); i++) {
-                                mDbHandler.addItem(new Item(0 , voucherYear , voucherNumber, voucherType, items.get(i).getUnit(), items.get(i).getItemNo(), items.get(i).getItemName(),
+
+                                Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(), items.get(i).getItemNo(), items.get(i).getItemName(),
                                         items.get(i).getQty(), items.get(i).getPrice(), items.get(i).getDisc(), items.get(i).getDiscPerc(),
-                                        items.get(i).getBonus(), 0 , items.get(i).getTaxValue() , items.get(i).getTaxPercent() ,0));
+                                        items.get(i).getBonus(), 0, items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+
+                                itemsList.add(item);
+                                mDbHandler.addItem(item);
                             }
 
-                           // Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
-                           // startActivity(intent);
+                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
+                                startActivity(intent);
 
-                            mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+                            }
+                            clearLayoutData();
+
                         }
-                        clearLayoutData();
+                    });
 
-                    }
-                });
+                builder.setNegativeButton(
 
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
-            }
-        });
+                    getResources().
+
+                    getString(R.string.app_cancel), null);
+                builder.create().
+
+                    show();
+                }
+            });
 
         return view;
-    }
+        }
 
-    public void setListener(SalesInvoiceInterface listener) {
-        this.salesInvoiceInterfaceListener = listener;
-    }
+        public void setListener (SalesInvoiceInterface listener){
+            this.salesInvoiceInterfaceListener = listener;
+        }
 
-    public OnItemLongClickListener onItemLongClickListener =
-            new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int position, long l) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getResources().getString(R.string.app_select_option));
-                    builder.setCancelable(true);
-                    builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                    builder.setItems(R.array.list_items_dialog, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    items.remove(position);
-                                    itemsListView.setAdapter(itemsListAdapter);
-                                    calculateTotals();
-                                    break;
+        public OnItemLongClickListener onItemLongClickListener =
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(final AdapterView<?> adapterView, View view, final int position, long l) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(getResources().getString(R.string.app_select_option));
+                        builder.setCancelable(true);
+                        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+                        builder.setItems(R.array.list_items_dialog, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        items.remove(position);
+                                        itemsListView.setAdapter(itemsListAdapter);
+                                        calculateTotals();
+                                        break;
 //                                case 1:
 //                                    salesInvoiceInterfaceListener.displayUpdateItems();
 //
@@ -324,145 +337,142 @@ public class SalesInvoice extends Fragment {
 //                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
 //                                    index = position;
 //                                    break;
-                                case 1:
-                                    clearItemsList();
-                                    break;
+                                    case 1:
+                                        clearItemsList();
+                                        break;
+                                }
                             }
-                        }
-                    });
-                    builder.create().show();
-                    return true;
+                        });
+                        builder.create().show();
+                        return true;
+                    }
+                };
+
+        public String[] getIndexToBeUpdated () {
+            return rowToBeUpdated;
+        }
+
+        public int getIndex () {
+            return index;
+        }
+
+        private void clearItemsList () {
+            items.clear();
+            itemsListAdapter.setItemsList(items);
+            itemsListAdapter.notifyDataSetChanged();
+        }
+
+        private void clearLayoutData () {
+            paymentTermRadioGroup.check(R.id.creditRadioButton);
+            remarkEditText.setText("");
+            clearItemsList();
+            calculateTotals();
+            subTotalTextView.setText("0.000");
+            taxTextView.setText("0.000");
+            netTotalTextView.setText("0.000");
+            discTextView.setText("0.000");
+            subTotal = 0;
+            totalTaxValue = 0;
+            netTotal = 0;
+            totalDiscount = 0;
+            calculateTotals();
+
+            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+            String vn = voucherNumber + "";
+            voucherNumberTextView.setText(vn);
+        }
+
+        public void calculateTotals () {
+            double itemTax, itemTotal, itemTotalAfterTax, itemTotalPerc, itemDiscVal;
+
+            subTotal = 0.0;
+            totalTaxValue = 0.0;
+            netTotal = 0.0;
+
+            totalDiscount = 0;
+
+            if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
+                try {
+                    totalDiscount = Float.parseFloat(discTextView.getText().toString());
+                } catch (NumberFormatException e) {
+                    totalDiscount = 0.0;
                 }
-            };
 
-    public String[] getIndexToBeUpdated() {
-        return rowToBeUpdated;
-    }
+                for (int i = 0; i < items.size(); i++) {
+                    itemTotal = items.get(i).getAmount();
+                    itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
+                    itemTotalAfterTax = items.get(i).getAmount() + itemTax;
+                    subTotal = subTotal + itemTotal;
+                }
 
-    public int getIndex() {
-        return index;
-    }
+                for (int i = 0; i < items.size(); i++) {
+                    itemTotal = items.get(i).getAmount();
+                    itemTotalPerc = itemTotal / subTotal;
+                    itemDiscVal = (itemTotalPerc * totalDiscount);
+                    items.get(i).setTotalDiscVal(itemDiscVal);
+                    itemTotal = itemTotal - itemDiscVal;
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                    items.get(i).setTaxValue(itemTax);
+                    totalTaxValue = totalTaxValue + itemTax;
+                }
 
-    private void clearItemsList() {
-        items.clear();
-        itemsListAdapter.setItemsList(items);
-        itemsListAdapter.notifyDataSetChanged();
-    }
+                netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
 
-    private void clearLayoutData() {
-        paymentTermRadioGroup.check(R.id.creditRadioButton);
-        remarkEditText.setText("");
-        clearItemsList();
-        calculateTotals();
-        subTotalTextView.setText("0.000");
-        taxTextView.setText("0.000");
-        netTotalTextView.setText("0.000");
-        discTextView.setText("0.000");
-        subTotal = 0;
-        totalTaxValue = 0;
-        netTotal = 0;
-        totalDiscount = 0;
-        calculateTotals();
+            } else {
+                try {
+                    totalDiscount = Float.parseFloat(discTextView.getText().toString());
+                } catch (NumberFormatException e) {
+                    totalDiscount = 0.0;
+                }
 
-        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-        String vn = voucherNumber + "";
-        voucherNumberTextView.setText(vn);
-    }
+                for (int i = 0; i < items.size(); i++) {
 
-    public void calculateTotals() {
-        double itemTax, itemTotal, itemTotalAfterTax, itemTotalPerc, itemDiscVal;
+                    itemTax = items.get(i).getAmount() -
+                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
 
-        subTotal = 0.0;
-        totalTaxValue = 0.0;
-        netTotal = 0.0;
+                    itemTotal = items.get(i).getAmount() - itemTax;
+                    itemTotalAfterTax = items.get(i).getAmount();
+                    subTotal = subTotal + itemTotal;
+                }
 
-        totalDiscount = 0;
+                for (int i = 0; i < items.size(); i++) {
 
-        if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0)
-        {
-            try {
-                totalDiscount = Float.parseFloat(discTextView.getText().toString());
-            } catch (NumberFormatException e) {
-                totalDiscount = 0.0;
+                    itemTax = items.get(i).getAmount() -
+                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
+
+                    itemTotal = items.get(i).getAmount() - itemTax;
+                    itemTotalPerc = itemTotal / subTotal;
+                    itemDiscVal = (itemTotalPerc * totalDiscount);
+                    items.get(i).setTotalDiscVal(itemDiscVal);
+                    itemTotal = itemTotal - itemDiscVal;
+
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+
+
+                    items.get(i).setTaxValue(itemTax);
+                    totalTaxValue = totalTaxValue + itemTax;
+                }
+
+                netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
+
             }
 
-            for (int i = 0; i < items.size(); i++) {
-                itemTotal = items.get(i).getAmount();
-                itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
-                itemTotalAfterTax = items.get(i).getAmount() + itemTax;
-                subTotal = subTotal + itemTotal;
-            }
 
-            for (int i = 0; i < items.size(); i++) {
-                itemTotal = items.get(i).getAmount();
-                itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
-                items.get(i).setTotalDiscVal(itemDiscVal);
-                itemTotal = itemTotal - itemDiscVal;
-                itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
-                items.get(i).setTaxValue(itemTax);
-                totalTaxValue = totalTaxValue + itemTax;
-            }
-
-            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
-
-        }
-        else
-        {
-            try {
-                totalDiscount = Float.parseFloat(discTextView.getText().toString());
-            } catch (NumberFormatException e) {
-                totalDiscount = 0.0;
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-
-                itemTax = items.get(i).getAmount() -
-                        (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
-
-                itemTotal = items.get(i).getAmount() - itemTax;
-                itemTotalAfterTax = items.get(i).getAmount();
-                subTotal = subTotal + itemTotal;
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-
-                itemTax = items.get(i).getAmount() -
-                        (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
-
-                itemTotal = items.get(i).getAmount() - itemTax;
-                itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
-                items.get(i).setTotalDiscVal(itemDiscVal);
-                itemTotal = itemTotal - itemDiscVal;
-
-                itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
-
-
-                items.get(i).setTaxValue(itemTax);
-                totalTaxValue = totalTaxValue + itemTax;
-            }
-
-            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
+            subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
+            taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+            netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
         }
 
+        public double getItemsTotal () {
+            double total = 0;
 
-        subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
-        taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-        netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+            for (Item i : items) {
+                total = total + i.getAmount();
+            }
 
-    }
-
-    public double getItemsTotal() {
-        double total = 0;
-
-        for (Item i : items) {
-            total = total + i.getAmount();
+            return total;
         }
 
-        return total;
-    }
 
-
-}// class salesInvoice
+    }// class salesInvoice

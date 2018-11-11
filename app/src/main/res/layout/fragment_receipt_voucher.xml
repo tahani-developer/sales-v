@@ -67,6 +67,16 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/cust_info" />
 
+        <TextView
+            android:id="@+id/voucher_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/voucher_number"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
 
     </LinearLayout>
 

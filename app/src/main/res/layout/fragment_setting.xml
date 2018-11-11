@@ -8,25 +8,27 @@
     tools:context="com.dr7.salesmanmanager.DiscountFragment"
     >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/server_ip"
-        android:textColor="@color/text_view_color"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/server_ip"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
         <EditText
             android:id="@+id/link"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:padding="5dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@color/text_view_color"
             android:textColor="@color/add_button" />
 
@@ -85,6 +87,15 @@
             android:textSize="18sp" />
 
     </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/use_weight_case"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_weight_case"
+        android:layout_marginLeft="600px"
+        android:textColor="@color/text_view_color"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

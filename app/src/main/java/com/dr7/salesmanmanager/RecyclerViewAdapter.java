@@ -74,27 +74,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.add_item_dialog_small);
-                Window window = dialog.getWindow();
 
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
                 final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
                 final TextView price = (TextView) dialog.findViewById(R.id.price);
                 final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
+                final EditText unitWeight = (EditText) dialog.findViewById(R.id.unitWeight);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
                 final EditText discount = (EditText) dialog.findViewById(R.id.discount);
                 final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.discTypeRadioGroup);
-                final LinearLayout discountLinearLayout = (LinearLayout)  dialog.findViewById(R.id.discount_linear);
+                final LinearLayout discountLinearLayout = (LinearLayout) dialog.findViewById(R.id.discount_linear);
+                final LinearLayout unitWeightLinearLayout = (LinearLayout) dialog.findViewById(R.id.linearWeight);
                 Button addToList = (Button) dialog.findViewById(R.id.addToList);
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
                 price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
 
-                DatabaseHandler mHandler = new DatabaseHandler(context);
+                final DatabaseHandler mHandler = new DatabaseHandler(context);
 
-                if(mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
+                if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
                     discountLinearLayout.setVisibility(View.INVISIBLE);
+
+                if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0)
+                    unitWeightLinearLayout.setVisibility(View.INVISIBLE);
 
                 List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
 
@@ -110,15 +114,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         if (!check)
                             Toast.makeText(view.getContext(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
                         else {
-                            AddItemsFragment2 obj = new AddItemsFragment2();
-                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                    holder.tax.getText().toString(), unit.getSelectedItem().toString(), unitQty.getText().toString(), price.getText().toString(),
-                                    bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
 
-                            if (added) {
-                                holder.linearLayout.setBackgroundColor(R.color.done_button);
-                                isClicked.set(holder.getAdapterPosition() , 1);
+                            String unitValue;
+                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                unitValue = unit.getSelectedItem().toString();
+
+                                AddItemsFragment2 obj = new AddItemsFragment2();
+                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                        bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
+
+                                if (added) {
+                                    holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                    isClicked.set(holder.getAdapterPosition(), 1);
+                                }
+                            } else {
+                                if (unitWeight.getText().toString() == "")
+                                    Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
+                                else {
+                                    unitValue = unitWeight.getText().toString();
+                                    AddItemsFragment2 obj = new AddItemsFragment2();
+                                    added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                            holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                            bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
+
+                                    if (added) {
+                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                        isClicked.set(holder.getAdapterPosition(), 1);
+                                    }
+                                }
                             }
+
                         }
                         dialog.dismiss();
                     }
@@ -158,7 +184,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    private Boolean check_Discount(Spinner unitEditText, EditText qtyEditText,  TextView priceEditText,
+    private Boolean check_Discount(Spinner unitEditText, EditText qtyEditText, TextView priceEditText,
                                    EditText bonusEditText, EditText discEditText, RadioGroup discTypeRadioGroup) {
         Boolean check = true;
         if (qtyEditText.getText().toString().equals(""))

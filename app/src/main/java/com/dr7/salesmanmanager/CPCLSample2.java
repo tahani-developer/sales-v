@@ -2,14 +2,16 @@ package com.dr7.salesmanmanager;
 
 import android.graphics.Typeface;
 
+import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.sewoo.jpos.command.CPCLConst;
 import com.sewoo.jpos.command.ESCPOSConst;
 import com.sewoo.jpos.printer.CPCLPrinter;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public class CPCLSample2
 {
@@ -80,39 +82,47 @@ public class CPCLSample2
 		cpclPrinter.printForm();
     }
 
-	public void voucher(Voucher voucher ,int count) throws UnsupportedEncodingException
+	public void voucher(Voucher voucher , List<Item> items, int count) throws UnsupportedEncodingException
 	{
 		cpclPrinter.setForm(0, 200, 200, 406, count);
 		cpclPrinter.setMedia(paperType);
 
-		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "************************", 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 70, format(voucher.getCustName()), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 70, "voucher number: "+voucher.getVoucherNumber(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 110, "voucher type: "+voucher.getVoucherType(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "date: "+voucher.getVoucherDate(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "discount: "+voucher.getVoucherDiscount(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "total discount: "+voucher.getTotalVoucherDiscount(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "sub total: "+voucher.getSubTotal(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "tax: "+voucher.getTax(), 0);
-		cpclPrinter.printCPCLText(0, 0, 2, 1, 150, "net sales: "+voucher.getNetSales(), 0);
-		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "************************", 0);
 		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "", 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "vouch no : "+voucher.getVoucherNumber() + "   date: "+voucher.getVoucherDate(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "cust name: " + voucher.getCustName(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "pay kind : "+ (voucher.getPayMethod()== 0? "credit":"cash") , 0);
+
+		for (int i = 0; i < items.size(); i++) {
+			double amount = items.get(i).getQty() * items.get(i).getPrice() - items.get(i).getDisc();
+			String text = "item:"+items.get(i).getItemName() + " qty:" + items.get(i).getQty() + " bonus:" +
+					items.get(i).getBonus() + " amount:" + amount;
+			cpclPrinter.printCPCLText(0, 0, 2, 1, 1, text , 0);
+		}
+
+		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "________________________", 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "sub tot: "+voucher.getSubTotal() + "  disc: "+voucher.getVoucherDiscount(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "tax: "+voucher.getTax() + "  net: "+voucher.getNetSales(), 0);
+
 		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "", 0);
 
 		cpclPrinter.printForm();
 	}
 
-	private static String format(String msg, Object... args) {
-		String str = "";
-		try {
-//			PrintStream ps = new PrintStream(System.out, true, "UTF-8");
-//			ps.println(String.format(msg, args));
-			str = new String(msg.getBytes(), "UTF-8");
-		} catch (UnsupportedEncodingException error) {
-			System.err.println(error);
-			System.exit(0);
-		}
-		return str;
+	public void payment(Payment payment, int count) throws UnsupportedEncodingException
+	{
+		cpclPrinter.setForm(0, 200, 200, 406, count);
+		cpclPrinter.setMedia(paperType);
+
+		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "", 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "vouch no : "+ payment.getVoucherNumber() + "   date: "+payment.getPayDate(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "cust name: "+ payment.getCustName(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "amount   : "+ payment.getAmount(), 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "pay kind : "+ (payment.getPayMethod()== 0? "cash":"cheque") , 0);
+		cpclPrinter.printCPCLText(0, 0, 2, 1, 1, "remark   : "+ payment.getRemark() , 0);
+
+		cpclPrinter.printCPCLText(0, 5, 1, 1, 1, "", 0);
+
+		cpclPrinter.printForm();
 	}
 
 
@@ -317,37 +327,37 @@ public class CPCLSample2
     		cpclPrinter.setForm(0, 200, 200, 1000, count);
     		cpclPrinter.setMedia(paperType);
 
-    		cpclPrinter.printAndroidFont("Korean Font", nLineWidth, 24, 0, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// Korean 100-dot size font in android device.
-    		cpclPrinter.printAndroidFont(Koreandata, nLineWidth, 100, 30, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
-    		cpclPrinter.printAndroidFont("Turkish Font", nLineWidth, 24, 140, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// Turkish 50-dot size font in android device.
-    		cpclPrinter.printAndroidFont(Turkishdata, nLineWidth, 50, 170, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
-    		cpclPrinter.printAndroidFont("Russian Font", nLineWidth, 24, 230, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// Russian 60-dot size font in android device.
-    		cpclPrinter.printAndroidFont(Russiandata, nLineWidth, 60, 260, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//    		cpclPrinter.printAndroidFont("Korean Font", nLineWidth, 24, 0, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// Korean 100-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(Koreandata, nLineWidth, 100, 30, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//
+//    		cpclPrinter.printAndroidFont("Turkish Font", nLineWidth, 24, 140, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// Turkish 50-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(Turkishdata, nLineWidth, 50, 170, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//
+//    		cpclPrinter.printAndroidFont("Russian Font", nLineWidth, 24, 230, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// Russian 60-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(Russiandata, nLineWidth, 60, 260, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
     		cpclPrinter.printAndroidFont("Arabic Font", nLineWidth, 24, 330, ESCPOSConst.LK_ALIGNMENT_LEFT);
     		// Arabic 100-dot size font in android device.
     		cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 100, 360, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
-    		cpclPrinter.printAndroidFont("Greek Font", nLineWidth, 24, 470, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// Greek 60-dot size font in android device.
-    		cpclPrinter.printAndroidFont(Greekdata, nLineWidth, 60, 500, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
-    		cpclPrinter.printAndroidFont("Japanese Font", nLineWidth, 24, 570, ESCPOSConst.LK_ALIGNMENT_LEFT);
-        	// Japanese 100-dot size font in android device.
-    		cpclPrinter.printAndroidFont(Japanesedata, nLineWidth, 100, 600, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
-    		cpclPrinter.printAndroidFont("GB2312 Font", nLineWidth, 24, 710, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// GB2312 100-dot size font in android device.
-    		cpclPrinter.printAndroidFont(GB2312data, nLineWidth, 100, 740, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
-    		cpclPrinter.printAndroidFont("BIG5 Font", nLineWidth, 24, 850, ESCPOSConst.LK_ALIGNMENT_LEFT);
-    		// BIG5 100-dot size font in android device.
-    		cpclPrinter.printAndroidFont(BIG5data, nLineWidth, 100, 880, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//    		cpclPrinter.printAndroidFont("Greek Font", nLineWidth, 24, 470, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// Greek 60-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(Greekdata, nLineWidth, 60, 500, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//
+//    		cpclPrinter.printAndroidFont("Japanese Font", nLineWidth, 24, 570, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//        	// Japanese 100-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(Japanesedata, nLineWidth, 100, 600, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//
+//    		cpclPrinter.printAndroidFont("GB2312 Font", nLineWidth, 24, 710, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// GB2312 100-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(GB2312data, nLineWidth, 100, 740, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//
+//    		cpclPrinter.printAndroidFont("BIG5 Font", nLineWidth, 24, 850, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//    		// BIG5 100-dot size font in android device.
+//    		cpclPrinter.printAndroidFont(BIG5data, nLineWidth, 100, 880, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
     		// Print
     		cpclPrinter.printForm();		

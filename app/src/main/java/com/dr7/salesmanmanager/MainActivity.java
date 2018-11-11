@@ -350,6 +350,7 @@ public class MainActivity extends AppCompatActivity
             final EditText paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
             final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
             final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
+            final CheckBox checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
             final RadioButton exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
             final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
 
@@ -370,6 +371,9 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 1)
                     checkBox.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1)
+                    checkBox2.setChecked(true);
             }
 
             okButton.setOnClickListener(new View.OnClickListener() {
@@ -385,13 +389,15 @@ public class MainActivity extends AppCompatActivity
 
                         int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
                         int priceByCust = checkBox.isChecked() ? 1 : 0;
+                        int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+
 
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust);
-                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust);
-                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust);
-                        mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust);
-                        mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust);
+                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase);
+                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase);
+                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase);
+                        mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase);
+                        mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase);
 
                         dialog.dismiss();
                     } else

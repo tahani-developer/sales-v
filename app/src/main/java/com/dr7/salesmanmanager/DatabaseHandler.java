@@ -143,6 +143,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TRANS_KIND = "TRANS_KIND";
     private static final String SERIAL_NUMBER = "SERIAL_NUMBER";
     private static final String PRICE_BYCUSTOMER = "PRICE_BYCUSTOMER";
+    private static final String USE_WEIGHT_CASE = "USE_WEIGHT_CASE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -366,7 +367,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SERIAL_NUMBER + " INTEGER,"
                 + IP_ADDRESS + " TEXT,"
                 + TAX_CALC_KIND + " INTEGER,"
-                + PRICE_BYCUSTOMER + " INTEGER" + ")";
+                + PRICE_BYCUSTOMER + " INTEGER,"
+                + USE_WEIGHT_CASE + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -657,7 +659,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber , int priceByCust) {
+    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber , int priceByCust , int useWeightCase) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -666,6 +668,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(IP_ADDRESS, ipAddress);
         values.put(TAX_CALC_KIND, taxCalcKind);
         values.put(PRICE_BYCUSTOMER, priceByCust);
+        values.put(USE_WEIGHT_CASE, useWeightCase);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -818,6 +821,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 setting.setIpAddress(cursor.getString(2));
                 setting.setTaxClarcKind(Integer.parseInt(cursor.getString(3)));
                 setting.setPriceByCust(Integer.parseInt(cursor.getString(4)));
+                setting.setUseWeightCase(Integer.parseInt(cursor.getString(5)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());

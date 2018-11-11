@@ -51,7 +51,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:text="@string/app_disc_type2"
-                android:enabled="false"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
         </RadioGroup>

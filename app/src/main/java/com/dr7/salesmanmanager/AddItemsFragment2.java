@@ -186,6 +186,7 @@ public class AddItemsFragment2 extends DialogFragment {
             }
             descPerc = ((item.getQty() * item.getPrice() *
                     (Float.parseFloat(discount.trim()) / 100)));
+            
         } catch (NumberFormatException e) {
             item.setDisc(0);
             item.setDiscPerc("0");

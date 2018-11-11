@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -53,6 +54,7 @@ public class ReceiptVoucher extends Fragment {
     private Spinner paymentKindSpinner;
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
+    private TextView voucherNo;
 
     private double total = 0.0;
 
@@ -64,6 +66,7 @@ public class ReceiptVoucher extends Fragment {
 
     public static TextView customername;
 
+    public static Payment payment;
 
    /* public static void test3(){
         customername.setText(CustomerListFragment.Customer_Name.toString());
@@ -101,9 +104,13 @@ public class ReceiptVoucher extends Fragment {
         amountEditText = (EditText) view.findViewById(R.id.amountEditText);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         customername = (TextView) view.findViewById(R.id.customer_nameVoucher);
+        voucherNo = (TextView) view.findViewById(R.id.voucher_no);
         addCheckButton = (Button) view.findViewById(R.id.addCheck);
 
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
+
+        voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
+        voucherNo.setText("Voucher Number: " + voucherNumber);
 
         addCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,7 +266,7 @@ public class ReceiptVoucher extends Fragment {
         });
 
 
-        voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
+
 
         saveData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,8 +303,13 @@ public class ReceiptVoucher extends Fragment {
 
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
-                                mDbHandler.addPayment(new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 0 , Integer.parseInt(paymentYear)));
+                                payment = new Payment(0, voucherNumber, salesMan, payDate,
+                                        remark, amount, 0, cusNumber, cusName, 0 , Integer.parseInt(paymentYear));
+                                mDbHandler.addPayment(payment);
+
+                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
+                                intent.putExtra("flag" , "1");
+                                startActivity(intent);
 
                                 mDbHandler.setMaxSerialNumber(0, voucherNumber);
                             }
@@ -321,8 +333,9 @@ public class ReceiptVoucher extends Fragment {
 
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
-                                mDbHandler.addPayment(new Payment(0, voucherNumber, salesMan,
-                                        payDate, remark, amount, 0, cusNumber, cusName, 1 , Integer.parseInt(paymentYear)));
+                                payment = new Payment(0, voucherNumber, salesMan, payDate,
+                                        remark, amount, 0, cusNumber, cusName, 1 , Integer.parseInt(paymentYear));
+                                mDbHandler.addPayment(payment);
 
                                 for (int i = 0; i < payments.size(); i++) {
                                     mDbHandler.addPaymentPaper(new Payment(0, voucherNumber, payments.get(i).getCheckNumber(),
@@ -331,6 +344,9 @@ public class ReceiptVoucher extends Fragment {
 
                                     mDbHandler.setMaxSerialNumber(4, voucherNumber);
                                 }
+
+                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
+                                intent.putExtra("flag" , "1");
                             }
                         }
                         clearForm();

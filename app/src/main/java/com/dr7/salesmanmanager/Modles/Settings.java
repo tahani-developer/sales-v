@@ -7,17 +7,19 @@ public class Settings {
     private  int serial;
     private int taxClarcKind;
     private int priceByCust;
+    private int useWeightCase;
 
     public Settings(){
 
     }
 
-    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust) {
+    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
         this.taxClarcKind = taxClarcKind;
         this.priceByCust = priceByCust;
+        this.useWeightCase = useWeightCase;
     }
 
     public String getIpAddress() {
@@ -58,5 +60,13 @@ public class Settings {
 
     public void setPriceByCust(int priceByCust) {
         this.priceByCust = priceByCust;
+    }
+
+    public int getUseWeightCase() {
+        return useWeightCase;
+    }
+
+    public void setUseWeightCase(int useWeightCase) {
+        this.useWeightCase = useWeightCase;
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class DiscountFragment extends DialogFragment {
 
     private Button okButton, cancelButton;
     private RadioGroup discTypeRadioGroup;
+    private RadioButton discPercent;
     private EditText discValueEditText;
     private DiscountInterface discountInterface;
     private static double discountValue = 0, discountPerc = 0;
@@ -56,8 +58,14 @@ public class DiscountFragment extends DialogFragment {
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
         discTypeRadioGroup = (RadioGroup) view.findViewById(R.id.discTypeRadioGroup);
+        discPercent = (RadioButton) view.findViewById(R.id.percentRadioButton);
         discValueEditText = (EditText) view.findViewById(R.id.discEditText);
         decimalFormat = new DecimalFormat("##.000");
+
+        DatabaseHandler mdHandler = new DatabaseHandler(getActivity());
+        if(mdHandler.getAllSettings().get(0).getTaxClarcKind() == 1){
+            discPercent.setEnabled(false);
+        }
 
         OnClickListener onClickListener = new OnClickListener() {
             @Override

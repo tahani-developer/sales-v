@@ -25,6 +25,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.port.android.BluetoothPort;
@@ -37,6 +39,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -71,7 +74,11 @@ public class BluetoothConnectMenu extends Activity {
     // Check disconnection
     private CheckBox chkDisconnect;
 
+    String flag = "0";
+
     Voucher voucher;
+    List<Item> item;
+    Payment payment;
 
     // Set up Bluetooth.
     private void bluetoothSetup() {
@@ -153,6 +160,13 @@ public class BluetoothConnectMenu extends Activity {
         setContentView(R.layout.bluetooth_menu);
 
         voucher = SalesInvoice.voucher;
+        item = SalesInvoice.itemsList;
+        payment = ReceiptVoucher.payment;
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            flag = extras.getString("flag");
+        }
         // Setting
         btAddrBox = (EditText) findViewById(R.id.EditTextAddressBT);
         connectButton = (Button) findViewById(R.id.ButtonConnectBT);
@@ -194,16 +208,13 @@ public class BluetoothConnectMenu extends Activity {
         searchButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-				if (!mBluetoothAdapter.isDiscovering())
-				{
-					clearBtDevData();
-					adapter.clear();
-					mBluetoothAdapter.startDiscovery();
-				}
-				else
-				{
-					mBluetoothAdapter.cancelDiscovery();
-				}
+                if (!mBluetoothAdapter.isDiscovering()) {
+                    clearBtDevData();
+                    adapter.clear();
+                    mBluetoothAdapter.startDiscovery();
+                } else {
+                    mBluetoothAdapter.cancelDiscovery();
+                }
 
             }
         });
@@ -215,7 +226,12 @@ public class BluetoothConnectMenu extends Activity {
                     CPCLSample2 sample = new CPCLSample2();
 //                    sample.selectGapPaper();
 
-                    sample.voucher(voucher ,0);
+//                    sample.voucher(voucher ,0);
+
+                    if (flag.equals("0"))
+                        sample.voucher(voucher, item, 1);
+                    else
+                        sample.payment(payment, 1);
                     finish();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -303,7 +319,6 @@ public class BluetoothConnectMenu extends Activity {
             };
         }
     }
-
 
 
     @Override
