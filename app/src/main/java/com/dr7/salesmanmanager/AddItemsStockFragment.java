@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class AddItemsStockFragment extends DialogFragment {
     private static List<Item> List;
     private Item item;
     Button addToListButton, doneButton;
+    SearchView search ;
     private ArrayList<String> itemsList;
     private List<Item> jsonItemsList;
     RecyclerView recyclerView;
@@ -106,6 +108,34 @@ public class AddItemsStockFragment extends DialogFragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        search = view.findViewById(R.id.mSearch);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //FILTER AS YOU TYPE
+//                adapter.getFilter().filter(query);
+
+                if(query != null && query.length() > 0){
+                    ArrayList <Item> filteredList = new ArrayList<>();
+                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
+                        if(jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
+                            filteredList.add(jsonItemsList.get(k));
+                    }
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                }
+                return false;
             }
         });
 

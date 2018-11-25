@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,7 +75,7 @@ public class VouchersReport extends AppCompatActivity {
         textNetSales = (TextView) findViewById(R.id.netSalesTextView1);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
         from_date.setText(today);
         to_date.setText(today);
@@ -319,7 +320,7 @@ public class VouchersReport extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy-MM-dd"; //In which you need put here
+        String myFormat = "yyy/MM/dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -330,7 +331,7 @@ public class VouchersReport extends AppCompatActivity {
 
     public Date formatDate (String date) throws ParseException {
 
-            String myFormat = "yyy-MM-dd"; //In which you need put here
+            String myFormat = "dd/MM/yyyy"; //In which you need put here
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
             Date d = sdf.parse(date);
             return d ;
@@ -356,6 +357,7 @@ public class VouchersReport extends AppCompatActivity {
                         vType == voucherType && pMethod == payMethod)
                     return true;
             } else {
+                Log.e("tag" , "*****" + date + "***" + fromDate);
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
                         vType == voucherType && pMethod == payMethod)

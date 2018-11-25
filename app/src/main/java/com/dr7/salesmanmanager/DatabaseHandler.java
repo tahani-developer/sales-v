@@ -5,9 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -24,6 +27,7 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,6 +148,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL_NUMBER = "SERIAL_NUMBER";
     private static final String PRICE_BYCUSTOMER = "PRICE_BYCUSTOMER";
     private static final String USE_WEIGHT_CASE = "USE_WEIGHT_CASE";
+    private static final String NUMBER_OF_COPIES = "NUMBER_OF_COPIES";
+
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String COMPANY_INFO = "COMPANY_INFO";
+
+    private static final String COMPANY_NAME = "COMPANY_NAME";
+    private static final String COMPANY_TEL = "COMPANY_TEL";
+    private static final String TAX_NO = "TAX_NO";
+    private static final String LOGO = "LOGO";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -368,8 +381,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + IP_ADDRESS + " TEXT,"
                 + TAX_CALC_KIND + " INTEGER,"
                 + PRICE_BYCUSTOMER + " INTEGER,"
-                + USE_WEIGHT_CASE + " INTEGER" + ")";
+                + USE_WEIGHT_CASE + " INTEGER,"
+                + NUMBER_OF_COPIES + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
+
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE " + COMPANY_INFO + "("
+                + COMPANY_NAME + " TEXT,"
+                + COMPANY_TEL + " INTEGER,"
+                + TAX_NO + " INTEGER,"
+                + LOGO + " BLOB" + ")";
+        db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -497,6 +520,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTING);
+        db.execSQL("DROP TABLE IF EXISTS " + COMPANY_INFO);
         db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_MASTER);
         db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_DETAILS);
         db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS);
@@ -659,7 +683,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber , int priceByCust , int useWeightCase) {
+    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber , int priceByCust ,
+                           int useWeightCase , int numOfCopy) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -669,8 +694,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TAX_CALC_KIND, taxCalcKind);
         values.put(PRICE_BYCUSTOMER, priceByCust);
         values.put(USE_WEIGHT_CASE, useWeightCase);
+        values.put(NUMBER_OF_COPIES, numOfCopy);
 
         db.insert(TABLE_SETTING, null, values);
+        db.close();
+    }
+
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo ) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        byte[] byteImage = {};
+        if (logo != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            logo.compress(Bitmap.CompressFormat.PNG, 0, stream);
+            byteImage = stream.toByteArray();
+        }
+
+        values.put(COMPANY_NAME, companyName);
+        values.put(COMPANY_TEL, companyTel);
+        values.put(TAX_NO, taxNo);
+        values.put(LOGO, byteImage);
+
+        db.insert(COMPANY_INFO, null, values);
         db.close();
     }
 
@@ -822,11 +868,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 setting.setTaxClarcKind(Integer.parseInt(cursor.getString(3)));
                 setting.setPriceByCust(Integer.parseInt(cursor.getString(4)));
                 setting.setUseWeightCase(Integer.parseInt(cursor.getString(5)));
+                setting.setNumOfCopy(Integer.parseInt(cursor.getString(6)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
         return settings;
+    }
+
+    public List<CompanyInfo> getAllCompanyInfo() {
+        List<CompanyInfo> infos = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + COMPANY_INFO;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                CompanyInfo info = new CompanyInfo();
+                info.setCompanyName(cursor.getString(0));
+                info.setcompanyTel(Integer.parseInt(cursor.getString(1)));
+                info.setTaxNo(Integer.parseInt(cursor.getString(2)));
+
+                if (cursor.getBlob(3).length == 0)
+                    info.setLogo(null);
+                else
+                    info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+
+                infos.add(info);
+            } while (cursor.moveToNext());
+        }
+        return infos;
     }
 
     public int getMaxSerialNumber(int voucherType) {
@@ -1464,6 +1534,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllSettings() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_SETTING);
+        db.close();
+    }
+
+    public void deleteAllCompanyInfo() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + COMPANY_INFO);
         db.close();
     }
 

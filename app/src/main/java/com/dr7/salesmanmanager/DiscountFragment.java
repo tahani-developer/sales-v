@@ -124,16 +124,20 @@ public class DiscountFragment extends DialogFragment {
     private Boolean checkDiscount() {
         int radioId = discTypeRadioGroup.getCheckedRadioButtonId();
 
-        if (radioId == R.id.percentRadioButton) {
-            if (Float.parseFloat(discValueEditText.getText().toString()) > 100)
-                return false;
-            else
-                return true;
-        } else {
-            if (Float.parseFloat(discValueEditText.getText().toString()) > invoiceTotal)
-                return false;
-            else
-                return true;
+        if(discValueEditText.getText().toString().equals(""))
+            return false;
+        else {
+            if (radioId == R.id.percentRadioButton) {
+                if (Float.parseFloat(discValueEditText.getText().toString()) > 100)
+                    return false;
+                else
+                    return true;
+            } else {
+                if (Float.parseFloat(discValueEditText.getText().toString()) > invoiceTotal)
+                    return false;
+                else
+                    return true;
+            }
         }
     }
 

@@ -117,7 +117,7 @@
             android:imeOptions="actionNext"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textColor="@color/second_color" />
 
     </LinearLayout>
@@ -151,13 +151,13 @@
             android:textColor="@color/text_view_color"
             android:textSize="25sp" />
 
-        <TextView
+        <EditText
             android:id="@+id/price"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="000"
+            android:text="0"
             android:textColor="@color/colorAccent"
             android:textSize="25sp" />
 

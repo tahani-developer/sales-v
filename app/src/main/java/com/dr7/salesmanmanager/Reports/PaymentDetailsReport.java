@@ -188,7 +188,7 @@ public class PaymentDetailsReport extends AppCompatActivity {
     }
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy-MM-dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -224,7 +224,7 @@ public class PaymentDetailsReport extends AppCompatActivity {
 
     public Date formatDate(String date) throws ParseException {
 
-        String myFormat = "yyy-MM-dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date d = sdf.parse(date);
         return d;

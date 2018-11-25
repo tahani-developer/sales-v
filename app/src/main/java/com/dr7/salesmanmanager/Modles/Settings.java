@@ -8,18 +8,20 @@ public class Settings {
     private int taxClarcKind;
     private int priceByCust;
     private int useWeightCase;
+    private int numOfCopy;
 
     public Settings(){
 
     }
 
-    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase) {
+    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase, int numOfCopy) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
         this.taxClarcKind = taxClarcKind;
         this.priceByCust = priceByCust;
         this.useWeightCase = useWeightCase;
+        this.numOfCopy = numOfCopy;
     }
 
     public String getIpAddress() {
@@ -68,5 +70,13 @@ public class Settings {
 
     public void setUseWeightCase(int useWeightCase) {
         this.useWeightCase = useWeightCase;
+    }
+
+    public int getNumOfCopy() {
+        return numOfCopy;
+    }
+
+    public void setNumOfCopy(int numOfCopy) {
+        this.numOfCopy = numOfCopy;
     }
 }

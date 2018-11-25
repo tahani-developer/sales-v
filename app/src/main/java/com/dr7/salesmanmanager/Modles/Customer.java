@@ -40,9 +40,9 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public  Customer(String customerAccount, String customerName) {
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
+    public  Customer(int custId, String custName) {
+        this.custId = custId;
+        this.custName = custName;
     }
 
     public int getCompanyNumber() {

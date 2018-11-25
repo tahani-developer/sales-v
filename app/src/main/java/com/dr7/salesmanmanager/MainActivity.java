@@ -1,17 +1,24 @@
 package com.dr7.salesmanmanager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -31,6 +38,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -44,6 +52,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +71,10 @@ public class MainActivity extends AppCompatActivity
     LocationManager locationManager;
     LocationListener locationListener;
     double latitude, longitude;
+
+    public static final int PICK_IMAGE = 1;
+    Bitmap itemBitmapPic = null;
+    ImageView logo;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -179,6 +192,9 @@ public class MainActivity extends AppCompatActivity
             builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
             android.app.AlertDialog alertDialog = builder.create();
             alertDialog.show();
+
+        } else if (id == R.id.action_company_info) {
+            openCompanyInfoDialog();
         }
 
         return super.onOptionsItemSelected(item);
@@ -343,6 +359,7 @@ public class MainActivity extends AppCompatActivity
             dialog.setContentView(R.layout.fragment_setting);
 
             final EditText linkEditText = (EditText) dialog.findViewById(R.id.link);
+            final EditText numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
             final EditText invoicEditText = (EditText) dialog.findViewById(R.id.invoice_serial);
             final EditText returnEditText = (EditText) dialog.findViewById(R.id.return_serial);
             final EditText orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
@@ -359,6 +376,7 @@ public class MainActivity extends AppCompatActivity
 
             if (mDbHandler.getAllSettings().size() != 0) {
                 linkEditText.setText("" + mDbHandler.getAllSettings().get(0).getIpAddress());
+                numOfCopy.setText("" + mDbHandler.getAllSettings().get(0).getNumOfCopy());
                 invoicEditText.setText("" + (mDbHandler.getMaxSerialNumber(504) + 1));
                 returnEditText.setText("" + (mDbHandler.getMaxSerialNumber(506) + 1));
                 orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
@@ -381,6 +399,7 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(View v) {
                     if (!linkEditText.getText().toString().equals("")) {
                         String link = linkEditText.getText().toString().trim();
+                        int numOfCopys = Integer.parseInt(numOfCopy.getText().toString()) - 1;
                         int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
                         int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
                         int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
@@ -393,11 +412,11 @@ public class MainActivity extends AppCompatActivity
 
 
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase);
-                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase);
-                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase);
-                        mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase);
-                        mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase);
+                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, numOfCopys);
+                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, numOfCopys);
+                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, numOfCopys);
+                        mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, numOfCopys);
+                        mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, numOfCopys);
 
                         dialog.dismiss();
                     } else
@@ -413,6 +432,117 @@ public class MainActivity extends AppCompatActivity
             });
             dialog.show();
 
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void openCompanyInfoDialog() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.company_info_dialog);
+
+        final EditText name = (EditText) dialog.findViewById(R.id.com_name);
+        final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
+        final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
+        logo = (ImageView) dialog.findViewById(R.id.logo);
+
+        Button okButton = (Button) dialog.findViewById(R.id.okBut);
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
+
+        if (mDbHandler.getAllCompanyInfo().size() != 0) {
+            name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
+            tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
+            tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
+            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+        }
+
+        logo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                intent.setType("image/*");
+//                intent.putExtra("crop", "false");
+//                intent.putExtra("scale", true);
+//                intent.putExtra("outputX", 256);
+//                intent.putExtra("outputY", 256);
+//                intent.putExtra("aspectX", 0);
+//                intent.putExtra("aspectY", 0);
+//                intent.putExtra("return-data", true);
+//                startActivityForResult(intent, 1);
+
+//                Intent intent = new Intent();
+//                //******call android default gallery
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                //******code for crop image
+//                intent.putExtra("crop", "true");
+//                intent.putExtra("aspectX", 0);
+//                intent.putExtra("aspectY", 0);
+//                try {
+//                    intent.putExtra("return-data", true);
+//                    startActivityForResult(
+//                            Intent.createChooser(intent,"Complete action using"),
+//                            2);
+//                } catch (ActivityNotFoundException e) {}
+
+                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                getIntent.setType("image/*");
+
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
+
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+
+                startActivityForResult(chooserIntent, PICK_IMAGE);
+            }
+        });
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!name.getText().toString().equals("")&& !tel.getText().toString().equals("")&& !tax.getText().toString().equals("")) {
+                    String comName = name.getText().toString().trim();
+                    int comTel = Integer.parseInt(tel.getText().toString());
+                    int taxNo = Integer.parseInt(tax.getText().toString());
+
+                    mDbHandler.deleteAllCompanyInfo();
+                    mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic);
+
+                    dialog.dismiss();
+                } else
+                    Toast.makeText(MainActivity.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver() , uri);
+                itemBitmapPic = bitmap;
+                logo.setImageBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

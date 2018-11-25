@@ -8,6 +8,9 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +42,7 @@ public class AddItemsFragment2 extends DialogFragment {
     private static List<Item> List;
     private Item item;
     Button addToListButton, doneButton;
+    SearchView search ;
     private ArrayList<String> itemsList;
     private List<Item> jsonItemsList;
     RecyclerView recyclerView;
@@ -81,13 +86,13 @@ public class AddItemsFragment2 extends DialogFragment {
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0 , "no filter");
 
-        ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
+        final ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
         categorySpinner.setAdapter(ad);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,6 +118,35 @@ public class AddItemsFragment2 extends DialogFragment {
 
             }
         });
+
+        search = view.findViewById(R.id.mSearch);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                //FILTER AS YOU TYPE
+//                adapter.getFilter().filter(query);
+
+                if(query != null && query.length() > 0){
+                    ArrayList <Item> filteredList = new ArrayList<>();
+                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
+                        if(jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
+                            filteredList.add(jsonItemsList.get(k));
+                    }
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                }
+                return false;
+            }
+        });
+
 
         Button done = (Button) view.findViewById(R.id.done);
 
@@ -186,8 +220,8 @@ public class AddItemsFragment2 extends DialogFragment {
             }
             descPerc = ((item.getQty() * item.getPrice() *
                     (Float.parseFloat(discount.trim()) / 100)));
-            
-        } catch (NumberFormatException e) {
+
+                                                                                                                } catch (NumberFormatException e) {
             item.setDisc(0);
             item.setDiscPerc("0");
         }

@@ -5,9 +5,13 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,13 +33,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.ganesh.intermecarabic.Arabic864;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
@@ -67,6 +77,19 @@ public class ReceiptVoucher extends Fragment {
     public static TextView customername;
 
     public static Payment payment;
+
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothSocket mmSocket;
+    BluetoothDevice mmDevice;
+
+    OutputStream mmOutputStream;
+    InputStream mmInputStream;
+    Thread workerThread;
+
+    byte[] readBuffer;
+    int readBufferPosition;
+    int counter;
+    volatile boolean stopWorker;
 
    /* public static void test3(){
         customername.setText(CustomerListFragment.Customer_Name.toString());
@@ -266,8 +289,6 @@ public class ReceiptVoucher extends Fragment {
         });
 
 
-
-
         saveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,12 +325,19 @@ public class ReceiptVoucher extends Fragment {
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 0 , Integer.parseInt(paymentYear));
+                                        remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
                                 mDbHandler.addPayment(payment);
 
-                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
-                                intent.putExtra("flag" , "1");
-                                startActivity(intent);
+                                // for english
+//                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
+//                                intent.putExtra("flag" , "1");
+//                                startActivity(intent);
+
+                                try {
+                                    findBT();
+                                    openBT();
+                                } catch (IOException ex) {
+                                }
 
                                 mDbHandler.setMaxSerialNumber(0, voucherNumber);
                             }
@@ -334,19 +362,26 @@ public class ReceiptVoucher extends Fragment {
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 1 , Integer.parseInt(paymentYear));
+                                        remark, amount, 0, cusNumber, cusName, 1, Integer.parseInt(paymentYear));
                                 mDbHandler.addPayment(payment);
 
                                 for (int i = 0; i < payments.size(); i++) {
                                     mDbHandler.addPaymentPaper(new Payment(0, voucherNumber, payments.get(i).getCheckNumber(),
-                                            payments.get(i).getBank(),  payments.get(i).getDueDate(), payments.get(i).getAmount(),
+                                            payments.get(i).getBank(), payments.get(i).getDueDate(), payments.get(i).getAmount(),
                                             0, Integer.parseInt(paymentYear)));
 
                                     mDbHandler.setMaxSerialNumber(4, voucherNumber);
                                 }
 
-                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
-                                intent.putExtra("flag" , "1");
+                                // for english
+//                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
+//                                intent.putExtra("flag" , "1");
+
+                                try {
+                                    findBT();
+                                    openBT();
+                                } catch (IOException ex) {
+                                }
                             }
                         }
                         clearForm();
@@ -459,6 +494,182 @@ public class ReceiptVoucher extends Fragment {
         if (!field1.equals("") && !field2.equals("") && !field3.equals("") && !field4.equals(""))
             return true;
         return false;
+    }
+
+
+    void findBT() {
+
+        try {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (mBluetoothAdapter == null) {
+//                myLabel.setText("No bluetooth adapter available");
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBluetooth = new Intent(
+                        BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBluetooth, 0);
+            }
+
+            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter
+                    .getBondedDevices();
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+
+                    // MP300 is the name of the bluetooth printer device07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ C4:73:1E:67:29:6C
+                    /*07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ E8:99:C4:FF:B1:AC
+                    07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ 0C:A6:94:35:11:27*/
+
+                    /*Log.e("sex",device.getName());*/
+//                    if (device.getName().equals("mobile printer")) { // PR3-30921446556
+                    /*Log.e("sex1",device.getAddress());*/
+                    mmDevice = device;
+//                        break;
+//                    }
+                }
+            }
+//            myLabel.setText("Bluetooth Device Found");
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Tries to open a connection to the bluetooth printer device
+    void openBT() throws IOException {
+        try {
+            // Standard SerialPortService ID
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket.connect();
+            mmOutputStream = mmSocket.getOutputStream();
+            mmInputStream = mmSocket.getInputStream();
+
+            beginListenForData();
+
+//            myLabel.setText("Bluetooth Opened");
+            sendData();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // After opening a connection to bluetooth printer device,
+    // we have to listen and check if a data were sent to be printed.
+    void beginListenForData() {
+        try {
+            final Handler handler = new Handler();
+
+            // This is the ASCII code for a newline character
+            final byte delimiter = 10;
+
+            stopWorker = false;
+            readBufferPosition = 0;
+            readBuffer = new byte[1024];
+
+            workerThread = new Thread(new Runnable() {
+                public void run() {
+                    while (!Thread.currentThread().isInterrupted()
+                            && !stopWorker) {
+
+                        try {
+
+                            int bytesAvailable = mmInputStream.available();
+                            if (bytesAvailable > 0) {
+                                byte[] packetBytes = new byte[bytesAvailable];
+                                mmInputStream.read(packetBytes);
+                                for (int i = 0; i < bytesAvailable; i++) {
+                                    byte b = packetBytes[i];
+                                    if (b == delimiter) {
+                                        byte[] encodedBytes = new byte[readBufferPosition];
+                                        System.arraycopy(readBuffer, 0,
+                                                encodedBytes, 0,
+                                                encodedBytes.length);
+                                        final String data = new String(
+                                                encodedBytes, "US-ASCII");
+                                        readBufferPosition = 0;
+
+                                        handler.post(new Runnable() {
+                                            public void run() {
+//                                                myLabel.setText(data);
+                                            }
+                                        });
+                                    } else {
+                                        readBuffer[readBufferPosition++] = b;
+                                    }
+                                }
+                            }
+
+                        } catch (IOException ex) {
+                            stopWorker = true;
+                        }
+
+                    }
+                }
+            });
+
+            workerThread.start();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * This will send data to be printed by the bluetooth printer
+     */
+    void sendData() throws IOException {
+        try {
+
+            // the text typed by the user
+            String msg = "";
+
+            msg += " " + "\n" +
+                    " " + "\n" +
+                    "_______________________" + "\n" +
+                    "ملاحظة: " + payment.getRemark() + "\n" +
+                    "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
+                    "الكمية: " + payment.getAmount() + "\n" +
+                    "اسم العميل: " + payment.getCustName() + "\n" +
+                    "رقم الفاتورة: " + payment.getVoucherNumber() + "    التاريخ: " + payment.getPayDate();
+
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+
+            int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
+            for (int i = 0; i <= numOfCopy; i++)
+                mmOutputStream.write(arabicArr);
+
+            closeBT();
+            // tell the user data were sent
+//                myLabel.setText("Data Sent");
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Close the connection to bluetooth printer.
+    void closeBT() throws IOException {
+        try {
+            stopWorker = true;
+            mmOutputStream.close();
+            mmInputStream.close();
+            mmSocket.close();
+//            myLabel.setText("Bluetooth Closed");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

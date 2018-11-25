@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,15 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 
 import java.util.ArrayList;
@@ -27,14 +31,16 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
 
-    private List<Item> items = new ArrayList<>();
+    private List<Item> items;
     private ArrayList<Integer> isClicked = new ArrayList<>();
+    private List<Item> filterList;
     private Context context;
     boolean added = false;
 
 
     public RecyclerViewAdapter(List<Item> items, Context context) {
         this.items = items;
+        this.filterList = items;
         this.context = context;
         for (int i = 0; i <= items.size(); i++) {
             isClicked.add(0);
@@ -77,7 +83,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
                 final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
-                final TextView price = (TextView) dialog.findViewById(R.id.price);
+                final EditText price = (EditText) dialog.findViewById(R.id.price);
                 final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText unitWeight = (EditText) dialog.findViewById(R.id.unitWeight);
@@ -110,29 +116,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     @Override
                     public void onClick(View v) {
 
-                        Boolean check = check_Discount(unit, unitQty, price, bonus, discount, radioGroup);
-                        if (!check)
-                            Toast.makeText(view.getContext(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
-                        else {
+                        if (!price.getText().toString().equals("") && !price.getText().toString().equals("0")) {
 
-                            String unitValue;
-                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
-                                unitValue = unit.getSelectedItem().toString();
+                            Boolean check = check_Discount(unit, unitQty, price, bonus, discount, radioGroup);
+                            if (!check)
+                                Toast.makeText(view.getContext(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
+                            else {
 
-                                AddItemsFragment2 obj = new AddItemsFragment2();
-                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
-                                        bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
+                                String unitValue;
+                                if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                    unitValue = unit.getSelectedItem().toString();
 
-                                if (added) {
-                                    holder.linearLayout.setBackgroundColor(R.color.done_button);
-                                    isClicked.set(holder.getAdapterPosition(), 1);
-                                }
-                            } else {
-                                if (unitWeight.getText().toString() == "")
-                                    Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
-                                else {
-                                    unitValue = unitWeight.getText().toString();
                                     AddItemsFragment2 obj = new AddItemsFragment2();
                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                             holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
@@ -142,11 +136,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         holder.linearLayout.setBackgroundColor(R.color.done_button);
                                         isClicked.set(holder.getAdapterPosition(), 1);
                                     }
+                                } else {
+                                    if (unitWeight.getText().toString() == "")
+                                        Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
+                                    else {
+                                        unitValue = unitWeight.getText().toString();
+                                        AddItemsFragment2 obj = new AddItemsFragment2();
+                                        added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
+
+                                        if (added) {
+                                            holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                            isClicked.set(holder.getAdapterPosition(), 1);
+                                        }
+                                    }
                                 }
+
                             }
 
-                        }
-                        dialog.dismiss();
+                            dialog.dismiss();
+                        } else
+                            Toast.makeText(view.getContext(), "Invalid price", Toast.LENGTH_LONG).show();
+
+
                     }
                 });
                 dialog.show();
@@ -183,7 +196,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-
     private Boolean check_Discount(Spinner unitEditText, EditText qtyEditText, TextView priceEditText,
                                    EditText bonusEditText, EditText discEditText, RadioGroup discTypeRadioGroup) {
         Boolean check = true;
@@ -213,4 +225,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         return check;
     }
+
 }

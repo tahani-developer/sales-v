@@ -56,7 +56,7 @@ public class StockRequestItemsReport extends AppCompatActivity {
         totalQtyTextView = (TextView) findViewById(R.id.total);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
         from_date.setText(today);
         to_date.setText(today);
@@ -172,7 +172,7 @@ public class StockRequestItemsReport extends AppCompatActivity {
     }
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy-MM-dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -183,7 +183,7 @@ public class StockRequestItemsReport extends AppCompatActivity {
 
     public Date formatDate(String date) throws ParseException {
 
-        String myFormat = "yyy-MM-dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date d = sdf.parse(date);
         return d;

@@ -42,6 +42,7 @@
 
     <string name="action_add_cust">Add Customer</string>
     <string name="action_settings">Settings</string>
+    <string name="action_company_info">Company Info</string>
     <string name="title_activity_activities">Activities</string>
 
     <string name="cust_name">Customer Name</string>
@@ -138,10 +139,11 @@
     <string name="include">Include</string>
     <string name="price_by_customer">Item Price By Customer</string>
     <string name="use_weight_case">Use Weight Case</string>
+    <string name="num_of_copy">Number Of Copy</string>
     <string name="vouchers_serial">Vouchers Serial</string>
-    <string name="invoice_serial_from">invoice serial from</string>
-    <string name="return_serial_from">return serial from</string>
-    <string name="order_serial_from">order serial from</string>
+    <string name="invoice_serial_from">invoice</string>
+    <string name="return_serial_from">return</string>
+    <string name="order_serial_from">order</string>
     <string name="payments_serial_from">Payments Serial From</string>
     <string name="save">Save</string>
     <string name="company_number">Company Number</string>
@@ -182,6 +184,11 @@
     <string name="barcode">Barcode</string>
     <string name="box_packing">Box Packing</string>
     <string name="update">Update</string>
+
+    <string name="company_name">Company Name: </string>
+    <string name="company_tel">Company Tel: </string>
+    <string name="tax_no">Tax No: </string>
+    <string name="logo">Logo: </string>
 
     <!--  Button -->
     <string name="bt_search_btn">Search Bluetooth Devices</string>
