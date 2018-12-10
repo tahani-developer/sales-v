@@ -35,7 +35,7 @@ public class CustomerCheckInFragment extends DialogFragment
     public static String customernametest;
     public static int checkOutIn;
 
-    static int cusCode;
+    static String cusCode;
     String cusName;
     int status;
 
@@ -84,7 +84,7 @@ public class CustomerCheckInFragment extends DialogFragment
                 MainActivity mainActivity = new MainActivity();
                 mainActivity.settext2();
 
-                cusCode = Integer.parseInt(Customer_Account.getText().toString());
+                cusCode = Customer_Account.getText().toString();
                 cusName = Customer_Name.getText().toString();
                 status = 0;
 

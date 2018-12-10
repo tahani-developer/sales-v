@@ -962,7 +962,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Transaction transaction = new Transaction();
 
                 transaction.setSalesManId(Integer.parseInt(cursor.getString(0)));
-                transaction.setCusCode(Integer.parseInt(cursor.getString(1)));
+                transaction.setCusCode(cursor.getString(1));
                 transaction.setCusName(cursor.getString(2));
                 transaction.setCheckInDate(cursor.getString(3));
                 transaction.setCheckInTime(cursor.getString(4));
@@ -1015,7 +1015,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Customer customer = new Customer();
 
                 customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
-                customer.setCustId(Integer.parseInt(cursor.getString(1)));
+                customer.setCustId(cursor.getString(1));
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
@@ -1232,7 +1232,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 payment.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
                 payment.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
                 payment.setPayDate(cursor.getString(2));
-                payment.setCustNumber(Integer.parseInt(cursor.getString(3)));
+                payment.setCustNumber(cursor.getString(3));
                 payment.setAmount(Double.parseDouble(cursor.getString(4)));
                 payment.setRemark(cursor.getString(5));
                 payment.setSaleManNumber(Integer.parseInt(cursor.getString(6)));
@@ -1409,7 +1409,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
 
-    public void updateTransaction(int cusCode, String currentDate, String currentTime) {
+    public void updateTransaction(String cusCode, String currentDate, String currentTime) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 

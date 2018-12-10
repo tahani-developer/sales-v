@@ -352,6 +352,7 @@ public class MainActivity extends AppCompatActivity
 
     public class openSetting {
 
+        @SuppressLint("SetTextI18n")
         public void showDialog(Activity activity, String msg) {
             final Dialog dialog = new Dialog(activity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -399,7 +400,7 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(View v) {
                     if (!linkEditText.getText().toString().equals("")) {
                         String link = linkEditText.getText().toString().trim();
-                        int numOfCopys = Integer.parseInt(numOfCopy.getText().toString()) - 1;
+                        int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
                         int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
                         int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
                         int order = Integer.parseInt(orderEditText.getText().toString()) - 1;

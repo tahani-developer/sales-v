@@ -11,7 +11,7 @@ public class Payment {
     private int companyNumber;
     private int voucherNumber;
     private String payDate;
-    private int custNumber;
+    private String custNumber;
     private String custName;
     private double amount;
     private String remark;
@@ -29,7 +29,7 @@ public class Payment {
 
     // constructor for payment
     public Payment(int companyNumber, int voucherNumber, int saleManNumber,
-                   String payDate, String remark, double amount, int isPosted, int custNumber ,
+                   String payDate, String remark, double amount, int isPosted, String custNumber ,
                    String custName,int payMethod , int year) {
         this.companyNumber = companyNumber;
         this.voucherNumber = voucherNumber;
@@ -74,11 +74,11 @@ public class Payment {
         this.companyNumber = companyNumber;
     }
 
-    public int getCustNumber() {
+    public String getCustNumber() {
         return custNumber;
     }
 
-    public void setCustNumber(int custNumber) {
+    public void setCustNumber(String custNumber) {
         this.custNumber = custNumber;
     }
 

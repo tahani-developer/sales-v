@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
@@ -72,6 +74,7 @@ public class SalesInvoice extends Fragment {
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
     boolean clicked = false;
+    String itemsString = "" ;
 
     public static Voucher voucher;
     public static List<Item> itemsList;
@@ -339,7 +342,7 @@ public class SalesInvoice extends Fragment {
                     }
                 });
 
-                builder.setNegativeButton(getResources(). getString(R.string.app_cancel), null);
+                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
                 builder.create().
 
                         show();
@@ -421,6 +424,8 @@ public class SalesInvoice extends Fragment {
         totalTaxValue = 0;
         netTotal = 0;
         totalDiscount = 0;
+        items.clear();
+        itemsList.clear();
         calculateTotals();
 
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
@@ -508,6 +513,17 @@ public class SalesInvoice extends Fragment {
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
+        subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
+        taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
+        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
+        discTextView.setText(convertToEnglish(discTextView.getText().toString()));
+
+    }
+
+    public String convertToEnglish(String value)
+    {
+        String newValue =   (((((((((((value+"").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
     }
 
     public double getItemsTotal() {
@@ -521,6 +537,21 @@ public class SalesInvoice extends Fragment {
     }
 
     void findBT() {
+
+        itemsString ="";
+        for (int j = 0; j < itemsList.size(); j++) { // don't know why is it here :/
+            String amount = ""+ (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+            amount = convertToEnglish(amount);
+
+            String row = itemsList.get(j).getItemName() + "                                             " ;
+            row = row.substring(0, 21)  + itemsList.get(j).getQty() + row.substring(21, row.length());
+            row = row.substring(0, 31)  + itemsList.get(j).getUnit() + row.substring(31, row.length());
+            row = row.substring(0, 41)  + itemsList.get(j).getPrice() + row.substring(41, row.length());
+            row = row.substring(0, 52)  + new DecimalFormat("#.##").format(Double.valueOf(amount));
+            row = row.trim();
+            itemsString = itemsString + "\n" + row  ;
+
+        }
 
         try {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -650,34 +681,111 @@ public class SalesInvoice extends Fragment {
     void sendData() throws IOException {
         try {
 
-            // the text typed by the user
-            String msg = "";
-
-            msg += " " + "\n" +
-                    "_______________________" + "\n" +
-                    "ملاحظة: " + voucher.getRemark() + "\n" +
-                    "الضريبة: " + voucher.getTax() + "  النت: " + voucher.getNetSales() + "\n" +
-                    "المجموع الجزئي: " + voucher.getSubTotal() + "  الخصم: " + voucher.getVoucherDiscount() + "\n" + "\n";
-
-            for (int i = 0; i < itemsList.size(); i++) {
-                double amount = itemsList.get(i).getQty() * itemsList.get(i).getPrice() - itemsList.get(i).getDisc();
-                String text = "السلعة:" + itemsList.get(i).getItemName() + " الكمية:" + itemsList.get(i).getQty() + " الزيادة:" +
-                        itemsList.get(i).getBonus() + " المجموع:" + amount;
-                msg += text + "\n";
-            }
-
-            msg += "طريقة الدفع : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" +
-                    "اسم العميل: " + voucher.getCustName() + "\n" +
-                    "\n" + "رقم الفاتورة : " + voucher.getVoucherNumber() + "   التاريخ: " + voucher.getVoucherDate() + "\n";
-
-
-            Arabic864 arabic = new Arabic864();
-            byte[] arabicArr = arabic.Convert(msg, false);
-
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
-            for (int i = 0; i <= numOfCopy; i++)
-                mmOutputStream.write(arabicArr);
+            CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+            // the text typed by the user
+//            String msg = "";
+//
+//            for (int i = 1; i < numOfCopy; i++) {
+//                msg +=  "       " + "\n" +
+//                        "       " + "\n" +
+//                        "----------------------------------------------" + "\n" +
+//                        "       " + "\n" +
+//                        "المستلم : ________________ التوقيع : __________" + "\n" +
+//                        "       " + "\n" +
+//                        "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n" +
+//                        "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n" +
+//                        "الصافي   : " + voucher.getNetSales() + "\n" +
+//                        "الضريبة  : " + voucher.getTax() + "\n" +
+//                        "الخصم    : " + voucher.getVoucherDiscount() + "\n" +
+//                        "المجموع  : " + voucher.getSubTotal() + "\n" +
+//                        "       " + "\n" +
+//                        "----------------------------------------------" + "\n";
+//
+//                for (int j = 0; j < itemsList.size(); j++) {
+//                    double amount = itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc();
+//
+//                    String row = itemsList.get(j).getItemName() + "                                             " ;
+//                    row = row.substring(0, 21)  + itemsList.get(j).getQty() + row.substring(21, row.length());
+//                    row = row.substring(0, 31)  + itemsList.get(j).getUnit() + row.substring(31, row.length());
+//                    row = row.substring(0, 41)  + itemsList.get(j).getPrice() + row.substring(41, row.length());
+//                    row = row.substring(0, 52)  + Double.valueOf(new DecimalFormat("#.##").format(amount));
+//                    row = row.trim();
+//
+//                    msg += row ;
+//                }
+//                printCustom(msg + "\n", 0, 2);
+//
+//                msg =  "----------------------------------------------" + "\n" +
+//                        " السلعة              " + "الكمية   "  + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" +
+//                        "----------------------------------------------" + "\n" +
+//                        "       " + "\n" +
+//                        "طريقة الدفع: " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" +
+//                        "ملاحظة: " + voucher.getRemark() + "\n" +
+//                        "اسم العميل: " + voucher.getCustName() + "\n" +
+//                        "       " + "\n" +
+//                        "رقم الفاتورة: " + voucher.getVoucherNumber() + "         التاريخ: " + voucher.getVoucherDate() + "\n" +
+//                        "----------------------------------------------" + "\n" +
+//                        "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+//                        companyInfo.getCompanyName()+ "\n" +
+//                        "       " + "\n" +
+//                        "       " ;
+//
+//                printCustom(msg + "\n", 0, 2);
+//
+//            }
+//
 
+            for (int i = 1; i <= numOfCopy; i++) {
+                String voucherTyp ="";
+                switch (voucher.getVoucherType()){
+                    case 504 :
+                        voucherTyp = "فاتورة بيع";
+                        break;
+                    case 506 :
+                        voucherTyp = "فاتورة مرتجعات";
+                        break;
+                    case 508 :
+                        voucherTyp = "طلب جديد";
+                        break;
+                }
+                printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
+                printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
+                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
+                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
+                printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);
+                printCustom("نوع الفاتورة : " + voucherTyp + "\n" , 1, 2);
+                printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" , 1, 2);
+                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                printCustom(" السلعة              " + "الكمية   "  + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" , 0, 2);
+                printCustom("----------------------------------------------" + "\n" , 1, 2);
+
+                printCustom(itemsString + "\n", 0, 2);
+
+                printCustom("----------------------------------------------" + "\n" , 1, 2);
+
+                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
+                printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
+                printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
+                printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
+                printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
+                printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
+                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("المستلم : ________________ التوقيع : __________" +"\n", 1, 2);
+                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                printCustom("\n" , 1, 2);
+                printCustom("\n" , 1, 2);
+
+                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+            }
             closeBT();
             // tell the user data were sent
 //                myLabel.setText("Data Sent");
@@ -687,6 +795,58 @@ public class SalesInvoice extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //print custom
+    private void printCustom(String msg, int size, int align) {
+        //Print config "mode"
+        byte[] cc = new byte[]{0x1B, 0x21, 0x03};  // 0- normal size text
+        //byte[] cc1 = new byte[]{0x1B,0x21,0x00};  // 0- normal size text
+        byte[] bb = new byte[]{0x1B, 0x21, 0x08};  // 1- only bold text
+        byte[] bb2 = new byte[]{0x1B, 0x21, 0x20}; // 2- bold with medium text
+        byte[] bb3 = new byte[]{0x1B, 0x21, 0x10}; // 3- bold with large text
+        try {
+            switch (size) {
+                case 0:
+                    mmOutputStream.write(cc);
+                    break;
+                case 1:
+                    mmOutputStream.write(bb);
+                    break;
+                case 2:
+                    mmOutputStream.write(bb2);
+                    break;
+                case 3:
+                    mmOutputStream.write(bb3);
+                    break;
+            }
+
+            switch (align) {
+                case 0:
+                    //left align
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_LEFT);
+                    break;
+                case 1:
+                    //center align
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    break;
+                case 2:
+                    //right align
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_RIGHT);
+                    break;
+            }
+
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+            mmOutputStream.write(arabicArr);
+
+//            outputStream.write(PrinterCommands.LF);
+            //outputStream.write(cc);
+            //printNewLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // Close the connection to bluetooth printer.

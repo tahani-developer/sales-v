@@ -65,9 +65,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.category.setText("" + items.get(holder.getAdapterPosition()).getCategory());
         holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
-        holder.price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
+        holder.price.setVisibility(View.INVISIBLE);
+        holder.pricee.setVisibility(View.INVISIBLE);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +83,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
                 final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
                 final TextView price = (TextView) dialog.findViewById(R.id.price);
+                final TextView pricee = (TextView) dialog.findViewById(R.id.pricee);
                 final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
@@ -91,7 +93,8 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
-                price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
+                price.setVisibility(View.INVISIBLE);
+                pricee.setVisibility(View.INVISIBLE);
 
                 DatabaseHandler mHandler = new DatabaseHandler(context);
                 List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
@@ -110,7 +113,8 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                         else {
                             AddItemsStockFragment obj = new AddItemsStockFragment();
                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                    holder.tax.getText().toString(), unit.getSelectedItem().toString(), unitQty.getText().toString(), price.getText().toString(),
+                                    holder.tax.getText().toString(), unit.getSelectedItem().toString(), unitQty.getText().toString(),
+                                    ""+items.get(holder.getAdapterPosition()).getPrice(),
                                     bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
 
                             if (added) {
@@ -138,7 +142,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
         LinearLayout linearLayout;
         CardView cardView;
-        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode;
+        TextView itemNumber, itemName, tradeMark, category, unitQty, pricee, price, tax, barcode;
 
         public viewHolder(View itemView) {
             super(itemView);
@@ -149,6 +153,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
             tradeMark = itemView.findViewById(R.id.textViewTradeMark);
             category = itemView.findViewById(R.id.textViewCategory);
             unitQty = itemView.findViewById(R.id.textViewUnit_qty);
+            pricee = itemView.findViewById(R.id.textViewPricee);
             price = itemView.findViewById(R.id.textViewPrice);
             tax = itemView.findViewById(R.id.textViewTax);
             barcode = itemView.findViewById(R.id.textViewBarcode);

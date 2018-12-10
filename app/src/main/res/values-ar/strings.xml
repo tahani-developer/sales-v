@@ -1,0 +1,229 @@
+<resources>
+    <string name="app_name">نظام الصقور للمندوبين</string>
+    <string name="app_username">اسم المستخدم</string>
+    <string name="app_password">كلمة السر</string>
+    <string name="app_dataManagement">ادارة البيانات</string>
+    <string name="app_activities">العمليات</string>
+    <string name="app_reports">التقارير</string>
+    <string name="app_sales_inv">فاتورة البيع</string>
+    <string name="app_ret_inv">فاتورة المرتجعات</string>
+    <string name="app_cust_order">طلب جديد</string>
+    <string name="app_request">طلب المخزون</string>
+    <string name="app_imp_data">استيراد البيانات</string>
+    <string name="app_exp_data">تصدير البيانات</string>
+    <string name="app_clear_local">مسح البيانات</string>
+    <string name="app_cash_report">تقرير الكاش</string>
+    <string name="app_daily_sales_s">التقرير المختصر للمبيعات اليومية</string>
+    <string name="app_daily_sales_d">التقرير المفصل للمبيعات اليومية</string>
+    <string name="app_stock_onhand">تقرير المخزون في اليد</string>
+    <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
+    <string name="app_receipt">المبيعات</string>
+    <string name="title_activity_main">الشاشة الرئيسية</string>
+    <string name="app_sign_out">نهاية اليوم</string>
+    <string name="customers_locations">موقع العميل</string>
+    <string name="app_day_start">بداية اليوم</string>
+    <string name="app_cust_no">حساب العميل</string>
+    <string name="app_sign_in_visit">دخول العميل</string>
+    <string name="app_sign_out_visit">خروج العميل</string>
+
+    <string name="app_select_cust">الرجاء اختيار العميل</string>
+    <string name="app_enter_cust_code">ادخل حساب العميل</string>
+    <string name="app_Confirm">تأكيد</string>
+    <string name="app_search">بحث</string>
+    <string name="app_name_tv">الاسم</string>
+    <string name="app_select_customer">اختر العميل</string>
+    <string name="app_contact_no">الرقم</string>
+    <string name="app_no_cust">لم يتم اختيار العميل</string>
+    <string name="customer_name" />
+    <string name="app_cust_name">اسم العميل</string>
+
+    <string name="navigation_drawer_open">افتح النافذة الجانبية</string>
+    <string name="navigation_drawer_close">اغلق النافذة الجانبية</string>
+
+    <string name="action_add_cust">اضف عميل</string>
+    <string name="action_settings">الاعدادات</string>
+    <string name="action_company_info">معلومات الشركة</string>
+    <string name="title_activity_activities">العمليات</string>
+
+    <string name="cust_name">اسم العميل</string>
+    <string name="app_trans_kind">نوع الفاتورة :</string>
+    <string name="payemtnTerm">طريقة الدفع :</string>
+    <string name="app_cash">كاش  </string>
+    <string name="app_credit">ذمم</string>
+    <string name="app_remark">ملاحظة</string>
+    <string name="app_sub_total">المجموع الجزئي</string>
+    <string name="app_disc">الخصم : </string>
+    <string name="app_tax">الضريبة : </string>
+    <string name="app_net_sales">الصافي : </string>
+    <string name="total_qty">الكمية كاملة : </string>
+
+
+    <string name="app_item_no">رقم المادة</string>
+    <string name="app_desc">الوصف</string>
+    <string name="app_qty">العدد</string>
+    <string name="app_price">السعر</string>
+    <string name="app_line_disc">الخصم</string>
+    <string name="app_tax_perc">نسبة الضريبة</string>
+    <string name="app_amount">المجموع</string>
+    <string name="app_zero">0.000</string>
+    <string name="app_conf_invKindT">تغيير نوع الفاتورة</string>
+    <string name="app_conf_invKindM">هل انت متأكد من تغيير اسم الفاتورة ؟</string>
+    <string name="app_yes">نعم</string>
+    <string name="app_no">لا</string>
+    <string name="app_invoice">فاتورة</string>
+    <string name="app_receiveFrom">تم الاستلام من</string>
+    <string name="app_receiptDetails">تفاصيل الفاتورة</string>
+    <string name="app_paymentDetails">تفاصيل البيع</string>
+    <string name="app_paymentType">نوع البيع</string>
+    <string name="app_cheque">شيك</string>
+    <string name="app_cheque_no">رقم الشيك</string>
+    <string name="app_cheque_date">تاريخ الشيك</string>
+    <string name="app_bank_name">اسم البنك</string>
+    <string name="app_cheq_no">رقم الشيك</string>
+    <string name="app_cheq_date">تاريخ الشيك</string>
+    <string name="app_cheq_val">قيمة الشيك</string>
+    <string name="app_item_code">الكود</string>
+    <string name="app_unit">الوحدة</string>
+    <string name="app_qty_on_hand">الكمية المتوفرة</string>
+    <string name="net_qty">صافي الكمية</string>
+    <string name="app_bonus">المجاني</string>
+    <string name="app_add_to_list">اضافة الى القائمة</string>
+    <string name="app_done">تم</string>
+
+    <string name="app_cust_balance">رصيد العميل</string>
+    <string name="app_max_debit">حد الدين</string>
+    <string name="app_avail_debit">امكانية الدين</string>
+    <string name="app_last_inv_date">تاريخ اخر فاتورة</string>
+    <string name="app_total_cust_sale">مجموع مشتريات العميل</string>
+    <string name="app_ok">موافق</string>
+    <string name="app_add_items">اضافة مادة</string>
+    <string name="app_update_items">تعديل المادة</string>
+    <string name="app_cust_info">معلومات العميل</string>
+    <string name="app_item_add">تمت الاضافة بنجاح</string>
+    <string name="app_fail_to_add_item">لم يتم اضافة المادة , تأكد من مدخلاتك</string>
+    <string name="app_select_option">اختر خيارا</string>
+    <string name="app_cancel">الغاء</string>
+    <string name="app_confirm_dialog">تأكيد</string>
+    <string name="app_confirm_dialog_msg">هل انت متأكد من اغلاق النافذة ؟</string>
+    <string name="app_confirm_dialog_clear">هل تريد مسح كل شيء ؟</string>
+    <string name="app_confirm_dialog_save">هل انت متأكد من حفظ البيانات ؟</string>
+    <string name="app_confirm_dialog_clear_item">هل تريد حذف هذة المادة ؟</string>
+    <string name="app_disc_type">نوع الخصم</string>
+    <string name="app_disc_type1">قيمة</string>
+    <string name="app_disc_type2">نسبة</string>
+    <string name="app_disc_value">قيمة الخصم</string>
+    <string name="app_disc_l">الخصم</string>
+    <string name="app_total">المجموع</string>
+
+    <string name="customer_log_report">تقرير دخول العميل</string>
+    <string name="transactions_report">تقرير العمليات</string>
+    <string name="vouchers_report">تقرير الفواتير</string>
+    <string name="items_report">تقرير المواد</string>
+    <string name="stock_request_vouchers_report">تقرير فواتير طلب المخزون</string>
+    <string name="stock_request_items_report">تقرير مواد طلب المخزون</string>
+    <string name="payments_details_report">تقرير تفاصيل المبيعات</string>
+    <string name="stock_request_report">تقرير طلب المخزون</string>
+
+    <string name="SALES_MAN_ID">رقم المندوب التسلسلي</string>
+    <string name="CUS_CODE">كود العميل</string>
+    <string name="CUS_NAME">اسم العميل</string>
+    <string name="CHECK_IN_DATE">تاريخ الدخول</string>
+    <string name="CHECK_IN_TIME">وقت الدخول</string>
+    <string name="CHECK_OUT_DATE">تاريخ الخروج</string>
+    <string name="CHECK_OUT_TIME">وقت الخروج</string>
+    <string name="STATUS">الحالة</string>
+
+    <string name="server_ip">رقم ال ip</string>
+    <string name="tax_calc_kind">نوع حساب الضريبة</string>
+    <string name="exclude">خاضع</string>
+    <string name="include">شامل</string>
+    <string name="price_by_customer">سعر المادة حسب العميل</string>
+    <string name="use_weight_case">استخدام الوزن</string>
+    <string name="allow_sale_with_minus">السماح ببيع السالب</string>
+    <string name="can_change_price">امكانية تغيير السعر</string>
+    <string name="num_of_copy">عدد النسخ</string>
+    <string name="vouchers_serial">تسلسل الفواتير</string>
+    <string name="invoice_serial_from">الفاتورة</string>
+    <string name="return_serial_from">المرتجع</string>
+    <string name="order_serial_from">الطلب</string>
+    <string name="payments_serial_from">تسلسل المبيعات من</string>
+    <string name="save">حفظ</string>
+    <string name="company_number">اسم الشركة</string>
+    <string name="voucher_number">رقم الفاتورة</string>
+    <string name="voucher_type">نوع الفاتورة</string>
+    <string name="voucher_date">تاريخ الفاتورة</string>
+    <string name="sale_man_number">رقم المندوب</string>
+    <string name="voucher_discount">خصم الفاتورة</string>
+    <string name="voucher_discount_Percent">نسبة الخصم</string>
+    <string name="remark">ملاحظة</string>
+    <string name="pay_method">طريقة الدفع</string>
+    <string name="is_posted">تم النشر</string>
+    <string name="sub_total">المجموع الجزئي</string>
+    <string name="tax">الضريبة</string>
+    <string name="net_sales">الصافي</string>
+
+    <string name="pay_date">تاريخ البيع</string>
+    <string name="check_number">رقم الشيك</string>
+    <string name="check_date">تاريخ الشيك</string>
+    <string name="check_value">قيمة الشيك</string>
+
+    <string name="from_date">من تاريخ</string>
+    <string name="to_date">الى تاريخ</string>
+    <string name="by_voucher_kind">حسب نوع الفاتورة</string>
+    <string name="by_payment_Term">حسب طريقة الدفع</string>
+    <string name="customer_number">رقم العميل</string>
+    <string name="preview">اظهار</string>
+    <string name="item_number">رقم المادة</string>
+    <string name="item_name">اسم المادة</string>
+    <string name="unit_qty">الكمية</string>
+    <string name="total_sold_qty">مجموع الكمية المباعة</string>
+    <string name="total_bonus_qty">مجموع الكمية المجانية</string>
+    <string name="total_sales_noTax">مجموع المبيعات(بدون ضريبة)</string>
+    <string name="items">المواد</string>
+
+    <string name="trade_mark">Trade Mark</string>
+    <string name="category">الفئة</string>
+    <string name="barcode">الباركود</string>
+    <string name="box_packing">صندوق التعبئة</string>
+    <string name="update">التحديث</string>
+
+    <string name="company_name">اسم الشركة: </string>
+    <string name="company_tel">هاتف الشركة</string>
+    <string name="tax_no">الرقم الضريبي: </string>
+    <string name="logo">الشعار: </string>
+
+    <!--  Button -->
+    <string name="bt_search_btn">البحث عن اجهزة البلوثوث</string>
+    <string name="bt_stop_search_btn">"ايقاف البحث عن اجهزة البلوتوث"</string>
+    <!--  Tab -->
+    <string name="bt_tab">البلوتوث</string>
+    <!--  Message -->
+    <string name="bt_disconn_msg">"البلوتوث غير متصل"</string>
+    <string name="bt_conn_msg">"البلوتوث متصل"</string>
+    <string name="bt_conn_fail_msg">"فشل الاتصال بالبلوتوث"</string>
+    <string name="bt_notconn_msg">"البلوتوث غير متصل"</string>
+    <string name="dev_check_disconnect">"تأكد من عدم الاتصال"</string>
+    <string name="reconnect_msg">"اعادة الاتصال بطابعة البلوتوث ؟"</string>
+    <string name="connect_cancel">"الغاء"</string>
+    <string name="dev_conn_btn">"اتصال"</string>
+    <string name="dev_disconn_btn">"الغاء الاتصال"</string>
+    <!-- Message -->
+    <string name="connecting_msg">"جار الاتصال"</string>
+    <string name="dev_check_msg">"تأكد من حالة الجهاز و الاعدادات"</string>
+
+    <string name="add_check">اضافة شيك</string>
+
+    <string-array name="app_paymentTypeList">
+        <item>كاش</item>
+        <item>شيك</item>
+    </string-array>
+
+    <string-array name="list_items_dialog">
+        <item>حذف</item>
+        <item>مسح الجميع</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_splashscreen">Splashscreen</string>
+</resources>

@@ -118,7 +118,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                         if (!price.getText().toString().equals("") && !price.getText().toString().equals("0")) {
 
-                            Boolean check = check_Discount(unit, unitQty, price, bonus, discount, radioGroup);
+                            Boolean check = check_Discount(unitWeight, unitQty, price, bonus, discount, radioGroup);
                             if (!check)
                                 Toast.makeText(view.getContext(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
                             else {
@@ -196,20 +196,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    private Boolean check_Discount(Spinner unitEditText, EditText qtyEditText, TextView priceEditText,
+    private Boolean check_Discount(EditText unitEditText, EditText qtyEditText, TextView priceEditText,
                                    EditText bonusEditText, EditText discEditText, RadioGroup discTypeRadioGroup) {
         Boolean check = true;
+
+        if (unitEditText.getText().toString().equals(""))
+            unitEditText.setText("0");
+        else
+            unitEditText.setText(convertToEnglish(unitEditText.getText().toString()));
+
         if (qtyEditText.getText().toString().equals(""))
             qtyEditText.setText("0");
+        else
+            qtyEditText.setText(convertToEnglish(qtyEditText.getText().toString()));
 
         if (priceEditText.getText().toString().equals(""))
             priceEditText.setText("0");
+        else
+            priceEditText.setText(convertToEnglish(priceEditText.getText().toString()));
 
         if (discEditText.getText().toString().equals(""))
             discEditText.setText("0");
+        else
+            discEditText.setText(convertToEnglish(discEditText.getText().toString()));
 
         if (bonusEditText.getText().toString().equals(""))
             bonusEditText.setText("0");
+        else
+            bonusEditText.setText(convertToEnglish(bonusEditText.getText().toString()));
 
         Float totalValue = (Float.parseFloat(qtyEditText.getText().toString())) * (Float.parseFloat(priceEditText.getText().toString()));
         Float discount = Float.parseFloat(discEditText.getText().toString());
@@ -226,4 +240,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return check;
     }
 
+    public String convertToEnglish(String value)
+    {
+        String newValue =   (((((((((((value+"").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
 }

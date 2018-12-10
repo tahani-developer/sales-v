@@ -257,12 +257,12 @@ public class bluetoothprinter extends Activity {
                 msg +=  " " + "\n" +
                         "_______________________" + "\n" +
                         "ملاحظة: " + voucher.getRemark() +"\n" +
-                        "الضريبة: "+voucher.getTax() + "  النت: "+voucher.getNetSales()+"\n" +
-                "المجموع الجزئي: "+voucher.getSubTotal() + "  الخصم: "+voucher.getVoucherDiscount() +"\n" +"\n" ;
+                        "الضريبة: "+voucher.getTax() + "  الصافي: "+voucher.getNetSales()+"\n" +
+                "المجموع: "+voucher.getSubTotal() + "  الخصم: "+voucher.getVoucherDiscount() +"\n" +"\n" ;
 
                 for (int i = 0; i < item.size(); i++) {
                     double amount = item.get(i).getQty() * item.get(i).getPrice() - item.get(i).getDisc();
-                    String text = "السلعة:"+item.get(i).getItemName() + " الكمية:" + item.get(i).getQty() + " الزيادة:" +
+                    String text = "السلعة:"+item.get(i).getItemName() + " الكمية:" + item.get(i).getQty() + " مجاني:" +
                             item.get(i).getBonus() + " المجموع:" + amount;
                     msg += text + "\n";
                 }

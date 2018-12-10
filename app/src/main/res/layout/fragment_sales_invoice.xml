@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:background="@color/layer3"
     android:orientation="vertical"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="10dp"
-    android:paddingStart="20dp"
-    android:paddingLeft="20dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="20dp"
-    android:paddingRight="20dp"
     android:paddingBottom="20dp"
+    android:paddingEnd="20dp"
+    android:paddingHorizontal="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingStart="20dp"
+    android:paddingTop="10dp"
+    android:paddingVertical="10dp"
     tools:context="com.dr7.salesmanmanager.SalesInvoice"
 
     >
@@ -25,35 +25,36 @@
         android:layout_marginBottom="5dp"
         android:background="@color/layer2"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
 
         <ImageButton
             android:id="@+id/newImgBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@drawable/new_inv" />
 
         <ImageButton
             android:id="@+id/saveInvoiceData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@drawable/save_btn" />
 
         <ImageButton
             android:id="@+id/discButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
-            android:layout_marginRight="20dp"
             android:text="@string/app_disc_l" />
 
         <ImageButton
             android:id="@+id/addItemImgButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:background="@drawable/add_items" />
 
     </LinearLayout>
@@ -79,8 +80,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -89,8 +90,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:gravity="center_vertical"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
@@ -101,8 +102,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -111,7 +112,7 @@
             android:id="@+id/custInfoImgBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@drawable/cust_info" />
 
 
@@ -119,7 +120,7 @@
             android:id="@+id/balanceImgBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginHorizontal="10dp"
             android:layout_marginTop="3dp"
             android:background="@drawable/balance_img" />
 
@@ -251,17 +252,16 @@
         android:layout_height="wrap_content"
         android:background="@color/layer4"
         android:orientation="horizontal"
+        android:paddingBottom="1dp"
         android:paddingLeft="10dp"
-        android:paddingTop="1dp"
         android:paddingRight="10dp"
-        android:paddingBottom="1dp">
+        android:paddingTop="1dp">
 
         <TextView
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:gravity="left"
             android:text="@string/app_item_no"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -272,7 +272,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
-            android:gravity="left"
             android:text="@string/app_desc"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -282,7 +281,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/app_qty"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -292,7 +290,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -302,7 +299,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/app_bonus"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -312,7 +308,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/app_line_disc"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -323,7 +318,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
             android:text="@string/app_amount"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -336,8 +330,7 @@
         android:layout_width="match_parent"
         android:layout_height="215dp"
         android:layout_gravity="fill"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/itemsListView"
@@ -348,99 +341,124 @@
 
     </LinearLayout>
 
-    <GridLayout
+    <LinearLayout
         android:id="@+id/totals"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="15dp"
         android:columnCount="8">
 
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
-            android:text="@string/app_sub_total"
-            android:textColor="@color/totals_color"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp">
 
-        <TextView
-            android:id="@+id/subTotalTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_sub_total"
+                android:textColor="@color/totals_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subTotalTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="0.000" />
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp">
 
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_disc"
+                android:textColor="@color/totals_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="@string/app_disc" />
+
+            <TextView
+                android:id="@+id/discTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="@string/app_disc"
-            android:textColor="@color/totals_color"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="@string/app_disc" />
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp">
 
-        <TextView
-            android:id="@+id/discTextView"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_tax"
+                android:textColor="@color/totals_color"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="@string/app_tax" />
+
+            <TextView
+                android:id="@+id/taxTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="0.000" />
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="20dp">
 
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="@string/app_tax"
-            android:textColor="@color/totals_color"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="@string/app_tax" />
+            <TextView
+                android:id="@+id/textView110"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_net_sales"
+                android:textColor="@color/totals_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/taxTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="0.000" />
-
-        <TextView
-            android:id="@+id/textView110"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:text="@string/app_net_sales"
-            android:textColor="@color/totals_color"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/netSalesTextView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            tools:text="0.000" />
-
-
-    </GridLayout>
+            <TextView
+                android:id="@+id/netSalesTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

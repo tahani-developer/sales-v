@@ -23,7 +23,6 @@
             android:text="@string/app_item_no"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
         <TextView
             android:id="@+id/DescTextView"
@@ -33,7 +32,6 @@
             android:text="@string/app_desc"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
         <TextView
             android:id="@+id/qtyTextView"
@@ -43,7 +41,6 @@
             android:text="@string/app_qty"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
         <TextView
             android:id="@+id/priceTextView"
@@ -53,7 +50,6 @@
             android:text="@string/app_price"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
 
         <TextView
@@ -64,7 +60,6 @@
             android:text="@string/app_bonus"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
 
         <TextView
@@ -75,7 +70,6 @@
             android:text="@string/app_line_disc"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
         <TextView
             android:id="@+id/amountTextView"
@@ -85,7 +79,6 @@
             android:text="@string/app_amount"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
-            android:gravity="left"
             />
     </LinearLayout>
 </LinearLayout>

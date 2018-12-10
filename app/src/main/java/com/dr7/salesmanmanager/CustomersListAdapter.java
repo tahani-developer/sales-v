@@ -2,12 +2,16 @@ package com.dr7.salesmanmanager;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Customer;
 
@@ -23,12 +27,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private Context context;
     private List<Customer> mOriginalValues;
     private List<Customer> custList;
+    private CustomerListShow customerListShow;
 
-    public CustomersListAdapter(Context context, List<Customer> custList)
+    public CustomersListAdapter( CustomerListShow customerListShow , Context context, List<Customer> custList)
     {
         this.context = context;
         this.mOriginalValues = custList;
         this.custList = custList;
+        this.customerListShow = customerListShow;
     }
 
     public void setItemsList(List<Customer> custList)
@@ -52,22 +58,48 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     }
 
     private class ViewHolder {
+        LinearLayout linearLayout;
         TextView custAccountTextView;
         TextView custNameTextView;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
 
-        ViewHolder holder = new ViewHolder();
+        final ViewHolder holder = new ViewHolder();
         view = View.inflate(context, R.layout.customers_item,null);
 
+        holder.linearLayout = (LinearLayout) view.findViewById(R.id.LinearLayout01);
         holder.custAccountTextView = (TextView) view.findViewById(R.id.custAccTextView);
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
 
 
         holder.custAccountTextView.setText(""+custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomerListShow.Customer_Name = custList.get(i).getCustName();
+                CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
+                CustomerListShow.CashCredit = custList.get(i).getCashCredit();
+                CustomerListShow.PriceListId = custList.get(i).getPriceListId();
+
+                if(custList.get(i).getIsSuspended() == 1){
+                    Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 180);
+                    ViewGroup group = (ViewGroup) toast.getView();
+                    TextView messageTextView = (TextView) group.getChildAt(0);
+                    messageTextView.setTextSize(25);
+                    toast.show();
+                } else {
+                    CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
+                    customerCheckInFragment.settext1();
+                }
+
+                customerListShow.dismiss();
+            }
+        });
 
         return view;
     }
@@ -84,7 +116,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
                 custList = (ArrayList<Customer>) results.values; // has the filtered values
                 notifyDataSetChanged();  // notifies the data with new filtered values
-                Log.e("here" , "*********1" + custList.get(0).getCustName());
+//                Log.e("here" , "*********1" + custList.get(0).getCustName());
             }
 
             @Override
@@ -120,7 +152,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     results.count = FilteredArrList.size();
                     results.values = FilteredArrList;
 
-                    Log.e("here" , "*********3" + FilteredArrList.get(0).getCustName());
+//                    Log.e("here" , "*********3" + FilteredArrList.get(0).getCustName());
                 }
                 return results;
             }

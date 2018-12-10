@@ -10,7 +10,7 @@ public class Transaction {
     //private variables
 
     int salesManId;
-    int cusCode;
+    String cusCode;
     String cusName;
     String checkInDate;
     String checkInTime;
@@ -22,7 +22,7 @@ public class Transaction {
     public Transaction() { }
 
     // constructor
-    public Transaction(int salesManId , int cusCode, String cusName, String checkInDate,
+    public Transaction(int salesManId , String cusCode, String cusName, String checkInDate,
                        String checkInTime, String checkOutDate, String checkOutTime, int status) {
         this.salesManId = salesManId ;
         this.cusCode = cusCode ;
@@ -42,11 +42,11 @@ public class Transaction {
         this.salesManId = salesManId;
     }
 
-    public int getCusCode() {
+    public String getCusCode() {
         return cusCode;
     }
 
-    public void setCusCode(int cusCode) {
+    public void setCusCode(String cusCode) {
         this.cusCode = cusCode;
     }
 

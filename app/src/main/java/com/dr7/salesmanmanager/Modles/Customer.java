@@ -7,7 +7,7 @@ package com.dr7.salesmanmanager.Modles;
 public class Customer {
 
     private int companyNumber ;
-    private int custId ;
+    private String custId ;
     private String custName ;
     private String address ;
     private int isSuspended ;
@@ -23,7 +23,7 @@ public class Customer {
 
     }
 
-    public Customer(int companyNumber, int custId, String custName, String address, int isSuspended,
+    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit,
                     String customerAccount, String customerName) {
 
@@ -40,7 +40,7 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public  Customer(int custId, String custName) {
+    public  Customer(String custId, String custName) {
         this.custId = custId;
         this.custName = custName;
     }
@@ -53,11 +53,11 @@ public class Customer {
         this.companyNumber = companyNumber;
     }
 
-    public int getCustId() {
+    public String getCustId() {
         return custId;
     }
 
-    public void setCustId(int custId) {
+    public void setCustId(String custId) {
         this.custId = custId;
     }
 

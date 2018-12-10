@@ -159,7 +159,7 @@ public class ImportJason extends AppCompatActivity{
 
                     Customer Customer = new Customer();
                     Customer.setCompanyNumber(finalObject.getInt("ComapnyNo"));
-                    Customer.setCustId(finalObject.getInt("CustID"));
+                    Customer.setCustId(finalObject.getString("CustID"));
                     Customer.setCustName(finalObject.getString("CustName"));
                     Customer.setAddress(finalObject.getString("Address"));
 //                    if (finalObject.getString("IsSuspended") == null)
@@ -171,11 +171,11 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
 
+                    Log.e("*****" , "hereeee" + finalObject.getString("CustID"));
                     customerList.add(Customer);
                 }
-                Log.e("*****" , "hereeee1" );
+
                 JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
-                Log.e("*****" , "hereeee2" );
                 itemUnitDetailsList.clear();
                 for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
                     JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
@@ -190,7 +190,6 @@ public class ImportJason extends AppCompatActivity{
                 }
 
                 JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
-                Log.e("*****" , "hereeee3" + parentArrayItems_Master.toString());
                 itemsMasterList.clear();
                 for (int i = 0; i < parentArrayItems_Master.length(); i++) {
                     JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);

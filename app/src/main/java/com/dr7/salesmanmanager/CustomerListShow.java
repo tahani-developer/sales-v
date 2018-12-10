@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,30 +85,32 @@ public class CustomerListShow extends DialogFragment {
 
         customerList = mHandler.getAllCustomers();
 
-        customersListAdapter = new CustomersListAdapter(getActivity(), customerList);
+        customersListAdapter = new CustomersListAdapter(CustomerListShow.this ,getActivity(), customerList);
         itemsListView.setAdapter(customersListAdapter);
 
         itemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Customer_Name = customerList.get(position).getCustName();
-                Customer_Account = customerList.get(position).getCustId() + "";
-                CashCredit = customerList.get(position).getCashCredit();
-                PriceListId = customerList.get(position).getPriceListId();
+//                LinearLayout linearLayout = (LinearLayout) parent.getChildAt(1);
+//                EditText editText = (EditText) linearLayout.getChildAt(1) ;
+//                Customer_Name = editText.getText().toString();
+//                Customer_Account = customerList.get(position).getCustId() + "";
+//                CashCredit = customerList.get(position).getCashCredit();
+//                PriceListId = customerList.get(position).getPriceListId();
+//
+//                if(customerList.get(position).getIsSuspended() == 1){
+//                    Toast toast = Toast.makeText(getActivity(), "This customer is susbended", Toast.LENGTH_LONG);
+//                    toast.setGravity(Gravity.CENTER, 0, 180);
+//                    ViewGroup group = (ViewGroup) toast.getView();
+//                    TextView messageTextView = (TextView) group.getChildAt(0);
+//                    messageTextView.setTextSize(25);
+//                    toast.show();
+//                } else {
+//                    CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
+//                    customerCheckInFragment.settext1();
+//                }
 
-                if(customerList.get(position).getIsSuspended() == 1){
-                    Toast toast = Toast.makeText(getActivity(), "This customer is susbended", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER, 0, 180);
-                    ViewGroup group = (ViewGroup) toast.getView();
-                    TextView messageTextView = (TextView) group.getChildAt(0);
-                    messageTextView.setTextSize(25);
-                    toast.show();
-                } else {
-                    CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
-                    customerCheckInFragment.settext1();
-                }
-
-                dismiss();
+//                dismiss();
             }
         });
 
@@ -143,7 +146,7 @@ public class CustomerListShow extends DialogFragment {
     }
 
 
-    void storeInDatabase() {
+    public void storeInDatabase() {
 
         mHandler.deleteAllCustomers();
 
@@ -243,7 +246,7 @@ public class CustomerListShow extends DialogFragment {
                     Customer Customer = new Customer();
 
                     Customer.setCompanyNumber(finalObject.getInt("ComapnyNo"));
-                    Customer.setCustId(finalObject.getInt("CustID"));
+                    Customer.setCustId(finalObject.getString("CustID"));
                     Customer.setCustName(finalObject.getString("CustName"));
                     Customer.setAddress(finalObject.getString("Address"));
 //                    if (finalObject.getString("IsSuspended") == null)
@@ -293,7 +296,7 @@ public class CustomerListShow extends DialogFragment {
             progressDialog.dismiss();
 
             if (result != null) {
-                customersListAdapter = new CustomersListAdapter(getActivity(), customerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this ,getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
                 storeInDatabase();
                 Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();

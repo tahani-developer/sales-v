@@ -71,10 +71,6 @@ public class CustomerLogReport extends AppCompatActivity {
             TableCustomerLogReport.addView(row);
         }
 
-
-
-        int k = transactionList.get(1).getCusCode() ;
-        Log.i(TAG, "***************************************" + k);
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
     }

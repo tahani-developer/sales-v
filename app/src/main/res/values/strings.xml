@@ -139,6 +139,8 @@
     <string name="include">Include</string>
     <string name="price_by_customer">Item Price By Customer</string>
     <string name="use_weight_case">Use Weight Case</string>
+    <string name="allow_sale_with_minus">Allow Sale With Minus</string>
+    <string name="can_change_price">Can Change Price</string>
     <string name="num_of_copy">Number Of Copy</string>
     <string name="vouchers_serial">Vouchers Serial</string>
     <string name="invoice_serial_from">invoice</string>
