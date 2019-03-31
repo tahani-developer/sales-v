@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,14 +19,14 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Reports.PaymentDetailsReport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +40,11 @@ public class AddItemsFragment2 extends DialogFragment {
     private static List<Item> List;
     private Item item;
     Button addToListButton, doneButton;
-    SearchView search ;
+    SearchView search;
     private ArrayList<String> itemsList;
-    private List<Item> jsonItemsList;
+    public static List<Item> jsonItemsList;
     RecyclerView recyclerView;
+    ListView verticalList;
     private float descPerc;
     boolean added = false;
 
@@ -84,9 +83,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
         final Spinner categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
-        categories.add(0 , "no filter");
+        categories.add(0, "no filter");
 
-        final ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
+        final ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, categories);
         categorySpinner.setAdapter(ad);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -95,14 +94,18 @@ public class AddItemsFragment2 extends DialogFragment {
         final RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
 
+//        verticalList = view.findViewById(R.id.verticalList);
+//        TestAdapter testAdapter = new TestAdapter(jsonItemsList, getActivity());
+//        verticalList.setAdapter(testAdapter);
+
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(!categorySpinner.getSelectedItem().toString().equals("no filter")){
-                    ArrayList <Item> filteredList = new ArrayList<>();
-                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
-                        if(jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (int k = 0; k < jsonItemsList.size(); k++) {
+                        if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(k));
                     }
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
@@ -131,10 +134,10 @@ public class AddItemsFragment2 extends DialogFragment {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
 
-                if(query != null && query.length() > 0){
-                    ArrayList <Item> filteredList = new ArrayList<>();
-                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
-                        if(jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
+                if (query != null && query.length() > 0) {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (int k = 0; k < jsonItemsList.size(); k++) {
+                        if (jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
                             filteredList.add(jsonItemsList.get(k));
                     }
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
@@ -172,7 +175,26 @@ public class AddItemsFragment2 extends DialogFragment {
 
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
-                           String price, String bonus, String discount, RadioGroup discTypeRadioGroup, Context context) {
+                           String price, String bonus, String discount, RadioGroup discTypeRadioGroup, CheckBox useWeight, Context context) {
+
+        SalesInvoice obj = new SalesInvoice();
+        boolean existItem = false;
+        for(int i = 0 ; i< obj.getItemsList().size() ; i++){
+            Log.e("***" , obj.getItemsList().get(i).getItemNo() + " " + itemNumber);
+            if(obj.getItemsList().get(i).getItemNo().equals(itemNumber)){
+                existItem = true;
+                break;
+            }
+        }
+        if(existItem) {
+            Toast toast = Toast.makeText(context, "This item has been added before !", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 180);
+            ViewGroup group = (ViewGroup) toast.getView();
+            TextView messageTextView = (TextView) group.getChildAt(0);
+            messageTextView.setTextSize(25);
+            toast.show();
+            return false;
+        }
 
         item = new Item();
         item.setItemNo(itemNumber);
@@ -221,23 +243,26 @@ public class AddItemsFragment2 extends DialogFragment {
             descPerc = ((item.getQty() * item.getPrice() *
                     (Float.parseFloat(discount.trim()) / 100)));
 
-                                                                                                                } catch (NumberFormatException e) {
+
+        } catch (NumberFormatException e) {
             item.setDisc(0);
             item.setDiscPerc("0");
         }
 
         try {
             if (item.getDiscType() == 0) {
-                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
+                item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
+//                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
             } else {
-                item.setAmount(Float.parseFloat(item.getUnit()) *item.getQty() * item.getPrice() - descPerc);
+//                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
+                item.setAmount(item.getQty() * item.getPrice() - descPerc);
             }
         } catch (NumberFormatException e) {
             item.setAmount(0);
         }
 
 
-        if ((!item.getItemName().equals("")) && item.getAmount() > 0) {
+        if ((!item.getItemName().equals("")) && item.getAmount() > 0 ) {
             List.add(item);
             Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 180);

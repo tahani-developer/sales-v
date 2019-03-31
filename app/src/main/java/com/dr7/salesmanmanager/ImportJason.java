@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -16,6 +14,7 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
+import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
@@ -23,10 +22,6 @@ import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +31,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -61,6 +54,7 @@ public class ImportJason extends AppCompatActivity{
     public static List<SalesManAndStoreLink> salesManAndStoreLinksList = new ArrayList<>();
     public static List<SalesMan> salesMenList = new ArrayList<>();
     public static List<CustomerPrice> customerPricesList = new ArrayList<>();
+    public static List<Offers> offersList = new ArrayList<>();
 
     public ImportJason(Context context){
         this.context = context ;
@@ -170,8 +164,8 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setCashCredit(finalObject.getInt("CashCredit"));
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
+                    Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
 
-                    Log.e("*****" , "hereeee" + finalObject.getString("CustID"));
                     customerList.add(Customer);
                 }
 
@@ -202,11 +196,13 @@ public class ImportJason extends AppCompatActivity{
                     item.setBarcode(finalObject.getString("Barcode"));
 //                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
                     item.setIsSuspended(0);
+                    item.setItemL(finalObject.getDouble("ItemL"));
 
                     itemsMasterList.add(item);
                 }
 
                 JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
+
                 priceListDpList.clear();
                 for (int i = 0; i < parentArrayPrice_List_D.length(); i++) {
                     JSONObject finalObject = parentArrayPrice_List_D.getJSONObject(i);
@@ -218,10 +214,11 @@ public class ImportJason extends AppCompatActivity{
                     item.setUnitId(finalObject.getString("UnitID"));
                     item.setPrice(finalObject.getDouble("Price"));
                     item.setTaxPerc(finalObject.getDouble("TaxPerc"));
+                    item.setMinSalePrice(finalObject.getDouble("MINPRICE"));
 
                     priceListDpList.add(item);
                 }
-
+                Log.e("priceList " , ""+ priceListDpList.get(0).getPrice());
                 JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
 
                 for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {
@@ -261,33 +258,34 @@ public class ImportJason extends AppCompatActivity{
                     item.setCompanyNo(finalObject.getInt("ComapnyNo"));
                     item.setSalesManNo(finalObject.getString("SalesManNo"));
                     item.setItemNo(finalObject.getString("ItemNo"));
-                    item.setQty(finalObject.getInt("Qty"));
+                    item.setQty(finalObject.getDouble("Qty"));
 
                     salesManItemsBalanceList.add(item);
                 }
 
-                JSONArray parentArraySalesmanAndStoreLink = parentObject.getJSONArray("SalesmanAndStoreLink");
-                salesManAndStoreLinksList.clear();
-                for (int i = 0; i < parentArraySalesmanAndStoreLink.length(); i++) {
-                    JSONObject finalObject = parentArraySalesmanAndStoreLink.getJSONObject(i);
+//                JSONArray parentArraySalesmanAndStoreLink = parentObject.getJSONArray("SalesmanAndStoreLink");
+//                salesManAndStoreLinksList.clear();
+//                for (int i = 0; i < parentArraySalesmanAndStoreLink.length(); i++) {
+//                    JSONObject finalObject = parentArraySalesmanAndStoreLink.getJSONObject(i);
+//
+//                    SalesManAndStoreLink item = new SalesManAndStoreLink();
+//                    item.setCompanyNo(finalObject.getInt("ComapnyNo"));
+//                    item.setSalesManNo(finalObject.getInt("SalesmanNo"));
+//                    item.setStoreNo(finalObject.getInt("StoreNo"));
+//
+//                    salesManAndStoreLinksList.add(item);
+//                }
 
-                    SalesManAndStoreLink item = new SalesManAndStoreLink();
-                    item.setCompanyNo(finalObject.getInt("ComapnyNo"));
-                    item.setSalesManNo(finalObject.getInt("SalesmanNo"));
-                    item.setStoreNo(finalObject.getInt("StoreNo"));
-
-                    salesManAndStoreLinksList.add(item);
-                }
-
-                JSONArray parentArraySalesMan = parentObject.getJSONArray("Sales_Team");
+                JSONArray parentArraySalesMan = parentObject.getJSONArray("SALESMEN");
                 salesMenList.clear();
                 for (int i = 0; i < parentArraySalesMan.length(); i++) {
                     JSONObject finalObject = parentArraySalesMan.getJSONObject(i);
 
                     SalesMan salesMan = new SalesMan();
-                    salesMan.setUserName(finalObject.getString("SalesManNo"));
-                    salesMan.setPassword(finalObject.getString("SalesManName"));
+                    salesMan.setPassword(finalObject.getString("USER_PASSWORD"));
+                    salesMan.setUserName(finalObject.getString("SALESNO"));
 
+                    Log.e("*******" , finalObject.getString("SALESNO"));
                     salesMenList.add(salesMan);
                 }
 
@@ -302,6 +300,24 @@ public class ImportJason extends AppCompatActivity{
                     price.setPrice(finalObject.getDouble("PRICE"));
 
                     customerPricesList.add(price);
+                }
+
+                JSONArray parentArrayOffers = parentObject.getJSONArray("VN_PROMOTION");
+                offersList.clear();
+                for (int i = 0; i < parentArrayOffers.length(); i++) {
+                    JSONObject finalObject = parentArrayOffers.getJSONObject(i);
+
+                    Offers offer = new Offers();
+                    offer.setPromotionID(finalObject.getInt("PROMOID"));
+                    offer.setPromotionType(finalObject.getInt("PROMOTYPE"));
+                    offer.setFromDate(finalObject.getString("BDTAE"));
+                    offer.setToDate(finalObject.getString("PEDTAE"));
+                    offer.setItemNo(finalObject.getString("ITEMCODE"));
+                    offer.setItemQty(finalObject.getDouble("PQTY"));
+                    offer.setBonusQty(finalObject.getDouble("BQTY"));
+                    offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
+
+                    offersList.add(offer);
                 }
 
 
@@ -385,10 +401,10 @@ public class ImportJason extends AppCompatActivity{
             mHandler.deleteAllPriceListD();
             mHandler.deleteAllPriceListM();
             mHandler.deleteAllSalesTeam();
-            mHandler.deleteAllSalesManItemsBalance();
             mHandler.deleteAllSalesmanAndStoreLink();
             mHandler.deleteAllSalesmen();
             mHandler.deleteAllCustomerPrice();
+            mHandler.deleteAllOffers();
 
             for (int i = 0; i < customerList.size(); i++) {
                 mHandler.addCustomer(customerList.get(i));
@@ -413,8 +429,12 @@ public class ImportJason extends AppCompatActivity{
                 mHandler.addSales_Team(salesTeamList.get(i));
             }
 
-            for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
-                mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList.get(i));
+            if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
+                Log.e("In***" , " in");
+                mHandler.deleteAllSalesManItemsBalance();
+                for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
+                    mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList.get(i));
+                }
             }
 
             for (int i = 0; i < salesManAndStoreLinksList.size(); i++) {
@@ -427,6 +447,10 @@ public class ImportJason extends AppCompatActivity{
 
             for (int i = 0; i < customerPricesList.size(); i++) {
                 mHandler.addCustomerPrice(customerPricesList.get(i));
+            }
+
+            for (int i = 0; i < offersList.size(); i++) {
+                mHandler.addOffer(offersList.get(i));
             }
 
             return "Finish Store";

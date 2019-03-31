@@ -8,122 +8,119 @@
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
 
-   <TableLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:paddingEnd="200dp"
-       android:paddingRight="200dp">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="200dp"
+        android:paddingRight="200dp">
 
-       <TableRow
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="10dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-           <TextView
-               android:layout_width="220dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="@string/company_name"
-               android:textColor="@color/text_view_color"
-               android:textSize="20sp"
-               android:textStyle="bold" />
+            <TextView
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/company_name"
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-           <EditText
-               android:id="@+id/com_name"
-               android:layout_width="160dp"
-               android:layout_height="35dp"
-               android:layout_weight="1"
-               android:layout_marginLeft="15dp"
-               android:layout_marginStart="15dp"
-               android:background="@color/text_view_color"
-               android:padding="5dp"
-               android:textColor="@color/layer1" />
+            <EditText
+                android:id="@+id/com_name"
+                android:layout_width="160dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:padding="5dp"
+                android:textColor="@color/text_view_color" />
 
-       </TableRow>
+        </TableRow>
 
-       <TableRow
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="10dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-           <TextView
-               android:layout_width="220dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="@string/company_tel"
-               android:textColor="@color/text_view_color"
-               android:textSize="20sp"
-               android:textStyle="bold" />
+            <TextView
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/company_tel"
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-           <EditText
-               android:id="@+id/com_tel"
-               android:layout_width="160dp"
-               android:layout_height="35dp"
-               android:layout_weight="1"
-               android:layout_marginLeft="15dp"
-               android:layout_marginStart="15dp"
-               android:background="@color/text_view_color"
-               android:inputType="number"
-               android:padding="5dp"
-               android:textColor="@color/layer1" />
+            <EditText
+                android:id="@+id/com_tel"
+                android:layout_width="160dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:inputType="number"
+                android:padding="5dp"
+                android:textColor="@color/text_view_color" />
 
-       </TableRow>
+        </TableRow>
 
-       <TableRow
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="10dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-           <TextView
-               android:layout_width="220dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="@string/tax_no"
-               android:textColor="@color/text_view_color"
-               android:textSize="20sp"
-               android:textStyle="bold" />
+            <TextView
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tax_no"
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-           <EditText
-               android:id="@+id/tax_no"
-               android:layout_width="160dp"
-               android:layout_height="35dp"
-               android:layout_weight="1"
-               android:layout_marginLeft="15dp"
-               android:layout_marginStart="15dp"
-               android:background="@color/text_view_color"
-               android:inputType="number"
-               android:padding="5dp"
-               android:textColor="@color/layer1" />
+            <EditText
+                android:id="@+id/tax_no"
+                android:layout_width="160dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:inputType="number"
+                android:padding="5dp"
+                android:textColor="@color/text_view_color" />
 
-       </TableRow>
+        </TableRow>
 
-       <TableRow
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="10dp">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-           <TextView
-               android:layout_width="220dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="@string/logo"
-               android:textColor="@color/text_view_color"
-               android:textSize="20sp"
-               android:textStyle="bold" />
+            <TextView
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/logo"
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-           <ImageView
-               android:id="@+id/logo"
-               android:layout_width="160dp"
-               android:layout_height="80dp"
-               android:layout_weight="1"
-               android:layout_marginLeft="15dp"
-               android:layout_marginStart="15dp"
-               android:background="@color/text_view_color" />
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="160dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@color/layer5" />
 
-       </TableRow>
+        </TableRow>
 
 
-   </TableLayout>
+    </TableLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -140,7 +137,7 @@
             android:layout_height="50dp"
             android:background="@color/add_button"
             android:text="@string/save"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
 
         <Button
@@ -150,7 +147,7 @@
             android:layout_marginLeft="35dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

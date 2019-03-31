@@ -5,21 +5,18 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -30,10 +27,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,8 +41,8 @@ public class CustomerListShow extends DialogFragment {
     public List<Customer> customerList;
     private Button update;
     private EditText customerNameTextView;
-    public static String Customer_Name = "No Customer Selected !", Customer_Account = "" , PriceListId = "" ;
-    public static int CashCredit = 0 ;
+    public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
+    public static int CashCredit = 0 , paymentTerm = 0;
 
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
@@ -83,9 +77,12 @@ public class CustomerListShow extends DialogFragment {
         mHandler = new DatabaseHandler(getActivity());
 
 
-        customerList = mHandler.getAllCustomers();
+        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+        else
+            customerList = mHandler.getAllCustomers();
 
-        customersListAdapter = new CustomersListAdapter(CustomerListShow.this ,getActivity(), customerList);
+        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
         itemsListView.setAdapter(customersListAdapter);
 
         itemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -123,7 +120,7 @@ public class CustomerListShow extends DialogFragment {
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
@@ -250,7 +247,7 @@ public class CustomerListShow extends DialogFragment {
                     Customer.setCustName(finalObject.getString("CustName"));
                     Customer.setAddress(finalObject.getString("Address"));
 //                    if (finalObject.getString("IsSuspended") == null)
-                        Customer.setIsSuspended(0);
+                    Customer.setIsSuspended(0);
 //                    else
 //                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
                     Customer.setPriceListId(finalObject.getString("PriceListID"));
@@ -296,7 +293,7 @@ public class CustomerListShow extends DialogFragment {
             progressDialog.dismiss();
 
             if (result != null) {
-                customersListAdapter = new CustomersListAdapter(CustomerListShow.this ,getActivity(), customerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
                 storeInDatabase();
                 Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();

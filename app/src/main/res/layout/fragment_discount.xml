@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:text="@string/app_disc_type2"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_view_color"
                 android:textSize="24sp" />
         </RadioGroup>
 
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:inputType="numberDecimal"
-            android:textColor="#ffffff"
+            android:textColor="@color/text_view_color"
             />
 
     </LinearLayout>
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:background="@color/add_button"
             android:text="@string/app_ok"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
 
         <Button
@@ -105,7 +105,7 @@
             android:layout_marginLeft="35dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
 
 

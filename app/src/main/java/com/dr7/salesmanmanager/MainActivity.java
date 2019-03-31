@@ -3,40 +3,40 @@ package com.dr7.salesmanmanager;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,17 +47,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
-import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Modles.Payment;
-import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import android.support.v4.app.Fragment;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -66,6 +63,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     public static int menuItemState;
     static public TextView mainTextView;
+    LinearLayout checkInLinearLayout, checkOutLinearLayout;
+    public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
     private DatabaseHandler mDbHandler;
     LocationManager locationManager;
@@ -75,6 +74,7 @@ public class MainActivity extends AppCompatActivity
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
     ImageView logo;
+    Calendar myCalendar;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +110,48 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);
+        checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
+        checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
+        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
+        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
+
+        checkInLinearLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
+                    if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
+                        checknum = 1;
+                        menuItemState = 1;
+                        openSelectCustDialog();
+                    } else {
+                        Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
+                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
+                }
+                return true;
+            }
+        });
+
+        checkOutLinearLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+                    if (!CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
+                        openCustCheckOut();
+                    } else {
+                        Toast.makeText(MainActivity.this, "No Customer Selected !", Toast.LENGTH_SHORT).show();
+                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out_hover));
+                }
+                return true;
+            }
+        });
 
         mDbHandler = new DatabaseHandler(MainActivity.this);
 
@@ -116,8 +159,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                openAddCustomerDialog();
             }
         });
 
@@ -128,6 +172,9 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.sales_man_name);
+        navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
 
@@ -150,6 +197,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -159,45 +207,32 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openPasswordDialog(1);
+//        } else if (id == R.id.action_cust_check_in) {
+//            checknum = 1;
+//            menuItemState = 1;
+//            openSelectCustDialog();
+//
+//        } else if (id == R.id.action_cust_check_out) {
+//            openCustCheckOut();
 
-            openSetting alert = new openSetting();
-            alert.showDialog(this, "Error de conexión al servidor");
+        } else if (id == R.id.action_print_voucher) {
+            Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
+            startActivity(intent);
 
-        } else if (id == R.id.action_cust_check_in) {
-            checknum = 1;
-            menuItemState = 1;
-            openSelectCustDialog();
-
-        } else if (id == R.id.action_add_cust) {
-            openAddCustomerDialog();
-
-        } else if (id == R.id.action_cust_check_out) {
-
-            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
-            builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-            builder.setCancelable(false);
-            builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    checknum = 0;
-                    CustomerListShow.Customer_Name = "No Customer Selected !";
-                    settext2();
-                    menuItemState = 0;
-
-                    CustomerCheckInFragment obj = new CustomerCheckInFragment();
-                    obj.editCheckOutTimeAndDate();
-                }
-            });
-            builder.setNegativeButton(getResources().getString(R.string.app_no), null);
-            builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
-            android.app.AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+//        } else if (id == R.id.action_add_cust) {
+//            openAddCustomerDialog();
 
         } else if (id == R.id.action_company_info) {
-            openCompanyInfoDialog();
+            openPasswordDialog(2);
+
+        } else if (id == R.id.de_export) {
+            openPasswordDialog(3);
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.
+
+                onOptionsItemSelected(item);
     }
 
     @Override
@@ -340,13 +375,79 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude , Login.salesMan ,0));
+                            latitude, longitude, Login.salesMan, 0 , Login.salesManNo));
                     dialog.dismiss();
                 } else
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
             }
         });
 
+        dialog.show();
+    }
+
+    public void openCustCheckOut() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+        builder.setCancelable(false);
+        builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                checknum = 0;
+                CustomerListShow.Customer_Name = "No Customer Selected !";
+                settext2();
+                menuItemState = 0;
+
+                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
+                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+
+
+                CustomerCheckInFragment obj = new CustomerCheckInFragment();
+                obj.editCheckOutTimeAndDate();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.app_no), null);
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+        android.app.AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    public void openPasswordDialog(final int flag) {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.password_dialog);
+
+        final EditText password = (EditText) dialog.findViewById(R.id.editText1);
+        Button okButton = (Button) dialog.findViewById(R.id.button1);
+        Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (password.getText().toString().equals("301190")) {
+                    dialog.dismiss();
+
+                    if (flag == 1) {
+                        openSetting alert = new openSetting();
+                        alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                    } else if (flag == 2)
+                        openCompanyInfoDialog();
+
+                    else {
+                        openDeExportDialog();
+                    }
+                } else
+                    Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
     }
 
@@ -369,6 +470,12 @@ public class MainActivity extends AppCompatActivity
             final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
             final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
             final CheckBox checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
+            final RadioGroup printMethod = (RadioGroup) dialog.findViewById(R.id.printMethod);
+            final RadioButton bluetooth = (RadioButton) dialog.findViewById(R.id.bluetoothRadioButton);
+            final RadioButton wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
+            final CheckBox allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
+            final CheckBox salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
+            final CheckBox minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
             final RadioButton exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
             final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
 
@@ -383,6 +490,12 @@ public class MainActivity extends AppCompatActivity
                 orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
                 paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(0) + 1));
                 paymentEditTextCheque.setText("" + (mDbHandler.getMaxSerialNumber(4) + 1));
+
+                if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
+                    bluetooth.setChecked(true);
+                else
+                    wifi.setChecked(true);
+
                 if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0)
                     exclude.setChecked(true);
                 else
@@ -393,33 +506,48 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1)
                     checkBox2.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1)
+                    allowMinus.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                    salesManCustomersOnly.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getMinSalePric() == 1)
+                    minSalePrice.setChecked(true);
             }
 
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!linkEditText.getText().toString().equals("")) {
-                        String link = linkEditText.getText().toString().trim();
-                        int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                        int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                        int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                        int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                        int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                        int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                        if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
+                            String link = linkEditText.getText().toString().trim();
+                            int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                            int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                            int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                            int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                            int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                            int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
 
-                        int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
-                        int priceByCust = checkBox.isChecked() ? 1 : 0;
-                        int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                            int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
+                            int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
+                            int priceByCust = checkBox.isChecked() ? 1 : 0;
+                            int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                            int alowMinus = allowMinus.isChecked() ? 1 : 0;
+                            int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
+                            int minSalePric = minSalePrice.isChecked() ? 1 : 0;
 
+                            mDbHandler.deleteAllSettings();
+                            mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
+                            mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
+                            mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
+                            mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
+                            mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
 
-                        mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, numOfCopys);
-                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, numOfCopys);
-                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, numOfCopys);
-                        mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, numOfCopys);
-                        mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, numOfCopys);
-
-                        dialog.dismiss();
+                            dialog.dismiss();
+                        } else
+                            Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
                     } else
                         Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
                 }
@@ -434,6 +562,7 @@ public class MainActivity extends AppCompatActivity
             dialog.show();
 
         }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -495,7 +624,7 @@ public class MainActivity extends AppCompatActivity
                 pickIntent.setType("image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
                 startActivityForResult(chooserIntent, PICK_IMAGE);
             }
@@ -504,7 +633,7 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!name.getText().toString().equals("")&& !tel.getText().toString().equals("")&& !tax.getText().toString().equals("")) {
+                if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals("")) {
                     String comName = name.getText().toString().trim();
                     int comTel = Integer.parseInt(tel.getText().toString());
                     int taxNo = Integer.parseInt(tax.getText().toString());
@@ -528,6 +657,119 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openDeExportDialog() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.de_export_dialog);
+
+        final EditText from_date = (EditText) dialog.findViewById(R.id.from_date);
+        final EditText to_date = (EditText) dialog.findViewById(R.id.to_date);
+        final RadioGroup exportTerm = (RadioGroup) dialog.findViewById(R.id.export_term);
+
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String today = df.format(currentTimeAndDate);
+        from_date.setText(today);
+        to_date.setText(today);
+
+        myCalendar = Calendar.getInstance();
+        from_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(MainActivity.this, openDatePickerDialog(from_date), myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        to_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(MainActivity.this, openDatePickerDialog(to_date), myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        Button okButton = (Button) dialog.findViewById(R.id.okBut);
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
+
+
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("") ) {
+
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Confirm Update")
+                            .setMessage("Are you sure you want to post data ? This will take few minutes !")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                    int flag ;
+
+                                    if(exportTerm.getCheckedRadioButtonId() == R.id.invoiceRadioButton)
+                                        flag = 0;
+                                    else if(exportTerm.getCheckedRadioButtonId() == R.id.paymentRadioButton)
+                                        flag = 1;
+                                    else
+                                        flag = 2;
+
+                                    DeExportJason obj = new DeExportJason(MainActivity.this , from_date.getText().toString() ,
+                                            to_date.getText().toString() , flag);
+
+                                    obj.startExportDatabase();
+                                    //obj.storeInDatabase();
+
+                                }
+                            })
+                            .setNegativeButton("Cancel", null).show();
+
+                    dialog.dismiss();
+                } else
+                    Toast.makeText(MainActivity.this, "Please select date !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+
+    }
+
+    public DatePickerDialog.OnDateSetListener openDatePickerDialog (final EditText editText){
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(editText);
+            }
+
+        };
+        return date;
+    }
+
+
+    private void updateLabel(EditText editText) {
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        editText.setText(sdf.format(myCalendar.getTime()));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -536,7 +778,7 @@ public class MainActivity extends AppCompatActivity
 
             Uri uri = data.getData();
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver() , uri);
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 itemBitmapPic = bitmap;
                 logo.setImageBitmap(bitmap);
             } catch (FileNotFoundException e) {

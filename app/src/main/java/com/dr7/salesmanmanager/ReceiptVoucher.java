@@ -40,7 +40,6 @@ import com.ganesh.intermecarabic.Arabic864;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,7 +66,7 @@ public class ReceiptVoucher extends Fragment {
     private Spinner paymentKindSpinner;
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
-    private TextView voucherNo;
+    private TextView voucherNo ,paymentTerm;
 
     private double total = 0.0;
 
@@ -133,18 +132,37 @@ public class ReceiptVoucher extends Fragment {
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         customername = (TextView) view.findViewById(R.id.customer_nameVoucher);
         voucherNo = (TextView) view.findViewById(R.id.voucher_no);
+        paymentTerm = (TextView) view.findViewById(R.id.payment_term);
         addCheckButton = (Button) view.findViewById(R.id.addCheck);
 
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
 
         voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
-        voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
+        voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+
+        String payMethod = "";
+        switch (CustomerListShow.paymentTerm){
+            case 0:
+                payMethod = getResources().getString(R.string.cash);
+                break;
+            case 1:
+                payMethod = getResources().getString(R.string.app_credit);
+                break;
+        }
+
+        if (MainActivity.checknum == 1) {
+            customername.setText(getResources().getString(R.string.cust_name)+ " : " +CustomerListShow.Customer_Name);
+            paymentTerm.setText(getResources().getString(R.string.payment_term)+ " : " + payMethod);
+        }
+        else {
+            customername.setText(getResources().getString(R.string.cust_name));
+            paymentTerm.setText(getResources().getString(R.string.payment_term));
+        }
 
         addCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final TableRow row = new TableRow(getActivity());
-                row.setPadding(5, 5, 5, 5);
+
 
 
                 final Dialog dialog = new Dialog(getActivity());
@@ -154,12 +172,19 @@ public class ReceiptVoucher extends Fragment {
                 Window window = dialog.getWindow();
 
                 final EditText chNum = (EditText) dialog.findViewById(R.id.editText1);
-                final EditText bank = (EditText) dialog.findViewById(R.id.editText2);
+                final Spinner bank = (Spinner) dialog.findViewById(R.id.editText2);
                 final EditText chDate = (EditText) dialog.findViewById(R.id.editText3);
                 final EditText chValue = (EditText) dialog.findViewById(R.id.editText4);
 
                 Button okButton = (Button) dialog.findViewById(R.id.button1);
                 Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+
+//                ArrayList<String> kinds = new ArrayList<>();
+//                kinds.add(getResources().getString(R.string.cash));
+//                kinds.add(getResources().getString(R.string.app_cheque));
+//
+//                ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
+//                paymentKindSpinner.setAdapter(paymentKind);
 
                 myCalendar = Calendar.getInstance();
                 chDate.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +201,10 @@ public class ReceiptVoucher extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        if (checkDialogFields(chNum.getText().toString(), bank.getText().toString(),
+                        final TableRow row = new TableRow(getActivity());
+                        row.setPadding(5, 5, 5, 5);
+
+                        if (checkDialogFields(chNum.getText().toString(), bank.getSelectedItem().toString(),
                                 chDate.getText().toString(), chValue.getText().toString())) {
 
                             if (checkTotal(chValue.getText().toString())) {
@@ -185,14 +213,15 @@ public class ReceiptVoucher extends Fragment {
 
                                 Payment check = new Payment();
                                 check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
-                                check.setBank(bank.getText().toString());
+                                check.setBank(bank.getSelectedItem().toString());
                                 check.setDueDate(chDate.getText().toString());
-                                check.setAmount(Integer.parseInt(chValue.getText().toString()));
+                                check.setAmount(Double.parseDouble(chValue.getText().toString()));
                                 payments.add(check);
 
+                                row.setTag(position);
                                 for (int i = 0; i < 4; i++) {
 
-                                    String[] record = {chNum.getText().toString(), bank.getText().toString(),
+                                    String[] record = {chNum.getText().toString(), bank.getSelectedItem().toString(),
                                             chDate.getText().toString(), chValue.getText().toString()};
 
                                     TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -202,7 +231,7 @@ public class ReceiptVoucher extends Fragment {
 
                                     textView.setHint(record[i]);
                                     textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
-                                    textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.layer4));
+                                    textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
                                     textView.setGravity(Gravity.CENTER);
 
                                     TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
@@ -223,9 +252,15 @@ public class ReceiptVoucher extends Fragment {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 tableCheckData.removeView(row);
-                                                payments.remove(position);
+                                                payments.remove(row.getTag());
                                                 total = total - Double.parseDouble(chValue.getText().toString());
                                                 chequeTotal.setText(total + "");
+                                                position--;
+
+                                                for (int k = 0; k < tableCheckData.getChildCount(); k++) {
+                                                    TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
+                                                    tableRow.setTag(k);
+                                                }
                                             }
                                         });
 
@@ -268,8 +303,8 @@ public class ReceiptVoucher extends Fragment {
 
 
         ArrayList<String> kinds = new ArrayList<>();
-        kinds.add("Cash");
-        kinds.add("Cheque");
+        kinds.add(getResources().getString(R.string.cash));
+        kinds.add(getResources().getString(R.string.app_cheque));
 
         ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
         paymentKindSpinner.setAdapter(paymentKind);
@@ -308,7 +343,7 @@ public class ReceiptVoucher extends Fragment {
 
                         String s = amountEditText.getText().toString();
                         String spinner = paymentKindSpinner.getSelectedItem().toString();
-                        if (spinner == "Cash") {
+                        if (spinner == getResources().getString(R.string.cash)) {
                             if (s.isEmpty() && s == "0")
                                 Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
 
@@ -343,10 +378,10 @@ public class ReceiptVoucher extends Fragment {
                                     openBT();
                                 } catch (IOException ex) {
                                 }
-
+                                clearForm();
                                 mDbHandler.setMaxSerialNumber(0, voucherNumber);
                             }
-                        } else if (spinner == "Cheque") {
+                        } else {
                             if (!checkValue())
                                 Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
                             else {
@@ -376,12 +411,16 @@ public class ReceiptVoucher extends Fragment {
                                             payments.get(i).getBank(), payments.get(i).getDueDate(), payments.get(i).getAmount(),
                                             0, Integer.parseInt(paymentYear)));
 
-                                    String row = " " + payments.get(i).getCheckNumber() + "                                             ";
-                                    row = row.substring(0, 13) + payments.get(i).getBank() + row.substring(13, row.length());
-                                    row = row.substring(0, 23) + payments.get(i).getDueDate() + row.substring(23, row.length());
-                                    row = row.substring(0, 37) + payments.get(i).getAmount() + row.substring(37, row.length());
+
+                                    String row = ".                                             ";
+                                    row = row.substring(0, 13) + payments.get(i).getCheckNumber() + row.substring(13, row.length());
+                                    row = row.substring(0, 24) + payments.get(i).getDueDate() + row.substring(24, row.length());
+                                    row = row.substring(0, 38) + payments.get(i).getAmount() + row.substring(38, row.length()) + "\n" ;
+//                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
                                     row = row.trim();
-                                    itemsString = itemsString + "\n" + row;
+                                    row += "\n" + " " + payments.get(i).getBank();
+
+                                    itemsString = "\n" + itemsString + "\n" + row;
 
                                     mDbHandler.setMaxSerialNumber(4, voucherNumber);
                                 }
@@ -644,20 +683,21 @@ public class ReceiptVoucher extends Fragment {
             // the text typed by the user
             String msg;
 
-            for (int i = 1; i < numOfCopy; i++) {
+            for (int i = 1; i <= numOfCopy; i++) {
                 if(payment.getPayMethod() == 0) {
                     msg = "       " + "\n" +
                             "----------------------------------------------" + "\n" +
                             "       " + "\n" +
-                            "المستلم : ________________ التوقيع : __________" + "\n" +
                             "       " + "\n" +
                             "       " + "\n" +
                             "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
-                            "الكمية: " + payment.getAmount() + "\n" +
+                            "المبلغ المقبوض: " + payment.getAmount() + "\n" +
                             "ملاحظة: " + payment.getRemark() + "\n" +
-                            "اسم العميل: " + payment.getCustName() + "\n" +
+                            payment.getCustName() + "\n" +
+                            "وصلني من السيد/السادة: " + "\n" +
                             "       " + "\n" +
                             "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                            " سند قبض " + "\n" +
                             "----------------------------------------------" + "\n" +
                             "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                             companyInfo.getCompanyName() + "\n" +
@@ -667,18 +707,18 @@ public class ReceiptVoucher extends Fragment {
                 msg = "       " + "\n" +
                         "----------------------------------------------" + "\n" +
                         "       " + "\n" +
-                        "المستلم : ________________ التوقيع : __________" + "\n" +
                         "       " + "\n" +
                         itemsString + "\n" +
                         "       " + "\n" +
                         "رقم الشيك  " + "البنك     " + "التاريخ       " + "القيمة  " + "\n" +
                         "       " + "\n" +
                         "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
-                        "الكمية: " + payment.getAmount() + "\n" +
+                        "المبلغ المقبوض: " + payment.getAmount() + "\n" +
                         "ملاحظة: " + payment.getRemark() + "\n" +
-                        "اسم العميل: " + payment.getCustName() + "\n" +
-                        "       " + "\n" +
+                        payment.getCustName() + "\n" +
+                        "وصلني من السيد/السادة: " + "\n" +                        "       " + "\n" +
                         "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                        " سند قبض " + "\n" +
                         "----------------------------------------------" + "\n" +
                         "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                         companyInfo.getCompanyName() + "\n" +

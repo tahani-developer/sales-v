@@ -9,13 +9,13 @@
     android:padding="20dp">
 
     <!-- TODO: Update blank fragment layout -->
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/app_enter_cust_code"
-    android:textColor="@color/text_view_color"
-    android:textSize="24sp"
-    />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_enter_cust_code"
+        android:textColor="@color/text_view_color"
+        android:textSize="24sp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,11 +23,14 @@
         android:orientation="horizontal"
         >
 
-        <EditText
+        <TextView
             android:id="@+id/customerAccountNo"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/totals_color"
+            android:layout_marginTop="10dp"
+            android:layout_height="35dp"
+            android:background="@color/totals_color"
+            android:enabled="false"
+            android:textColor="@color/text_view_color"
             android:layout_weight="5" />
 
         <ImageButton
@@ -63,7 +66,7 @@
             android:layout_height="wrap_content"
             android:background="@color/add_button"
             android:text="@string/app_ok"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
 
         <Button
@@ -73,7 +76,7 @@
             android:layout_marginLeft="35dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.dr7.salesmanmanager.Activities"
     android:orientation="horizontal"
-    android:background="@color/layer2"
+    android:background="@color/layer1"
     >
 
 

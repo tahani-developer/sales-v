@@ -30,24 +30,28 @@ public class Item {
     private int companyNumber;
     private String year;
     private int isPosted;
+    private double itemL;
+    private double minSalePrice;
 
     public Item()
     {
 
     }
     //constructor for add item recycler
-    public Item(String itemNo, String itemName, float qty, String category, String barcode, float price) {
+    public Item(String itemNo, String itemName, float qty, String category, String barcode, float price ,double itemL) {
         this.itemNo = itemNo;
         this.itemName = itemName;
         this.qty = qty;
         this.category = category;
         this.barcode = barcode;
         this.price = price;
+        this.itemL = itemL;
     }
 
     //constructor for sales invoice
-    public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName, float qty,
-                float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue, float taxPercent,int isPosted) {
+    public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
+                float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
+                float taxPercent,int isPosted) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -272,6 +276,22 @@ public class Item {
 
     public void setIsPosted(int isPosted) {
         this.isPosted = isPosted;
+    }
+
+    public double getItemL() {
+        return itemL;
+    }
+
+    public void setItemL(double itemL) {
+        this.itemL = itemL;
+    }
+
+    public double getMinSalePrice() {
+        return minSalePrice;
+    }
+
+    public void setMinSalePrice(double minSalePrice) {
+        this.minSalePrice = minSalePrice;
     }
 
     public JSONObject getJSONObject() {

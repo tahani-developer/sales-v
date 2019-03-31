@@ -15,6 +15,7 @@ public class Customer {
     private int cashCredit ;
     private String salesManNumber ;
     private double creditLimit ;
+    private int payMethod ;
 
 
     private  String customerAccount, customerName;
@@ -25,7 +26,7 @@ public class Customer {
 
     public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit,
-                    String customerAccount, String customerName) {
+                    String customerAccount, String customerName , int payMethod) {
 
         this.companyNumber = companyNumber;
         this.custId = custId;
@@ -38,6 +39,7 @@ public class Customer {
         this.creditLimit = creditLimit;
         this.customerAccount = customerAccount;
         this.customerName = customerName;
+        this.payMethod = payMethod;
     }
 
     public  Customer(String custId, String custName) {
@@ -131,5 +133,13 @@ public class Customer {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public int getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(int payMethod) {
+        this.payMethod = payMethod;
     }
 }

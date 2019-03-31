@@ -60,7 +60,7 @@ public class ItemsListAdapter extends BaseAdapter {
 
         itemNoTextView.setText(itemList.get(i).getItemNo());
         itemNameTextView.setText(itemList.get(i).getItemName());
-        qtyTextView.setText(""+itemList.get(i).getQty() * Double.parseDouble(itemList.get(i).getUnit()));
+        qtyTextView.setText(""+itemList.get(i).getQty());
         priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
         bonusTextView.setText(String.valueOf(itemList.get(i).getBonus()));
         lineDescTextView.setText(String.valueOf(itemList.get(i).getDisc()));

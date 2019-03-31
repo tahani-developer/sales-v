@@ -76,7 +76,7 @@
             android:id="@+id/preview"
             android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:background="@color/done_button"
             android:layout_marginLeft="60dp"
             android:layout_marginStart="60dp"
@@ -117,7 +117,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_number"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -127,7 +127,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_date"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -138,7 +138,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/remark"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -148,7 +148,7 @@
                     android:layout_weight="0.2"
                     android:gravity="center"
                     android:text="@string/items"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 

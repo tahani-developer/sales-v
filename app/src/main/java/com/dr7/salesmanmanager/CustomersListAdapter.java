@@ -6,7 +6,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
@@ -84,6 +83,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
+                CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
 
                 if(custList.get(i).getIsSuspended() == 1){
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);

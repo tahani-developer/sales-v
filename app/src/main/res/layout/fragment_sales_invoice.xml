@@ -352,14 +352,14 @@
             android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="15dp">
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_sub_total"
-                android:textColor="@color/totals_color"
+                android:textColor="@color/text_view_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -377,17 +377,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="15dp">
 
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_disc"
-                android:textColor="@color/totals_color"
+                android:textColor="@color/text_view_color"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="@string/app_disc" />
@@ -405,17 +405,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="160dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="15dp">
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_tax"
-                android:textColor="@color/totals_color"
+                android:textColor="@color/text_view_color"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="@string/app_tax" />
@@ -434,17 +434,17 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="20dp">
+            android:layout_marginHorizontal="15dp">
 
             <TextView
                 android:id="@+id/textView110"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_net_sales"
-                android:textColor="@color/totals_color"
+                android:textColor="@color/text_view_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

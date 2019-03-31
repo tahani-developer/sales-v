@@ -2,16 +2,13 @@ package com.dr7.salesmanmanager;
 
 
 import android.app.DialogFragment;
-import android.os.Bundle;
 import android.app.Fragment;
-//import android.support.v4.app.DialogFragment;
-//import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -21,6 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+//import android.support.v4.app.DialogFragment;
+//import android.support.v4.app.Fragment;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,10 +28,10 @@ import java.util.Date;
 public class CustomerCheckInFragment extends DialogFragment
 {
     private static final String TAG = "CustomerCheckInFragment";
-    static TextView customerNameTextView, mainTextView, Customer_Name;
+    static TextView customerNameTextView, Customer_Name;
     ImageButton findButton;
     Button cancelButton, okButton;
-    static EditText Customer_Account;
+    static TextView Customer_Account;
     public static String customernametest;
     public static int checkOutIn;
 
@@ -71,7 +71,7 @@ public class CustomerCheckInFragment extends DialogFragment
 
         findButton = (ImageButton) view.findViewById(R.id.find_img_button);
         Customer_Name = (TextView) view.findViewById(R.id.checkInCustomerName);
-        Customer_Account = (EditText) view.findViewById(R.id.customerAccountNo);
+        Customer_Account = (TextView) view.findViewById(R.id.customerAccountNo);
 
         customernametest = CustomerListShow.Customer_Name.toString();
 
@@ -99,6 +99,9 @@ public class CustomerCheckInFragment extends DialogFragment
 
                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                         "Not Yet", "Not Yet", 0));
+
+                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                 dismiss();
             }
         });

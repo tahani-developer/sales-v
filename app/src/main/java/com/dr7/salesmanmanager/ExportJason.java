@@ -8,7 +8,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
-import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Transaction;
@@ -16,18 +15,12 @@ import com.dr7.salesmanmanager.Modles.Voucher;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -70,7 +63,6 @@ public class ExportJason extends AppCompatActivity {
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
 
-
         items = mHandler.getAllItems();
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
@@ -78,6 +70,12 @@ public class ExportJason extends AppCompatActivity {
                 items.get(i).setIsPosted(1);
                 jsonArrayItems.put(items.get(i).getJSONObject());
             }
+
+        try {
+            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
@@ -103,7 +101,6 @@ public class ExportJason extends AppCompatActivity {
                 jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
             }
 
-        Log.e("hhhhh","**************************" +jsonArrayAddedCustomer.toString());
         new ExportJason.JSONTask().execute();
 
 
@@ -151,14 +148,19 @@ public class ExportJason extends AppCompatActivity {
                         // + "&" + "Sales_Voucher_D=" + jsonArrayItems.toString().trim()
                         + "&" + "Payments="        + jsonArrayPayments.toString().trim()
                         + "&" + "Payments_Checks=" + jsonArrayPaymentsPaper.toString().trim()
-                        + "&" + "added_customers=" + jsonArrayAddedCustomer.toString().trim();
+                        + "&" + "Added_Customers=" + jsonArrayAddedCustomer.toString().trim();
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(table1);
+                try {
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                    wr.write(table1);
 
-                wr.flush();
+                    wr.flush();
+                } catch (Exception e){
+                    Log.e("here****" , e.getMessage());
+                }
+
 
                 // get response
                 reader = new BufferedReader(new
@@ -198,17 +200,21 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(s.contains("SUCCESS")){
-                mHandler.updateVoucher();
-                mHandler.updateVoucherDetails();
-                mHandler.updatePayment();
-                mHandler.updatePaymentPaper();
-                mHandler.updateAddedCustomers();
-//                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Success");
+            if(s != null) {
+                if (s.contains("SUCCESS")) {
+                    mHandler.updateVoucher();
+                    mHandler.updateVoucherDetails();
+                    mHandler.updatePayment();
+                    mHandler.updatePaymentPaper();
+                    mHandler.updateAddedCustomers();
+                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                    Log.e("tag", "****Success");
+                } else {
+                    Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show();
+                    Log.e("tag", "****Failed to export data");
+                }
             } else {
-//                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Failed to export data");
+                Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
             }
             progressDialog.dismiss();
         }

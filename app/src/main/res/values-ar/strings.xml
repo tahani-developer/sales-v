@@ -3,7 +3,7 @@
     <string name="app_username">اسم المستخدم</string>
     <string name="app_password">كلمة السر</string>
     <string name="app_dataManagement">ادارة البيانات</string>
-    <string name="app_activities">العمليات</string>
+    <string name="app_activities">الحركات</string>
     <string name="app_reports">التقارير</string>
     <string name="app_sales_inv">فاتورة البيع</string>
     <string name="app_ret_inv">فاتورة المرتجعات</string>
@@ -17,7 +17,7 @@
     <string name="app_daily_sales_d">التقرير المفصل للمبيعات اليومية</string>
     <string name="app_stock_onhand">تقرير المخزون في اليد</string>
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
-    <string name="app_receipt">المبيعات</string>
+    <string name="app_receipt">سند قبض</string>
     <string name="title_activity_main">الشاشة الرئيسية</string>
     <string name="app_sign_out">نهاية اليوم</string>
     <string name="customers_locations">موقع العميل</string>
@@ -43,15 +43,19 @@
     <string name="action_add_cust">اضف عميل</string>
     <string name="action_settings">الاعدادات</string>
     <string name="action_company_info">معلومات الشركة</string>
+    <string name="de_export">فك التصدير</string>
+    <string name="action_print_voucher">طباعة فاتورة</string>
     <string name="title_activity_activities">العمليات</string>
 
+    <string name="add_cust">اضافة عميل</string>
     <string name="cust_name">اسم العميل</string>
     <string name="app_trans_kind">نوع الفاتورة :</string>
     <string name="payemtnTerm">طريقة الدفع :</string>
-    <string name="app_cash">كاش  </string>
+    <string name="app_cash">نقداً  </string>
+    <string name="cash">نقداً</string>
     <string name="app_credit">ذمم</string>
     <string name="app_remark">ملاحظة</string>
-    <string name="app_sub_total">المجموع الجزئي</string>
+    <string name="app_sub_total">المجموع</string>
     <string name="app_disc">الخصم : </string>
     <string name="app_tax">الضريبة : </string>
     <string name="app_net_sales">الصافي : </string>
@@ -60,7 +64,7 @@
 
     <string name="app_item_no">رقم المادة</string>
     <string name="app_desc">الوصف</string>
-    <string name="app_qty">العدد</string>
+    <string name="app_qty">الكمية</string>
     <string name="app_price">السعر</string>
     <string name="app_line_disc">الخصم</string>
     <string name="app_tax_perc">نسبة الضريبة</string>
@@ -73,8 +77,8 @@
     <string name="app_invoice">فاتورة</string>
     <string name="app_receiveFrom">تم الاستلام من</string>
     <string name="app_receiptDetails">تفاصيل الفاتورة</string>
-    <string name="app_paymentDetails">تفاصيل البيع</string>
-    <string name="app_paymentType">نوع البيع</string>
+    <string name="app_paymentDetails">تفاصيل الدفع</string>
+    <string name="app_paymentType">طريقة الدفع </string>
     <string name="app_cheque">شيك</string>
     <string name="app_cheque_no">رقم الشيك</string>
     <string name="app_cheque_date">تاريخ الشيك</string>
@@ -89,6 +93,14 @@
     <string name="app_bonus">المجاني</string>
     <string name="app_add_to_list">اضافة الى القائمة</string>
     <string name="app_done">تم</string>
+    <string name="weight">الوزن</string>
+    <string name="use_weight">استخدام العدد</string>
+
+    <string name="offer_dialog">صندوق العروض</string>
+    <string name="promo_type">نوع العرض </string>
+    <string name="bonus_item">المادة المجانية </string>
+    <string name="discount_value">قيمة الخصم </string>
+    <string name="of">من</string>
 
     <string name="app_cust_balance">رصيد العميل</string>
     <string name="app_max_debit">حد الدين</string>
@@ -114,6 +126,7 @@
     <string name="app_disc_value">قيمة الخصم</string>
     <string name="app_disc_l">الخصم</string>
     <string name="app_total">المجموع</string>
+    <string name="app_disc_">خصم</string>
 
     <string name="customer_log_report">تقرير دخول العميل</string>
     <string name="transactions_report">تقرير العمليات</string>
@@ -137,10 +150,15 @@
     <string name="tax_calc_kind">نوع حساب الضريبة</string>
     <string name="exclude">خاضع</string>
     <string name="include">شامل</string>
+    <string name="print_method">طريقة الطباعة</string>
+    <string name="bluetooth">بلوتوث</string>
+    <string name="wifi">وايفاي</string>
     <string name="price_by_customer">سعر المادة حسب العميل</string>
     <string name="use_weight_case">استخدام الوزن</string>
     <string name="allow_sale_with_minus">السماح ببيع السالب</string>
     <string name="can_change_price">امكانية تغيير السعر</string>
+    <string name="get_salesman_customers_only">سحب عملاء المندوب فقط</string>
+    <string name="min_sale_price">الحد الادنى لسعر البيع</string>
     <string name="num_of_copy">عدد النسخ</string>
     <string name="vouchers_serial">تسلسل الفواتير</string>
     <string name="invoice_serial_from">الفاتورة</string>
@@ -150,6 +168,8 @@
     <string name="save">حفظ</string>
     <string name="company_number">اسم الشركة</string>
     <string name="voucher_number">رقم الفاتورة</string>
+    <string name="payment_term">طريقة الدفع</string>
+    <string name="payment_number">رقم السند</string>
     <string name="voucher_type">نوع الفاتورة</string>
     <string name="voucher_date">تاريخ الفاتورة</string>
     <string name="sale_man_number">رقم المندوب</string>
@@ -175,11 +195,14 @@
     <string name="preview">اظهار</string>
     <string name="item_number">رقم المادة</string>
     <string name="item_name">اسم المادة</string>
-    <string name="unit_qty">الكمية</string>
+    <string name="unit_qty">العدد</string>
     <string name="total_sold_qty">مجموع الكمية المباعة</string>
     <string name="total_bonus_qty">مجموع الكمية المجانية</string>
     <string name="total_sales_noTax">مجموع المبيعات(بدون ضريبة)</string>
     <string name="items">المواد</string>
+    <string name="print">طباعة</string>
+    <string name="show">اظهار</string>
+    <string name="all">الكل</string>
 
     <string name="trade_mark">Trade Mark</string>
     <string name="category">الفئة</string>
@@ -212,15 +235,47 @@
     <string name="dev_check_msg">"تأكد من حالة الجهاز و الاعدادات"</string>
 
     <string name="add_check">اضافة شيك</string>
+    <string name="enter_password">ادخل كلمة المرور</string>
+    <string name="enter_qty">ادخل الكمية</string>
 
     <string-array name="app_paymentTypeList">
-        <item>كاش</item>
+        <item>نقداً</item>
         <item>شيك</item>
     </string-array>
 
     <string-array name="list_items_dialog">
         <item>حذف</item>
+        <item>تعديل الكمية</item>
         <item>مسح الجميع</item>
+    </string-array>
+
+    <string-array name="banks_list">
+        <item>البنك العربي</item>
+        <item>المؤسسة العربية المصرفية</item>
+        <item>بنك الاردن</item>
+        <item>بنك القاهرة عمان</item>
+        <item>بنك المال الأردني</item>
+        <item>البنك التجاري الأردني</item>
+        <item>البنك الاردني الكويتي</item>
+        <item>البنك الاهلي الاردني</item>
+        <item>بنك الاسكان للتجارة والتمويل</item>
+        <item>بنك الاستثمار العربي الاردني</item>
+        <item>البنك الاستثماري</item>
+        <item>بنك سوسيته جنرال / الاردن</item>
+        <item>بنك الاتحاد</item>
+        <item>ستاندرد تشارترد</item>
+        <item>البنك العقاري المصري العربي</item>
+        <item>سيتي بنك إن . إيه</item>
+        <item>مصرف الرافدين</item>
+        <item>بنك الكويت الوطني</item>
+        <item>بنك لبنان والمهجر</item>
+        <item>بنك عوده ش.م.ل</item>
+        <item>البنك العربي الاسلامي الدولي</item>
+        <item>البنك الاسلامي الاردني</item>
+        <item>بنك صفوة الإسلامي</item>
+        <item>مصرف الراجحي</item>
+
+
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

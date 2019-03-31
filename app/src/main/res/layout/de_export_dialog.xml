@@ -1,0 +1,142 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="660dp"
+    android:layout_height="350dp"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:padding="30px"
+    tools:context="com.dr7.salesmanmanager.DiscountFragment">
+
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="25dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/from_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/from_date"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:inputType="date"
+            android:focusable="false"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="center_vertical"
+            android:text="@string/to_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/to_date"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:inputType="date"
+            android:focusable="false"/>
+
+
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/export_term"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <RadioButton
+            android:id="@+id/invoiceRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:checked="true"
+            android:text="@string/app_invoice"
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/paymentRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:text="@string/app_receipt"
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/allRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:checked="false"
+            android:text="@string/all"
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp"
+            android:layout_marginStart="20dp" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnSpan="2"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/okBut"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:background="@color/add_button"
+            android:text="@string/app_exp_data"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancelBut"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="35dp"
+            android:background="@color/done_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

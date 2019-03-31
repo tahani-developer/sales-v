@@ -39,7 +39,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/SALES_MAN_ID"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -48,7 +48,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CUS_CODE"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CUS_NAME"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -66,7 +66,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_IN_DATE"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_IN_TIME"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -84,7 +84,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_OUT_DATE"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -93,7 +93,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_OUT_TIME"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -102,7 +102,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/STATUS"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
             </TableRow>
 

@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,7 +22,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
@@ -68,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 try {
                     List<Address> addresses =
                             geocoder.getFromLocation(latitude, longitude, 1);
+                    Log.e("location**" , addresses.toString());
                     String result = addresses.get(0).getLocality()+": " + custName;
                     //result += addresses.get(0).getCountryName();
                     LatLng latLng = new LatLng(latitude, longitude);

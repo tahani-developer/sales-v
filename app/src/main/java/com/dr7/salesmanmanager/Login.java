@@ -1,16 +1,15 @@
 package com.dr7.salesmanmanager;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Reports.SalesMan;
@@ -19,15 +18,15 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
 
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
+    private ImageView logo;
     private CardView loginCardView;
-    public static String salesMan = "";
+    public static String salesMan = "" , salesManNo = "";
     private boolean isMasterLogin;
 
     DatabaseHandler mDHandler;
@@ -38,8 +37,19 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mDHandler = new DatabaseHandler(Login.this);
+        logo = (ImageView) findViewById(R.id.imageView3);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+
+        try {
+            if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
+                logo.setImageDrawable(null);
+            } else {
+                logo.setImageBitmap(mDHandler.getAllCompanyInfo().get(0).getLogo());
+            }
+        } catch (Exception e){
+
+        }
 
         ipAddress = "192.168.1.8";
         link = "http://" + ipAddress + "/tickets_service/index.php";
@@ -65,6 +75,7 @@ public class Login extends AppCompatActivity {
                     {
                         isMasterLogin = false;
                         for (int i = 0; i < salesMenList.size(); i++) {
+                            Log.e("*****" , usernameEditText.getText().toString() +" " + salesMenList.get(i).getUserName());
                             if (usernameEditText.getText().toString().equals(salesMenList.get(i).getUserName())) {
                                 exist = true;
                                 index = i;
@@ -78,6 +89,7 @@ public class Login extends AppCompatActivity {
                         if (isMasterLogin)
                         {
                             salesMan = usernameEditText.getText().toString();
+                            salesManNo = passwordEditText.getText().toString();
                             Intent main = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(main);
                         }
@@ -85,6 +97,7 @@ public class Login extends AppCompatActivity {
                         {
                             if (salesMenList.get(index).getPassword().equals(passwordEditText.getText().toString())) {
                                 salesMan = usernameEditText.getText().toString();
+                                salesManNo = passwordEditText.getText().toString();
 
                                 Intent main = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(main);

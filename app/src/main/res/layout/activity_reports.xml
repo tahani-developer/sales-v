@@ -9,50 +9,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
+        android:gravity="center"
         android:background="@color/layer3"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:paddingStart="50dp"
-        android:paddingLeft="50dp"
-        android:paddingEnd="50dp"
-        android:paddingRight="50dp">
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="150dp">
 
-        <Button
-            android:id="@+id/customer_log_report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@color/layer4"
-            android:text="@string/customer_log_report"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:background="@drawable/report_back"
+            android:orientation="vertical"
+            android:layout_marginVertical="5dp"
+            >
 
-        <Button
-            android:id="@+id/transactions_report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@color/layer5"
-            android:text="@string/transactions_report"
-            android:textStyle="bold" />
+            <Button
+                android:id="@+id/customer_log_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/slid"
+                android:text="@string/customer_log_report"
+                android:textSize="18sp"
+                android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/return_report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@color/layer4"
-            android:text="@string/payments_details_report"
-            android:textStyle="bold" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/stock_request_report"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@color/layer5"
-            android:text="@string/stock_request_report"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:background="@drawable/report_back"
+            android:orientation="vertical"
+            android:layout_marginVertical="5dp"
+            >
 
+            <Button
+                android:id="@+id/transactions_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/slid"
+                android:text="@string/transactions_report"
+                android:textSize="18sp"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:background="@drawable/report_back"
+            android:orientation="vertical"
+            android:layout_marginVertical="5dp"
+            >
+
+            <Button
+                android:id="@+id/return_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/slid"
+                android:text="@string/payments_details_report"
+                android:textSize="18sp"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:background="@drawable/report_back"
+            android:orientation="vertical"
+            android:layout_marginVertical="5dp"
+            >
+
+            <Button
+                android:id="@+id/stock_request_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/slid"
+                android:text="@string/stock_request_report"
+                android:textSize="18sp"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

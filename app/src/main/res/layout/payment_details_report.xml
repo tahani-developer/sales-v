@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:layout_marginStart="40dp"
             android:text="@string/preview"
             android:layout_marginLeft="40dp" />
@@ -126,7 +126,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_number"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -135,7 +135,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/pay_date"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -144,7 +144,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/cust_name"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -153,7 +153,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/app_amount"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -162,7 +162,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/remark"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -171,7 +171,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/sale_man_number"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
                 <TextView
@@ -180,7 +180,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/pay_method"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
             </TableRow>
 

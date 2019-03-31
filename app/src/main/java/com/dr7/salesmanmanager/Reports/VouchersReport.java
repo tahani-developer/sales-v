@@ -179,9 +179,9 @@ public class VouchersReport extends AppCompatActivity {
 
                                 } else {
                                     TextView textView = new TextView(VouchersReport.this);
-                                    textView.setText("Show");
+                                    textView.setText(getResources().getString(R.string.show));
                                     textView.setTextSize(12);
-                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.text_view_color));
+                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.colorAccent));
                                     textView.setGravity(Gravity.CENTER);
 
@@ -235,7 +235,7 @@ public class VouchersReport extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(VouchersReport.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog2);
         Window window = dialog.getWindow();
         window.setLayout(800, 400);
@@ -320,7 +320,7 @@ public class VouchersReport extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy/MM/dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)

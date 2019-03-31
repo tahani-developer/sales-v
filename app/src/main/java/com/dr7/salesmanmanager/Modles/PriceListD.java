@@ -8,19 +8,21 @@ public class PriceListD {
     private String unitId;
     private double price;
     private double taxPerc;
+    private double minSalePrice;
 
     public PriceListD(){
 
     }
 
     public PriceListD(int companyNo, int prNo, String itemNo, String unitId,
-                      double price, double taxPerc) {
+                      double price, double taxPerc, double minSalePrice) {
         this.companyNo = companyNo;
         this.prNo = prNo;
         this.itemNo = itemNo;
         this.unitId = unitId;
         this.price = price;
         this.taxPerc = taxPerc;
+        this.minSalePrice = minSalePrice;
     }
 
     public int getCompanyNo() {
@@ -69,5 +71,13 @@ public class PriceListD {
 
     public void setTaxPerc(double taxPerc) {
         this.taxPerc = taxPerc;
+    }
+
+    public double getMinSalePrice() {
+        return minSalePrice;
+    }
+
+    public void setMinSalePrice(double minSalePrice) {
+        this.minSalePrice = minSalePrice;
     }
 }

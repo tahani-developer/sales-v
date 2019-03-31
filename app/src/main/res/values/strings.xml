@@ -43,12 +43,16 @@
     <string name="action_add_cust">Add Customer</string>
     <string name="action_settings">Settings</string>
     <string name="action_company_info">Company Info</string>
+    <string name="de_export">De-Export</string>
+    <string name="action_print_voucher">Print Voucher</string>
     <string name="title_activity_activities">Activities</string>
 
+    <string name="add_cust">Add Customer</string>
     <string name="cust_name">Customer Name</string>
     <string name="app_trans_kind">Voucher Kind :</string>
     <string name="payemtnTerm">Payment Term :</string>
     <string name="app_cash">Cash   </string>
+    <string name="cash">Cash</string>
     <string name="app_credit">Credit</string>
     <string name="app_remark">Remark : </string>
     <string name="app_sub_total">Sub Total : </string>
@@ -89,6 +93,14 @@
     <string name="app_bonus">Bonus</string>
     <string name="app_add_to_list">Add To List</string>
     <string name="app_done">Done</string>
+    <string name="weight">Weight</string>
+    <string name="use_weight">Use Weight</string>
+
+    <string name="offer_dialog">Offer Dialog</string>
+    <string name="promo_type">Offer Type </string>
+    <string name="bonus_item">Bonus Item </string>
+    <string name="discount_value">Discount Value </string>
+    <string name="of">Of</string>
 
     <string name="app_cust_balance">Customer Balance</string>
     <string name="app_max_debit">Debit Limit</string>
@@ -114,6 +126,7 @@
     <string name="app_disc_value">Discount Value</string>
     <string name="app_disc_l">Discount</string>
     <string name="app_total">Total</string>
+    <string name="app_disc_">Discount</string>
 
     <string name="customer_log_report">Customer Log Report</string>
     <string name="transactions_report">Transactions Report</string>
@@ -137,10 +150,15 @@
     <string name="tax_calc_kind">Tax Calc Kind</string>
     <string name="exclude">Exclude</string>
     <string name="include">Include</string>
+    <string name="print_method">Print Method</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wifi">Wifi</string>
     <string name="price_by_customer">Item Price By Customer</string>
     <string name="use_weight_case">Use Weight Case</string>
     <string name="allow_sale_with_minus">Allow Sale With Minus</string>
     <string name="can_change_price">Can Change Price</string>
+    <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
+    <string name="min_sale_price">Min Sale Price</string>
     <string name="num_of_copy">Number Of Copy</string>
     <string name="vouchers_serial">Vouchers Serial</string>
     <string name="invoice_serial_from">invoice</string>
@@ -150,6 +168,8 @@
     <string name="save">Save</string>
     <string name="company_number">Company Number</string>
     <string name="voucher_number">Voucher Number</string>
+    <string name="payment_term">Payment term</string>
+    <string name="payment_number">Payment Number</string>
     <string name="voucher_type">Voucher Type</string>
     <string name="voucher_date">Voucher Date</string>
     <string name="sale_man_number">Sales Man Number</string>
@@ -180,6 +200,9 @@
     <string name="total_bonus_qty">Total Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
     <string name="items">Items</string>
+    <string name="print">Print</string>
+    <string name="show">Show</string>
+    <string name="all">All</string>
 
     <string name="trade_mark">Trade Mark</string>
     <string name="category">Category</string>
@@ -212,6 +235,8 @@
     <string name="dev_check_msg">"Check the device status or settings."</string>
 
     <string name="add_check">Add Cheque</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_qty">Enter Qty</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
@@ -220,7 +245,36 @@
 
     <string-array name="list_items_dialog">
         <item>Delete</item>
+        <item>Update Qty</item>
         <item>Clear All</item>
+    </string-array>
+
+    <string-array name="banks_list">
+        <item>Arab Bank</item>
+        <item>Arab Banking Corporation (Jordan)</item>
+        <item>Bank of Jordan</item>
+        <item>Cairo Amman Bank</item>
+        <item>Capital Bank of Jordan</item>
+        <item>Jordan Commercial Bank</item>
+        <item>Jordan Kuwait Bank</item>
+        <item>Jordan Ahli Bank</item>
+        <item>Housing Bank for Trade and Finance</item>
+        <item>Arab Jordan Investment Bank</item>
+        <item>Investbank</item>
+        <item>Société Générale de Banque Jordanie</item>
+        <item>Bank al Etihad</item>
+        <item>Standard Chartered</item>
+        <item>Egyptian Arab Land Bank</item>
+        <item>Citibank</item>
+        <item>Rafidain Bank</item>
+        <item>National Bank of Kuwait</item>
+        <item>BLOM Bank</item>
+        <item>Bank Audi</item>
+        <item>Islamic International Arab Bank</item>
+        <item>Jordan Islamic Bank</item>
+        <item>Safwa Islamic Bank</item>
+        <item>Al-Rajhi Bank</item>
+
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->

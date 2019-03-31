@@ -1,29 +1,39 @@
 package com.dr7.salesmanmanager;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.os.Handler;
+import android.support.v4.print.PrintHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -55,7 +65,7 @@ public class SalesInvoice extends Fragment {
     private ImageButton addItemImgButton2, custInfoImgButton, SaveData;
     private ImageView connect;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
-    private RadioButton cash, credit;
+    private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
     private EditText remarkEditText;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
@@ -67,14 +77,15 @@ public class SalesInvoice extends Fragment {
     public static TextView voucherNumberTextView, Customer_nameSales;
 
     private static DatabaseHandler mDbHandler;
-    private int voucherType = 504;
+    public static int voucherType = 504;
     private int voucherNumber;
     private int payMethod;
     static int index;
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
     boolean clicked = false;
-    String itemsString = "" ;
+    String itemsString = "";
+    String itemsString2 = "";
 
     public static Voucher voucher;
     public static List<Item> itemsList;
@@ -140,6 +151,9 @@ public class SalesInvoice extends Fragment {
         voucherTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transKindRadioGroup);
         cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
         credit = (RadioButton) view.findViewById(R.id.creditRadioButton);
+        retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
+        salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
+        orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
@@ -152,6 +166,9 @@ public class SalesInvoice extends Fragment {
 
         itemsList = new ArrayList<>();
 
+        custInfoImgButton.setVisibility(View.INVISIBLE);
+        connect.setVisibility(View.INVISIBLE);
+
         if (MainActivity.checknum == 1)
             Customer_nameSales.setText(CustomerListShow.Customer_Name.toString());
         else
@@ -160,34 +177,99 @@ public class SalesInvoice extends Fragment {
         if (CustomerListShow.CashCredit == 0) {
             cash.setChecked(true);
             credit.setChecked(false);
+            payMethod = 1;
         } else {
             credit.setChecked(true);
             cash.setChecked(false);
+            payMethod = 0;
         }
 
         voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+            public void onCheckedChanged(RadioGroup group, final int checkedId) {
                 paymentTermRadioGroup.setVisibility(View.VISIBLE);
-                switch (checkedId) {
-                    case R.id.salesRadioButton:
-                        voucherType = 504;
-                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                        String vn1 = voucherNumber + "";
-                        voucherNumberTextView.setText(vn1);
-                        break;
-                    case R.id.retSalesRadioButton:
-                        voucherType = 506;
-                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                        String vn2 = voucherNumber + "";
-                        voucherNumberTextView.setText(vn2);
-                        break;
-                    case R.id.orderRadioButton:
-                        voucherType = 508;
-                        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                        String vn3 = voucherNumber + "";
-                        voucherNumberTextView.setText(vn3);
-                        paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                        break;
+                if (itemsListView.getCount() > 0) {
+                    new android.support.v7.app.AlertDialog.Builder(getActivity())
+                            .setTitle("Confirm Update")
+                            .setCancelable(false)
+                            .setMessage("Are you sure you want clear the list !")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+                                    clearItemsList();
+
+                                    switch (checkedId) {
+                                        case R.id.salesRadioButton:
+                                            voucherType = 504;
+                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                            String vn1 = voucherNumber + "";
+                                            voucherNumberTextView.setText(vn1);
+                                            break;
+                                        case R.id.retSalesRadioButton:
+                                            voucherType = 506;
+                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                            String vn2 = voucherNumber + "";
+                                            voucherNumberTextView.setText(vn2);
+                                            break;
+                                        case R.id.orderRadioButton:
+                                            voucherType = 508;
+                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                            String vn3 = voucherNumber + "";
+                                            voucherNumberTextView.setText(vn3);
+                                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                                            break;
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Log.e("voucherType ", "" + voucherType);
+                                    switch (voucherType) {
+                                        case 504:
+                                            voucherTypeRadioGroup.check(R.id.salesRadioButton);
+//                                            salesRadioButton.setSelected(true);
+//                                            retSalesRadioButton.setSelected(false);
+//                                            orderRadioButton.setSelected(false);
+                                            break;
+                                        case 506:
+                                            voucherTypeRadioGroup.check(R.id.retSalesRadioButton);
+//                                            salesRadioButton.setSelected(false);
+//                                            retSalesRadioButton.setSelected(true);
+//                                            orderRadioButton.setSelected(false);
+                                            break;
+                                        case 508:
+                                            voucherTypeRadioGroup.check(R.id.orderRadioButton);
+//                                            salesRadioButton.setSelected(false);
+//                                            retSalesRadioButton.setSelected(false);
+//                                            orderRadioButton.setSelected(true);
+                                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                                            break;
+                                    }
+                                }
+                            })
+                            .show();
+                } else {
+                    switch (checkedId) {
+                        case R.id.salesRadioButton:
+                            voucherType = 504;
+                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                            String vn1 = voucherNumber + "";
+                            voucherNumberTextView.setText(vn1);
+                            break;
+                        case R.id.retSalesRadioButton:
+                            voucherType = 506;
+                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                            String vn2 = voucherNumber + "";
+                            voucherNumberTextView.setText(vn2);
+                            break;
+                        case R.id.orderRadioButton:
+                            voucherType = 508;
+                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                            String vn3 = voucherNumber + "";
+                            voucherNumberTextView.setText(vn3);
+                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                            break;
+                    }
                 }
             }
         });
@@ -289,9 +371,11 @@ public class SalesInvoice extends Fragment {
                                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                                 String voucherDate = df.format(currentTimeAndDate);
+                                voucherDate = convertToEnglish(voucherDate);
 
                                 SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
                                 String voucherYear = df2.format(currentTimeAndDate);
+                                voucherYear = convertToEnglish(voucherYear);
 
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
@@ -314,26 +398,29 @@ public class SalesInvoice extends Fragment {
 
                                 for (int i = 0; i < items.size(); i++) {
 
-                                    Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(), items.get(i).getItemNo(), items.get(i).getItemName(),
-                                            items.get(i).getQty(), items.get(i).getPrice(), items.get(i).getDisc(), items.get(i).getDiscPerc(),
-                                            items.get(i).getBonus(), 0, items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+                                    Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                            items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                            items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                            items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
 
                                     itemsList.add(item);
                                     mDbHandler.addItem(item);
+
+                                    if (voucherType != 506)
+                                        mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                    else
+                                        mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
                                 }
 
-//                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
-//                                startActivity(intent);
-
-                                try {
-                                    findBT();
-                                    openBT();
-                                } catch (IOException ex) {
+                                if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                    try {
+                                        findBT();
+                                        openBT();
+                                    } catch (IOException ex) {
+                                    }
+                                } else {
+                                    hiddenDialog();
                                 }
-
-//                            Intent intent = new Intent(getActivity(), bluetoothprinter.class);
-//                            startActivity(intent);
-
                                 mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
 
                             }
@@ -373,9 +460,8 @@ public class SalesInvoice extends Fragment {
                                     itemsListView.setAdapter(itemsListAdapter);
                                     calculateTotals();
                                     break;
-//                                case 1:
+                                case 1:
 //                                    salesInvoiceInterfaceListener.displayUpdateItems();
-//
 //                                    rowToBeUpdated[0] = items.get(position).getItemNo();
 //                                    rowToBeUpdated[1] = items.get(position).getItemName();
 //                                    rowToBeUpdated[2] = items.get(position).getQty() + "";
@@ -384,9 +470,58 @@ public class SalesInvoice extends Fragment {
 //                                    rowToBeUpdated[5] = items.get(position).getDiscPerc().replaceAll("[%:,]","");
 //                                    rowToBeUpdated[6] = items.get(position).getDiscType() + "";
 //                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
-//                                    index = position;
-//                                    break;
-                                case 1:
+
+
+                                    final Dialog dialog = new Dialog(getActivity());
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setCancelable(true);
+                                    dialog.setContentView(R.layout.update_qty_dialog);
+
+                                    final EditText qty = (EditText) dialog.findViewById(R.id.editText1);
+                                    Button okButton = (Button) dialog.findViewById(R.id.button1);
+                                    Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+
+                                    okButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            float availableQty = 0;
+                                            List<Item> jsonItemsList = AddItemsFragment2.jsonItemsList;
+                                            for (int i = 0; i < jsonItemsList.size(); i++) {
+                                                if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
+                                                    availableQty = jsonItemsList.get(i).getQty();
+                                                    break;
+                                                }
+                                            }
+                                            Log.e("qty ", "" + availableQty + "  " + qty.getText().toString());
+                                            if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
+                                                    availableQty >= Float.parseFloat(qty.getText().toString()) ||
+                                                    voucherType == 506) {
+                                                items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
+                                                if (items.get(position).getDiscType() == 0)
+                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+                                                else
+                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+
+                                                itemsListView.setAdapter(itemsListAdapter);
+                                                calculateTotals();
+                                                dialog.dismiss();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+                                                dialog.dismiss();
+                                            }
+                                        }
+                                    });
+
+                                    cancelButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
+
+                                    break;
+                                case 2:
                                     clearItemsList();
                                     break;
                             }
@@ -412,7 +547,7 @@ public class SalesInvoice extends Fragment {
     }
 
     private void clearLayoutData() {
-        paymentTermRadioGroup.check(R.id.creditRadioButton);
+//        paymentTermRadioGroup.check(R.id.creditRadioButton);
         remarkEditText.setText("");
         clearItemsList();
         calculateTotals();
@@ -511,6 +646,7 @@ public class SalesInvoice extends Fragment {
 
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+//        discTextView.setText(String.valueOf(decimalFormat.format(discTextView.getText().toString())));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
         subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
@@ -520,9 +656,8 @@ public class SalesInvoice extends Fragment {
 
     }
 
-    public String convertToEnglish(String value)
-    {
-        String newValue =   (((((((((((value+"").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
 
@@ -536,20 +671,310 @@ public class SalesInvoice extends Fragment {
         return total;
     }
 
+    @SuppressLint("SetTextI18n")
+    public void hiddenDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.print);
+
+        final Button okButton = dialog.findViewById(R.id.print1);
+        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
+        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
+
+        TextView companyName = dialog.findViewById(R.id.company);
+        TextView phone = dialog.findViewById(R.id.phone);
+        TextView taxNo = dialog.findViewById(R.id.tax_no);
+        TextView date = dialog.findViewById(R.id.date);
+        TextView vouch_no = dialog.findViewById(R.id.voucher_no);
+        TextView vouchType = dialog.findViewById(R.id.voucher_type);
+        TextView payMethod = dialog.findViewById(R.id.payMethod);
+        TextView cust = dialog.findViewById(R.id.cust_);
+        TextView remark = dialog.findViewById(R.id.remark_);
+        TextView totalNoTax = dialog.findViewById(R.id.total_noTax);
+        TextView discount = dialog.findViewById(R.id.discount);
+        TextView tax = dialog.findViewById(R.id.tax);
+        TextView netSale = dialog.findViewById(R.id.net_sales_);
+
+        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+
+        companyName.setText(companyInfo.getCompanyName());
+        phone.setText(phone.getText().toString() + companyInfo.getcompanyTel());
+        taxNo.setText(taxNo.getText().toString() + companyInfo.getTaxNo());
+        date.setText(date.getText().toString() + voucher.getVoucherDate());
+        vouch_no.setText(vouch_no.getText().toString() + voucher.getVoucherNumber());
+        remark.setText(remark.getText().toString() + voucher.getRemark());
+        cust.setText(cust.getText().toString() + voucher.getCustName());
+        totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
+        discount.setText(discount.getText().toString() + voucher.getVoucherDiscount());
+        tax.setText(tax.getText().toString() + voucher.getTax());
+        netSale.setText(netSale.getText().toString() + voucher.getNetSales());
+
+        String voucherTyp = "";
+        switch (voucher.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+        vouchType.setText(vouchType.getText().toString() + voucherTyp);
+        payMethod.setText(payMethod.getText().toString() + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f);
+        lp2.setMargins(2, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+
+            final TableRow headerRow = new TableRow(getActivity());
+
+            TextView headerView7 = new TextView(getActivity());
+            headerView7.setGravity(Gravity.CENTER);
+            headerView7.setText("المجموع");
+            headerView7.setLayoutParams(lp2);
+            headerView7.setTextSize(12);
+            headerRow.addView(headerView7);
+
+            TextView headerView6 = new TextView(getActivity());
+            headerView6.setGravity(Gravity.CENTER);
+            headerView6.setText("الخصم");
+            headerView6.setLayoutParams(lp2);
+            headerView6.setTextSize(12);
+            headerRow.addView(headerView6);
+
+            TextView headerView5 = new TextView(getActivity());
+            headerView5.setGravity(Gravity.CENTER);
+            headerView5.setText("المجاني");
+            headerView5.setLayoutParams(lp2);
+            headerView5.setTextSize(12);
+            headerRow.addView(headerView5);
+
+            TextView headerView4 = new TextView(getActivity());
+            headerView4.setGravity(Gravity.CENTER);
+            headerView4.setText("سعر الوحدة");
+            headerView4.setLayoutParams(lp2);
+            headerView4.setTextSize(12);
+            headerRow.addView(headerView4);
+
+            TextView headerView3 = new TextView(getActivity());
+            headerView3.setGravity(Gravity.CENTER);
+            headerView3.setText("الوزن");
+            headerView3.setLayoutParams(lp2);
+            headerView3.setTextSize(12);
+            headerRow.addView(headerView3);
+
+            TextView headerView2 = new TextView(getActivity());
+            headerView2.setGravity(Gravity.CENTER);
+            headerView2.setText("العدد");
+            headerView2.setLayoutParams(lp2);
+            headerView2.setTextSize(12);
+            headerRow.addView(headerView2);
+
+            TextView headerView1 = new TextView(getActivity());
+            headerView1.setGravity(Gravity.CENTER);
+            headerView1.setText("السلعة");
+            headerView1.setLayoutParams(lp3);
+            headerView1.setTextSize(12);
+            headerRow.addView(headerView1);
+
+            tabLayout.addView(headerRow);
+        } else {
+            final TableRow headerRow = new TableRow(getActivity());
+            TextView headerView1 = new TextView(getActivity());
+
+            TextView headerView6 = new TextView(getActivity());
+            headerView6.setGravity(Gravity.CENTER);
+            headerView6.setText("المجموع");
+            headerView6.setLayoutParams(lp2);
+            headerView6.setTextSize(12);
+            headerRow.addView(headerView6);
+
+            TextView headerView5 = new TextView(getActivity());
+            headerView5.setGravity(Gravity.CENTER);
+            headerView5.setText("الخصم");
+            headerView5.setLayoutParams(lp2);
+            headerView5.setTextSize(12);
+            headerRow.addView(headerView5);
+
+            TextView headerView4 = new TextView(getActivity());
+            headerView4.setGravity(Gravity.CENTER);
+            headerView4.setText("المجاني");
+            headerView4.setLayoutParams(lp2);
+            headerView4.setTextSize(12);
+            headerRow.addView(headerView4);
+
+            TextView headerView3 = new TextView(getActivity());
+            headerView3.setGravity(Gravity.CENTER);
+            headerView3.setText("سعر الوحدة");
+            headerView3.setLayoutParams(lp2);
+            headerView3.setTextSize(12);
+            headerRow.addView(headerView3);
+
+            TextView headerView2 = new TextView(getActivity());
+            headerView2.setGravity(Gravity.CENTER);
+            headerView2.setText("العدد");
+            headerView2.setLayoutParams(lp2);
+            headerView2.setTextSize(12);
+            headerRow.addView(headerView2);
+
+            headerView1.setGravity(Gravity.CENTER);
+            headerView1.setText("السلعة");
+            headerView1.setLayoutParams(lp3);
+            headerView1.setTextSize(12);
+            headerRow.addView(headerView1);
+
+            tabLayout.addView(headerRow);
+        }
+
+        for (int j = 0; j < itemsList.size(); j++) {
+            final TableRow row = new TableRow(getActivity());
+
+            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(getActivity());
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(10);
+
+                    switch (i) {
+                        case 6:
+                            textView.setText(itemsList.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+                        case 5:
+                            textView.setText(itemsList.get(j).getUnit());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 4:
+                            textView.setText("" + itemsList.get(j).getQty());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 3:
+                            textView.setText("" + itemsList.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 2:
+                            textView.setText(""+itemsList.get(j).getBonus());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 1:
+                            textView.setText(""+itemsList.get(j).getDisc());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 0:
+                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+            } else {
+                for (int i = 0; i <= 6; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(getActivity());
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(10);
+
+                    switch (i) {
+                        case 5:
+                            textView.setText(itemsList.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+                        case 4:
+                            textView.setText(itemsList.get(j).getUnit());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 3:
+                            textView.setText("" + itemsList.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 2:
+                            textView.setText(""+itemsList.get(j).getBonus());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 1:
+                            textView.setText(""+itemsList.get(j).getDisc());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+                        case 0:
+                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+            }
+            tabLayout.addView(row);
+
+        }
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PrintHelper photoPrinter = new PrintHelper(getActivity());
+                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+                linearLayout.setDrawingCacheEnabled(true);
+                Bitmap bitmap = linearLayout.getDrawingCache();
+                photoPrinter.printBitmap("invoice.jpg", bitmap);
+
+            }
+        });
+
+        dialog.show();
+
+    }
+
     void findBT() {
 
-        itemsString ="";
+        itemsString = "";
+        itemsString2 = "";
         for (int j = 0; j < itemsList.size(); j++) { // don't know why is it here :/
-            String amount = ""+ (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
             amount = convertToEnglish(amount);
 
-            String row = itemsList.get(j).getItemName() + "                                             " ;
-            row = row.substring(0, 21)  + itemsList.get(j).getQty() + row.substring(21, row.length());
-            row = row.substring(0, 31)  + itemsList.get(j).getUnit() + row.substring(31, row.length());
-            row = row.substring(0, 41)  + itemsList.get(j).getPrice() + row.substring(41, row.length());
-            row = row.substring(0, 52)  + new DecimalFormat("#.##").format(Double.valueOf(amount));
+            String row = itemsList.get(j).getItemName() + "                                             ";
+            row = row.substring(0, 21) + itemsList.get(j).getUnit() + row.substring(21, row.length());
+            row = row.substring(0, 31) + itemsList.get(j).getQty() + row.substring(31, row.length());
+            row = row.substring(0, 41) + itemsList.get(j).getPrice() + row.substring(41, row.length());
+            row = row.substring(0, 52) + new DecimalFormat("#.##").format(Double.valueOf(amount));
             row = row.trim();
-            itemsString = itemsString + "\n" + row  ;
+            itemsString = itemsString + "\n" + row;
+
+            String row2 = itemsList.get(j).getItemName() + "                                             ";
+            row2 = row2.substring(0, 21) + itemsList.get(j).getUnit() + row2.substring(21, row2.length());
+            row2 = row2.substring(0, 31) + itemsList.get(j).getPrice() + row2.substring(31, row2.length());
+            row2 = row2.substring(0, 42) + new DecimalFormat("#.##").format(Double.valueOf(amount));
+            row2 = row2.trim();
+            itemsString2 = itemsString2 + "\n" + row2;
 
         }
 
@@ -683,103 +1108,64 @@ public class SalesInvoice extends Fragment {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            // the text typed by the user
-//            String msg = "";
-//
-//            for (int i = 1; i < numOfCopy; i++) {
-//                msg +=  "       " + "\n" +
-//                        "       " + "\n" +
-//                        "----------------------------------------------" + "\n" +
-//                        "       " + "\n" +
-//                        "المستلم : ________________ التوقيع : __________" + "\n" +
-//                        "       " + "\n" +
-//                        "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n" +
-//                        "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n" +
-//                        "الصافي   : " + voucher.getNetSales() + "\n" +
-//                        "الضريبة  : " + voucher.getTax() + "\n" +
-//                        "الخصم    : " + voucher.getVoucherDiscount() + "\n" +
-//                        "المجموع  : " + voucher.getSubTotal() + "\n" +
-//                        "       " + "\n" +
-//                        "----------------------------------------------" + "\n";
-//
-//                for (int j = 0; j < itemsList.size(); j++) {
-//                    double amount = itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc();
-//
-//                    String row = itemsList.get(j).getItemName() + "                                             " ;
-//                    row = row.substring(0, 21)  + itemsList.get(j).getQty() + row.substring(21, row.length());
-//                    row = row.substring(0, 31)  + itemsList.get(j).getUnit() + row.substring(31, row.length());
-//                    row = row.substring(0, 41)  + itemsList.get(j).getPrice() + row.substring(41, row.length());
-//                    row = row.substring(0, 52)  + Double.valueOf(new DecimalFormat("#.##").format(amount));
-//                    row = row.trim();
-//
-//                    msg += row ;
-//                }
-//                printCustom(msg + "\n", 0, 2);
-//
-//                msg =  "----------------------------------------------" + "\n" +
-//                        " السلعة              " + "الكمية   "  + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" +
-//                        "----------------------------------------------" + "\n" +
-//                        "       " + "\n" +
-//                        "طريقة الدفع: " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" +
-//                        "ملاحظة: " + voucher.getRemark() + "\n" +
-//                        "اسم العميل: " + voucher.getCustName() + "\n" +
-//                        "       " + "\n" +
-//                        "رقم الفاتورة: " + voucher.getVoucherNumber() + "         التاريخ: " + voucher.getVoucherDate() + "\n" +
-//                        "----------------------------------------------" + "\n" +
-//                        "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
-//                        companyInfo.getCompanyName()+ "\n" +
-//                        "       " + "\n" +
-//                        "       " ;
-//
-//                printCustom(msg + "\n", 0, 2);
-//
-//            }
-//
 
             for (int i = 1; i <= numOfCopy; i++) {
-                String voucherTyp ="";
-                switch (voucher.getVoucherType()){
-                    case 504 :
+                String voucherTyp = "";
+                switch (voucher.getVoucherType()) {
+                    case 504:
                         voucherTyp = "فاتورة بيع";
                         break;
-                    case 506 :
+                    case 506:
                         voucherTyp = "فاتورة مرتجعات";
                         break;
-                    case 508 :
+                    case 508:
                         voucherTyp = "طلب جديد";
                         break;
                 }
                 printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
                 printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
-                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                printCustom("----------------------------------------------" + "\n", 1, 2);
                 printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
                 mmOutputStream.write(PrinterCommands.FEED_LINE);
                 printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
                 printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);
-                printCustom("نوع الفاتورة : " + voucherTyp + "\n" , 1, 2);
-                printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" , 1, 2);
+                printCustom("نوع الفاتورة : " + voucherTyp + "\n", 1, 2);
+                printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", 1, 2);
                 mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("----------------------------------------------" + "\n" , 1, 2);
-                printCustom(" السلعة              " + "الكمية   "  + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" , 0, 2);
-                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                printCustom("----------------------------------------------" + "\n", 1, 2);
+                if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                    printCustom(" السلعة              " + "العدد   " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+                    printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                printCustom(itemsString + "\n", 0, 2);
+                    printCustom(itemsString + "\n", 0, 2);
+                } else {
+                    printCustom(" السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+                    printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                printCustom("----------------------------------------------" + "\n" , 1, 2);
+                    printCustom(itemsString2 + "\n", 0, 2);
+                }
+
+                printCustom("----------------------------------------------" + "\n", 1, 2);
 
                 mmOutputStream.write(PrinterCommands.FEED_LINE);
                 printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
                 printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
                 printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
                 printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
-                printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
-                printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
+                if (voucher.getVoucherType() != 506) {
+                    printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
+                    printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
+                }
                 mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("المستلم : ________________ التوقيع : __________" +"\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("----------------------------------------------" + "\n" , 1, 2);
-                printCustom("\n" , 1, 2);
-                printCustom("\n" , 1, 2);
+                printCustom("----------------------------------------------" + "\n", 1, 2);
+                printCustom("\n", 1, 2);
+                printCustom("\n", 1, 2);
+                printCustom("\n", 1, 2);
+                printCustom("\n", 1, 2);
+                printCustom("\n", 1, 2);
+                printCustom("\n", 1, 2);
 
                 mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                 mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);

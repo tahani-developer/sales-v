@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Unit"
+            android:text="@string/app_unit"
             android:textColor="@color/text_view_color"
             android:textSize="25sp" />
 
@@ -71,12 +71,13 @@
 
 
         <TextView
+            android:id="@+id/textQty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:text="@string/unit_qty"
+            android:text="@string/weight"
             android:textColor="@color/text_view_color"
             android:textSize="25sp" />
 
@@ -87,8 +88,7 @@
             android:imeOptions="actionNext"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:inputType="number"
-            android:textColor="@color/second_color" />
+            android:inputType="numberDecimal" />
 
     </LinearLayout>
 
@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Unit (weight) "
+            android:text="@string/unit_qty"
             android:textColor="@color/text_view_color"
             android:textSize="25sp" />
 
@@ -118,7 +118,17 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:inputType="numberDecimal"
-            android:textColor="@color/second_color" />
+            />
+
+        <CheckBox
+            android:id="@+id/use_weight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/use_weight"
+            android:checked="true"
+            android:textColor="@color/text_view_color" />
 
     </LinearLayout>
 
@@ -163,6 +173,7 @@
             android:textSize="25sp" />
 
         <TextView
+            android:id="@+id/bonuss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -180,7 +191,6 @@
             android:gravity="center"
             android:imeOptions="actionNext"
             android:inputType="number"
-            android:textColor="@color/second_color"
             android:textSize="25sp" />
 
     </LinearLayout>
@@ -211,7 +221,6 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:imeOptions="actionDone"
-            android:textColor="@color/second_color"
             android:inputType="number"
             android:textSize="25sp" />
 
@@ -257,7 +266,7 @@
         android:layout_margin="20dp"
         android:background="@color/add_button"
         android:text="@string/app_add_to_list"
-        android:textColor="@color/text_view_color"
+        android:textColor="@color/layer5"
         android:textStyle="bold" />
 
 </LinearLayout>

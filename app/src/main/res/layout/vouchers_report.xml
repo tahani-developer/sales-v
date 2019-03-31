@@ -202,7 +202,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:background="@color/done_button"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
@@ -238,7 +238,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/cust_name"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -248,7 +248,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_number"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -258,7 +258,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_date"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
                 <TextView
@@ -267,7 +267,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/pay_method"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -277,7 +277,7 @@
                     android:layout_weight="2"
                     android:gravity="center"
                     android:text="@string/items"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
                 <TextView
@@ -286,7 +286,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_discount"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -296,7 +296,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/sub_total"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -306,7 +306,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/tax"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -316,7 +316,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/net_sales"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 

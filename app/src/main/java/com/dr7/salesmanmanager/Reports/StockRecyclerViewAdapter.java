@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dr7.salesmanmanager.AddItemsFragment2;
 import com.dr7.salesmanmanager.AddItemsStockFragment;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -84,6 +83,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
                 final TextView price = (TextView) dialog.findViewById(R.id.price);
                 final TextView pricee = (TextView) dialog.findViewById(R.id.pricee);
+                final TextView bonuss = (TextView) dialog.findViewById(R.id.bonuss);
                 final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
@@ -95,6 +95,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
                 price.setVisibility(View.INVISIBLE);
                 pricee.setVisibility(View.INVISIBLE);
+                bonus.setVisibility(View.INVISIBLE);
+                discount.setVisibility(View.INVISIBLE);
+                radioGroup.setVisibility(View.INVISIBLE);
+                bonuss.setVisibility(View.INVISIBLE);
 
                 DatabaseHandler mHandler = new DatabaseHandler(context);
                 List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
@@ -111,10 +115,11 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                         if (!check)
                             Toast.makeText(view.getContext(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
                         else {
+
                             AddItemsStockFragment obj = new AddItemsStockFragment();
                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                     holder.tax.getText().toString(), unit.getSelectedItem().toString(), unitQty.getText().toString(),
-                                    ""+items.get(holder.getAdapterPosition()).getPrice(),
+                                    "1"+items.get(holder.getAdapterPosition()).getPrice(),
                                     bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
 
                             if (added) {

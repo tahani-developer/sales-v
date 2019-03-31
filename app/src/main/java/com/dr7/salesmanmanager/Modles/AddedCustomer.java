@@ -11,19 +11,22 @@ public class AddedCustomer {
     private double latitude;
     private double longtitude;
     private String salesMan;
+    private String salesmanNo;
     private int isPosted;
 
     public AddedCustomer(){
 
     }
 
-    public AddedCustomer(String custName, String remark, double latitude, double longtitude , String salesMan , int isPosted) {
+    public AddedCustomer(String custName, String remark, double latitude, double longtitude ,String salesMan ,
+                         int isPosted, String salesmanNo) {
         this.custName = custName;
         this.remark = remark;
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.salesMan = salesMan;
         this.isPosted = isPosted;
+        this.salesmanNo = salesmanNo;
     }
 
     public String getCustName() {
@@ -66,6 +69,14 @@ public class AddedCustomer {
         this.salesMan = salesMan;
     }
 
+    public String getSalesmanNo() {
+        return salesmanNo;
+    }
+
+    public void setSalesmanNo(String salesmanNo) {
+        this.salesmanNo = salesmanNo;
+    }
+
     public int getIsPosted() {
         return isPosted;
     }
@@ -83,6 +94,7 @@ public class AddedCustomer {
             obj.put("longtitude", longtitude);
             obj.put("salesMan", salesMan);
             obj.put("isPosted", isPosted);
+            obj.put("salesmanNo", salesmanNo);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

@@ -57,7 +57,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="@string/cust_name"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_view_color"
             android:textSize="24sp" />
 
         <ImageButton
@@ -65,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
+            android:visibility="invisible"
             android:background="@drawable/cust_info" />
 
         <TextView
@@ -75,7 +76,18 @@
             android:layout_marginHorizontal="20dp"
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_view_color"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/payment_term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/payment_term"
+            android:textColor="@color/text_view_color"
             android:textSize="24sp" />
 
     </LinearLayout>
@@ -121,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:imeActionLabel="@string/app_done"
-            android:textColor="@color/totals_color"
+            android:textColor="@color/text_view_color"
             android:layout_weight="8"
             />
 
@@ -175,7 +187,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
+            android:padding="5dp"
             android:layout_marginStart="300dp"
             android:text="@string/add_check"
             android:layout_marginLeft="400dp" />
@@ -207,7 +220,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_number"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -217,7 +230,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/app_bank_name"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -227,7 +240,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_date"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -237,7 +250,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_value"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 

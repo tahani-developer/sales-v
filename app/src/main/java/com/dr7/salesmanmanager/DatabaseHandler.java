@@ -16,6 +16,7 @@ import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
+import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
@@ -34,7 +35,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 14;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -53,6 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String CASH_CREDIT = "CASH_CREDIT";
     private static final String SALES_MAN_NO = "SALES_MAN_NO";
     private static final String CREDIT_LIMIT = "CREDIT_LIMIT";
+    private static final String PAY_METHOD0 = "PAY_METHOD";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -71,6 +73,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String CateogryID1 = "CateogryID";
     private static final String Barcode1 = "Barcode";
     private static final String IsSuspended1 = "IsSuspended";
+    private static final String ITEM_L1 = "ITEM_L";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
@@ -81,6 +84,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String UnitID2 = "UnitID";
     private static final String Price2 = "Price";
     private static final String TaxPerc2 = "TaxPerc";
+    private static final String MinSalePrice2 = "MinSalePrice";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_M = "Price_List_M";
@@ -148,7 +152,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL_NUMBER = "SERIAL_NUMBER";
     private static final String PRICE_BYCUSTOMER = "PRICE_BYCUSTOMER";
     private static final String USE_WEIGHT_CASE = "USE_WEIGHT_CASE";
+    private static final String ALLOAW_MINUS = "ALLOAW_MINUS";
     private static final String NUMBER_OF_COPIES = "NUMBER_OF_COPIES";
+    private static final String SALESMAN_CUSTOMERS = "SALESMAN_CUSTOMERS";
+    private static final String MIN_SALE_PRICE = "MIN_SALE_PRICE";
+    private static final String PRINT_METHOD = "PRINT_METHOD";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -254,7 +262,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String LATITUDE7 = "LATITUDE";
     private static final String LONGITUDE7 = "LONGITUDE";
     private static final String SALESMAN7 = "SALESMAN";
+    private static final String SALESMAN_NO7 = "SALESMAN_NO";
     private static final String IS_POSTED7 = "IS_POSTED";
+
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String VS_PROMOTION = "VS_PROMOTION";
+
+    private static final String PROMOTION_ID = "PROMOTION_ID";
+    private static final String PROMOTION_TYPE = "PROMOTION_TYPE";
+    private static final String FROM_DATE = "FROM_DATE";
+    private static final String TO_DATE = "TO_DATE";
+    private static final String ITEM_NUMBERS = "ITEM_NUMBER";
+    private static final String ITEM_QTY = "ITEM_QTY";
+    private static final String BONUS_QTY = "BONUS_QTY";
+    private static final String BONUS_ITEM_NO = "BONUS_ITEM_NO";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -275,7 +297,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + PRICE_LIST_ID + " TEXT,"
                 + CASH_CREDIT + " INTEGER,"
                 + SALES_MAN_NO + " TEXT,"
-                + CREDIT_LIMIT + " INTEGER" + ")";
+                + CREDIT_LIMIT + " INTEGER,"
+                + PAY_METHOD0 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -295,7 +318,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + Name1 + " TEXT,"
                 + CateogryID1 + " TEXT,"
                 + Barcode1 + " TEXT,"
-                + IsSuspended1 + " INTEGER" + ")";
+                + IsSuspended1 + " INTEGER,"
+                + ITEM_L1 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -306,7 +330,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ItemNo2 + " TEXT,"
                 + UnitID2 + " TEXT,"
                 + Price2 + " INTEGER,"
-                + TaxPerc2 + " INTEGER" + ")";
+                + TaxPerc2 + " INTEGER,"
+                + MinSalePrice2 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_Price_List_D);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -382,7 +407,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TAX_CALC_KIND + " INTEGER,"
                 + PRICE_BYCUSTOMER + " INTEGER,"
                 + USE_WEIGHT_CASE + " INTEGER,"
-                + NUMBER_OF_COPIES + " INTEGER" + ")";
+                + ALLOAW_MINUS + " INTEGER,"
+                + NUMBER_OF_COPIES + " INTEGER,"
+                + SALESMAN_CUSTOMERS + " INTEGER,"
+                + MIN_SALE_PRICE + " INTEGER,"
+                + PRINT_METHOD + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -497,38 +526,77 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + LATITUDE7 + " INTEGER,"
                 + LONGITUDE7 + " INTEGER,"
                 + SALESMAN7 + " TEXT,"
-                + IS_POSTED7 + " INTEGER" + ")";
+                + IS_POSTED7 + " INTEGER,"
+                + SALESMAN_NO7 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ADDED_CUSTOMER);
 
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
+                + PROMOTION_ID + " INTEGER,"
+                + PROMOTION_TYPE + " INTEGER,"
+                + FROM_DATE + " TEXT,"
+                + TO_DATE + " TEXT,"
+                + ITEM_NUMBERS + " TEXT,"
+                + ITEM_QTY + " INTEGER,"
+                + BONUS_QTY + " INTEGER,"
+                + BONUS_ITEM_NO + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_VS_PROMOTION);
+
     }
+
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_MASTER);
-        db.execSQL("DROP TABLE IF EXISTS " + Item_Unit_Details);
-        db.execSQL("DROP TABLE IF EXISTS " + Items_Master);
-        db.execSQL("DROP TABLE IF EXISTS " + Price_List_D);
-        db.execSQL("DROP TABLE IF EXISTS " + Price_List_M);
-        db.execSQL("DROP TABLE IF EXISTS " + Sales_Team);
-        db.execSQL("DROP TABLE IF EXISTS " + SalesMan_Items_Balance);
-        db.execSQL("DROP TABLE IF EXISTS " + SalesmanAndStoreLink);
-        db.execSQL("DROP TABLE IF EXISTS " + SalesMen);
-        db.execSQL("DROP TABLE IF EXISTS " + CustomerPrices);
+//         Drop older table if existed
+//        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_MASTER);
+//        db.execSQL("DROP TABLE IF EXISTS " + Item_Unit_Details);
+//        db.execSQL("DROP TABLE IF EXISTS " + Items_Master);
+//        db.execSQL("DROP TABLE IF EXISTS " + Price_List_D);
+//        db.execSQL("DROP TABLE IF EXISTS " + Price_List_M);
+//        db.execSQL("DROP TABLE IF EXISTS " + Sales_Team);
+//        db.execSQL("DROP TABLE IF EXISTS " + SalesMan_Items_Balance);
+//        db.execSQL("DROP TABLE IF EXISTS " + SalesmanAndStoreLink);
+//        db.execSQL("DROP TABLE IF EXISTS " + SalesMen);
+//        db.execSQL("DROP TABLE IF EXISTS " + CustomerPrices);
+//
+//
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTING);
+//        db.execSQL("DROP TABLE IF EXISTS " + COMPANY_INFO);
+//        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_MASTER);
+//        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_DETAILS);
+//        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS);
+//        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS_PAPER);
+//        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_MASTER);
+//        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_DETAILS);
+//        // Create tables again
+//        onCreate(db);PAY_METHOD
 
 
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTING);
-        db.execSQL("DROP TABLE IF EXISTS " + COMPANY_INFO);
-        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_MASTER);
-        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_DETAILS);
-        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS_PAPER);
-        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_MASTER);
-        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_DETAILS);
-        // Create tables again
-        onCreate(db);
+        try {
+
+//            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
+//            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
+            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
+
+            String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
+                    + PROMOTION_ID + " INTEGER,"
+                    + PROMOTION_TYPE + " INTEGER,"
+                    + FROM_DATE + " TEXT,"
+                    + TO_DATE + " TEXT,"
+                    + ITEM_NUMBERS + " TEXT,"
+                    + ITEM_QTY + " INTEGER,"
+                    + BONUS_QTY + " INTEGER,"
+                    + BONUS_ITEM_NO + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_VS_PROMOTION);
+        } catch (Exception e) {
+            Log.e("onUpgrade*****", "duplicated table");
+        }
+
     }
 
     public void addCustomer(Customer customer) {
@@ -544,6 +612,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(CASH_CREDIT, customer.getCashCredit());
         values.put(SALES_MAN_NO, customer.getSalesManNumber());
         values.put(CREDIT_LIMIT, customer.getCreditLimit());
+        values.put(PAY_METHOD0, customer.getPayMethod());
 
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
@@ -572,6 +641,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(CateogryID1, item.getCategoryId());
         values.put(Barcode1, item.getBarcode());
         values.put(IsSuspended1, item.getIsSuspended());
+        values.put(ITEM_L1, item.getItemL());
 
         db.insert(Items_Master, null, values);
         db.close();
@@ -587,6 +657,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(UnitID2, price.getUnitId());
         values.put(Price2, price.getPrice());
         values.put(TaxPerc2, price.getTaxPerc());
+        values.put(MinSalePrice2, price.getMinSalePrice());
 
         db.insert(Price_List_D, null, values);
         db.close();
@@ -683,8 +754,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber , int priceByCust ,
-                           int useWeightCase , int numOfCopy) {
+    public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
+                           int allowMinus, int numOfCopy , int salesManCustomers , int minSalePrice , int printMethod) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -694,13 +765,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TAX_CALC_KIND, taxCalcKind);
         values.put(PRICE_BYCUSTOMER, priceByCust);
         values.put(USE_WEIGHT_CASE, useWeightCase);
+        values.put(ALLOAW_MINUS, allowMinus);
         values.put(NUMBER_OF_COPIES, numOfCopy);
+        values.put(SALESMAN_CUSTOMERS, salesManCustomers);
+        values.put(MIN_SALE_PRICE, minSalePrice);
+        values.put(PRINT_METHOD, printMethod);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo ) {
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -848,9 +923,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(LATITUDE7, customer.getLatitude());
         values.put(LONGITUDE7, customer.getLongtitude());
         values.put(SALESMAN7, customer.getSalesMan());
+        values.put(SALESMAN_NO7, customer.getSalesmanNo());
         values.put(IS_POSTED7, customer.getIsPosted());
 
         db.insert(ADDED_CUSTOMER, null, values);
+        db.close();
+    }
+
+    public void addOffer(Offers offers) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(PROMOTION_ID, offers.getPromotionID());
+        values.put(PROMOTION_TYPE, offers.getPromotionType());
+        values.put(FROM_DATE, offers.getFromDate());
+        values.put(TO_DATE, offers.getToDate());
+        values.put(ITEM_NUMBERS, offers.getItemNo());
+        values.put(ITEM_QTY, offers.getItemQty());
+        values.put(BONUS_QTY, offers.getBonusQty());
+        values.put(BONUS_ITEM_NO, offers.getBonusItemNo());
+
+        db.insert(VS_PROMOTION, null, values);
         db.close();
     }
 
@@ -868,7 +961,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 setting.setTaxClarcKind(Integer.parseInt(cursor.getString(3)));
                 setting.setPriceByCust(Integer.parseInt(cursor.getString(4)));
                 setting.setUseWeightCase(Integer.parseInt(cursor.getString(5)));
-                setting.setNumOfCopy(Integer.parseInt(cursor.getString(6)));
+                setting.setAllowMinus(Integer.parseInt(cursor.getString(6)));
+                setting.setNumOfCopy(Integer.parseInt(cursor.getString(7)));
+                setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
+                setting.setPrintMethod(Integer.parseInt(cursor.getString(9)));
+                setting.setMinSalePric(Integer.parseInt(cursor.getString(10)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());
@@ -909,7 +1006,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return maxVoucher;
 
     }
-// hello
+
+    // hello
     public void setMaxSerialNumber(int voucherType, int newSerial) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -986,6 +1084,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        Log.e("*****" , ""+ cursor.getCount());
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
@@ -1005,6 +1104,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Customer customer = new Customer();
+
+                customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                customer.setCustId(cursor.getString(1));
+                customer.setCustName(cursor.getString(2));
+                customer.setAddress(cursor.getString(3));
+                customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
+                customer.setPriceListId(cursor.getString(5));
+                customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
+                customer.setSalesManNumber(cursor.getString(7));
+                customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+
+                // Adding transaction to list
+                customers.add(customer);
+            } while (cursor.moveToNext());
+        }
+        return customers;
+    }
+
+    public List<Customer> getCustomersBySalesMan(String salesMan) {
+        List<Customer> customers = new ArrayList<Customer>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER + " where SALES_MAN_NO = '" + salesMan + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1082,9 +1211,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            Log.i("DatabaseHandler", "************************" + selectQuery);
             do {
                 Item item = new Item();
 
@@ -1110,17 +1238,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 items.add(item);
             } while (cursor.moveToNext());
         }
-
         return items;
     }
 
     public List<Item> getAllJsonItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
+        String salesMan = Login.salesMan;
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo , M.Name , M.CateogryID , S.Qty , P.Price , P.TaxPerc ,  M.Barcode\n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L\n" +
                 "                from Items_Master M , SalesMan_Items_Balance S , Price_List_D P\n" +
-                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo = '1' and S.SalesManNo = '1'";
+                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo = '1' and S.SalesManNo = '" + salesMan +"'";
+
+        Log.e("***" , selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1137,7 +1267,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setQty(Float.parseFloat(cursor.getString(3)));
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
-                item.setBarcode(cursor.getString(6));
+                item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+                item.setBarcode(cursor.getString(7));
+                item.setItemL(Double.parseDouble(cursor.getString(8)));
 
                 // Adding transaction to list
                 items.add(item);
@@ -1152,10 +1284,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String PriceListId = CustomerListShow.PriceListId;
         String custNum = CustomerListShow.Customer_Account;
-        String selectQuery = "select DISTINCT  M.ItemNo , M.Name , M.CateogryID , S.Qty , C.PRICE , P.TaxPerc ,  M.Barcode\n" +
+        String salesMan = Login.salesMan;
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L\n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C , Price_List_D P\n" +
-                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo = '1' and S.SalesManNo = '1' " +
-                "   and C.CustomerNumber = '" + custNum +"'";
+                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo = '1' and S.SalesManNo = '" + salesMan + "'" +
+                "   and C.CustomerNumber = '" + custNum + "'";
+
+        Log.e("***" , selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1172,7 +1307,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setQty(Float.parseFloat(cursor.getString(3)));
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
-                item.setBarcode(cursor.getString(6));
+                item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+                item.setBarcode(cursor.getString(7));
+                item.setItemL(Double.parseDouble(cursor.getString(8)));
 
                 // Adding transaction to list
                 items.add(item);
@@ -1399,6 +1536,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 customer.setLongtitude(Double.parseDouble(cursor.getString(3)));
                 customer.setSalesMan(cursor.getString(4));
                 customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
+                customer.setSalesmanNo(cursor.getString(6));
 
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1407,6 +1545,50 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return customers;
     }
 
+    public List<Offers> getAllOffers() {
+        List<Offers> offers = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + VS_PROMOTION;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Offers offer = new Offers();
+                offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
+                offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
+                offer.setFromDate(cursor.getString(2));
+                offer.setToDate(cursor.getString(3));
+                offer.setItemNo(cursor.getString(4));
+                offer.setItemQty(Double.parseDouble(cursor.getString(5)));
+                offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
+                offer.setBonusItemNo(cursor.getString(7));
+
+                offers.add(offer);
+            } while (cursor.moveToNext());
+        }
+
+        return offers;
+    }
+
+    public int getIsPosted(int salesMan) {
+        String selectQuery = "select IS_POSTED  from " + SALES_VOUCHER_MASTER +
+                " where SALES_MAN_NUMBER = '" + salesMan + "'" ;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int isPosted = 1;
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.e("isPosted***" , cursor.getString(0));
+                if (Integer.parseInt(cursor.getString(0)) == 0) {
+                    isPosted = 0;
+                    break;
+                }
+            } while (cursor.moveToNext());
+        }
+        return isPosted;
+    }
 
 
     public void updateTransaction(String cusCode, String currentDate, String currentTime) {
@@ -1426,7 +1608,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(SALES_VOUCHER_MASTER, values,  IS_POSTED + "=" + 0, null);
+        db.update(SALES_VOUCHER_MASTER, values, IS_POSTED + "=" + 0, null);
     }
 
     public void updateVoucherDetails() {
@@ -1434,7 +1616,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(SALES_VOUCHER_DETAILS, values,  IS_POSTED + "=" + 0, null);
+        db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0, null);
     }
 
     public void updatePayment() {
@@ -1442,7 +1624,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(PAYMENTS, values,  IS_POSTED + "=" + 0, null);
+        db.update(PAYMENTS, values, IS_POSTED + "=" + 0, null);
     }
 
     public void updatePaymentPaper() {
@@ -1450,7 +1632,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(PAYMENTS_PAPER, values,  IS_POSTED + "=" + 0, null);
+        db.update(PAYMENTS_PAPER, values, IS_POSTED + "=" + 0, null);
     }
 
     public void updateAddedCustomers() {
@@ -1458,9 +1640,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(IS_POSTED, 1);
-        db.update(ADDED_CUSTOMER, values,  IS_POSTED + "=" + 0, null);
+        db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
     }
 
+    public void updateSalesManItemsBalance1(float qty , int salesMan, String itemNo) {
+        db = this.getWritableDatabase();
+
+        String selectQuery = "select Qty from SalesMan_Items_Balance " +
+                " where ItemNo = " + itemNo + " and SalesManNo = " + salesMan;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        float existQty = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                existQty = Float.parseFloat(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        existQty -= qty;
+
+        Log.e("qty1 ***" , ""+existQty);
+
+        ContentValues values = new ContentValues();
+        values.put(Qty5, existQty);
+        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
+    }
+
+    public void updateSalesManItemsBalance2(float qty , int salesMan, String itemNo) {
+        db = this.getWritableDatabase();
+
+        String selectQuery = "select Qty from SalesMan_Items_Balance " +
+                " where ItemNo = " + itemNo + " and SalesManNo = " + salesMan;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        float existQty = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                existQty = Float.parseFloat(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        existQty += qty;
+
+        Log.e("qty2 ***" , ""+existQty);
+
+        ContentValues values = new ContentValues();
+        values.put(Qty5, existQty);
+        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
+    }
 
     public void deleteVoucher(int voucherNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1531,6 +1756,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + SalesMen);
         db.close();
     }
+
     public void deleteAllSettings() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_SETTING);
@@ -1546,6 +1772,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllCustomerPrice() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + CustomerPrices);
+        db.close();
+    }
+
+    public void deleteAllOffers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + VS_PROMOTION);
         db.close();
     }
 

@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text_view_color"
@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text_view_color"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text_view_color"
@@ -47,7 +47,7 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/text_view_color"
@@ -67,7 +67,7 @@
         <EditText
             android:id="@+id/editText1"
             android:layout_margin="5dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/layer5"
@@ -76,12 +76,13 @@
             android:paddingStart="5dp"
             android:inputType="number" />
 
-        <EditText
+        <Spinner
             android:id="@+id/editText2"
             android:layout_margin="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:entries="@array/banks_list"
             android:background="@color/layer5"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
@@ -90,7 +91,7 @@
         <EditText
             android:id="@+id/editText3"
             android:layout_margin="5dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/layer5"
@@ -103,14 +104,14 @@
         <EditText
             android:id="@+id/editText4"
             android:layout_margin="5dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/layer5"
             android:ems="10"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
-            android:inputType="number" />
+            android:inputType="numberDecimal" />
     </LinearLayout>
 
     <LinearLayout
@@ -127,7 +128,7 @@
             android:layout_margin="20dp"
             android:imeOptions="actionDone"
             android:background="@color/done_button"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:text="@string/app_done"
             android:textStyle="bold"
             tools:ignore="TextViewEdits" />
@@ -139,7 +140,7 @@
             android:layout_weight="1"
             android:layout_margin="20dp"
             android:background="@color/add_button"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/layer5"
             android:text="@string/app_cancel"
             android:textStyle="bold"/>
     </LinearLayout>
