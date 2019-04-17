@@ -101,6 +101,7 @@
     <string name="bonus_item">المادة المجانية </string>
     <string name="discount_value">قيمة الخصم </string>
     <string name="of">من</string>
+    <string name="quantity"> الكمية </string>
 
     <string name="app_cust_balance">رصيد العميل</string>
     <string name="app_max_debit">حد الدين</string>
@@ -136,6 +137,7 @@
     <string name="stock_request_items_report">تقرير مواد طلب المخزون</string>
     <string name="payments_details_report">تقرير تفاصيل المبيعات</string>
     <string name="stock_request_report">تقرير طلب المخزون</string>
+    <string name="inventory_report"> تقرير المخزون </string>
 
     <string name="SALES_MAN_ID">رقم المندوب التسلسلي</string>
     <string name="CUS_CODE">كود العميل</string>

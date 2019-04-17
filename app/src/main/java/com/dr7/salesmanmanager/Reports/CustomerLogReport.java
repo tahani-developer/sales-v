@@ -33,6 +33,7 @@ public class CustomerLogReport extends AppCompatActivity {
         DatabaseHandler obj = new DatabaseHandler(CustomerLogReport.this);
         transactionList = obj.getAlltransactions();
 
+
         TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
 
         for (int n = 0; n <transactionList.size() ; n++) {

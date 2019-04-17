@@ -136,6 +136,8 @@
     <string name="stock_request_items_report">Stock Request Items Report</string>
     <string name="payments_details_report">Payment Details Report</string>
     <string name="stock_request_report">Stock Request Report</string>
+    <string name="inventory_report">Inventory Report</string>
+    <string name="quantity">Quantity</string>
 
     <string name="SALES_MAN_ID">Sales Man ID</string>
     <string name="CUS_CODE">Customer Code</string>

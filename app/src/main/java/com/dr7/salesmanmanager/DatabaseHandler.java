@@ -26,13 +26,16 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class
+
+DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 14;
@@ -755,7 +758,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
-                           int allowMinus, int numOfCopy , int salesManCustomers , int minSalePrice , int printMethod) {
+                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1084,7 +1087,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        Log.e("*****" , ""+ cursor.getCount());
+        Log.e("*****", "" + cursor.getCount());
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
@@ -1198,6 +1201,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return vouchers;
     }
+// to retrive items number and name to inventory report
+    public List<ItemsMaster> getItemMaster() {
+        List<ItemsMaster> masters = new ArrayList<ItemsMaster>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + Items_Master;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ItemsMaster itemsMaster = new ItemsMaster();
+                itemsMaster.setCompanyNo(Integer.parseInt(cursor.getString(0)));
+                itemsMaster.setItemNo(cursor.getString(1));
+                itemsMaster.setName(cursor.getString(2));
+                itemsMaster.setCategoryId(cursor.getString(3));
+                itemsMaster.setBarcode(cursor.getString(4));
+                itemsMaster.setIsSuspended(Integer.parseInt(cursor.getString(5)));
+                itemsMaster.setItemL(Double.parseDouble(cursor.getString(6)));
+                masters.add(itemsMaster);
+            }
+            while(cursor.moveToNext());
+        }
+        return  masters;
+    }
 
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<Item>();
@@ -1241,6 +1270,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public List<inventoryReportItem> getInventory_db() {
+
+        List<inventoryReportItem> items_inventory = new ArrayList<inventoryReportItem>();
+        // Select All Query
+        String selectQuery = " select  DISTINCT    M.ItemNo ,M.Name ,S.Qty from Items_Master M   ,  SalesMan_Items_Balance S  " +
+                "  where M.ItemNo  = S.ItemNo ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                inventoryReportItem  itemsinven=new inventoryReportItem();
+                itemsinven.setItemNo(cursor.getString(0));
+                itemsinven.setName(cursor.getString(1));
+                itemsinven.setQty(Double.parseDouble(cursor.getString(2)));
+                items_inventory.add(itemsinven);
+
+
+            }
+            while (cursor.moveToNext());
+        }
+    return  items_inventory;
+    }
+
     public List<Item> getAllJsonItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -1279,7 +1334,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<Item> getAllJsonItems2() {
+    public List<Item> getAllJsonItems2()
+    {
+
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         String PriceListId = CustomerListShow.PriceListId;

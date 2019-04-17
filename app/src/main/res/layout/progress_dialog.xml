@@ -13,11 +13,12 @@
         android:text="Update Database..."
         android:layout_marginHorizontal="20dp"
         android:textColor="@color/text_view_color"/>
-   <ProgressBar
-       style="@android:style/Widget.ProgressBar.Horizontal"
-       android:indeterminate="true"
-       android:id="@+id/progress"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_margin="20dp"/>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:indeterminate="true" />
 </LinearLayout>
