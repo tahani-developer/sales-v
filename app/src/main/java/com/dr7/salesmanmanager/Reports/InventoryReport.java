@@ -18,7 +18,6 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.R;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +143,7 @@ public class InventoryReport extends AppCompatActivity {
         }
     }
 
-    public boolean filters(int n) throws ParseException {
+    public boolean filters(int n) {
 
         String item_num = item_number2.getText().toString().trim();
         String item_number_inventory = itemsReportinventory.get(n).getItemNo();
@@ -154,7 +153,6 @@ public class InventoryReport extends AppCompatActivity {
                 return true;
             }
         }
-        Toast.makeText(InventoryReport.this, "invalid number ", Toast.LENGTH_SHORT).show();
         return false;
     }
 }
