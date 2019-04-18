@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager.Reports;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -34,29 +35,35 @@ public class InventoryReport  extends AppCompatActivity {
     List<Voucher> item;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventory_report);
+
         itemsReportinventory = new ArrayList<inventoryReportItem>();
-        item=new ArrayList<Voucher>();
-        Log.d("inve", "new arr");
-        // salesManItemsBalances = new ArrayList<SalesManItemsBalance>();
         DatabaseHandler obj = new DatabaseHandler(InventoryReport.this);
-        Log.d("inve", "obj");
 
         itemsReportinventory = obj.getInventory_db();
         item_number2 = (EditText) findViewById(R.id.item_number_inventory);
         item_number2.requestFocus();
         tableInventoryReport = (TableLayout) findViewById(R.id.TableInventoryReport);
         preview = (Button) findViewById(R.id.preview_button_inventory);
-        Log.d("inve", "initlize");
-        Log.e("trans",itemsReportinventory.toString());
+
+        preview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+                }
+                return true;
+            }
+        });
         load();
 
-
     }
-    //load all items exist in the inventory without filter
     public  void load()
     {
         clear();
@@ -74,12 +81,10 @@ public class InventoryReport  extends AppCompatActivity {
                     String[] record = {itemsReportinventory.get(n).getItemNo() + "",
                             itemsReportinventory.get(n).getName() + "",
                             itemsReportinventory.get(n).getQty() + "",};
-                    Log.e("items", "giv item");
                     TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                     row.setLayoutParams(lp);
                     TextView textView = new TextView(InventoryReport.this);
                     textView.setText(record[i].toString());
-                    Log.e("items", record[i].toString());
                     textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
@@ -87,12 +92,8 @@ public class InventoryReport  extends AppCompatActivity {
                     textView.setLayoutParams(lp2);
 
                     row.addView(textView);
-                    Log.d("inve", "in add viewtext");
                 }
                 tableInventoryReport.addView(row);
-                Log.d("inve", "in add view row");
-
-
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -101,8 +102,6 @@ public class InventoryReport  extends AppCompatActivity {
     }
     // Button preview to filter the result accourding to item number
     public void creatInventoryReport_button(View v) {
-        Log.d("inve", "creat button");
-
         clear();
         if (!item_number2.getText().toString().equals("")) {
 
@@ -120,12 +119,10 @@ public class InventoryReport  extends AppCompatActivity {
                             String[] record = {itemsReportinventory.get(n).getItemNo() + "",
                                     itemsReportinventory.get(n).getName() + "",
                                     itemsReportinventory.get(n).getQty() + "",};
-                            Log.e("items", "giv item");
                             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                             row.setLayoutParams(lp);
                             TextView textView = new TextView(InventoryReport.this);
                             textView.setText(record[i].toString());
-                            Log.e("items", record[i].toString());
                             textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
                             textView.setGravity(Gravity.CENTER);
 
@@ -133,10 +130,8 @@ public class InventoryReport  extends AppCompatActivity {
                             textView.setLayoutParams(lp2);
 
                             row.addView(textView);
-                            Log.d("inve", "in add viewtext");
                         }
                         tableInventoryReport.addView(row);
-                        Log.d("inve", "in add view row");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -144,22 +139,8 @@ public class InventoryReport  extends AppCompatActivity {
             }
 
         } else {
-            Toast.makeText(InventoryReport.this, "Please fill the number of item fields", Toast.LENGTH_LONG).show();
-            Log.d("inve", "fill");
+            Toast.makeText(InventoryReport.this, "Please fill the item number fields", Toast.LENGTH_LONG).show();
         }
-
-
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
     }
 
     public void clear() {
@@ -167,24 +148,19 @@ public class InventoryReport  extends AppCompatActivity {
         // Remove all rows except the first one
         if (childCount > 1) {
             tableInventoryReport.removeViews(1, childCount - 1);
-            Log.d("inve","in clear");
 
         }
     }
     public boolean filters (int n) throws ParseException {
-
-        Log.d("inve","in filter");
 
         String item_num = item_number2.getText().toString().trim();
         String item_number_inventory=itemsReportinventory.get(n).getItemNo();
         if (!item_number2.getText().toString().equals("")) {
 
             if (item_num.equals(item_number_inventory)) {
-                Log.d("inve", "in filter result true");
                 return true;
             }
         }
-        Log.d("inve", "in filter resultfalse");
         Toast.makeText(InventoryReport.this, "invalid number ", Toast.LENGTH_SHORT).show();
         return  false;
     }
