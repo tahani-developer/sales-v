@@ -90,10 +90,10 @@ public class AddItemsStockFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if(!categorySpinner.getSelectedItem().toString().equals("no filter")){
-                    ArrayList <Item> filteredList = new ArrayList<>();
-                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
-                        if(jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (int k = 0; k < jsonItemsList.size(); k++) {
+                        if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(k));
                     }
                     StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
@@ -122,10 +122,10 @@ public class AddItemsStockFragment extends DialogFragment {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
 
-                if(query != null && query.length() > 0){
-                    ArrayList <Item> filteredList = new ArrayList<>();
-                    for(int k = 0 ; k<jsonItemsList.size() ; k++ ){
-                        if(jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
+                if (query != null && query.length() > 0) {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (int k = 0; k < jsonItemsList.size(); k++) {
+                        if (jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
                             filteredList.add(jsonItemsList.get(k));
                     }
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());

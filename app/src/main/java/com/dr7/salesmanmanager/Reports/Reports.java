@@ -17,7 +17,7 @@ public class Reports extends AppCompatActivity {
     Button transactions_report;
     Button return_report;
     Button stock_request_report;
-
+    Button Inventory_report;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,12 +26,14 @@ public class Reports extends AppCompatActivity {
         customer_log_report = (Button) findViewById(R.id.customer_log_report);
         transactions_report = (Button) findViewById(R.id.transactions_report);
         return_report = (Button) findViewById(R.id.return_report);
+        Inventory_report = (Button) findViewById(R.id.inventory_report);
         stock_request_report = (Button) findViewById(R.id.stock_request_report);
 
         customer_log_report.setOnClickListener(onClickListener);
         transactions_report.setOnClickListener(onClickListener);
         return_report.setOnClickListener(onClickListener);
         stock_request_report.setOnClickListener(onClickListener);
+        Inventory_report.setOnClickListener(onClickListener);
 
     }
 
@@ -58,6 +60,10 @@ public class Reports extends AppCompatActivity {
                 case R.id.stock_request_report:
                     Intent intent4 = new Intent(Reports.this, StockRequestReport.class);
                     startActivity(intent4);
+                    break ;
+                case R.id.inventory_report:
+                    Intent intent5 = new Intent(Reports.this, InventoryReport.class);
+                    startActivity(intent5);
                     break ;
             }
 

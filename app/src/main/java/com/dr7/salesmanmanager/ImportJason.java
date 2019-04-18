@@ -219,6 +219,8 @@ public class ImportJason extends AppCompatActivity{
                     priceListDpList.add(item);
                 }
                 Log.e("priceList " , ""+ priceListDpList.get(0).getPrice());
+
+
                 JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
 
                 for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {

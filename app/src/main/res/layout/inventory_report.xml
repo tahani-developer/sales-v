@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer1"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/inventory_report"
+        android:textColor="@color/text_view_color"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+
+            android:gravity="center_vertical"
+            android:text="@string/item_number"
+            android:textColor="@color/text_view_color"
+            android:textSize="17sp" />
+
+
+        <EditText
+            android:id="@+id/item_number_inventory"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:inputType="number"
+            android:background="@color/layer5"
+            android:gravity="center_vertical"
+            android:padding="2dp"
+
+            android:textColor="@color/done_button"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/preview_button_inventory"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+
+
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/done_button"
+            android:onClick="creatInventoryReport_button"
+            android:text="@string/preview"
+            android:textColor="@color/text_view_color" />
+
+    </LinearLayout>
+
+
+
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/layer2"
+        android:layout_margin="20dp"
+        >
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/TableInventoryReport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="7dp"
+            android:background="@color/layer5">
+
+            <TableRow
+                android:background="@color/layer3"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/item_number"
+                    android:textColor="@color/text_view_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/item_name"
+                    android:textColor="@color/text_view_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/quantity"
+                    android:textColor="@color/text_view_color"
+                    android:textStyle="bold" />
+
+
+
+
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

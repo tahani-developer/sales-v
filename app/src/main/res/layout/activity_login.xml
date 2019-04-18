@@ -30,11 +30,11 @@
         android:layout_marginLeft="-41dp"
         android:background="@color/layer3"
         android:drawableLeft="@drawable/ic_action_name"
-        android:textColorHint="@color/layer1"
-        android:textColor="@color/text_view_color"
         android:ems="10"
         android:hint="@string/app_username"
         android:inputType="textPersonName"
+        android:textColor="@color/text_view_color"
+        android:textColorHint="@color/layer1"
         android:textSize="16sp" />
 
     <EditText

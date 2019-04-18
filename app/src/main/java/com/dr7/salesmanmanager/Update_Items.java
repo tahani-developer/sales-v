@@ -199,7 +199,8 @@ public class Update_Items extends DialogFragment {
     };
 
 
-    public void setListener(Update_Items.Update_Items_interface listener) {
+    public void setListener(Update_Items
+                                    .Update_Items_interface listener) {
         this.listener = listener;
     }
 

@@ -333,6 +333,7 @@ public class MainActivity extends AppCompatActivity
 
         Window window = dialog.getWindow();
 
+
         final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
         final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
         Button done = (Button) dialog.findViewById(R.id.doneButton);

@@ -108,7 +108,8 @@ public class ItemsReport extends AppCompatActivity {
                 if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
                     totalSold = 0 ; totalBonus = 0 ; totalSales = 0 ;
                     for (int n = 0; n < items.size(); n++) {
-                        if (filters(n)) {
+                        if (filters(n))
+                        {
                             TableRow row = new TableRow(ItemsReport.this);
                             row.setPadding(5, 10, 5, 10);
 
