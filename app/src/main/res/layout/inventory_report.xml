@@ -28,13 +28,12 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="3dp"
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-
             android:gravity="center_vertical"
             android:text="@string/item_number"
             android:textColor="@color/text_view_color"
@@ -44,24 +43,23 @@
         <EditText
             android:id="@+id/item_number_inventory"
             android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:inputType="number"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@color/layer5"
             android:gravity="center_vertical"
             android:padding="2dp"
-
             android:textColor="@color/done_button"
             android:textSize="15sp" />
 
         <Button
             android:id="@+id/preview_button_inventory"
             android:layout_width="130dp"
-            android:layout_height="match_parent"
-
-
-            android:layout_marginStart="40dp"
-            android:layout_marginLeft="40dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="420dp"
+            android:layout_marginLeft="420dp"
             android:background="@color/done_button"
             android:onClick="creatInventoryReport_button"
             android:text="@string/preview"
