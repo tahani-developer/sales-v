@@ -33,6 +33,7 @@ public class InventoryReport  extends AppCompatActivity {
     TableLayout tableInventoryReport;
     List<inventoryReportItem> itemsReportinventory;
     List<Voucher> item;
+     static int n=0;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -61,54 +62,24 @@ public class InventoryReport  extends AppCompatActivity {
                 return true;
             }
         });
-        load();
+        for (n = 0; n < itemsReportinventory.size(); n++)
+        load_table();
+
 
     }
-    public  void load()
-    {
+
+  /*  public  void load(int flag) {
         clear();
-        for (int n = 0; n < itemsReportinventory.size(); n++) {
-            try {
+      //  int n;
 
-                TableRow row = new TableRow(InventoryReport.this);
-                row.setPadding(5, 10, 5, 10);
 
-                if (n % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer4));
-                else
-                    row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer5));
-                for (int i = 0; i < 3; i++) {
-                    String[] record = {itemsReportinventory.get(n).getItemNo() + "",
-                            itemsReportinventory.get(n).getName() + "",
-                            itemsReportinventory.get(n).getQty() + "",};
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                    row.setLayoutParams(lp);
-                    TextView textView = new TextView(InventoryReport.this);
-                    textView.setText(record[i].toString());
-                    textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                    textView.setGravity(Gravity.CENTER);
-
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                    textView.setLayoutParams(lp2);
-
-                    row.addView(textView);
-                }
-                tableInventoryReport.addView(row);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    // Button preview to filter the result accourding to item number
-    public void creatInventoryReport_button(View v) {
-        clear();
         if (!item_number2.getText().toString().equals("")) {
-
-            for (int n = 0; n < itemsReportinventory.size(); n++) {
+            for (n = 0; n < itemsReportinventory.size(); n++) {
                 try {
                     if (filters(n)) {
-                        TableRow row = new TableRow(InventoryReport.this);
+                        load_table();
+
+                       /* TableRow row = new TableRow(InventoryReport.this);
                         row.setPadding(5, 10, 5, 10);
 
                         if (n % 2 == 0)
@@ -133,6 +104,84 @@ public class InventoryReport  extends AppCompatActivity {
                         }
                         tableInventoryReport.addView(row);
                     }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }*/
+    public void load_table(){
+        TableRow row = new TableRow(InventoryReport.this);
+        row.setPadding(5, 10, 5, 10);
+
+        if (n % 2 == 0)
+            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer4));
+        else
+            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer5));
+        for (int i = 0; i < 3; i++) {
+            String[] record = {itemsReportinventory.get(n).getItemNo() + "",
+                    itemsReportinventory.get(n).getName() + "",
+                    itemsReportinventory.get(n).getQty() + "",};
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+            TextView textView = new TextView(InventoryReport.this);
+            textView.setText(record[i].toString());
+            textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            textView.setGravity(Gravity.CENTER);
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            textView.setLayoutParams(lp2);
+
+            row.addView(textView);
+        }
+        tableInventoryReport.addView(row);
+    }
+
+
+
+
+
+
+    // Button preview to filter the result accourding to item number
+    public void creatInventoryReport_button(View v) {
+
+      clear();
+        if (!item_number2.getText().toString().equals("")) {
+
+            for (int n = 0; n < itemsReportinventory.size(); n++) {
+                try {
+                    if (filters(n)) {
+                        load_table();
+                    }
+                  /*  TableRow row = new TableRow(InventoryReport.this);
+                        row.setPadding(5, 10, 5, 10);
+
+                        if (n % 2 == 0)
+                            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer4));
+                        else
+                            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer5));
+                        for (int i = 0; i < 3; i++) {
+                            String[] record = {itemsReportinventory.get(n).getItemNo() + "",
+                                    itemsReportinventory.get(n).getName() + "",
+                                    itemsReportinventory.get(n).getQty() + "",};
+                            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                            row.setLayoutParams(lp);
+                            TextView textView = new TextView(InventoryReport.this);
+                            textView.setText(record[i].toString());
+                            textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                            textView.setGravity(Gravity.CENTER);
+
+                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                            textView.setLayoutParams(lp2);
+
+                            row.addView(textView);
+                        }
+                        tableInventoryReport.addView(row);
+                    }
+                    */
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -140,8 +189,9 @@ public class InventoryReport  extends AppCompatActivity {
 
         } else {
             Toast.makeText(InventoryReport.this, "Please fill the item number fields", Toast.LENGTH_LONG).show();
-        }
-    }
+            }
+     }
+
 
     public void clear() {
         int childCount = tableInventoryReport.getChildCount();
@@ -152,7 +202,7 @@ public class InventoryReport  extends AppCompatActivity {
         }
     }
     public boolean filters (int n) throws ParseException {
-
+     //  if (n==-1){return true;}
         String item_num = item_number2.getText().toString().trim();
         String item_number_inventory=itemsReportinventory.get(n).getItemNo();
         if (!item_number2.getText().toString().equals("")) {
