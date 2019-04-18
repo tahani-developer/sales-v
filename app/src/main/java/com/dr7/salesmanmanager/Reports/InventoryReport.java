@@ -50,7 +50,7 @@ public class InventoryReport extends AppCompatActivity {
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
                 }
-                return true;
+                return false;
             }
         });
         load();
