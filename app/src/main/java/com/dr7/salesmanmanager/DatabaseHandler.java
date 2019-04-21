@@ -967,8 +967,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setAllowMinus(Integer.parseInt(cursor.getString(6)));
                 setting.setNumOfCopy(Integer.parseInt(cursor.getString(7)));
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
-                setting.setPrintMethod(Integer.parseInt(cursor.getString(9)));
-                setting.setMinSalePric(Integer.parseInt(cursor.getString(10)));
+                setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
+                setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());
