@@ -5,11 +5,22 @@ public class inventoryReportItem {
     private String itemNo;
     private String name;
     private double qty;
+    private String categoryId;
 
-    public inventoryReportItem(String itemNo, String name, double qty) {
+
+    public inventoryReportItem(String itemNo, String name, double qty, String categoryId) {
         this.itemNo = itemNo;
         this.name = name;
         this.qty = qty;
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public inventoryReportItem() {

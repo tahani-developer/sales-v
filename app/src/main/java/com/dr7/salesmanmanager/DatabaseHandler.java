@@ -1273,9 +1273,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<inventoryReportItem> getInventory_db() {
 
         List<inventoryReportItem> items_inventory = new ArrayList<inventoryReportItem>();
+        String salesMan = Login.salesMan;
         // Select All Query
-        String selectQuery = " select  DISTINCT    M.ItemNo ,M.Name ,S.Qty from Items_Master M   ,  SalesMan_Items_Balance S  " +
-                "  where M.ItemNo  = S.ItemNo ";
+        String selectQuery = " select  DISTINCT    M.ItemNo ,M.Name ,S.Qty ,M.CateogryID from Items_Master M   ,  SalesMan_Items_Balance S  " +
+                "  where M.ItemNo  = S.ItemNo  and  S.SalesManNo = '" + salesMan +"'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1287,6 +1288,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 itemsinven.setItemNo(cursor.getString(0));
                 itemsinven.setName(cursor.getString(1));
                 itemsinven.setQty(Double.parseDouble(cursor.getString(2)));
+                itemsinven.setCategoryId(cursor.getString(3));
                 items_inventory.add(itemsinven);
 
 

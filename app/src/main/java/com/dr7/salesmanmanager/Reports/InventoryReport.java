@@ -1,158 +1,193 @@
 package com.dr7.salesmanmanager.Reports;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.R;
+import com.dr7.salesmanmanager.RecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryReport extends AppCompatActivity {
-    EditText item_number2;
-    Button preview;
-    TableLayout tableInventoryReport;
+    EditText item_number2, item_name;
+    Button preview2;
     List<inventoryReportItem> itemsReportinventory;
+    SearchView search;
+    RecyclerView recyclerView;
+    Context context;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventory_report);
-
         itemsReportinventory = new ArrayList<inventoryReportItem>();
+        itemsReportinventory.clear();
         DatabaseHandler obj = new DatabaseHandler(InventoryReport.this);
         itemsReportinventory = obj.getInventory_db();
-
         item_number2 = (EditText) findViewById(R.id.item_number_inventory);
-        tableInventoryReport = (TableLayout) findViewById(R.id.TableInventoryReport);
-        preview = (Button) findViewById(R.id.preview_button_inventory);
+        preview2 = (Button) findViewById(R.id.preview_button_inventory);
+        //---------------   to load Inventory report  accourding to item number---------------------
+        preview2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!item_number2.getText().toString().equals("")) {
+                    ArrayList<inventoryReportItem> filteredList_number = new ArrayList<>();
+                    for (int k = 0; k < itemsReportinventory.size(); k++) {
+                        if (itemsReportinventory.get(k).getItemNo().equals(item_number2.getText().toString())) {
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
+                            filteredList_number.add(itemsReportinventory.get(k));
+
+                        }
+                    }
+
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_number, context);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+                    recyclerView.setAdapter(adapter);
+                }
+
+            }
+        });
+
+        //-------------------------------Spinner-------------------------------------------------
+        final Spinner categorySpinner = (Spinner) findViewById(R.id.cat);
+        List<String> categories = obj.getAllExistingCategories();
+        categories.add(0, "no filter");
+
+        final ArrayAdapter<String> ad = new ArrayAdapter<>(this, R.layout.spinner_style, categories);
+        categorySpinner.setAdapter(ad);
+
+//      load Inventory Report
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_report);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        final ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+        recyclerView.setAdapter(adapter);
+
+//      load  Inventory Report  when choose item from spinner category
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+            {
+
+                if (!categorySpinner.getSelectedItem().toString().equals("no filter"))
+                {
+                    ArrayList<inventoryReportItem> filteredList = new ArrayList<>();
+                    for (int k = 0; k < itemsReportinventory.size(); k++)
+                    {
+                        if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString()))
+                            filteredList.add(itemsReportinventory.get(k));
+
+
+                    }
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList, context);
+                    recyclerView.setAdapter(adapter);
+                } else
+                    {
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+                    recyclerView.setAdapter(adapter);
+                    }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        //--------------------------------------------------------------------------------
+
+        preview2.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+                    preview2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+                    preview2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
                 }
                 return false;
             }
         });
-        load();
-
-    }
-
-    public void load() {
-        clear();
-        for (int n = 0; n < itemsReportinventory.size(); n++) {
-            try {
-
-                TableRow row = new TableRow(InventoryReport.this);
-                row.setPadding(5, 10, 5, 10);
-
-                if (n % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer4));
-                else
-                    row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer5));
-                for (int i = 0; i < 3; i++) {
-                    String[] record = {itemsReportinventory.get(n).getItemNo() + "",
-                            itemsReportinventory.get(n).getName() + "",
-                            itemsReportinventory.get(n).getQty() + "",};
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                    row.setLayoutParams(lp);
-                    TextView textView = new TextView(InventoryReport.this);
-                    textView.setText(record[i].toString());
-                    textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                    textView.setGravity(Gravity.CENTER);
-
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                    textView.setLayoutParams(lp2);
-
-                    row.addView(textView);
-                }
-                tableInventoryReport.addView(row);
-            } catch (Exception e) {
-                e.printStackTrace();
+       //--------------------------------SearchView  to load Inventory report  accourding to item name ------------------------------------------------
+        search = (SearchView) findViewById(R.id.mSearch2);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener()
+        {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
-        }
-    }
 
-    // Button preview to filter the result accourding to item number
-    public void creatInventoryReport_button(View v) {
-        clear();
-        if (!item_number2.getText().toString().equals("")) {
+            // @Override
+            public boolean onQueryTextChange(String newText)
+            {
+                Log.e("loa", "text cha");
+                if (newText != null && newText.length() > 0)
+                {
+                    ArrayList<inventoryReportItem> filteredList_name = new ArrayList<>();
+                    for (int k = 0; k < itemsReportinventory.size(); k++)
+                    {
+                        if (itemsReportinventory.get(k).getName().contains(newText.toString()))
+                        {
+                            filteredList_name.add(itemsReportinventory.get(k));
 
-            for (int n = 0; n < itemsReportinventory.size(); n++) {
-                try {
-                    if (filters(n)) {
-                        TableRow row = new TableRow(InventoryReport.this);
-                        row.setPadding(5, 10, 5, 10);
-
-                        if (n % 2 == 0)
-                            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer4));
-                        else
-                            row.setBackgroundColor(ContextCompat.getColor(InventoryReport.this, R.color.layer5));
-                        for (int i = 0; i < 3; i++) {
-                            String[] record = {itemsReportinventory.get(n).getItemNo() + "",
-                                    itemsReportinventory.get(n).getName() + "",
-                                    itemsReportinventory.get(n).getQty() + "",};
-                            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                            row.setLayoutParams(lp);
-                            TextView textView = new TextView(InventoryReport.this);
-                            textView.setText(record[i].toString());
-                            textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
-                            textView.setGravity(Gravity.CENTER);
-
-                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                            textView.setLayoutParams(lp2);
-
-                            row.addView(textView);
                         }
-                        tableInventoryReport.addView(row);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_name, context);
+                    recyclerView.setAdapter(adapter);
                 }
+                else
+                    {
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+                    recyclerView.setAdapter(adapter);
+                    }
+
+                return false;
             }
 
-        } else {
-            Toast.makeText(InventoryReport.this, "Please fill item number", Toast.LENGTH_LONG).show();
-        }
+        });
     }
 
     public void clear() {
-        int childCount = tableInventoryReport.getChildCount();
-        // Remove all rows except the first one
-        if (childCount > 1) {
-            tableInventoryReport.removeViews(1, childCount - 1);
+        itemsReportinventory.clear();
 
-        }
     }
 
-    public boolean filters(int n) {
-
-        String item_num = item_number2.getText().toString().trim();
-        String item_number_inventory = itemsReportinventory.get(n).getItemNo();
-        if (!item_number2.getText().toString().equals("")) {
-
-            if (item_num.equals(item_number_inventory)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
+
+
+
+
+
+
