@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer1"
@@ -9,21 +8,21 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/vouchers_report"
         android:textColor="@color/text_view_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/row2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="2dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
+        android:layout_marginLeft="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,11 +31,11 @@
             android:gravity="center_vertical"
             android:text="@string/from_date"
             android:textColor="@color/text_view_color"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="200dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -51,16 +50,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
             android:text="@string/to_date"
             android:textColor="@color/text_view_color"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="200dp"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -75,18 +74,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginRight="3dp"
             android:gravity="center_vertical"
             android:text="@string/customer_number"
             android:textColor="@color/text_view_color"
-            android:textSize="17sp" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/customer_number"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:padding="5dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
@@ -96,6 +95,15 @@
             android:textColor="@color/done_button"
             android:textSize="15sp"
             android:inputType="number"/>
+        <Button
+            android:id="@+id/preview"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:textColor="@color/layer5"
+            android:background="@color/done_button"
+            android:layout_margin="5dp"
+
+            android:text="@string/preview" />
 
     </LinearLayout>
 
@@ -103,10 +111,11 @@
         android:id="@+id/row3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginRight="15dp">
 
         <RadioGroup
             android:id="@+id/transKindRadioGroup"
@@ -114,8 +123,8 @@
             android:layout_height="wrap_content"
             android:background="@color/layer1"
             android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <TextView
                 android:id="@+id/tvTrKind"
@@ -123,39 +132,39 @@
                 android:layout_height="wrap_content"
                 android:text="@string/by_voucher_kind"
                 android:textColor="@color/second_color"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/salesRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:checked="true"
                 android:text="@string/app_sales_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/retSalesRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:checked="false"
                 android:text="@string/app_ret_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/orderRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:checked="false"
                 android:text="@string/app_cust_order"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
-                android:layout_marginStart="20dp" />
+                android:textSize="12sp"
+                android:layout_marginStart="15dp" />
 
         </RadioGroup>
 
@@ -163,11 +172,11 @@
             android:id="@+id/paymentTermRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:background="@color/layer1"
             android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp">
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <TextView
                 android:id="@+id/tv"
@@ -175,58 +184,49 @@
                 android:layout_height="wrap_content"
                 android:text="@string/by_payment_Term"
                 android:textColor="@color/second_color"
-                android:textSize="14dp"
+                android:textSize="12dp"
                 android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/creditRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:checked="true"
                 android:text="@string/app_credit"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/cashRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/app_cash"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
         </RadioGroup>
 
-        <Button
-            android:id="@+id/preview"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textColor="@color/layer5"
-            android:background="@color/done_button"
-            android:layout_marginRight="20dp"
-            android:layout_marginEnd="20dp"
-            android:text="@string/preview" />
+
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="330dp"
+        android:layout_height="270dp"
         android:background="@color/layer2"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
         >
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/TableTransactionsReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="7dp"
+            android:layout_margin="5dp"
             android:background="@color/layer5">
 
             <TableRow
@@ -234,92 +234,101 @@
                 >
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:textSize="12dp"
                     android:text="@string/cust_name"
                     android:textColor="@color/text_view_color"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textSize="12dp"
                     android:text="@string/voucher_number"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:gravity="center"
                     android:text="@string/voucher_date"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/pay_method"
+                    android:textSize="12dp"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:gravity="center"
+                    android:textSize="12dp"
                     android:text="@string/items"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_discount"
+                    android:textSize="12dp"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textSize="12dp"
                     android:text="@string/sub_total"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textSize="12dp"
                     android:gravity="center"
                     android:text="@string/tax"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:textSize="12dp"
                     android:text="@string/net_sales"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:padding="1dp"/>
 
 
             </TableRow>
@@ -330,11 +339,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="15dp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -360,7 +394,6 @@
             android:layout_weight="1"
             android:paddingLeft="20dp"
             android:textStyle="bold" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -371,31 +404,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="20dp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="20dp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="20dp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="20dp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:textStyle="bold" />
 
         <TextView
@@ -403,10 +412,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:text="@string/app_zero"
             android:textColor="@color/amountColor"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
 
@@ -415,10 +424,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:text="@string/app_zero"
             android:textColor="@color/amountColor"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
 
@@ -427,10 +436,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingLeft="20dp"
+            android:paddingLeft="15dp"
             android:text="@string/app_zero"
             android:textColor="@color/amountColor"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
     </LinearLayout>

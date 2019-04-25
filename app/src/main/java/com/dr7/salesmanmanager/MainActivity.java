@@ -452,7 +452,8 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-    public class openSetting {
+    public class openSetting
+    {
 
         @SuppressLint("SetTextI18n")
         public void showDialog(Activity activity, String msg) {
