@@ -478,6 +478,7 @@ public class MainActivity extends AppCompatActivity
             final CheckBox allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
             final CheckBox salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
             final CheckBox minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
+            final CheckBox allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
             final RadioButton exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
             final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
 
@@ -517,6 +518,9 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getMinSalePric() == 1)
                     minSalePrice.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
+                    allowOutOfRange.setChecked(true);
             }
 
             okButton.setOnClickListener(new View.OnClickListener() {
@@ -539,13 +543,14 @@ public class MainActivity extends AppCompatActivity
                             int alowMinus = allowMinus.isChecked() ? 1 : 0;
                             int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
                             int minSalePric = minSalePrice.isChecked() ? 1 : 0;
+                            int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
 
                             mDbHandler.deleteAllSettings();
-                            mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
-                            mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
-                            mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
-                            mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
-                            mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod);
+                            mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                            mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                            mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                            mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                            mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
 
                             dialog.dismiss();
                         } else

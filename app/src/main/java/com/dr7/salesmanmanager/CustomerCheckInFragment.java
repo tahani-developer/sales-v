@@ -126,7 +126,8 @@ public class CustomerCheckInFragment extends DialogFragment {
 
 
                 if (custObj != null) {
-                    if (isInRange(custObj.getCustLat(), custObj.getCustLong())) {
+                    if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
+                            isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
                         MainActivity mainActivity = new MainActivity();
                         mainActivity.settext2();

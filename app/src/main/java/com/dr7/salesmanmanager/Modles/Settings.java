@@ -13,13 +13,14 @@ public class Settings {
     private int salesManCustomers;
     private int minSalePric;
     private int printMethod;
+    private int allowOutOfRange;
 
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
-                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod) {
+                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -31,6 +32,7 @@ public class Settings {
         this.salesManCustomers = salesManCustomers;
         this.minSalePric = minSalePric;
         this.printMethod = printMethod;
+        this.allowOutOfRange = allowOutOfRange;
     }
 
     public String getIpAddress() {
@@ -119,5 +121,13 @@ public class Settings {
 
     public void setPrintMethod(int printMethod) {
         this.printMethod = printMethod;
+    }
+
+    public int getAllowOutOfRange() {
+        return allowOutOfRange;
+    }
+
+    public void setAllowOutOfRange(int allowOutOfRange) {
+        this.allowOutOfRange = allowOutOfRange;
     }
 }

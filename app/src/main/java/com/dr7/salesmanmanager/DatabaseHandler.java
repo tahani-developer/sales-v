@@ -38,7 +38,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -162,6 +162,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SALESMAN_CUSTOMERS = "SALESMAN_CUSTOMERS";
     private static final String MIN_SALE_PRICE = "MIN_SALE_PRICE";
     private static final String PRINT_METHOD = "PRINT_METHOD";
+    private static final String ALLOW_OUT_OF_RANGE = "ALLOW_OUT_OF_RANGE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -418,7 +419,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + NUMBER_OF_COPIES + " INTEGER,"
                 + SALESMAN_CUSTOMERS + " INTEGER,"
                 + MIN_SALE_PRICE + " INTEGER,"
-                + PRINT_METHOD + " INTEGER" + ")";
+                + PRINT_METHOD + " INTEGER,"
+                + ALLOW_OUT_OF_RANGE + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -562,9 +564,9 @@ DatabaseHandler extends SQLiteOpenHelper {
 //            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
-            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD INTEGER NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER NOT NULL DEFAULT '1'");
 
-            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
+//            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
             db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
 
@@ -733,7 +735,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
-                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod) {
+                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -748,6 +750,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SALESMAN_CUSTOMERS, salesManCustomers);
         values.put(MIN_SALE_PRICE, minSalePrice);
         values.put(PRINT_METHOD, printMethod);
+        values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -944,6 +947,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
                 setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
                 setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
+                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(11)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());
