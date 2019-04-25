@@ -38,7 +38,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 12;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -58,6 +58,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SALES_MAN_NO = "SALES_MAN_NO";
     private static final String CREDIT_LIMIT = "CREDIT_LIMIT";
     private static final String PAY_METHOD0 = "PAY_METHOD";
+    private static final String CUST_LAT = "CUST_LAT";
+    private static final String CUST_LONG = "CUST_LONG";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -301,7 +303,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CASH_CREDIT + " INTEGER,"
                 + SALES_MAN_NO + " TEXT,"
                 + CREDIT_LIMIT + " INTEGER,"
-                + PAY_METHOD0 + " INTEGER" + ")";
+                + PAY_METHOD0 + " INTEGER,"
+                + CUST_LAT + " TEXT,"
+                + CUST_LONG + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -552,50 +556,19 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-//         Drop older table if existed
-//        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_MASTER);
-//        db.execSQL("DROP TABLE IF EXISTS " + Item_Unit_Details);
-//        db.execSQL("DROP TABLE IF EXISTS " + Items_Master);
-//        db.execSQL("DROP TABLE IF EXISTS " + Price_List_D);
-//        db.execSQL("DROP TABLE IF EXISTS " + Price_List_M);
-//        db.execSQL("DROP TABLE IF EXISTS " + Sales_Team);
-//        db.execSQL("DROP TABLE IF EXISTS " + SalesMan_Items_Balance);
-//        db.execSQL("DROP TABLE IF EXISTS " + SalesmanAndStoreLink);
-//        db.execSQL("DROP TABLE IF EXISTS " + SalesMen);
-//        db.execSQL("DROP TABLE IF EXISTS " + CustomerPrices);
-//
-//
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRANSACTIONS);
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTING);
-//        db.execSQL("DROP TABLE IF EXISTS " + COMPANY_INFO);
-//        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_MASTER);
-//        db.execSQL("DROP TABLE IF EXISTS " + SALES_VOUCHER_DETAILS);
-//        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS);
-//        db.execSQL("DROP TABLE IF EXISTS " + PAYMENTS_PAPER);
-//        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_MASTER);
-//        db.execSQL("DROP TABLE IF EXISTS " + REQUEST_DETAILS);
-//        // Create tables again
-//        onCreate(db);PAY_METHOD
-
-
         try {
 
-//            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
+//            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
 //            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
+//            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
+//            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
+            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD INTEGER NOT NULL DEFAULT '0'");
+
             db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
             db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
 
-            String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
-                    + PROMOTION_ID + " INTEGER,"
-                    + PROMOTION_TYPE + " INTEGER,"
-                    + FROM_DATE + " TEXT,"
-                    + TO_DATE + " TEXT,"
-                    + ITEM_NUMBERS + " TEXT,"
-                    + ITEM_QTY + " INTEGER,"
-                    + BONUS_QTY + " INTEGER,"
-                    + BONUS_ITEM_NO + " TEXT" + ")";
-            db.execSQL(CREATE_TABLE_VS_PROMOTION);
+
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated table");
         }
@@ -616,6 +589,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SALES_MAN_NO, customer.getSalesManNumber());
         values.put(CREDIT_LIMIT, customer.getCreditLimit());
         values.put(PAY_METHOD0, customer.getPayMethod());
+        values.put(CUST_LAT, customer.getCustLat());
+        values.put(CUST_LONG, customer.getCustLong());
 
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
@@ -1125,6 +1100,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                customer.setCustLat(cursor.getString(9));
+                customer.setCustLong(cursor.getString(10));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1155,6 +1132,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+                customer.setCustLat(cursor.getString(9));
+                customer.setCustLong(cursor.getString(10));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1700,6 +1679,16 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
+    }
+
+    public void updateCustomersMaster(String lat , String lon , int custId) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(CUST_LAT, lat);
+        values.put(CUST_LONG, lon);
+
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custId, null);
     }
 
     public void updateSalesManItemsBalance1(float qty , int salesMan, String itemNo) {
