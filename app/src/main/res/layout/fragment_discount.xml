@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_disc_type"
                 android:textColor="@color/text_view_color"
-                android:textSize="24sp"
+
+                android:textSize="@dimen/title_large"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -43,7 +44,7 @@
                 android:checked="true"
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
-                android:textSize="24sp" />
+                android:textSize="@dimen/content_large" />
 
             <RadioButton
                 android:id="@+id/percentRadioButton"
@@ -52,7 +53,7 @@
                 android:layout_marginLeft="30dp"
                 android:text="@string/app_disc_type2"
                 android:textColor="@color/text_view_color"
-                android:textSize="24sp" />
+                android:textSize="@dimen/content_large"  />
         </RadioGroup>
 
     </LinearLayout>
@@ -67,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_disc_value"
             android:textColor="@color/text_view_color"
-            android:textSize="24sp"
+            android:textSize="@dimen/title_large"
             android:textStyle="bold" />
 
         <EditText
@@ -91,7 +92,7 @@
 
         <Button
             android:id="@+id/okButton"
-            android:layout_width="250dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@color/add_button"
             android:text="@string/app_ok"
@@ -100,7 +101,7 @@
 
         <Button
             android:id="@+id/cancelButton"
-            android:layout_width="250dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
             android:background="@color/done_button"

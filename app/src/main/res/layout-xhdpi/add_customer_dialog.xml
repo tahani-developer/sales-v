@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp"
+    android:layout_height="300dp"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_cust"
+        android:layout_gravity="center"
+        android:textColor="@color/text_view_color"
+        android:textSize="17sp" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:columnCount="2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cust_name"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/custEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColor="@color/add_button" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/remark"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/remarkEditText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:layout_marginTop="10dp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColor="@color/add_button" />
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/doneButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/done_button"
+            android:gravity="center"
+            android:text="@string/app_done"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

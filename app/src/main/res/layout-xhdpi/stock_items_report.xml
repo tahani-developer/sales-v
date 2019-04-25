@@ -5,15 +5,14 @@
     android:background="@color/layer1"
     android:orientation="vertical">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="@string/payments_details_report"
+        android:text="@string/stock_request_items_report"
         android:textColor="@color/text_view_color"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -21,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal"
         android:layout_marginLeft="15dp">
 
@@ -35,12 +34,12 @@
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/from_date_r"
+            android:id="@+id/from_date"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="2dp"
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp"
@@ -52,15 +51,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
             android:text="@string/to_date"
             android:textColor="@color/text_view_color"
             android:textSize="15sp" />
 
         <EditText
-            android:id="@+id/to_date_r"
-            android:layout_width="100dp"
+            android:id="@+id/to_date"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -71,51 +70,30 @@
             android:inputType="date"
             android:focusable="false"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_view_color"
-            android:text="@string/app_paymentType"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"/>
-
-        <Spinner
-            android:id="@+id/paymentTypeSpinner_r"
-            android:layout_width="100dp"
-            android:padding="3dp"
-            android:textSize="15sp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:entries="@array/app_paymentTypeList"
-            android:background="@color/layer2"
-            android:gravity="center"
-            android:layout_marginStart="10dp" />
-
         <Button
-            android:id="@+id/preview_but"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
+            android:id="@+id/preview"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
             android:textColor="@color/layer5"
-            android:layout_marginStart="20dp"
-            android:textSize="15sp"
-            android:text="@string/preview"
-            android:layout_marginLeft="20dp" />
+            android:background="@color/done_button"
+            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
+            android:text="@string/preview" />
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="280dp"
         android:background="@color/layer2"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         >
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/TablePaymentsDetailsReport"
+            android:id="@+id/TableItemsBalanceReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="7dp"
+            android:layout_margin="3dp"
             android:background="@color/layer5">
 
             <TableRow
@@ -127,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/voucher_number"
+                    android:text="@string/item_number"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
@@ -136,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/pay_date"
+                    android:text="@string/item_name"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
 
@@ -145,47 +123,48 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/cust_name"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/app_amount"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/remark"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/sale_man_number"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/pay_method"
+                    android:text="@string/unit_qty"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold" />
             </TableRow>
 
         </TableLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp">
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:text="@string/total_qty"
+            android:textColor="@color/text_view_color"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            />
+
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:text="@string/app_zero"
+            android:textColor="@color/amountColor"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 </LinearLayout>

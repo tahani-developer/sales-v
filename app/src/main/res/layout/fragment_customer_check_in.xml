@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discLayout"
-    android:layout_width="700dp"
-    android:layout_height="450dp"
+    android:layout_width="650dp"
+    android:layout_height="400dp"
     android:minWidth="700dp"
     android:minHeight="450dp"
     android:background="@color/layer3"
@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:text="@string/app_enter_cust_code"
         android:textColor="@color/text_view_color"
-        android:textSize="24sp"
+        android:textSize="20sp"
         />
 
     <LinearLayout
@@ -29,7 +29,7 @@
             android:id="@+id/customerAccountNo"
             android:layout_width="0dp"
             android:layout_marginTop="10dp"
-            android:layout_height="35dp"
+            android:layout_height="30dp"
             android:background="@color/totals_color"
             android:enabled="false"
             android:textColor="@color/text_view_color"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:text="@string/app_cust_name"
         android:textColor="@color/text_view_color"
-        android:textSize="24sp"
+        android:textSize="20sp"
         />
 
     <LinearLayout

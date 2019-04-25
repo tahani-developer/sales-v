@@ -191,7 +191,7 @@ public class AddItemsFragment2 extends DialogFragment {
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(25);
+            messageTextView.setTextSize(15);
             toast.show();
             return false;
         }
@@ -268,7 +268,7 @@ public class AddItemsFragment2 extends DialogFragment {
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(25);
+            messageTextView.setTextSize(15);
             toast.show();
 
             return true;
@@ -278,7 +278,7 @@ public class AddItemsFragment2 extends DialogFragment {
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(25);
+            messageTextView.setTextSize(15);
             toast.show();
             return false;
         }

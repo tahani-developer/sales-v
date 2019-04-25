@@ -1,0 +1,466 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingEnd="5dp"
+    android:paddingHorizontal="5dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingStart="5dp"
+    android:paddingTop="5dp"
+    android:paddingVertical="5dp"
+    tools:context="com.dr7.salesmanmanager.SalesInvoice"
+
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/row1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:background="@color/layer2"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp">
+
+        <ImageButton
+            android:id="@+id/newImgBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/new_inv" />
+
+        <ImageButton
+            android:id="@+id/saveInvoiceData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/save_btn" />
+
+        <ImageButton
+            android:id="@+id/discButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_disc"
+            android:text="@string/app_disc_l" />
+
+        <ImageButton
+            android:id="@+id/addItemImgButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/add_items" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/voucher_number"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/voucherNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/cust_name"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/invoiceCustomerName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/custInfoImgBtn"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            android:background="@drawable/cust_info" />
+
+
+        <ImageView
+            android:id="@+id/balanceImgBtn"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/balance_img" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/row3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/transKindRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/layer1"
+            android:orientation="horizontal"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp">
+
+            <TextView
+                android:id="@+id/tvTrKind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_trans_kind"
+                android:textColor="@color/second_color"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/salesRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:checked="true"
+                android:text="@string/app_sales_inv"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/retSalesRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:checked="false"
+                android:text="@string/app_ret_inv"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/orderRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:checked="false"
+                android:text="@string/app_cust_order"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/paymentTermRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:background="@color/layer1"
+            android:orientation="horizontal"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp">
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/payemtnTerm"
+                android:textColor="@color/second_color"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/creditRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:checked="true"
+                android:text="@string/app_credit"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/cashRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:text="@string/app_cash"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_remark"
+            android:textSize="14dp"
+            android:textColor="@color/text_view_color" />
+
+        <EditText
+            android:id="@+id/remarkEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:textSize="12dp"
+            android:textColor="@color/totals_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/layer4"
+        android:orientation="horizontal"
+        android:paddingBottom="1dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="1dp">
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_item_no"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_desc"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_qty"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_price"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_bonus"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_line_disc"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/app_amount"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row7"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_gravity="fill"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/itemsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/totals"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:columnCount="8">
+
+        <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="10dp">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_sub_total"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subTotalTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_disc"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="@string/app_disc" />
+
+            <TextView
+                android:id="@+id/discTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_tax"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="@string/app_tax" />
+
+            <TextView
+                android:id="@+id/taxTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/textView110"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_net_sales"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/netSalesTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:text="@string/app_zero"
+                android:textColor="@color/amountColor"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="0.000" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

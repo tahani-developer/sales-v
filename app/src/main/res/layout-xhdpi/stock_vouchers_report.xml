@@ -8,21 +8,21 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="@string/action_print_voucher"
+        android:text="@string/stock_request_vouchers_report"
         android:textColor="@color/text_view_color"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/row2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,92 +31,87 @@
             android:gravity="center_vertical"
             android:text="@string/from_date"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_large" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="5dp"
+            android:focusable="false"
             android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="@dimen/content_large"
             android:inputType="date"
-            android:focusable="false"/>
+            android:textColor="@color/add_button"
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
             android:gravity="center_vertical"
             android:text="@string/to_date"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_large" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:focusable="false"
             android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="15sp"
             android:inputType="date"
-            android:focusable="false"/>
+            android:textColor="@color/add_button"
+            android:textSize="15sp" />
+
 
         <Button
             android:id="@+id/preview"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:textColor="@color/layer5"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginLeft="40dp"
             android:background="@color/done_button"
-            android:layout_marginHorizontal="50dp"
-            android:text="@string/preview" />
+            android:text="@string/preview"
+            android:textColor="@color/layer5" />
+
 
     </LinearLayout>
 
 
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:background="@color/layer2"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
         >
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/TableTransactionsReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="7dp"
             android:background="@color/layer5">
 
             <TableRow
                 android:background="@color/layer3"
                 >
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/cust_name"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold"
-                    android:padding="5dp"/>
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -126,7 +121,7 @@
                     android:padding="5dp"/>
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -134,62 +129,24 @@
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
+
+
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/pay_method"
+                    android:text="@string/remark"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.2"
                     android:gravity="center"
-                    android:text="@string/voucher_discount"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/sub_total"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/tax"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/net_sales"
-                    android:textColor="@color/text_view_color"
-                    android:textStyle="bold"
-                    android:padding="5dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@string/print"
+                    android:text="@string/items"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold"
                     android:padding="5dp"/>

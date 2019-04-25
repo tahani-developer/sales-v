@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -132,7 +133,7 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                            row.setPadding(5, 10, 5, 10);
+                            row.setPadding(2, 10, 2, 10);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer4));
@@ -169,8 +170,9 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1f);
                                     textView.setLayoutParams(lp2);
+
 
                                     row.addView(textView);
 
@@ -178,6 +180,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(getResources().getString(R.string.print));
                                     textView.setTextSize(12);
+
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
                                     textView.setGravity(Gravity.CENTER);
@@ -199,7 +202,9 @@ public class PrintVoucher extends AppCompatActivity {
                                         }
                                     });
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(40, 30, 0.2f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
+
+
                                     textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
