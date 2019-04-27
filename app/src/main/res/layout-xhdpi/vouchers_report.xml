@@ -35,7 +35,7 @@
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -59,7 +59,7 @@
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
