@@ -6,27 +6,29 @@ package com.dr7.salesmanmanager.Modles;
 
 public class Customer {
 
-    private int companyNumber ;
-    private String custId ;
-    private String custName ;
-    private String address ;
-    private int isSuspended ;
-    private String priceListId ;
-    private int cashCredit ;
-    private String salesManNumber ;
-    private double creditLimit ;
-    private int payMethod ;
+    private int companyNumber;
+    private String custId;
+    private String custName;
+    private String address;
+    private int isSuspended;
+    private String priceListId;
+    private int cashCredit;
+    private String salesManNumber;
+    private double creditLimit;
+    private int payMethod;
+    private String custLat;
+    private String custLong;
 
 
-    private  String customerAccount, customerName;
+    private String customerAccount, customerName;
 
-    public Customer(){
+    public Customer() {
 
     }
 
     public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit,
-                    String customerAccount, String customerName , int payMethod) {
+                    String customerAccount, String customerName, int payMethod, String custLat, String custLong) {
 
         this.companyNumber = companyNumber;
         this.custId = custId;
@@ -40,9 +42,11 @@ public class Customer {
         this.customerAccount = customerAccount;
         this.customerName = customerName;
         this.payMethod = payMethod;
+        this.custLat = custLat;
+        this.custLong = custLong;
     }
 
-    public  Customer(String custId, String custName) {
+    public Customer(String custId, String custName) {
         this.custId = custId;
         this.custName = custName;
     }
@@ -119,27 +123,27 @@ public class Customer {
         this.creditLimit = creditLimit;
     }
 
-    public  String getCustomerAccount() {
-        return customerAccount;
-    }
-
-    public void setCustomerAccount(String customerAccount) {
-        this.customerAccount = customerAccount;
-    }
-
-    public   String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
     public int getPayMethod() {
         return payMethod;
     }
 
     public void setPayMethod(int payMethod) {
         this.payMethod = payMethod;
+    }
+
+    public String getCustLat() {
+        return custLat;
+    }
+
+    public void setCustLat(String custLat) {
+        this.custLat = custLat;
+    }
+
+    public String getCustLong() {
+        return custLong;
+    }
+
+    public void setCustLong(String custLong) {
+        this.custLong = custLong;
     }
 }

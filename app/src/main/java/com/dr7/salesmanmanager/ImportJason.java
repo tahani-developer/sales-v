@@ -165,6 +165,8 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
                     Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                    Customer.setCustLat(finalObject.getString("CustLat"));
+                    Customer.setCustLong(finalObject.getString("CustLong"));
 
                     customerList.add(Customer);
                 }

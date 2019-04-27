@@ -821,65 +821,61 @@ public class PrintVoucher extends AppCompatActivity {
 
             for (int i = 1; i <= numOfCopy; i++) {
 
-                printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("الرقم الضريبي  : " + companyInfo.getTaxNo() + "\n", 1, 2);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-                printCustom("التاريخ        : " + voucher.getVoucherDate() + "\n", 1, 2);
-                printCustom("رقم الفاتورة   : " + voucher.getVoucherNumber() + "\n", 1, 2);
+                printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("رقم العميل     : " + voucher.getCustNumber() + "\n", 1, 2);
-                printCustom("اسم العميل     : " + voucher.getCustName() + "\n", 1, 2);
-                printCustom("مندوب المبيعات : " + voucher.getSaleManNumber() + "\n", 1, 2);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
+                printCustom("------------------------------------------" + " \n ", 1, 0);
+                printCustom("التاريخ        " + "١١١١" + " : " + " \n ", 1, 0);
+                printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
+                printCustom("رقم العميل     " + voucher.getCustNumber() + " : " + "\n", 1, 0);
+                printCustom("اسم العميل " + " : " + voucher.getCustName()  + "\n", 1, 0);
+                printCustom("مندوب المبيعات " + voucher.getSaleManNumber() + " : " + "\n", 1, 0);
+                printCustom("------------------------------------------" + "\n", 1, 0);
 
+                int serial = 1;
                 for (int j = 0; j < items.size(); j++) {
+                    if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                        String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                        String amountATax = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue());
+                        amount = convertToEnglish(amount);
+                        amountATax = convertToEnglish(amountATax);
 
-                    String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
-                    String amountATax = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc()+ items.get(j).getTaxValue());
-                    amount = convertToEnglish(amount);
-                    amountATax = convertToEnglish(amountATax);
+                        printCustom("(" + serial + "" + "\n", 1, 0);
+                        printCustom("رقم الصنف " + items.get(j).getItemNo() + " : " + " \n ", 1, 0);
+                        printCustom("الصنف " + " : " + items.get(j).getItemName() + " \n ", 1, 0);
+                        printCustom("الكمية    " + items.get(j).getQty() + " : " + " \n ", 1, 0);
+                        printCustom("السعر     " + items.get(j).getPrice() + " : " + " \n ", 1, 0);
+                        printCustom("الخصم     " + items.get(j).getDisc() + " : " + " \n ", 1, 0);
+                        printCustom("الصافي    " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
+                        printCustom("الضريبة   " + items.get(j).getTaxValue() + " : " + " \n ", 1, 0);
+                        printCustom("الاجمالي   " + amountATax + " : " + " \n ", 1, 0);
 
-                    printCustom("" + (j+1) +"(" + "\n", 1, 2);
-                    printCustom("رقم الصنف : " + items.get(j).getItemNo() + "\n", 1, 2);
-                    printCustom("الصنف     : " + items.get(j).getItemName() + "\n", 1, 2);
-                    printCustom("الكمية    : " + items.get(j).getQty() + "\n", 1, 2);
-                    printCustom("السعر     : " + items.get(j).getPrice() + "\n", 1, 2);
-                    printCustom("الخصم     : " + items.get(j).getDisc() + "\n", 1, 2);
-                    printCustom("الصافي    : " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + "\n", 1, 2);
-                    printCustom("الضريبة   : " + items.get(j).getTaxValue() + "\n", 1, 2);
-                    printCustom("الاجمالي   : " + amountATax + "\n", 1, 2);
+                        printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
 
-                    printCustom("* * * * * * * * * * * * * " + "\n", 1, 2);
-
-                    totalQty += items.get(j).getQty();
-                    totalPrice += items.get(j).getPrice();
-                    totalDisc += items.get(j).getDisc();
-                    totalNet += (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
-                    totalTax += items.get(j).getTaxValue();
-                    totalTotal += items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue() ;
-
+                        serial++;
+                        totalQty += items.get(j).getQty();
+                        totalPrice += items.get(j).getPrice();
+                        totalDisc += items.get(j).getDisc();
+                        totalNet += (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                        totalTax += items.get(j).getTaxValue();
+                        totalTotal += items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue();
+                    }
                 }
 
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("اجمالي الكمية  : " + totalQty + "\n", 1, 2);
-                printCustom("اجمالي السعر   : " + totalPrice + "\n", 1, 2);
-                printCustom("اجمالي الخصم   : " + totalDisc + "\n", 1, 2);
-                printCustom("اجمالي الصافي  : " + totalNet + "\n", 1, 2);
-                printCustom("اجمالي الضريبة : " + totalTax + "\n", 1, 2);
-                printCustom("اجمالي الإجمالي : " + totalTotal + "\n", 1, 2);
+                printCustom("اجمالي الكمية  " + totalQty + " : " +" \n ", 1, 0);
+                printCustom("اجمالي السعر   " + totalPrice + " : " +" \n ", 1, 0);
+                printCustom("اجمالي الخصم   " + totalDisc + " : " +" \n ", 1, 0);
+                printCustom("اجمالي الصافي  " + totalNet + " : " +" \n ", 1, 0);
+                printCustom("اجمالي الضريبة " + totalTax + " : " +" \n ", 1, 0);
+                printCustom("اجمالي الإجمالي " + totalTotal + " : " +" \n ", 1, 0);
 
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
                 if (voucher.getVoucherType() != 506) {
-                    printCustom("استلمت البضاعة خالية من اي عيب او توالف" + "\n", 1, 2);
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
-                    printCustom("توقيع العميل : _______________" + "\n", 1, 2);
+                    printCustom("استلمت البضاعة خالية من اي عيب او توالف" + " \n ", 1, 0);
+                    printCustom("توقيع العميل" + "  " + "_______________" + " \n ", 1, 0);
                 }
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
+                printCustom("------------------------------------------" + " \n ", 1, 0);
+                printCustom("\n", 1, 0);
+                printCustom("\n", 1, 0);
 
                 mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                 mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
@@ -933,12 +929,13 @@ public class PrintVoucher extends AppCompatActivity {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_RIGHT);
                     break;
             }
+            mmOutputStream.write(PrinterCommands.LF);
 
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
-            mmOutputStream.write(arabicArr);
+            mmOutputStream.write(msg.getBytes());
 
-//            outputStream.write(PrinterCommands.LF);
+
             //outputStream.write(cc);
             //printNewLine();
         } catch (IOException e) {
