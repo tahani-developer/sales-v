@@ -1,24 +1,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="880dp"
+    android:layout_width="wrap_content"
     android:layout_height="475dp"
     android:background="@color/layer3"
     android:orientation="vertical"
-    android:padding="35dp"
+    android:padding="15dp"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/server_ip"
-            android:textColor="@color/text_view_color"
-            android:textSize="20sp"
+            android:textColor="@color/done_button"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <EditText
@@ -35,12 +36,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="20dp"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -50,22 +53,22 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="175dp"
+                    android:layout_height="45dp"
                     android:text="@string/num_of_copy"
-                   android:textColor="@color/text_view_color"
-                    android:textSize="20sp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/num_of_copy"
-                    android:layout_width="match_parent"
+                    android:layout_width="105dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:text="layout frag"
                     android:inputType="number"
                     android:padding="5dp"
+                    android:text="Number of cupy"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -73,15 +76,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
+                android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="178dp"
                     android:layout_height="wrap_content"
                     android:text="@string/vouchers_serial"
+
                     android:textColor="@color/text_view_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -107,7 +111,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="178dp"
                     android:layout_height="wrap_content" />
 
                 <EditText
@@ -130,7 +134,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="179dp"
                     android:layout_height="wrap_content" />
 
                 <EditText
@@ -150,15 +154,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="29dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/payments_serial_from"
                     android:textColor="@color/text_view_color"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -181,7 +185,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="179dp"
                     android:layout_height="wrap_content" />
 
                 <EditText
@@ -203,7 +207,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -215,31 +219,30 @@
                 android:textColor="@color/totals_color">
 
                 <TextView
-                    android:layout_width="135dp"
+                    android:layout_width="@dimen/card_view_width"
                     android:layout_height="wrap_content"
                     android:text="@string/print_method"
                     android:textColor="@color/text_view_color"
-                    android:textSize="19sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/bluetoothRadioButton"
-                    android:layout_width="130dp"
+                    android:layout_width="103dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:checked="true"
                     android:text="@string/bluetooth"
                     android:textColor="@color/text_view_color"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <RadioButton
                     android:id="@+id/wifiRadioButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="101dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
                     android:text="@string/wifi"
                     android:textColor="@color/text_view_color"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
             </RadioGroup>
 
@@ -251,31 +254,30 @@
                 android:textColor="@color/totals_color">
 
                 <TextView
-                    android:layout_width="135dp"
+                    android:layout_width="@dimen/card_view_width"
                     android:layout_height="wrap_content"
                     android:text="@string/tax_calc_kind"
                     android:textColor="@color/text_view_color"
-                    android:textSize="19sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/excludeRadioButton"
-                    android:layout_width="130dp"
+                    android:layout_width="103dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:checked="true"
                     android:text="@string/exclude"
                     android:textColor="@color/text_view_color"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <RadioButton
                     android:id="@+id/includeRadioButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="102dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
                     android:text="@string/include"
                     android:textColor="@color/text_view_color"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
             </RadioGroup>
 
@@ -283,97 +285,104 @@
                 android:id="@+id/price_by_cust"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/price_by_customer"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/use_weight_case"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/use_weight_case"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/allow_sale_with_minus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/allow_sale_with_minus"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/can_change_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/can_change_price"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/salesman_customers_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/get_salesman_customers_only"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/min_sale_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/min_sale_price"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <CheckBox
                 android:id="@+id/allow_cust_check_out_range"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
+
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="692dp"
         android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginRight="15dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="1dp"
+        tools:layout_height="wrap_content">
 
         <Button
             android:id="@+id/okBut"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
+            android:layout_width="120dp"
+            android:layout_height="25dp"
             android:layout_marginHorizontal="15dp"
             android:background="@color/add_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:layout_height="20dp" />
 
         <Button
             android:id="@+id/cancelBut"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
+            android:layout_width="120dp"
+            android:layout_height="25dp"
             android:layout_marginHorizontal="15dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:layout_height="20dp" />
     </LinearLayout>
 
 </LinearLayout>

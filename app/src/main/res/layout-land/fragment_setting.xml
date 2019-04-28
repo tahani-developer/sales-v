@@ -68,7 +68,7 @@
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
                     android:padding="5dp"
-                    android:text="land frag"
+                    android:text="Number of cupy"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -284,7 +284,7 @@
                 android:id="@+id/price_by_cust"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="0dp"
                 android:text="@string/price_by_customer"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -293,7 +293,7 @@
                 android:id="@+id/use_weight_case"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/use_weight_case"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -302,7 +302,7 @@
                 android:id="@+id/allow_sale_with_minus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/allow_sale_with_minus"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -311,7 +311,7 @@
                 android:id="@+id/can_change_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/can_change_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -320,7 +320,7 @@
                 android:id="@+id/salesman_customers_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/get_salesman_customers_only"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -329,7 +329,7 @@
                 android:id="@+id/min_sale_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/min_sale_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -339,7 +339,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -353,35 +353,35 @@
         android:layout_width="692dp"
         android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="1dp"
         android:layout_marginRight="15dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="1dp"
         tools:layout_height="wrap_content">
 
         <Button
             android:id="@+id/okBut"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="25dp"
             android:layout_marginHorizontal="15dp"
             android:background="@color/add_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
             android:textStyle="bold"
-            tools:layout_height="25dp" />
+            tools:layout_height="20dp" />
 
         <Button
             android:id="@+id/cancelBut"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="25dp"
             android:layout_marginHorizontal="15dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold"
-            tools:layout_height="25dp" />
+            tools:layout_height="20dp" />
     </LinearLayout>
 
 </LinearLayout>
