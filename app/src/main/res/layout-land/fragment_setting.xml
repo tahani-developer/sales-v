@@ -68,7 +68,7 @@
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
                     android:padding="5dp"
-                    android:text="Number of cupy"
+                    android:hint="Number of cupy"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>

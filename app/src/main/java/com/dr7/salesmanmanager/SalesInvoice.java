@@ -1030,7 +1030,7 @@ public class SalesInvoice extends Fragment {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData();
+            sendData2();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
