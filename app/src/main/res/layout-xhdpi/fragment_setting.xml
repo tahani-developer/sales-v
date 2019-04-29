@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/server_ip"
-            android:textColor="@color/done_button"
+            android:textColor="@color/text_view_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -68,7 +68,8 @@
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
                     android:padding="5dp"
-                    android:text="Number of cupy"
+                    android:text=""
+                    android:hint="number of copey"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>

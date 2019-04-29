@@ -63,7 +63,8 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:text="xxx"
+                    android:text=""
+                    android:hint="number of copy"
 
                     android:inputType="number"
                     android:padding="5dp"
