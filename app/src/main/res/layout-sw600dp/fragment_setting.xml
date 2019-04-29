@@ -121,7 +121,7 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/return_serial_from"
                     android:inputType="number"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -144,7 +144,7 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/order_serial_from"
                     android:inputType="number"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -171,7 +171,7 @@
                     android:layout_marginLeft="15dp"
                     android:hint="@string/app_cash"
                     android:inputType="number"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:textColor="@color/text_view_color" />
 
 
@@ -195,7 +195,7 @@
                     android:layout_marginTop="10dp"
                     android:hint="@string/app_cheque"
                     android:inputType="number"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -205,7 +205,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -294,7 +294,7 @@
                 android:id="@+id/use_weight_case"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/use_weight_case"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -303,7 +303,7 @@
                 android:id="@+id/allow_sale_with_minus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/allow_sale_with_minus"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -312,7 +312,7 @@
                 android:id="@+id/can_change_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/can_change_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -321,7 +321,7 @@
                 android:id="@+id/salesman_customers_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/get_salesman_customers_only"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -330,7 +330,7 @@
                 android:id="@+id/min_sale_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/min_sale_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -340,7 +340,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -353,15 +353,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/okBut"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_marginHorizontal="15dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/content_xlarge"
+            android:layout_marginHorizontal="10dp"
             android:background="@color/add_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
@@ -369,9 +371,10 @@
 
         <Button
             android:id="@+id/cancelBut"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_marginHorizontal="15dp"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/content_xlarge"
+            android:layout_marginHorizontal="10dp"
             android:background="@color/done_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
