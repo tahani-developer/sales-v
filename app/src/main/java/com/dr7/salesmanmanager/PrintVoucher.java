@@ -655,7 +655,7 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData2(voucher);
+            sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
