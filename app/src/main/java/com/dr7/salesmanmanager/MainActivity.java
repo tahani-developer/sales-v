@@ -526,37 +526,52 @@ public class MainActivity extends AppCompatActivity
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!linkEditText.getText().toString().equals("")) {
-                        if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
-                            String link = linkEditText.getText().toString().trim();
-                            int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                            int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                            int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                            int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                            int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                            int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
 
-                            int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
-                            int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
-                            int priceByCust = checkBox.isChecked() ? 1 : 0;
-                            int useWeightCase = checkBox2.isChecked() ? 1 : 0;
-                            int alowMinus = allowMinus.isChecked() ? 1 : 0;
-                            int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
-                            int minSalePric = minSalePrice.isChecked() ? 1 : 0;
-                            int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
+                    if (!(linkEditText.getText().toString().equals("")))
+                    {
+                        if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") &&!returnEditText.getText().toString().equals("") &&
+                               !orderEditText.getText().toString().equals("") &&!paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals(""))
+                        {
 
-                            mDbHandler.deleteAllSettings();
-                            mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
-                            mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
-                            mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
-                            mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
-                            mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                                if (Integer.parseInt(numOfCopy.getText().toString()) < 5)
+                                {
+                                    String link = linkEditText.getText().toString().trim();
+                                    int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                                    int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                                    int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                                    int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                                    int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                                    int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
 
-                            dialog.dismiss();
-                        } else
-                            Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+                                    int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
+                                    int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
+                                    int priceByCust = checkBox.isChecked() ? 1 : 0;
+                                    int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                                    int alowMinus = allowMinus.isChecked() ? 1 : 0;
+                                    int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
+                                    int minSalePric = minSalePrice.isChecked() ? 1 : 0;
+                                    int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
+
+                                    mDbHandler.deleteAllSettings();
+                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                                    mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange);
+
+                                    dialog.dismiss();
+                                } else
+                                    Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
+                            } else{
+                                Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+                        }
+
+
+
                 }
             });
 

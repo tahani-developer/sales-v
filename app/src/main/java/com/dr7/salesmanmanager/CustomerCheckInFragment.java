@@ -90,7 +90,8 @@ public class CustomerCheckInFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_customer_check_in, container, false);
         //selectButton = (ImageButton) view.findViewById(R.id.check_img_button);
@@ -110,25 +111,50 @@ public class CustomerCheckInFragment extends DialogFragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!(Customer_Account.getText().toString().equals(""))) {
 
-                cusCode = Customer_Account.getText().toString();
-                cusName = Customer_Name.getText().toString();
-                status = 0;
+                    cusCode = Customer_Account.getText().toString();
 
-                List<Customer> customers = mDbHandler.getAllCustomers();
-                Customer custObj = null;
-                for (int i = 0; i < customers.size(); i++) {
-                    if (customers.get(i).getCustId().equals(cusCode)) {
-                        custObj = customers.get(i);
-                        break;
+                    cusName = Customer_Name.getText().toString();
+                    status = 0;
+
+                    List<Customer> customers = mDbHandler.getAllCustomers();
+                    Customer custObj = null;
+                    for (int i = 0; i < customers.size(); i++) {
+                        if (customers.get(i).getCustId().equals(cusCode)) {
+                            custObj = customers.get(i);
+                            break;
+                        }
                     }
-                }
 
 
-                if (custObj != null) {
-                    if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
-                            isInRange(custObj.getCustLat(), custObj.getCustLong())) {
+                    if (custObj != null) {
+                        if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
+                                isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
+                            MainActivity mainActivity = new MainActivity();
+                            mainActivity.settext2();
+
+                            Date currentTimeAndDate = Calendar.getInstance().getTime();
+                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+                            String currentTime = tf.format(currentTimeAndDate);
+                            String currentDate = df.format(currentTimeAndDate);
+
+                            int salesMan = Integer.parseInt(Login.salesMan);
+
+                            mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
+                                    "Not Yet", "Not Yet", 0));
+
+                            MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+                            MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+                            dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
                         MainActivity mainActivity = new MainActivity();
                         mainActivity.settext2();
 
@@ -144,38 +170,19 @@ public class CustomerCheckInFragment extends DialogFragment {
                         mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                 "Not Yet", "Not Yet", 0));
 
+                        saveCustLocation(Integer.parseInt(cusCode));
+                        new JSONTask().execute();
+
                         MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
                         MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                         dismiss();
-                    } else {
-                        Toast.makeText(getActivity() , "Not in range" , Toast.LENGTH_SHORT).show();
                     }
-
                 } else {
-                    MainActivity mainActivity = new MainActivity();
-                    mainActivity.settext2();
-
-                    Date currentTimeAndDate = Calendar.getInstance().getTime();
-                    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-                    String currentTime = tf.format(currentTimeAndDate);
-                    String currentDate = df.format(currentTimeAndDate);
-
-                    int salesMan = Integer.parseInt(Login.salesMan);
-
-                    mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                            "Not Yet", "Not Yet", 0));
-
-                    saveCustLocation(Integer.parseInt(cusCode));
-                    new JSONTask().execute();
-
-                    MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                    MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
-                    dismiss();
+                    Toast.makeText(getActivity(), "Please Enter Customer Name", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        }
+      );
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

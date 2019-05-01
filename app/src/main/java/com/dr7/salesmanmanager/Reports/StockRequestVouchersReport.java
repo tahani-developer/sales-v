@@ -134,7 +134,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                                     TextView textView = new TextView(StockRequestVouchersReport.this);
                                     textView.setText("Show");
                                     textView.setTextSize(12);
-                                    textView.setTextColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.text_view_color));
+                                    textView.setTextColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.colorAccent));
                                     textView.setGravity(Gravity.CENTER);
 

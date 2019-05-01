@@ -7,7 +7,12 @@
     android:padding="15dp"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
-
+    <ScrollView android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -385,5 +390,7 @@
             android:textStyle="bold"
             tools:layout_height="20dp" />
     </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
