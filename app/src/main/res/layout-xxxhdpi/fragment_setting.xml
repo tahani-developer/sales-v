@@ -68,9 +68,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:text=""
-                    android:hint="number of copy"
-
+                    android:hint="Number of cupy"
                     android:inputType="number"
                     android:padding="5dp"
                     android:textColor="@color/text_view_color" />
