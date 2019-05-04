@@ -14,13 +14,14 @@ public class Settings {
     private int minSalePric;
     private int printMethod;
     private int allowOutOfRange;
+    private int can_change_price;
 
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
-                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange) {
+                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int can_change_price) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -33,6 +34,15 @@ public class Settings {
         this.minSalePric = minSalePric;
         this.printMethod = printMethod;
         this.allowOutOfRange = allowOutOfRange;
+        this.can_change_price=can_change_price;
+    }
+
+    public int getCan_change_price() {
+        return can_change_price;
+    }
+
+    public void setCan_change_price(int can_change_price) {
+        this.can_change_price = can_change_price;
     }
 
     public String getIpAddress() {

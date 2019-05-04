@@ -117,7 +117,7 @@
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Item Name"
+            android:text="@string/item_name"
             android:textStyle="bold" />
 
 
@@ -128,7 +128,7 @@
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Item Number"
+            android:text="@string/item_number"
             android:textStyle="bold" />
 
 
@@ -139,7 +139,7 @@
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Quantity"
+            android:text="@string/unit_qty"
             android:textStyle="bold" />
     </LinearLayout>
 
