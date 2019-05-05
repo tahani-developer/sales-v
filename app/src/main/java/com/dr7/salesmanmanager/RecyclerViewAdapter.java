@@ -103,12 +103,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
-                price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
+
 
                 final DatabaseHandler mHandler = new DatabaseHandler(context);
+                //*********************************** change Price with customer or not accourding to setting  ************************************
+                if (mHandler.getAllSettings().get(0).getCan_change_price() == 0)
+                {
+                    price.setEnabled(false);
+                //    price.setText("Desable");
+
+                }
+                else
+                {
+                    price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
+                }
 
                 if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
                     discountLinearLayout.setVisibility(View.INVISIBLE);
+
 
                 if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                     unitWeightLinearLayout.setVisibility(View.INVISIBLE);

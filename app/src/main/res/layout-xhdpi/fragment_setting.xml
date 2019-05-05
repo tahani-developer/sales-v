@@ -7,7 +7,12 @@
     android:padding="15dp"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
-
+    <ScrollView android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/server_ip"
-            android:textColor="@color/done_button"
+            android:textColor="@color/text_view_color"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -68,7 +73,8 @@
                     android:layout_marginLeft="15dp"
                     android:inputType="number"
                     android:padding="5dp"
-                    android:hint="Number of cupy"
+                    android:text=""
+                    android:hint="number of copey"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
@@ -384,5 +390,7 @@
             android:textStyle="bold"
             tools:layout_height="20dp" />
     </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -84,6 +85,13 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final TextView price = (TextView) dialog.findViewById(R.id.price);
                 final TextView pricee = (TextView) dialog.findViewById(R.id.pricee);
                 final TextView bonuss = (TextView) dialog.findViewById(R.id.bonuss);
+
+                //******************************************************invisible weight text view in stock request*************************
+                final TextView texViewtQty = (TextView) dialog.findViewById(R.id.textQty);
+                final TextView weight = (TextView) dialog.findViewById(R.id.textview_wieght);
+                final EditText weight_editText = (EditText) dialog.findViewById(R.id.unitWeight);
+                final CheckBox use_weight = (CheckBox) dialog.findViewById(R.id.use_weight);
+                //****************************************************************************************************************************
                 final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
@@ -93,12 +101,19 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
+
                 price.setVisibility(View.INVISIBLE);
                 pricee.setVisibility(View.INVISIBLE);
                 bonus.setVisibility(View.INVISIBLE);
                 discount.setVisibility(View.INVISIBLE);
                 radioGroup.setVisibility(View.INVISIBLE);
                 bonuss.setVisibility(View.INVISIBLE);
+                //******************************************
+                weight.setVisibility(View.INVISIBLE);
+                weight_editText.setVisibility(View.INVISIBLE);
+                texViewtQty.setText("Unit Qty");
+                use_weight.setVisibility(View.INVISIBLE);
+                //******************************************************
 
                 DatabaseHandler mHandler = new DatabaseHandler(context);
                 List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());

@@ -7,31 +7,40 @@
     android:padding="15dp"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
-
+    <ScrollView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_ip"
-            android:textColor="@color/text_view_color"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/link"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
 
-            android:padding="5dp"
-            android:textColor="@color/add_button" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/server_ip"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/link"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="10dp"
+
+                android:padding="5dp"
+                android:textColor="@color/add_button" />
+
+        </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -338,8 +347,8 @@
                 android:id="@+id/allow_cust_check_out_range"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:layout_marginTop="1dp"
+                android:checked="true"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
@@ -383,5 +392,7 @@
             android:textStyle="bold"
             tools:layout_height="20dp" />
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

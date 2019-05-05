@@ -66,7 +66,7 @@ public class ReceiptVoucher extends Fragment {
     private Spinner paymentKindSpinner;
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
-    private TextView voucherNo ,paymentTerm;
+    private TextView voucherNo, paymentTerm;
 
     private double total = 0.0;
 
@@ -141,7 +141,7 @@ public class ReceiptVoucher extends Fragment {
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
 
         String payMethod = "";
-        switch (CustomerListShow.paymentTerm){
+        switch (CustomerListShow.paymentTerm) {
             case 0:
                 payMethod = getResources().getString(R.string.cash);
                 break;
@@ -151,10 +151,9 @@ public class ReceiptVoucher extends Fragment {
         }
 
         if (MainActivity.checknum == 1) {
-            customername.setText(getResources().getString(R.string.cust_name)+ " : " +CustomerListShow.Customer_Name);
-            paymentTerm.setText(getResources().getString(R.string.payment_term)+ " : " + payMethod);
-        }
-        else {
+            customername.setText(getResources().getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name);
+            paymentTerm.setText(getResources().getString(R.string.payment_term) + " : " + payMethod);
+        } else {
             customername.setText(getResources().getString(R.string.cust_name));
             paymentTerm.setText(getResources().getString(R.string.payment_term));
         }
@@ -162,7 +161,6 @@ public class ReceiptVoucher extends Fragment {
         addCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
 
                 final Dialog dialog = new Dialog(getActivity());
@@ -206,81 +204,90 @@ public class ReceiptVoucher extends Fragment {
 
                         if (checkDialogFields(chNum.getText().toString(), bank.getSelectedItem().toString(),
                                 chDate.getText().toString(), chValue.getText().toString())) {
+                            if ((Double.parseDouble(chValue.getText().toString()) != 0.0)) {
 
-                            if (checkTotal(chValue.getText().toString())) {
-                                total = total + Double.parseDouble(chValue.getText().toString());
-                                chequeTotal.setText(total + "");
+                                if (checkTotal(chValue.getText().toString())) {
+                                    total = total + Double.parseDouble(chValue.getText().toString());
+                                    chequeTotal.setText(total + "");
 
-                                Payment check = new Payment();
-                                check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
-                                check.setBank(bank.getSelectedItem().toString());
-                                check.setDueDate(chDate.getText().toString());
-                                check.setAmount(Double.parseDouble(chValue.getText().toString()));
-                                payments.add(check);
+                                    Payment check = new Payment();
+                                    check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
+                                    check.setBank(bank.getSelectedItem().toString());
+                                    check.setDueDate(chDate.getText().toString());
+                                    check.setAmount(Double.parseDouble(chValue.getText().toString()));
+                                    payments.add(check);
 
-                                row.setTag(position);
-                                for (int i = 0; i < 4; i++) {
+                                    row.setTag(position);
+                                    for (int i = 0; i < 4; i++) {
 
-                                    String[] record = {chNum.getText().toString(), bank.getSelectedItem().toString(),
-                                            chDate.getText().toString(), chValue.getText().toString()};
+                                        String[] record = {chNum.getText().toString(), bank.getSelectedItem().toString(),
+                                                chDate.getText().toString(), chValue.getText().toString()};
 
-                                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                                    row.setLayoutParams(lp);
+                                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                        row.setLayoutParams(lp);
 
-                                    TextView textView = new TextView(getActivity());
+                                        TextView textView = new TextView(getActivity());
 
-                                    textView.setHint(record[i]);
-                                    textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
-                                    textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
-                                    textView.setGravity(Gravity.CENTER);
+                                        textView.setHint(record[i]);
+                                        textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                        textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                        textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                    textView.setLayoutParams(lp2);
+                                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                        textView.setLayoutParams(lp2);
 
-                                    row.addView(textView);
+                                        row.addView(textView);
 
 
-                                }
-                                row.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View v) {
-
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                                        builder.setCancelable(false);
-                                        builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                tableCheckData.removeView(row);
-                                                payments.remove(row.getTag());
-                                                total = total - Double.parseDouble(chValue.getText().toString());
-                                                chequeTotal.setText(total + "");
-                                                position--;
-
-                                                for (int k = 0; k < tableCheckData.getChildCount(); k++) {
-                                                    TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
-                                                    tableRow.setTag(k);
-                                                }
-                                            }
-                                        });
-
-                                        builder.setNegativeButton(getResources().getString(R.string.app_no), null);
-                                        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear_item));
-                                        AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-
-                                        return true;
                                     }
-                                });
-                                tableCheckData.addView(row);
 
-                                position++;
-                                dialog.dismiss();
-                            } else
-                                Toast.makeText(getActivity(), "Cheque Total is greater than Amount value", Toast.LENGTH_SHORT).show();
-                        } else
-                            Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
-                    }
+                                    row.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                                            builder.setCancelable(false);
+                                            builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    tableCheckData.removeView(row);
+                                                    payments.remove(row.getTag());
+                                                    total = total - Double.parseDouble(chValue.getText().toString());
+                                                    chequeTotal.setText(total + "");
+                                                    position--;
+
+                                                    for (int k = 0; k < tableCheckData.getChildCount(); k++) {
+                                                        TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
+                                                        tableRow.setTag(k);
+                                                    }
+                                                }
+                                            });
+
+                                            builder.setNegativeButton(getResources().getString(R.string.app_no), null);
+                                            builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear_item));
+                                            AlertDialog alertDialog = builder.create();
+                                            alertDialog.show();
+
+                                            return true;
+                                        }
+                                    });
+                                    tableCheckData.addView(row);
+
+                                    position++;
+                                    dialog.dismiss();
+
+                                } else {
+                                    Toast.makeText(getActivity(), "Cheque Total is greater than Amount value", Toast.LENGTH_SHORT).show();
+                                }
+                            }  else {
+                                Toast.makeText(getActivity(), "Please Enter Amount greater than  0 ", Toast.LENGTH_SHORT).show();
+                            }
+
+                            }
+                            else
+                                Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
+                        }
                 });
 
                 cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -344,10 +351,10 @@ public class ReceiptVoucher extends Fragment {
                         String s = amountEditText.getText().toString();
                         String spinner = paymentKindSpinner.getSelectedItem().toString();
                         if (spinner == getResources().getString(R.string.cash)) {
-                            if (s.isEmpty() && s == "0")
-                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                            if (!s.equals("") && Double.parseDouble(s) != 0)
+                            {
 
-                            else {
+
                                 Toast.makeText(getActivity(), "Amount Saved***", Toast.LENGTH_LONG).show();
 
                                 Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -359,14 +366,20 @@ public class ReceiptVoucher extends Fragment {
 
                                 String cusNumber = (CustomerListShow.Customer_Account);
                                 String cusName = CustomerListShow.Customer_Name;
-                                Double amount = Double.parseDouble(amountEditText.getText().toString());
                                 String remark = remarkEditText.getText().toString();
+                                // if(!(amountEditText.getText().toString().equals(""))) {
+                                Double amount = Double.parseDouble(amountEditText.getText().toString());
+
 
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 payment = new Payment(0, voucherNumber, salesMan, payDate,
                                         remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
                                 mDbHandler.addPayment(payment);
+
+//                                else{
+//                                    Toast.makeText(getActivity(), "Please enter the amount", Toast.LENGTH_SHORT).show();
+//                                }
 
                                 // for english
 //                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
@@ -380,6 +393,9 @@ public class ReceiptVoucher extends Fragment {
                                 }
                                 clearForm();
                                 mDbHandler.setMaxSerialNumber(0, voucherNumber);
+
+                            } else {
+                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             if (!checkValue())
@@ -415,7 +431,7 @@ public class ReceiptVoucher extends Fragment {
                                     String row = ".                                             ";
                                     row = row.substring(0, 13) + payments.get(i).getCheckNumber() + row.substring(13, row.length());
                                     row = row.substring(0, 24) + payments.get(i).getDueDate() + row.substring(24, row.length());
-                                    row = row.substring(0, 38) + payments.get(i).getAmount() + row.substring(38, row.length()) + "\n" ;
+                                    row = row.substring(0, 38) + payments.get(i).getAmount() + row.substring(38, row.length()) + "\n";
 //                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
                                     row = row.trim();
                                     row += "\n" + " " + payments.get(i).getBank();
@@ -677,14 +693,14 @@ public class ReceiptVoucher extends Fragment {
     void sendData() throws IOException {
         try {
 
-            Log.e("******" , "here");
+            Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
             // the text typed by the user
             String msg;
 
             for (int i = 1; i <= numOfCopy; i++) {
-                if(payment.getPayMethod() == 0) {
+                if (payment.getPayMethod() == 0) {
                     msg = "       " + "\n" +
                             "----------------------------------------------" + "\n" +
                             "       " + "\n" +
@@ -704,26 +720,26 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "       ";
                 } else {
-                msg = "       " + "\n" +
-                        "----------------------------------------------" + "\n" +
-                        "       " + "\n" +
-                        "       " + "\n" +
-                        itemsString + "\n" +
-                        "       " + "\n" +
-                        "رقم الشيك  " + "البنك     " + "التاريخ       " + "القيمة  " + "\n" +
-                        "       " + "\n" +
-                        "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
-                        "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                        "ملاحظة: " + payment.getRemark() + "\n" +
-                        payment.getCustName() + "\n" +
-                        "وصلني من السيد/السادة: " + "\n" +                        "       " + "\n" +
-                        "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
-                        " سند قبض " + "\n" +
-                        "----------------------------------------------" + "\n" +
-                        "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
-                        companyInfo.getCompanyName() + "\n" +
-                        "       " + "\n" +
-                        "       ";
+                    msg = "       " + "\n" +
+                            "----------------------------------------------" + "\n" +
+                            "       " + "\n" +
+                            "       " + "\n" +
+                            itemsString + "\n" +
+                            "       " + "\n" +
+                            "رقم الشيك  " + "البنك     " + "التاريخ       " + "القيمة  " + "\n" +
+                            "       " + "\n" +
+                            "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
+                            "المبلغ المقبوض: " + payment.getAmount() + "\n" +
+                            "ملاحظة: " + payment.getRemark() + "\n" +
+                            payment.getCustName() + "\n" +
+                            "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
+                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                            " سند قبض " + "\n" +
+                            "----------------------------------------------" + "\n" +
+                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                            companyInfo.getCompanyName() + "\n" +
+                            "       " + "\n" +
+                            "       ";
                 }
                 printCustom(msg + "\n", 1, 2);
 

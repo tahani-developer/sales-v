@@ -253,7 +253,8 @@ public class StockRequest extends Fragment {
 
             itemNoTextView.setText(itemList.get(i).getItemNo());
             itemNameTextView.setText(itemList.get(i).getItemName());
-            qtyTextView.setText(String.valueOf(itemList.get(i).getQty() * Integer.parseInt(itemList.get(i).getUnit())));
+            qtyTextView.setText(String.valueOf(itemList.get(i).getQty()));
+          //  qtyTextView.setText(String.valueOf(itemList.get(i).getQty() * Integer.parseInt(itemList.get(i).getUnit())));
 
             return myView;
         }
