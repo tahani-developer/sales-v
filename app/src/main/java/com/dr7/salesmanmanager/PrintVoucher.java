@@ -825,7 +825,7 @@ public class PrintVoucher extends AppCompatActivity {
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
                 printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
                 printCustom("------------------------------------------" + " \n ", 1, 0);
-                printCustom("التاريخ        " + "١١١١" + " : " + " \n ", 1, 0);
+                printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
                 printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
                 printCustom("رقم العميل     " + voucher.getCustNumber() + " : " + "\n", 1, 0);
                 printCustom("اسم العميل " + " : " + voucher.getCustName()  + "\n", 1, 0);

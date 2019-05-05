@@ -601,7 +601,7 @@ public class ReceiptVoucher extends Fragment {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData();
+            sendData2();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -770,6 +770,66 @@ public class ReceiptVoucher extends Fragment {
         }
     }
 
+    void sendData2() throws IOException {
+        try {
+
+            int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
+            CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+
+            for (int i = 1; i <= numOfCopy; i++) {
+                if(payment.getPayMethod() == 0) {
+
+                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
+                    printCustom("------------------------------------------" + " \n ", 1, 0);
+                    printCustom("التاريخ        " + payment.getPayDate() + " : " + " \n ", 1, 0);
+                    printCustom("رقم السند      " + payment.getVoucherNumber() + " : " + " \n ", 1, 0);
+                    printCustom("اسم العميل " + " : " + payment.getCustName()  + " \n ", 1, 0);
+                    printCustom("ملاحظة " + " : " + payment.getRemark()  + " \n ", 1, 0);
+                    printCustom("المبلغ المقبوض " + payment.getAmount() + " : " + " \n ", 1, 0);
+                    printCustom("طريقة الدفع    " + " : " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") +  " \n ", 1, 0);
+                    printCustom("\n", 1, 0);
+                } else {
+                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
+                    printCustom("------------------------------------------" + " \n ", 1, 0);
+                    printCustom("التاريخ        " + payment.getPayDate() + " : " + " \n ", 1, 0);
+                    printCustom("رقم السند      " + payment.getVoucherNumber() + " : " + " \n ", 1, 0);
+                    printCustom("اسم العميل " + " : " + payment.getCustName()  + " \n ", 1, 0);
+                    printCustom("ملاحظة " + " : " + payment.getRemark()  + " \n ", 1, 0);
+                    printCustom("المبلغ المقبوض " + payment.getAmount() + " : " + " \n ", 1, 0);
+                    printCustom("طريقة الدفع    " + " : " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + " \n ", 1, 0);
+                    printCustom("\n", 1, 0);
+
+                    int serial = 1;
+                    Log.e("payments ",""+payments.size());
+                    for (int j = 0; j < payments.size(); j++) {
+                        Log.e("kk" , " " + payments.get(i).getCheckNumber());
+                        printCustom("(" + serial + "" + "\n", 1, 0);
+                        printCustom("رقم الشيك " + payments.get(i).getCheckNumber() + " : " + " \n ", 1, 0);
+                        printCustom("البنك     " + payments.get(i).getBank() + " : " + " \n ", 1, 0);
+                        printCustom("التاريخ     " + payments.get(i).getDueDate() + " : " + " \n ", 1, 0);
+                        printCustom("القيمة      " + payments.get(i).getAmount() + " : " + " \n ", 1, 0);
+                        printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
+                    }
+
+                }
+
+            }
+//            Arabic864 arabic = new Arabic864();
+//            byte[] arabicArr = arabic.Convert(msg, false);
+
+            closeBT();
+
+        } catch (NullPointerException e) {
+            closeBT();
+            e.printStackTrace();
+        } catch (Exception e) {
+            closeBT();
+            e.printStackTrace();
+        }
+    }
+
     //print custom
     private void printCustom(String msg, int size, int align) {
         //Print config "mode"
@@ -811,7 +871,7 @@ public class ReceiptVoucher extends Fragment {
 
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
-            mmOutputStream.write(arabicArr);
+            mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
             //outputStream.write(cc);

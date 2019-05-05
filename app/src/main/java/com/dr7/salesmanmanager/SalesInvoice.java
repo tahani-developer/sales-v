@@ -1202,7 +1202,7 @@ public class SalesInvoice extends Fragment {
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
                 printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
                 printCustom("------------------------------------------" + " \n ", 1, 0);
-                printCustom("التاريخ        " + "١١١١" + " : " + " \n ", 1, 0);
+                printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
                 printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
                 printCustom("رقم العميل     " + voucher.getCustNumber() + " : " + "\n", 1, 0);
                 printCustom("اسم العميل " + " : " + voucher.getCustName()  + "\n", 1, 0);
@@ -1309,7 +1309,7 @@ public class SalesInvoice extends Fragment {
 
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
-            mmOutputStream.write(arabicArr);
+            mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
             //outputStream.write(cc);
