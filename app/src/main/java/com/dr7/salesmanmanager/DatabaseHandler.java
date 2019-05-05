@@ -43,7 +43,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
-    
+
 
     // tables from JSON
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
