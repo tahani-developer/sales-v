@@ -165,8 +165,8 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
                     Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
-                    Customer.setCustLat(finalObject.getString("CustLat"));
-                    Customer.setCustLong(finalObject.getString("CustLong"));
+//                    Customer.setCustLat(finalObject.getString("CustLat"));
+//                    Customer.setCustLong(finalObject.getString("CustLong"));
 
                     customerList.add(Customer);
                 }
@@ -333,7 +333,7 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
 
             } catch (JSONException e) {
-                Log.e("Customer", "********ex3");
+                Log.e("Customer", "********ex3  "+e.toString());
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
