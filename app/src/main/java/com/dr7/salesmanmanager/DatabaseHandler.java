@@ -957,9 +957,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
                 setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
                 setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
-                setting.setCan_change_price(Integer.parseInt(cursor.getString(11)));
+                setting.setCanChangePrice(Integer.parseInt(cursor.getString(11)));
                 setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(12)));
-                setting.setRead_discount_from_offers(Integer.parseInt(cursor.getString(13)));
+                setting.setReadDiscountFromOffers(Integer.parseInt(cursor.getString(13)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1266,7 +1266,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public List<inventoryReportItem> getInventory_db() {
 
-        List<inventoryReportItem> items_inventory = new ArrayList<inventoryReportItem>();
+        List<inventoryReportItem> items_inventory = new ArrayList<>();
         String salesMan = Login.salesMan;
         // Select All Query
         String selectQuery = " select  DISTINCT    M.ItemNo ,M.Name ,S.Qty ,M.CateogryID from Items_Master M   ,  SalesMan_Items_Balance S  " +
@@ -1333,7 +1333,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<Item> getAllJsonItems2()
     {
 
-        List<Item> items = new ArrayList<Item>();
+        List<Item> items = new ArrayList<>();
         // Select All Query
         String PriceListId = CustomerListShow.PriceListId;
         String custNum = CustomerListShow.Customer_Account;

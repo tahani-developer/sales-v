@@ -39,7 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Item> filterList;
     private Context context;
     boolean added = false;
-    DatabaseHandler MHandler;
+    private  DatabaseHandler MHandler;
 
     public RecyclerViewAdapter(List<Item> items, Context context) {
         this.items = items;
@@ -86,20 +86,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.add_item_dialog_small);
 
-                final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
-                final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
-                final EditText price = (EditText) dialog.findViewById(R.id.price);
-                final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
-                final TextView textQty = (TextView) dialog.findViewById(R.id.textQty);
-                final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
-                final EditText unitWeight = (EditText) dialog.findViewById(R.id.unitWeight);
-                final CheckBox useWeight = (CheckBox) dialog.findViewById(R.id.use_weight);
-                final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
-                final EditText discount = (EditText) dialog.findViewById(R.id.discount);
-                final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.discTypeRadioGroup);
-                final LinearLayout discountLinearLayout = (LinearLayout) dialog.findViewById(R.id.discount_linear);
-                final LinearLayout unitWeightLinearLayout = (LinearLayout) dialog.findViewById(R.id.linearWeight);
-                Button addToList = (Button) dialog.findViewById(R.id.addToList);
+                final TextView itemNumber =  dialog.findViewById(R.id.item_number);
+                final TextView itemName =  dialog.findViewById(R.id.item_name);
+                final EditText price = dialog.findViewById(R.id.price);
+                final Spinner unit =  dialog.findViewById(R.id.unit);
+                final TextView textQty =  dialog.findViewById(R.id.textQty);
+                final EditText unitQty = dialog.findViewById(R.id.unitQty);
+                final EditText unitWeight =  dialog.findViewById(R.id.unitWeight);
+                final CheckBox useWeight =  dialog.findViewById(R.id.use_weight);
+                final EditText bonus =  dialog.findViewById(R.id.bonus);
+                final EditText discount =  dialog.findViewById(R.id.discount);
+                final RadioGroup radioGroup =  dialog.findViewById(R.id.discTypeRadioGroup);
+                final LinearLayout discountLinearLayout =  dialog.findViewById(R.id.discount_linear);
+                final LinearLayout unitWeightLinearLayout =  dialog.findViewById(R.id.linearWeight);
+                Button addToList = dialog.findViewById(R.id.addToList);
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                 itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
@@ -107,7 +107,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 final DatabaseHandler mHandler = new DatabaseHandler(context);
                 //*********************************** change Price with customer or not accourding to setting  ************************************
-                if (mHandler.getAllSettings().get(0).getCan_change_price() == 0)
+                if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0)
                 {
                     price.setEnabled(false);
                 //    price.setText("Desable");
@@ -195,7 +195,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     } else
                                         Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
                                 } else {
-                                    if (unitWeight.getText().toString() == "")
+                                    if (unitWeight.getText().toString().equals(""))
                                         Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
                                     else {
                                         unitValue = unitWeight.getText().toString();
