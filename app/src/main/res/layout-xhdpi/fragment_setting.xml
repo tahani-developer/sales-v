@@ -59,7 +59,7 @@
 
                 <TextView
                     android:layout_width="175dp"
-                    android:layout_height="45dp"
+                    android:layout_height="35dp"
                     android:text="@string/num_of_copy"
                     android:textColor="@color/text_view_color"
                     android:textSize="18sp"
@@ -82,7 +82,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -126,7 +126,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:hint="@string/return_serial_from"
                     android:inputType="number"
                     android:padding="5dp"
@@ -149,7 +149,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:hint="@string/order_serial_from"
                     android:inputType="number"
                     android:padding="5dp"
@@ -160,7 +160,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -200,23 +200,13 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:hint="@string/app_cheque"
                     android:inputType="number"
                     android:padding="5dp"
                     android:textColor="@color/text_view_color" />
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
             <RadioGroup
                 android:id="@+id/printMethod"
                 android:layout_width="match_parent"
@@ -287,6 +277,17 @@
 
             </RadioGroup>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+
             <CheckBox
                 android:id="@+id/price_by_cust"
                 android:layout_width="match_parent"
@@ -348,6 +349,14 @@
                 android:checked="true"
                 android:layout_marginTop="1dp"
                 android:text="@string/allow_cust_check_out_range"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp" />
+            <CheckBox
+                android:id="@+id/read_discount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/read_discount_from_offers"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
 

@@ -38,7 +38,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 22;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -165,6 +165,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINT_METHOD = "PRINT_METHOD";
     private static final String ALLOW_OUT_OF_RANGE = "ALLOW_OUT_OF_RANGE";
     private static final String CAN_CHANGE_PRICE = "CAN_CHANGE_PRICE";
+    private static final String READ_DISCOUNT_FROM_OFFERS = "READ_DISCOUNT_FROM_OFFERS";
+
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -422,8 +424,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + SALESMAN_CUSTOMERS + " INTEGER,"
                 + MIN_SALE_PRICE + " INTEGER,"
                 + PRINT_METHOD + " INTEGER,"
-                + ALLOW_OUT_OF_RANGE + " INTEGER,"
-                + CAN_CHANGE_PRICE + " INTEGER" + ")";
+                + CAN_CHANGE_PRICE + " INTEGER,"
+                +  ALLOW_OUT_OF_RANGE+  " INTEGER,"
+                +  READ_DISCOUNT_FROM_OFFERS+ " INTEGER" + ")";
+
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -565,14 +569,15 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
 //            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
+            db.execSQL("ALTER TABLE SETTING ADD READ_DISCOUNT_FROM_OFFERS INTEGER  NOT NULL DEFAULT '0'");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
-            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
-          //  db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER NOT NULL DEFAULT '1'");
+          //  db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
+        //   db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER NOT NULL DEFAULT '1'");
 
 //            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
-            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
+          //  db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
+          //  db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
 
 
         } catch (Exception e) {
@@ -739,7 +744,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
-                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice) {
+                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -754,9 +759,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SALESMAN_CUSTOMERS, salesManCustomers);
         values.put(MIN_SALE_PRICE, minSalePrice);
         values.put(PRINT_METHOD, printMethod);
-        values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
         values.put(CAN_CHANGE_PRICE, canChangePrice);
-
+        values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
+        values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -952,8 +957,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
                 setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
                 setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
-                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(11)));
-                setting.setCan_change_price(Integer.parseInt(cursor.getString(12)));
+                setting.setCan_change_price(Integer.parseInt(cursor.getString(11)));
+                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(12)));
+                setting.setRead_discount_from_offers(Integer.parseInt(cursor.getString(13)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

@@ -162,6 +162,7 @@
     <string name="get_salesman_customers_only">سحب عملاء المندوب فقط</string>
     <string name="min_sale_price">الحد الادنى لسعر البيع</string>
     <string name="allow_cust_check_out_range">السماح بدخول العميل من خارج النطاق</string>
+    <string name="read_discount_from_offers">الحصول على الخصومات من العروض </string>
     <string name="num_of_copy">عدد النسخ</string>
     <string name="vouchers_serial">تسلسل الفواتير</string>
     <string name="invoice_serial_from">الفاتورة</string>

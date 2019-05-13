@@ -162,6 +162,7 @@
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
     <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>
+    <string name="read_discount_from_offers">Read Discount From Offers</string>
     <string name="num_of_copy">Number Of Copy</string>
     <string name="vouchers_serial">Vouchers Serial</string>
     <string name="invoice_serial_from">invoice</string>
