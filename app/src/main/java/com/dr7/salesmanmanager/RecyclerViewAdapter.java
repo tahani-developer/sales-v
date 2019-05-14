@@ -120,6 +120,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
                     discountLinearLayout.setVisibility(View.INVISIBLE);
 
+                if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
+                    discountLinearLayout.setVisibility(View.INVISIBLE);
+                }
 
                 if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                     unitWeightLinearLayout.setVisibility(View.INVISIBLE);

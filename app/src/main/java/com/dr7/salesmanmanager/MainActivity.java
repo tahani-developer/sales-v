@@ -531,6 +531,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getCanChangePrice() == 1)
                     checkBox_canChangePrice.setChecked(true);
+
                 if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
                     readDiscount.setChecked(true);
             }
@@ -565,6 +566,7 @@ public class MainActivity extends AppCompatActivity
                                     int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
                                     int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
                                     int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
+
                                     mDbHandler.deleteAllSettings();
                                     mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
                                     mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
