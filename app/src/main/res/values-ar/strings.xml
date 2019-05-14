@@ -21,6 +21,7 @@
     <string name="title_activity_main">الشاشة الرئيسية</string>
     <string name="app_sign_out">نهاية اليوم</string>
     <string name="customers_locations">موقع العميل</string>
+    <string name="sales_man_map">خريطة المندوب</string>
     <string name="app_day_start">بداية اليوم</string>
     <string name="app_cust_no">حساب العميل</string>
     <string name="app_sign_in_visit">دخول العميل</string>

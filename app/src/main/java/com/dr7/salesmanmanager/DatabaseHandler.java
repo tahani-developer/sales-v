@@ -23,6 +23,7 @@ import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
+import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -38,7 +39,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 20;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -285,6 +286,14 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String BONUS_QTY = "BONUS_QTY";
     private static final String BONUS_ITEM_NO = "BONUS_ITEM_NO";
 
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String SALESMEN_STATIONS = "SALESMEN_STATIONS";
+
+    private static final String SALESMEN_NO = "SALESMEN_NO";
+    private static final String DATE_ = "DATE_";
+    private static final String LATITUDE = "LATITUDE";
+    private static final String LONGITUDE = "LONGITUDE";
+    private static final String SERIAL = "SERIAL";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -555,6 +564,16 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + BONUS_ITEM_NO + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_VS_PROMOTION);
 
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+                + SALESMEN_NO + " TEXT,"
+                + DATE_ + " TEXT,"
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT,"
+                + SERIAL + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+
     }
 
     // Upgrading database
@@ -567,13 +586,21 @@ DatabaseHandler extends SQLiteOpenHelper {
 //            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
-            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
+//            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
           //  db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER NOT NULL DEFAULT '1'");
 
 //            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
-            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
+            //db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
+             //   db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
+//            db.execSQL("ALTER TABLE CAN_CHANGE_PRICE ADD SETTING INTEGER NOT NULL DEFAULT '0'");
 
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+                    + SALESMEN_NO + " TEXT,"
+                    + DATE_ + " TEXT,"
+                    + LATITUDE + " TEXT,"
+                    + LONGITUDE + " TEXT,"
+                    + SERIAL + " INTEGER" + ")";
+            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated table");
@@ -1109,8 +1136,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
-                customer.setCustLat(cursor.getString(9));
-                customer.setCustLong(cursor.getString(10));
+                customer.setCustLat(cursor.getString(10));
+                customer.setCustLong(cursor.getString(11));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1615,6 +1642,28 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return offers;
+    }
+
+    public List<SalesmanStations> getAllSalesmanSatation(String salesmanNo , String date) {
+        List<SalesmanStations> stations = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + SALESMEN_STATIONS + " where SALESMEN_NO = '" + salesmanNo + "' and DATE_ = '" + date + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SalesmanStations station = new SalesmanStations();
+                station.setSalesmanNo(cursor.getString(0));
+                station.setDate(cursor.getString(1));
+                station.setLatitude(cursor.getString(2));
+                station.setLongitude(cursor.getString(3));
+                station.setSerial(Integer.parseInt(cursor.getString(4)));
+
+                stations.add(station);
+            } while (cursor.moveToNext());
+        }
+
+        return stations;
     }
 
     public int getIsPosted(int salesMan) {

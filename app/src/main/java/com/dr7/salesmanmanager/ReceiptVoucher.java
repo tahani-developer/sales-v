@@ -216,6 +216,8 @@ public class ReceiptVoucher extends Fragment {
                                     check.setDueDate(chDate.getText().toString());
                                     check.setAmount(Double.parseDouble(chValue.getText().toString()));
                                     payments.add(check);
+                                    Log.e("payments tsst",""+payments.size()+" "+chNum.getText().toString()+" \n"+bank.getSelectedItem().toString()
+                                    +"\n"+chDate.getText().toString()+"\n"+chValue.getText().toString());
 
                                     row.setTag(position);
                                     for (int i = 0; i < 4; i++) {
@@ -820,12 +822,15 @@ public class ReceiptVoucher extends Fragment {
                     int serial = 1;
                     Log.e("payments ",""+payments.size());
                     for (int j = 0; j < payments.size(); j++) {
-                        Log.e("kk" , " " + payments.get(i).getCheckNumber());
+
+                        Log.e("payments 11",""+payments.get(j).getBank());
+                        Log.e("kk" , " " + payments.get(j).getCheckNumber());
+
                         printCustom("(" + serial + "" + "\n", 1, 0);
-                        printCustom("رقم الشيك " + payments.get(i).getCheckNumber() + " : " + " \n ", 1, 0);
-                        printCustom("البنك     " + payments.get(i).getBank() + " : " + " \n ", 1, 0);
-                        printCustom("التاريخ     " + payments.get(i).getDueDate() + " : " + " \n ", 1, 0);
-                        printCustom("القيمة      " + payments.get(i).getAmount() + " : " + " \n ", 1, 0);
+                        printCustom("رقم الشيك " + payments.get(j).getCheckNumber() + " : " + " \n ", 1, 0);
+                        printCustom("البنك     " + payments.get(j).getBank() + " : " + " \n ", 1, 0);
+                        printCustom("التاريخ     " + payments.get(j).getDueDate() + " : " + " \n ", 1, 0);
+                        printCustom("القيمة      " + payments.get(j).getAmount() + " : " + " \n ", 1, 0);
                         printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
                     }
 

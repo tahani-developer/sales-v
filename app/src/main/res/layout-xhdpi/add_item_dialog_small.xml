@@ -191,7 +191,7 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:imeOptions="actionNext"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -222,7 +222,7 @@
             android:layout_margin="5dp"
             android:gravity="center"
             android:imeOptions="actionDone"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:textSize="20sp" />
 
         <RadioGroup

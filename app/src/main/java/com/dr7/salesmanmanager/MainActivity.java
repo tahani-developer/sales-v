@@ -287,6 +287,10 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.sales_man_map) {
+            Intent intent = new Intent(this, SalesmanMap.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_imp_data) {
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")

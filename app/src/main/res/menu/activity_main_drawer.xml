@@ -18,6 +18,11 @@
             android:title="@string/app_sign_out" />
 
         <item
+            android:id="@+id/sales_man_map"
+            android:icon="@drawable/ic_person_pin_circle_black_24dp"
+            android:title="@string/sales_man_map" />
+
+        <item
             android:id="@+id/customers_location"
             android:icon="@drawable/ic_person_pin_circle_black_24dp"
             android:title="@string/customers_locations" />

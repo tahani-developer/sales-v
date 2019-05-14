@@ -21,6 +21,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="app_sign_out">Day End</string>
     <string name="customers_locations">Customers Locations</string>
+    <string name="sales_man_map">Salesman Map</string>
     <string name="app_day_start">Day Start</string>
     <string name="app_cust_no">Customer Account</string>
     <string name="app_sign_in_visit">Customer Check In</string>
