@@ -14,14 +14,15 @@ public class Settings {
     private int minSalePric;
     private int printMethod;
     private int allowOutOfRange;
-    private int can_change_price;
+    private int canChangePrice;
+    private int readDiscountFromOffers;
 
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
-                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int can_change_price) {
+                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int canChangePrice,int readDiscountFromOffers) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -34,15 +35,24 @@ public class Settings {
         this.minSalePric = minSalePric;
         this.printMethod = printMethod;
         this.allowOutOfRange = allowOutOfRange;
-        this.can_change_price=can_change_price;
+        this.canChangePrice=canChangePrice;
+        this.readDiscountFromOffers=readDiscountFromOffers;
     }
 
-    public int getCan_change_price() {
-        return can_change_price;
+    public int getCanChangePrice() {
+        return canChangePrice;
     }
 
-    public void setCan_change_price(int can_change_price) {
-        this.can_change_price = can_change_price;
+    public void setCanChangePrice(int canChangePrice) {
+        this.canChangePrice = canChangePrice;
+    }
+
+    public int getReadDiscountFromOffers() {
+        return readDiscountFromOffers;
+    }
+
+    public void setReadDiscountFromOffers(int readDiscountFromOffers) {
+        this.readDiscountFromOffers = readDiscountFromOffers;
     }
 
     public String getIpAddress() {

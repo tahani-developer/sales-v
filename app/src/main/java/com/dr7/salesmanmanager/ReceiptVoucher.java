@@ -506,7 +506,7 @@ public class ReceiptVoucher extends Fragment {
         remarkEditText.setText("");
         paymentKindSpinner.setSelection(0);
         chequeTotal.setText("0.00");
-
+        total=0.0;
         voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
     }
@@ -698,6 +698,8 @@ public class ReceiptVoucher extends Fragment {
             Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+              String nameCompany=companyInfo.getCompanyName().toString();
+
             // the text typed by the user
             String msg;
 
