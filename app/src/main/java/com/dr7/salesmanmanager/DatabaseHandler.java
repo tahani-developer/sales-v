@@ -972,6 +972,23 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addSalesmanStation(SalesmanStations station) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SALESMEN_NO, station.getSalesmanNo());
+        values.put(DATE_, station.getDate());
+        values.put(LATITUDE, station.getLatitude());
+        values.put(LONGITUDE, station.getLongitude());
+        values.put(SERIAL, station.getSerial());
+        values.put(CUSTOMR_NO, station.getCustNo());
+        values.put(CUSUSTOMR_NAME, station.getCustName());
+
+        db.insert(SALESMEN_STATIONS, null, values);
+        db.close();
+    }
+
+
     public List<Settings> getAllSettings() {
         List<Settings> settings = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_SETTING;
@@ -1899,6 +1916,12 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllOffers() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + VS_PROMOTION);
+        db.close();
+    }
+
+    public void deleteAllSalesmenStations() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SALESMEN_STATIONS);
         db.close();
     }
 

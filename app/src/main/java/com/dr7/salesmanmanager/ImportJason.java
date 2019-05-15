@@ -20,6 +20,7 @@ import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
+import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import org.json.JSONArray;
@@ -55,6 +56,7 @@ public class ImportJason extends AppCompatActivity{
     public static List<SalesMan> salesMenList = new ArrayList<>();
     public static List<CustomerPrice> customerPricesList = new ArrayList<>();
     public static List<Offers> offersList = new ArrayList<>();
+    public static List<SalesmanStations> salesmanStationsList = new ArrayList<>();
 
     public ImportJason(Context context){
         this.context = context ;
@@ -324,6 +326,23 @@ public class ImportJason extends AppCompatActivity{
                     offersList.add(offer);
                 }
 
+//                JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
+//                salesmanStationsList.clear();
+//                for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
+//                    JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
+//
+//                    SalesmanStations station = new SalesmanStations();
+//                    station.setSalesmanNo(finalObject.getString("SALEAMAN_NO"));
+//                    station.setDate(finalObject.getString("DATE_"));
+//                    station.setLatitude(finalObject.getString("LATITUDE"));
+//                    station.setLongitude(finalObject.getString("LONGITUDE"));
+//                    station.setSerial(finalObject.getInt("SERIAL"));
+//                    station.setCustNo(finalObject.getString("ACCCODE"));
+//                    station.setCustName(finalObject.getString("ACCNAME"));
+//
+//                    salesmanStationsList.add(station);
+//                }
+
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
@@ -409,6 +428,7 @@ public class ImportJason extends AppCompatActivity{
             mHandler.deleteAllSalesmen();
             mHandler.deleteAllCustomerPrice();
             mHandler.deleteAllOffers();
+            mHandler.deleteAllSalesmenStations();
 
             for (int i = 0; i < customerList.size(); i++) {
                 mHandler.addCustomer(customerList.get(i));
@@ -455,6 +475,10 @@ public class ImportJason extends AppCompatActivity{
 
             for (int i = 0; i < offersList.size(); i++) {
                 mHandler.addOffer(offersList.get(i));
+            }
+
+            for (int i = 0; i < salesmanStationsList.size(); i++) {
+                mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }
 
             return "Finish Store";
