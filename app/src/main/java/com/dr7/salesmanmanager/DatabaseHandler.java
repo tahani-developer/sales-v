@@ -39,7 +39,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 23;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -296,6 +296,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String LATITUDE = "LATITUDE";
     private static final String LONGITUDE = "LONGITUDE";
     private static final String SERIAL = "SERIAL";
+    private static final String CUSTOMR_NO = "CUSTOMR_NO";
+    private static final String CUSUSTOMR_NAME = "CUSUSTOMR_NAME";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -575,7 +577,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + DATE_ + " TEXT,"
                 + LATITUDE + " TEXT,"
                 + LONGITUDE + " TEXT,"
-                + SERIAL + " INTEGER" + ")";
+                + SERIAL + " INTEGER,"
+                + CUSTOMR_NO + " TEXT,"
+                + CUSUSTOMR_NAME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
     }
@@ -588,7 +592,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
 //            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
-            db.execSQL("ALTER TABLE SETTING ADD READ_DISCOUNT_FROM_OFFERS INTEGER  NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
+            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
 //            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
           //  db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
@@ -604,7 +609,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                     + DATE_ + " TEXT,"
                     + LATITUDE + " TEXT,"
                     + LONGITUDE + " TEXT,"
-                    + SERIAL + " INTEGER" + ")";
+                    + SERIAL + " INTEGER,"
+                    + CUSTOMR_NO + " TEXT,"
+                    + CUSUSTOMR_NAME + " TEXT" + ")";
             db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
@@ -1664,6 +1671,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 station.setLatitude(cursor.getString(2));
                 station.setLongitude(cursor.getString(3));
                 station.setSerial(Integer.parseInt(cursor.getString(4)));
+                station.setCustNo(cursor.getString(5));
+                station.setCustName(cursor.getString(6));
 
                 stations.add(station);
             } while (cursor.moveToNext());

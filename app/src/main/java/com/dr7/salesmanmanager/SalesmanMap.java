@@ -66,7 +66,7 @@ public class SalesmanMap extends FragmentActivity implements OnMapReadyCallback 
                     LatLng latLng = new LatLng(Double.parseDouble(stations.get(j).getLatitude()), Double.parseDouble(stations.get(j).getLongitude()));
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
-                    markerOptions.title("" + stations.get(j).getSerial());
+                    markerOptions.title("(" + stations.get(j).getSerial() + ") " + stations.get(j).getCustName());
 
                     if (stations.get(j).getSerial() == 1)
                         mMap.addMarker(markerOptions).showInfoWindow();

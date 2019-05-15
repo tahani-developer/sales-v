@@ -6,13 +6,17 @@ public class SalesmanStations {
     private String latitude;
     private String longitude;
     private int serial;
+    private String custNo;
+    private String custName;
 
-    public SalesmanStations(String salesmanNo, String date, String latitude, String longitude, int serial) {
+    public SalesmanStations(String salesmanNo, String date, String latitude, String longitude, int serial, String custNo, String custName) {
         this.salesmanNo = salesmanNo;
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
         this.serial = serial;
+        this.custNo = custNo;
+        this.custName = custName;
     }
 
     public SalesmanStations() {
@@ -57,5 +61,21 @@ public class SalesmanStations {
 
     public void setSerial(int serial) {
         this.serial = serial;
+    }
+
+    public String getCustNo() {
+        return custNo;
+    }
+
+    public void setCustNo(String custNo) {
+        this.custNo = custNo;
+    }
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
     }
 }
