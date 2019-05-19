@@ -39,7 +39,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 23;
+    private static final int DATABASE_VERSION = 26;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -436,8 +436,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + MIN_SALE_PRICE + " INTEGER,"
                 + PRINT_METHOD + " INTEGER,"
                 + CAN_CHANGE_PRICE + " INTEGER,"
-                +  ALLOW_OUT_OF_RANGE+  " INTEGER,"
-                +  READ_DISCOUNT_FROM_OFFERS+ " INTEGER" + ")";
+                + ALLOW_OUT_OF_RANGE+  " INTEGER,"
+                + READ_DISCOUNT_FROM_OFFERS+ " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -591,18 +591,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         try {
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
-//            db.execSQL("ALTER TABLE SETTING ADD MIN_SALE_PRICE TEXT NOT NULL DEFAULT '1'");
-            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
-            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
-//            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LONG TEXT");
-//            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD CUST_LAT TEXT");
-          //  db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '1'");
-        //   db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER NOT NULL DEFAULT '1'");
-
-//            db.execSQL("ALTER TABLE Price_List_D ADD MinSalePrice TEXT NOT NULL DEFAULT '1'");
-            //db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD PAY_METHOD TEXT NOT NULL DEFAULT '0'");
-             //   db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD SALESMAN_NO TEXT NOT NULL DEFAULT '0'");
-//            db.execSQL("ALTER TABLE CAN_CHANGE_PRICE ADD SETTING INTEGER NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD READ_DISCOUNT_FROM_OFFERS TEXT NOT NULL DEFAULT '0'");
+//            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
+//            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
 
             String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
                     + SALESMEN_NO + " TEXT,"
@@ -615,7 +606,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated table");
+            Log.e("onUpgrade*****", "duplicated column");
         }
 
     }
@@ -796,6 +787,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CAN_CHANGE_PRICE, canChangePrice);
         values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
         values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
+
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1008,8 +1000,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
                 setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
                 setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
-                setting.setCanChangePrice(Integer.parseInt(cursor.getString(11)));
-                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(12)));
+                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(11)));
+                setting.setCanChangePrice(Integer.parseInt(cursor.getString(12)));
                 setting.setReadDiscountFromOffers(Integer.parseInt(cursor.getString(13)));
                 settings.add(setting);
             } while (cursor.moveToNext());
@@ -1676,7 +1668,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public List<SalesmanStations> getAllSalesmanSatation(String salesmanNo , String date) {
         List<SalesmanStations> stations = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + SALESMEN_STATIONS + " where SALESMEN_NO = '" + salesmanNo + "' and DATE_ = '" + date + "'";
+        String selectQuery = "SELECT * FROM " + SALESMEN_STATIONS + " where SALESMEN_NO = '" + salesmanNo + "' and DATE_ = '" + date + " 00:00:00'";
+
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1684,7 +1677,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             do {
                 SalesmanStations station = new SalesmanStations();
                 station.setSalesmanNo(cursor.getString(0));
-                station.setDate(cursor.getString(1));
+                station.setDate(cursor.getString(1).replaceAll("-", "/"));
                 station.setLatitude(cursor.getString(2));
                 station.setLongitude(cursor.getString(3));
                 station.setSerial(Integer.parseInt(cursor.getString(4)));

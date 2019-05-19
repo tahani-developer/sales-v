@@ -344,7 +344,6 @@
                 android:id="@+id/allow_cust_check_out_range"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:layout_marginTop="3dp"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"

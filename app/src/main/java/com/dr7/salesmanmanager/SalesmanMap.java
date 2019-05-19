@@ -1,17 +1,10 @@
 package com.dr7.salesmanmanager;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,7 +16,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,7 +46,7 @@ public class SalesmanMap extends FragmentActivity implements OnMapReadyCallback 
         mMap = googleMap;
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String today = df.format(currentTimeAndDate);
 
         List<SalesmanStations> stations = new DatabaseHandler(SalesmanMap.this).getAllSalesmanSatation(Login.salesMan, today);
@@ -67,6 +59,7 @@ public class SalesmanMap extends FragmentActivity implements OnMapReadyCallback 
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     markerOptions.title("(" + stations.get(j).getSerial() + ") " + stations.get(j).getCustName());
+
 
                     if (stations.get(j).getSerial() == 1)
                         mMap.addMarker(markerOptions).showInfoWindow();

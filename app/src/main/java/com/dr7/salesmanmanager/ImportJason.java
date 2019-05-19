@@ -167,8 +167,8 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
                     Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
-//                    Customer.setCustLat(finalObject.getString("CustLat"));
-//                    Customer.setCustLong(finalObject.getString("CustLong"));
+                    Customer.setCustLat(finalObject.getString("LATITUDE"));
+                    Customer.setCustLong(finalObject.getString("LONGITUDE"));
 
                     customerList.add(Customer);
                 }
@@ -226,10 +226,10 @@ public class ImportJason extends AppCompatActivity{
 
 
                 JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
-
+                priceListMpList.clear();
                 for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {
                     JSONObject finalObject = parentArrayPrice_List_M.getJSONObject(i);
-                    priceListMpList.clear();
+
                     PriceListM item = new PriceListM();
                     item.setCompanyNo(finalObject.getInt("ComapnyNo"));
                     item.setPrNo(finalObject.getInt("PrNo"));
@@ -326,23 +326,23 @@ public class ImportJason extends AppCompatActivity{
                     offersList.add(offer);
                 }
 
-//                JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
-//                salesmanStationsList.clear();
-//                for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
-//                    JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
-//
-//                    SalesmanStations station = new SalesmanStations();
-//                    station.setSalesmanNo(finalObject.getString("SALEAMAN_NO"));
-//                    station.setDate(finalObject.getString("DATE_"));
-//                    station.setLatitude(finalObject.getString("LATITUDE"));
-//                    station.setLongitude(finalObject.getString("LONGITUDE"));
-//                    station.setSerial(finalObject.getInt("SERIAL"));
-//                    station.setCustNo(finalObject.getString("ACCCODE"));
-//                    station.setCustName(finalObject.getString("ACCNAME"));
-//
-//                    salesmanStationsList.add(station);
-//                }
+                JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
+                salesmanStationsList.clear();
+                for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
+                    JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
 
+                    SalesmanStations station = new SalesmanStations();
+                    station.setSalesmanNo(finalObject.getString("SALESMAN_NO"));
+                    station.setDate(finalObject.getString("DATE_"));
+                    station.setLatitude(finalObject.getString("LATITUDE"));
+                    station.setLongitude(finalObject.getString("LONGITUDE"));
+                    station.setSerial(finalObject.getInt("SERIAL"));
+                    station.setCustNo(finalObject.getString("ACCCODE"));
+                    station.setCustName(finalObject.getString("ACCNAME"));
+
+                    salesmanStationsList.add(station);
+                }
+                Log.e("salesmanStationsList ", "********" + salesmanStationsList.size());
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");

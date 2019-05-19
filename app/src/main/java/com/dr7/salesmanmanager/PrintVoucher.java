@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -655,7 +654,7 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData2(voucher);
+            sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {

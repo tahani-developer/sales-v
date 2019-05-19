@@ -183,8 +183,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                     if (appliedOffer != null) {
                                                         String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), priceAfterDiscount,
-                                                                bonus.getText().toString(), discount.getText().toString(), radioGroup, useWeight, view.getContext());
+                                                                holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                                bonus.getText().toString(), "" +appliedOffer.getBonusQty(), radioGroup, useWeight, view.getContext());
                                                     }
                                                 }
                                             } else {
@@ -241,8 +241,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                             if (appliedOffer != null) {
                                                                 String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                        holder.tax.getText().toString(), unitValue, qty, priceAfterDiscount,
-                                                                        bonus.getText().toString(), discount.getText().toString(), radioGroup, useWeight, view.getContext());
+                                                                        holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                        bonus.getText().toString(), ""+appliedOffer.getBonusQty(), radioGroup, useWeight, view.getContext());
                                                             }
                                                         }
                                                     } else {
@@ -291,8 +291,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
 
+
             List<Offers> offers = MHandler.getAllOffers();
+
+
             for (int i = 0; i < offers.size(); i++) {
+                Log.e("log2 " , date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
                 if (itemNo.equals(offers.get(i).getItemNo()) &&
                         (formatDate(date).after(formatDate(offers.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers.get(i).getFromDate()))) &&
                         (formatDate(date).before(formatDate(offers.get(i).getToDate())) || formatDate(date).equals(offers.get(i).getToDate()))) {
