@@ -1676,6 +1676,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 SalesmanStations station = new SalesmanStations();
+
                 station.setSalesmanNo(cursor.getString(0));
                 station.setDate(cursor.getString(1).replaceAll("-", "/"));
                 station.setLatitude(cursor.getString(2));

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Transaction;
 
 import org.json.JSONArray;
@@ -105,6 +106,9 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         customernametest = CustomerListShow.Customer_Name.toString();
 
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        final String today = df.format(currentTimeAndDate);
 
         mDbHandler = new DatabaseHandler(getActivity());
 
@@ -129,29 +133,43 @@ public class CustomerCheckInFragment extends DialogFragment {
 
 
                     if (custObj != null) {
-                        if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
-                                isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
-                            MainActivity mainActivity = new MainActivity();
-                            mainActivity.settext2();
+                        List<SalesmanStations> stations = new DatabaseHandler(getActivity()).getAllSalesmanSatation(Login.salesMan, today);
+                        boolean inRoot = false;
+                        for (int i = 0; i < stations.size(); i++) {
+                            if (stations.get(i).getCustNo().equals(cusCode)) {
+                                inRoot = true;
+                                break;
+                            }
+                        }
 
-                            Date currentTimeAndDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                        if(inRoot) {
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
+                                    isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
-                            String currentTime = tf.format(currentTimeAndDate);
-                            String currentDate = df.format(currentTimeAndDate);
+                                MainActivity mainActivity = new MainActivity();
+                                mainActivity.settext2();
 
-                            int salesMan = Integer.parseInt(Login.salesMan);
+                                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-                            mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                                    "Not Yet", "Not Yet", 0));
+                                String currentTime = tf.format(currentTimeAndDate);
+                                String currentDate = df.format(currentTimeAndDate);
 
-                            MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                            MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
-                            dismiss();
+                                int salesMan = Integer.parseInt(Login.salesMan);
+
+                                mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
+                                        "Not Yet", "Not Yet", 0));
+
+                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+                                dismiss();
+                            } else {
+                                Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "This customer is not in your root, please check your map", Toast.LENGTH_LONG).show();
                         }
 
                     } else {
