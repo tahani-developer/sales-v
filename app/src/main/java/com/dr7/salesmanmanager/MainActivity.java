@@ -47,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Reports.Reports;
 
 import java.io.FileNotFoundException;
@@ -454,7 +455,55 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 r1.setChecked(true);
+                r2.setChecked(false);
+                r3.setChecked(false);
+                r4.setChecked(false);
+                r5.setChecked(false);
                 rate[0] = 1;
+            }
+        });
+        r2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                r1.setChecked(true);
+                r2.setChecked(true);
+                r3.setChecked(false);
+                r4.setChecked(false);
+                r5.setChecked(false);
+                rate[0] = 2;
+            }
+        });
+        r3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                r1.setChecked(true);
+                r2.setChecked(true);
+                r3.setChecked(true);
+                r4.setChecked(false);
+                r5.setChecked(false);
+                rate[0] = 3;
+            }
+        });
+        r4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                r1.setChecked(true);
+                r2.setChecked(true);
+                r3.setChecked(true);
+                r4.setChecked(true);
+                r5.setChecked(false);
+                rate[0] = 4;
+            }
+        });
+        r5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                r1.setChecked(true);
+                r2.setChecked(true);
+                r3.setChecked(true);
+                r4.setChecked(true);
+                r5.setChecked(true);
+                rate[0] = 5;
             }
         });
 
@@ -501,7 +550,11 @@ public class MainActivity extends AppCompatActivity
                 int selectProposedReques = selectProposedRequest.isChecked() ? 1 : 0;
                 int displa = display.isChecked() ? 1 : 0;
 
+                mDbHandler.addVisitRate(new VisitRate(visitPurpos, custRegar, checkStor, PromoCheckStor, selectProposedReques,
+                        displa, rate[0], visitPic, CustomerListShow.Customer_Account, CustomerListShow.Customer_Name, Login.salesManNo));
+
                 dialog.dismiss();
+                Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();

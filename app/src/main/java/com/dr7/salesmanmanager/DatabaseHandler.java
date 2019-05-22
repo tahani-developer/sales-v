@@ -26,6 +26,7 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Reports.SalesMan;
@@ -39,7 +40,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 28;
+    private static final int DATABASE_VERSION = 30;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -50,14 +51,18 @@ DatabaseHandler extends SQLiteOpenHelper {
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VISIT_RATE="VISIT_RATE";
 
-    private static final String VISIT_PERPOS="VISIT_PERPOS";
-    private static final String CUSTOMER_REGARDS="CUSTOMER_REGARDS";
-    private static final String CHECK_STORE="CHECK_STORE";
-    private static final String PROMOTION_CHECK_STOCK="PROMOTION_CHECK_STOCK";
-    private static final String SPESIFY_PROPOSED_REQUEST="SPESIFY_PROPOSED_REQUEST";
-    private static final String PERSUSION="PERSUSION";
+    private static final String VISIT_PERPOS ="VISIT_PERPOS";
+    private static final String CUSTOMER_REGARDS ="CUSTOMER_REGARDS";
+    private static final String CHECK_STORE ="CHECK_STORE";
+    private static final String PROMOTION_CHECK_STOCK ="PROMOTION_CHECK_STOCK";
+    private static final String SPESIFY_PROPOSED_REQUEST ="SPESIFY_PROPOSED_REQUEST";
+    private static final String PERSUSION ="PERSUSION";
     private static final String VISIT_RATE1 = "VISIT_RATE";
-    private static final String VISIT_PIC="VISIT_PIC";
+    private static final String VISIT_PIC ="VISIT_PIC";
+    private static final String CUST_CODE_ ="CUST_CODE";
+    private static final String CUST_NAME_ ="CUST_NAME";
+    private static final String SALESMAN_="SALESMAN";
+
     //__________________________________________________________________________
     private static final String CUSTOMER_MASTER = "CUSTOMER_MASTER";
 
@@ -354,7 +359,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
                 + PERSUSION + " INTEGER,"
                 + VISIT_RATE1 + " INTEGER,"
-                + VISIT_PIC + " BLOB" + ")";
+                + VISIT_PIC + " BLOB,"
+                + CUST_CODE_ + " TEXT,"
+                + CUST_NAME_ + " TEXT,"
+                + SALESMAN_ + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_VISIT_RATE);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -614,19 +622,11 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         try {
-            String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
-                    + VISIT_PERPOS + " INTEGER,"
-                    + CUSTOMER_REGARDS + " INTEGER,"
-                    + CHECK_STORE + " INTEGER,"
-                    + PROMOTION_CHECK_STOCK + " INTEGER,"
-                    + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
-                    + PERSUSION + " INTEGER,"
-                    + VISIT_RATE1 + " INTEGER,"
-                    + VISIT_PIC + " BLOB" + ")";
-            db.execSQL(CREATE_TABLE_VISIT_RATE);
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
-            db.execSQL("ALTER TABLE TABLE_TRANSACTIONS ADD IS_POSTED TEXT NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
+            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
+            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
 //
@@ -715,6 +715,11 @@ DatabaseHandler extends SQLiteOpenHelper {
             byteImage = stream.toByteArray();
             values.put(VISIT_PIC, byteImage);
         }
+
+        values.put(CUST_CODE_, visitRate.getCustCode());
+        values.put(CUST_NAME_, visitRate.getCustName());
+        values.put(SALESMAN_, visitRate.getSalesman());
+
         db.insert(VISIT_RATE, null, values);
         db.close();
     }
@@ -1060,6 +1065,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                     rate.setVisitpic(null);
                 else
                     rate.setVisitpic(BitmapFactory.decodeByteArray(cursor.getBlob(8), 0, cursor.getBlob(8).length));
+
+                rate.setCustCode(cursor.getString(5));
+                rate.setCustName(cursor.getString(6));
+                rate.setSalesman(cursor.getString(7));
+
                 visitrate.add(rate);
             } while (cursor.moveToNext());
         }
