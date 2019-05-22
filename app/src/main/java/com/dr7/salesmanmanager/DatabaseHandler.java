@@ -39,7 +39,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 26;
+    private static final int DATABASE_VERSION = 28;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -149,6 +149,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CHECK_OUT_DATE = "CHECK_OUT_DATE";
     private static final String CHECK_OUT_TIME = "CHECK_OUT_TIME";
     private static final String STATUS = "STATUS";
+    private static final String IS_POSTED2 = "IS_POSTED";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String TABLE_SETTING = "SETTING";
@@ -418,7 +419,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CHECK_IN_TIME + " TEXT,"
                 + CHECK_OUT_DATE + " TEXT,"
                 + CHECK_OUT_TIME + " TEXT,"
-                + STATUS + " INTEGER" + ")";
+                + STATUS + " INTEGER,"
+                + IS_POSTED2 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_CONTACTS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -591,19 +593,19 @@ DatabaseHandler extends SQLiteOpenHelper {
         try {
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
-            db.execSQL("ALTER TABLE SETTING ADD READ_DISCOUNT_FROM_OFFERS TEXT NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE TABLE_TRANSACTIONS ADD IS_POSTED TEXT NOT NULL DEFAULT '0'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
-                    + SALESMEN_NO + " TEXT,"
-                    + DATE_ + " TEXT,"
-                    + LATITUDE + " TEXT,"
-                    + LONGITUDE + " TEXT,"
-                    + SERIAL + " INTEGER,"
-                    + CUSTOMR_NO + " TEXT,"
-                    + CUSUSTOMR_NAME + " TEXT" + ")";
-            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+//            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+//                    + SALESMEN_NO + " TEXT,"
+//                    + DATE_ + " TEXT,"
+//                    + LATITUDE + " TEXT,"
+//                    + LONGITUDE + " TEXT,"
+//                    + SERIAL + " INTEGER,"
+//                    + CUSTOMR_NO + " TEXT,"
+//                    + CUSUSTOMR_NAME + " TEXT" + ")";
+//            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column");
@@ -763,6 +765,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CHECK_OUT_DATE, transaction.getCheckOutDate());
         values.put(CHECK_OUT_TIME, transaction.getCheckOutTime());
         values.put(STATUS, transaction.getStatus());
+        values.put(IS_POSTED2, transaction.getIsPosted());
 
         db.insert(TABLE_TRANSACTIONS, null, values);
         db.close();
@@ -1103,6 +1106,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 transaction.setCheckOutDate(cursor.getString(5));
                 transaction.setCheckOutTime(cursor.getString(6));
                 transaction.setStatus(Integer.parseInt(cursor.getString(7)));
+                transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
 
                 // Adding transaction to list
                 transactionList.add(transaction);
@@ -1763,6 +1767,14 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
+    }
+
+    public void updateTransactions() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED2, 1);
+        db.update(TABLE_TRANSACTIONS, values, IS_POSTED + "=" + 0, null);
     }
 
     public void updateCustomersMaster(String lat , String lon , int custId) {

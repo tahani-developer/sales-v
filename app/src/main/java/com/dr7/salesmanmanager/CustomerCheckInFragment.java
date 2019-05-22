@@ -160,7 +160,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                                        "Not Yet", "Not Yet", 0));
+                                        "01/01/19999", "0", 0, 0));
 
                                 MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
                                 MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
@@ -186,7 +186,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                         int salesMan = Integer.parseInt(Login.salesMan);
 
                         mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                                "Not Yet", "Not Yet", 0));
+                                "01/01/19999", "0", 0, 0));
 
                         saveCustLocation(Integer.parseInt(cusCode));
                         new JSONTask().execute();

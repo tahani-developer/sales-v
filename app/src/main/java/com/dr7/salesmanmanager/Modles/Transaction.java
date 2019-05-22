@@ -17,13 +17,14 @@ public class Transaction {
     String checkOutDate;
     String checkOutTime;
     int status;
+    int isPosted;
 
     // Empty constructor
     public Transaction() { }
 
     // constructor
     public Transaction(int salesManId , String cusCode, String cusName, String checkInDate,
-                       String checkInTime, String checkOutDate, String checkOutTime, int status) {
+                       String checkInTime, String checkOutDate, String checkOutTime, int status, int isPosted) {
         this.salesManId = salesManId ;
         this.cusCode = cusCode ;
         this.cusName = cusName ;
@@ -32,6 +33,7 @@ public class Transaction {
         this.checkOutDate = checkOutDate;
         this.checkOutTime = checkOutTime ;
         this.status = status ;
+        this.isPosted = isPosted;
     }
 
     public int getSalesManId() {
@@ -94,6 +96,14 @@ public class Transaction {
         return status;
     }
 
+    public int getIsPosted() {
+        return isPosted;
+    }
+
+    public void setIsPosted(int isPosted) {
+        this.isPosted = isPosted;
+    }
+
     public void setStatus(int status) {
         this.status = status;
     }
@@ -101,14 +111,14 @@ public class Transaction {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("salesManId", salesManId);
-            obj.put("cusCode", cusCode);
-            obj.put("cusName", cusName);
-            obj.put("checkInDate", checkInDate);
-            obj.put("checkInTime", checkInTime);
-            obj.put("checkOutDate", checkOutDate);
-            obj.put("checkOutTime", checkOutTime);
-            obj.put("status", status);
+            obj.put("SALES_MAN_ID", salesManId);
+            obj.put("CUS_CODE", cusCode);
+            obj.put("CUS_NAME", cusName);
+            obj.put("CHECK_IN_DATE", checkInDate);
+            obj.put("CHECK_IN_TIME", checkInTime);
+            obj.put("CHECK_OUT_DATE", checkOutDate);
+            obj.put("CHECK_OUT_TIME", checkOutTime);
+            obj.put("STATUS", status);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

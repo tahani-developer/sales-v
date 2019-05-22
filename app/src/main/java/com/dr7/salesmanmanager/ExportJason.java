@@ -31,7 +31,7 @@ public class ExportJason extends AppCompatActivity {
 
     private Context context;
     private ProgressDialog progressDialog;
-    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer;
+    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer, jsonArrayTransactions;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -50,11 +50,14 @@ public class ExportJason extends AppCompatActivity {
 
     void startExportDatabase() {
 
-//        transactions = mHandler.getAlltransactions();
-//        JSONArray jsonArrayTransactions = new JSONArray();
-//        for (int i = 0; i < transactions.size(); i++)
-//            jsonArrayTransactions.put(transactions.get(i).getJSONObject());
-//
+        transactions = mHandler.getAlltransactions();
+        jsonArrayTransactions = new JSONArray();
+        for (int i = 0; i < transactions.size(); i++)
+            if (transactions.get(i).getIsPosted() == 0) {
+                transactions.get(i).setIsPosted(1);
+                jsonArrayTransactions.put(transactions.get(i).getJSONObject());
+            }
+
         vouchers = mHandler.getAllVouchers();
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
@@ -148,7 +151,8 @@ public class ExportJason extends AppCompatActivity {
                         // + "&" + "Sales_Voucher_D=" + jsonArrayItems.toString().trim()
                         + "&" + "Payments="        + jsonArrayPayments.toString().trim()
                         + "&" + "Payments_Checks=" + jsonArrayPaymentsPaper.toString().trim()
-                        + "&" + "Added_Customers=" + jsonArrayAddedCustomer.toString().trim();
+                        + "&" + "Added_Customers=" + jsonArrayAddedCustomer.toString().trim()
+                        + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim();
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -207,6 +211,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updatePayment();
                     mHandler.updatePaymentPaper();
                     mHandler.updateAddedCustomers();
+                    mHandler.updateTransactions();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {

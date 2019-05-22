@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     Bitmap itemBitmapPic = null;
     ImageView logo;
     Calendar myCalendar;
+    Bitmap visitPic = null;
+    ImageView visitPicture ;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -405,9 +407,10 @@ public class MainActivity extends AppCompatActivity
                 checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
                 checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
 
-
                 CustomerCheckInFragment obj = new CustomerCheckInFragment();
                 obj.editCheckOutTimeAndDate();
+
+                openVisitRateDialog();
             }
         });
         builder.setNegativeButton(getResources().getString(R.string.app_no), null);
@@ -415,6 +418,93 @@ public class MainActivity extends AppCompatActivity
         android.app.AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    public void openVisitRateDialog() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.visit_rate);
+        dialog.setCanceledOnTouchOutside(true);
+
+        final RadioGroup visitPurpose = dialog.findViewById(R.id.visit_purpose);
+        RadioButton payment = dialog.findViewById(R.id.payment);
+        RadioButton bankUp = dialog.findViewById(R.id.bank_up);
+        RadioButton enterCat = dialog.findViewById(R.id.entering_categories);
+        RadioButton vistSpase = dialog.findViewById(R.id.visit_presentation_space);
+        RadioButton other = dialog.findViewById(R.id.other);
+
+        final RadioButton r1 = dialog.findViewById(R.id.rate1);
+        final RadioButton r2 = dialog.findViewById(R.id.rate2);
+        final RadioButton r3 = dialog.findViewById(R.id.rate3);
+        final RadioButton r4 = dialog.findViewById(R.id.rate4);
+        final RadioButton r5 = dialog.findViewById(R.id.rate5);
+
+        final CheckBox custRegard = dialog.findViewById(R.id.cust_regard);
+        final CheckBox checkStore = dialog.findViewById(R.id.check_store);
+        final CheckBox PromoCheckStore = dialog.findViewById(R.id.promotion_check_stock);
+        final CheckBox selectProposedRequest = dialog.findViewById(R.id.select_proposed_request);
+        final CheckBox display = dialog.findViewById(R.id.display_and_persuasion);
+
+        visitPicture = dialog.findViewById(R.id.image);
+        Button save = dialog.findViewById(R.id.save);
+
+        final int[] rate = {0};
+        r1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                r1.setChecked(true);
+                rate[0] = 1;
+            }
+        });
+
+        visitPicture.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
+                }
+                else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, 1888);
+                }
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int visitPurpos = 0;
+                switch (visitPurpose.getCheckedRadioButtonId()){
+                    case R.id.payment :
+                        visitPurpos = 0;
+                        break;
+                    case R.id.bank_up :
+                        visitPurpos = 1;
+                        break;
+                    case R.id.entering_categories :
+                        visitPurpos = 2;
+                        break;
+                    case R.id.visit_presentation_space :
+                        visitPurpos = 3;
+                        break;
+                    case R.id.other :
+                        visitPurpos = 4;
+                        break;
+                }
+
+                int custRegar = custRegard.isChecked() ? 1 : 0;
+                int checkStor = checkStore.isChecked() ? 1 : 0;
+                int PromoCheckStor = PromoCheckStore.isChecked() ? 1 : 0;
+                int selectProposedReques = selectProposedRequest.isChecked() ? 1 : 0;
+                int displa = display.isChecked() ? 1 : 0;
+
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     public void openPasswordDialog(final int flag) {
@@ -822,6 +912,14 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (requestCode == 1888 && resultCode == Activity.RESULT_OK) {
+            final Bundle extras = data.getExtras();
+            if (extras != null) {
+                visitPic = extras.getParcelable("data");
+                visitPicture.setImageDrawable(new BitmapDrawable(getResources(), visitPic));
             }
         }
     }

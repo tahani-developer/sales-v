@@ -243,6 +243,21 @@
     <string name="enter_password">ادخل كلمة المرور</string>
     <string name="enter_qty">ادخل الكمية</string>
 
+    <string name="visit_steps">خطوات الزيارة/البيعة</string>
+    <string name="visit_purpose">التخطيط/هدف الزيارة</string>
+    <string name="payment">بيع</string>
+    <string name="bank_up">تحصيل</string>
+    <string name="entering_categories">ادخال صنف</string>
+    <string name="visit_presentation_space">زيارة مساحة العرض</string>
+    <string name="other">غير ذلك</string>
+    <string name="cust_regard">تحية العميل</string>
+    <string name="check_store">تفقد المتجر/الرف/المستودع/نشاط المنافسين</string>
+    <string name="promotion_check_stock">العرض و الترويج , تفقد المخزون و الاصناف الواجب توافرها</string>
+    <string name="select_proposed_request">تحديد الطلبية المقترحة</string>
+    <string name="display_and_persuasion">التقديم و الإقناع</string>
+    <string name="visit_rate">مراجعة الزيارة</string>
+    <string name="tack_pic">اخذ صورة</string>
+
     <string-array name="app_paymentTypeList">
         <item>نقداً</item>
         <item>شيك</item>

@@ -243,6 +243,22 @@
     <string name="enter_password">Enter Password</string>
     <string name="enter_qty">Enter Qty</string>
 
+    <string name="visit_steps">Visit/Payment Steps</string>
+    <string name="visit_purpose">Visit Purpose</string>
+    <string name="payment">Payment</string>
+    <string name="bank_up">Bank Up</string>
+    <string name="entering_categories">Entering Categories</string>
+    <string name="visit_presentation_space">Visit Presentation Space</string>
+    <string name="other">Other</string>
+    <string name="cust_regard">Customer Regard</string>
+    <string name="check_store">Check Store/Shelf/Repository/Activity of competitors</string>
+    <string name="promotion_check_stock">Presentation And Promotion And Check_store, The Categories Supposed to be there</string>
+    <string name="select_proposed_request">Select Proposed Request</string>
+    <string name="display_and_persuasion">Display And Persuasion</string>
+    <string name="visit_rate">Visit Rate</string>
+    <string name="tack_pic">Take Picture After Performance</string>
+
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
