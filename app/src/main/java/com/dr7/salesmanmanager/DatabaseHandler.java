@@ -48,6 +48,17 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     // tables from JSON
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String VISIT_RATE="VISIT_RATE";
+
+    private static final String VISIT_PERPOS="VISIT_PERPOS";
+    private static final String CUSTOMER_REGARDS="CUSTOMER_REGARDS";
+    private static final String CHECK_STORE="CHECK_STORE";
+    private static final String PROMOTION_CHECK_STOCK="PROMOTION_CHECK_STOCK";
+    private static final String SPESIFY_PROPOSED_REQUEST="SPESIFY_PROPOSED_REQUEST";
+    private static final String PERSUSION="PERSUSION";
+    private static final String VISIT_RATE1 = "VISIT_RATE";
+    private static final String VISIT_PIC="VISIT_PIC";
+    //__________________________________________________________________________
     private static final String CUSTOMER_MASTER = "CUSTOMER_MASTER";
 
     private static final String COMPANY_NUMBER0 = "COMPANY_NUMBER0";
@@ -335,6 +346,18 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
+                + VISIT_PERPOS + " INTEGER,"
+                + CUSTOMER_REGARDS + " INTEGER,"
+                + CHECK_STORE + " INTEGER,"
+                + PROMOTION_CHECK_STOCK + " INTEGER,"
+                + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
+                + PERSUSION + " INTEGER,"
+                + VISIT_RATE1 + " INTEGER,"
+                + VISIT_PIC + " BLOB" + ")";
+        db.execSQL(CREATE_TABLE_VISIT_RATE);
+
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_Items_Master = "CREATE TABLE " + Items_Master + "("
                 + ComapnyNo1 + " INTEGER,"
@@ -591,12 +614,22 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         try {
+            String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
+                    + VISIT_PERPOS + " INTEGER,"
+                    + CUSTOMER_REGARDS + " INTEGER,"
+                    + CHECK_STORE + " INTEGER,"
+                    + PROMOTION_CHECK_STOCK + " INTEGER,"
+                    + SPESIFY_PROPOSED_REQUEST + " INTEGER,"
+                    + PERSUSION + " INTEGER,"
+                    + VISIT_RATE1 + " INTEGER,"
+                    + VISIT_PIC + " BLOB" + ")";
+            db.execSQL(CREATE_TABLE_VISIT_RATE);
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
             db.execSQL("ALTER TABLE TABLE_TRANSACTIONS ADD IS_POSTED TEXT NOT NULL DEFAULT '0'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
-
+//
 //            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
 //                    + SALESMEN_NO + " TEXT,"
 //                    + DATE_ + " TEXT,"
@@ -662,6 +695,30 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.insert(Items_Master, null, values);
         db.close();
     }
+    //----------------------------------------------------
+    public void addVisitRate(VisitRate visitRate) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(VISIT_PERPOS,visitRate.getVisitPerpos());
+        values.put(CUSTOMER_REGARDS, visitRate.getCustomerRegards());
+        values.put(CHECK_STORE, visitRate.getCheckStore());
+        values.put(PROMOTION_CHECK_STOCK, visitRate.getPromotionCheckStock());
+        values.put(SPESIFY_PROPOSED_REQUEST, visitRate.getSpesifyProposedRequest());
+        values.put(PERSUSION, visitRate.getPersusion());
+        values.put(VISIT_RATE1, visitRate.getVisitRate());
+
+        byte[] byteImage = {};
+        if (visitRate.getVisitpic() != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            visitRate.getVisitpic() .compress(Bitmap.CompressFormat.PNG, 0, stream);
+            byteImage = stream.toByteArray();
+            values.put(VISIT_PIC, byteImage);
+        }
+        db.insert(VISIT_RATE, null, values);
+        db.close();
+    }
+    //----------------------------------------------------
 
     public void addPrice_List_D(PriceListD price) {
         db = this.getReadableDatabase();
@@ -982,6 +1039,34 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.insert(SALESMEN_STATIONS, null, values);
         db.close();
     }
+    //--------------------------------------------------------
+    public List<VisitRate> getVisitRate() {
+        List<VisitRate> visitrate = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + VISIT_RATE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                VisitRate rate = new VisitRate();
+                rate.setVisitPerpos(Integer.parseInt(cursor.getString(0)));
+                rate.setCustomerRegards(Integer.parseInt(cursor.getString(1)));
+                rate.setCheckStore(Integer.parseInt(cursor.getString(2)));
+                rate.setPromotionCheckStock(Integer.parseInt(cursor.getString(3)));
+                rate.setCheckStore(Integer.parseInt(cursor.getString(4)));
+                rate.setSpesifyProposedRequest(Integer.parseInt(cursor.getString(5)));
+                rate.setPersusion(Integer.parseInt(cursor.getString(6)));
+                rate.setVisitRate(Integer.parseInt(cursor.getString(7)));
+                if (cursor.getBlob(8).length == 0)
+                    rate.setVisitpic(null);
+                else
+                    rate.setVisitpic(BitmapFactory.decodeByteArray(cursor.getBlob(8), 0, cursor.getBlob(8).length));
+                visitrate.add(rate);
+            } while (cursor.moveToNext());
+        }
+        return visitrate;
+    }
+
+    //--------------------------------------------------------
 
 
     public List<Settings> getAllSettings() {
