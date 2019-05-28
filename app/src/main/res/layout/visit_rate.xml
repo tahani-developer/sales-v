@@ -14,274 +14,306 @@
         android:textColor="@color/text_view_color"
         android:textSize="25dp" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/visit_purpose"
-                    android:textColor="@color/text_view_color"
-                    android:textSize="20dp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <RadioGroup
-                    android:id="@+id/visit_purpose"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/visit_purpose"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="20dp" />
 
-                    <RadioButton
-                        android:id="@+id/payment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:text="@string/payment"
-                        android:textColor="@color/text_view_color" />
+                    <RadioGroup
+                        android:id="@+id/visit_purpose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <RadioButton
-                        android:id="@+id/bank_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:text="@string/bank_up"
-                        android:textColor="@color/text_view_color" />
+                        <RadioButton
+                            android:id="@+id/payment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:text="@string/payment"
+                            android:textColor="@color/text_view_color" />
 
-                    <RadioButton
-                        android:id="@+id/entering_categories"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:text="@string/entering_categories"
-                        android:textColor="@color/text_view_color" />
+                        <RadioButton
+                            android:id="@+id/bank_up"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:text="@string/bank_up"
+                            android:textColor="@color/text_view_color" />
 
-                    <RadioButton
-                        android:id="@+id/visit_presentation_space"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:text="@string/visit_presentation_space"
-                        android:textColor="@color/text_view_color" />
+                        <RadioButton
+                            android:id="@+id/entering_categories"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:text="@string/entering_categories"
+                            android:textColor="@color/text_view_color" />
 
-                    <RadioButton
-                        android:id="@+id/other"
-                        android:layout_width="wrap_content"
-                        android:layout_height="26dp"
-                        android:text="@string/other"
-                        android:textColor="@color/text_view_color" />
-                </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/visit_presentation_space"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:text="@string/visit_presentation_space"
+                            android:textColor="@color/text_view_color" />
+
+                        <RadioButton
+                            android:id="@+id/other"
+                            android:layout_width="wrap_content"
+                            android:layout_height="26dp"
+                            android:text="@string/other"
+                            android:textColor="@color/text_view_color" />
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@color/layer1" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/visit_rate"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="20dp" />
+
+                        <RadioButton
+                            android:id="@+id/rate1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@color/layer3"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="50dp" />
+
+                        <RadioButton
+                            android:id="@+id/rate2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@color/layer3"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="50dp" />
+
+                        <RadioButton
+                            android:id="@+id/rate3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@color/layer3"
+                            android:textColor="@color/text_view_color" />
+
+                        <RadioButton
+                            android:id="@+id/rate4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@color/layer3"
+                            android:textColor="@color/text_view_color" />
+
+                        <RadioButton
+                            android:id="@+id/rate5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="5dp"
+                            android:background="@color/layer3"
+                            android:textColor="@color/text_view_color" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/text_view_color" />
 
-                <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="5dp"
-                    android:background="@color/layer1" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/visit_rate"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="20dp" />
+                        android:layout_weight="1.3"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/rate1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@color/layer3"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="50dp" />
 
-                    <RadioButton
-                        android:id="@+id/rate2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@color/layer3"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="50dp" />
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                    <RadioButton
-                        android:id="@+id/rate3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@color/layer3"
-                        android:textColor="@color/text_view_color" />
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
-                    <RadioButton
-                        android:id="@+id/rate4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@color/layer3"
-                        android:textColor="@color/text_view_color" />
+                                <TextView
+                                    android:layout_width="830dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/cust_regard"
+                                    android:textColor="@color/text_view_color"
+                                    android:textSize="20dp" />
 
-                    <RadioButton
-                        android:id="@+id/rate5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginHorizontal="5dp"
-                        android:background="@color/layer3"
-                        android:textColor="@color/text_view_color" />
+                                <CheckBox
+                                    android:id="@+id/cust_regard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp">
+
+                                <TextView
+                                    android:layout_width="830dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/check_store"
+                                    android:textColor="@color/text_view_color"
+                                    android:textSize="20dp" />
+
+                                <CheckBox
+                                    android:id="@+id/check_store"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </TableRow>
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp">
+
+                                <TextView
+                                    android:layout_width="830dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/promotion_check_stock"
+                                    android:textColor="@color/text_view_color"
+                                    android:textSize="20dp" />
+
+                                <CheckBox
+                                    android:id="@+id/promotion_check_stock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                            </TableRow>
+
+                        </TableLayout>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="830dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/select_proposed_request"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="20dp" />
+
+                            <CheckBox
+                                android:id="@+id/select_proposed_request"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="830dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/display_and_persuasion"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="20dp" />
+
+                            <CheckBox
+                                android:id="@+id/display_and_persuasion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </TableRow>
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="10dp"
-            android:background="@color/text_view_color" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            </HorizontalScrollView>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.3"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center">
 
+                <Button
+                    android:id="@+id/save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@color/add_button"
+                    android:text="@string/save"
+                    android:textColor="@color/layer5" />
 
-                <TableLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="830dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/cust_regard"
-                            android:textColor="@color/text_view_color"
-                            android:textSize="20dp" />
-
-                        <CheckBox
-                            android:id="@+id/cust_regard"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
-
-                        <TextView
-                            android:layout_width="830dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/check_store"
-                            android:textColor="@color/text_view_color"
-                            android:textSize="20dp" />
-
-                        <CheckBox
-                            android:id="@+id/check_store"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
-
-                        <TextView
-                            android:layout_width="830dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/promotion_check_stock"
-                            android:textColor="@color/text_view_color"
-                            android:textSize="20dp" />
-
-                        <CheckBox
-                            android:id="@+id/promotion_check_stock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </TableRow>
-
-                </TableLayout>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="830dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/select_proposed_request"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="20dp" />
-
-                    <CheckBox
-                        android:id="@+id/select_proposed_request"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="830dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/display_and_persuasion"
-                        android:textColor="@color/text_view_color"
-                        android:textSize="20dp" />
-
-                    <CheckBox
-                        android:id="@+id/display_and_persuasion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </TableRow>
-
+                <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/add_button"
+                    android:text="@string/app_cancel"
+                    android:textColor="@color/layer5" />
 
             </LinearLayout>
-
         </LinearLayout>
 
-        <Button
-            android:id="@+id/save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/add_button"
-            android:layout_marginTop="5dp"
-            android:text="@string/save"
-            android:textColor="@color/layer5"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

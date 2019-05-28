@@ -40,7 +40,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -622,23 +622,29 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         try {
+            db.execSQL("DROP TABLE SALESMEN_STATIONS");
+        }catch (Exception e) {
+            Log.e("onUpgrade*****", "duplicated column");
+        }
+
+        try {
 
 //            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
-            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
-            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
-            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
+//            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
+//            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
+//            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
-//
-//            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
-//                    + SALESMEN_NO + " TEXT,"
-//                    + DATE_ + " TEXT,"
-//                    + LATITUDE + " TEXT,"
-//                    + LONGITUDE + " TEXT,"
-//                    + SERIAL + " INTEGER,"
-//                    + CUSTOMR_NO + " TEXT,"
-//                    + CUSUSTOMR_NAME + " TEXT" + ")";
-//            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+                    + SALESMEN_NO + " TEXT,"
+                    + DATE_ + " TEXT,"
+                    + LATITUDE + " TEXT,"
+                    + LONGITUDE + " TEXT,"
+                    + SERIAL + " INTEGER,"
+                    + CUSTOMR_NO + " TEXT,"
+                    + CUSUSTOMR_NAME + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column");
@@ -1066,9 +1072,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 else
                     rate.setVisitpic(BitmapFactory.decodeByteArray(cursor.getBlob(8), 0, cursor.getBlob(8).length));
 
-                rate.setCustCode(cursor.getString(5));
-                rate.setCustName(cursor.getString(6));
-                rate.setSalesman(cursor.getString(7));
+                rate.setCustCode(cursor.getString(9));
+                rate.setCustName(cursor.getString(10));
+                rate.setSalesman(cursor.getString(11));
 
                 visitrate.add(rate);
             } while (cursor.moveToNext());

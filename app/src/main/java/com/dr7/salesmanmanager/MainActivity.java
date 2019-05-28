@@ -449,6 +449,7 @@ public class MainActivity extends AppCompatActivity
 
         visitPicture = dialog.findViewById(R.id.image);
         Button save = dialog.findViewById(R.id.save);
+        Button cancel = dialog.findViewById(R.id.cancel);
 
         final int[] rate = {0};
         r1.setOnClickListener(new View.OnClickListener() {
@@ -555,6 +556,13 @@ public class MainActivity extends AppCompatActivity
 
                 dialog.dismiss();
                 Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
             }
         });
         dialog.show();

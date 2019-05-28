@@ -68,6 +68,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     static String cusCode;
     String cusName;
     int status;
+    String today;
 
     private static DatabaseHandler mDbHandler;
 
@@ -108,7 +109,8 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        final String today = df.format(currentTimeAndDate);
+        today = df.format(currentTimeAndDate);
+        today = convertToEnglish(today);
 
         mDbHandler = new DatabaseHandler(getActivity());
 
@@ -143,7 +145,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                             }
                         }
 
-                        if(inRoot) {
+//                        if(inRoot) {
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
                                     isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
@@ -168,9 +170,9 @@ public class CustomerCheckInFragment extends DialogFragment {
                             } else {
                                 Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getActivity(), "This customer is not in your root, please check your map", Toast.LENGTH_LONG).show();
-                        }
+//                        } else {
+//                            Toast.makeText(getActivity(), "This customer is not in your root, please check your map", Toast.LENGTH_LONG).show();
+//                        }
 
                     } else {
                         MainActivity mainActivity = new MainActivity();
@@ -447,6 +449,11 @@ public class CustomerCheckInFragment extends DialogFragment {
             }
             progressDialog.dismiss();
         }
+    }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
     }
 
 }

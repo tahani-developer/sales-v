@@ -868,12 +868,12 @@ public class SalesInvoice extends Fragment {
                             break;
 
                         case 2:
-                            textView.setText(""+itemsList.get(j).getBonus());
+                            textView.setText("" + itemsList.get(j).getBonus());
                             textView.setLayoutParams(lp2);
                             break;
 
                         case 1:
-                            textView.setText(""+itemsList.get(j).getDisc());
+                            textView.setText("" + itemsList.get(j).getDisc());
                             textView.setLayoutParams(lp2);
                             break;
 
@@ -914,12 +914,12 @@ public class SalesInvoice extends Fragment {
                             break;
 
                         case 2:
-                            textView.setText(""+itemsList.get(j).getBonus());
+                            textView.setText("" + itemsList.get(j).getBonus());
                             textView.setLayoutParams(lp2);
                             break;
 
                         case 1:
-                            textView.setText(""+itemsList.get(j).getDisc());
+                            textView.setText("" + itemsList.get(j).getDisc());
                             textView.setLayoutParams(lp2);
                             break;
 
@@ -1030,7 +1030,7 @@ public class SalesInvoice extends Fragment {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData();
+            sendData2();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1196,70 +1196,74 @@ public class SalesInvoice extends Fragment {
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 
-            for (int i = 1; i <= numOfCopy; i++) {
+            if (companyInfo != null) {
+                for (int i = 1; i <= numOfCopy; i++) {
 
-                printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
-                printCustom("------------------------------------------" + " \n ", 1, 0);
-                printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
-                printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
-                printCustom("رقم العميل     " + voucher.getCustNumber() + " : " + "\n", 1, 0);
-                printCustom("اسم العميل " + " : " + voucher.getCustName()  + "\n", 1, 0);
-                printCustom("مندوب المبيعات " + voucher.getSaleManNumber() + " : " + "\n", 1, 0);
-                printCustom("------------------------------------------" + "\n", 1, 0);
+                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
+                    printCustom("------------------------------------------" + " \n ", 1, 0);
+                    printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
+                    printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
+                    printCustom("رقم العميل     " + voucher.getCustNumber() + " : " + "\n", 1, 0);
+                    printCustom("اسم العميل " + " : " + voucher.getCustName() + "\n", 1, 0);
+                    printCustom("مندوب المبيعات " + voucher.getSaleManNumber() + " : " + "\n", 1, 0);
+                    printCustom("------------------------------------------" + "\n", 1, 0);
 
-                int serial = 1;
-                for (int j = 0; j < itemsList.size(); j++) {
-                    if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
-                        String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
-                        String amountATax = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc() + itemsList.get(j).getTaxValue());
-                        amount = convertToEnglish(amount);
-                        amountATax = convertToEnglish(amountATax);
+                    int serial = 1;
+                    for (int j = 0; j < itemsList.size(); j++) {
+                        if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
+                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            String amountATax = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc() + itemsList.get(j).getTaxValue());
+                            amount = convertToEnglish(amount);
+                            amountATax = convertToEnglish(amountATax);
 
-                        printCustom("(" + serial + "" + "\n", 1, 0);
-                        printCustom("رقم الصنف " + itemsList.get(j).getItemNo() + " : " + " \n ", 1, 0);
-                        printCustom("الصنف " + " : " + itemsList.get(j).getItemName() + " \n ", 1, 0);
-                        printCustom("الكمية    " + itemsList.get(j).getQty() + " : " + " \n ", 1, 0);
-                        printCustom("السعر     " + itemsList.get(j).getPrice() + " : " + " \n ", 1, 0);
-                        printCustom("الخصم     " + itemsList.get(j).getDisc() + " : " + " \n ", 1, 0);
-                        printCustom("الصافي    " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
-                        printCustom("الضريبة   " + itemsList.get(j).getTaxValue() + " : " + " \n ", 1, 0);
-                        printCustom("الاجمالي   " + amountATax + " : " + " \n ", 1, 0);
+                            printCustom("(" + serial + "" + "\n", 1, 0);
+                            printCustom("رقم الصنف " + itemsList.get(j).getItemNo() + " : " + " \n ", 1, 0);
+                            printCustom("الصنف " + " : " + itemsList.get(j).getItemName() + " \n ", 1, 0);
+                            printCustom("الكمية    " + itemsList.get(j).getQty() + " : " + " \n ", 1, 0);
+                            printCustom("السعر     " + itemsList.get(j).getPrice() + " : " + " \n ", 1, 0);
+                            printCustom("الخصم     " + itemsList.get(j).getDisc() + " : " + " \n ", 1, 0);
+                            printCustom("الصافي    " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
+                            printCustom("الضريبة   " + itemsList.get(j).getTaxValue() + " : " + " \n ", 1, 0);
+                            printCustom("الاجمالي   " + amountATax + " : " + " \n ", 1, 0);
 
-                        printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
+                            printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
 
-                        serial++;
-                        totalQty += itemsList.get(j).getQty();
-                        totalPrice += itemsList.get(j).getPrice();
-                        totalDisc += itemsList.get(j).getDisc();
-                        totalNet += (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
-                        totalTax += itemsList.get(j).getTaxValue();
-                        totalTotal += itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc() + itemsList.get(j).getTaxValue();
+                            serial++;
+                            totalQty += itemsList.get(j).getQty();
+                            totalPrice += itemsList.get(j).getPrice();
+                            totalDisc += itemsList.get(j).getDisc();
+                            totalNet += (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            totalTax += itemsList.get(j).getTaxValue();
+                            totalTotal += itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc() + itemsList.get(j).getTaxValue();
+                        }
                     }
+
+                    DecimalFormat threeDForm = new DecimalFormat("0.000");
+                    printCustom("اجمالي الكمية  " + totalQty + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي السعر   " + threeDForm.format(totalPrice) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الخصم   " + totalDisc + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الصافي  " + threeDForm.format(totalNet) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الضريبة " + totalTax + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الإجمالي " + threeDForm.format(totalTotal) + " : " + " \n ", 1, 0);
+
+                    if (voucher.getVoucherType() != 506) {
+                        printCustom("استلمت البضاعة خالية من اي عيب او توالف" + " \n ", 1, 0);
+                        printCustom("توقيع العميل" + "  " + "_______________" + " \n ", 1, 0);
+                    }
+                    printCustom("------------------------------------------" + " \n ", 1, 0);
+                    printCustom("\n", 1, 0);
+                    printCustom("\n", 1, 0);
+
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                 }
-
-                printCustom("اجمالي الكمية  " + totalQty + " : " +" \n ", 1, 0);
-                printCustom("اجمالي السعر   " + totalPrice + " : " +" \n ", 1, 0);
-                printCustom("اجمالي الخصم   " + totalDisc + " : " +" \n ", 1, 0);
-                printCustom("اجمالي الصافي  " + totalNet + " : " +" \n ", 1, 0);
-                printCustom("اجمالي الضريبة " + totalTax + " : " +" \n ", 1, 0);
-                printCustom("اجمالي الإجمالي " + totalTotal + " : " +" \n ", 1, 0);
-
-                if (voucher.getVoucherType() != 506) {
-                    printCustom("استلمت البضاعة خالية من اي عيب او توالف" + " \n ", 1, 0);
-                    printCustom("توقيع العميل" + "  " + "_______________" + " \n ", 1, 0);
-                }
-                printCustom("------------------------------------------" + " \n ", 1, 0);
-                printCustom("\n", 1, 0);
-                printCustom("\n", 1, 0);
-
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-            }
-            closeBT();
+                closeBT();
+            } else
+                Toast.makeText(getActivity(), " please enter company information", Toast.LENGTH_LONG).show();
 
         } catch (NullPointerException e) {
             e.printStackTrace();

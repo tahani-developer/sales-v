@@ -5,6 +5,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,9 +49,11 @@ public class SalesmanMap extends FragmentActivity implements OnMapReadyCallback 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String today = df.format(currentTimeAndDate);
+        today = convertToEnglish(today);
 
         List<SalesmanStations> stations = new DatabaseHandler(SalesmanMap.this).getAllSalesmanSatation(Login.salesMan, today);
 
+        Log.e("size " , "" + stations.size());
         PolylineOptions polylineOptions = new PolylineOptions();
         for (int i = 0; i < stations.size(); i++) {
             for (int j = 0; j < stations.size(); j++) {
@@ -79,5 +82,9 @@ public class SalesmanMap extends FragmentActivity implements OnMapReadyCallback 
         }
     }
 
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
 
 }

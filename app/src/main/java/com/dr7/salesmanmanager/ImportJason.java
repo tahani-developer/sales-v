@@ -21,6 +21,7 @@ import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import org.json.JSONArray;
@@ -64,9 +65,12 @@ public class ImportJason extends AppCompatActivity{
     }
 
     public void startParsing(){
-        String ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
-        URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-        new JSONTask().execute(URL_TO_HIT);
+        List<Settings> settings =  mHandler.getAllSettings();
+        if(settings.size() != 0) {
+            String ipAddress = settings.get(0).getIpAddress();
+            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+            new JSONTask().execute(URL_TO_HIT);
+        }
     }
 
     void storeInDatabase() {
