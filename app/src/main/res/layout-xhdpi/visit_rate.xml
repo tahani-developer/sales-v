@@ -4,7 +4,7 @@
     android:layout_height="400dp"
     android:background="@color/layer3"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="20dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -14,13 +14,12 @@
         android:textColor="@color/text_view_color"
         android:textSize="20dp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -38,13 +37,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/visit_purpose"
+                        android:background="@color/done_button"
                         android:textColor="@color/text_view_color"
                         android:textSize="15dp" />
 
                     <RadioGroup
                         android:id="@+id/visit_purpose"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="100dp">
 
                         <RadioButton
                             android:id="@+id/payment"
@@ -86,15 +86,15 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="120dp"
+                    android:layout_weight="2"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/image"
                         android:layout_width="110dp"
-                        android:layout_height="100dp"
+                        android:layout_height="80dp"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:background="@color/layer1" />
@@ -162,37 +162,36 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="650dp"
                 android:layout_height="1dp"
                 android:layout_marginVertical="5dp"
                 android:background="@color/text_view_color" />
 
             <HorizontalScrollView
-                android:layout_width="match_parent"
+                android:layout_width="750dp"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="750dp"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="700dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.3"
                         android:orientation="vertical">
 
 
                         <TableLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="650dp"
                             android:layout_height="wrap_content">
 
                             <TableRow
-                                android:layout_width="match_parent"
+                                android:layout_width="650dp"
                                 android:layout_height="wrap_content">
 
                                 <TextView
-                                    android:layout_width="800dp"
+                                    android:layout_width="600dp"
                                     android:layout_height="wrap_content"
                                     android:text="@string/cust_regard"
                                     android:textColor="@color/text_view_color"
@@ -200,17 +199,17 @@
 
                                 <CheckBox
                                     android:id="@+id/cust_regard"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="50dp"
                                     android:layout_height="wrap_content" />
                             </TableRow>
 
                             <TableRow
-                                android:layout_width="match_parent"
+                                android:layout_width="650dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp">
+                                android:layout_marginTop="1dp">
 
                                 <TextView
-                                    android:layout_width="800dp"
+                                    android:layout_width="600dp"
                                     android:layout_height="wrap_content"
                                     android:text="@string/check_store"
                                     android:textColor="@color/text_view_color"
@@ -218,17 +217,17 @@
 
                                 <CheckBox
                                     android:id="@+id/check_store"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="50dp"
                                     android:layout_height="wrap_content" />
                             </TableRow>
 
                             <TableRow
-                                android:layout_width="match_parent"
+                                android:layout_width="650dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp">
+                                android:layout_marginTop="1dp">
 
                                 <TextView
-                                    android:layout_width="800dp"
+                                    android:layout_width="600dp"
                                     android:layout_height="wrap_content"
                                     android:text="@string/promotion_check_stock"
                                     android:textColor="@color/text_view_color"
@@ -236,18 +235,18 @@
 
                                 <CheckBox
                                     android:id="@+id/promotion_check_stock"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="50dp"
                                     android:layout_height="wrap_content" />
                             </TableRow>
 
                         </TableLayout>
 
                         <TableRow
-                            android:layout_width="match_parent"
+                            android:layout_width="650dp"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:layout_width="800dp"
+                                android:layout_width="600dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/select_proposed_request"
                                 android:textColor="@color/text_view_color"
@@ -255,16 +254,16 @@
 
                             <CheckBox
                                 android:id="@+id/select_proposed_request"
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content" />
                         </TableRow>
 
                         <TableRow
-                            android:layout_width="match_parent"
+                            android:layout_width="650dp"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:layout_width="800dp"
+                                android:layout_width="600dp"
                                 android:layout_height="wrap_content"
                                 android:text="@string/display_and_persuasion"
                                 android:textColor="@color/text_view_color"
@@ -272,7 +271,7 @@
 
                             <CheckBox
                                 android:id="@+id/display_and_persuasion"
-                                android:layout_width="wrap_content"
+                                android:layout_width="50dp"
                                 android:layout_height="wrap_content" />
                         </TableRow>
 
@@ -291,10 +290,10 @@
 
                 <Button
                     android:id="@+id/save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="1dp"
                     android:layout_marginHorizontal="5dp"
                     android:background="@color/add_button"
                     android:text="@string/save"
@@ -302,18 +301,18 @@
 
                 <Button
                     android:id="@+id/cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="5dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@color/add_button"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/done_button"
                     android:text="@string/app_cancel"
                     android:textColor="@color/layer5" />
 
             </LinearLayout>
         </LinearLayout>
 
-    </ScrollView>
+
 
 </LinearLayout>
