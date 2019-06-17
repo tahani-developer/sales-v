@@ -185,7 +185,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                         String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                 holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
-                                                                bonus.getText().toString(), "" +appliedOffer.getBonusQty(), radioGroup, useWeight, view.getContext());
+                                                                bonus.getText().toString(), "" +(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString())), radioGroup, useWeight, view.getContext());
                                                     }
                                                 }
                                             } else {
@@ -243,7 +243,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                 String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                         holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
-                                                                        bonus.getText().toString(), ""+appliedOffer.getBonusQty(), radioGroup, useWeight, view.getContext());
+                                                                        bonus.getText().toString(), ""+(appliedOffer.getBonusQty()*Double.parseDouble(qty)), radioGroup, useWeight, view.getContext());
                                                             }
                                                         }
                                                     } else {

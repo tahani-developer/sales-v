@@ -16,13 +16,15 @@ public class Settings {
     private int allowOutOfRange;
     private int canChangePrice;
     private int readDiscountFromOffers;
+    private int workOnline;
 
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
-                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int canChangePrice,int readDiscountFromOffers) {
+                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int canChangePrice,int readDiscountFromOffers,
+                    int workOnline) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -35,8 +37,9 @@ public class Settings {
         this.minSalePric = minSalePric;
         this.printMethod = printMethod;
         this.allowOutOfRange = allowOutOfRange;
-        this.canChangePrice=canChangePrice;
-        this.readDiscountFromOffers=readDiscountFromOffers;
+        this.canChangePrice = canChangePrice;
+        this.readDiscountFromOffers = readDiscountFromOffers;
+        this.workOnline = workOnline;
     }
 
     public int getCanChangePrice() {
@@ -149,5 +152,13 @@ public class Settings {
 
     public void setAllowOutOfRange(int allowOutOfRange) {
         this.allowOutOfRange = allowOutOfRange;
+    }
+
+    public int getWorkOnline() {
+        return workOnline;
+    }
+
+    public void setWorkOnline(int workOnline) {
+        this.workOnline = workOnline;
     }
 }

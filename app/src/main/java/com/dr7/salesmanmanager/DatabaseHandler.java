@@ -40,7 +40,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 31;
+    private static final int DATABASE_VERSION = 45;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -184,6 +184,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ALLOW_OUT_OF_RANGE = "ALLOW_OUT_OF_RANGE";
     private static final String CAN_CHANGE_PRICE = "CAN_CHANGE_PRICE";
     private static final String READ_DISCOUNT_FROM_OFFERS = "READ_DISCOUNT_FROM_OFFERS";
+    private static final String WORK_ONLINE = "WORK_ONLINE";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -470,7 +471,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PRINT_METHOD + " INTEGER,"
                 + CAN_CHANGE_PRICE + " INTEGER,"
                 + ALLOW_OUT_OF_RANGE+  " INTEGER,"
-                + READ_DISCOUNT_FROM_OFFERS+ " INTEGER" + ")";
+                + READ_DISCOUNT_FROM_OFFERS+  " INTEGER,"
+                + WORK_ONLINE+ " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -621,11 +623,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        try {
-            db.execSQL("DROP TABLE SALESMEN_STATIONS");
-        }catch (Exception e) {
-            Log.e("onUpgrade*****", "duplicated column");
-        }
+
 
         try {
 
@@ -634,17 +632,21 @@ DatabaseHandler extends SQLiteOpenHelper {
 //            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
 //            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
 //            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
-//            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSUSTOMR_NAME TEXT  NOT NULL DEFAULT 'sss'");
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
-                    + SALESMEN_NO + " TEXT,"
-                    + DATE_ + " TEXT,"
-                    + LATITUDE + " TEXT,"
-                    + LONGITUDE + " TEXT,"
-                    + SERIAL + " INTEGER,"
-                    + CUSTOMR_NO + " TEXT,"
-                    + CUSUSTOMR_NAME + " TEXT" + ")";
-            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+//            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
+//            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
+//            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
+
+//            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+//                    + SALESMEN_NO + " TEXT,"
+//                    + DATE_ + " TEXT,"
+//                    + LATITUDE + " TEXT,"
+//                    + LONGITUDE + " TEXT,"
+//                    + SERIAL + " INTEGER,"
+//                    + CUSTOMR_NO + " TEXT,"
+//                    + CUSUSTOMR_NAME + " TEXT" + ")";
+//            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column");
@@ -840,7 +842,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
-                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount) {
+                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
+                           int workOnline) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -858,6 +861,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CAN_CHANGE_PRICE, canChangePrice);
         values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
         values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
+        values.put(WORK_ONLINE, workOnline);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -1107,6 +1111,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(11)));
                 setting.setCanChangePrice(Integer.parseInt(cursor.getString(12)));
                 setting.setReadDiscountFromOffers(Integer.parseInt(cursor.getString(13)));
+                setting.setWorkOnline(Integer.parseInt(cursor.getString(14)));
+
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1115,9 +1121,10 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public List<CompanyInfo> getAllCompanyInfo() {
         List<CompanyInfo> infos = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + COMPANY_INFO;
+        String selectQuery = "SELECT  * FROM  COMPANY_INFO";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+
         if (cursor.moveToFirst()) {
             do {
                 CompanyInfo info = new CompanyInfo();
@@ -1844,6 +1851,22 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(IS_POSTED, 1);
         db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0, null);
+    }
+
+    public void updateVoucher2(int voucherNo) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED, 1);
+        db.update(SALES_VOUCHER_MASTER, values, IS_POSTED + "=" + 0 + " and VOUCHER_NUMBER = " + voucherNo, null);
+    }
+
+    public void updateVoucherDetails2(int voucherNo) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED, 1);
+        db.update(SALES_VOUCHER_DETAILS, values, IS_POSTED + "=" + 0 + " and VOUCHER_NUMBER = " + voucherNo, null);
     }
 
     public void updatePayment() {

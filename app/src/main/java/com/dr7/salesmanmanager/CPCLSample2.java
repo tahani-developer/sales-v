@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager;
 
 import android.graphics.Typeface;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -141,14 +142,17 @@ public class CPCLSample2
 		cpclPrinter.printForm();
     }
     
-    public void imageTest(int count) throws IOException
+    public void imageTest(CompanyInfo obj ,int count ) throws IOException
     {
     	cpclPrinter.setForm(0, 200, 200, 406, count);    	
 		cpclPrinter.setMedia(paperType);
+
+		cpclPrinter.printCPCLText(CPCLConst.LK_CPCL_0_ROTATION, 0, 2, 130, 280, "SEWOO TECH", 0);
+		cpclPrinter.printBitmap(obj.getLogo(), 1, 200);
 		
-    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_2.jpg", 1, 200);    	
-    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);    	
-    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);      	
+//    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_2.jpg", 1, 200);
+//    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
+//    	cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
     	cpclPrinter.printForm();    	
     }
         

@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,7 +31,6 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
-import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +53,7 @@ public class PrintVoucher extends AppCompatActivity {
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
     Button preview;
+    ImageView pic;
     TableLayout TableTransactionsReport;
     TableLayout TableItemInfo;
     Calendar myCalendar;
@@ -69,6 +70,7 @@ public class PrintVoucher extends AppCompatActivity {
     int counter;
     volatile boolean stopWorker;
 
+    Bitmap bitmap;
     String itemsString;
     String itemsString2 = "";
     DatabaseHandler obj;
@@ -90,6 +92,7 @@ public class PrintVoucher extends AppCompatActivity {
         from_date = (EditText) findViewById(R.id.from_date);
         to_date = (EditText) findViewById(R.id.to_date);
         preview = (Button) findViewById(R.id.preview);
+        pic = findViewById(R.id.pic);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -194,7 +197,8 @@ public class PrintVoucher extends AppCompatActivity {
                                                 try {
                                                     findBT(Integer.parseInt(textView.getText().toString()));
                                                     openBT(vouch);
-                                                } catch (IOException ex) { }
+                                                } catch (IOException ex) {
+                                                }
                                             } else {
                                                 hiddenDialog(vouch);
                                             }
@@ -495,12 +499,12 @@ public class PrintVoucher extends AppCompatActivity {
                                 break;
 
                             case 2:
-                                textView.setText(""+items.get(j).getBonus());
+                                textView.setText("" + items.get(j).getBonus());
                                 textView.setLayoutParams(lp2);
                                 break;
 
                             case 1:
-                                textView.setText(""+items.get(j).getDisc());
+                                textView.setText("" + items.get(j).getDisc());
                                 textView.setLayoutParams(lp2);
                                 break;
 
@@ -541,12 +545,12 @@ public class PrintVoucher extends AppCompatActivity {
                                 break;
 
                             case 2:
-                                textView.setText(""+items.get(j).getBonus());
+                                textView.setText("" + items.get(j).getBonus());
                                 textView.setLayoutParams(lp2);
                                 break;
 
                             case 1:
-                                textView.setText(""+items.get(j).getDisc());
+                                textView.setText("" + items.get(j).getDisc());
                                 textView.setLayoutParams(lp2);
 
                             case 0:
@@ -569,7 +573,7 @@ public class PrintVoucher extends AppCompatActivity {
                 PrintHelper photoPrinter = new PrintHelper(PrintVoucher.this);
                 photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
                 linearLayout.setDrawingCacheEnabled(true);
-                Bitmap bitmap = linearLayout.getDrawingCache();
+                bitmap = linearLayout.getDrawingCache();
                 photoPrinter.printBitmap("invoice.jpg", bitmap);
 
             }
@@ -733,70 +737,88 @@ public class PrintVoucher extends AppCompatActivity {
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-            for (int i = 1; i <= numOfCopy; i++) {
-                String voucherTyp = "";
-                switch (voucher.getVoucherType()) {
-                    case 504:
-                        voucherTyp = "فاتورة بيع";
-                        break;
-                    case 506:
-                        voucherTyp = "فاتورة مرتجعات";
-                        break;
-                    case 508:
-                        voucherTyp = "طلب جديد";
-                        break;
-                }
-                printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
-                printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-                printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
-                printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);
-                printCustom("نوع الفاتورة : " + voucherTyp + "\n", 1, 2);
-                printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
+            if (companyInfo != null) {
 
-                if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
-                    printCustom(" السلعة              " + "العدد    " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+
+                for (int i = 1; i <= numOfCopy; i++) {
+                    String voucherTyp = "";
+                    switch (voucher.getVoucherType()) {
+                        case 504:
+                            voucherTyp = "فاتورة بيع";
+                            break;
+                        case 506:
+                            voucherTyp = "فاتورة مرتجعات";
+                            break;
+                        case 508:
+                            voucherTyp = "طلب جديد";
+                            break;
+                    }
+
+                    if (companyInfo.getLogo() != null) {
+                        pic.setImageBitmap(companyInfo.getLogo());
+                        pic.setDrawingCacheEnabled(true);
+                        Bitmap bitmap = pic.getDrawingCache();
+
+                        PrintPic printPic = PrintPic.getInstance();
+                        printPic.init(bitmap);
+                        byte[] bitmapdata = printPic.printDraw();
+                        mmOutputStream.write(bitmapdata);
+                        printCustom(" \n ", 1, 0);
+                    }
+
+                    printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
+                    printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
-                    printCustom(itemsString + "\n", 0, 2);
-                } else {
-                    printCustom(" السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+                    printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
+                    printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);
+                    printCustom("نوع الفاتورة : " + voucherTyp + "\n", 1, 2);
+                    printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", 1, 2);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                    printCustom(itemsString2 + "\n", 0, 2);
+                    if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                        printCustom(" السلعة              " + "العدد    " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+                        printCustom("----------------------------------------------" + "\n", 1, 2);
+                        printCustom(itemsString + "\n", 0, 2);
+                    } else {
+                        printCustom(" السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
+                        printCustom("----------------------------------------------" + "\n", 1, 2);
+
+                        printCustom(itemsString2 + "\n", 0, 2);
+                    }
+                    printCustom("----------------------------------------------" + "\n", 1, 2);
+
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
+                    printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
+                    printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
+                    printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
+                    printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
+                    printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    printCustom("----------------------------------------------" + "\n", 1, 2);
+                    printCustom("\n", 1, 2);
+                    printCustom("\n", 1, 2);
+                    printCustom("\n", 1, 2);
+                    printCustom("\n", 1, 2);
+                    printCustom("\n", 1, 2);
+                    printCustom("\n", 1, 2);
+
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+
                 }
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
-                printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
-                printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
-                printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
-                printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
-                printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
-                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                printCustom("----------------------------------------------" + "\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
-                printCustom("\n", 1, 2);
-
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-
-            }
-            closeBT();
-            // tell the user data were sent
+                closeBT();
+                // tell the user data were sent
 //                myLabel.setText("Data Sent");
+            } else
+                Toast.makeText(PrintVoucher.this, " please enter company information", Toast.LENGTH_LONG).show();
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -818,8 +840,22 @@ public class PrintVoucher extends AppCompatActivity {
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-            if (companyInfo != null ) {
+            if (companyInfo != null) {
+
                 for (int i = 1; i <= numOfCopy; i++) {
+
+                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+
+                    if (companyInfo.getLogo() != null) {
+                        pic.setImageBitmap(companyInfo.getLogo());
+                        pic.setDrawingCacheEnabled(true);
+                        bitmap = pic.getDrawingCache();
+
+                        PrintPic printPic = PrintPic.getInstance();
+                        printPic.init(bitmap);
+                        byte[] bitmapdata = printPic.printDraw();
+                        mmOutputStream.write(bitmapdata);
+                    }
 
                     printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
@@ -844,11 +880,11 @@ public class PrintVoucher extends AppCompatActivity {
                             printCustom("رقم الصنف " + items.get(j).getItemNo() + " : " + " \n ", 1, 0);
                             printCustom("الصنف " + " : " + items.get(j).getItemName() + " \n ", 1, 0);
                             printCustom("الكمية    " + items.get(j).getQty() + " : " + " \n ", 1, 0);
-                            printCustom("السعر     " + items.get(j).getPrice() + " : " + " \n ", 1, 0);
-                            printCustom("الخصم     " + items.get(j).getDisc() + " : " + " \n ", 1, 0);
-                            printCustom("الصافي    " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
-                            printCustom("الضريبة   " + items.get(j).getTaxValue() + " : " + " \n ", 1, 0);
-                            printCustom("الاجمالي   " + amountATax + " : " + " \n ", 1, 0);
+                            printCustom("السعر     " + " JD " + items.get(j).getPrice() + " : " + " \n ", 1, 0);
+                            printCustom("الخصم     " + " JD " + items.get(j).getDisc() + " : " + " \n ", 1, 0);
+                            printCustom("الصافي    " + " JD " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
+                            printCustom("الضريبة   " + " JD " + new DecimalFormat("#.##").format(items.get(j).getTaxValue()) + " : " + " \n ", 1, 0);
+                            printCustom("الاجمالي   " + " JD " + new DecimalFormat("#.##").format(amountATax) + " : " + " \n ", 1, 0);
 
                             printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
 
@@ -863,12 +899,12 @@ public class PrintVoucher extends AppCompatActivity {
                     }
 
                     DecimalFormat threeDForm = new DecimalFormat("0.000");
-                    printCustom("اجمالي الكمية  " + totalQty + " : " + " \n ", 1, 0);
-                    printCustom("اجمالي السعر   " + threeDForm.format(totalPrice) + " : " + " \n ", 1, 0);
-                    printCustom("اجمالي الخصم   " + totalDisc + " : " + " \n ", 1, 0);
-                    printCustom("اجمالي الصافي  " + threeDForm.format(totalNet) + " : " + " \n ", 1, 0);
-                    printCustom("اجمالي الضريبة " + totalTax + " : " + " \n ", 1, 0);
-                    printCustom("اجمالي الإجمالي " + threeDForm.format(totalTotal) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الكمية  " + convertToEnglish("" + totalQty) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي السعر   " + " JD " + convertToEnglish(threeDForm.format(totalPrice)) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الخصم   " + " JD " + convertToEnglish(threeDForm.format(totalDisc)) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الصافي  " + " JD " + convertToEnglish(threeDForm.format(totalNet)) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الضريبة " + " JD " + convertToEnglish(threeDForm.format(totalTax)) + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي الإجمالي " + " JD " + convertToEnglish(threeDForm.format(totalTotal)) + " : " + " \n ", 1, 0);
 
                     if (voucher.getVoucherType() != 506) {
                         printCustom("استلمت البضاعة خالية من اي عيب او توالف" + " \n ", 1, 0);
@@ -882,10 +918,11 @@ public class PrintVoucher extends AppCompatActivity {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+
                 }
                 closeBT();
             } else
-                Toast.makeText(PrintVoucher.this , " please enter company information" , Toast.LENGTH_LONG).show();
+                Toast.makeText(PrintVoucher.this, " please enter company information", Toast.LENGTH_LONG).show();
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -932,12 +969,10 @@ public class PrintVoucher extends AppCompatActivity {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_RIGHT);
                     break;
             }
-            mmOutputStream.write(PrinterCommands.LF);
 
-            Arabic864 arabic = new Arabic864();
-            byte[] arabicArr = arabic.Convert(msg, false);
+//            Arabic864 arabic = new Arabic864();
+//            byte[] arabicArr = arabic.Convert(msg, false);
             mmOutputStream.write(msg.getBytes());
-
 
             //outputStream.write(cc);
             //printNewLine();
