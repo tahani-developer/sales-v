@@ -639,6 +639,7 @@ public class MainActivity extends AppCompatActivity
             final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
             final CheckBox checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
             final CheckBox readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
+            final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
 
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
@@ -685,6 +686,9 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
                     readDiscount.setChecked(true);
+
+                if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1)
+                    workOnline.setChecked(true);
             }
 
             okButton.setOnClickListener(new View.OnClickListener() {
@@ -717,13 +721,14 @@ public class MainActivity extends AppCompatActivity
                                     int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
                                     int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
                                     int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
+                                    int workOnlin = workOnline.isChecked() ? 1 : 0;
 
                                     mDbHandler.deleteAllSettings();
-                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
-                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
-                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
-                                    mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
-                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer);
+                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
+                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
+                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
+                                    mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
+                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
 
                                     dialog.dismiss();
                                 } else

@@ -77,10 +77,12 @@ public class CustomerListShow extends DialogFragment {
         mHandler = new DatabaseHandler(getActivity());
 
 
-        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
-            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-        else
-            customerList = mHandler.getAllCustomers();
+        if(mHandler.getAllSettings().size() != 0) {
+            if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+            else
+                customerList = mHandler.getAllCustomers();
+        }
 
         customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
         itemsListView.setAdapter(customersListAdapter);
