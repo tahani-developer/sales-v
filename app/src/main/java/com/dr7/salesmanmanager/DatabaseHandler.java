@@ -40,7 +40,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 45;
+    private static final int DATABASE_VERSION = 46;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -185,6 +185,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CAN_CHANGE_PRICE = "CAN_CHANGE_PRICE";
     private static final String READ_DISCOUNT_FROM_OFFERS = "READ_DISCOUNT_FROM_OFFERS";
     private static final String WORK_ONLINE = "WORK_ONLINE";
+    private static final String PAYMETHOD_CHECK = "PAYMETHOD_CHECK";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -472,7 +473,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CAN_CHANGE_PRICE + " INTEGER,"
                 + ALLOW_OUT_OF_RANGE+  " INTEGER,"
                 + READ_DISCOUNT_FROM_OFFERS+  " INTEGER,"
-                + WORK_ONLINE+ " INTEGER" + ")";
+                + WORK_ONLINE+  " INTEGER,"
+                + PAYMETHOD_CHECK+ " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -635,7 +637,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 //            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
 //            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
-            db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
+          //  db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
 //            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
 
 //            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
@@ -843,7 +846,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
-                           int workOnline) {
+                           int workOnline,int  payMethodCheck) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -862,7 +865,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
         values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
         values.put(WORK_ONLINE, workOnline);
-
+        values.put(PAYMETHOD_CHECK, payMethodCheck);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1108,10 +1111,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setSalesManCustomers(Integer.parseInt(cursor.getString(8)));
                 setting.setMinSalePric(Integer.parseInt(cursor.getString(9)));
                 setting.setPrintMethod(Integer.parseInt(cursor.getString(10)));
-                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(11)));
-                setting.setCanChangePrice(Integer.parseInt(cursor.getString(12)));
+                setting.setCanChangePrice(Integer.parseInt(cursor.getString(11)));
+                setting.setAllowOutOfRange(Integer.parseInt(cursor.getString(12)));
                 setting.setReadDiscountFromOffers(Integer.parseInt(cursor.getString(13)));
                 setting.setWorkOnline(Integer.parseInt(cursor.getString(14)));
+                setting.setPaymethodCheck(Integer.parseInt(cursor.getString(15)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());

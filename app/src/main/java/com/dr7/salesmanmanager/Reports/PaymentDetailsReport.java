@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -92,9 +93,10 @@ public class PaymentDetailsReport extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    payMethod = 0;
-                } else if (i == 1) {
                     payMethod = 1;
+                } else if (i == 1) {
+                    payMethod = 0;
+
                 } else payMethod = 2;
             }
 
@@ -109,6 +111,7 @@ public class PaymentDetailsReport extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("paymentdetail",""+payments);
 
                 clear();
                 for (int n = 0; n < payments.size(); n++) {
@@ -133,10 +136,11 @@ public class PaymentDetailsReport extends AppCompatActivity {
 
                             switch (record[6]) {
                                 case "0":
-                                    record[6] = "Cash";
+                                    record[6] = "Cheque";
                                     break;
                                 case "1":
-                                    record[6] = "Cheque";
+
+                                    record[6] = "Cash";
                                     break;
                             }
 

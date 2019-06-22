@@ -10,9 +10,15 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +31,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -40,6 +47,9 @@ import com.ganesh.intermecarabic.Arabic864;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.text.Bidi;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +59,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.text.Bidi;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,9 +77,11 @@ public class ReceiptVoucher extends Fragment {
     private LinearLayout chequeLayout;
     private ScrollView scrollView;
     private Spinner paymentKindSpinner;
+    private ImageView pic;
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
     private TextView voucherNo, paymentTerm;
+    int   voucherType=1;
 
     private double total = 0.0;
 
@@ -136,17 +151,19 @@ public class ReceiptVoucher extends Fragment {
         addCheckButton = (Button) view.findViewById(R.id.addCheck);
 
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
+        pic=(ImageView)view.findViewById(R.id.pic);
 
-        voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
+        voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
 
         String payMethod = "";
         switch (CustomerListShow.paymentTerm) {
             case 0:
-                payMethod = getResources().getString(R.string.cash);
+                payMethod = getResources().getString(R.string.app_credit);
                 break;
             case 1:
-                payMethod = getResources().getString(R.string.app_credit);
+                payMethod = getResources().getString(R.string.cash);
+
                 break;
         }
 
@@ -208,8 +225,8 @@ public class ReceiptVoucher extends Fragment {
 
                                 if (checkTotal(chValue.getText().toString())) {
                                     total = total + Double.parseDouble(chValue.getText().toString());
-                                    chequeTotal.setText(total + "");
 
+                                    chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                                     Payment check = new Payment();
                                     check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
                                     check.setBank(bank.getSelectedItem().toString());
@@ -256,7 +273,8 @@ public class ReceiptVoucher extends Fragment {
                                                     tableCheckData.removeView(row);
                                                     payments.remove(row.getTag());
                                                     total = total - Double.parseDouble(chValue.getText().toString());
-                                                    chequeTotal.setText(total + "");
+
+                                                    chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                                                     position--;
 
                                                     for (int k = 0; k < tableCheckData.getChildCount(); k++) {
@@ -347,6 +365,7 @@ public class ReceiptVoucher extends Fragment {
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
 
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
 
@@ -354,14 +373,15 @@ public class ReceiptVoucher extends Fragment {
                         String spinner = paymentKindSpinner.getSelectedItem().toString();
                         if (spinner == getResources().getString(R.string.cash)) {
                             if (!s.equals("") && Double.parseDouble(s) != 0)
-                            {
+                            {voucherType=1;
 
 
                                 Toast.makeText(getActivity(), "Amount Saved***", Toast.LENGTH_LONG).show();
 
                                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String payDate = df.format(currentTimeAndDate);
+                                String payDate =convertToEnglish( df.format(currentTimeAndDate));
+
 
                                 SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
                                 String paymentYear = df2.format(currentTimeAndDate);
@@ -376,7 +396,7 @@ public class ReceiptVoucher extends Fragment {
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
+                                        remark, amount, 0, cusNumber, cusName, 1, Integer.parseInt(paymentYear));
                                 mDbHandler.addPayment(payment);
 
 //                                else{
@@ -393,8 +413,9 @@ public class ReceiptVoucher extends Fragment {
                                     openBT();
                                 } catch (IOException ex) {
                                 }
+                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
                                 clearForm();
-                                mDbHandler.setMaxSerialNumber(0, voucherNumber);
+
 
                             } else {
                                 Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
@@ -407,7 +428,7 @@ public class ReceiptVoucher extends Fragment {
 
                                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String payDate = df.format(currentTimeAndDate);
+                                String payDate = convertToEnglish(df.format(currentTimeAndDate));
 
                                 SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
                                 String paymentYear = df2.format(currentTimeAndDate);
@@ -420,7 +441,7 @@ public class ReceiptVoucher extends Fragment {
                                 int salesMan = Integer.parseInt(Login.salesMan);
 
                                 payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 1, Integer.parseInt(paymentYear));
+                                        remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
                                 mDbHandler.addPayment(payment);
 
                                 itemsString = "";
@@ -476,18 +497,20 @@ public class ReceiptVoucher extends Fragment {
         paymentKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
+                if (i == 0) {//cash
                     chequeLayout.setVisibility(View.INVISIBLE);
                     scrollView.setVisibility(View.INVISIBLE);
                     addCheckButton.setVisibility(View.INVISIBLE);
                     tableCheckData.setVisibility(View.INVISIBLE);
-                    voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
+                    voucherType=1;
+                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
                 } else {
                     chequeLayout.setVisibility(View.VISIBLE);
                     scrollView.setVisibility(View.VISIBLE);
                     addCheckButton.setVisibility(View.VISIBLE);
                     tableCheckData.setVisibility(View.VISIBLE);
-                    voucherNumber = mDbHandler.getMaxSerialNumber(4) + 1;
+                    voucherType=4;
+                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
                 }
             }
 
@@ -507,9 +530,15 @@ public class ReceiptVoucher extends Fragment {
         paymentKindSpinner.setSelection(0);
         chequeTotal.setText("0.00");
         total=0.0;
-        voucherNumber = mDbHandler.getMaxSerialNumber(0) + 1;
+        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
+       // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
     }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
+
 
 
     private Boolean checkTotal(String s) {
@@ -523,7 +552,9 @@ public class ReceiptVoucher extends Fragment {
     }
 
     private Boolean checkValue() {
-        if (total != Double.parseDouble(amountEditText.getText().toString())) {
+       String total_convert= convertToEnglish(new DecimalFormat("##.###").format(total));
+       Double total_double=Double.parseDouble(total_convert);
+        if (total_double != Double.parseDouble(amountEditText.getText().toString())) {
             return false;
         }
         return true;
@@ -607,6 +638,7 @@ public class ReceiptVoucher extends Fragment {
     }
 
     // Tries to open a connection to the bluetooth printer device
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     void openBT() throws IOException {
         try {
             // Standard SerialPortService ID
@@ -620,6 +652,7 @@ public class ReceiptVoucher extends Fragment {
 
 //            myLabel.setText("Bluetooth Opened");
             sendData2();
+           // sendData();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -692,6 +725,7 @@ public class ReceiptVoucher extends Fragment {
     /*
      * This will send data to be printed by the bluetooth printer
      */
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     void sendData() throws IOException {
         try {
 
@@ -699,28 +733,34 @@ public class ReceiptVoucher extends Fragment {
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
               String nameCompany=companyInfo.getCompanyName().toString();
-
+/*"       " + "\n" +
+                            "----------------------------------------------" + "\n" +
+                            "       " + "\n" +
+                            "       " + "\n" +
+                            "       " + "\n" +*/
             // the text typed by the user
             String msg;
 
             for (int i = 1; i <= numOfCopy; i++) {
-                if (payment.getPayMethod() == 0) {
-                    msg = "       " + "\n" +
+                if (payment.getPayMethod() == 1) {
+                    msg = "\n" +
                             "----------------------------------------------" + "\n" +
                             "       " + "\n" +
                             "       " + "\n" +
                             "       " + "\n" +
-                            "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
-                            "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                            "ملاحظة: " + payment.getRemark() + "\n" +
-                            payment.getCustName() + "\n" +
-                            "وصلني من السيد/السادة: " + "\n" +
-                            "       " + "\n" +
-                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
-                            " سند قبض " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
-                            companyInfo.getCompanyName() + "\n" +
+                            "                         "+ (payment.getPayMethod() == 0 ? "  شيك  " : " نقدا  ")+"" +": طريقة االدفع"+ "\n"+
+                            "                         "+ payment.getAmount() +" "+  ": المبلغ المقبوض  "+ "\n"+
+                            "                                   "+  payment.getRemark()  +" : ملاحظة " + "\n"+
+                            "                        "+ payment.getCustName() + "\n" +
+                            "                        "+   ":السادة/وصلني من السيد "  +  "\n" +
+                            "   -------------------------------------- " + "\n" +
+                            "                             "+  payment.getVoucherNumber()+ "  : رقم السند  " +"\n" +
+                            "                         "+ payment.getPayDate() + "  : التاريخ  " + "\n" +
+                            "                                    "+ " سند قبض " + "\n" +
+                            "   --------------------------------------  " + "\n" +
+                            "                            "+   companyInfo.getcompanyTel() +  "  :هاتف  "  +
+                            "                            "+companyInfo.getTaxNo()  + "   : الرقم الضريبي  "+"\n"+
+                            "                        "+  companyInfo.getCompanyName() + "\n" +
                             "       " + "\n" +
                             "       ";
                 } else {
@@ -732,7 +772,7 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "رقم الشيك  " + "البنك     " + "التاريخ       " + "القيمة  " + "\n" +
                             "       " + "\n" +
-                            "طريقة الدفع: " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + "\n" +
+                            "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
                             "المبلغ المقبوض: " + payment.getAmount() + "\n" +
                             "ملاحظة: " + payment.getRemark() + "\n" +
                             payment.getCustName() + "\n" +
@@ -745,16 +785,40 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "       ";
                 }
-                printCustom(msg + "\n", 1, 2);
+                Arabic864 arabic = new Arabic864();
+                //   byte[] arabicArr = arabic.Convert(  new StringBuilder(msg).reverse().toString(),false);
+                //    byte[] arabicArr = arabic.Convert("الاسم",false);
+                Log.e("mymsg", "" + msg);
 
-            }
+                Bidi bidi = new Bidi(msg, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
+
+                if (bidi.isLeftToRight()) {
+
+                    // it's LTR
+                } else {
+                    Log.e("Not ---LtoR",""+msg);
+                    Log.e("LtoR",""+msg);
+                    byte[] arabicArr = arabic.Convert(new StringBuilder(msg).reverse().toString(), false);
+                    Log.e("byte", "" + arabicArr.toString());
+                    mmOutputStream.write(arabicArr);
+
+                    // it's RTL
+                }
+
+//
+////                viewImage.setImageBitmap(BitmapFactory.decodeFile("your iamge path"));
+//             //   mmOutputStream.write(arabicArr);
+
+//                printCustom(msg+ "\n", 1, 0);
+
+//            }
 //            Arabic864 arabic = new Arabic864();
 //            byte[] arabicArr = arabic.Convert(msg, false);
 
 
 //            int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
 //            CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-
+//
 //            for (int i = 1; i <= numOfCopy; i++) {
 //                printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
 //                printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
@@ -778,6 +842,7 @@ public class ReceiptVoucher extends Fragment {
 //                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
 //                mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
 //            }
+            }
 
             closeBT();
 
@@ -789,25 +854,83 @@ public class ReceiptVoucher extends Fragment {
             e.printStackTrace();
         }
     }
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }
+        catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+    public static String makeLtr ( String string ) {
+        if (checkRtl(string)) {
+            /* prepend the string with an LTR control sign (so
+               that Android's RTL check returns false) and an RTL
+               control sign (so that the string itself is printed in
+               RTL) and append an LTR control sign (so that if we
+               append another String it is laid out LTR). */
+            Log.e("makeLTR",""+"\u200E" + "\u200F" + string + "\u200E");
+            return "\u200E" + "\u200F" + string + "\u200E";
+
+        } else {
+            return string;
+        }
+    }
+    public static boolean checkRtl ( String string ) {
+        if (TextUtils.isEmpty(string)) {
+            return false;
+        }
+        char c = string.charAt(0);
+        Log.e("check"," "+( c >= 0x590 && c <= 0x6ff));
+        return c >= 0x590 && c <= 0x6ff;
+    }
+    public String printStringtLtr(String sb) {
+        if (sb.length() == 0)
+            return "";
+        StringBuilder b = new StringBuilder();
+//        for (String c : sb) {
+            for(int i=0;i<sb.length();i++)
+            {
+            b.append('\u200e').append(sb.charAt(i));
+        }
+        return b.substring(0, b.length() - 2) ;
+    }
 
     void sendData2() throws IOException {
         try {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
+            Log.e("nocopy",""+numOfCopy);
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+            pic.setImageBitmap(companyInfo.getLogo());
+            pic.setDrawingCacheEnabled(true);
+            Bitmap bitmap = pic.getDrawingCache();
+
+            PrintPic printPic = PrintPic.getInstance();
+            printPic.init(bitmap);
+            byte[] bitmapdata = printPic.printDraw();
 
             for (int i = 1; i <= numOfCopy; i++) {
-                if(payment.getPayMethod() == 0) {
+                if (companyInfo.getLogo() != null) {
+
+                    mmOutputStream.write(bitmapdata);
+//                    printCustom(" \n ", 1, 0);
+                }
+                if(payment.getPayMethod() == 1) {
 
                     printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
-                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
+                    printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo()  + " : " +" \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ        " + payment.getPayDate() + " : " + " \n ", 1, 0);
                     printCustom("رقم السند      " + payment.getVoucherNumber() + " : " + " \n ", 1, 0);
                     printCustom("اسم العميل " + " : " + payment.getCustName()  + " \n ", 1, 0);
                     printCustom("ملاحظة " + " : " + payment.getRemark()  + " \n ", 1, 0);
                     printCustom("المبلغ المقبوض " + payment.getAmount() + " : " + " \n ", 1, 0);
-                    printCustom("طريقة الدفع    " + " : " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") +  " \n ", 1, 0);
+                    printCustom("طريقة الدفع    " + " : " + "نقدا" +  " \n ", 1, 0);
+                  //  printCustom("طريقة الدفع    " + " : " + (payment.getPayMethod() == 0 ?  "شيك" : "نقدا") +  " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                 } else {
                     printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
@@ -818,7 +941,7 @@ public class ReceiptVoucher extends Fragment {
                     printCustom("اسم العميل " + " : " + payment.getCustName()  + " \n ", 1, 0);
                     printCustom("ملاحظة " + " : " + payment.getRemark()  + " \n ", 1, 0);
                     printCustom("المبلغ المقبوض " + payment.getAmount() + " : " + " \n ", 1, 0);
-                    printCustom("طريقة الدفع    " + " : " + (payment.getPayMethod() == 0 ? "نقدا" : "شيك") + " \n ", 1, 0);
+                    printCustom("طريقة الدفع    " + " : " +  "شيك"  + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
 
                     int serial = 1;
@@ -892,8 +1015,8 @@ public class ReceiptVoucher extends Fragment {
                     break;
             }
 
-            Arabic864 arabic = new Arabic864();
-            byte[] arabicArr = arabic.Convert(msg, false);
+//            Arabic864 arabic = new Arabic864();
+//            byte[] arabicArr = arabic.Convert(msg, false);
             mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);

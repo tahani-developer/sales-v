@@ -17,14 +17,15 @@ public class Settings {
     private int canChangePrice;
     private int readDiscountFromOffers;
     private int workOnline;
+    private int paymethodCheck;
 
     public Settings(){
 
     }
 
-    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
-                    int allowMinus, int numOfCopy , int salesManCustomers , int minSalePric , int printMethod, int allowOutOfRange,int canChangePrice,int readDiscountFromOffers,
-                    int workOnline) {
+    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase, int allowMinus,
+                    int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange, int canChangePrice,
+                    int readDiscountFromOffers, int workOnline, int paymethodCheck) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -40,6 +41,15 @@ public class Settings {
         this.canChangePrice = canChangePrice;
         this.readDiscountFromOffers = readDiscountFromOffers;
         this.workOnline = workOnline;
+        this.paymethodCheck = paymethodCheck;
+    }
+
+    public int getPaymethodCheck() {
+        return paymethodCheck;
+    }
+
+    public void setPaymethodCheck(int paymethodCheck) {
+        this.paymethodCheck = paymethodCheck;
     }
 
     public int getCanChangePrice() {

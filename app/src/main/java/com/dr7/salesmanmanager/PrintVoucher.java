@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +51,7 @@ public class PrintVoucher extends AppCompatActivity {
 
     List<Voucher> vouchers;
     List<Item> items;
+    List<CompanyInfo> companeyinfo;
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
     Button preview;
@@ -83,16 +85,18 @@ public class PrintVoucher extends AppCompatActivity {
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
+        companeyinfo=new ArrayList<CompanyInfo>();
 
         obj = new DatabaseHandler(PrintVoucher.this);
         vouchers = obj.getAllVouchers();
         items = obj.getAllItems();
+        companeyinfo=obj.getAllCompanyInfo();
 
         TableTransactionsReport = (TableLayout) findViewById(R.id.TableTransactionsReport);
         from_date = (EditText) findViewById(R.id.from_date);
         to_date = (EditText) findViewById(R.id.to_date);
         preview = (Button) findViewById(R.id.preview);
-        pic = findViewById(R.id.pic);
+        pic = (ImageView) findViewById(R.id.pic);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -151,11 +155,13 @@ public class PrintVoucher extends AppCompatActivity {
                                         vouchers.get(n).getSubTotal() + "",
                                         vouchers.get(n).getTax() + "",
                                         vouchers.get(n).getNetSales() + ""};
+                                Log.e("paymethod",""+vouchers.get(n).getPayMethod());
 
 
                                 switch (vouchers.get(n).getPayMethod()) {
                                     case 0:
                                         record[3] = getResources().getString(R.string.app_credit);
+
                                         break;
                                     case 1:
                                         record[3] = getResources().getString(R.string.cash);
@@ -193,17 +199,23 @@ public class PrintVoucher extends AppCompatActivity {
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
 
-                                            if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                try {
-                                                    findBT(Integer.parseInt(textView.getText().toString()));
-                                                    openBT(vouch);
-                                                } catch (IOException ex) {
-                                                }
-                                            } else {
-                                                hiddenDialog(vouch);
-                                            }
+                                             if(!obj.getAllCompanyInfo().get(0).getCompanyName().equals("")&&obj.getAllCompanyInfo().get(0).getcompanyTel()!=0 && obj.getAllCompanyInfo().get(0).getTaxNo()!=-1) {
+                                                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
+                                                     try {
+                                                         Log.e("voucher","  "+vouch);
+                                                         findBT(Integer.parseInt(textView.getText().toString()));
+                                                         openBT(vouch);
+                                                     } catch (IOException ex) {
+                                                     }
+                                                 } else {
+                                                     hiddenDialog(vouch);
+                                                 }
+                                             }else{
+                                                 Toast.makeText(PrintVoucher.this, "please enter All companey info", Toast.LENGTH_SHORT).show();
+                                             }
                                         }
                                     });
+
 
                                     TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
 
@@ -648,6 +660,7 @@ public class PrintVoucher extends AppCompatActivity {
     // Tries to open a connection to the bluetooth printer device
     void openBT(Voucher voucher) throws IOException {
         try {
+            Log.e("open","'yes");
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
             mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
@@ -658,7 +671,8 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData2(voucher);
+              sendData2(voucher);
+          //  sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -733,6 +747,7 @@ public class PrintVoucher extends AppCompatActivity {
      */
     void sendData(Voucher voucher) throws IOException {
         try {
+            Log.e("send","'yes");
 
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
@@ -838,28 +853,30 @@ public class PrintVoucher extends AppCompatActivity {
             double totalTotal = 0;
 
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
+            Log.e("nocopy",""+numOfCopy);
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+            pic.setImageBitmap(companyInfo.getLogo());
+            pic.setDrawingCacheEnabled(true);
+            bitmap = pic.getDrawingCache();
+            PrintPic printPic = PrintPic.getInstance();
+            printPic.init(bitmap);
+            byte[] bitmapdata = printPic.printDraw();
+
 
             if (companyInfo != null) {
 
                 for (int i = 1; i <= numOfCopy; i++) {
 
-                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                 //   printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 
                     if (companyInfo.getLogo() != null) {
-                        pic.setImageBitmap(companyInfo.getLogo());
-                        pic.setDrawingCacheEnabled(true);
-                        bitmap = pic.getDrawingCache();
 
-                        PrintPic printPic = PrintPic.getInstance();
-                        printPic.init(bitmap);
-                        byte[] bitmapdata = printPic.printDraw();
                         mmOutputStream.write(bitmapdata);
                     }
 
-                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 1);
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
+                    printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
                     printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
@@ -869,6 +886,7 @@ public class PrintVoucher extends AppCompatActivity {
                     printCustom("------------------------------------------" + "\n", 1, 0);
 
                     int serial = 1;
+                    DecimalFormat threeDForm = new DecimalFormat("0.000");
                     for (int j = 0; j < items.size(); j++) {
                         if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
                             String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
@@ -880,16 +898,17 @@ public class PrintVoucher extends AppCompatActivity {
                             printCustom("رقم الصنف " + items.get(j).getItemNo() + " : " + " \n ", 1, 0);
                             printCustom("الصنف " + " : " + items.get(j).getItemName() + " \n ", 1, 0);
                             printCustom("الكمية    " + items.get(j).getQty() + " : " + " \n ", 1, 0);
+                            printCustom("المجاني    " + items.get(j).getBonus() + " : " + " \n ", 1, 0);
                             printCustom("السعر     " + " JD " + items.get(j).getPrice() + " : " + " \n ", 1, 0);
                             printCustom("الخصم     " + " JD " + items.get(j).getDisc() + " : " + " \n ", 1, 0);
-                            printCustom("الصافي    " + " JD " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
-                            printCustom("الضريبة   " + " JD " + new DecimalFormat("#.##").format(items.get(j).getTaxValue()) + " : " + " \n ", 1, 0);
-                            printCustom("الاجمالي   " + " JD " + new DecimalFormat("#.##").format(amountATax) + " : " + " \n ", 1, 0);
+                            printCustom("الصافي    " + " JD " + convertToEnglish(threeDForm.format(Double.parseDouble(amount))) + " : " + "\n", 1, 0);
+                            printCustom("الضريبة   " + " JD " +convertToEnglish(threeDForm.format(items.get(j).getTaxValue())) + " : " + " \n ", 1, 0);
+                            printCustom("الاجمالي   " + " JD " + convertToEnglish(threeDForm.format(Double.parseDouble(amountATax))) + " : " + " \n ", 1, 0);
 
                             printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
 
                             serial++;
-                            totalQty += items.get(j).getQty();
+                            totalQty += items.get(j).getQty()+items.get(j).getBonus();
                             totalPrice += items.get(j).getPrice();
                             totalDisc += items.get(j).getDisc();
                             totalNet += (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
@@ -898,7 +917,7 @@ public class PrintVoucher extends AppCompatActivity {
                         }
                     }
 
-                    DecimalFormat threeDForm = new DecimalFormat("0.000");
+
                     printCustom("اجمالي الكمية  " + convertToEnglish("" + totalQty) + " : " + " \n ", 1, 0);
                     printCustom("اجمالي السعر   " + " JD " + convertToEnglish(threeDForm.format(totalPrice)) + " : " + " \n ", 1, 0);
                     printCustom("اجمالي الخصم   " + " JD " + convertToEnglish(threeDForm.format(totalDisc)) + " : " + " \n ", 1, 0);
@@ -972,6 +991,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 //            Arabic864 arabic = new Arabic864();
 //            byte[] arabicArr = arabic.Convert(msg, false);
+//            mmOutputStream.write(arabicArr);
             mmOutputStream.write(msg.getBytes());
 
             //outputStream.write(cc);

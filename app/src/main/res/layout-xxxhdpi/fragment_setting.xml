@@ -40,7 +40,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -286,7 +286,7 @@
                 android:id="@+id/price_by_cust"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:text="@string/price_by_customer"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -295,7 +295,7 @@
                 android:id="@+id/use_weight_case"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/use_weight_case"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -304,7 +304,7 @@
                 android:id="@+id/allow_sale_with_minus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/allow_sale_with_minus"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -313,7 +313,7 @@
                 android:id="@+id/can_change_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/can_change_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -322,7 +322,7 @@
                 android:id="@+id/salesman_customers_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/get_salesman_customers_only"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -331,7 +331,7 @@
                 android:id="@+id/min_sale_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/min_sale_price"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -340,7 +340,7 @@
                 android:id="@+id/allow_cust_check_out_range"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/allow_cust_check_out_range"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -348,7 +348,7 @@
                 android:id="@+id/read_discount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/read_discount_from_offers"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -357,11 +357,20 @@
                 android:id="@+id/work_online"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/work_online"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
 
+            <CheckBox
+                android:id="@+id/checkBox_paymethod_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:checked="true"
+                android:text="@string/paymethod_check"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -370,7 +379,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_columnSpan="2"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 

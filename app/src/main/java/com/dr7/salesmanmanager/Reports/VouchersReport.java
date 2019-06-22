@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ public class VouchersReport extends AppCompatActivity {
     TableLayout TableTransactionsReport ;
     TableLayout TableItemInfo;
     Calendar myCalendar ;
-    int payMethod = 0;
+    private DecimalFormat decimalFormat;
+    int payMethod = 1;
     int voucherType = 504;
 
     double subTotal = 0 , tax = 0 , netSales = 0;
@@ -54,6 +56,7 @@ public class VouchersReport extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vouchers_report);
+        decimalFormat = new DecimalFormat("##.00");
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
@@ -209,8 +212,8 @@ public class VouchersReport extends AppCompatActivity {
                     }
 
                     textSubTotal.setText(subTotal+"");
-                    textTax.setText(tax+"");
-                    textNetSales.setText(netSales+"");
+                    textTax.setText( convertToEnglish(decimalFormat.format(tax)));
+                    textNetSales.setText( convertToEnglish(decimalFormat.format(netSales)));
 
                 } else
                     Toast.makeText(VouchersReport.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
@@ -229,6 +232,10 @@ public class VouchersReport extends AppCompatActivity {
             }
         });
 
+    }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
     }
 
     public void voucherInfoDialog(int voucherNumber , int voucherType) {
