@@ -40,7 +40,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -290,7 +290,7 @@
                 android:id="@+id/price_by_cust"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="3dp"
                 android:text="@string/price_by_customer"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
@@ -365,6 +365,16 @@
                 android:text="@string/work_online"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/checkBox_paymethod_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:checked="true"
+                android:text="@string/paymethod_check"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
+
 
         </LinearLayout>
 

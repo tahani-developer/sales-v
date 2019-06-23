@@ -110,6 +110,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //*********************************** change Price with customer or not accourding to setting  ************************************
                 if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0)
                 {
+                    price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
                     price.setEnabled(false);
                     //    price.setText("Desable");
 

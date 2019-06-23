@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.ganesh.intermecarabic.Arabic864;
 
 import org.json.JSONArray;
 
@@ -52,6 +53,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.Bidi;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -167,7 +169,7 @@ public class SalesInvoice extends Fragment {
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
-        pic = view.findViewById(R.id.pic);
+        pic = (ImageView) view.findViewById(R.id.pic);
 
         discTextView = (TextView) view.findViewById(R.id.discTextView);
         subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
@@ -184,14 +186,29 @@ public class SalesInvoice extends Fragment {
         else
             Customer_nameSales.setText("Customer Name");
 
-        if (CustomerListShow.CashCredit == 0) {
-            cash.setChecked(true);
-            credit.setChecked(false);
-            payMethod = 1;
-        } else {
+//        if (CustomerListShow.CashCredit == 0) {
+//            credit.setChecked(true);
+//            cash.setChecked(false);
+//               payMethod = 0;
+//
+//        } else {
+//            cash.setChecked(true);
+//            credit.setChecked(false);
+//              payMethod = 1;
+//
+//
+//        }
+        if (mDbHandler.getAllSettings().get(0).getPaymethodCheck()==0) {
             credit.setChecked(true);
             cash.setChecked(false);
-            payMethod = 0;
+               payMethod = 0;
+
+        } else {
+            cash.setChecked(true);
+            credit.setChecked(false);
+              payMethod = 1;
+
+
         }
 
         voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -404,6 +421,7 @@ public class SalesInvoice extends Fragment {
                                         CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
 
                                 mDbHandler.addVoucher(voucher);
+                                Log.e("paymethod",""+voucher.getPayMethod());
 
 
                                 for (int i = 0; i < items.size(); i++) {
@@ -420,7 +438,9 @@ public class SalesInvoice extends Fragment {
                                         mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
                                     else
                                         mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
                                 }
+
 
                                 if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
                                     new JSONTask().execute();
@@ -439,6 +459,7 @@ public class SalesInvoice extends Fragment {
 
                             }
                             clearLayoutData();
+
                         }
                     }
                 });
@@ -449,7 +470,7 @@ public class SalesInvoice extends Fragment {
                         show();
             }
         });
-
+      //  Log.e("paymethod",""+voucher.getPayMethod());
         return view;
     }
 
@@ -1045,6 +1066,7 @@ public class SalesInvoice extends Fragment {
 
 //            myLabel.setText("Bluetooth Opened");
             sendData2();
+           // sendData();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1153,7 +1175,7 @@ public class SalesInvoice extends Fragment {
                     }
 
                     printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
-                    printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
+                    printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 0);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
                     printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
                     mmOutputStream.write(PrinterCommands.FEED_LINE);
@@ -1201,6 +1223,15 @@ public class SalesInvoice extends Fragment {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                  //  Arabic864 arabic = new Arabic864();
+                    //   byte[] arabicArr = arabic.Convert(  new StringBuilder(msg).reverse().toString(),false);
+                    //    byte[] arabicArr = arabic.Convert("الاسم",false);
+//                    Log.e("mymsg", "" + msg);
+//                        Log.e("Not ---LtoR",""+msg);
+//                        Log.e("LtoR",""+msg);
+//                        byte[] arabicArr = arabic.Convert(new StringBuilder(msg).reverse().toString(), false);
+//                        Log.e("byte", "" + arabicArr.toString());
+//                        mmOutputStream.write(arabicArr);
                 }
                 closeBT();
                 // tell the user data were sent
@@ -1227,29 +1258,31 @@ public class SalesInvoice extends Fragment {
             double totalTotal = 0;
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
+            Log.e("nocopy",""+numOfCopy);
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+            pic.setImageBitmap(companyInfo.getLogo());
+            pic.setDrawingCacheEnabled(true);
+            Bitmap bitmap = pic.getDrawingCache();
+
+            PrintPic printPic = PrintPic.getInstance();
+            printPic.init(bitmap);
+            byte[] bitmapdata = printPic.printDraw();
 
             if (companyInfo != null) {
 
                 for (int i = 1; i <= numOfCopy; i++) {
 
-                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                  //  printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 
                     if (companyInfo.getLogo() != null) {
-                        pic.setImageBitmap(companyInfo.getLogo());
-                        pic.setDrawingCacheEnabled(true);
-                        Bitmap bitmap = pic.getDrawingCache();
 
-                        PrintPic printPic = PrintPic.getInstance();
-                        printPic.init(bitmap);
-                        byte[] bitmapdata = printPic.printDraw();
                         mmOutputStream.write(bitmapdata);
-                        printCustom(" \n ", 1, 0);
+                   //     printCustom(" \n ", 1, 1);
                     }
 
-                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom(companyInfo.getCompanyName() + "   \n   ", 1, 0);
 //                mmOutputStream.write(PrinterCommands.FEED_LINE);
-                    printCustom("الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
+                    printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
                     printCustom("رقم الفاتورة   " + voucher.getVoucherNumber() + " : " + "\n", 1, 0);
@@ -1259,6 +1292,7 @@ public class SalesInvoice extends Fragment {
                     printCustom("------------------------------------------" + "\n", 1, 0);
 
                     int serial = 1;
+                    DecimalFormat threeDForm = new DecimalFormat("0.000");
                     for (int j = 0; j < itemsList.size(); j++) {
                         if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
                             String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
@@ -1266,20 +1300,22 @@ public class SalesInvoice extends Fragment {
                             amount = convertToEnglish(amount);
                             amountATax = convertToEnglish(amountATax);
 
+
                             printCustom("(" + serial + "" + "\n", 1, 0);
                             printCustom("رقم الصنف " + itemsList.get(j).getItemNo() + " : " + " \n ", 1, 0);
                             printCustom("الصنف " + " : " + itemsList.get(j).getItemName() + " \n ", 1, 0);
                             printCustom("الكمية    " + itemsList.get(j).getQty() + " : " + " \n ", 1, 0);
+                            printCustom("المجاني    " + itemsList.get(j).getBonus() + " : " + " \n ", 1, 0);
                             printCustom("السعر     " + " JD " + itemsList.get(j).getPrice() + " : " + " \n ", 1, 0);
                             printCustom("الخصم     " + " JD " + itemsList.get(j).getDisc() + " : " + " \n ", 1, 0);
-                            printCustom("الصافي    " + " JD " + new DecimalFormat("#.##").format(Double.valueOf(amount)) + " : " + "\n", 1, 0);
-                            printCustom("الضريبة   " + " JD " + new DecimalFormat("#.##").format(itemsList.get(j).getTaxValue()) + " : " + " \n ", 1, 0);
-                            printCustom("الاجمالي   " + " JD " + new DecimalFormat("#.##").format(amountATax) + " : " + " \n ", 1, 0);
+                            printCustom("الصافي    " + " JD " + convertToEnglish(threeDForm.format(Double.parseDouble(amount))) + " : " + "\n", 1, 0);
+                            printCustom("الضريبة   " + " JD " +convertToEnglish(threeDForm.format(itemsList.get(j).getTaxValue())) + " : " + " \n ", 1, 0);
+                            printCustom("الاجمالي   " + " JD " + convertToEnglish(threeDForm.format(Double.parseDouble(amountATax))) + " : " + " \n ", 1, 0);
 
                             printCustom("* * * * * * * * * * * * * " + " \n ", 1, 0);
 
                             serial++;
-                            totalQty += itemsList.get(j).getQty();
+                            totalQty += itemsList.get(j).getQty()+itemsList.get(j).getBonus();
                             totalPrice += itemsList.get(j).getPrice();
                             totalDisc += itemsList.get(j).getDisc();
                             totalNet += (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
@@ -1288,7 +1324,7 @@ public class SalesInvoice extends Fragment {
                         }
                     }
 
-                    DecimalFormat threeDForm = new DecimalFormat("0.000");
+
                     printCustom("اجمالي الكمية  " + convertToEnglish(threeDForm.format(totalQty)) + " : " + " \n ", 1, 0);
                     printCustom("اجمالي السعر   " + " JD " + convertToEnglish(threeDForm.format(totalPrice)) + " : " + " \n ", 1, 0);
                     printCustom("اجمالي الخصم   " + " JD " + convertToEnglish(threeDForm.format(totalDisc)) + " : " + " \n ", 1, 0);
@@ -1361,11 +1397,12 @@ public class SalesInvoice extends Fragment {
 
 //            Arabic864 arabic = new Arabic864();
 //            byte[] arabicArr = arabic.Convert(msg, false);
+//            mmOutputStream.write(arabicArr);
             mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
-            //outputStream.write(cc);
-            //printNewLine();
+//            outputStream.write(cc);
+//            printNewLine();
         } catch (IOException e) {
             e.printStackTrace();
         }

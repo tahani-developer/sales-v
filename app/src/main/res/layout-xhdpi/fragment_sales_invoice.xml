@@ -214,7 +214,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
-                android:checked="true"
                 android:text="@string/app_credit"
                 android:textColor="@color/text_view_color"
                 android:textSize="10sp" />
@@ -224,6 +223,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
+                android:checked="true"
                 android:text="@string/app_cash"
                 android:textColor="@color/text_view_color"
                 android:textSize="10sp" />

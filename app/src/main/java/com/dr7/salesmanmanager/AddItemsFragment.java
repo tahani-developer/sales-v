@@ -65,7 +65,6 @@ public class AddItemsFragment extends DialogFragment {
         discEditText = (EditText) view.findViewById(R.id.lineDiscText);
         taxEditText = (EditText) view.findViewById(R.id.taxPercentText);
         discTypeRadioGroup = (RadioGroup) view.findViewById(R.id.discTypeRadioGroup);
-
         addToListButton.setOnClickListener(onClickListener);
         doneButton.setOnClickListener(onClickListener);
 

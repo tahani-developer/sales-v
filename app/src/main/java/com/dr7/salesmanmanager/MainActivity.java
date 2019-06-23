@@ -527,20 +527,20 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 int visitPurpos = 0;
-                switch (visitPurpose.getCheckedRadioButtonId()){
-                    case R.id.payment :
+                switch (visitPurpose.getCheckedRadioButtonId()) {
+                    case R.id.payment:
                         visitPurpos = 0;
                         break;
-                    case R.id.bank_up :
+                    case R.id.bank_up:
                         visitPurpos = 1;
                         break;
-                    case R.id.entering_categories :
+                    case R.id.entering_categories:
                         visitPurpos = 2;
                         break;
-                    case R.id.visit_presentation_space :
+                    case R.id.visit_presentation_space:
                         visitPurpos = 3;
                         break;
-                    case R.id.other :
+                    case R.id.other:
                         visitPurpos = 4;
                         break;
                 }
@@ -555,7 +555,7 @@ public class MainActivity extends AppCompatActivity
                         displa, rate[0], visitPic, CustomerListShow.Customer_Account, CustomerListShow.Customer_Name, Login.salesManNo));
 
                 dialog.dismiss();
-                Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -640,7 +640,7 @@ public class MainActivity extends AppCompatActivity
             final CheckBox checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
             final CheckBox readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
             final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
-
+            final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -650,7 +650,7 @@ public class MainActivity extends AppCompatActivity
                 invoicEditText.setText("" + (mDbHandler.getMaxSerialNumber(504) + 1));
                 returnEditText.setText("" + (mDbHandler.getMaxSerialNumber(506) + 1));
                 orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
-                paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(0) + 1));
+                paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(1) + 1));//test
                 paymentEditTextCheque.setText("" + (mDbHandler.getMaxSerialNumber(4) + 1));
 
                 if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
@@ -689,6 +689,8 @@ public class MainActivity extends AppCompatActivity
 
                 if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1)
                     workOnline.setChecked(true);
+                if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 1)
+                    paymetod_check.setChecked(true);
             }
 
             okButton.setOnClickListener(new View.OnClickListener() {
@@ -722,13 +724,14 @@ public class MainActivity extends AppCompatActivity
                                     int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
                                     int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
                                     int workOnlin = workOnline.isChecked() ? 1 : 0;
+                                    int paymethodCheck=paymetod_check.isChecked()?1:0;
 
                                     mDbHandler.deleteAllSettings();
-                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
-                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
-                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
-                                    mDbHandler.addSetting(link, taxKind, 0, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
-                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin);
+                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
+                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
+                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
+                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
+                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
 
                                     dialog.dismiss();
                                 } else
@@ -1055,5 +1058,9 @@ public class MainActivity extends AppCompatActivity
         enterCustDialog.setView(myLayout);
         enterCustDialog.create().show();
     }//openCheckInDialog
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
 
 }
