@@ -144,6 +144,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        
         <activity
             android:name=".CPCL2Menu"
             android:label="@string/title_activity_main"
