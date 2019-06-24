@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -126,6 +127,7 @@ public class Login extends AppCompatActivity {
             super.onPostExecute(o);
         }
 
+        @SuppressLint("WrongThread")
         @Override
         protected Object doInBackground(Object[] objects) {
 
