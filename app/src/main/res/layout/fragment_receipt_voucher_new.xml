@@ -2,42 +2,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp"
-    android:paddingEnd="10dp"
-    android:paddingHorizontal="10dp"
-    android:paddingStart="10dp"
-    android:paddingVertical="5dp"    android:orientation="vertical"
-    android:background="@color/layer3"
-    tools:context="com.dr7.salesmanmanager.ReceiptVoucher">
 
+
+    android:background="@drawable/back_payment"
+
+    android:orientation="vertical"
+    tools:context="com.dr7.salesmanmanager.ReceiptVoucher">
+    <!--android:paddingBottom="10dp"-->
+
+    <!--android:paddingLeft="10dp"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:paddingTop="30dp"-->
+
+    <!--android:paddingEnd="10dp"-->
+    <!--android:paddingHorizontal="10dp"-->
+    <!--android:paddingStart="10dp"-->
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+       android:layout_gravity="center"
         android:id="@+id/row1"
         android:layout_marginBottom="3dp"
-        android:background="@color/layer2"
-        >
-        <ImageButton
-            android:id="@+id/ClearForm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/new_inv"
-            android:layout_marginRight="20dp"
-            />
 
-        <ImageButton
+        >
+        <!--<ImageButton-->
+            <!--android:id="@+id/ClearForm"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@drawable/new_inv"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--/>-->
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ClearForm"
+            android:clickable="true"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/clear"
+            app:civ_border_width="2dp"
+            android:layout_marginLeft="10dp"
+            app:civ_border_color="@color/white"/>
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/SaveData"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@drawable/save"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--/>-->
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/SaveData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/save_btn"
-            android:layout_marginRight="20dp"
-            />
+            android:clickable="true"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/saveyellow"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/white"/>
         <ImageView
             android:id="@+id/pic_receipt"
             android:layout_width="200dp"
@@ -62,8 +88,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
             android:text="@string/cust_name"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/content_large" />
 
         <ImageButton
@@ -82,7 +109,7 @@
             android:layout_marginHorizontal="10dp"
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/content_large"  />
 
         <TextView
@@ -93,7 +120,7 @@
             android:layout_marginHorizontal="10dp"
             android:gravity="center_vertical"
             android:text="@string/payment_term"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/content_large" />
 
     </LinearLayout>
@@ -107,8 +134,9 @@
 
         <TextView
             android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:text="@string/app_amount"
             android:layout_weight="1"
             />
@@ -118,6 +146,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
+            android:layout_marginRight="5dp"
             android:imeOptions="flagNavigateNext"
             android:inputType="numberDecimal"
             android:layout_weight="1.5"
@@ -128,7 +157,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:text="@string/app_remark"
             android:layout_weight="1"
             />
@@ -157,10 +186,9 @@
             android:layout_height="wrap_content"
             android:text="@string/app_paymentDetails"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/layer2"
             android:textSize="@dimen/content_xlarge"
             android:gravity="center_horizontal"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             />
     </LinearLayout>
 
@@ -175,7 +203,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_view_color"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/colorPrimaryDark"
             android:text="@string/app_paymentType" />
 
         <Spinner
@@ -185,17 +214,18 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:entries="@array/app_paymentTypeList"
-            android:background="@color/layer2"
+            android:background="@color/white"
             android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_marginStart="5dp" />
 
         <Button
             android:id="@+id/addCheck"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:background="@color/colorAccent"
-            android:textColor="@color/layer5"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:background="@drawable/background"
             android:padding="5dp"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_marginStart="100dp"
             android:text="@string/add_check"
             android:layout_marginLeft="50dp" />
@@ -205,6 +235,7 @@
     <ScrollView
         android:layout_width="500dp"
         android:layout_height="120dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:id="@+id/chequesScroll"
         >
@@ -214,11 +245,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:background="@color/layer2">
+            android:background="@color/white">
 
             <TableRow
-                android:background="@color/layer3"
-                android:backgroundTint="@color/layer2"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
                 >
 
                 <TextView
@@ -227,7 +258,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     android:padding="1dp"/>
 
@@ -237,7 +268,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/app_bank_name"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     android:padding="1dp"/>
 
@@ -247,7 +278,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_date"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     android:padding="3dp"/>
 
@@ -257,7 +288,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/check_value"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     android:padding="1dp"/>
 
@@ -299,7 +330,7 @@
             android:visibility="visible"
             android:text="@string/app_total"
             android:textStyle="bold"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             />
 
         <TextView

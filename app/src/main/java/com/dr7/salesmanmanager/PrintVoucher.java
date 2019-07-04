@@ -96,7 +96,7 @@ public class PrintVoucher extends AppCompatActivity {
         from_date = (EditText) findViewById(R.id.from_date);
         to_date = (EditText) findViewById(R.id.to_date);
         preview = (Button) findViewById(R.id.preview);
-        pic = (ImageView) findViewById(R.id.pic);
+        pic = (ImageView) findViewById(R.id.pic_ptint_voucher);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -671,8 +671,8 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-              sendData2(voucher);
-          //  sendData(voucher);
+//              sendData2(voucher);
+            sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -753,6 +753,13 @@ public class PrintVoucher extends AppCompatActivity {
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
             if (companyInfo != null) {
+                pic.setImageBitmap(companyInfo.getLogo());
+                pic.setDrawingCacheEnabled(true);
+                Bitmap bitmap = pic.getDrawingCache();
+
+                PrintPic printPic = PrintPic.getInstance();
+                printPic.init(bitmap);
+                byte[] bitmapdata = printPic.printDraw();
 
 
                 for (int i = 1; i <= numOfCopy; i++) {
@@ -770,13 +777,7 @@ public class PrintVoucher extends AppCompatActivity {
                     }
 
                     if (companyInfo.getLogo() != null) {
-                        pic.setImageBitmap(companyInfo.getLogo());
-                        pic.setDrawingCacheEnabled(true);
-                        Bitmap bitmap = pic.getDrawingCache();
 
-                        PrintPic printPic = PrintPic.getInstance();
-                        printPic.init(bitmap);
-                        byte[] bitmapdata = printPic.printDraw();
                         mmOutputStream.write(bitmapdata);
                         printCustom(" \n ", 1, 0);
                     }
@@ -989,10 +990,10 @@ public class PrintVoucher extends AppCompatActivity {
                     break;
             }
 
-//            Arabic864 arabic = new Arabic864();
-//            byte[] arabicArr = arabic.Convert(msg, false);
-//            mmOutputStream.write(arabicArr);
-            mmOutputStream.write(msg.getBytes());
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+            mmOutputStream.write(arabicArr);
+//            mmOutputStream.write(msg.getBytes());
 
             //outputStream.write(cc);
             //printNewLine();

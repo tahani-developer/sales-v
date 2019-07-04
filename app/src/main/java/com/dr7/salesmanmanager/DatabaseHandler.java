@@ -28,6 +28,7 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
@@ -40,7 +41,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 46;
+    private static final int DATABASE_VERSION = 49;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -48,6 +49,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     // tables from JSON
+    private static final String ACTIVE_KEY="ACTIVE_KEY";
+    private static final String KEY_VALUE ="KEY_VALUE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VISIT_RATE="VISIT_RATE";
 
@@ -380,6 +383,11 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+
+                + KEY_VALUE + " INTEGER"+ ")";
+        db.execSQL(CREATE_ACTIVE_KEY);
+        //-----------------------------------------------------
 
         String CREATE_TABLE_Price_List_D = "CREATE TABLE " + Price_List_D + "("
                 + ComapnyNo2 + " INTEGER,"
@@ -638,7 +646,12 @@ DatabaseHandler extends SQLiteOpenHelper {
 //            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
 //            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
           //  db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
-            db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
+           // db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
+            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+
+                    + KEY_VALUE + " INTEGER"+ ")";
+            db.execSQL(CREATE_ACTIVE_KEY);
+
 //            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
 
 //            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
@@ -657,6 +670,15 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void addKey(activeKey keyvalue)
+    {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_VALUE,keyvalue.getKey());
+        db.insert(ACTIVE_KEY, null, values);
+        db.close();
+
+    }
     public void addCustomer(Customer customer) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -1546,7 +1568,25 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         return categories;
     }
+     public  int getActiveKeyValue()
+     { int keyvalue=0;
+         String selectQuery = "select DISTINCT  KEY_VALUE from "+ ACTIVE_KEY;
 
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+
+         if (cursor.moveToFirst())
+         {
+             do {
+                 keyvalue=cursor.getInt(0);
+
+             } while (cursor.moveToNext());
+         }
+         Log.e("keyvalue","Db"+keyvalue);
+         return keyvalue;
+
+
+     }
     public List<String> getAllexistingUnits(String itemNo) {
         List<String> units = new ArrayList<>();
         units.add("1");
@@ -1978,6 +2018,11 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllCustomers() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + CUSTOMER_MASTER);
+        db.close();
+    }
+    public void deleteKeyValue() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + KEY_VALUE);
         db.close();
     }
 

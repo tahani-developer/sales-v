@@ -169,7 +169,7 @@ public class SalesInvoice extends Fragment {
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
-        pic = (ImageView) view.findViewById(R.id.pic);
+        pic = (ImageView) view.findViewById(R.id.pic_sale_invoices);
 
         discTextView = (TextView) view.findViewById(R.id.discTextView);
         subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
@@ -1065,8 +1065,8 @@ public class SalesInvoice extends Fragment {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-            sendData2();
-           // sendData();
+//            sendData2();
+            sendData();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1076,7 +1076,7 @@ public class SalesInvoice extends Fragment {
 
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.
-    void beginListenForData() {
+    void beginListenForData() throws IOException {
         try {
             final Handler handler = new Handler();
 
@@ -1130,8 +1130,10 @@ public class SalesInvoice extends Fragment {
 
             workerThread.start();
         } catch (NullPointerException e) {
+            closeBT();
             e.printStackTrace();
         } catch (Exception e) {
+            closeBT();
             e.printStackTrace();
         }
     }
@@ -1241,8 +1243,10 @@ public class SalesInvoice extends Fragment {
                 Toast.makeText(getActivity(), " please enter company information", Toast.LENGTH_LONG).show();
 
         } catch (NullPointerException e) {
+            closeBT();
             e.printStackTrace();
         } catch (Exception e) {
+            closeBT();
             e.printStackTrace();
         }
     }
@@ -1395,10 +1399,10 @@ public class SalesInvoice extends Fragment {
                     break;
             }
 
-//            Arabic864 arabic = new Arabic864();
-//            byte[] arabicArr = arabic.Convert(msg, false);
-//            mmOutputStream.write(arabicArr);
-            mmOutputStream.write(msg.getBytes());
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+            mmOutputStream.write(arabicArr);
+//            mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
 //            outputStream.write(cc);
@@ -1416,6 +1420,7 @@ public class SalesInvoice extends Fragment {
             mmOutputStream.close();
             mmInputStream.close();
             mmSocket.close();
+            workerThread.stop();
 //            myLabel.setText("Bluetooth Closed");
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -1490,7 +1495,7 @@ public class SalesInvoice extends Fragment {
                 }
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "" + JsonResponse);
+               // Log.e("tag", "" + JsonResponse);
 
                 return JsonResponse;
 

@@ -72,9 +72,10 @@ public class PrintPic {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (null != btm) {
-                btm.recycle();
-            }
+//            if (null != btm && !btm.isRecycled()) {//*****
+//                btm.recycle();
+//                btm=null;//test
+//            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -11,14 +12,20 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import maes.tech.intentanim.CustomIntent;
 
 public class Activities extends AppCompatActivity implements
         SalesInvoice.SalesInvoiceInterface, AddItemsFragment.AddItemsInterface,
@@ -27,8 +34,8 @@ public class Activities extends AppCompatActivity implements
 
 {
 
-    private ImageView saleImageView, returnInvImageView, receiptImageView, stockImageView;
-
+    private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView;
+  //  private CircleImageView saleImageView;
     private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
 
     private int activitySelected;
@@ -109,7 +116,8 @@ public class Activities extends AppCompatActivity implements
         salesInvoice.calculateTotals();
     }
 
-
+    Animation animZoomIn ;
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -117,6 +125,7 @@ public class Activities extends AppCompatActivity implements
         setContentView(R.layout.activity_activities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         activitySelected = -1;
         isFragmentBlank = true;
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
@@ -210,6 +219,7 @@ public class Activities extends AppCompatActivity implements
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.saleInvImageView:
+                   // saleImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 0)
                             return;
@@ -224,13 +234,12 @@ public class Activities extends AppCompatActivity implements
                                     displaySaleInvoice();
                                 }
                             });
-
-
                             builder.setNegativeButton(getResources().getString(R.string.app_no), null);
                             builder.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                         } else {
+
                             displaySaleInvoice();
                         }//displaySaleInvoice();
 
@@ -239,6 +248,7 @@ public class Activities extends AppCompatActivity implements
                     break;
 
                 case R.id.paymentImageView:
+                //   receiptImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 1)
                             return;
@@ -268,6 +278,7 @@ public class Activities extends AppCompatActivity implements
                     break;
 
                 case R.id.stockRequestImageView:
+                  //  stockImageView.startAnimation(animZoomIn);
                     if (!isFragmentBlank) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
                         builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
@@ -290,7 +301,6 @@ public class Activities extends AppCompatActivity implements
             }
         }
     };
-
     @Override
     public void onBackPressed() {
 
