@@ -203,6 +203,7 @@ public class ImportJason extends AppCompatActivity{
                     item.setCategoryId(finalObject.getString("CateogryID"));
                     item.setBarcode(finalObject.getString("Barcode"));
 //                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
+                    item.setPosPrice(finalObject.getDouble("F_D"));
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
 

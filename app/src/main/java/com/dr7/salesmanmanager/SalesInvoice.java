@@ -70,6 +70,9 @@ import java.util.UUID;
 public class SalesInvoice extends Fragment {
 
 
+    private static String smokeGA = "دخان";
+    private static String smokeGE = "SMOKE";
+
     private static int salesMan ;
     static int index;
     public static List<Payment>  payment_unposted;
@@ -684,7 +687,10 @@ public class SalesInvoice extends Fragment {
     }
 
     public void calculateTotals() {
-        double itemTax, itemTotal, itemTotalAfterTax, itemTotalPerc, itemDiscVal;
+        double itemTax, itemTotal, itemTotalAfterTax,
+                itemTotalPerc, itemDiscVal, posPrice;
+
+        String itemGroup;
 
         subTotal = 0.0;
         totalTaxValue = 0.0;
@@ -711,8 +717,20 @@ public class SalesInvoice extends Fragment {
                 itemTotalPerc = itemTotal / subTotal;
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setTotalDiscVal(itemDiscVal);
-                itemTotal = itemTotal - itemDiscVal;
-                itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+
+                itemGroup = items.get(i).getCategory();
+
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
+                {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent())/(1+items.get(i).getTaxPercent());
+                }
+                else
+                {
+                    itemTotal = itemTotal - itemDiscVal;
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                }
+
                 items.get(i).setTaxValue(itemTax);
                 totalTaxValue = totalTaxValue + itemTax;
             }
@@ -746,8 +764,18 @@ public class SalesInvoice extends Fragment {
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setTotalDiscVal(itemDiscVal);
                 itemTotal = itemTotal - itemDiscVal;
+                itemGroup = items.get(i).getCategory();
 
-                itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
+                {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent())/(1+items.get(i).getTaxPercent());
+                }
+                else
+                {
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                }
+
 
 
                 items.get(i).setTaxValue(itemTax);

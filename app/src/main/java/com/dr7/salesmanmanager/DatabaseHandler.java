@@ -41,7 +41,7 @@ public class
 DatabaseHandler extends SQLiteOpenHelper {
 
     // Database Version
-    private static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 50;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -100,7 +100,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String Barcode1 = "Barcode";
     private static final String IsSuspended1 = "IsSuspended";
     private static final String ITEM_L1 = "ITEM_L";
-
+    private static final String ITEM_F_D = "F_D";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -379,7 +379,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CateogryID1 + " TEXT,"
                 + Barcode1 + " TEXT,"
                 + IsSuspended1 + " INTEGER,"
-                + ITEM_L1 + " INTEGER" + ")";
+                + ITEM_L1 + " INTEGER,"
+                + ITEM_F_D + " REAL"
+                + ")";
+
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -647,10 +650,16 @@ DatabaseHandler extends SQLiteOpenHelper {
 //            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
           //  db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
            // db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
-            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+
+            db.execSQL("ALTER TABLE Items_Master ADD F_D REAL  NOT NULL DEFAULT '0'");
+
+
+            /*String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
 
                     + KEY_VALUE + " INTEGER"+ ")";
-            db.execSQL(CREATE_ACTIVE_KEY);
+            db.execSQL(CREATE_ACTIVE_KEY);*/
+
+
 
 //            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
 
@@ -724,6 +733,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Barcode1, item.getBarcode());
         values.put(IsSuspended1, item.getIsSuspended());
         values.put(ITEM_L1, item.getItemL());
+        values.put(ITEM_F_D, item.getPosPrice());
 
         db.insert(Items_Master, null, values);
         db.close();
