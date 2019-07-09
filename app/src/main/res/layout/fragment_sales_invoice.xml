@@ -58,7 +58,7 @@
             android:background="@drawable/add_items" />
 
         <ImageView
-            android:id="@+id/pic_sale_invoices"
+            android:id="@+id/pic_sale"
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:visibility="invisible"/>

@@ -2112,5 +2112,42 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + PAYMENTS_PAPER + " where IS_POSTED = '1' ");
         db.close();
     }
+    public List<Payment> getAllPayments_customerNo( String CustomerNo) {
+
+        List<Payment> paymentsList = new ArrayList<Payment>();
+        String selectQuery = "SELECT  * FROM " + PAYMENTS +" where CUSTOMER_NUMBER = '" + CustomerNo + "' ";
+        Log.e("select",""+selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Payment payment = new Payment();
+
+                payment.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                payment.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                payment.setPayDate(cursor.getString(2));
+                payment.setCustNumber(cursor.getString(3));
+                payment.setAmount(Double.parseDouble(cursor.getString(4)));
+                payment.setRemark(cursor.getString(5));
+                payment.setSaleManNumber(Integer.parseInt(cursor.getString(6)));
+                payment.setIsPosted(Integer.parseInt(cursor.getString(7)));
+                payment.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                payment.setCustName(cursor.getString(9));
+                payment.setYear(Integer.parseInt(cursor.getString(10)));
+
+                paymentsList.add(payment);
+            } while (cursor.moveToNext());
+        }
+
+        return paymentsList;
+    }
+        public void updateCustomersPayment_Info(double CriditLimit , int CashCredit , String custNo) {
+        db = this.getWritableDatabase();
+        Log.e("updateCust",""+CriditLimit+CashCredit);
+        ContentValues values = new ContentValues();
+        values.put(CASH_CREDIT, CashCredit);
+        values.put(CREDIT_LIMIT, CriditLimit);
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custNo, null);
+    }
 
 }

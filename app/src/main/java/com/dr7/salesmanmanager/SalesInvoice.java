@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
@@ -53,7 +54,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.Bidi;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +69,11 @@ import java.util.UUID;
  */
 public class SalesInvoice extends Fragment {
 
+
+    private static int salesMan ;
+    static int index;
+    public static List<Payment>  payment_unposted;
+    double max_cridit,available_balance,account_balance, cash_cridit,unposted_payment,unposted_voucher;
 
     public ListView itemsListView;
     public static List<Item> items;
@@ -91,7 +96,7 @@ public class SalesInvoice extends Fragment {
     public static int voucherType = 504;
     private int voucherNumber;
     private int payMethod;
-    static int index;
+
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
     boolean clicked = false;
@@ -169,7 +174,7 @@ public class SalesInvoice extends Fragment {
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
-        pic = (ImageView) view.findViewById(R.id.pic_sale_invoices);
+        pic = (ImageView) view.findViewById(R.id.pic_sale);
 
         discTextView = (TextView) view.findViewById(R.id.discTextView);
         subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
@@ -380,8 +385,6 @@ public class SalesInvoice extends Fragment {
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
-
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
@@ -404,7 +407,7 @@ public class SalesInvoice extends Fragment {
                                 String voucherYear = df2.format(currentTimeAndDate);
                                 voucherYear = convertToEnglish(voucherYear);
 
-                                int salesMan = Integer.parseInt(Login.salesMan);
+                                salesMan = Integer.parseInt(Login.salesMan);
 
                                 DiscountFragment obj = new DiscountFragment();
                                 double discountValue = obj.getDiscountValue();
@@ -419,47 +422,99 @@ public class SalesInvoice extends Fragment {
                                         salesMan, discountValue, discountPerc, remark, payMethod,
                                         0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
                                         CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
+                                if(payMethod==0)
+                                {
+                                    Log.e("paymethod is","cridit");
+                                    if(customer_is_authrized())
+                                    {
 
-                                mDbHandler.addVoucher(voucher);
-                                Log.e("paymethod",""+voucher.getPayMethod());
-
-
-                                for (int i = 0; i < items.size(); i++) {
-
-                                    Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
-                                            items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
-                                            items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
-                                            items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
-
-                                    itemsList.add(item);
-                                    mDbHandler.addItem(item);
-
-                                    if (voucherType != 506)
-                                        mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-                                    else
-                                        mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-
-                                }
+                                        mDbHandler.addVoucher(voucher);
+                                        Log.e("paymethod", "" + voucher.getPayMethod());
 
 
-                                if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
-                                    new JSONTask().execute();
-                                }
+                                        for (int i = 0; i < items.size(); i++) {
 
-                                if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                    try {
-                                        findBT();
-                                        openBT();
-                                    } catch (IOException ex) {
+                                            Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                                    items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                                    items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+
+                                            itemsList.add(item);
+                                            mDbHandler.addItem(item);
+
+                                            if (voucherType != 506)
+                                                mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                            else
+                                                mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+                                        }
+
+
+                                        if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                                            new JSONTask().execute();
+                                        }
+
+                                        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                            try {
+                                                findBT();
+                                                openBT();
+                                            } catch (IOException ex) {
+                                            }
+                                        } else {
+                                            hiddenDialog();
+                                        }
+                                        mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+
                                     }
-                                } else {
-                                    hiddenDialog();
+                                    else{
+                                        Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
+                                    }
+
+
                                 }
-                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+                                else{
+                                    Log.e("paymethod is","cash");
+                                    mDbHandler.addVoucher(voucher);
+                                    Log.e("paymethod", "" + voucher.getPayMethod());
 
+
+                                    for (int i = 0; i < items.size(); i++) {
+
+                                        Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                                items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                                items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+
+                                        itemsList.add(item);
+                                        mDbHandler.addItem(item);
+
+                                        if (voucherType != 506)
+                                            mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                        else
+                                            mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+                                    }
+
+
+                                    if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                                        new JSONTask().execute();
+                                    }
+
+                                    if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                        try {
+                                            findBT();
+                                            openBT();
+                                        } catch (IOException ex) {
+                                        }
+                                    } else {
+                                        hiddenDialog();
+                                    }
+                                    mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+
+
+                                }
+                                clearLayoutData();
                             }
-                            clearLayoutData();
-
                         }
                     }
                 });
@@ -470,12 +525,37 @@ public class SalesInvoice extends Fragment {
                         show();
             }
         });
-      //  Log.e("paymethod",""+voucher.getPayMethod());
+        //  Log.e("paymethod",""+voucher.getPayMethod());
         return view;
     }
 
     public void setListener(SalesInvoiceInterface listener) {
         this.salesInvoiceInterfaceListener = listener;
+    }
+    public boolean customer_is_authrized() {
+        unposted_payment=0;
+        max_cridit =CustomerListShow.CreditLimit;
+        cash_cridit=CustomerListShow.CashCredit;
+        Log.e("max_cridit",""+max_cridit+"casCre"+cash_cridit);
+//        if (voucher.getIsPosted() == 0) {
+//            unposted_voucher=voucher.getNetSales();
+//            Log.e("unposted_voucher",""+unposted_voucher);
+//
+//        }
+        payment_unposted =  mDbHandler.getAllPayments_customerNo(voucher.getCustNumber());
+        for (int i=0;i<payment_unposted.size();i++) {
+            if (payment_unposted.get(i).getIsPosted()==0) {
+                unposted_payment += payment_unposted.get(i).getAmount();
+                Log.e("unposted_payment", "" + unposted_payment+"\tcusNO"+voucher.getCustNumber());
+            }
+        }
+        available_balance = max_cridit - cash_cridit +unposted_payment;
+        Log.e("available",""+available_balance);
+        if (available_balance >= voucher.getNetSales())
+            return true;
+        else
+            return false;
+
     }
 
     public OnItemLongClickListener onItemLongClickListener =

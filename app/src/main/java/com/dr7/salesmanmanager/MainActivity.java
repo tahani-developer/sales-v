@@ -310,7 +310,25 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.nav_sign_out) {
+        }
+        else if (id == R.id.nav_refreshdata) {
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Confirm Update")
+//                    .setMessage("Are you sure you want to refresh data ? This will take few minutes !")
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                            RefreshData obj = new RefreshData(MainActivity.this);
+                            obj.startParsing();
+                            //obj.storeInDatabase();
+
+//                        }
+//                    })
+//                    .setNegativeButton("Cancel", null).show();
+
+        }
+        else if (id == R.id.nav_sign_out) {
             Intent intent = new Intent(this, CPCL2Menu.class);
             startActivity(intent);
 
