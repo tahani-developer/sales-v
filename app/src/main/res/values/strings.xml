@@ -10,6 +10,7 @@
     <string name="app_cust_order">New Order</string>
     <string name="app_request">Stock request</string>
     <string name="app_imp_data">Import Data</string>
+    <string name="app_refresh_data">Refresh Data</string>
     <string name="app_exp_data">Export Data</string>
     <string name="app_clear_local">Clear Local Data</string>
     <string name="app_cash_report">Cash Report</string>

@@ -32,6 +32,7 @@ public class Item {
     private int isPosted;
     private double itemL;
     private double minSalePrice;
+    private double posPrice;
 
     public Item()
     {
@@ -79,6 +80,9 @@ public class Item {
         this.qty = qty;
         this.date = date;
     }
+
+
+
 
     public String getYear() {
         return year;
@@ -292,6 +296,14 @@ public class Item {
 
     public void setMinSalePrice(double minSalePrice) {
         this.minSalePrice = minSalePrice;
+    }
+
+    public double getPosPrice() {
+        return posPrice;
+    }
+
+    public void setPosPrice(double posPrice) {
+        this.posPrice = posPrice;
     }
 
     public JSONObject getJSONObject() {

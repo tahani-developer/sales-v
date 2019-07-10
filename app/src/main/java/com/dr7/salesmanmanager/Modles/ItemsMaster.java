@@ -9,12 +9,21 @@ public class ItemsMaster {
     private String barcode;
     private int isSuspended;
     private double itemL; // for weight
+    private double posPrice; // for weight
 
     public ItemsMaster (){
 
     }
 
-    public ItemsMaster(int companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended ,double itemL) {
+    public double getPosPrice() {
+        return posPrice;
+    }
+
+    public void setPosPrice(double posPrice) {
+        this.posPrice = posPrice;
+    }
+
+    public ItemsMaster(int companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended , double itemL) {
         this.companyNo = companyNo;
         this.itemNo = itemNo;
         this.name = name;

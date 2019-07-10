@@ -165,6 +165,7 @@
     <string name="allow_cust_check_out_range">السماح بدخول العميل من خارج النطاق</string>
     <string name="read_discount_from_offers">الحصول على الخصومات من العروض </string>
     <string name="work_online">العمل اونلاين</string>
+    <string name="app_refresh_data">تحديث البيانات </string>
     <string name="paymethod_check">فواتير البيع نقدا</string>
     <string name="num_of_copy">عدد النسخ</string>
     <string name="vouchers_serial">تسلسل الفواتير</string>
