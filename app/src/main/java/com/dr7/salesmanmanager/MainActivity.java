@@ -310,7 +310,8 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.nav_sign_out) {
+        }
+        else if (id == R.id.nav_sign_out) {
             Intent intent = new Intent(this, CPCL2Menu.class);
             startActivity(intent);
 

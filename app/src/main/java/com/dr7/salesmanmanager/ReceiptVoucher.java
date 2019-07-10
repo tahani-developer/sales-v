@@ -102,6 +102,7 @@ public class ReceiptVoucher extends Fragment {
 
     public static Payment payment;
 
+
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -659,9 +660,9 @@ public class ReceiptVoucher extends Fragment {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-//            sendData2();
+           // sendData2();
 
-            sendData();
+           sendData();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1086,7 +1087,7 @@ public class ReceiptVoucher extends Fragment {
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
             mmOutputStream.write(arabicArr);
-//            mmOutputStream.write(msg.getBytes());
+         //   mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
             //outputStream.write(cc);

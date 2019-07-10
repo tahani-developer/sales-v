@@ -1637,6 +1637,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         return paymentsList;
     }
 
+
     public List<Payment> getAllPaymentsPaper() {
 
         List<Payment> paymentsList = new ArrayList<Payment>();
@@ -1951,9 +1952,9 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(CUST_LAT, lat);
         values.put(CUST_LONG, lon);
-
         db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custId, null);
     }
+
 
     public void updateSalesManItemsBalance1(float qty , int salesMan, String itemNo) {
         db = this.getWritableDatabase();

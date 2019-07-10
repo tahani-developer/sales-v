@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import maes.tech.intentanim.CustomIntent;
-
+@SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
     private String username, password, link, ipAddress;

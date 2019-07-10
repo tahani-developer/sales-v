@@ -37,7 +37,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
@@ -69,7 +71,6 @@ import java.util.UUID;
  */
 public class SalesInvoice extends Fragment {
 
-
     public ListView itemsListView;
     public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
@@ -90,7 +91,8 @@ public class SalesInvoice extends Fragment {
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     private int voucherNumber;
-    private int payMethod;
+    private int payMethod ;
+    private static int salesMan ;
     static int index;
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -100,6 +102,8 @@ public class SalesInvoice extends Fragment {
 
     public static Voucher voucher;
     public static List<Item> itemsList;
+
+    public static List<Payment>  payment_unposted;
 
     bluetoothprinter object;
 
@@ -113,7 +117,8 @@ public class SalesInvoice extends Fragment {
 
     byte[] readBuffer;
     int readBufferPosition;
-    int counter;
+    double max_cridit,available_balance,account_balance, cash_cridit,unposted_payment,unposted_voucher;
+
     volatile boolean stopWorker;
    /* public static void test2(){
 
@@ -375,104 +380,18 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //customer_is_authrized
 
-                clicked = false;
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                //  Log.e("paymethod",""+voucher.getPayMethod());
 
 
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
-
-                        if (!clicked) {
-                            clicked = true;
-                            int listSize = itemsListView.getCount();
-                            if (listSize == 0)
-                                Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
-                            else {
-
-                                String remark = " " + remarkEditText.getText().toString();
-
-                                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String voucherDate = df.format(currentTimeAndDate);
-                                voucherDate = convertToEnglish(voucherDate);
-
-                                SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
-                                String voucherYear = df2.format(currentTimeAndDate);
-                                voucherYear = convertToEnglish(voucherYear);
-
-                                int salesMan = Integer.parseInt(Login.salesMan);
-
-                                DiscountFragment obj = new DiscountFragment();
-                                double discountValue = obj.getDiscountValue();
-                                double discountPerc = obj.getDiscountPerc();
-
-                                double totalDisc = Double.parseDouble(discTextView.getText().toString());
-                                double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-                                double tax = Double.parseDouble(taxTextView.getText().toString());
-                                double netSales = Double.parseDouble(netTotalTextView.getText().toString());
-
-                                voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                                        salesMan, discountValue, discountPerc, remark, payMethod,
-                                        0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                                        CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
-
-                                mDbHandler.addVoucher(voucher);
-                                Log.e("paymethod",""+voucher.getPayMethod());
-
-
-                                for (int i = 0; i < items.size(); i++) {
-
-                                    Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
-                                            items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
-                                            items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
-                                            items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
-
-                                    itemsList.add(item);
-                                    mDbHandler.addItem(item);
-
-                                    if (voucherType != 506)
-                                        mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-                                    else
-                                        mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-
-                                }
-
-
-                                if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
-                                    new JSONTask().execute();
-                                }
-
-                                if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                    try {
-                                        findBT();
-                                        openBT();
-                                    } catch (IOException ex) {
-                                    }
-                                } else {
-                                    hiddenDialog();
-                                }
-                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
-
-                            }
-                            clearLayoutData();
-
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().
-
-                        show();
             }
-        });
-      //  Log.e("paymethod",""+voucher.getPayMethod());
+        }
+        );
         return view;
     }
+
+
 
     public void setListener(SalesInvoiceInterface listener) {
         this.salesInvoiceInterfaceListener = listener;
