@@ -1488,7 +1488,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String salesMan = Login.salesMan;
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L\n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S , Price_List_D P\n" +
                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo = '1' and S.SalesManNo = '" + salesMan +"'";
 
@@ -1513,6 +1513,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setBarcode(cursor.getString(7));
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
 
+                item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());
@@ -1529,7 +1531,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String PriceListId = CustomerListShow.PriceListId;
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L\n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C , Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo = '1' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
@@ -1554,7 +1556,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
                 item.setBarcode(cursor.getString(7));
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
-
+                item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());

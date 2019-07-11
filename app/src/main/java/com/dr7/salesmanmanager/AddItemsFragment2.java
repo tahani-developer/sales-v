@@ -47,6 +47,8 @@ public class AddItemsFragment2 extends DialogFragment {
     ListView verticalList;
     private float descPerc;
     boolean added = false;
+    private static String smokeGA = "دخان";
+    private static String smokeGE = "SMOKE";
 
 
     public AddItemsInterface getListener() {
@@ -76,6 +78,7 @@ public class AddItemsFragment2 extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+
         if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
             jsonItemsList = mHandler.getAllJsonItems();
         else
@@ -175,9 +178,11 @@ public class AddItemsFragment2 extends DialogFragment {
 
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
-                           String price, String bonus, String discount, RadioGroup discTypeRadioGroup, CheckBox useWeight, Context context) {
+                           String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
+                           String category, String posPrice,CheckBox useWeight, Context context) {
 
         SalesInvoice obj = new SalesInvoice();
+        String itemGroup;
         boolean existItem = false;
         for(int i = 0 ; i< obj.getItemsList().size() ; i++){
             Log.e("***" , obj.getItemsList().get(i).getItemNo() + " " + itemNumber);
@@ -200,6 +205,7 @@ public class AddItemsFragment2 extends DialogFragment {
         item.setItemNo(itemNumber);
         item.setItemName(itemName);
         item.setTax(Float.parseFloat(tax.trim()));
+        item.setCategory(category);
 
         try {
             item.setUnit(unit);
@@ -210,6 +216,7 @@ public class AddItemsFragment2 extends DialogFragment {
             else
                 item.setBonus(Float.parseFloat(bonus));
             item.setTax(Float.parseFloat(tax.trim()));
+            item.setPosPrice(Float.parseFloat(posPrice.trim()));
 
         } catch (NumberFormatException e) {
             item.setUnit("");
@@ -251,7 +258,16 @@ public class AddItemsFragment2 extends DialogFragment {
 
         try {
             if (item.getDiscType() == 0) {
+
+                itemGroup = item.getCategory();
+
+                /*if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
+                    item.setAmount(item.getQty() * (float)item.getPosPrice()  - item.getDisc());
+                else*/
+
+
                 item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
+
                 Log.e("log =" , item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
             } else {

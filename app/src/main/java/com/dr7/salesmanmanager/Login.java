@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
-
+@SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
     private String username, password, link, ipAddress;

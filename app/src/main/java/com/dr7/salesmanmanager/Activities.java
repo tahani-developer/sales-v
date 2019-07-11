@@ -19,13 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
-import com.mikhaellopez.circularimageview.CircularImageView;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import maes.tech.intentanim.CustomIntent;
+//import de.hdodenhof.circleimageview.CircleImageView;
+//import maes.tech.intentanim.CustomIntent;
 
 public class Activities extends AppCompatActivity implements
         SalesInvoice.SalesInvoiceInterface, AddItemsFragment.AddItemsInterface,
@@ -361,6 +360,9 @@ public class Activities extends AppCompatActivity implements
         salesInvoice.getItemsList().get(index).setTax(item.getTaxPercent());
         salesInvoice.getItemsList().get(index).setDiscType(item.getDiscType());
         salesInvoice.getItemsList().get(index).setAmount(item.getAmount());
+        salesInvoice.getItemsList().get(index).setCategory(item.getCategory());
+        salesInvoice.getItemsList().get(index).setPosPrice(item.getPosPrice());
+
         // salesInvoice.itemsListAdapter.ite setItemsList(itemsList);
         salesInvoice.itemsListAdapter.notifyDataSetChanged();
         salesInvoice.calculateTotals();
