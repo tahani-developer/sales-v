@@ -18,14 +18,14 @@ public class Settings {
     private int readDiscountFromOffers;
     private int workOnline;
     private int paymethodCheck;
-
+    private int bonusNotAlowed;
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase, int allowMinus,
                     int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange, int canChangePrice,
-                    int readDiscountFromOffers, int workOnline, int paymethodCheck) {
+                    int readDiscountFromOffers, int workOnline, int paymethodCheck,int bonusNotAlowed) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -42,6 +42,15 @@ public class Settings {
         this.readDiscountFromOffers = readDiscountFromOffers;
         this.workOnline = workOnline;
         this.paymethodCheck = paymethodCheck;
+        this.bonusNotAlowed=bonusNotAlowed;
+    }
+
+    public int getBonusNotAlowed() {
+        return bonusNotAlowed;
+    }
+
+    public void setBonusNotAlowed(int bonusNotAlowed) {
+        this.bonusNotAlowed = bonusNotAlowed;
     }
 
     public int getPaymethodCheck() {

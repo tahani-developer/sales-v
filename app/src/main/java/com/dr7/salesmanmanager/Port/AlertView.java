@@ -32,7 +32,7 @@ public class AlertView
 	}
 }
 
- class EmptyListener implements android.content.DialogInterface.OnClickListener
+ class EmptyListener implements DialogInterface.OnClickListener
 {
 	@Override
 	public void onClick(DialogInterface dialog, int which)

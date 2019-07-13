@@ -659,6 +659,7 @@ public class MainActivity extends AppCompatActivity
             final CheckBox readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
             final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
             final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
+            final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -743,13 +744,13 @@ public class MainActivity extends AppCompatActivity
                                     int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
                                     int workOnlin = workOnline.isChecked() ? 1 : 0;
                                     int paymethodCheck=paymetod_check.isChecked()?1:0;
-
+                                    int bonusNotalow=bonusNotAlowed.isChecked()?1:0;
                                     mDbHandler.deleteAllSettings();
-                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
-                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
-                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
-                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
-                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck);
+                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
+                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
+                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
+                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
+                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
 
                                     dialog.dismiss();
                                 } else

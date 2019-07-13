@@ -100,6 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 final RadioGroup radioGroup =  dialog.findViewById(R.id.discTypeRadioGroup);
                 final LinearLayout discountLinearLayout =  dialog.findViewById(R.id.discount_linear);
                 final LinearLayout unitWeightLinearLayout =  dialog.findViewById(R.id.linearWeight);
+                final LinearLayout bonusLinearLayout =  dialog.findViewById(R.id.linear_bonus);
                 Button addToList = dialog.findViewById(R.id.addToList);
 
                 itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
@@ -123,6 +124,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
                     discountLinearLayout.setVisibility(View.INVISIBLE);
+                }
+             if (mHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {
+                 bonusLinearLayout.setVisibility(View.VISIBLE);
+                }
+             else{
+                 bonus.setText(0);
+                 bonusLinearLayout.setVisibility(View.INVISIBLE);
                 }
 
                 if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {

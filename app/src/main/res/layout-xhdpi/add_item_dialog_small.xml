@@ -172,7 +172,12 @@
             android:inputType="numberDecimal"
             android:textColor="@color/colorAccent"
             android:textSize="20sp" />
-
+        <LinearLayout
+            android:id="@+id/linear_bonus"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:visibility="invisible">
         <TextView
             android:id="@+id/bonuss"
             android:layout_width="wrap_content"
@@ -193,6 +198,7 @@
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
             android:textSize="20sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
