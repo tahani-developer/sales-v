@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/customer_nameVoucher"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -70,13 +70,13 @@
             android:id="@+id/custInfoImgBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:visibility="invisible"
             android:background="@drawable/cust_info" />
 
         <TextView
             android:id="@+id/voucher_no"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="10dp"
@@ -87,7 +87,7 @@
 
         <TextView
             android:id="@+id/payment_term"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="10dp"

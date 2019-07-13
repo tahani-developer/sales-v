@@ -282,7 +282,6 @@ public class CustomerCheckInFragment extends DialogFragment {
     }
 
     boolean isInRange(String cusLat, String cusLong) {
-
         if(cusLat.equals(""))
             return true;
 
