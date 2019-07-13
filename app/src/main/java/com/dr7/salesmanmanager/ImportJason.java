@@ -172,8 +172,10 @@ public class ImportJason extends AppCompatActivity{
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
                     try {
                         Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                    }catch (Exception e){
+                        Customer.setPayMethod(-1);
+
                     }
-                    catch(Exception e){ Customer.setPayMethod(-1);}
                     Customer.setCustLat(finalObject.getString("LATITUDE"));
                     Customer.setCustLong(finalObject.getString("LONGITUDE"));
 
