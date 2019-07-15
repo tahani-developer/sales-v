@@ -671,8 +671,8 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-//              sendData2(voucher);
-            sendData(voucher);
+           //  sendData2(voucher);
+          sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -993,7 +993,7 @@ public class PrintVoucher extends AppCompatActivity {
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
             mmOutputStream.write(arabicArr);
-//            mmOutputStream.write(msg.getBytes());
+//             mmOutputStream.write(msg.getBytes());
 
             //outputStream.write(cc);
             //printNewLine();

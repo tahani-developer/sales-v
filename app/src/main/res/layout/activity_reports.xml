@@ -37,7 +37,7 @@
                     android:background="@drawable/slid"
                     android:text="@string/customer_log_report"
                     android:textAllCaps="false"
-                    android:textSize="18sp" />
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -55,7 +55,7 @@
                     android:background="@drawable/slid"
                     android:text="@string/transactions_report"
                     android:textAllCaps="false"
-                    android:textSize="18sp" />
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -73,7 +73,7 @@
                     android:background="@drawable/slid"
                     android:text="@string/payments_details_report"
                     android:textAllCaps="false"
-                    android:textSize="18sp" />
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
@@ -91,15 +91,13 @@
                     android:background="@drawable/slid"
                     android:text="@string/stock_request_report"
                     android:textAllCaps="false"
-                    android:textSize="18sp" />
+                    android:textSize="18dp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="85dp"
-                android:layout_marginBottom="20dp"
-
                 android:background="@drawable/report_back"
                 android:orientation="vertical">
 
@@ -108,9 +106,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="25dp"
-
                     android:background="@drawable/slid"
                     android:text="@string/inventory_report"
+                    android:textAllCaps="false"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="85dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/report_back"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/cash_report"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/slid"
+                    android:text="@string/app_cash_report"
                     android:textAllCaps="false"
                     android:textSize="18sp" />
 

@@ -130,7 +130,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                  bonusLinearLayout.setVisibility(View.VISIBLE);
                 }
              else{
-                 bonus.setText(0);
+                 bonus.setText("0");
                  bonusLinearLayout.setVisibility(View.INVISIBLE);
                 }
 

@@ -40,8 +40,9 @@ public class
 
 DatabaseHandler extends SQLiteOpenHelper {
 
+    private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 50;
+    private static final int DATABASE_VERSION = 52;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -636,42 +637,124 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
+
+        try{
+            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+        try{
+            db.execSQL("ALTER TABLE Items_Master ADD F_D REAL  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD BONUS_NOT_ALLOWED INTEGER  NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+                    + SALESMEN_NO + " TEXT,"
+                    + DATE_ + " TEXT,"
+                    + LATITUDE + " TEXT,"
+                    + LONGITUDE + " TEXT,"
+                    + SERIAL + " INTEGER,"
+                    + CUSTOMR_NO + " TEXT,"
+                    + CUSUSTOMR_NAME + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
         try {
 
-//            db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");TABLE_SETTING
-//            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_CODE TEXT NOT NULL DEFAULT ''");
-//            db.execSQL("ALTER TABLE VISIT_RATE ADD CUST_NAME TEXT NOT NULL DEFAULT ''");
-//            db.execSQL("ALTER TABLE VISIT_RATE ADD SALESMAN TEXT NOT NULL DEFAULT ''");
-//            db.execSQL("ALTER TABLE SALESMEN_STATIONS ADD CUSTOMR_NO TEXT  NOT NULL DEFAULT '111'");
 
-//            db.execSQL("ALTER TABLE SETTING ADD ALLOW_OUT_OF_RANGE INTEGER  NOT NULL DEFAULT '0'");
-//            db.execSQL("ALTER TABLE SETTING ADD CAN_CHANGE_PRICE INTEGER  NOT NULL DEFAULT '0'");
-          //  db.execSQL("ALTER TABLE SETTING ADD WORK_ONLINE INTEGER  NOT NULL DEFAULT '0'");
-           // db.execSQL("ALTER TABLE SETTING ADD PAYMETHOD_CHECK INTEGER  NOT NULL DEFAULT '1'");
-            db.execSQL("ALTER TABLE SETTING ADD BONUS_NOT_ALLOWED INTEGER  NOT NULL DEFAULT '1'");
-            //db.execSQL("ALTER TABLE Items_Master ADD F_D REAL  NOT NULL DEFAULT '0'");
-
-
-            /*String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
 
                     + KEY_VALUE + " INTEGER"+ ")";
-            db.execSQL(CREATE_ACTIVE_KEY);*/
+            db.execSQL(CREATE_ACTIVE_KEY);
 
-
-
-//            db.execSQL("ALTER TABLE TRANSACTIONS ADD IS_POSTED2 INTEGER  NOT NULL DEFAULT '0'");
-
-//            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
-//                    + SALESMEN_NO + " TEXT,"
-//                    + DATE_ + " TEXT,"
-//                    + LATITUDE + " TEXT,"
-//                    + LONGITUDE + " TEXT,"
-//                    + SERIAL + " INTEGER,"
-//                    + CUSTOMR_NO + " TEXT,"
-//                    + CUSUSTOMR_NAME + " TEXT" + ")";
-//            db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
 
         } catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column");
@@ -1477,8 +1560,6 @@ DatabaseHandler extends SQLiteOpenHelper {
                 itemsinven.setQty(Double.parseDouble(cursor.getString(2)));
                 itemsinven.setCategoryId(cursor.getString(3));
                 items_inventory.add(itemsinven);
-
-
             }
             while (cursor.moveToNext());
         }

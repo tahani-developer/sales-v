@@ -305,4 +305,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_splashscreen">Splashscreen</string>
     <string name="bonus_not_allowed">عدم اعطاء مجاني</string>
+    <string name="date">Date</string>
+    <string name="cash_sale">Cash sales</string>
+    <string name="credit_sales">Credit Sales</string>
+    <string name="total_sales">Total Sales</string>
+    <string name="netpayment">Net</string>
+    <string name="total_cash">Total Cash</string>
+    <string name="sales">Sales</string>
 </resources>

@@ -326,7 +326,6 @@ public class SalesInvoice extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
-
         discountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
