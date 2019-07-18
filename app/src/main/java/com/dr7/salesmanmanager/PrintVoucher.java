@@ -142,7 +142,7 @@ public class PrintVoucher extends AppCompatActivity {
                             row.setPadding(2, 10, 2, 10);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer4));
+                                row.setBackgroundColor(getResources().getColor( R.color.layer3));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
 
@@ -671,8 +671,8 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-           //  sendData2(voucher);
-          sendData(voucher);
+             sendData2(voucher);
+//          sendData(voucher);
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -990,10 +990,10 @@ public class PrintVoucher extends AppCompatActivity {
                     break;
             }
 
-            Arabic864 arabic = new Arabic864();
-            byte[] arabicArr = arabic.Convert(msg, false);
-            mmOutputStream.write(arabicArr);
-//             mmOutputStream.write(msg.getBytes());
+//            Arabic864 arabic = new Arabic864();
+//            byte[] arabicArr = arabic.Convert(msg, false);
+//            mmOutputStream.write(arabicArr);
+             mmOutputStream.write(msg.getBytes());
 
             //outputStream.write(cc);
             //printNewLine();

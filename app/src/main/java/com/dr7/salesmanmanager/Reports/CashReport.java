@@ -31,6 +31,7 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
+//import com.dr7.salesmanmanager.Pos;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
@@ -59,7 +60,7 @@ public class CashReport  extends AppCompatActivity {
     TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext;
     List<Voucher> voucher;
     double cash = 0, credit = 0, total = 0;
-    double cashPayment=0,creditPayment=0,net=0,total_cash;
+    double cashPayment=0,creditPayment=0,net=0,total_cash=0;
     int paymethod=0;
     private DecimalFormat decimalFormat;
     BluetoothAdapter mBluetoothAdapter;
@@ -147,7 +148,8 @@ public class CashReport  extends AppCompatActivity {
                     creditPaymenttext.setText(creditPayment+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
                     Log.e("cash_p", "" + cashPayment + "\t creditPaymenttext= " + creditPayment + "nettext=" + net);
-                    total_cashtext.setText(convertToEnglish(decimalFormat.format((net+cash))));
+                    total_cash=net+cash;
+                    total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
                     Log.e("totalcash","="+net+cash);
 
                     }
@@ -157,17 +159,17 @@ public class CashReport  extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
         //******************************date*****************************************
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -221,17 +223,8 @@ public class CashReport  extends AppCompatActivity {
                     .getBondedDevices();
             if (pairedDevices.size() > 0) {
                 for (BluetoothDevice device : pairedDevices) {
-
-                    // MP300 is the name of the bluetooth printer device07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ C4:73:1E:67:29:6C
-                    /*07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ E8:99:C4:FF:B1:AC
-                    07-28 13:20:10.946  10461-10461/com.example.printer E/sex﹕ 0C:A6:94:35:11:27*/
-
-                    /*Log.e("sex",device.getName());*/
-//                    if (device.getName().equals("mobile printer")) { // PR3-30921446556
-                    /*Log.e("sex1",device.getAddress());*/
                     mmDevice = device;
-//                        break;
-//                    }
+//
                 }
             }
 //            myLabel.setText("Bluetooth Device Found");
@@ -361,7 +354,7 @@ public class CashReport  extends AppCompatActivity {
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
                     printCustom("المبيعات نقدا " + cash + " : " + " \n ", 1, 0);
                     printCustom("المبيعات ذمم   " + credit + " : " + " \n ", 1, 0);
-                    printCustom("إجمالي المبيعات   " + total + " : " + " \n ", 1, 0);
+                    printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("الدفع نقدا " + cashPayment + " : " + " \n ", 1, 0);
@@ -438,6 +431,8 @@ public class CashReport  extends AppCompatActivity {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_RIGHT);
                     break;
             }
+//            Pos pos=new Pos();
+//           pos.POS_SetCharSetAndCodePage(0x00,0x00);
 
 //            Arabic864 arabic = new Arabic864();
 //            byte[] arabicArr = arabic.Convert(msg, false);

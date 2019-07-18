@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity
     Calendar myCalendar;
     Bitmap visitPic = null;
     ImageView visitPicture ;
+    int amountOfmaxDiscount=0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -348,6 +351,43 @@ public class MainActivity extends AppCompatActivity
         customerCheckInFragment.setListener(this);
         customerCheckInFragment.show(getFragmentManager(), "");
     }
+    public void openMaxDiscount() {
+        Log.e("openMaxDiscount","yes");
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.max_discount_credit);
+
+        final EditText amount = (EditText) dialog.findViewById(R.id.amount_discount_cridit);
+        Button okButton = (Button) dialog.findViewById(R.id.okBut_discount);
+        Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut_discount);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!amount.getText().toString().equals(""))
+                {
+                    amountOfmaxDiscount=Integer.parseInt(amount.getText().toString());
+                    Log.e("amountOfmaxDiscount",""+amountOfmaxDiscount);
+                  //  mDbHandler.getAllSettings().get(0).setAmountOfMaxDiscount(amountOfmaxDiscount);
+                   dialog.dismiss();
+                }
+
+              else
+                    Toast.makeText(MainActivity.this, "Incorrect Input !", Toast.LENGTH_SHORT).show();
+
+        }});
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+
 
     public void openAddCustomerDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
@@ -660,6 +700,7 @@ public class MainActivity extends AppCompatActivity
             final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
             final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
             final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
+            final CheckBox noOfferForCredit = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -710,7 +751,20 @@ public class MainActivity extends AppCompatActivity
                     workOnline.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 1)
                     paymetod_check.setChecked(true);
+//                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
+//                    noOfferForCredit.setChecked(true);
+
             }
+            noOfferForCredit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(noOfferForCredit.isChecked())
+                    {
+                        Log.e("noOfferForCredit","yes");
+                        openMaxDiscount();
+                    }
+                }
+            });
 
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -745,12 +799,17 @@ public class MainActivity extends AppCompatActivity
                                     int workOnlin = workOnline.isChecked() ? 1 : 0;
                                     int paymethodCheck=paymetod_check.isChecked()?1:0;
                                     int bonusNotalow=bonusNotAlowed.isChecked()?1:0;
+                                    int noOffer_Credit=noOfferForCredit.isChecked()?1:0;
+
+
+
                                     mDbHandler.deleteAllSettings();
-                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
-                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
-                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
-                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
-                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow);
+
+                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
+                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
+                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
+                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
+                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
 
                                     dialog.dismiss();
                                 } else

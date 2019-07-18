@@ -99,7 +99,7 @@ public class SalesInvoice extends Fragment {
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     private int voucherNumber;
-    private int payMethod;
+  public  int payMethod;
 
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -123,6 +123,8 @@ public class SalesInvoice extends Fragment {
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    double discountValue;
+    double discountPerc;
     volatile boolean stopWorker;
    /* public static void test2(){
 
@@ -219,7 +221,6 @@ public class SalesInvoice extends Fragment {
 
 
         }
-
         voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, final int checkedId) {
                 paymentTermRadioGroup.setVisibility(View.VISIBLE);
@@ -315,9 +316,13 @@ public class SalesInvoice extends Fragment {
                 switch (checkedId) {
                     case R.id.creditRadioButton:
                         payMethod = 0;
+                        if(mDbHandler.getAllSettings().get(0).getNoOffer_for_credit()==1)
+                        clearLayoutData();
                         break;
                     case R.id.cashRadioButton:
                         payMethod = 1;
+                        if(mDbHandler.getAllSettings().get(0).getNoOffer_for_credit()==1)
+                        clearLayoutData();
                         break;
                 }
             }
@@ -329,7 +334,20 @@ public class SalesInvoice extends Fragment {
         discountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                salesInvoiceInterfaceListener.displayDiscountFragment();
+                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() ==1) {
+                    Log.e("discountButton","="+mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                    if(payMethod==0) {
+                        salesInvoiceInterfaceListener.displayDiscountFragment();
+                    }
+                    else
+                    {
+                        Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+
+                    salesInvoiceInterfaceListener.displayDiscountFragment();
+                }
             }
         });
 
@@ -393,25 +411,12 @@ public class SalesInvoice extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int l) {
 
                         if (!clicked) {
+
                             clicked = true;
                             int listSize = itemsListView.getCount();
                             if (listSize == 0)
                                 Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
                             else {
-
-                                String remark = " " + remarkEditText.getText().toString();
-
-                                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String voucherDate = df.format(currentTimeAndDate);
-                                voucherDate = convertToEnglish(voucherDate);
-
-                                SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
-                                String voucherYear = df2.format(currentTimeAndDate);
-                                voucherYear = convertToEnglish(voucherYear);
-
-                                salesMan = Integer.parseInt(Login.salesMan);
-
                                 DiscountFragment obj = new DiscountFragment();
                                 double discountValue = obj.getDiscountValue();
                                 double discountPerc = obj.getDiscountPerc();
@@ -420,17 +425,76 @@ public class SalesInvoice extends Fragment {
                                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
                                 double tax = Double.parseDouble(taxTextView.getText().toString());
                                 double netSales = Double.parseDouble(netTotalTextView.getText().toString());
+                                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
+                                    Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
 
-                                voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                                        salesMan, discountValue, discountPerc, remark, payMethod,
-                                        0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                                        CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
-                                if(payMethod==0)
-                                {
-                                    Log.e("paymethod is","cridit");
-                                    if(customer_is_authrized())
-                                    {
+                                } else {
 
+                                    String remark = " " + remarkEditText.getText().toString();
+
+                                    Date currentTimeAndDate = Calendar.getInstance().getTime();
+                                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                                    String voucherDate = df.format(currentTimeAndDate);
+                                    voucherDate = convertToEnglish(voucherDate);
+
+                                    SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
+                                    String voucherYear = df2.format(currentTimeAndDate);
+                                    voucherYear = convertToEnglish(voucherYear);
+                                    salesMan = Integer.parseInt(Login.salesMan);
+
+
+                                    voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
+                                            salesMan, discountValue, discountPerc, remark, payMethod,
+                                            0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+                                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
+                                    if (payMethod == 0) {
+                                        Log.e("paymethod is", "cridit");
+                                        if (customer_is_authrized()) {
+
+                                            mDbHandler.addVoucher(voucher);
+                                            Log.e("paymethod", "" + voucher.getPayMethod());
+
+
+                                            for (int i = 0; i < items.size(); i++) {
+
+                                                Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                                        items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                                        items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                        items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+
+                                                itemsList.add(item);
+                                                mDbHandler.addItem(item);
+
+                                                if (voucherType != 506)
+                                                    mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                                else
+                                                    mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+                                            }
+
+
+                                            if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                                                new JSONTask().execute();
+                                            }
+
+                                            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                                try {
+                                                    findBT();
+                                                    openBT();
+                                                } catch (IOException ex) {
+                                                }
+                                            } else {
+                                                hiddenDialog();
+                                            }
+                                            mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+
+                                        } else {
+                                            Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
+                                        }
+
+
+                                    } else {
+                                        Log.e("paymethod is", "cash");
                                         mDbHandler.addVoucher(voucher);
                                         Log.e("paymethod", "" + voucher.getPayMethod());
 
@@ -468,65 +532,23 @@ public class SalesInvoice extends Fragment {
                                         }
                                         mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
 
-                                    }
-                                    else{
-                                        Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
-                                    }
 
-
+                                    }
                                 }
-                                else{
-                                    Log.e("paymethod is","cash");
-                                    mDbHandler.addVoucher(voucher);
-                                    Log.e("paymethod", "" + voucher.getPayMethod());
 
-
-                                    for (int i = 0; i < items.size(); i++) {
-
-                                        Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
-                                                items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
-                                                items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
-                                                items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
-
-                                        itemsList.add(item);
-                                        mDbHandler.addItem(item);
-
-                                        if (voucherType != 506)
-                                            mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-                                        else
-                                            mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-
-                                    }
-
-
-                                    if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
-                                        new JSONTask().execute();
-                                    }
-
-                                    if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                        try {
-                                            findBT();
-                                            openBT();
-                                        } catch (IOException ex) {
-                                        }
-                                    } else {
-                                        hiddenDialog();
-                                    }
-                                    mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
-
-
-                                }
                                 clearLayoutData();
                             }
+                        //not empty list
                         }
-                    }
+                    }//end ok save
+
                 });
 
                 builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
                 builder.create().
 
                         show();
-            }
+            }//end save data
         });
         //  Log.e("paymethod",""+voucher.getPayMethod());
         return view;
@@ -552,7 +574,11 @@ public class SalesInvoice extends Fragment {
                 Log.e("unposted_payment", "" + unposted_payment+"\tcusNO"+voucher.getCustNumber());
             }
         }
-        available_balance = max_cridit - cash_cridit +unposted_payment;
+        if(max_cridit>=cash_cridit) {
+            available_balance = max_cridit - cash_cridit + unposted_payment;
+        }
+        else
+            Log.e("max_cridit","small");
         Log.e("available",""+available_balance);
         if (available_balance >= voucher.getNetSales())
             return true;
@@ -1544,7 +1570,7 @@ public class SalesInvoice extends Fragment {
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_RIGHT);
                     break;
             }
-
+//
             Arabic864 arabic = new Arabic864();
             byte[] arabicArr = arabic.Convert(msg, false);
             mmOutputStream.write(arabicArr);

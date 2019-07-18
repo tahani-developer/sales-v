@@ -42,19 +42,17 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 52;
+    private static final int DATABASE_VERSION = 55;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
-
-
     // tables from JSON
     private static final String ACTIVE_KEY="ACTIVE_KEY";
     private static final String KEY_VALUE ="KEY_VALUE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-    private static final String VISIT_RATE="VISIT_RATE";
 
+    private static final String VISIT_RATE="VISIT_RATE";
     private static final String VISIT_PERPOS ="VISIT_PERPOS";
     private static final String CUSTOMER_REGARDS ="CUSTOMER_REGARDS";
     private static final String CHECK_STORE ="CHECK_STORE";
@@ -191,6 +189,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String WORK_ONLINE = "WORK_ONLINE";
     private static final String PAYMETHOD_CHECK = "PAYMETHOD_CHECK";
     private static final String BONUS_NOT_ALLOWED = "BONUS_NOT_ALLOWED";
+    private static final String NO_OFFERS_FOR_CREDIT_INVOICE="NO_OFFERS_FOR_CREDIT_INVOICE";
+    private static final String AMOUNT_OF_MAX_DISCOUNT="AMOUNT_OF_MAX_DISCOUNT";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -487,7 +487,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + READ_DISCOUNT_FROM_OFFERS+  " INTEGER,"
                 + WORK_ONLINE+  " INTEGER,"
                 + PAYMETHOD_CHECK+ " INTEGER,"
-                + BONUS_NOT_ALLOWED+ " INTEGER" + ")";
+                + BONUS_NOT_ALLOWED+ " INTEGER,"
+                + NO_OFFERS_FOR_CREDIT_INVOICE+ " INTEGER, "
+                + AMOUNT_OF_MAX_DISCOUNT+ " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -704,6 +706,18 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         try{
             db.execSQL("ALTER TABLE SETTING ADD BONUS_NOT_ALLOWED INTEGER  NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD NO_OFFERS_FOR_CREDIT_INVOICE INTEGER  NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD AMOUNT_OF_MAX_DISCOUNT INTEGER NOT NULL   DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -961,7 +975,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
-                           int workOnline,int  payMethodCheck,int bonusNotAlowed) {
+                           int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -982,6 +996,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(WORK_ONLINE, workOnline);
         values.put(PAYMETHOD_CHECK, payMethodCheck);
         values.put(BONUS_NOT_ALLOWED,bonusNotAlowed);
+        values.put(NO_OFFERS_FOR_CREDIT_INVOICE,noOfferForCredid);
+        values.put(AMOUNT_OF_MAX_DISCOUNT,amountOfMaxDiscount);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1233,7 +1249,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setWorkOnline(Integer.parseInt(cursor.getString(14)));
                 setting.setPaymethodCheck(Integer.parseInt(cursor.getString(15)));
                 setting.setBonusNotAlowed(Integer.parseInt(cursor.getString(16)));
-
+                setting.setNoOffer_for_credit(Integer.parseInt(cursor.getString(17)));
+                setting.setAmountOfMaxDiscount(Integer.parseInt(cursor.getString(18)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

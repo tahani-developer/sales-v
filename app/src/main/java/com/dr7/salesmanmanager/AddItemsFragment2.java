@@ -96,11 +96,6 @@ public class AddItemsFragment2 extends DialogFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         final RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
-
-//        verticalList = view.findViewById(R.id.verticalList);
-//        TestAdapter testAdapter = new TestAdapter(jsonItemsList, getActivity());
-//        verticalList.setAdapter(testAdapter);
-
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
