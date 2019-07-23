@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -111,6 +112,7 @@ public class Activities extends AppCompatActivity implements
 
     @Override
     public void addDiscount(double discount, int iDiscType) {
+
         salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals();
     }

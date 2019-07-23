@@ -19,13 +19,15 @@ public class Settings {
     private int workOnline;
     private int paymethodCheck;
     private int bonusNotAlowed;
+    private int noOffer_for_credit;
+    private  int amountOfMaxDiscount;
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase, int allowMinus,
                     int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange, int canChangePrice,
-                    int readDiscountFromOffers, int workOnline, int paymethodCheck,int bonusNotAlowed) {
+                    int readDiscountFromOffers, int workOnline, int paymethodCheck,int bonusNotAlowed ,int noOffer_for_credit,int amountOfMaxDiscount) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -43,10 +45,28 @@ public class Settings {
         this.workOnline = workOnline;
         this.paymethodCheck = paymethodCheck;
         this.bonusNotAlowed=bonusNotAlowed;
+        this.noOffer_for_credit=noOffer_for_credit;
+        this.amountOfMaxDiscount=amountOfMaxDiscount;
+    }
+
+    public int getAmountOfMaxDiscount() {
+        return amountOfMaxDiscount;
+    }
+
+    public void setAmountOfMaxDiscount(int amountOfMaxDiscount) {
+        this.amountOfMaxDiscount = amountOfMaxDiscount;
     }
 
     public int getBonusNotAlowed() {
         return bonusNotAlowed;
+    }
+
+    public int getNoOffer_for_credit() {
+        return noOffer_for_credit;
+    }
+
+    public void setNoOffer_for_credit(int noOffer_for_credit) {
+        this.noOffer_for_credit = noOffer_for_credit;
     }
 
     public void setBonusNotAlowed(int bonusNotAlowed) {

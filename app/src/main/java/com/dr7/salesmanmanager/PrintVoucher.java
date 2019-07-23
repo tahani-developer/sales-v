@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -145,7 +144,7 @@ public class PrintVoucher extends AppCompatActivity {
                             row.setPadding(2, 10, 2, 10);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer4));
+                                row.setBackgroundColor(getResources().getColor( R.color.layer3));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
 
@@ -771,6 +770,7 @@ public class PrintVoucher extends AppCompatActivity {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
+
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();
@@ -793,7 +793,7 @@ public class PrintVoucher extends AppCompatActivity {
                     if (companyInfo.getLogo() != null) {
                         //  mmOutputStream.write(bitmapdata);
 
-
+                        mmOutputStream.write(bitmapdata);
                         printCustom(" \n ", 1, 0);
                     }
 

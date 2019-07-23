@@ -61,7 +61,7 @@ public class CustomerLogReport extends AppCompatActivity {
 
                 TextView textView = new TextView(this);
                 textView.setText(record[i]);
-                textView.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+                textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorPrimary));
                 textView.setGravity(Gravity.CENTER);
 
                 TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="465dp"
@@ -35,6 +35,7 @@
        <LinearLayout
            android:layout_height="wrap_content"
            android:orientation="horizontal"
+           android:layout_marginTop="10dp"
            android:layout_width="match_parent"
            android:layout_marginLeft="20dp">
 
@@ -59,9 +60,23 @@
                android:layout_height="match_parent"
                android:textColor="@color/text_view_color"
                android:background="@color/done_button"
-               android:layout_marginLeft="200dp"
-               android:layout_marginStart="350dp"
+               android:layout_marginLeft="100dp"
+               android:layout_marginStart="150dp"
                android:text="@string/preview" />
+           <Button
+               android:id="@+id/print_cash_report"
+               android:layout_width="100dp"
+               android:layout_height="match_parent"
+               android:textColor="@color/text_view_color"
+               android:background="@color/colorblue1"
+               android:layout_marginLeft="100dp"
+               android:layout_marginStart="120dp"
+               android:text="@string/print" />
+           <ImageView
+               android:id="@+id/pic_reportCash"
+               android:layout_width="100dp"
+               android:layout_height="30dp"
+               android:visibility="invisible"/>
        </LinearLayout>
 
 
@@ -74,7 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="20dp"
         android:background="@color/white"
