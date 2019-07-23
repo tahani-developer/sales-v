@@ -85,8 +85,7 @@ public class PrintPic {
      * @return 字节
      */
     public byte[] printDraw() {
-        Bitmap nbm = Bitmap
-                .createBitmap(this.bm, 0, 0, this.width, getLength());
+        Bitmap nbm = Bitmap.createBitmap(this.bm, 0, 0, this.width, getLength());
 
         byte[] imgbuf = new byte[this.width / 8 * getLength() + 8];
 

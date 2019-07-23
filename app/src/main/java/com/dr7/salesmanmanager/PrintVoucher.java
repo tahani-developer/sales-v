@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -48,7 +49,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PrintVoucher extends AppCompatActivity {
-
+    Bitmap testB;
+    PrintPic printPic;
+    byte[] printIm;
     List<Voucher> vouchers;
     List<Item> items;
     List<CompanyInfo> companeyinfo;
@@ -594,6 +597,12 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     void findBT(int voucherNo) {
+        try {
+            /*  very important **********************************************************/
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         itemsString = "";
         for (int j = 0; j < items.size(); j++) {
 
@@ -672,7 +681,11 @@ public class PrintVoucher extends AppCompatActivity {
 
 //            myLabel.setText("Bluetooth Opened");
            //  sendData2(voucher);
-          sendData(voucher);
+
+
+//            sendData(voucher);
+            send_dataSewoo(voucher);
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -745,6 +758,8 @@ public class PrintVoucher extends AppCompatActivity {
     /*
      * This will send data to be printed by the bluetooth printer
      */
+
+
     void sendData(Voucher voucher) throws IOException {
         try {
             Log.e("send","'yes");
@@ -756,7 +771,6 @@ public class PrintVoucher extends AppCompatActivity {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
-
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();
@@ -777,8 +791,9 @@ public class PrintVoucher extends AppCompatActivity {
                     }
 
                     if (companyInfo.getLogo() != null) {
+                        //  mmOutputStream.write(bitmapdata);
 
-                        mmOutputStream.write(bitmapdata);
+
                         printCustom(" \n ", 1, 0);
                     }
 
@@ -842,6 +857,175 @@ public class PrintVoucher extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+
+
+
+    void send_dataSewoo(Voucher voucher) throws IOException {
+        try {
+            Log.e("send","'yes");
+            testB =convertLayoutToImage(voucher);
+
+            printPic = PrintPic.getInstance();
+            printPic.init(testB);
+            printIm= printPic.printDraw();
+            mmOutputStream.write(printIm);
+
+//            dialogs.show();
+            ImageView iv = (ImageView) findViewById(R.id.ivw);
+////                iv.setLayoutParams(layoutParams);
+            iv.setBackgroundColor(Color.TRANSPARENT);
+            iv.setImageBitmap(testB);
+//                iv.setMaxHeight(100);
+//                iv.setMaxWidth(100);
+
+
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+void fill_theVocher(Voucher voucher){
+
+        Dialog dialogs=new Dialog(PrintVoucher.this);
+        dialogs.setContentView(R.layout.printdialog);
+
+    CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
+
+            compname=(TextView)dialogs.findViewById(R.id.compname);
+            tel=(TextView)dialogs.findViewById(R.id.tel);
+            taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+            vhNo=(TextView)dialogs.findViewById(R.id.vhNo);
+            date=(TextView)dialogs.findViewById(R.id.date);
+            custname=(TextView)dialogs.findViewById(R.id.custname);
+            note=(TextView)dialogs.findViewById(R.id.note);
+            vhType=(TextView)dialogs.findViewById(R.id.vhType);
+            paytype=(TextView)dialogs.findViewById(R.id.paytype);
+            total=(TextView)dialogs.findViewById(R.id.total);
+            discount=(TextView)dialogs.findViewById(R.id.discount);
+            tax=(TextView)dialogs.findViewById(R.id.tax);
+            ammont=(TextView)dialogs.findViewById(R.id.ammont);
+
+
+
+
+
+    String voucherTyp = "";
+                    switch (voucher.getVoucherType()) {
+                        case 504:
+                            voucherTyp = "فاتورة بيع";
+                            break;
+                        case 506:
+                            voucherTyp = "فاتورة مرتجعات";
+                            break;
+                        case 508:
+                            voucherTyp = "طلب جديد";
+                            break;
+                    }
+
+    compname.setText(companyInfo.getCompanyName() );
+    tel.setText(""+companyInfo.getcompanyTel());
+    taxNo.setText(""+companyInfo.getTaxNo() );
+    vhNo.setText(""+voucher.getVoucherNumber());
+    date.setText(voucher.getVoucherDate());
+    custname.setText(voucher.getCustName() );
+    note.setText(voucher.getRemark());
+    vhType.setText(voucherTyp);
+
+    paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") );
+    total.setText(""+voucher.getSubTotal());
+    discount.setText(""+voucher.getVoucherDiscount());
+    tax.setText(""+voucher.getTax());
+    ammont.setText(""+voucher.getNetSales());
+
+
+
+
+
+}
+    private Bitmap convertLayoutToImage(Voucher voucher) {
+        LinearLayout linearView=null;
+
+
+        Dialog dialogs=new Dialog(PrintVoucher.this);
+        dialogs.setContentView(R.layout.printdialog);
+//            fill_theVocher( voucher);
+
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
+
+        compname=(TextView)dialogs.findViewById(R.id.compname);
+        tel=(TextView)dialogs.findViewById(R.id.tel);
+        taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+        vhNo=(TextView)dialogs.findViewById(R.id.vhNo);
+        date=(TextView)dialogs.findViewById(R.id.date);
+        custname=(TextView)dialogs.findViewById(R.id.custname);
+        note=(TextView)dialogs.findViewById(R.id.note);
+        vhType=(TextView)dialogs.findViewById(R.id.vhType);
+        paytype=(TextView)dialogs.findViewById(R.id.paytype);
+        total=(TextView)dialogs.findViewById(R.id.total);
+        discount=(TextView)dialogs.findViewById(R.id.discount);
+        tax=(TextView)dialogs.findViewById(R.id.tax);
+        ammont=(TextView)dialogs.findViewById(R.id.ammont);
+
+
+
+
+
+        String voucherTyp = "";
+        switch (voucher.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+
+        compname.setText(companyInfo.getCompanyName() );
+        tel.setText(""+companyInfo.getcompanyTel());
+        taxNo.setText(""+companyInfo.getTaxNo() );
+        vhNo.setText(""+voucher.getVoucherNumber());
+        date.setText(voucher.getVoucherDate());
+        custname.setText(voucher.getCustName() );
+        note.setText(voucher.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") );
+        total.setText(""+voucher.getSubTotal());
+        discount.setText(""+voucher.getVoucherDiscount());
+        tax.setText(""+voucher.getTax());
+        ammont.setText(""+voucher.getNetSales());
+
+
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        return bit;// creates bitmap and returns the same
+    }
+
+
+
 
     void sendData2(Voucher voucher) throws IOException {
         try {
@@ -1011,11 +1195,13 @@ public class PrintVoucher extends AppCompatActivity {
     // Close the connection to bluetooth printer.
     void closeBT() throws IOException {
         try {
-            stopWorker = true;
+//            stopWorker = true;
             mmOutputStream.close();
             mmInputStream.close();
+
             mmSocket.close();
-//            myLabel.setText("Bluetooth Closed");
+//            mmSocket=null;
+          //            myLabel.setText("Bluetooth Closed");
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {

@@ -42,7 +42,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 52;
+    private static final int DATABASE_VERSION = 54;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1270,7 +1270,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursor.moveToFirst();
 
-        int maxVoucher = Integer.parseInt(cursor.getString(0));
+//        int maxVoucher = Integer.parseInt(cursor.getString(0));
+        int maxVoucher=0;
         return maxVoucher;
 
     }
