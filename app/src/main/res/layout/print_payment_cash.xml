@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="اسم الشركة  "
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:id="@+id/textView_companey_Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=" الصقور "
+                android:textColor="@color/text_view_color"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TextView
+            android:id="@+id/textVi1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/text_view_color"
+            android:layout_weight="1"
+            android:text="--------------------------------------------------------------------------------------------"
+            android:textSize="18sp" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="4"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/text_view_color"
+                android:layout_weight="1"
+                android:text="الهاتف :"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/telephone"
+                android:layout_width="match_parent"
+                android:textColor="@color/text_view_color"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" "
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_weight="1"
+                android:textColor="@color/text_view_color"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="الرقم الضريبي : "
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tax_no"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/text_view_color"
+                android:layout_height="wrap_content"
+                android:text=" "
+                android:textSize="18sp" />
+        </TableRow>
+        <TextView
+            android:id="@+id/textVi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/text_view_color"
+            android:layout_weight="1"
+            android:text="--------------------------------------------------------------------------------------------"
+            android:textSize="18sp" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/text_view_color"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                android:text="سند قبض " />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:weightSum="4"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/text_view_color"
+                android:layout_weight="1"
+                android:text="رقم السند  :"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView_cashNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_view_color"
+                android:layout_weight="1"
+                android:text=""
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_view_color"
+                android:layout_weight="1"
+                android:text=" التاريخ :"
+                android:textSize="18sp"  />
+            <TextView
+                android:id="@+id/textVie_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_view_color"
+                android:layout_weight="1"
+                android:text=""
+                android:textSize="18sp"  />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:text="وصلني من السيد السادة :"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/textView_customerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ملاحظة : "
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+               />
+            <TextView
+                android:id="@+id/textView_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="المبلغ المضبوض : "
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:id="@+id/textView_amount_ofMoney"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="طريقة الدفع  : "
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                />
+            <TextView
+                android:id="@+id/textView_payMethod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

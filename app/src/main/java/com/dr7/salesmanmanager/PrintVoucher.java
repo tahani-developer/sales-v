@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -32,10 +33,18 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
+import com.sewoo.jpos.command.ESCPOS;
+import com.sewoo.jpos.command.ESCPOSConst;
+import com.sewoo.jpos.image.ImageLoader;
+import com.sewoo.jpos.image.MobileImageConverter;
+import com.sewoo.jpos.printer.ESCPOSPrinter;
+import com.sewoo.jpos.printer.LKPrint;
+import com.sewoo.port.android.USBPortConnection;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +57,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PrintVoucher extends AppCompatActivity {
+    private ESCPOSPrinter posPtr;
+    private final char ESC = ESCPOS.ESC;
+    private final char LF = ESCPOS.LF;
 
     List<Voucher> vouchers;
     List<Item> items;
@@ -82,7 +94,7 @@ public class PrintVoucher extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.print_vouchers);
-
+        posPtr = new ESCPOSPrinter();
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo=new ArrayList<CompanyInfo>();
@@ -201,12 +213,22 @@ public class PrintVoucher extends AppCompatActivity {
 
                                              if(!obj.getAllCompanyInfo().get(0).getCompanyName().equals("")&&obj.getAllCompanyInfo().get(0).getcompanyTel()!=0 && obj.getAllCompanyInfo().get(0).getTaxNo()!=-1) {
                                                  if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                     try {
-                                                         Log.e("voucher","  "+vouch);
+                                                     Log.e("voucher","  "+vouch);
                                                          findBT(Integer.parseInt(textView.getText().toString()));
+                                                     try {
                                                          openBT(vouch);
-                                                     } catch (IOException ex) {
+                                                     } catch (IOException e) {
+                                                         e.printStackTrace();
                                                      }
+//                                                    Intent ste=  new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
+//                                                    startActivity(ste);
+//                                                     ESCPSample2 sample = new ESCPSample2();
+//                                                     try {
+//                                                         sample.printMultilingualFont();
+//                                                     } catch (UnsupportedEncodingException e) {
+//                                                         e.printStackTrace();
+//                                                     }
+
                                                  } else {
                                                      hiddenDialog(vouch);
                                                  }
@@ -671,8 +693,9 @@ public class PrintVoucher extends AppCompatActivity {
             beginListenForData();
 
 //            myLabel.setText("Bluetooth Opened");
-             sendData2(voucher);
-//          sendData(voucher);
+//             sendData2(voucher);
+          sendData(voucher);
+          //  sendDataTest();
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -745,6 +768,27 @@ public class PrintVoucher extends AppCompatActivity {
     /*
      * This will send data to be printed by the bluetooth printer
      */
+    public  void  sendDataTest() throws UnsupportedEncodingException {
+//        int nLineWidth = 384;
+//        try {
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//            pic.setImageBitmap(companyInfo.getLogo());
+//            pic.setDrawingCacheEnabled(true);
+//            Bitmap bitmap = pic.getDrawingCache();
+//          //  posPtr.printBitmap(bitmap, LKPrint.LK_ALIGNMENT_LEFT, 1);
+//
+//
+//            PrintPic printPic = PrintPic.getInstance();
+//            printPic.init(bitmap);
+//            byte[] bitmapdata = printPic.printDraw();
+//         //   mmOutputStream.write(bitmap);
+//          //  posPtr.printAndroidFont("فاتورة بيع ", nLineWidth, 100, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        ESCPSample2 i=new ESCPSample2();
+//        i.printMultilingualFont();
+    }
     void sendData(Voucher voucher) throws IOException {
         try {
             Log.e("send","'yes");
@@ -756,7 +800,6 @@ public class PrintVoucher extends AppCompatActivity {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
-
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();
@@ -777,8 +820,9 @@ public class PrintVoucher extends AppCompatActivity {
                     }
 
                     if (companyInfo.getLogo() != null) {
+                      //  mmOutputStream.write(bitmapdata);
 
-                        mmOutputStream.write(bitmapdata);
+
                         printCustom(" \n ", 1, 0);
                     }
 
@@ -842,6 +886,7 @@ public class PrintVoucher extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
     void sendData2(Voucher voucher) throws IOException {
         try {
@@ -990,10 +1035,10 @@ public class PrintVoucher extends AppCompatActivity {
                     break;
             }
 
-//            Arabic864 arabic = new Arabic864();
-//            byte[] arabicArr = arabic.Convert(msg, false);
-//            mmOutputStream.write(arabicArr);
-             mmOutputStream.write(msg.getBytes());
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+            mmOutputStream.write(arabicArr);
+//             mmOutputStream.write(msg.getBytes());
 
             //outputStream.write(cc);
             //printNewLine();

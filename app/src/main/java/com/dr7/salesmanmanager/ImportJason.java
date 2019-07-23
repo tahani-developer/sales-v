@@ -200,7 +200,6 @@ public class ImportJason extends AppCompatActivity{
                 itemsMasterList.clear();
                 for (int i = 0; i < parentArrayItems_Master.length(); i++) {
                     JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);
-
                     ItemsMaster item = new ItemsMaster();
                     item.setCompanyNo(finalObject.getInt("ComapnyNo"));
                     item.setItemNo(finalObject.getString("ItemNo"));
@@ -211,7 +210,6 @@ public class ImportJason extends AppCompatActivity{
                     item.setPosPrice(finalObject.getDouble("F_D"));
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
-
                     itemsMasterList.add(item);
                 }
 
