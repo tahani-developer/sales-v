@@ -47,9 +47,11 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.ganesh.intermecarabic.Arabic864;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.text.Bidi;
 import java.text.DecimalFormat;
@@ -735,9 +737,11 @@ public class ReceiptVoucher extends Fragment {
     /*
      * This will send data to be printed by the bluetooth printer
      */
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     void sendData() throws IOException {
         try {
+
 
             Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
@@ -971,7 +975,13 @@ public class ReceiptVoucher extends Fragment {
             Log.e("nocopy",""+numOfCopy);
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
             if(pic!=null) {
-                pic.setImageBitmap(companyInfo.getLogo());
+//                pic.setImageBitmap(companyInfo.getLogo());
+                String s="tahani test invoice ";
+                byte [] encodeByte=Base64.decode(s,Base64.DEFAULT);
+
+                InputStream inputStream  = new ByteArrayInputStream(encodeByte);
+                Bitmap bitmap2  = BitmapFactory.decodeStream(inputStream);
+                pic.setImageBitmap(bitmap2);
                 pic.setDrawingCacheEnabled(true);
 
                 Bitmap bitmap = pic.getDrawingCache();

@@ -1,5 +1,4 @@
 package com.dr7.salesmanmanager;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -356,7 +355,7 @@ public class BluetoothConnectMenu extends Activity {
 
         builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // �� ����Ʈ�� ���������� 
+                // �� ����Ʈ�� ����������
             }
         }).setPositiveButton(getResources().getString(R.string.dev_conn_btn), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {

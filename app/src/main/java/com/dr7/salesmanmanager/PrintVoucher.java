@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
@@ -53,6 +52,10 @@ public class PrintVoucher extends AppCompatActivity {
     Bitmap testB;
     PrintPic printPic;
     byte[] printIm;
+    private ESCPOSPrinter posPtr;
+    private final char ESC = ESCPOS.ESC;
+    private final char LF = ESCPOS.LF;
+
     List<Voucher> vouchers;
     List<Item> items;
     List<CompanyInfo> companeyinfo;
@@ -764,6 +767,27 @@ public class PrintVoucher extends AppCompatActivity {
     /*
      * This will send data to be printed by the bluetooth printer
      */
+    public  void  sendDataTest() throws UnsupportedEncodingException {
+//        int nLineWidth = 384;
+//        try {
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//            pic.setImageBitmap(companyInfo.getLogo());
+//            pic.setDrawingCacheEnabled(true);
+//            Bitmap bitmap = pic.getDrawingCache();
+//          //  posPtr.printBitmap(bitmap, LKPrint.LK_ALIGNMENT_LEFT, 1);
+//
+//
+//            PrintPic printPic = PrintPic.getInstance();
+//            printPic.init(bitmap);
+//            byte[] bitmapdata = printPic.printDraw();
+//         //   mmOutputStream.write(bitmap);
+//          //  posPtr.printAndroidFont("فاتورة بيع ", nLineWidth, 100, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        ESCPSample2 i=new ESCPSample2();
+//        i.printMultilingualFont();
+    }
 
 
     void sendData(Voucher voucher) throws IOException {
@@ -777,7 +801,6 @@ public class PrintVoucher extends AppCompatActivity {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
-
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();
