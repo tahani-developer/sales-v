@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +46,8 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.ByteArrayInputStream;
@@ -77,6 +80,9 @@ public class ReceiptVoucher extends Fragment {
 
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
+    PrintPic printPic;
+    Bitmap testB;
+    byte[] printIm;
     Context context;
     int position = 1;
     public List<Payment> payments;
@@ -370,7 +376,13 @@ public class ReceiptVoucher extends Fragment {
 
             @Override
             public void onClick(View v) {
-               saveData.setAnimation(animZoomIn);
+                try {
+                    closeBT();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+              //  saveData.setAnimation(animZoomIn);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
@@ -503,7 +515,7 @@ public class ReceiptVoucher extends Fragment {
             }
         };
 
-        custInfoImgButton.setOnClickListener(onClickListener);
+      // custInfoImgButton.setOnClickListener(onClickListener);
 
         paymentKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -544,6 +556,7 @@ public class ReceiptVoucher extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
        // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
+        payments.clear();
     }
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
@@ -608,7 +621,11 @@ public class ReceiptVoucher extends Fragment {
 
 
     void findBT() {
-
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -664,7 +681,11 @@ public class ReceiptVoucher extends Fragment {
 //            myLabel.setText("Bluetooth Opened");
 //            sendData2();
 
-           sendData();
+//            sendData();
+            Settings settings = mDbHandler.getAllSettings().get(0);
+            for(int i=0;i<settings.getNumOfCopy();i++) {
+                send_dataSewoo();
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -672,6 +693,125 @@ public class ReceiptVoucher extends Fragment {
         }
     }
 
+    void send_dataSewoo() throws IOException {
+        try {
+            Log.e("send","'yes");
+            testB =convertLayoutToImage();
+
+            printPic = PrintPic.getInstance();
+            printPic.init(testB);
+            printIm= printPic.printDraw();
+            mmOutputStream.write(printIm);
+
+//            dialogs.show();
+//            ImageView iv = (ImageView)findViewById(R.id.ivw);
+////            iv.setLayoutParams(layoutParams);
+//            iv.setBackgroundColor(Color.TRANSPARENT);
+//            iv.setImageBitmap(testB);
+//                iv.setMaxHeight(100);
+//                iv.setMaxWidth(100);
+
+
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Bitmap convertLayoutToImage() {
+        LinearLayout linearView=null;
+
+        Dialog dialogs=new Dialog(getActivity());
+        dialogs.setContentView(R.layout.print_payment_cash);
+        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+//*******************************************initial ***************************************************************
+        TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
+        LinearLayout cheque_print_linear=(LinearLayout)dialogs.findViewById(R.id.cheque_payment_layout) ;
+        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
+        tel=(TextView)dialogs.findViewById(R.id.telephone);
+        taxNo=(TextView)dialogs.findViewById(R.id.tax_no);
+        cashNo=(TextView)dialogs.findViewById(R.id.textView_cashNo);
+        date=(TextView)dialogs.findViewById(R.id.textVie_date);
+        custname=(TextView)dialogs.findViewById(R.id.textView_customerName);
+        note=(TextView)dialogs.findViewById(R.id.textView_remark);
+        ammont=(TextView)dialogs.findViewById(R.id.textView_amount_ofMoney);
+        paytype=(TextView)dialogs.findViewById(R.id.textView_payMethod);
+        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
+        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+
+//************************************************fill layout *********************************************************************
+        if(!companyInfo.getLogo().equals(null))
+        {
+            companey_logo.setImageBitmap(companyInfo.getLogo());
+
+        }
+        compname.setText(companyInfo.getCompanyName() );
+        tel.setText(""+companyInfo.getcompanyTel());
+        taxNo.setText(""+companyInfo.getTaxNo() );
+        ammont.setText(payment.getAmount()+"");
+        note.setText(payment.getRemark());
+        if(payment.getPayMethod()==1) {
+            paytype.setText(" نقدا ");
+            cheque_print_linear.setVisibility(View.GONE);
+        }
+        else {
+            paytype.setText(" ذمم  ");
+            cheque_print_linear.setVisibility(View.VISIBLE);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            lp.setMargins(0, 7, 0, 0);
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp2.setMargins(0, 7, 0, 0);
+
+            for (int n = 0; n < payments.size(); n++) {
+//                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
+                    final TableRow row = new TableRow(this.getActivity());
+                    row.setPadding(0, 10, 0, 10);
+                    Log.e("paymentprint",""+payments.size());
+                    for (int i = 0; i < 4; i++) {
+
+                        String[] record = {
+                                payments.get(n).getBank() + "",
+                                payments.get(n).getCheckNumber() + "",
+                                payments.get(n).getDueDate() + "",
+                                payments.get(n).getAmount() + "",
+                        };
+
+                        row.setLayoutParams(lp);
+                        TextView textView = new TextView(this.getActivity());
+                        textView.setText(record[i]);
+                        textView.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary));
+                        textView.setGravity(Gravity.CENTER);
+                        textView.setTextSize(18);
+                        textView.setLayoutParams(lp2);
+                        row.addView(textView);
+
+                    }
+
+                    tableCheque.addView(row);
+                }
+//            }
+        }
+
+
+        custname.setText(payment.getCustName());
+        date.setText(payment.getPayDate());
+        cashNo.setText(payment.getVoucherNumber()+"");
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_cash);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        return bit;// creates bitmap and returns the same
+    }
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.
     void beginListenForData() {
