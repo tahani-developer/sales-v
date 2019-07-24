@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -695,8 +696,8 @@ public class PrintVoucher extends AppCompatActivity {
            //  sendData2(voucher);
 
 
-//            sendData(voucher);
-            send_dataSewoo(voucher);
+            sendData(voucher);
+       //     send_dataSewoo(voucher);
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -1228,7 +1229,7 @@ void fill_theVocher(Voucher voucher){
     // Close the connection to bluetooth printer.
     void closeBT() throws IOException {
         try {
-//            stopWorker = true;
+           stopWorker = true;
             mmOutputStream.close();
             mmInputStream.close();
 
