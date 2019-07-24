@@ -405,11 +405,11 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    closeBT();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    closeBT();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 clicked = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
@@ -457,7 +457,7 @@ public class SalesInvoice extends Fragment {
                                             CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
                                     if (payMethod == 0) {
                                         Log.e("paymethod is", "cridit");
-                                        if (customer_is_authrized()) {
+//                                        if (customer_is_authrized()) {
 
                                             mDbHandler.addVoucher(voucher);
                                             Log.e("paymethod", "" + voucher.getPayMethod());
@@ -496,9 +496,9 @@ public class SalesInvoice extends Fragment {
                                             }
                                             mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
 
-                                        } else {
-                                            Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
-                                        }
+//                                        } else {
+//                                            Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
+//                                        }
 
 
                                     } else {
@@ -1428,12 +1428,12 @@ public class SalesInvoice extends Fragment {
 
 //            myLabel.setText("Bluetooth Opened");
 //            sendData2();
-//            sendData();
+            sendData();
 
 
-            Settings settings = mDbHandler.getAllSettings().get(0);
-            for(int i=0;i<settings.getNumOfCopy();i++)
-            {send_dataSewoo(voucher);}
+//            Settings settings = mDbHandler.getAllSettings().get(0);
+//            for(int i=0;i<settings.getNumOfCopy();i++)
+//            {send_dataSewoo(voucher);}
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -1516,6 +1516,13 @@ public class SalesInvoice extends Fragment {
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 
             if (companyInfo != null) {
+                pic.setImageBitmap(companyInfo.getLogo());
+                pic.setDrawingCacheEnabled(true);
+                Bitmap bitmap = pic.getDrawingCache();
+
+                PrintPic printPic = PrintPic.getInstance();
+                printPic.init(bitmap);
+                byte[] bitmapdata = printPic.printDraw();
 
 
                 for (int i = 1; i <= numOfCopy; i++) {
@@ -1533,13 +1540,7 @@ public class SalesInvoice extends Fragment {
                     }
 
                     if (companyInfo.getLogo() != null) {
-                        pic.setImageBitmap(companyInfo.getLogo());
-                        pic.setDrawingCacheEnabled(true);
-                        Bitmap bitmap = pic.getDrawingCache();
 
-                        PrintPic printPic = PrintPic.getInstance();
-                        printPic.init(bitmap);
-                        byte[] bitmapdata = printPic.printDraw();
                         mmOutputStream.write(bitmapdata);
                         printCustom(" \n ", 1, 0);
                     }
@@ -1569,7 +1570,7 @@ public class SalesInvoice extends Fragment {
 
                     printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                //    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
                     printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
                     printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
@@ -1577,10 +1578,10 @@ public class SalesInvoice extends Fragment {
                     if (voucher.getVoucherType() != 506) {
                         printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
                         printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
-                        mmOutputStream.write(PrinterCommands.FEED_LINE);
+                     //   mmOutputStream.write(PrinterCommands.FEED_LINE);
                         printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
                     }
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                  //  mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);

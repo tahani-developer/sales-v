@@ -63,37 +63,37 @@
             android:gravity="center_vertical"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/custInfoImgBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:visibility="invisible"
-            android:background="@drawable/cust_info" />
+        <!--<ImageButton-->
+            <!--android:id="@+id/custInfoImgBtn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:visibility="invisible"-->
+            <!--android:background="@drawable/cust_info" />-->
 
         <TextView
             android:id="@+id/voucher_no"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="20dp"
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
             android:textColor="@color/text_view_color"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/payment_term"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="20dp"
             android:gravity="center_vertical"
             android:text="@string/payment_term"
             android:textColor="@color/text_view_color"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

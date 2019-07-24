@@ -31,12 +31,14 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,9 +51,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public class PrintVoucher extends AppCompatActivity {
-    Bitmap testB;
-    PrintPic printPic;
-    byte[] printIm;
+//    Bitmap testB;
+//    PrintPic printPic;
+//    byte[] printIm;
 
 
     List<Voucher> vouchers;
@@ -682,15 +684,15 @@ public class PrintVoucher extends AppCompatActivity {
             mmInputStream = mmSocket.getInputStream();
 
             beginListenForData();
-            Settings settings = obj.getAllSettings().get(0);
+         //   Settings settings = obj.getAllSettings().get(0);
 
 //            myLabel.setText("Bluetooth Opened");
            //  sendData2(voucher);
 
 
-//            sendData(voucher);
-            for(int i=0;i<settings.getNumOfCopy();i++)
-            {send_dataSewoo(voucher);}
+            sendData(voucher);
+//            for(int i=0;i<settings.getNumOfCopy();i++)
+//            {send_dataSewoo(voucher);}
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -848,16 +850,16 @@ public class PrintVoucher extends AppCompatActivity {
                     }
                     printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                   // mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
                     printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
                     printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
                     printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
                     printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
                     printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                 //   mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
-                    mmOutputStream.write(PrinterCommands.FEED_LINE);
+                 //   mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);
@@ -888,32 +890,32 @@ public class PrintVoucher extends AppCompatActivity {
 
 
 
-    void send_dataSewoo(Voucher voucher) throws IOException {
-        try {
-            Log.e("send","'yes");
-            testB =convertLayoutToImage(voucher);
-
-            printPic = PrintPic.getInstance();
-            printPic.init(testB);
-            printIm= printPic.printDraw();
-            mmOutputStream.write(printIm);
-
-//            dialogs.show();
-            ImageView iv = (ImageView) findViewById(R.id.ivw);
-////                iv.setLayoutParams(layoutParams);
-            iv.setBackgroundColor(Color.TRANSPARENT);
-            iv.setImageBitmap(testB);
-//                iv.setMaxHeight(100);
-//                iv.setMaxWidth(100);
-
-
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    void send_dataSewoo(Voucher voucher) throws IOException {
+//        try {
+//            Log.e("send","'yes");
+//            testB =convertLayoutToImage(voucher);
+//
+//            printPic = PrintPic.getInstance();
+//            printPic.init(testB);
+//            printIm= printPic.printDraw();
+//            mmOutputStream.write(printIm);
+//
+////            dialogs.show();
+//            ImageView iv = (ImageView) findViewById(R.id.ivw);
+//////                iv.setLayoutParams(layoutParams);
+//            iv.setBackgroundColor(Color.TRANSPARENT);
+//            iv.setImageBitmap(testB);
+////                iv.setMaxHeight(100);
+////                iv.setMaxWidth(100);
+//
+//
+//
+//        } catch (NullPointerException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView=null;
