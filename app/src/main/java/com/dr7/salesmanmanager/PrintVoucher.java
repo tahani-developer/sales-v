@@ -31,12 +31,17 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
+import com.sewoo.jpos.command.ESCPOS;
+import com.sewoo.jpos.printer.CPCLPrinter;
+import com.sewoo.jpos.printer.ESCPOSPrinter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -695,6 +700,8 @@ public class PrintVoucher extends AppCompatActivity {
             for(int i=0;i<settings.getNumOfCopy();i++)
             {send_dataSewoo(voucher);}
 
+//            sendCpcl();
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -788,6 +795,26 @@ public class PrintVoucher extends AppCompatActivity {
 //        ESCPSample2 i=new ESCPSample2();
 //        i.printMultilingualFont();
     }
+
+
+    void sendCpcl()  {
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        CPCLSample2 cpclSample2=new CPCLSample2();
+
+//            cpclSample2.imageTest(companyInfo,1);
+            CPCLPrinter cp=new CPCLPrinter();
+
+        try {
+            cpclSample2.imageTest(1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
 
 
     void sendData(Voucher voucher) throws IOException {
@@ -928,7 +955,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
         ImageView img=(ImageView)dialogs.findViewById(R.id.img);
 
         compname=(TextView)dialogs.findViewById(R.id.compname);
@@ -944,6 +971,7 @@ public class PrintVoucher extends AppCompatActivity {
         discount=(TextView)dialogs.findViewById(R.id.discount);
         tax=(TextView)dialogs.findViewById(R.id.tax);
         ammont=(TextView)dialogs.findViewById(R.id.ammont);
+        textW=(TextView)dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
 //
 
@@ -979,6 +1007,12 @@ public class PrintVoucher extends AppCompatActivity {
         ammont.setText(""+voucher.getNetSales());
 
 
+        if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
+                        textW.setVisibility(View.GONE);
+        }else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
 
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -1009,17 +1043,32 @@ public class PrintVoucher extends AppCompatActivity {
 
 
                             case 1:
-                                textView.setText("" + items.get(j).getQty());
-                                textView.setLayoutParams(lp2);
+                                if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                    textView.setText("" + items.get(j).getUnit());
+                                    textView.setLayoutParams(lp2);
+                                }else{
+                                    textView.setText("" + items.get(j).getQty());
+                                    textView.setLayoutParams(lp2);
+                                }
                                 break;
 
                             case 2:
+                                if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                    textView.setText("" + items.get(j).getQty());
+                                    textView.setLayoutParams(lp2);
+                                    textView.setVisibility(View.VISIBLE);
+                                }else {
+                                    textView.setVisibility(View.GONE);
+                                }
+                                break;
+
+                            case 3:
                                 textView.setText("" + items.get(j).getPrice());
                                 textView.setLayoutParams(lp2);
                                 break;
 
 
-                            case 3:
+                            case 4:
                                 String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                                 amount = convertToEnglish(amount);
                                 textView.setText(amount);

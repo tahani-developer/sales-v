@@ -38,6 +38,5 @@ dependencies {
     implementation 'com.mikhaellopez:circularimageview:4.0.1'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.hajiyevelnur92:intentanimation:1.0'
-
-
+    implementation files('libs/itextpdf-5.4.1.jar')
 }

@@ -914,7 +914,7 @@ public class SalesInvoice extends Fragment {
 
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 
-        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
 
         ImageView img =(ImageView)dialogs.findViewById(R.id.img);
         compname=(TextView)dialogs.findViewById(R.id.compname);
@@ -930,6 +930,7 @@ public class SalesInvoice extends Fragment {
         discount=(TextView)dialogs.findViewById(R.id.discount);
         tax=(TextView)dialogs.findViewById(R.id.tax);
         ammont=(TextView)dialogs.findViewById(R.id.ammont);
+        textW=(TextView)dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
 //
 
@@ -967,6 +968,13 @@ public class SalesInvoice extends Fragment {
 
 
 
+        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        }else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         lp2.setMargins(0, 7, 0, 0);
@@ -996,17 +1004,32 @@ public class SalesInvoice extends Fragment {
 
 
                         case 1:
-                            textView.setText("" + itemsList.get(j).getQty());
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                            textView.setText("" + itemsList.get(j).getUnit());
                             textView.setLayoutParams(lp2);
+                    }else{
+                        textView.setText("" + items.get(j).getQty());
+                        textView.setLayoutParams(lp2);
+                    }
                             break;
 
                         case 2:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            }else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
                             textView.setText("" + itemsList.get(j).getPrice());
                             textView.setLayoutParams(lp2);
                             break;
 
 
-                        case 3:
+                        case 4:
                             String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
                             amount = convertToEnglish(amount);
                             textView.setText(amount);

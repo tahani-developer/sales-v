@@ -36,7 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -218,25 +217,25 @@ public class BluetoothConnectMenu extends Activity {
             }
         });
 
-        print.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    CPCLSample2 sample = new CPCLSample2();
-//                    sample.selectGapPaper();
-
-//                    sample.voucher(voucher ,0);
-
-                    if (flag.equals("0"))
-                        sample.voucher(voucher, item, 1);
-                    else
-                        sample.payment(payment, 1);
-                    finish();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        print.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try {
+//                    CPCLSample2 sample = new CPCLSample2();
+////                    sample.selectGapPaper();
+//
+////                    sample.voucher(voucher ,0);
+//
+//                    if (flag.equals("0"))
+//                        sample.voucher(voucher, item, 1);
+//                    else
+//                        sample.payment(payment, 1);
+//                    finish();
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
         // Bluetooth Device List
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
