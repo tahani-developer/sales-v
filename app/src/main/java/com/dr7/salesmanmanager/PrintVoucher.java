@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
@@ -198,6 +200,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
 
@@ -205,8 +208,10 @@ public class PrintVoucher extends AppCompatActivity {
                                                  if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
                                                      try {
                                                          Log.e("voucher","  "+vouch);
-                                                         findBT(Integer.parseInt(textView.getText().toString()));
-                                                         openBT(vouch);
+
+                                                          findBT(Integer.parseInt(textView.getText().toString()));
+                                                          openBT(vouch);
+
                                                      } catch (IOException ex) {
                                                      }
                                                  } else {
@@ -677,13 +682,15 @@ public class PrintVoucher extends AppCompatActivity {
             mmInputStream = mmSocket.getInputStream();
 
             beginListenForData();
+            Settings settings = obj.getAllSettings().get(0);
 
 //            myLabel.setText("Bluetooth Opened");
            //  sendData2(voucher);
 
 
 //            sendData(voucher);
-            send_dataSewoo(voucher);
+            for(int i=0;i<settings.getNumOfCopy();i++)
+            {send_dataSewoo(voucher);}
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -888,69 +895,8 @@ public class PrintVoucher extends AppCompatActivity {
         }
     }
 
-void fill_theVocher(Voucher voucher){
-
-        Dialog dialogs=new Dialog(PrintVoucher.this);
-        dialogs.setContentView(R.layout.printdialog);
-
-    CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-
-        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
-
-            compname=(TextView)dialogs.findViewById(R.id.compname);
-            tel=(TextView)dialogs.findViewById(R.id.tel);
-            taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
-            vhNo=(TextView)dialogs.findViewById(R.id.vhNo);
-            date=(TextView)dialogs.findViewById(R.id.date);
-            custname=(TextView)dialogs.findViewById(R.id.custname);
-            note=(TextView)dialogs.findViewById(R.id.note);
-            vhType=(TextView)dialogs.findViewById(R.id.vhType);
-            paytype=(TextView)dialogs.findViewById(R.id.paytype);
-            total=(TextView)dialogs.findViewById(R.id.total);
-            discount=(TextView)dialogs.findViewById(R.id.discount);
-            tax=(TextView)dialogs.findViewById(R.id.tax);
-            ammont=(TextView)dialogs.findViewById(R.id.ammont);
-
-
-
-
-
-    String voucherTyp = "";
-                    switch (voucher.getVoucherType()) {
-                        case 504:
-                            voucherTyp = "فاتورة بيع";
-                            break;
-                        case 506:
-                            voucherTyp = "فاتورة مرتجعات";
-                            break;
-                        case 508:
-                            voucherTyp = "طلب جديد";
-                            break;
-                    }
-
-    compname.setText(companyInfo.getCompanyName() );
-    tel.setText(""+companyInfo.getcompanyTel());
-    taxNo.setText(""+companyInfo.getTaxNo() );
-    vhNo.setText(""+voucher.getVoucherNumber());
-    date.setText(voucher.getVoucherDate());
-    custname.setText(voucher.getCustName() );
-    note.setText(voucher.getRemark());
-    vhType.setText(voucherTyp);
-
-    paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") );
-    total.setText(""+voucher.getSubTotal());
-    discount.setText(""+voucher.getVoucherDiscount());
-    tax.setText(""+voucher.getTax());
-    ammont.setText(""+voucher.getNetSales());
-
-
-
-
-
-}
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView=null;
-
 
         Dialog dialogs=new Dialog(PrintVoucher.this);
         dialogs.setContentView(R.layout.printdialog);
@@ -960,6 +906,7 @@ void fill_theVocher(Voucher voucher){
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
         TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont;
+        ImageView img=(ImageView)dialogs.findViewById(R.id.img);
 
         compname=(TextView)dialogs.findViewById(R.id.compname);
         tel=(TextView)dialogs.findViewById(R.id.tel);
@@ -974,7 +921,8 @@ void fill_theVocher(Voucher voucher){
         discount=(TextView)dialogs.findViewById(R.id.discount);
         tax=(TextView)dialogs.findViewById(R.id.tax);
         ammont=(TextView)dialogs.findViewById(R.id.ammont);
-
+        TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
+//
 
 
 
@@ -991,7 +939,7 @@ void fill_theVocher(Voucher voucher){
                 voucherTyp = "طلب جديد";
                 break;
         }
-
+        img.setImageBitmap(companyInfo.getLogo());
         compname.setText(companyInfo.getCompanyName() );
         tel.setText(""+companyInfo.getcompanyTel());
         taxNo.setText(""+companyInfo.getTaxNo() );
@@ -1006,6 +954,64 @@ void fill_theVocher(Voucher voucher){
         discount.setText(""+voucher.getVoucherDiscount());
         tax.setText(""+voucher.getTax());
         ammont.setText(""+voucher.getNetSales());
+
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = 0; j < items.size(); j++) {
+
+            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                final TableRow row = new TableRow(PrintVoucher.this);
+
+
+
+                    for (int i = 0; i <= 7; i++) {
+                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                        lp.setMargins(0, 10, 0, 0);
+                        row.setLayoutParams(lp);
+
+                        TextView textView = new TextView(PrintVoucher.this);
+                        textView.setGravity(Gravity.CENTER);
+                        textView.setTextSize(18);
+
+                        switch (i) {
+                            case 0:
+                                textView.setText(items.get(j).getItemName());
+                                textView.setLayoutParams(lp3);
+                                break;
+
+
+                            case 1:
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                break;
+
+                            case 2:
+                                textView.setText("" + items.get(j).getPrice());
+                                textView.setLayoutParams(lp2);
+                                break;
+
+
+                            case 3:
+                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                                amount = convertToEnglish(amount);
+                                textView.setText(amount);
+                                textView.setLayoutParams(lp2);
+                                break;
+                        }
+                        row.addView(textView);
+                    }
+
+
+                tabLayout.addView(row);
+            }
+        }
+
+
 
 
 
