@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager.Reports;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -11,31 +12,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
-//import com.dr7.salesmanmanager.Pos;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
-import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,16 +47,22 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+//import com.dr7.salesmanmanager.Pos;
+
 public class CashReport  extends AppCompatActivity {
     List<Payment> payments;
-    private EditText date;
+    public  static EditText date;
     private Button preview,print;
     Calendar myCalendar;
+    Bitmap testB;
+    PrintPic printPic;
+    boolean isFinishPrint=false;
+    byte[] printIm;
     TextView cash_sal, credit_sale, total_sale;
     TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext;
     List<Voucher> voucher;
-    double cash = 0, credit = 0, total = 0;
-    double cashPayment=0,creditPayment=0,net=0,total_cash=0;
+     public static double cash = 0, credit = 0, total = 0;
+    public static double cashPayment=0,creditPayment=0,net=0,total_cash=0;
     int paymethod=0;
     private DecimalFormat decimalFormat;
     BluetoothAdapter mBluetoothAdapter;
@@ -78,13 +80,15 @@ public class CashReport  extends AppCompatActivity {
     DatabaseHandler obj;
     private ImageView pic;
 
+
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cash_report);
         //************************* initial *************************************
-        decimalFormat = new DecimalFormat("##.000");
+        decimalFormat = new DecimalFormat("##.00");
         payments = new ArrayList<Payment>();
        obj = new DatabaseHandler(CashReport.this);
         payments = obj.getAllPayments();
@@ -100,6 +104,8 @@ public class CashReport  extends AppCompatActivity {
         nettext = (TextView) findViewById(R.id.text_net_paymentReport);
         total_cashtext=(TextView) findViewById(R.id.text_total_cash);
         pic=(ImageView)findViewById(R.id.pic_reportCash);
+
+
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,8 +130,8 @@ public class CashReport  extends AppCompatActivity {
                     }
 
                     total = cash + credit;
-                    cash_sal.setText(cash + "");
-                    credit_sale.setText(credit + "");
+                    cash_sal.setText(convertToEnglish(decimalFormat.format(cash ))+ "");
+                    credit_sale.setText(convertToEnglish(decimalFormat.format(credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
                     Log.e("cash", "" + cash + "\t credit= " + credit + "total=" + total);
                     //  clearPayment();
@@ -144,8 +150,8 @@ public class CashReport  extends AppCompatActivity {
                             }
                         }
                     net=cashPayment+creditPayment;
-                    cash_paymenttext.setText(cashPayment+"");
-                    creditPaymenttext.setText(creditPayment+"");
+                    cash_paymenttext.setText(convertToEnglish(decimalFormat.format(cashPayment))+"");
+                    creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
                     Log.e("cash_p", "" + cashPayment + "\t creditPaymenttext= " + creditPayment + "nettext=" + net);
                     total_cash=net+cash;
@@ -191,11 +197,54 @@ public class CashReport  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
-                    try {
-                        findBT();
-                        openBT();
-                    } catch (IOException ex) {
+                    int printer = obj.getPrinterSetting();
+
+                    switch (printer) {
+                        case 0:
+
+                            Intent i=new Intent(CashReport.this,BluetoothConnectMenu.class);
+                            i.putExtra("printKey","2");
+                            startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                            break;
+                        case 1:
+
+                            try {
+                                findBT();
+                                openBT(1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+//                                                             lk31.setChecked(true);
+                            break;
+                        case 2:
+
+                            try {
+                                findBT();
+                                openBT(2);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+//                                                             lk32.setChecked(true);
+                            break;
+                        case 3:
+
+                            try {
+                                findBT();
+                                openBT(3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+//                                                             qs.setChecked(true);
+                            break;
                     }
+
+//                    try {
+////                        findBT();
+////                        openBT();
+//                    } catch (IOException ex) {
+//                    }
                 } else {
                    // hiddenDialog();
                 }
@@ -205,7 +254,12 @@ public class CashReport  extends AppCompatActivity {
 
 
     void findBT() {
-
+        try {
+            /*  very important **********************************************************/
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -227,7 +281,6 @@ public class CashReport  extends AppCompatActivity {
 //
                 }
             }
-//            myLabel.setText("Bluetooth Device Found");
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -239,7 +292,7 @@ public class CashReport  extends AppCompatActivity {
 
     // Tries to open a connection to the bluetooth printer device
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    void openBT() throws IOException {
+    void openBT(int casePrinter) throws IOException {
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -249,16 +302,124 @@ public class CashReport  extends AppCompatActivity {
             mmInputStream = mmSocket.getInputStream();
 
             beginListenForData();
+            switch (casePrinter){
 
-//            myLabel.setText("Bluetooth Opened");
-             sendData2();
+                case 1:
+                    sendData();
+                    break;
+                case 2:
+                    Settings settings = obj.getAllSettings().get(0);
+                    for(int i=0;i<settings.getNumOfCopy();i++)
+                    {send_dataSewoo();}
 
-          //  sendData();
+                    break;
+                case 3:
+                    sendData2();
+                    break;
+
+
+
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    void send_dataSewoo() throws IOException {
+        try {
+            Log.e("send","'yes");
+            testB =convertLayoutToImage();
+
+            printPic = PrintPic.getInstance();
+            printPic.init(testB);
+            printIm= printPic.printDraw();
+            mmOutputStream.write(printIm);
+            isFinishPrint=true;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Bitmap convertLayoutToImage() {
+        LinearLayout linearView=null;
+
+        final Dialog dialogs=new Dialog(CashReport.this);
+        dialogs.setContentView(R.layout.print_cash_report);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//*******************************************initial ***************************************************************
+        TextView  tel,taxNo,compname,datepri, cash_sal, credit_sale, total_sale,
+        cash_paymenttext, cheque_Paymenttext, nettext,total_cashtext;
+
+        LinearLayout reportprint_linear=(LinearLayout)dialogs.findViewById(R.id.linear_print_cash_report) ;
+
+        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
+        taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+        tel=(TextView)dialogs.findViewById(R.id.tel);
+        datepri=(TextView)dialogs.findViewById(R.id.date_editReport_cash);
+        cash_sal=(TextView)dialogs.findViewById(R.id.text_cash_sales);
+        credit_sale=(TextView)dialogs.findViewById(R.id.text_credit_sales);
+        total_sale=(TextView)dialogs.findViewById(R.id.text_total_sales);
+
+        cash_paymenttext=(TextView)dialogs.findViewById(R.id.text_cash_PaymentReport);
+        cheque_Paymenttext =(TextView)dialogs.findViewById(R.id.text_cheque_paymentReport);
+        nettext=(TextView)dialogs.findViewById(R.id.text_net_paymentReport);
+
+        total_cashtext=(TextView)dialogs.findViewById(R.id.text_total_cash);
+
+//        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
+//        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+
+
+        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+//************************************************fill layout *********************************************************************
+//        if(!companyInfo.getLogo().equals(null))
+//        {
+//            companey_logo.setImageBitmap(companyInfo.getLogo());
+//
+//        }
+        taxNo.setText(companyInfo.getTaxNo() +"");
+        tel.setText(companyInfo.getcompanyTel()+"");
+        compname.setText(companyInfo.getCompanyName() );
+        datepri.setText(date.getText().toString());
+        cash_sal.setText(convertToEnglish(decimalFormat.format( cash )));
+        credit_sale.setText(convertToEnglish(decimalFormat.format(credit )));
+        total_sale.setText(convertToEnglish(decimalFormat.format(total)));
+
+        cash_paymenttext.setText(convertToEnglish(decimalFormat.format( cashPayment )));
+        cheque_Paymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment )));
+        nettext.setText(convertToEnglish(decimalFormat.format(net )));
+        total_cashtext.setText(convertToEnglish(decimalFormat.format( total_cash )));
+         dialogs.show();
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.linear_print_cash_report);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        return bit;// creates bitmap and returns the same
     }
 
     // After opening a connection to bluetooth printer device,
@@ -352,17 +513,17 @@ public class CashReport  extends AppCompatActivity {
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
-                    printCustom("المبيعات نقدا " + cash + " : " + " \n ", 1, 0);
-                    printCustom("المبيعات ذمم   " + credit + " : " + " \n ", 1, 0);
+                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format(cash ))+ " : " + " \n ", 1, 0);
+                    printCustom("المبيعات ذمم   " +convertToEnglish(decimalFormat.format( credit ))+ " : " + " \n ", 1, 0);
                     printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("الدفع نقدا " + cashPayment + " : " + " \n ", 1, 0);
-                    printCustom("الدفع شيك   " + creditPayment + " : " + " \n ", 1, 0);
-                    printCustom("الاجمالي   " + net + " : " + " \n ", 1, 0);
+                    printCustom("الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment ))+ " : " + " \n ", 1, 0);
+                    printCustom("الدفع شيك   " +convertToEnglish(decimalFormat.format( creditPayment ))+ " : " + " \n ", 1, 0);
+                    printCustom("الاجمالي   " + convertToEnglish(decimalFormat.format(net)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("اجمالي المقبوضات   " + total_cash + " : " + " \n ", 1, 0);
+                    printCustom("اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash ))+ " : " + " \n ", 1, 0);
 
 
                 }

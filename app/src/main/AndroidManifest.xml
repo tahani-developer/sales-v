@@ -149,14 +149,16 @@
             android:name=".BluetoothConnectMenu"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@android:style/Theme.Dialog"
+            android:excludeFromRecents="true"
+            />
 
         
-        <activity
-            android:name=".CPCL2Menu"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <!--<activity-->
+            <!--android:name=".CPCL2Menu"-->
+            <!--android:label="@string/title_activity_main"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:theme="@style/AppTheme.NoActionBar" />-->
 
         <activity
             android:name=".MapsActivity"

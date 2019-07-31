@@ -3,12 +3,15 @@ package com.dr7.salesmanmanager;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -33,10 +36,10 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Port.AlertView;
 import com.ganesh.intermecarabic.Arabic864;
-import com.sewoo.jpos.command.ESCPOS;
-import com.sewoo.jpos.printer.CPCLPrinter;
-import com.sewoo.jpos.printer.ESCPOSPrinter;
+import com.sewoo.port.android.BluetoothPort;
+import com.sewoo.request.android.RequestHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,19 +51,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 public class PrintVoucher extends AppCompatActivity {
-//    Bitmap testB;
-//    PrintPic printPic;
-//    byte[] printIm;
+    Bitmap testB;
+    PrintPic printPic;
+    byte[] printIm;
 
-
+    private Thread hThread;
+    private String lastConnAddr;
+    private BluetoothPort bluetoothPort;
     List<Voucher> vouchers;
-    List<Item> items;
+    public static List<Item> items;
     List<CompanyInfo> companeyinfo;
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
@@ -81,7 +87,11 @@ public class PrintVoucher extends AppCompatActivity {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+  TextView doneinsewooprint;
+  boolean isFinishPrint=false;
 
+     //Voucher addvou;
+    static  Voucher vouch1;
     Bitmap bitmap;
     String itemsString;
     String itemsString2 = "";
@@ -101,6 +111,7 @@ public class PrintVoucher extends AppCompatActivity {
         vouchers = obj.getAllVouchers();
         items = obj.getAllItems();
         companeyinfo=obj.getAllCompanyInfo();
+        bluetoothSetup();
 
         TableTransactionsReport = (TableLayout) findViewById(R.id.TableTransactionsReport);
         from_date = (EditText) findViewById(R.id.from_date);
@@ -141,10 +152,12 @@ public class PrintVoucher extends AppCompatActivity {
             public void onClick(View v) {
 
                 clear();
+
                 if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
 
                     for (int n = 0; n < vouchers.size(); n++) {
-                        final Voucher vouch = vouchers.get(n);
+                        final Voucher vouch;
+                        vouch = vouchers.get(n);
 
                         if (filters(n)) {
 
@@ -165,7 +178,7 @@ public class PrintVoucher extends AppCompatActivity {
                                         vouchers.get(n).getSubTotal() + "",
                                         vouchers.get(n).getTax() + "",
                                         vouchers.get(n).getNetSales() + ""};
-                                Log.e("paymethod",""+vouchers.get(n).getPayMethod());
+//                                Log.e("paymethod",""+vouchers.get(n).getPayMethod());
 
 
                                 switch (vouchers.get(n).getPayMethod()) {
@@ -203,6 +216,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
                                     textView.setGravity(Gravity.CENTER);
 
+
                                     textView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -211,14 +225,60 @@ public class PrintVoucher extends AppCompatActivity {
 
                                              if(!obj.getAllCompanyInfo().get(0).getCompanyName().equals("")&&obj.getAllCompanyInfo().get(0).getcompanyTel()!=0 && obj.getAllCompanyInfo().get(0).getTaxNo()!=-1) {
                                                  if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                     try {
-                                                         Log.e("voucher","  "+vouch);
+//                                                     try {
+                                                         Log.e("voucher","  "+ vouch.getVoucherNumber());
 
-                                                          findBT(Integer.parseInt(textView.getText().toString()));
-                                                          openBT(vouch);
+                                                     int printer = obj.getPrinterSetting();
 
-                                                     } catch (IOException ex) {
+                                                     switch (printer) {
+                                                         case 0:
+                                                             vouch1=vouch;
+                                                             Intent i=new Intent(PrintVoucher.this,BluetoothConnectMenu.class);
+                                                             i.putExtra("printKey","0");
+                                                             startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                                                             break;
+                                                         case 1:
+
+                                                             try {
+                                                                 findBT(Integer.parseInt(textView.getText().toString()));
+                                                                 openBT(vouch,1);
+                                                             } catch (IOException e) {
+                                                                 e.printStackTrace();
+                                                             }
+//                                                             lk31.setChecked(true);
+                                                             break;
+                                                         case 2:
+
+                                                             try {
+                                                                 findBT(Integer.parseInt(textView.getText().toString()));
+                                                                 openBT(vouch,2);
+                                                             } catch (IOException e) {
+                                                                 e.printStackTrace();
+                                                             }
+//                                                             lk32.setChecked(true);
+                                                             break;
+                                                         case 3:
+
+                                                             try {
+                                                                 findBT(Integer.parseInt(textView.getText().toString()));
+                                                                 openBT(vouch,3);
+                                                             } catch (IOException e) {
+                                                                 e.printStackTrace();
+                                                             }
+//                                                             qs.setChecked(true);
+                                                             break;
                                                      }
+
+
+//
+//                                                         master(vouch);
+//                                                     testB =convertLayoutToImage(v);
+
+
+//                                                     } catch (IOException ex) {
+//                                                     }
                                                  } else {
                                                      hiddenDialog(vouch);
                                                  }
@@ -676,7 +736,7 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     // Tries to open a connection to the bluetooth printer device
-    void openBT(Voucher voucher) throws IOException {
+    void openBT(Voucher voucher,int casePrinter) throws IOException {
         try {
             Log.e("open","'yes");
             // Standard SerialPortService ID
@@ -687,17 +747,28 @@ public class PrintVoucher extends AppCompatActivity {
             mmInputStream = mmSocket.getInputStream();
 
             beginListenForData();
-         //   Settings settings = obj.getAllSettings().get(0);
+            Settings settings = obj.getAllSettings().get(0);
+
+
+            switch (casePrinter){
+
+                case 1:
+                    sendData(voucher);
+                    break;
+                case 2:
+                    for(int i=0;i<settings.getNumOfCopy();i++)
+                    {send_dataSewoo(voucher);}
+
+                    break;
+                case 3:
+                    sendData2(voucher);
+                    break;
+
+
+
+            }
 
 //            myLabel.setText("Bluetooth Opened");
-           //  sendData2(voucher);
-
-
-            sendData(voucher);
-//            for(int i=0;i<settings.getNumOfCopy();i++)
-//            {send_dataSewoo(voucher);}
-
-//            sendCpcl();
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -794,22 +865,6 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
 
-    void sendCpcl()  {
-
-        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-        CPCLSample2 cpclSample2=new CPCLSample2();
-
-//            cpclSample2.imageTest(companyInfo,1);
-            CPCLPrinter cp=new CPCLPrinter();
-
-        try {
-            cpclSample2.imageTest(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
 
 
@@ -915,42 +970,48 @@ public class PrintVoucher extends AppCompatActivity {
 
 
 
-//    void send_dataSewoo(Voucher voucher) throws IOException {
-//        try {
-//            Log.e("send","'yes");
-//            testB =convertLayoutToImage(voucher);
-//
-//            printPic = PrintPic.getInstance();
-//            printPic.init(testB);
-//            printIm= printPic.printDraw();
-//            mmOutputStream.write(printIm);
-//
-////            dialogs.show();
-//            ImageView iv = (ImageView) findViewById(R.id.ivw);
-//////                iv.setLayoutParams(layoutParams);
-//            iv.setBackgroundColor(Color.TRANSPARENT);
-//            iv.setImageBitmap(testB);
-////                iv.setMaxHeight(100);
-////                iv.setMaxWidth(100);
-//
-//
-//
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    void send_dataSewoo(Voucher voucher) throws IOException {
+        try {
+            Log.e("send","'yes");
+            testB =convertLayoutToImage(voucher);
+
+            printPic = PrintPic.getInstance();
+            printPic.init(testB);
+            printIm= printPic.printDraw();
+//            mmOutputStream.write(PrinterCommands.SELECT_BIT_IMAGE_MODE);
+            mmOutputStream.write(printIm);
+
+//            dialogs.show();
+            isFinishPrint=true;
+
+            ImageView iv = (ImageView) findViewById(R.id.ivw);
+////                iv.setLayoutParams(layoutParams);
+            iv.setBackgroundColor(Color.TRANSPARENT);
+            iv.setImageBitmap(testB);
+//                iv.setMaxHeight(100);
+//                iv.setMaxWidth(100);
+
+
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView=null;
 
-        Dialog dialogs=new Dialog(PrintVoucher.this);
+        final Dialog dialogs=new Dialog(PrintVoucher.this);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.setCancelable(false);
         dialogs.setContentView(R.layout.printdialog);
 //            fill_theVocher( voucher);
 
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+         doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
 
         TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
         ImageView img=(ImageView)dialogs.findViewById(R.id.img);
@@ -972,6 +1033,21 @@ public class PrintVoucher extends AppCompatActivity {
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
 //
 
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
 
 
 
@@ -1081,7 +1157,7 @@ public class PrintVoucher extends AppCompatActivity {
         }
 
 
-
+dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
@@ -1284,4 +1360,167 @@ public class PrintVoucher extends AppCompatActivity {
         }
     }
 
+
+    void master(Voucher voucher){
+//        addPairedDevices();
+
+        if (!bluetoothPort.isConnected()) {
+            try {
+                // "00:13:7B:58:37:9A"
+                mmDevice=mBluetoothAdapter.getRemoteDevice( "00:13:7B:58:37:9A");
+                btConn(mmDevice);
+                Log.e("mac address ",""+mmDevice);
+            } catch (IllegalArgumentException var3) {
+                Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+                return;
+            } catch (IOException var4) {
+                Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+                return;
+            }
+        } else {
+//                btDisconn();
+        }
+
+       String strCount="1";
+        int count = Integer.parseInt(strCount);
+        Log.d("NUM", String.valueOf(count));
+        CPCLSample2 sample = new CPCLSample2(PrintVoucher.this);
+        sample.selectGapPaper();
+        try {
+//            sample.printMultilingualFont(count);
+            testB=convertLayoutToImage(voucher);
+
+            Bitmap bitmap= BitmapFactory.decodeResource(getResources(), R.drawable.clear);
+
+            sample.dmStamp(1,bitmap);
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private void btConn(BluetoothDevice btDev) throws IOException {
+        (new connTask()).execute(new BluetoothDevice[]{btDev});
+    }
+
+    class connTask extends AsyncTask<BluetoothDevice, Void, Integer> {
+        private final ProgressDialog dialog = new ProgressDialog(PrintVoucher.this);
+
+        connTask() {
+        }
+
+        protected void onPreExecute() {
+            this.dialog.setTitle("ddddd");
+            this.dialog.setMessage("vvv");
+            this.dialog.show();
+            super.onPreExecute();
+        }
+
+        protected Integer doInBackground(BluetoothDevice... params) {
+            Integer retVal = null;
+
+            try {
+             bluetoothPort.connect(mmDevice);
+            lastConnAddr = mmDevice.getAddress();
+                retVal = 0;
+            } catch (IOException var4) {
+                Log.e("BluetoothConnectMenu", var4.getMessage());
+                retVal = -1;
+            }
+
+            return retVal;
+        }
+
+        protected void onPostExecute(Integer result) {
+            if (result == 0) {
+                RequestHandler rh = new RequestHandler();
+              hThread = new Thread(rh);
+               hThread.start();
+
+                if (this.dialog.isShowing()) {
+                    this.dialog.dismiss();
+                }
+
+                Toast toast = Toast.makeText(PrintVoucher.this, "connect post", Toast.LENGTH_SHORT);
+                toast.show();
+
+            } else {
+                if (this.dialog.isShowing()) {
+                    this.dialog.dismiss();
+                }
+
+                AlertView.showAlert("post alert", "post ,,,.", PrintVoucher.this);
+            }
+
+            super.onPostExecute(result);
+        }
+    }
+
+
+    private void bluetoothSetup() {
+        this.clearBtDevData();
+        this.bluetoothPort = BluetoothPort.getInstance();
+        this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (this.mBluetoothAdapter != null) {
+            if (!this.mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
+                this.startActivityForResult(enableBtIntent, 2);
+            }
+
+        }
+    }
+    private void clearBtDevData() {
+//        this.mmDevice = null;
+    }
+
+
+
+    private void addPairedDevices() {
+        Iterator iter = this.mBluetoothAdapter.getBondedDevices().iterator();
+
+        while(iter.hasNext()) {
+            BluetoothDevice pairedDevice = (BluetoothDevice)iter.next();
+            if (this.bluetoothPort.isValidAddress(pairedDevice.getAddress())) {
+                mmDevice=pairedDevice ;
+                Log.e("device ",""+mmDevice);
+
+            }
+        }
+
+    }
+
+
+
+    protected void onDestroy() {
+        try {
+//            if (this.bluetoothPort.isConnected() && this.chkDisconnect.isChecked()) {
+//                this.unregisterReceiver(disconnectReceiver);
+//            }
+
+            this.bluetoothPort.disconnect();
+        } catch (IOException var2) {
+            Log.e("BluetoothConnectMenu", var2.getMessage(), var2);
+        } catch (InterruptedException var3) {
+            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+        }
+
+        if (this.hThread != null && this.hThread.isAlive()) {
+            this.hThread.interrupt();
+            this.hThread = null;
+        }
+
+//        this.unregisterReceiver(this.searchFinish);
+//        this.unregisterReceiver(this.searchStart);
+//        this.unregisterReceiver(this.discoveryResult);
+        super.onDestroy();
+    }
+
+
 }
+
+

@@ -44,4 +44,9 @@
         android:orderInCategory="100"
         android:title="@string/action_print_voucher"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/printerSetting"
+        android:orderInCategory="100"
+        android:title="@string/action_printer_setting"
+        app:showAsAction="never" />
 </menu>

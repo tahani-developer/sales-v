@@ -12,8 +12,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.print.PrintHelper;
 import android.util.Log;
 import android.view.Gravity;
@@ -99,11 +101,12 @@ public class SalesInvoice extends Fragment {
     public ImageButton discountButton;
     private DecimalFormat decimalFormat;
     public static TextView voucherNumberTextView, Customer_nameSales;
-
+     static ArrayList<Item> itemForPrint;
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     private int voucherNumber;
   public  int payMethod;
+    boolean isFinishPrint=false;
 
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -111,8 +114,8 @@ public class SalesInvoice extends Fragment {
     String itemsString = "";
     String itemsString2 = "";
 
-    public static Voucher voucher;
-    public static List<Item> itemsList;
+    static Voucher voucher;
+   static List<Item> itemsList;
 
     bluetoothprinter object;
 
@@ -130,6 +133,8 @@ public class SalesInvoice extends Fragment {
     double discountValue;
     double discountPerc;
     volatile boolean stopWorker;
+//    static Voucher voucherSale;
+//    static List<Item> itemSale;
    /* public static void test2(){
 
         Customer_nameSales.setText(CustomerListFragment.Customer_Name.toString());
@@ -167,6 +172,7 @@ public class SalesInvoice extends Fragment {
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
         object = new bluetoothprinter();
+        itemForPrint=new ArrayList<>();
 
         addItemImgButton2 = (ImageButton) view.findViewById(R.id.addItemImgButton2);
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
@@ -192,6 +198,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
 
         itemsList = new ArrayList<>();
+
 
         custInfoImgButton.setVisibility(View.INVISIBLE);
         connect.setVisibility(View.INVISIBLE);
@@ -405,16 +412,18 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    closeBT();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    closeBT();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemForPrint.clear();
                 clicked = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
 
@@ -471,7 +480,9 @@ public class SalesInvoice extends Fragment {
                                                         items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
 
                                                 itemsList.add(item);
+
                                                 mDbHandler.addItem(item);
+                                                itemForPrint.add(item);
 
                                                 if (voucherType != 506)
                                                     mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
@@ -486,11 +497,61 @@ public class SalesInvoice extends Fragment {
                                             }
 
                                             if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                try {
-                                                    findBT();
-                                                    openBT();
-                                                } catch (IOException ex) {
+//                                                try {
+//                                                    findBT();
+//                                                    openBT();f
+
+
+
+                                                int printer = mDbHandler.getPrinterSetting();
+
+                                                switch (printer) {
+                                                    case 0:
+                                                        Intent i=new Intent(getActivity().getBaseContext(),BluetoothConnectMenu.class);
+                                                        i.putExtra("printKey","1");
+                                                        startActivity(i);
+//                                                             lk30.setChecked(true);
+                                                        break;
+                                                    case 1:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(1);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk31.setChecked(true);
+                                                        break;
+                                                    case 2:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(2);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk32.setChecked(true);
+                                                        break;
+                                                    case 3:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(3);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             qs.setChecked(true);
+                                                        break;
                                                 }
+
+
+
+
+
+
+
+//                                                } catch (IOException ex) {
+//                                                }
                                             } else {
                                                 hiddenDialog();
                                             }
@@ -516,6 +577,7 @@ public class SalesInvoice extends Fragment {
 
                                             itemsList.add(item);
                                             mDbHandler.addItem(item);
+                                            itemForPrint.add(item);
 
                                             if (voucherType != 506)
                                                 mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
@@ -530,11 +592,57 @@ public class SalesInvoice extends Fragment {
                                         }
 
                                         if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                            try {
-                                                findBT();
-                                                openBT();
-                                            } catch (IOException ex) {
+//                                            try {
+//                                                findBT();
+//                                                openBT();
+//                                            } catch (IOException ex) {
+//                                            }
+
+                                            int printer = mDbHandler.getPrinterSetting();
+
+                                            switch (printer) {
+                                                case 0:
+                                                    Intent i=new Intent(getActivity().getBaseContext(),BluetoothConnectMenu.class);
+                                                    i.putExtra("printKey","1");
+                                                    startActivity(i);
+//                                                             lk30.setChecked(true);
+                                                    break;
+                                                case 1:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(1);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             lk31.setChecked(true);
+                                                    break;
+                                                case 2:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(2);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             lk32.setChecked(true);
+                                                    break;
+                                                case 3:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(3);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             qs.setChecked(true);
+                                                    break;
                                             }
+
+
+
+
+
                                         } else {
                                             hiddenDialog();
                                         }
@@ -882,7 +990,7 @@ public class SalesInvoice extends Fragment {
             printPic.init(testB);
             printIm= printPic.printDraw();
             mmOutputStream.write(printIm);
-
+            isFinishPrint=true;
 //            dialogs.show();
 //            ImageView iv = (ImageView) view.findViewById(R.id.ivw);
 //////                iv.setLayoutParams(layoutParams);
@@ -907,7 +1015,7 @@ public class SalesInvoice extends Fragment {
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView=null;
 
-        Dialog dialogs=new Dialog(getActivity());
+        final Dialog dialogs=new Dialog(getActivity());
         dialogs.setContentView(R.layout.printdialog);
 //            fill_theVocher( voucher);
 
@@ -934,7 +1042,22 @@ public class SalesInvoice extends Fragment {
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
 //
 
+       TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
 
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
 
 
         String voucherTyp = "";
@@ -1438,7 +1561,7 @@ public class SalesInvoice extends Fragment {
     }
 
     // Tries to open a connection to the bluetooth printer device
-    void openBT() throws IOException {
+    void openBT(int casePrinter) throws IOException {
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -1449,15 +1572,25 @@ public class SalesInvoice extends Fragment {
 
             beginListenForData();
 
-//            myLabel.setText("Bluetooth Opened");
-//            sendData2();
-            sendData();
+
+            switch (casePrinter){
+
+                case 1:
+                    sendData();
+                    break;
+                case 2:
+                    Settings settings = mDbHandler.getAllSettings().get(0);
+                    for(int i=0;i<settings.getNumOfCopy();i++)
+                    {send_dataSewoo(voucher);}
+
+                    break;
+                case 3:
+                    sendData2();
+                    break;
 
 
-//            Settings settings = mDbHandler.getAllSettings().get(0);
-//            for(int i=0;i<settings.getNumOfCopy();i++)
-//            {send_dataSewoo(voucher);}
 
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {

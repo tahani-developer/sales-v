@@ -1,6 +1,8 @@
 package com.dr7.salesmanmanager;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -24,9 +26,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Modles.Payment;
-import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -36,22 +37,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * BluetoothConnectMenu
- *
- * @author Sung-Keun Lee
- * @version 2011. 12. 21.
- */
+import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
+
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+
 public class BluetoothConnectMenu extends Activity {
     private static final String TAG = "BluetoothConnectMenu";
-    // Intent request codes
-    // private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
-
     ArrayAdapter<String> adapter;
     private BluetoothAdapter mBluetoothAdapter;
     private Vector<BluetoothDevice> remoteDevices;
@@ -61,60 +59,60 @@ public class BluetoothConnectMenu extends Activity {
     private BroadcastReceiver disconnectReceiver;
     private Thread hThread;
     private Context context;
-    // UI
     private EditText btAddrBox;
     private Button connectButton;
-    private Button print;
     private Button searchButton;
     private ListView list;
-    // BT
     private BluetoothPort bluetoothPort;
-    // Check disconnection
     private CheckBox chkDisconnect;
+    private static final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "//temp";
+    private static final String fileName;
+    private String lastConnAddr;
+    static  String idname;
+    DatabaseHandler obj;
+    String getData;
+    List <Item>allStudents;
 
-    String flag = "0";
+    static {
+        fileName = dir + "//BTPrinter";
+    }
 
-    Voucher voucher;
-    List<Item> item;
-    Payment payment;
+    public BluetoothConnectMenu() {
 
-    // Set up Bluetooth.
+    }
+
     private void bluetoothSetup() {
-        // Initialize
-        clearBtDevData();
-        bluetoothPort = BluetoothPort.getInstance();
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
-            return;
-        }
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        this.clearBtDevData();
+        this.bluetoothPort = BluetoothPort.getInstance();
+        this.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (this.mBluetoothAdapter != null) {
+            if (!this.mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent("android.bluetooth.adapter.action.REQUEST_ENABLE");
+                this.startActivityForResult(enableBtIntent, 2);
+            }
 
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
     }
 
-    private static final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "//temp";
-    private static final String fileName = dir + "//BTPrinter";
-    private String lastConnAddr;
-
     private void loadSettingFile() {
-        int rin = 0;
+//        int rin = false;
         char[] buf = new char[128];
+
         try {
             FileReader fReader = new FileReader(fileName);
-            rin = fReader.read(buf);
+            int rin = fReader.read(buf);
             if (rin > 0) {
-                lastConnAddr = new String(buf, 0, rin);
-                btAddrBox.setText(lastConnAddr);
+                this.lastConnAddr = new String(buf, 0, rin);
+                this.btAddrBox.setText(this.lastConnAddr);
             }
+
             fReader.close();
-        } catch (FileNotFoundException e) {
-            Log.i(TAG, "Connection history not exists.");
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
+        } catch (FileNotFoundException var4) {
+            Log.i("BluetoothConnectMenu", "Connection history not exists.");
+        } catch (IOException var5) {
+            Log.e("BluetoothConnectMenu", var5.getMessage(), var5);
         }
+
     }
 
     private void saveSettingFile() {
@@ -123,348 +121,349 @@ public class BluetoothConnectMenu extends Activity {
             if (!tempDir.exists()) {
                 tempDir.mkdir();
             }
+
             FileWriter fWriter = new FileWriter(fileName);
-            if (lastConnAddr != null)
-                fWriter.write(lastConnAddr);
+            if (this.lastConnAddr != null) {
+                fWriter.write(this.lastConnAddr);
+            }
+
             fWriter.close();
-        } catch (FileNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
+        } catch (FileNotFoundException var3) {
+            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+        } catch (IOException var4) {
+            Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
         }
+
     }
 
-    // clear device data used list.
     private void clearBtDevData() {
-        remoteDevices = new Vector<BluetoothDevice>();
+        this.remoteDevices = new Vector();
     }
 
-    // add paired device to list
     private void addPairedDevices() {
-        BluetoothDevice pairedDevice;
-        Iterator<BluetoothDevice> iter = (mBluetoothAdapter.getBondedDevices()).iterator();
-        while (iter.hasNext()) {
-            pairedDevice = iter.next();
-            if (bluetoothPort.isValidAddress(pairedDevice.getAddress())) {
-                remoteDevices.add(pairedDevice);
-                adapter.add(pairedDevice.getName() + "\n[" + pairedDevice.getAddress() + "] [Paired]");
+        Iterator iter = this.mBluetoothAdapter.getBondedDevices().iterator();
+
+        while(iter.hasNext()) {
+            BluetoothDevice pairedDevice = (BluetoothDevice)iter.next();
+            if (this.bluetoothPort.isValidAddress(pairedDevice.getAddress())) {
+                this.remoteDevices.add(pairedDevice);
+                this.adapter.add(pairedDevice.getName() + "\n[" + pairedDevice.getAddress() + "] [Paired]");
             }
         }
+
     }
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_menu);
+        this.setContentView(R.layout.bluetooth_menu);
+        this.btAddrBox = (EditText)this.findViewById(R.id.EditTextAddressBT);
+        this.connectButton = (Button)this.findViewById(R.id.ButtonConnectBT);
+        BluetoothConnectMenu.this.connectButton.setEnabled(true);
+        this.searchButton = (Button)this.findViewById(R.id.ButtonSearchBT);
+        this.list = (ListView)this.findViewById(R.id.BtAddrListView);
+        this.chkDisconnect = (CheckBox)this.findViewById(R.id.check_disconnect);
+        this.chkDisconnect.setChecked(true);
+        this.context = this;
+        obj=new DatabaseHandler(BluetoothConnectMenu.this);
 
-        voucher = SalesInvoice.voucher;
-        item = SalesInvoice.itemsList;
-        payment = ReceiptVoucher.payment;
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            flag = extras.getString("flag");
-        }
-        // Setting
-        btAddrBox = (EditText) findViewById(R.id.EditTextAddressBT);
-        connectButton = (Button) findViewById(R.id.ButtonConnectBT);
-        print = (Button) findViewById(R.id.print);
-        searchButton = (Button) findViewById(R.id.ButtonSearchBT);
-        list = (ListView) findViewById(R.id.BtAddrListView);
-        chkDisconnect = (CheckBox) findViewById(R.id.check_disconnect);
-        chkDisconnect.setChecked(true);
-        context = this;
-        // Setting
-        loadSettingFile();
-        bluetoothSetup();
-        // Connect, Disconnect -- Button
-        connectButton.setOnClickListener(new OnClickListener() {
-            @Override
+//
+        getData = getIntent().getStringExtra("printKey");
+//        Bundle bundle = getIntent().getExtras();
+//         allStudents = (List<Item>) bundle.get("ExtraData");
+//
+//         Log.e("all",allStudents.get(0).getBarcode());
+
+      Log.e("printKey",""+getData);
+        this.loadSettingFile();
+        this.bluetoothSetup();
+        this.connectButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                if (!bluetoothPort.isConnected()) // Connect routine.
-                {
+                if (!BluetoothConnectMenu.this.bluetoothPort.isConnected()) {
                     try {
-                        btConn(mBluetoothAdapter.getRemoteDevice(btAddrBox.getText().toString()));
-                    } catch (IllegalArgumentException e) {
-                        // Bluetooth Address Format [OO:OO:OO:OO:OO:OO]
-                        Log.e(TAG, e.getMessage(), e);
-                        AlertView.showAlert(e.getMessage(), context);
+                        BluetoothConnectMenu.this.btConn(BluetoothConnectMenu.this.mBluetoothAdapter.getRemoteDevice(BluetoothConnectMenu.this.btAddrBox.getText().toString()));
+                    } catch (IllegalArgumentException var3) {
+                        Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+                        AlertView.showAlert(var3.getMessage(), BluetoothConnectMenu.this.context);
                         return;
-                    } catch (IOException e) {
-                        Log.e(TAG, e.getMessage(), e);
-                        AlertView.showAlert(e.getMessage(), context);
+                    } catch (IOException var4) {
+                        Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+                        AlertView.showAlert(var4.getMessage(), BluetoothConnectMenu.this.context);
                         return;
                     }
-                } else // Disconnect routine.
-                {
-                    // Always run.
-                    btDisconn();
-                }
-            }
-        });
-        // Search Button
-        searchButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mBluetoothAdapter.isDiscovering()) {
-                    clearBtDevData();
-                    adapter.clear();
-                    mBluetoothAdapter.startDiscovery();
                 } else {
-                    mBluetoothAdapter.cancelDiscovery();
+                    BluetoothConnectMenu.this.btDisconn();
                 }
 
             }
         });
+        this.searchButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                if (!BluetoothConnectMenu.this.mBluetoothAdapter.isDiscovering()) {
+                    BluetoothConnectMenu.this.clearBtDevData();
+                    BluetoothConnectMenu.this.adapter.clear();
+                    BluetoothConnectMenu.this.mBluetoothAdapter.startDiscovery();
+                } else {
+                    BluetoothConnectMenu.this.mBluetoothAdapter.cancelDiscovery();
+                }
 
-//        print.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try {
-//                    CPCLSample2 sample = new CPCLSample2();
-////                    sample.selectGapPaper();
-//
-////                    sample.voucher(voucher ,0);
-//
-//                    if (flag.equals("0"))
-//                        sample.voucher(voucher, item, 1);
-//                    else
-//                        sample.payment(payment, 1);
-//                    finish();
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+            }
+        });
+        this.adapter = new ArrayAdapter(BluetoothConnectMenu.this ,R.layout.cci );
 
-        // Bluetooth Device List
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        list.setAdapter(adapter);
-        addPairedDevices();
-        // Connect - click the List item.
-        list.setOnItemClickListener(new OnItemClickListener() {
-            @Override
+        this.list.setAdapter(this.adapter);
+        this.addPairedDevices();
+        this.list.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                BluetoothDevice btDev = remoteDevices.elementAt(arg2);
+                BluetoothDevice btDev = (BluetoothDevice)BluetoothConnectMenu.this.remoteDevices.elementAt(arg2);
+
                 try {
-                    if (mBluetoothAdapter.isDiscovering()) {
-                        mBluetoothAdapter.cancelDiscovery();
+                    if (BluetoothConnectMenu.this.mBluetoothAdapter.isDiscovering()) {
+                        BluetoothConnectMenu.this.mBluetoothAdapter.cancelDiscovery();
                     }
-                    btAddrBox.setText(btDev.getAddress());
-                    btConn(btDev);
-                } catch (IOException e) {
-                    AlertView.showAlert(e.getMessage(), context);
-                    return;
+
+                    BluetoothConnectMenu.this.btAddrBox.setText(btDev.getAddress());
+                    BluetoothConnectMenu.this.btConn(btDev);
+                } catch (IOException var8) {
+                    AlertView.showAlert(var8.getMessage(), BluetoothConnectMenu.this.context);
                 }
             }
         });
-
-        // UI - Event Handler.
-        // Search device, then add List.
-        discoveryResult = new BroadcastReceiver() {
-            @Override
+        this.discoveryResult = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                String key;
-                BluetoothDevice remoteDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice remoteDevice = (BluetoothDevice)intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
                 if (remoteDevice != null) {
-                    if (remoteDevice.getBondState() != BluetoothDevice.BOND_BONDED) {
+                    String key;
+                    if (remoteDevice.getBondState() != 12) {
                         key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "]";
                     } else {
                         key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "] [Paired]";
                     }
-                    if (bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
-                        remoteDevices.add(remoteDevice);
-                        adapter.add(key);
+
+                    if (BluetoothConnectMenu.this.bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
+                        BluetoothConnectMenu.this.remoteDevices.add(remoteDevice);
+                        BluetoothConnectMenu.this.adapter.add(key);
                     }
                 }
+
             }
         };
-        registerReceiver(discoveryResult, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-        searchStart = new BroadcastReceiver() {
-            @Override
+        this.registerReceiver(this.discoveryResult, new IntentFilter("android.bluetooth.device.action.FOUND"));
+        this.searchStart = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                connectButton.setEnabled(false);
-                btAddrBox.setEnabled(false);
-                searchButton.setText(getResources().getString(R.string.bt_stop_search_btn));
+                BluetoothConnectMenu.this.connectButton.setEnabled(false);
+                BluetoothConnectMenu.this.btAddrBox.setEnabled(false);
+//                BluetoothConnectMenu.this.searchButton.setText(BluetoothConnectMenu.this.getResources().getString(2131034114));
+
+                BluetoothConnectMenu.this.searchButton.setText("stop ");
             }
         };
-        registerReceiver(searchStart, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
-        searchFinish = new BroadcastReceiver() {
-            @Override
+        this.registerReceiver(this.searchStart, new IntentFilter("android.bluetooth.adapter.action.DISCOVERY_STARTED"));
+        this.searchFinish = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                connectButton.setEnabled(true);
-                btAddrBox.setEnabled(true);
-                searchButton.setText(getResources().getString(R.string.bt_search_btn));
+                BluetoothConnectMenu.this.connectButton.setEnabled(true);
+                BluetoothConnectMenu.this.btAddrBox.setEnabled(true);
+//                BluetoothConnectMenu.this.searchButton.setText(BluetoothConnectMenu.this.getResources().getString(2131034113));
+                BluetoothConnectMenu.this.searchButton.setText("search");
+
             }
         };
-        registerReceiver(searchFinish, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED));
-        if (chkDisconnect.isChecked()) {
-            disconnectReceiver = new BroadcastReceiver() {
-                @Override
+        this.registerReceiver(this.searchFinish, new IntentFilter("android.bluetooth.adapter.action.DISCOVERY_FINISHED"));
+        if (this.chkDisconnect.isChecked()) {
+            this.disconnectReceiver = new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
-                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                    if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
-                        //Device is now connected
-//						Log.e(TAG, "Connected");
-                    } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                        //Device has disconnected
-//						Log.e(TAG, "Disconnected");
-                        DialogReconnectionOption();
+                    BluetoothDevice device = (BluetoothDevice)intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
+                    if (!"android.bluetooth.device.action.ACL_CONNECTED".equals(action) && "android.bluetooth.device.action.ACL_DISCONNECTED".equals(action)) {
+                        BluetoothConnectMenu.this.DialogReconnectionOption();
                     }
+
                 }
             };
         }
+
     }
 
-
-    @Override
     protected void onDestroy() {
         try {
-            if (bluetoothPort.isConnected() == true) {
-                if (chkDisconnect.isChecked()) {
-                    unregisterReceiver(disconnectReceiver);
-                }
+            if (this.bluetoothPort.isConnected() && this.chkDisconnect.isChecked()) {
+                this.unregisterReceiver(this.disconnectReceiver);
             }
-            saveSettingFile();
-            bluetoothPort.disconnect();
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
-            Log.e(TAG, e.getMessage(), e);
+
+            this.saveSettingFile();
+            this.bluetoothPort.disconnect();
+        } catch (IOException var2) {
+            Log.e("BluetoothConnectMenu", var2.getMessage(), var2);
+        } catch (InterruptedException var3) {
+            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
         }
-        if ((hThread != null) && (hThread.isAlive())) {
-            hThread.interrupt();
-            hThread = null;
+
+        if (this.hThread != null && this.hThread.isAlive()) {
+            this.hThread.interrupt();
+            this.hThread = null;
         }
-        unregisterReceiver(searchFinish);
-        unregisterReceiver(searchStart);
-        unregisterReceiver(discoveryResult);
+
+        this.unregisterReceiver(this.searchFinish);
+        this.unregisterReceiver(this.searchStart);
+        this.unregisterReceiver(this.discoveryResult);
         super.onDestroy();
     }
 
-    // Display the dialog when bluetooth disconnected.
     private void DialogReconnectionOption() {
-        final String[] items = new String[]{"Bluetooth printer"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setTitle(getResources().getString(R.string.reconnect_msg));
-
-        builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        String[] items = new String[]{"Bluetooth printer"};
+        Builder builder = new Builder(this);
+        builder.setTitle("connection ...");
+        builder.setSingleChoiceItems(items, 0, new android.content.DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // �� ����Ʈ�� ����������
             }
-        }).setPositiveButton(getResources().getString(R.string.dev_conn_btn), new DialogInterface.OnClickListener() {
+        }).setPositiveButton("connect", new android.content.DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // OK ��ư Ŭ���� , ���⼭ ������ ���� ���� Activity �� �ѱ�� �ȴ�.
                 try {
-                    // Disconnect routine.
-                    btDisconn();
-                    btConn(mBluetoothAdapter.getRemoteDevice(btAddrBox.getText().toString()));
-                } catch (IllegalArgumentException e) {
-                    // Bluetooth Address Format [OO:OO:OO:OO:OO:OO]
-                    Log.e(TAG, e.getMessage(), e);
-                    AlertView.showAlert(e.getMessage(), context);
-                    return;
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    AlertView.showAlert(e.getMessage(), context);
-                    return;
+                    BluetoothConnectMenu.this.btDisconn();
+                    BluetoothConnectMenu.this.btConn(BluetoothConnectMenu.this.mBluetoothAdapter.getRemoteDevice(BluetoothConnectMenu.this.btAddrBox.getText().toString()));
+                } catch (IllegalArgumentException var4) {
+                    Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+                    AlertView.showAlert(var4.getMessage(), BluetoothConnectMenu.this.context);
+                } catch (IOException var5) {
+                    Log.e("BluetoothConnectMenu", var5.getMessage(), var5);
+                    AlertView.showAlert(var5.getMessage(), BluetoothConnectMenu.this.context);
                 }
             }
-        }).setNegativeButton(getResources().getString(R.string.connect_cancel), new DialogInterface.OnClickListener() {
+        }).setNegativeButton("cancel", new android.content.DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                // Cancel ��ư Ŭ����
-                // Disconnect routine.
-                btDisconn();
+                BluetoothConnectMenu.this.btDisconn();
             }
         });
         builder.show();
     }
 
-    // Bluetooth Connection method.
-    private void btConn(final BluetoothDevice btDev) throws IOException {
-        new connTask().execute(btDev);
+    private void btConn(BluetoothDevice btDev) throws IOException {
+        (new BluetoothConnectMenu.connTask()).execute(new BluetoothDevice[]{btDev});
     }
 
-    // Bluetooth Disconnection method.
     private void btDisconn() {
         try {
-            bluetoothPort.disconnect();
-            if (chkDisconnect.isChecked()) {
-                unregisterReceiver(disconnectReceiver);
+            this.bluetoothPort.disconnect();
+            if (this.chkDisconnect.isChecked()) {
+                this.unregisterReceiver(this.disconnectReceiver);
             }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+        } catch (Exception var2) {
+            Log.e("BluetoothConnectMenu", var2.getMessage(), var2);
         }
-        if ((hThread != null) && (hThread.isAlive()))
-            hThread.interrupt();
-        // UI
-        connectButton.setText(getResources().getString(R.string.dev_conn_btn));
-        list.setEnabled(true);
-        btAddrBox.setEnabled(true);
-        searchButton.setEnabled(true);
-        Toast toast = Toast.makeText(context, getResources().getString(R.string.bt_disconn_msg), Toast.LENGTH_SHORT);
+
+        if (this.hThread != null && this.hThread.isAlive()) {
+            this.hThread.interrupt();
+        }
+
+        this.connectButton.setText("Connect");
+        this.list.setEnabled(true);
+        this.btAddrBox.setEnabled(true);
+        this.searchButton.setEnabled(true);
+        Toast toast = Toast.makeText(this.context, "disconnect", Toast.LENGTH_SHORT);
         toast.show();
     }
 
-    // Bluetooth Connection Task.
     class connTask extends AsyncTask<BluetoothDevice, Void, Integer> {
         private final ProgressDialog dialog = new ProgressDialog(BluetoothConnectMenu.this);
 
-        @Override
+        connTask() {
+        }
+
         protected void onPreExecute() {
-            dialog.setTitle(getResources().getString(R.string.bt_tab));
-            dialog.setMessage(getResources().getString(R.string.connecting_msg));
-            dialog.show();
+            this.dialog.setTitle(" Try Connect ");
+            this.dialog.setMessage("Please Wait ....");
+            this.dialog.show();
             super.onPreExecute();
         }
 
-        @Override
         protected Integer doInBackground(BluetoothDevice... params) {
             Integer retVal = null;
-            try {
-                bluetoothPort.connect(params[0]);
 
-                lastConnAddr = params[0].getAddress();
-                retVal = Integer.valueOf(0);
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-                retVal = Integer.valueOf(-1);
+            try {
+                BluetoothConnectMenu.this.bluetoothPort.connect(params[0]);
+                BluetoothConnectMenu.this.lastConnAddr = params[0].getAddress();
+                retVal = 0;
+            } catch (IOException var4) {
+                Log.e("BluetoothConnectMenu", var4.getMessage());
+                retVal = -1;
             }
+
             return retVal;
         }
 
-        @Override
+        @SuppressLint("WrongThread")
         protected void onPostExecute(Integer result) {
-            if (result.intValue() == 0)    // Connection success.
-            {
+            if (result == 0) {
                 RequestHandler rh = new RequestHandler();
-                hThread = new Thread(rh);
-                hThread.start();
-                // UI
-                connectButton.setText(getResources().getString(R.string.dev_disconn_btn));
-                list.setEnabled(false);
-                btAddrBox.setEnabled(false);
-                searchButton.setEnabled(false);
-                if (dialog.isShowing())
-                    dialog.dismiss();
-                Toast toast = Toast.makeText(context, getResources().getString(R.string.bt_conn_msg), Toast.LENGTH_SHORT);
-                toast.show();
-                if (chkDisconnect.isChecked()) {
-                    registerReceiver(disconnectReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED));
-                    registerReceiver(disconnectReceiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
+                BluetoothConnectMenu.this.hThread = new Thread(rh);
+                BluetoothConnectMenu.this.hThread.start();
+                BluetoothConnectMenu.this.connectButton.setText("Connect");
+                BluetoothConnectMenu.this.connectButton.setEnabled(false);
+                BluetoothConnectMenu.this.list.setEnabled(false);
+                BluetoothConnectMenu.this.btAddrBox.setEnabled(false);
+                BluetoothConnectMenu.this.searchButton.setEnabled(false);
+                if (this.dialog.isShowing()) {
+                    this.dialog.dismiss();
                 }
-            } else    // Connection failed.
-            {
-                if (dialog.isShowing())
-                    dialog.dismiss();
-                AlertView.showAlert(getResources().getString(R.string.bt_conn_fail_msg),
-                        getResources().getString(R.string.dev_check_msg), context);
+
+                Toast toast = Toast.makeText(BluetoothConnectMenu.this.context, "Now Printing ", Toast.LENGTH_SHORT);
+                toast.show();
+
+
+                int count =Integer.parseInt(getData);
+                CPCLSample2 sample = new CPCLSample2(BluetoothConnectMenu.this);
+                sample.selectContinuousPaper();
+                try {
+                    CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//                  Log.e("salesVoucher","=" + SalesInvoice.items.get(0).getVoucherNumber());
+                    if((count==0)||(count==1)) {
+//                        sample.dmStamp(1,companyInfo.getLogo());
+                        sample.printMultilingualFont(count,companyInfo.getLogo());
+
+//                        itemForPrint.clear();
+                    }else{
+                        if(count==2)
+                        {
+                        sample.printMultilingualFontCash();
+                        paymentsforPrint.clear();
+                    }
+                        else if(count==3){
+                            sample.printMultilingualFontCashReport();
+
+                        }
+                    }
+
+                    finish();
+//                    Bitmap bitmap= BitmapFactory.decodeResource(getResources(), R.drawable.clear);
+//                    Bitmap testB =convertLayoutToImage(vouch,items);
+//                    ByteArrayOutputStream stream=new ByteArrayOutputStream();
+//                    testB.compress(Bitmap.CompressFormat.PNG, 90, stream);
+//                    sample.dmStamp(1,testB);
+//                    sample.imageTest(1,testB);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (BluetoothConnectMenu.this.chkDisconnect.isChecked()) {
+                    BluetoothConnectMenu.this.registerReceiver(BluetoothConnectMenu.this.disconnectReceiver, new IntentFilter("android.bluetooth.device.action.ACL_CONNECTED"));
+                    BluetoothConnectMenu.this.registerReceiver(BluetoothConnectMenu.this.disconnectReceiver, new IntentFilter("android.bluetooth.device.action.ACL_DISCONNECTED"));
+                }
+            } else {
+                if (this.dialog.isShowing()) {
+                    this.dialog.dismiss();
+                }
+
+                AlertView.showAlert("Disconnect Bluetoothُ", "Try Again ,,,.", BluetoothConnectMenu.this.context);
             }
+
             super.onPostExecute(result);
         }
+    }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
     }
 }

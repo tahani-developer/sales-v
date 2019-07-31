@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Reports.Reports;
 
@@ -79,8 +80,8 @@ public class MainActivity extends AppCompatActivity
     ImageView logo;
     Calendar myCalendar;
     Bitmap visitPic = null;
-    ImageView visitPicture ;
-    int amountOfmaxDiscount=0;
+    ImageView visitPicture;
+    int amountOfmaxDiscount = 0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -234,6 +235,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.de_export) {
             openPasswordDialog(3);
+        } else if (id == R.id.printerSetting) {
+            openPasswordDialog(4);
         }
 
         return super.
@@ -313,8 +316,7 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setNegativeButton("Cancel", null).show();
 
-        }
-        else if (id == R.id.nav_refreshdata) {
+        } else if (id == R.id.nav_refreshdata) {
 //            new AlertDialog.Builder(this)
 //                    .setTitle("Confirm Update")
 //                    .setMessage("Are you sure you want to refresh data ? This will take few minutes !")
@@ -322,18 +324,17 @@ public class MainActivity extends AppCompatActivity
 //                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 //                        public void onClick(DialogInterface dialog, int whichButton) {
 
-                            RefreshData obj = new RefreshData(MainActivity.this);
-                            obj.startParsing();
-                            //obj.storeInDatabase();
+            RefreshData obj = new RefreshData(MainActivity.this);
+            obj.startParsing();
+            //obj.storeInDatabase();
 
 //                        }
 //                    })
 //                    .setNegativeButton("Cancel", null).show();
 
-        }
-        else if (id == R.id.nav_sign_out) {
-            Intent intent = new Intent(this, CPCL2Menu.class);
-            startActivity(intent);
+        } else if (id == R.id.nav_sign_out) {
+//            Intent intent = new Intent(this, CPCL2Menu.class);
+//            startActivity(intent);
 
         } else if (id == R.id.nav_clear_local) {
 
@@ -351,8 +352,9 @@ public class MainActivity extends AppCompatActivity
         customerCheckInFragment.setListener(this);
         customerCheckInFragment.show(getFragmentManager(), "");
     }
+
     public void openMaxDiscount() {
-        Log.e("openMaxDiscount","yes");
+        Log.e("openMaxDiscount", "yes");
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -365,18 +367,16 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!amount.getText().toString().equals(""))
-                {
-                    amountOfmaxDiscount=Integer.parseInt(amount.getText().toString());
-                    Log.e("amountOfmaxDiscount",""+amountOfmaxDiscount);
-                  //  mDbHandler.getAllSettings().get(0).setAmountOfMaxDiscount(amountOfmaxDiscount);
-                   dialog.dismiss();
-                }
-
-              else
+                if (!amount.getText().toString().equals("")) {
+                    amountOfmaxDiscount = Integer.parseInt(amount.getText().toString());
+                    Log.e("amountOfmaxDiscount", "" + amountOfmaxDiscount);
+                    //  mDbHandler.getAllSettings().get(0).setAmountOfMaxDiscount(amountOfmaxDiscount);
+                    dialog.dismiss();
+                } else
                     Toast.makeText(MainActivity.this, "Incorrect Input !", Toast.LENGTH_SHORT).show();
 
-        }});
+            }
+        });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -386,7 +386,6 @@ public class MainActivity extends AppCompatActivity
         });
         dialog.show();
     }
-
 
 
     public void openAddCustomerDialog() {
@@ -441,7 +440,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude, Login.salesMan, 0 , Login.salesManNo));
+                            latitude, longitude, Login.salesMan, 0, Login.salesManNo));
                     dialog.dismiss();
                 } else
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
@@ -572,8 +571,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
-                }
-                else {
+                } else {
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(cameraIntent, 1888);
                 }
@@ -613,7 +611,7 @@ public class MainActivity extends AppCompatActivity
                         displa, rate[0], visitPic, CustomerListShow.Customer_Account, CustomerListShow.Customer_Name, Login.salesManNo));
 
                 dialog.dismiss();
-              //  Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -648,8 +646,10 @@ public class MainActivity extends AppCompatActivity
                     } else if (flag == 2)
                         openCompanyInfoDialog();
 
-                    else {
+                    else if (flag == 3) {
                         openDeExportDialog();
+                    } else if (flag == 4) {
+                        openPrintSetting();
                     }
                 } else
                     Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
@@ -665,8 +665,7 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
-    public class openSetting
-    {
+    public class openSetting {
 
         @SuppressLint("SetTextI18n")
         public void showDialog(Activity activity, String msg) {
@@ -758,9 +757,8 @@ public class MainActivity extends AppCompatActivity
             noOfferForCredit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(noOfferForCredit.isChecked())
-                    {
-                        Log.e("noOfferForCredit","yes");
+                    if (noOfferForCredit.isChecked()) {
+                        Log.e("noOfferForCredit", "yes");
                         openMaxDiscount();
                     }
                 }
@@ -770,58 +768,53 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    if (!(linkEditText.getText().toString().equals("")))
-                    {
-                        if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") &&!returnEditText.getText().toString().equals("") &&
-                               !orderEditText.getText().toString().equals("") &&!paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals(""))
-                        {
+                    if (!(linkEditText.getText().toString().equals(""))) {
+                        if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
+                                !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals("")) {
 
-                                if (Integer.parseInt(numOfCopy.getText().toString()) < 5)
-                                {
-                                    String link = linkEditText.getText().toString().trim();
-                                    int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                                    int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                                    int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                                    int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                                    int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                                    int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                            if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
+                                String link = linkEditText.getText().toString().trim();
+                                int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                                int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                                int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                                int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                                int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                                int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
 
-                                    int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
-                                    int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
-                                    int priceByCust = checkBox.isChecked() ? 1 : 0;
-                                    int useWeightCase = checkBox2.isChecked() ? 1 : 0;
-                                    int alowMinus = allowMinus.isChecked() ? 1 : 0;
-                                    int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
-                                    int minSalePric = minSalePrice.isChecked() ? 1 : 0;
-                                    int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
-                                    int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
-                                    int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
-                                    int workOnlin = workOnline.isChecked() ? 1 : 0;
-                                    int paymethodCheck=paymetod_check.isChecked()?1:0;
-                                    int bonusNotalow=bonusNotAlowed.isChecked()?1:0;
-                                    int noOffer_Credit=noOfferForCredit.isChecked()?1:0;
+                                int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
+                                int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
+                                int priceByCust = checkBox.isChecked() ? 1 : 0;
+                                int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                                int alowMinus = allowMinus.isChecked() ? 1 : 0;
+                                int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
+                                int minSalePric = minSalePrice.isChecked() ? 1 : 0;
+                                int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
+                                int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
+                                int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
+                                int workOnlin = workOnline.isChecked() ? 1 : 0;
+                                int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
+                                int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
+                                int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
 
 
+                                mDbHandler.deleteAllSettings();
 
-                                    mDbHandler.deleteAllSettings();
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
+                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
+                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
 
-                                    mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
-                                    mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
-                                    mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
-                                    mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
-                                    mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange,canChangPrice,readDiscountFromoffer, workOnlin,paymethodCheck,bonusNotalow,noOffer_Credit,amountOfmaxDiscount);
-
-                                    dialog.dismiss();
-                                } else
-                                    Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
-                            } else{
-                                Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
-                            }
-
+                                dialog.dismiss();
+                            } else
+                                Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
                         }
 
+                    } else {
+                        Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+                    }
 
 
                 }
@@ -931,6 +924,74 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openPrintSetting() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.printer_setting);
+
+        final RadioButton lk30, lk32, lk31, qs;
+        lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
+        lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
+
+        lk32 = (RadioButton) dialog.findViewById(R.id.LK32);
+        qs = (RadioButton) dialog.findViewById(R.id.QS);
+
+
+        Button save = (Button) dialog.findViewById(R.id.save);
+
+        int printer = mDbHandler.getPrinterSetting();
+
+        switch (printer) {
+            case 0:
+                lk30.setChecked(true);
+                break;
+            case 1:
+                lk31.setChecked(true);
+                break;
+            case 2:
+                lk32.setChecked(true);
+                break;
+            case 3:
+                qs.setChecked(true);
+                break;
+        }
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDbHandler.deleteAllPrinterSetting();
+                PrinterSetting printerSetting = new PrinterSetting();
+
+                if (lk30.isChecked()) {
+                    printerSetting.setPrinterName(0);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk30");
+                } else if (lk31.isChecked()) {
+                    printerSetting.setPrinterName(1);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk31");
+                } else if (lk32.isChecked()) {
+                    printerSetting.setPrinterName(2);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk32");
+                } else if (qs.isChecked()) {
+                    printerSetting.setPrinterName(3);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "qs");
+                }
+dialog.dismiss();
+            }
+
+        });
+
+
+        dialog.show();
+
+
+    }
+
+
     public void openDeExportDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -972,11 +1033,10 @@ public class MainActivity extends AppCompatActivity
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
 
-
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("") ) {
+                if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
 
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Confirm Update")
@@ -985,17 +1045,17 @@ public class MainActivity extends AppCompatActivity
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
-                                    int flag ;
+                                    int flag;
 
-                                    if(exportTerm.getCheckedRadioButtonId() == R.id.invoiceRadioButton)
+                                    if (exportTerm.getCheckedRadioButtonId() == R.id.invoiceRadioButton)
                                         flag = 0;
-                                    else if(exportTerm.getCheckedRadioButtonId() == R.id.paymentRadioButton)
+                                    else if (exportTerm.getCheckedRadioButtonId() == R.id.paymentRadioButton)
                                         flag = 1;
                                     else
                                         flag = 2;
 
-                                    DeExportJason obj = new DeExportJason(MainActivity.this , from_date.getText().toString() ,
-                                            to_date.getText().toString() , flag);
+                                    DeExportJason obj = new DeExportJason(MainActivity.this, from_date.getText().toString(),
+                                            to_date.getText().toString(), flag);
 
                                     obj.startExportDatabase();
                                     //obj.storeInDatabase();
@@ -1020,7 +1080,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public DatePickerDialog.OnDateSetListener openDatePickerDialog (final EditText editText){
+    public DatePickerDialog.OnDateSetListener openDatePickerDialog(final EditText editText) {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -1136,6 +1196,7 @@ public class MainActivity extends AppCompatActivity
         enterCustDialog.setView(myLayout);
         enterCustDialog.create().show();
     }//openCheckInDialog
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
