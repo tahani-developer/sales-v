@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:text="Printer Setting "
+        android:textColor="@color/add_button"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/add_button" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <RadioButton
+            android:id="@+id/LK30"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:checked="true"
+            android:text="SEWOOLK-P30"
+            android:textColor="@color/add_button"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/LK31"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="SEWOO LK-P31"
+            android:textColor="@color/add_button"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/LK32"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="SEWOO LK-P32 /PRINTER (MTP-3)"
+            android:textColor="@color/add_button"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/QS"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="QS-PRINTER"
+            android:textColor="@color/add_button"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/done_button"
+        android:text="@string/save"
+        android:textColor="@color/layer3"
+        android:textSize="18sp" />
+</LinearLayout>

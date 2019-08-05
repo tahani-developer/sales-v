@@ -12,8 +12,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.print.PrintHelper;
 import android.util.Log;
 import android.view.Gravity;
@@ -89,10 +91,12 @@ public class SalesInvoice extends Fragment {
     public ImageButton discountButton;
     private DecimalFormat decimalFormat;
     public static TextView voucherNumberTextView, Customer_nameSales;
+     static ArrayList<Item> itemForPrint;
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     private int voucherNumber;
-    public int payMethod;
+  public  int payMethod;
+    boolean isFinishPrint=false;
 
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -100,8 +104,8 @@ public class SalesInvoice extends Fragment {
     String itemsString = "";
     String itemsString2 = "";
 
-    public static Voucher voucher;
-    public static List<Item> itemsList;
+    static Voucher voucher;
+   static List<Item> itemsList;
 
     bluetoothprinter object;
 
@@ -119,6 +123,8 @@ public class SalesInvoice extends Fragment {
     double discountValue;
     double discountPerc;
     volatile boolean stopWorker;
+//    static Voucher voucherSale;
+//    static List<Item> itemSale;
    /* public static void test2(){
 
         Customer_nameSales.setText(CustomerListFragment.Customer_Name.toString());
@@ -156,6 +162,7 @@ public class SalesInvoice extends Fragment {
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
         object = new bluetoothprinter();
+        itemForPrint=new ArrayList<>();
 
         addItemImgButton2 = (ImageButton) view.findViewById(R.id.addItemImgButton2);
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
@@ -181,6 +188,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
 
         itemsList = new ArrayList<>();
+
 
         custInfoImgButton.setVisibility(View.INVISIBLE);
         connect.setVisibility(View.INVISIBLE);
@@ -391,11 +399,18 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    closeBT();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                itemForPrint.clear();
                 clicked = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
 
@@ -451,7 +466,9 @@ public class SalesInvoice extends Fragment {
                                                         items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
 
                                                 itemsList.add(item);
+
                                                 mDbHandler.addItem(item);
+                                                itemForPrint.add(item);
 
                                                 if (voucherType != 506)
                                                     mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
@@ -466,11 +483,61 @@ public class SalesInvoice extends Fragment {
                                             }
 
                                             if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                try {
-                                                    findBT();
-                                                    openBT();
-                                                } catch (IOException ex) {
+//                                                try {
+//                                                    findBT();
+//                                                    openBT();f
+
+
+
+                                                int printer = mDbHandler.getPrinterSetting();
+
+                                                switch (printer) {
+                                                    case 0:
+                                                        Intent i=new Intent(getActivity().getBaseContext(),BluetoothConnectMenu.class);
+                                                        i.putExtra("printKey","1");
+                                                        startActivity(i);
+//                                                             lk30.setChecked(true);
+                                                        break;
+                                                    case 1:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(1);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk31.setChecked(true);
+                                                        break;
+                                                    case 2:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(2);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk32.setChecked(true);
+                                                        break;
+                                                    case 3:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(3);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             qs.setChecked(true);
+                                                        break;
                                                 }
+
+
+
+
+
+
+
+//                                                } catch (IOException ex) {
+//                                                }
                                             } else {
                                                 hiddenDialog();
                                             }
@@ -496,6 +563,7 @@ public class SalesInvoice extends Fragment {
 
                                             itemsList.add(item);
                                             mDbHandler.addItem(item);
+                                            itemForPrint.add(item);
 
                                             if (voucherType != 506)
                                                 mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
@@ -510,11 +578,57 @@ public class SalesInvoice extends Fragment {
                                         }
 
                                         if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                            try {
-                                                findBT();
-                                                openBT();
-                                            } catch (IOException ex) {
+//                                            try {
+//                                                findBT();
+//                                                openBT();
+//                                            } catch (IOException ex) {
+//                                            }
+
+                                            int printer = mDbHandler.getPrinterSetting();
+
+                                            switch (printer) {
+                                                case 0:
+                                                    Intent i=new Intent(getActivity().getBaseContext(),BluetoothConnectMenu.class);
+                                                    i.putExtra("printKey","1");
+                                                    startActivity(i);
+//                                                             lk30.setChecked(true);
+                                                    break;
+                                                case 1:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(1);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             lk31.setChecked(true);
+                                                    break;
+                                                case 2:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(2);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             lk32.setChecked(true);
+                                                    break;
+                                                case 3:
+
+                                                    try {
+                                                        findBT();
+                                                        openBT(3);
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+//                                                             qs.setChecked(true);
+                                                    break;
                                             }
+
+
+
+
+
                                         } else {
                                             hiddenDialog();
                                         }
@@ -833,65 +947,84 @@ public class SalesInvoice extends Fragment {
     }
 
 
-//    void send_dataSewoo(Voucher voucher) throws IOException {
-//        try {
-//            Log.e("send","'yes");
-//            testB =convertLayoutToImage(voucher);
-//
-//            printPic = PrintPic.getInstance();
-//            printPic.init(testB);
-//            printIm= printPic.printDraw();
-//            mmOutputStream.write(printIm);
-//
-////            dialogs.show();
-////            ImageView iv = (ImageView) view.findViewById(R.id.ivw);
-////////                iv.setLayoutParams(layoutParams);
-////            iv.setBackgroundColor(Color.TRANSPARENT);
-////            iv.setImageBitmap(testB);
-//
-////            int w=10/0;
-//
-//
-////                iv.setMaxHeight(100);
-////                iv.setMaxWidth(100);
-//
-//
-//
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    void send_dataSewoo(Voucher voucher) throws IOException {
+        try {
+            Log.e("send","'yes");
+            testB =convertLayoutToImage(voucher);
+
+            printPic = PrintPic.getInstance();
+            printPic.init(testB);
+            printIm= printPic.printDraw();
+            mmOutputStream.write(printIm);
+            isFinishPrint=true;
+//            dialogs.show();
+//            ImageView iv = (ImageView) view.findViewById(R.id.ivw);
+//////                iv.setLayoutParams(layoutParams);
+//            iv.setBackgroundColor(Color.TRANSPARENT);
+//            iv.setImageBitmap(testB);
+
+//            int w=10/0;
+
+
+//                iv.setMaxHeight(100);
+//                iv.setMaxWidth(100);
+
+
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private Bitmap convertLayoutToImage(Voucher voucher) {
-        LinearLayout linearView = null;
+        LinearLayout linearView=null;
 
-        Dialog dialogs = new Dialog(getActivity());
+        final Dialog dialogs=new Dialog(getActivity());
         dialogs.setContentView(R.layout.printdialog);
 //            fill_theVocher( voucher);
 
 
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 
-        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont;
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
 
-        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
-        compname = (TextView) dialogs.findViewById(R.id.compname);
-        tel = (TextView) dialogs.findViewById(R.id.tel);
-        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
-        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
-        date = (TextView) dialogs.findViewById(R.id.date);
-        custname = (TextView) dialogs.findViewById(R.id.custname);
-        note = (TextView) dialogs.findViewById(R.id.note);
-        vhType = (TextView) dialogs.findViewById(R.id.vhType);
-        paytype = (TextView) dialogs.findViewById(R.id.paytype);
-        total = (TextView) dialogs.findViewById(R.id.total);
-        discount = (TextView) dialogs.findViewById(R.id.discount);
-        tax = (TextView) dialogs.findViewById(R.id.tax);
-        ammont = (TextView) dialogs.findViewById(R.id.ammont);
-        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
+        ImageView img =(ImageView)dialogs.findViewById(R.id.img);
+        compname=(TextView)dialogs.findViewById(R.id.compname);
+        tel=(TextView)dialogs.findViewById(R.id.tel);
+        taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+        vhNo=(TextView)dialogs.findViewById(R.id.vhNo);
+        date=(TextView)dialogs.findViewById(R.id.date);
+        custname=(TextView)dialogs.findViewById(R.id.custname);
+        note=(TextView)dialogs.findViewById(R.id.note);
+        vhType=(TextView)dialogs.findViewById(R.id.vhType);
+        paytype=(TextView)dialogs.findViewById(R.id.paytype);
+        total=(TextView)dialogs.findViewById(R.id.total);
+        discount=(TextView)dialogs.findViewById(R.id.discount);
+        tax=(TextView)dialogs.findViewById(R.id.tax);
+        ammont=(TextView)dialogs.findViewById(R.id.ammont);
+        textW=(TextView)dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
 //
+
+       TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
 
 
         String voucherTyp = "";
@@ -924,6 +1057,14 @@ public class SalesInvoice extends Fragment {
         ammont.setText("" + voucher.getNetSales());
 
 
+
+        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        }else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         lp2.setMargins(0, 7, 0, 0);
@@ -952,17 +1093,32 @@ public class SalesInvoice extends Fragment {
 
 
                         case 1:
-                            textView.setText("" + itemsList.get(j).getQty());
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                            textView.setText("" + itemsList.get(j).getUnit());
                             textView.setLayoutParams(lp2);
+                    }else{
+                        textView.setText("" + items.get(j).getQty());
+                        textView.setLayoutParams(lp2);
+                    }
                             break;
 
                         case 2:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            }else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
                             textView.setText("" + itemsList.get(j).getPrice());
                             textView.setLayoutParams(lp2);
                             break;
 
 
-                        case 3:
+                        case 4:
                             String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
                             amount = convertToEnglish(amount);
                             textView.setText(amount);
@@ -1293,12 +1449,12 @@ public class SalesInvoice extends Fragment {
 
     void findBT() {
 
-//        try {
-//            /*  very important **********************************************************/
-//            closeBT();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            /*  very important **********************************************************/
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         itemsString = "";
         itemsString2 = "";
@@ -1363,7 +1519,7 @@ public class SalesInvoice extends Fragment {
     }
 
     // Tries to open a connection to the bluetooth printer device
-    void openBT() throws IOException {
+    void openBT(int casePrinter) throws IOException {
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -1371,17 +1527,28 @@ public class SalesInvoice extends Fragment {
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
+
             beginListenForData();
 
-//            myLabel.setText("Bluetooth Opened");
-//            sendData2();
-            sendData();
+
+            switch (casePrinter){
+
+                case 1:
+                    sendData();
+                    break;
+                case 2:
+                    Settings settings = mDbHandler.getAllSettings().get(0);
+                    for(int i=0;i<settings.getNumOfCopy();i++)
+                    {send_dataSewoo(voucher);}
+
+                    break;
+                case 3:
+                    sendData2();
+                    break;
 
 
-//            Settings settings = mDbHandler.getAllSettings().get(0);
-//            for(int i=0;i<settings.getNumOfCopy();i++)
-//            {send_dataSewoo(voucher);}
 
+            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1445,10 +1612,10 @@ public class SalesInvoice extends Fragment {
 
             workerThread.start();
         } catch (NullPointerException e) {
-//            closeBT();
+            closeBT();
             e.printStackTrace();
         } catch (Exception e) {
-//            closeBT();
+            closeBT();
             e.printStackTrace();
         }
     }
@@ -1456,123 +1623,11 @@ public class SalesInvoice extends Fragment {
     /*
      * This will send data to be printed by the bluetooth printer
      */
-//    void sendData() throws IOException {
-//        try {
-//
-//            int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
-//            CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-//
-//            if (companyInfo != null) {
-//                pic.setImageBitmap(companyInfo.getLogo());
-//                pic.setDrawingCacheEnabled(true);
-//                Bitmap bitmap = pic.getDrawingCache();
-//
-//                PrintPic printPic = PrintPic.getInstance();
-//                printPic.init(bitmap);
-//                byte[] bitmapdata = printPic.printDraw();
-//
-//
-//                for (int i = 1; i <= numOfCopy; i++) {
-//                    String voucherTyp = "";
-//                    switch (voucher.getVoucherType()) {
-//                        case 504:
-//                            voucherTyp = "فاتورة بيع";
-//                            break;
-//                        case 506:
-//                            voucherTyp = "فاتورة مرتجعات";
-//                            break;
-//                        case 508:
-//                            voucherTyp = "طلب جديد";
-//                            break;
-//                    }
-//
-//                    if (companyInfo.getLogo() != null) {
-//
-//                        mmOutputStream.write(bitmapdata);
-//                        printCustom(" \n ", 1, 0);
-//                    }
-//
-//                    printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
-//                    printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 0);
-//                    printCustom("----------------------------------------------" + "\n", 1, 2);
-//                    printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
-//                    mmOutputStream.write(PrinterCommands.FEED_LINE);
-//                    printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
-//                    printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);
-//                    printCustom("نوع الفاتورة : " + voucherTyp + "\n", 1, 2);
-//                    printCustom("طريقة الدفع  : " + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", 1, 2);
-//                    mmOutputStream.write(PrinterCommands.FEED_LINE);
-//                    printCustom("----------------------------------------------" + "\n", 1, 2);
-//                    if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
-//                        printCustom(" السلعة              " + "العدد   " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
-//                        printCustom("----------------------------------------------" + "\n", 1, 2);
-//
-//                        printCustom(itemsString + "\n", 0, 2);
-//                    } else {
-//                        printCustom(" السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n", 0, 2);
-//                        printCustom("----------------------------------------------" + "\n", 1, 2);
-//
-//                        printCustom(itemsString2 + "\n", 0, 2);
-//                    }
-//
-//                    printCustom("----------------------------------------------" + "\n", 1, 2);
-//
-//                //    mmOutputStream.write(PrinterCommands.FEED_LINE);
-//                    printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
-//                    printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
-//                    printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
-//                    printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
-//                    if (voucher.getVoucherType() != 506) {
-//                        printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
-//                        printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
-//                     //   mmOutputStream.write(PrinterCommands.FEED_LINE);
-//                        printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
-//                    }
-//                  //  mmOutputStream.write(PrinterCommands.FEED_LINE);
-//                    printCustom("----------------------------------------------" + "\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//                    printCustom("\n", 1, 2);
-//
-//                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-//                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-//                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-//                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
-//                  //  Arabic864 arabic = new Arabic864();
-//                    //   byte[] arabicArr = arabic.Convert(  new StringBuilder(msg).reverse().toString(),false);
-//                    //    byte[] arabicArr = arabic.Convert("الاسم",false);
-////                    Log.e("mymsg", "" + msg);
-////                        Log.e("Not ---LtoR",""+msg);
-////                        Log.e("LtoR",""+msg);
-////                        byte[] arabicArr = arabic.Convert(new StringBuilder(msg).reverse().toString(), false);
-////                        Log.e("byte", "" + arabicArr.toString());
-////                        mmOutputStream.write(arabicArr);
-//                }
-//                closeBT();
-//                // tell the user data were sent
-////                myLabel.setText("Data Sent");
-//
-//            } else
-//                Toast.makeText(getActivity(), " please enter company information", Toast.LENGTH_LONG).show();
-//
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
     void sendData() throws IOException {
         try {
 
-
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-
 
             if (companyInfo != null) {
                 pic.setImageBitmap(companyInfo.getLogo());
@@ -1582,6 +1637,7 @@ public class SalesInvoice extends Fragment {
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();
+
 
                 for (int i = 1; i <= numOfCopy; i++) {
                     Thread.sleep(1000);
@@ -1598,11 +1654,11 @@ public class SalesInvoice extends Fragment {
                             break;
                     }
 
-//                    if (companyInfo.getLogo() != null) {
-//
-//                        mmOutputStream.write(bitmapdata);
-//                        printCustom(" \n ", 1, 0);
-//                    }
+                    if (companyInfo.getLogo() != null) {
+
+                        mmOutputStream.write(bitmapdata);
+                        printCustom(" \n ", 1, 0);
+                    }
 
                     printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
                     printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 0);
@@ -1649,16 +1705,32 @@ public class SalesInvoice extends Fragment {
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);
 
-
-                    // tell the user data were sent
-//                myLabel.setText("Data Sent");
-
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                    mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
+                  //  Arabic864 arabic = new Arabic864();
+                    //   byte[] arabicArr = arabic.Convert(  new StringBuilder(msg).reverse().toString(),false);
+                    //    byte[] arabicArr = arabic.Convert("الاسم",false);
+//                    Log.e("mymsg", "" + msg);
+//                        Log.e("Not ---LtoR",""+msg);
+//                        Log.e("LtoR",""+msg);
+//                        byte[] arabicArr = arabic.Convert(new StringBuilder(msg).reverse().toString(), false);
+//                        Log.e("byte", "" + arabicArr.toString());
+//                        mmOutputStream.write(arabicArr);
                 }
                 closeBT();
-            }
+                // tell the user data were sent
+//                myLabel.setText("Data Sent");
+
+            } else
+                Toast.makeText(getActivity(), " please enter company information", Toast.LENGTH_LONG).show();
+
         } catch (NullPointerException e) {
+            closeBT();
             e.printStackTrace();
         } catch (Exception e) {
+            closeBT();
             e.printStackTrace();
         }
     }
@@ -1674,7 +1746,7 @@ public class SalesInvoice extends Fragment {
             double totalTotal = 0;
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
-            Log.e("nocopy", "" + numOfCopy);
+            Log.e("nocopy",""+numOfCopy);
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
             pic.setImageBitmap(companyInfo.getLogo());
             pic.setDrawingCacheEnabled(true);
@@ -1832,7 +1904,7 @@ public class SalesInvoice extends Fragment {
             mmOutputStream.close();
             mmInputStream.close();
             mmSocket.close();
-//            workerThread.stop();
+            workerThread.stop();
 //            myLabel.setText("Bluetooth Closed");
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -1907,7 +1979,7 @@ public class SalesInvoice extends Fragment {
                 }
 
                 JsonResponse = sb.toString();
-                // Log.e("tag", "" + JsonResponse);
+               // Log.e("tag", "" + JsonResponse);
 
                 return JsonResponse;
 

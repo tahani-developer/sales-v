@@ -49,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Reports.Reports;
 
@@ -234,6 +235,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.de_export) {
             openPasswordDialog(3);
+        } else if (id == R.id.printerSetting) {
+            openPasswordDialog(4);
         }
 
         return super.
@@ -330,8 +333,8 @@ public class MainActivity extends AppCompatActivity
 //                    .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_sign_out) {
-            Intent intent = new Intent(this, CPCL2Menu.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, CPCL2Menu.class);
+//            startActivity(intent);
 
         } else if (id == R.id.nav_clear_local) {
 
@@ -608,7 +611,7 @@ public class MainActivity extends AppCompatActivity
                         displa, rate[0], visitPic, CustomerListShow.Customer_Account, CustomerListShow.Customer_Name, Login.salesManNo));
 
                 dialog.dismiss();
-                //  Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(MainActivity.this, "Saved !", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -643,8 +646,10 @@ public class MainActivity extends AppCompatActivity
                     } else if (flag == 2)
                         openCompanyInfoDialog();
 
-                    else {
+                    else if (flag == 3) {
                         openDeExportDialog();
+                    } else if (flag == 4) {
+                        openPrintSetting();
                     }
                 } else
                     Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
@@ -918,6 +923,74 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
 
     }
+
+    public void openPrintSetting() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.printer_setting);
+
+        final RadioButton lk30, lk32, lk31, qs;
+        lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
+        lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
+
+        lk32 = (RadioButton) dialog.findViewById(R.id.LK32);
+        qs = (RadioButton) dialog.findViewById(R.id.QS);
+
+
+        Button save = (Button) dialog.findViewById(R.id.save);
+
+        int printer = mDbHandler.getPrinterSetting();
+
+        switch (printer) {
+            case 0:
+                lk30.setChecked(true);
+                break;
+            case 1:
+                lk31.setChecked(true);
+                break;
+            case 2:
+                lk32.setChecked(true);
+                break;
+            case 3:
+                qs.setChecked(true);
+                break;
+        }
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDbHandler.deleteAllPrinterSetting();
+                PrinterSetting printerSetting = new PrinterSetting();
+
+                if (lk30.isChecked()) {
+                    printerSetting.setPrinterName(0);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk30");
+                } else if (lk31.isChecked()) {
+                    printerSetting.setPrinterName(1);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk31");
+                } else if (lk32.isChecked()) {
+                    printerSetting.setPrinterName(2);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "lk32");
+                } else if (qs.isChecked()) {
+                    printerSetting.setPrinterName(3);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "qs");
+                }
+dialog.dismiss();
+            }
+
+        });
+
+
+        dialog.show();
+
+
+    }
+
 
     public void openDeExportDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);

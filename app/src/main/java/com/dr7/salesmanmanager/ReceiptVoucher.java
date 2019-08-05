@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,12 +66,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import java.text.Bidi;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -85,7 +78,8 @@ public class ReceiptVoucher extends Fragment {
     byte[] printIm;
     Context context;
     int position = 1;
-    public List<Payment> payments;
+    public static List<Payment> payments;
+    public static List<Payment> paymentsforPrint;
     Animation animZoomIn;
     private LinearLayout chequeLayout;
     private ScrollView scrollView;
@@ -99,6 +93,7 @@ public class ReceiptVoucher extends Fragment {
     private double total = 0.0;
 
     String itemsString = "";
+    boolean isFinishPrint=false;
 
     private EditText amountEditText, remarkEditText;
     private TableLayout tableCheckData;
@@ -166,6 +161,7 @@ public class ReceiptVoucher extends Fragment {
         animZoomIn = (Animation) AnimationUtils.loadAnimation(this.getActivity().getBaseContext(),R.anim.zoom_in);
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
         pic=(ImageView)view.findViewById(R.id.pic_receipt);
+        paymentsforPrint=new ArrayList<>();
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
@@ -247,6 +243,7 @@ public class ReceiptVoucher extends Fragment {
                                     check.setDueDate(chDate.getText().toString());
                                     check.setAmount(Double.parseDouble(chValue.getText().toString()));
                                     payments.add(check);
+                                    paymentsforPrint.add(check);
                                     Log.e("payments",""+payments.size());
                                     Log.e("payments tsst",""+payments.size()+" "+chNum.getText().toString()+" \n"+bank.getSelectedItem().toString()
                                     +"\n"+chDate.getText().toString()+"\n"+chValue.getText().toString());
@@ -432,11 +429,63 @@ public class ReceiptVoucher extends Fragment {
 //                                intent.putExtra("flag" , "1");
 //                                startActivity(intent);
 
-                                try {
-                                    findBT();
-                                    openBT();
-                                } catch (IOException ex) {
+
+
+                                int printer = mDbHandler.getPrinterSetting();
+
+                                switch (printer) {
+                                    case 0:
+
+                                        Intent i=new Intent(getActivity(),BluetoothConnectMenu.class);
+                                        i.putExtra("printKey","2");
+                                        startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                                        break;
+                                    case 1:
+
+                                        try {
+                                            findBT();
+                                            openBT(1);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             lk31.setChecked(true);
+                                        break;
+                                    case 2:
+
+                                        try {
+                                            findBT();
+                                            openBT(2);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             lk32.setChecked(true);
+                                        break;
+                                    case 3:
+
+                                        try {
+                                            findBT();
+                                            openBT(3);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             qs.setChecked(true);
+                                        break;
                                 }
+
+
+
+
+//                                try {
+//                                    findBT();
+//                                    openBT();
+//                                } catch (IOException ex) {
+//                                }
+
+
+
+
                                 mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
                                 clearForm();
 
@@ -487,11 +536,63 @@ public class ReceiptVoucher extends Fragment {
                                     mDbHandler.setMaxSerialNumber(4, voucherNumber);
                                 }
 
-                                try {
-                                    findBT();
-                                    openBT();
-                                } catch (IOException ex) {
+
+
+
+                                int printer = mDbHandler.getPrinterSetting();
+
+                                switch (printer) {
+                                    case 0:
+
+                                        Intent i=new Intent(getActivity(),BluetoothConnectMenu.class);
+                                        i.putExtra("printKey","2");
+                                        startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                                        break;
+                                    case 1:
+
+                                        try {
+                                            findBT();
+                                            openBT(1);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             lk31.setChecked(true);
+                                        break;
+                                    case 2:
+
+                                        try {
+                                            findBT();
+                                            openBT(2);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             lk32.setChecked(true);
+                                        break;
+                                    case 3:
+
+                                        try {
+                                            findBT();
+                                            openBT(3);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+//                                                             qs.setChecked(true);
+                                        break;
                                 }
+
+
+//
+//                                try {
+//                                    findBT();
+//                                    openBT();
+//                                } catch (IOException ex) {
+//                                }
+
+
+
+
                                 clearForm();
                             }
                         }
@@ -667,7 +768,7 @@ public class ReceiptVoucher extends Fragment {
 
     // Tries to open a connection to the bluetooth printer device
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    void openBT() throws IOException {
+    void openBT(int casePrinter) throws IOException {
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -678,14 +779,28 @@ public class ReceiptVoucher extends Fragment {
 
             beginListenForData();
 
-//            myLabel.setText("Bluetooth Opened");
-//            sendData2();
 
-            sendData();
-//            Settings settings = mDbHandler.getAllSettings().get(0);
-//            for(int i=0;i<settings.getNumOfCopy();i++) {
-//                send_dataSewoo();
-//            }
+            switch (casePrinter){
+
+                case 1:
+                    sendData();
+                    break;
+                case 2:
+                    Settings settings = mDbHandler.getAllSettings().get(0);
+                    for(int i=0;i<settings.getNumOfCopy();i++) {
+                        send_dataSewoo();}
+                    break;
+                case 3:
+                    sendData2();
+                    break;
+
+
+
+            }
+
+//            myLabel.setText("Bluetooth Opened");
+//
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -702,7 +817,7 @@ public class ReceiptVoucher extends Fragment {
             printPic.init(testB);
             printIm= printPic.printDraw();
             mmOutputStream.write(printIm);
-
+            isFinishPrint=true;
 //            dialogs.show();
 //            ImageView iv = (ImageView)findViewById(R.id.ivw);
 ////            iv.setLayoutParams(layoutParams);
@@ -722,7 +837,7 @@ public class ReceiptVoucher extends Fragment {
     private Bitmap convertLayoutToImage() {
         LinearLayout linearView=null;
 
-        Dialog dialogs=new Dialog(getActivity());
+        final Dialog dialogs=new Dialog(getActivity());
         dialogs.setContentView(R.layout.print_payment_cash);
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 //*******************************************initial ***************************************************************
@@ -739,6 +854,23 @@ public class ReceiptVoucher extends Fragment {
         paytype=(TextView)dialogs.findViewById(R.id.textView_payMethod);
         TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
         ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+
+
+        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
 
 //************************************************fill layout *********************************************************************
         if(!companyInfo.getLogo().equals(null))

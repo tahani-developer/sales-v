@@ -31,6 +31,8 @@ public class PrinterCommands {
     public static byte[] FEED_PAPER_AND_CUT = {0x1D, 0x56, 66, 0x00};
 
     public static byte[] SELECT_CYRILLIC_CHARACTER_CODE_TABLE = {0x1B, 0x74, 0x11};
+//
+//    public static byte[] SELECT_BIT_IMAGE_MODE = {0x1B, 0x2A, 33, 255, 3};
 
 //    public static byte[] SELECT_BIT_IMAGE_MODE = {0x1B, 0x2A, 33, -128, 0};
     public static byte[] SELECT_BIT_IMAGE_MODE = {  0x1B, 0x2A, 33, (byte) 255, 3};

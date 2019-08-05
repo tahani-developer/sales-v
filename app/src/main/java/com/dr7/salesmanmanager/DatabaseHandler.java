@@ -20,6 +20,7 @@ import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
@@ -42,7 +43,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 55;
+    private static final int DATABASE_VERSION = 56;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -50,6 +51,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     // tables from JSON
     private static final String ACTIVE_KEY="ACTIVE_KEY";
     private static final String KEY_VALUE ="KEY_VALUE";
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+    private static final String PRINTER_SETTING_TABLE="PRINTER_SETTING_TABLE";
+    private static final String PRINTER_SETTING ="PRINTER_SETTING";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -392,6 +397,12 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_VALUE + " INTEGER"+ ")";
         db.execSQL(CREATE_ACTIVE_KEY);
         //-----------------------------------------------------
+
+        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+
+                + PRINTER_SETTING + " INTEGER"+ ")";
+        db.execSQL(CREATE_PRINTER_SETTING_TABLE);
+//ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_Price_List_D = "CREATE TABLE " + Price_List_D + "("
                 + ComapnyNo2 + " INTEGER,"
@@ -774,6 +785,21 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.e("onUpgrade*****", "duplicated column");
         }
 
+
+        try {
+
+
+            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+
+                    + PRINTER_SETTING + " INTEGER"+ ")";
+            db.execSQL(CREATE_PRINTER_SETTING_TABLE);
+
+
+        } catch (Exception e) {
+            Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
+        }
+
+
     }
 
     public void addKey(activeKey keyvalue)
@@ -785,6 +811,17 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
     }
+
+    public void addPrinterSeting(PrinterSetting printer)
+    {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PRINTER_SETTING,printer.getPrinterName());
+        db.insert(PRINTER_SETTING_TABLE, null, values);
+        db.close();
+
+    }
+
     public void addCustomer(Customer customer) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -1699,6 +1736,30 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
      }
+
+
+
+    public  int getPrinterSetting()
+    { int keyvalue=0;
+        String selectQuery = "select DISTINCT  PRINTER_SETTING from "+ PRINTER_SETTING_TABLE;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst())
+        {
+            do {
+                keyvalue=cursor.getInt(0);
+
+            } while (cursor.moveToNext());
+        }
+
+        return keyvalue;
+
+
+    }
+
+
     public List<String> getAllexistingUnits(String itemNo) {
         List<String> units = new ArrayList<>();
         units.add("1");
@@ -2133,6 +2194,15 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + CUSTOMER_MASTER);
         db.close();
     }
+
+
+
+    public void deleteAllPrinterSetting() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + PRINTER_SETTING_TABLE);
+        db.close();
+    }
+
     public void deleteKeyValue() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + KEY_VALUE);
