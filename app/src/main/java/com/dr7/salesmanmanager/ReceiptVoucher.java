@@ -681,11 +681,11 @@ public class ReceiptVoucher extends Fragment {
 //            myLabel.setText("Bluetooth Opened");
 //            sendData2();
 
-//            sendData();
-            Settings settings = mDbHandler.getAllSettings().get(0);
-            for(int i=0;i<settings.getNumOfCopy();i++) {
-                send_dataSewoo();
-            }
+            sendData();
+//            Settings settings = mDbHandler.getAllSettings().get(0);
+//            for(int i=0;i<settings.getNumOfCopy();i++) {
+//                send_dataSewoo();
+//            }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {

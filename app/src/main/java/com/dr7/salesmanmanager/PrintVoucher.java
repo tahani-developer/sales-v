@@ -603,12 +603,12 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     void findBT(int voucherNo) {
-        try {
-            /*  very important **********************************************************/
-            closeBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            /*  very important **********************************************************/
+//            closeBT();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         itemsString = "";
         for (int j = 0; j < items.size(); j++) {
 
@@ -682,6 +682,7 @@ public class PrintVoucher extends AppCompatActivity {
             mmSocket.connect();
             mmOutputStream = mmSocket.getOutputStream();
             mmInputStream = mmSocket.getInputStream();
+
 
             beginListenForData();
          //   Settings settings = obj.getAllSettings().get(0);
@@ -806,6 +807,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 
                 for (int i = 1; i <= numOfCopy; i++) {
+                    Thread.sleep(1000);
                     String voucherTyp = "";
                     switch (voucher.getVoucherType()) {
                         case 504:
@@ -818,13 +820,13 @@ public class PrintVoucher extends AppCompatActivity {
                             voucherTyp = "طلب جديد";
                             break;
                     }
-
-                    if (companyInfo.getLogo() != null) {
-                        //  mmOutputStream.write(bitmapdata);
-
-                        mmOutputStream.write(bitmapdata);
-                        printCustom(" \n ", 1, 0);
-                    }
+//
+//                    if (companyInfo.getLogo() != null) {
+//                        //  mmOutputStream.write(bitmapdata);
+//
+//                        mmOutputStream.write(bitmapdata);
+//                        printCustom(" \n ", 1, 0);
+//                    }
 
                     printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
                     printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
@@ -850,16 +852,16 @@ public class PrintVoucher extends AppCompatActivity {
                     }
                     printCustom("----------------------------------------------" + "\n", 1, 2);
 
-                   // mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
                     printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
                     printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
                     printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
                     printCustom("استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n", 1, 2);
                     printCustom("اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n", 1, 2);
-                 //   mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("المستلم : ________________ التوقيع : __________" + "\n", 1, 2);
-                 //   mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);
@@ -867,7 +869,6 @@ public class PrintVoucher extends AppCompatActivity {
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);
                     printCustom("\n", 1, 2);
-
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
                     mmOutputStream.write(PrinterCommands.ESC_ALIGN_CENTER);
@@ -1088,7 +1089,7 @@ public class PrintVoucher extends AppCompatActivity {
                     }
 
                     printCustom(companyInfo.getCompanyName() + " \n ", 1, 1);
-//                mmOutputStream.write(PrinterCommands.FEED_LINE);
+                    mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ        " + voucher.getVoucherDate() + " : " + " \n ", 1, 0);
