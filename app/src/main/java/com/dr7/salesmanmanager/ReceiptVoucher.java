@@ -46,16 +46,12 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
-import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.text.Bidi;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -142,6 +138,11 @@ public class ReceiptVoucher extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_receipt_voucher, container, false);
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();
@@ -788,6 +789,7 @@ public class ReceiptVoucher extends Fragment {
                 case 2:
                     Settings settings = mDbHandler.getAllSettings().get(0);
                     for(int i=0;i<settings.getNumOfCopy();i++) {
+                        Thread.sleep(1000);
                         send_dataSewoo();}
                     break;
                 case 3:
@@ -818,6 +820,10 @@ public class ReceiptVoucher extends Fragment {
             printIm= printPic.printDraw();
             mmOutputStream.write(printIm);
             isFinishPrint=true;
+
+
+
+
 //            dialogs.show();
 //            ImageView iv = (ImageView)findViewById(R.id.ivw);
 ////            iv.setLayoutParams(layoutParams);
@@ -929,9 +935,9 @@ public class ReceiptVoucher extends Fragment {
         custname.setText(payment.getCustName());
         date.setText(payment.getPayDate());
         cashNo.setText(payment.getVoucherNumber()+"");
-
+        dialogs.show();
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
-        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_cash);
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_invoice);
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -1263,6 +1269,7 @@ public class ReceiptVoucher extends Fragment {
                 byte[] bitmapdata = printPic.printDraw();
 
                 for (int i = 1; i <= numOfCopy; i++) {
+                    Thread.sleep(1000);
                     if (companyInfo.getLogo() != null) {
 
                         mmOutputStream.write(bitmapdata);

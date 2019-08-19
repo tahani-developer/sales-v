@@ -87,6 +87,11 @@ public class CashReport  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cash_report);
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //************************* initial *************************************
         decimalFormat = new DecimalFormat("##.00");
         payments = new ArrayList<Payment>();
@@ -622,11 +627,12 @@ public class CashReport  extends AppCompatActivity {
 
             for (int i = 1; i <= numOfCopy; i++) {
                     msg = "       " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "       " + "\n" +
-                            "       " + "\n" +
-                            "       " + "\n" +
 
+                            "       " + "\n" +
+                            "اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash ))+
+                            "الاجمالي   " + convertToEnglish(decimalFormat.format(net)) +
+                            "الدفع شيك   " +convertToEnglish(decimalFormat.format( creditPayment ))+
+                            "الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment ))+
                             "----------------------------------------------" + "\n" +
                             "إجمالي المبيعات : "+total + "\n" +
                             "المبيعات ذمم : " +credit+ "\n" +
