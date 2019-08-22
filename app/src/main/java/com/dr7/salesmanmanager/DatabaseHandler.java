@@ -1839,7 +1839,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Payment payment = new Payment();
 
-                payment.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                payment.setCompanyNumber(cursor.getInt(0));
                 payment.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
                 payment.setPayDate(cursor.getString(2));
                 payment.setCustNumber(cursor.getString(3));

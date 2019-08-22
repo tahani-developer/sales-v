@@ -97,7 +97,7 @@
         <ImageView
             android:id="@+id/pic_ptint_voucher"
             android:layout_width="200dp"
-            android:layout_height="80dp"
+            android:layout_height="60dp"
             android:visibility="visible"/>
     </LinearLayout>
 

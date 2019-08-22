@@ -71,7 +71,9 @@ import java.util.UUID;
 public class SalesInvoice extends Fragment {
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
-
+    Bitmap testB;
+    byte[] printIm;
+    PrintPic printPic;
     private static int salesMan;
     static int index;
     public static List<Payment> payment_unposted ;
@@ -164,6 +166,11 @@ public class SalesInvoice extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
         list_discount_offers=new ArrayList<>();
@@ -1180,7 +1187,7 @@ public class SalesInvoice extends Fragment {
                 tabLayout.addView(row);
             }
         }
-
+        dialogs.show();
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);

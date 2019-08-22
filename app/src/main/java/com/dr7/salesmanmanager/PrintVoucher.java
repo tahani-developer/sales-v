@@ -102,7 +102,11 @@ public class PrintVoucher extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.print_vouchers);
-
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo=new ArrayList<CompanyInfo>();
@@ -900,13 +904,12 @@ public class PrintVoucher extends AppCompatActivity {
                             voucherTyp = "طلب جديد";
                             break;
                     }
-//
-//                    if (companyInfo.getLogo() != null) {
-//                        //  mmOutputStream.write(bitmapdata);
-//
-//                        mmOutputStream.write(bitmapdata);
-//                        printCustom(" \n ", 1, 0);
-//                    }
+
+                    if (companyInfo.getLogo() != null) {
+
+                        mmOutputStream.write(bitmapdata);
+
+                    }
 
                     printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
                     printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
@@ -1203,7 +1206,7 @@ dialogs.show();
             if (companyInfo != null) {
 
                 for (int i = 1; i <= numOfCopy; i++) {
-
+                      Thread.sleep(1000);
                  //   printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
 
                     if (companyInfo.getLogo() != null) {
