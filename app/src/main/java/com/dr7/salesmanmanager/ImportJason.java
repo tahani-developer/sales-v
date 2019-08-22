@@ -17,6 +17,7 @@ import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
+import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
@@ -57,6 +58,7 @@ public class ImportJason extends AppCompatActivity{
     public static List<SalesMan> salesMenList = new ArrayList<>();
     public static List<CustomerPrice> customerPricesList = new ArrayList<>();
     public static List<Offers> offersList = new ArrayList<>();
+    public static List<QtyOffers> qtyOffersList = new ArrayList<>();
     public static List<SalesmanStations> salesmanStationsList = new ArrayList<>();
 
     public ImportJason(Context context){
@@ -350,6 +352,17 @@ public class ImportJason extends AppCompatActivity{
 
                     salesmanStationsList.add(station);
                 }
+                JSONArray parentArrayQuantityOffers = parentObject.getJSONArray("QTY_OFFERS");
+                qtyOffersList.clear();
+                for (int i = 0; i < parentArrayQuantityOffers.length(); i++) {
+                    JSONObject finalObject = parentArrayQuantityOffers.getJSONObject(i);
+
+                    QtyOffers qtyOffers = new QtyOffers();
+                    qtyOffers.setQTY(finalObject.getDouble("QTY"));
+                    qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
+                    qtyOffersList.add(qtyOffers);
+                    Log.e("qtyOffersList", "=" + qtyOffersList.size());
+                }
                 Log.e("salesmanStationsList ", "********" + salesmanStationsList.size());
 
             } catch (MalformedURLException e) {
@@ -483,6 +496,9 @@ public class ImportJason extends AppCompatActivity{
 
             for (int i = 0; i < offersList.size(); i++) {
                 mHandler.addOffer(offersList.get(i));
+            }
+            for (int i = 0; i < qtyOffersList.size(); i++) {
+                mHandler.addQtyOffers(qtyOffersList.get(i));
             }
 
             for (int i = 0; i < salesmanStationsList.size(); i++) {

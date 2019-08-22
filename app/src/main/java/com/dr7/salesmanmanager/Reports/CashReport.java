@@ -626,6 +626,10 @@ public class CashReport  extends AppCompatActivity {
                             "       " + "\n" +
                             "       " + "\n" +
                             "       " + "\n" +
+                            "اجمالي المقبوضات  : " + convertToEnglish(decimalFormat.format(total_cash ))+
+                            "الاجمالي  :  " + convertToEnglish(decimalFormat.format(net))+
+                            "الدفع شيك :  " +convertToEnglish(decimalFormat.format( creditPayment ))+
+                            "الدفع نقدا: "+convertToEnglish(decimalFormat.format(cashPayment ))+
 
                             "----------------------------------------------" + "\n" +
                             "إجمالي المبيعات : "+total + "\n" +
