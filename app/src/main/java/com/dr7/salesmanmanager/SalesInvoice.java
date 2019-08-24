@@ -11,9 +11,13 @@ import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.print.PrintHelper;
@@ -48,6 +52,9 @@ import com.ganesh.intermecarabic.Arabic864;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -535,6 +542,10 @@ public class SalesInvoice extends Fragment {
                                                         }
 //                                                             qs.setChecked(true);
                                                         break;
+                                                    case 4:
+                                                        printTally(voucher);
+                                                        break;
+
                                                 }
 
 
@@ -630,6 +641,10 @@ public class SalesInvoice extends Fragment {
                                                     }
 //                                                             qs.setChecked(true);
                                                     break;
+                                                case 4:
+                                                    printTally(voucher);
+                                                    break;
+
                                             }
 
 
@@ -1156,6 +1171,186 @@ public class SalesInvoice extends Fragment {
         return bit;// creates bitmap and returns the same
     }
 
+    private Bitmap convertLayoutToImageTally(Voucher voucher) {
+        LinearLayout linearView=null;
+
+        final Dialog dialogs=new Dialog(getActivity());
+        dialogs.setContentView(R.layout.printdialog_tally);
+//            fill_theVocher( voucher);
+
+
+        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+
+        TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
+
+        ImageView img =(ImageView)dialogs.findViewById(R.id.img);
+        compname=(TextView)dialogs.findViewById(R.id.compname);
+        tel=(TextView)dialogs.findViewById(R.id.tel);
+        taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+        vhNo=(TextView)dialogs.findViewById(R.id.vhNo);
+        date=(TextView)dialogs.findViewById(R.id.date);
+        custname=(TextView)dialogs.findViewById(R.id.custname);
+        note=(TextView)dialogs.findViewById(R.id.note);
+        vhType=(TextView)dialogs.findViewById(R.id.vhType);
+        paytype=(TextView)dialogs.findViewById(R.id.paytype);
+        total=(TextView)dialogs.findViewById(R.id.total);
+        discount=(TextView)dialogs.findViewById(R.id.discount);
+        tax=(TextView)dialogs.findViewById(R.id.tax);
+        ammont=(TextView)dialogs.findViewById(R.id.ammont);
+        textW=(TextView)dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
+//
+
+        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+
+        String voucherTyp = "";
+        switch (voucher.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+
+        img.setImageBitmap(companyInfo.getLogo());
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        vhNo.setText("" + voucher.getVoucherNumber());
+        date.setText(voucher.getVoucherDate());
+        custname.setText(voucher.getCustName());
+        note.setText(voucher.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+        total.setText("" + voucher.getSubTotal());
+        discount.setText("" + voucher.getVoucherDiscount());
+        tax.setText("" + voucher.getTax());
+        ammont.setText("" + voucher.getNetSales());
+
+
+
+        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        }else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = 0; j < itemsList.size(); j++) {
+
+            if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
+                final TableRow row = new TableRow(getActivity());
+
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(getActivity());
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(32);
+
+                    switch (i) {
+                        case 0:
+                            textView.setText(itemsList.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+
+                        case 1:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getUnit());
+                                textView.setLayoutParams(lp2);
+                            }else{
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                            }
+                            break;
+
+                        case 2:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            }else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
+                            textView.setText("" + itemsList.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+
+                        case 4:
+                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+
+                tabLayout.addView(row);
+            }
+        }
+        dialogs.show();
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit = linearView.getDrawingCache();
+
+
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+        return bitmap;// creates bitmap and returns the same
+    }
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
@@ -1562,6 +1757,47 @@ public class SalesInvoice extends Fragment {
             e.printStackTrace();
         }
     }
+
+
+    void printTally(Voucher voucher) {
+
+        Bitmap bitmap = convertLayoutToImageTally(voucher);
+
+        try {
+            Settings settings = mDbHandler.getAllSettings().get(0);
+            File file = savebitmap(bitmap, settings.getNumOfCopy());
+            Log.e("save image ", "" + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        File f = null;
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        File file = new File(directory_path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        for (int i = 0; i < numCope; i++) {
+            String targetPdf = directory_path + "testimageSales" + i + ".png";
+            f = new File(targetPdf);
+
+
+//        f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        }
+        return f;
+    }
+
+
+
 
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.

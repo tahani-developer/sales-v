@@ -60,6 +60,15 @@
             android:text="QS-PRINTER"
             android:textColor="@color/add_button"
             android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/dotMatrix"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Dot-Matrix Printer (Tally MDP 480+)"
+            android:textColor="@color/add_button"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <Button
