@@ -21,6 +21,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
@@ -43,12 +44,16 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 56;
+    private static final int DATABASE_VERSION = 57;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    private static final String QTY_OFFERS="QTY_OFFERS";
+    private static final String QTY ="QTY";
+    private static final String DISCOUNT_VALUE ="DISCOUNT_VALUE";
+    //__________________________________________________________________
     private static final String ACTIVE_KEY="ACTIVE_KEY";
     private static final String KEY_VALUE ="KEY_VALUE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -334,7 +339,12 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+                + QTY + " REAL,"
+                + DISCOUNT_VALUE + " REAL"+ ")";
+        db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE " + CUSTOMER_MASTER + "("
@@ -787,18 +797,36 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         try {
-
-
             String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
 
                     + PRINTER_SETTING + " INTEGER"+ ")";
             db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
         }
+        try {
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+                + QTY + " REAL,"
+                + DISCOUNT_VALUE + " REAL"+ ")";
+        db.execSQL(CREATE_TABLE_QTY_OFFERS);
+        }
+        catch (Exception e) {
+            Log.e("onUpgrade*****", "duplicated column QTY_OFFERS");
+        }
 
+
+    }
+    public void addQtyOffers(QtyOffers qtyOffers)
+    {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(QTY,qtyOffers.getQTY());
+        values.put(DISCOUNT_VALUE,qtyOffers.getDiscountValue());
+        db.insert(QTY_OFFERS, null, values);
+        db.close();
 
     }
 
@@ -838,7 +866,6 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PAY_METHOD0, customer.getPayMethod());
         values.put(CUST_LAT, customer.getCustLat());
         values.put(CUST_LONG, customer.getCustLong());
-
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -846,7 +873,6 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void addItem_Unit_Details(ItemUnitDetails item) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
         values.put(ComapnyNo, item.getCompanyNo());
         values.put(ItemNo, item.getItemNo());
         values.put(UnitID, item.getUnitId());
@@ -1736,7 +1762,29 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
      }
+    public  List<QtyOffers> getDiscountOffers()
+    {
+        List<QtyOffers> qtyOffers=new ArrayList<>();
+        String selectQuery = "select * from "+ QTY_OFFERS;
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst())
+        {
+            do {
+                QtyOffers new_Value_Qty_offers=new QtyOffers();
+                new_Value_Qty_offers.setQTY(Double.parseDouble(cursor.getString(0)));
+                new_Value_Qty_offers.setDiscountValue(Double.parseDouble(cursor.getString(1)));
+                qtyOffers.add(new_Value_Qty_offers);
+
+            } while (cursor.moveToNext());
+        }
+        Log.e("new_Value_Qty_offers","Db"+qtyOffers);
+        return qtyOffers;
+
+
+    }
 
 
     public  int getPrinterSetting()

@@ -266,7 +266,7 @@ public class CPCLSample2 {
         try {
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();
@@ -284,7 +284,7 @@ public class CPCLSample2 {
         try {
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();
@@ -503,7 +503,7 @@ public class CPCLSample2 {
         try {
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();

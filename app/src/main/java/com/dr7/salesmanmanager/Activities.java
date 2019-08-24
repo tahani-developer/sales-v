@@ -112,8 +112,8 @@ public class Activities extends AppCompatActivity implements
 
     @Override
     public void addDiscount(double discount, int iDiscType) {
-
-        salesInvoice.discTextView.setText(decimalFormat.format(discount));
+        salesInvoice.sum_discount=discount;
+//        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals();
     }
 

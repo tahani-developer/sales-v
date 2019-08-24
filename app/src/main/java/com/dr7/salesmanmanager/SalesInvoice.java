@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.ganesh.intermecarabic.Arabic864;
@@ -82,7 +83,8 @@ public class SalesInvoice extends Fragment {
     PrintPic printPic;
     private static int salesMan;
     static int index;
-    public static List<Payment> payment_unposted;
+    public static List<Payment> payment_unposted ;
+    public List<QtyOffers> list_discount_offers;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_payment, unposted_voucher;
     public ListView itemsListView;
     public static List<Item> items;
@@ -94,7 +96,7 @@ public class SalesInvoice extends Fragment {
     private EditText remarkEditText;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
-    public double totalDiscount;
+    public double totalDiscount=0,discount_oofers_total=0, sum_discount=0;;
     private TextView taxTextView, subTotalTextView, netTotalTextView;
     public TextView discTextView;
     public ImageButton discountButton;
@@ -125,6 +127,9 @@ public class SalesInvoice extends Fragment {
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
+    Bitmap testB;
+    PrintPic printPic;
+    byte[] printIm;
 
     byte[] readBuffer;
     int readBufferPosition;
@@ -175,6 +180,7 @@ public class SalesInvoice extends Fragment {
         }
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
+        list_discount_offers=new ArrayList<>();
         object = new bluetoothprinter();
         itemForPrint=new ArrayList<>();
 
@@ -835,19 +841,22 @@ public class SalesInvoice extends Fragment {
 
     public void calculateTotals() {
         double itemTax, itemTotal, itemTotalAfterTax,
-                itemTotalPerc, itemDiscVal, posPrice;
-
+                itemTotalPerc, itemDiscVal, posPrice,totalQty=0;
+        //**********************************************************************
+        list_discount_offers=mDbHandler.getDiscountOffers();
+        Log.e("list_discount_offers",""+list_discount_offers);
         String itemGroup;
 
         subTotal = 0.0;
         totalTaxValue = 0.0;
         netTotal = 0.0;
 
-        totalDiscount = 0;
+        //Include tax
 
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             try {
-                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+                totalDiscount=sum_discount;
+//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -871,10 +880,27 @@ public class SalesInvoice extends Fragment {
             }
 
             for (int i = 0; i < items.size(); i++) {
+
                 itemTotal = items.get(i).getAmount();
                 itemTotalPerc = itemTotal / subTotal;
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setTotalDiscVal(itemDiscVal);
+                //************************************************************
+
+
+                totalQty +=items.get(i).getQty();
+                Log.e("totalQty",""+totalQty);
+
+                discount_oofers_total=0.0;
+                for(int j=0;j<list_discount_offers.size();j++)
+                {
+
+                    if(totalQty>=list_discount_offers.get(j).getQTY())
+                    {
+                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
+                        Log.e("discount_oofers_total",""+discount_oofers_total);
+                    }
+                }
 
                 itemGroup = items.get(i).getCategory();
 
@@ -890,11 +916,15 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue = totalTaxValue + itemTax;
             }
 
-            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
+            netTotal = netTotal + subTotal - totalDiscount-discount_oofers_total + totalTaxValue;
+//              netTotal = netTotal + subTotal -sum_discount + totalTaxValue;
 
-        } else {
-            try {
-                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+
+        }
+
+        else {
+            try {totalDiscount=sum_discount;
+//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -937,6 +967,19 @@ public class SalesInvoice extends Fragment {
                 itemTotalPerc = itemTotal / subTotal;
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setTotalDiscVal(itemDiscVal);
+          //      discount_oofers_total=0.0;
+                totalQty +=items.get(i).getQty();
+                Log.e("totalQty",""+totalQty);
+                discount_oofers_total=0;
+                for(int j=0;j<list_discount_offers.size();j++)
+                {
+
+                    if(totalQty>=list_discount_offers.get(j).getQTY())
+                    {
+                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
+                        Log.e("discount_oofers_total",""+discount_oofers_total);
+                    }
+                }
                 itemTotal = itemTotal - itemDiscVal;
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
@@ -951,20 +994,25 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue = totalTaxValue + itemTax;
             }
 
-            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
+            netTotal = netTotal + subTotal - totalDiscount-discount_oofers_total + totalTaxValue;
+           // discount_oofers_total=0;
 
         }
 
-
+        double discount_All_invoice=discount_oofers_total+Double.parseDouble(discTextView.getText().toString());
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
+
+//        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
+        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_oofers_total+""))));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
         subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
         taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
         netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
-        discTextView.setText(convertToEnglish(discTextView.getText().toString()));
+
+        discTextView.setText(convertToEnglish(discount_oofers_total+""));
+        discount_oofers_total=0.0;
 
     }
 
