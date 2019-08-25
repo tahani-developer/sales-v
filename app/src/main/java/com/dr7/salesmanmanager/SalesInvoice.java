@@ -127,9 +127,7 @@ public class SalesInvoice extends Fragment {
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
-    Bitmap testB;
-    PrintPic printPic;
-    byte[] printIm;
+
 
     byte[] readBuffer;
     int readBufferPosition;
