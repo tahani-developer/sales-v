@@ -10,11 +10,13 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,14 +26,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ExportJason extends AppCompatActivity {
 
     private Context context;
     private ProgressDialog progressDialog;
-    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer, jsonArrayTransactions;
+    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer, jsonArrayTransactions, jsonArrayBalance;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -42,14 +47,15 @@ public class ExportJason extends AppCompatActivity {
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     public static List<Voucher> requestVouchers = new ArrayList<>();
     public static List<Item> requestItems = new ArrayList<>();
+     public  static  List<SalesManItemsBalance> salesManItemsBalanceList=new ArrayList<>();
 
-    public ExportJason(Context context) {
+    public ExportJason(Context context) throws JSONException {
         this.context = context;
         this.mHandler = new DatabaseHandler(context);
     }
 
-    void startExportDatabase() {
 
+    void startExportDatabase() {
         transactions = mHandler.getAlltransactions();
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)
@@ -57,11 +63,23 @@ public class ExportJason extends AppCompatActivity {
                 transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
             }
+        salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
+        jsonArrayBalance=new JSONArray();
+        for (int i = 0; i < salesManItemsBalanceList.size(); i++)
+        {
+            salesManItemsBalanceList.get(i).getSalesManNo();
+            salesManItemsBalanceList.get(i).getItemNo();
+            salesManItemsBalanceList.get(i).getQty();
+            jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
+//            jsonArrayBalance.put(getObj());
+//            Log.e("json_balance ",""+jsonArrayBalance.toString());
+        }
 
         vouchers = mHandler.getAllVouchers();
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
-            if (vouchers.get(i).getIsPosted() == 0) {
+            if (vouchers.get(i).getIsPosted() == 0)
+            {
                 vouchers.get(i).setIsPosted(1);
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
@@ -152,7 +170,8 @@ public class ExportJason extends AppCompatActivity {
                         + "&" + "Payments="        + jsonArrayPayments.toString().trim()
                         + "&" + "Payments_Checks=" + jsonArrayPaymentsPaper.toString().trim()
                         + "&" + "Added_Customers=" + jsonArrayAddedCustomer.toString().trim()
-                        + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim();
+                        + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim()
+                        + "&" + "LOAD_VAN=" + jsonArrayBalance.toString().trim();//sales_man_item_balance
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);

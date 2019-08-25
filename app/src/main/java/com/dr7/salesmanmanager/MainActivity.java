@@ -49,15 +49,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
+import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity
@@ -82,6 +91,13 @@ public class MainActivity extends AppCompatActivity
     Bitmap visitPic = null;
     ImageView visitPicture;
     int amountOfmaxDiscount = 0;
+    public static List<Transaction> transactions = new ArrayList<>();
+    public static List<Voucher> vouchers = new ArrayList<>();
+    public static List<Item> items = new ArrayList<>();
+    public static List<Payment> payments = new ArrayList<>();
+    public static List<Payment> paymentsPaper = new ArrayList<>();
+    public static List<AddedCustomer> addedCustomer = new ArrayList<>();
+    int sum_chech_export_lists=0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -284,7 +300,12 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            ExportJason obj = new ExportJason(MainActivity.this);
+                            ExportJason obj = null;
+                            try {
+                                obj = new ExportJason(MainActivity.this);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             obj.startExportDatabase();
                             //obj.storeInDatabase();
 
@@ -307,9 +328,74 @@ public class MainActivity extends AppCompatActivity
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+//                            openPasswordDialog(5);
+//                            transactions = mDbHandler.getAlltransactions();
+//                            for (int i = 0; i < transactions.size(); i++)
+//                                if (transactions.get(i).getIsPosted() == 0)
+//                                {
+//                                    sum_chech_export_lists++;
+//                                    Log.e("sumExport",""+sum_chech_export_lists);
+//                                    break ;//  sum=1
+//
+//                                }
+                            vouchers = mDbHandler.getAllVouchers();
+                            for (int i = 0; i < vouchers.size(); i++)
+                                if (vouchers.get(i).getIsPosted() == 0)
+                                {
+                                    sum_chech_export_lists++;//  sum=1
+                                    break;
+                                }
 
-                            ImportJason obj = new ImportJason(MainActivity.this);
-                            obj.startParsing();
+                            items = mDbHandler.getAllItems();
+                            for (int i = 0; i < items.size(); i++)
+                                if (items.get(i).getIsPosted() == 0) {
+                                    sum_chech_export_lists++;//  sum=2
+                                    break;
+                                }
+                            payments = mDbHandler.getAllPayments();
+
+                            for (int i = 0; i < payments.size(); i++)
+                                if (payments.get(i).getIsPosted() == 0) {
+                                    sum_chech_export_lists++;//  sum=4
+                                    Log.e("sumExport",""+sum_chech_export_lists);
+                                    break;
+
+                                }
+
+                            paymentsPaper = mDbHandler.getAllPaymentsPaper();
+
+                            for (int i = 0; i < paymentsPaper.size(); i++)
+                                if (paymentsPaper.get(i).getIsPosted() == 0) {
+                                    sum_chech_export_lists++;//  sum=5
+                                    break;
+
+                                }
+
+                            addedCustomer = mDbHandler.getAllAddedCustomer();
+
+                            for (int i = 0; i < addedCustomer.size(); i++)
+                                if (addedCustomer.get(i).getIsPosted() == 0) {
+                                    sum_chech_export_lists++;//  sum=6
+                                    Log.e("sumExport",""+sum_chech_export_lists);
+                                    break;
+
+                                }
+                            if(sum_chech_export_lists>0)
+                            {
+                                Toast.makeText(MainActivity.this, "Please Do Export All Data Before importing the data ", Toast.LENGTH_SHORT).show();
+                                sum_chech_export_lists=0;
+
+
+                            }
+                            else {
+                                Log.e("sumExport",""+sum_chech_export_lists);
+                                openPasswordDialog(5);
+
+
+                            }
+
+
+
                             //obj.storeInDatabase();
 
                         }
@@ -650,6 +736,11 @@ public class MainActivity extends AppCompatActivity
                         openDeExportDialog();
                     } else if (flag == 4) {
                         openPrintSetting();
+                    }
+                    else if (flag == 5) {
+                        ImportJason obj = new ImportJason(MainActivity.this);
+                        obj.startParsing();
+
                     }
                 } else
                     Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();

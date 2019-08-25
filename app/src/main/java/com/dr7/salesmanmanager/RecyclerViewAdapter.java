@@ -203,8 +203,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                     }
                                                 }
                                             } else {
+                                                double totalQty=0;
+                                                totalQty= Double.parseDouble(unitQty.getText().toString())+ Double.parseDouble( bonus.getText().toString());
+                                                Log.e("totalQty+recyclerview",""+totalQty);
                                                 added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                        holder.tax.getText().toString(), unitValue,totalQty+"", price.getText().toString(),
                                                         bonus.getText().toString(), discount.getText().toString(), radioGroup,
                                                         items.get(holder.getAdapterPosition()).getCategory(),items.get(holder.getAdapterPosition()).getPosPrice()+"",useWeight, view.getContext());
                                             }

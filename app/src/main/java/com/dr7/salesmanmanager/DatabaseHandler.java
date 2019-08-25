@@ -1531,7 +1531,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Voucher.setVoucherType(Integer.parseInt(cursor.getString(2)));
                 Voucher.setVoucherDate(cursor.getString(3));
                 Voucher.setSaleManNumber(Integer.parseInt(cursor.getString(4)));
-                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(5)));
+                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(10)));//5
                 Voucher.setVoucherDiscountPercent(Double.parseDouble(cursor.getString(6)));
                 Voucher.setRemark(cursor.getString(7));
                 Voucher.setPayMethod(Integer.parseInt(cursor.getString(8)));
@@ -1605,7 +1605,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setBonus(Float.parseFloat(cursor.getString(7)));
                 item.setDisc(Float.parseFloat(cursor.getString(8)));
                 item.setDiscPerc(cursor.getString(9));
-                item.setTotalDiscVal(Integer.parseInt(cursor.getString(10)));
+                item.setTotalDiscVal(cursor.getFloat(10));
+                item.setVoucherDiscount(cursor.getFloat(10));
                 item.setTaxValue(Double.parseDouble(cursor.getString(11)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
                 item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
@@ -2043,6 +2044,31 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return offers;
     }
+    //*********************************************************
+
+    public List<SalesManItemsBalance> getSalesManItemsBalance(String salesmanNo) {
+        List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
+        String selectQuery = "SELECT  distinct SalesManNo , ItemNo , Qty  FROM "+ SalesMan_Items_Balance
+                +" Where SalesManNo = " + salesmanNo + " And  Qty > 0 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
+                salesManItemsBalance.setSalesManNo(cursor.getString(0));
+                salesManItemsBalance.setItemNo(cursor.getString(1));
+                salesManItemsBalance.setQty(Double.parseDouble(cursor.getString(2)));
+
+
+                salesManItemsBalanceList.add(salesManItemsBalance);
+            } while (cursor.moveToNext());
+        }
+        Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+
+        return salesManItemsBalanceList;
+    }
+    //*********************************************************
 
     public List<SalesmanStations> getAllSalesmanSatation(String salesmanNo , String date) {
         List<SalesmanStations> stations = new ArrayList<>();

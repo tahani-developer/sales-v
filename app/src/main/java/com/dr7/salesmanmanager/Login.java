@@ -115,7 +115,21 @@ public class Login extends AppCompatActivity {
                         } else {
 
                             if (salesMenList.get(index).getPassword().equals(passwordEditText.getText().toString())) {
-                                showDialog_key();
+                                key_value_Db = mDHandler.getActiveKeyValue();
+                                if(key_value_Db==0) {//dosent exist value key in DB
+
+                                    showDialog_key();
+                                }
+                                else{
+
+                                    salesMan = usernameEditText.getText().toString();
+                                    salesManNo = passwordEditText.getText().toString();
+
+                                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(main);
+//                                CustomIntent.customType(getBaseContext(),"left-to-right");
+                                }
+
                             } else
                                 Toast.makeText(Login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
                         }
