@@ -1021,13 +1021,14 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
 
-        final RadioButton lk30, lk32, lk31, qs;
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix;
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
         lk32 = (RadioButton) dialog.findViewById(R.id.LK32);
         qs = (RadioButton) dialog.findViewById(R.id.QS);
 
+        dotMatrix=(RadioButton) dialog.findViewById(R.id.dotMatrix);
 
         Button save = (Button) dialog.findViewById(R.id.save);
 
@@ -1046,6 +1047,10 @@ public class MainActivity extends AppCompatActivity
             case 3:
                 qs.setChecked(true);
                 break;
+            case 4:
+                dotMatrix.setChecked(true);
+                break;
+
         }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -1070,6 +1075,10 @@ public class MainActivity extends AppCompatActivity
                     printerSetting.setPrinterName(3);
                     mDbHandler.addPrinterSeting(printerSetting);
                     Log.e("click ", "qs");
+                }else if (dotMatrix.isChecked()) {
+                    printerSetting.setPrinterName(4);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "dotMatrix");
                 }
 dialog.dismiss();
             }

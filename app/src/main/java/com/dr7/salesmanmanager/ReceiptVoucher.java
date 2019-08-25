@@ -13,8 +13,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -49,6 +53,9 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -473,6 +480,10 @@ public class ReceiptVoucher extends Fragment {
                                         }
 //                                                             qs.setChecked(true);
                                         break;
+                                    case 4:
+                                        printTally();
+                                        break;
+
                                 }
 
 
@@ -581,6 +592,10 @@ public class ReceiptVoucher extends Fragment {
                                         }
 //                                                             qs.setChecked(true);
                                         break;
+                                    case 4:
+                                        printTally();
+                                        break;
+
                                 }
 
 
@@ -797,7 +812,6 @@ public class ReceiptVoucher extends Fragment {
                     break;
 
 
-
             }
 
 //            myLabel.setText("Bluetooth Opened");
@@ -840,6 +854,46 @@ public class ReceiptVoucher extends Fragment {
             e.printStackTrace();
         }
     }
+
+
+    void printTally() {
+
+        Bitmap bitmap = convertLayoutToImageTally();
+
+        try {
+            Settings settings = mDbHandler.getAllSettings().get(0);
+            File file = savebitmap(bitmap, settings.getNumOfCopy());
+            Log.e("save image ", "" + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        File f = null;
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        File file = new File(directory_path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        for (int i = 0; i < numCope; i++) {
+            String targetPdf = directory_path + "testimageReceipt" + i + ".png";
+            f = new File(targetPdf);
+
+
+//        f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        }
+        return f;
+    }
+
+
     private Bitmap convertLayoutToImage() {
         LinearLayout linearView=null;
 
@@ -949,6 +1003,128 @@ public class ReceiptVoucher extends Fragment {
         linearView.buildDrawingCache();
         Bitmap bit =linearView.getDrawingCache();
         return bit;// creates bitmap and returns the same
+    }
+
+    private Bitmap convertLayoutToImageTally() {
+        LinearLayout linearView=null;
+
+        final Dialog dialogs=new Dialog(getActivity());
+        dialogs.setContentView(R.layout.print_payment_cash);
+        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+//*******************************************initial ***************************************************************
+        TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
+        LinearLayout cheque_print_linear=(LinearLayout)dialogs.findViewById(R.id.cheque_payment_layout) ;
+        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
+        tel=(TextView)dialogs.findViewById(R.id.telephone);
+        taxNo=(TextView)dialogs.findViewById(R.id.tax_no);
+        cashNo=(TextView)dialogs.findViewById(R.id.textView_cashNo);
+        date=(TextView)dialogs.findViewById(R.id.textVie_date);
+        custname=(TextView)dialogs.findViewById(R.id.textView_customerName);
+        note=(TextView)dialogs.findViewById(R.id.textView_remark);
+        ammont=(TextView)dialogs.findViewById(R.id.textView_amount_ofMoney);
+        paytype=(TextView)dialogs.findViewById(R.id.textView_payMethod);
+        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
+        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+
+
+        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+//************************************************fill layout *********************************************************************
+        if(!companyInfo.getLogo().equals(null))
+        {
+            companey_logo.setImageBitmap(companyInfo.getLogo());
+
+        }
+        compname.setText(companyInfo.getCompanyName() );
+        tel.setText(""+companyInfo.getcompanyTel());
+        taxNo.setText(""+companyInfo.getTaxNo() );
+        ammont.setText(payment.getAmount()+"");
+        note.setText(payment.getRemark());
+        if(payment.getPayMethod()==1) {
+            paytype.setText(" نقدا ");
+            cheque_print_linear.setVisibility(View.GONE);
+        }
+        else {
+            paytype.setText(" ذمم  ");
+            cheque_print_linear.setVisibility(View.VISIBLE);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            lp.setMargins(0, 7, 0, 0);
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp2.setMargins(0, 7, 0, 0);
+
+            for (int n = 0; n < payments.size(); n++) {
+//                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
+                final TableRow row = new TableRow(this.getActivity());
+                row.setPadding(0, 10, 0, 10);
+                Log.e("paymentprint",""+payments.size());
+                for (int i = 0; i < 4; i++) {
+
+                    String[] record = {
+                            payments.get(n).getBank() + "",
+                            payments.get(n).getCheckNumber() + "",
+                            payments.get(n).getDueDate() + "",
+                            payments.get(n).getAmount() + "",
+                    };
+
+                    row.setLayoutParams(lp);
+                    TextView textView = new TextView(this.getActivity());
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(32);
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
+
+                }
+
+                tableCheque.addView(row);
+            }
+//            }
+        }
+
+
+        custname.setText(payment.getCustName());
+        date.setText(payment.getPayDate());
+        cashNo.setText(payment.getVoucherNumber()+"");
+        dialogs.show();
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_invoice);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+
+        return bitmap;// creates bitmap and returns the same
     }
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.
