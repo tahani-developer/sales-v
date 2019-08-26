@@ -1,5 +1,14 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class SalesManItemsBalance {
 
     private int companyNo;
@@ -48,5 +57,33 @@ public class SalesManItemsBalance {
 
     public void setQty(double qty) {
         this.qty = qty;
+    }
+    Date currentTimeAndDate = Calendar.getInstance().getTime();
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    String today = df.format(currentTimeAndDate);
+
+
+//    public JSONObject getObj() {
+//        JSONObject obj = new JSONObject();
+//        try {
+//            obj.put("date",today);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return obj;
+//    }
+
+    // VANCODE,LOADDATE,LOADQTY,ITEMCODE,NETQTY".
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("VANCODE", salesManNo);
+            obj.put("ITEMCODE", itemNo);
+            obj.put("LOADQTY", qty);
+            obj.put("LOADDATE",today);
+        } catch (JSONException e) {
+            Log.e("TagSalesmanBalance" , "JSONException");
+        }
+        return obj;
     }
 }

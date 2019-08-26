@@ -580,7 +580,7 @@ public class SalesInvoice extends Fragment {
 
                                             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                                                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
-                                                    items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                    items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),//0
                                                     items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
 
                                             itemsList.add(item);
@@ -852,6 +852,29 @@ public class SalesInvoice extends Fragment {
         //Include tax
 
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
+
+            for (int i = 0; i < items.size(); i++) {
+
+                totalQty +=items.get(i).getQty();
+                //  Log.e("totalQty",""+totalQty);
+
+                discount_oofers_total=0;
+                for(int j=0;j<list_discount_offers.size();j++)
+                {
+
+                    if(totalQty>=list_discount_offers.get(j).getQTY())
+                    {
+                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
+                        Log.e("discount_oofers_total",""+discount_oofers_total);
+                    }
+                }
+
+            }
+
+
+            if (discount_oofers_total > 0)
+                sum_discount = discount_oofers_total;
+
             try {
                 totalDiscount=sum_discount;
 //                totalDiscount = Float.parseFloat(discTextView.getText().toString());
@@ -889,6 +912,8 @@ public class SalesInvoice extends Fragment {
                 totalQty +=items.get(i).getQty();
                 Log.e("totalQty",""+totalQty);
 
+
+                /* tahani code
                 discount_oofers_total=0.0;
                 for(int j=0;j<list_discount_offers.size();j++)
                 {
@@ -899,6 +924,8 @@ public class SalesInvoice extends Fragment {
                         Log.e("discount_oofers_total",""+discount_oofers_total);
                     }
                 }
+                */
+
 
                 itemGroup = items.get(i).getCategory();
 
@@ -921,6 +948,30 @@ public class SalesInvoice extends Fragment {
         }
 
         else {
+
+            for (int i = 0; i < items.size(); i++) {
+
+                totalQty +=items.get(i).getQty();
+              //  Log.e("totalQty",""+totalQty);
+
+                discount_oofers_total=0;
+                for(int j=0;j<list_discount_offers.size();j++)
+                {
+
+                    if(totalQty>=list_discount_offers.get(j).getQTY())
+                    {
+                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
+                        Log.e("discount_oofers_total",""+discount_oofers_total);
+                    }
+                }
+
+            }
+
+
+
+            if (discount_oofers_total > 0)
+                sum_discount = discount_oofers_total;
+
             try {totalDiscount=sum_discount;
 //                totalDiscount = Float.parseFloat(discTextView.getText().toString());
             } catch (NumberFormatException e) {
@@ -964,10 +1015,15 @@ public class SalesInvoice extends Fragment {
                 itemTotal = items.get(i).getAmount() - itemTax;
                 itemTotalPerc = itemTotal / subTotal;
                 itemDiscVal = (itemTotalPerc * totalDiscount);
+                items.get(i).setVoucherDiscount( (float)itemDiscVal);
                 items.get(i).setTotalDiscVal(itemDiscVal);
           //      discount_oofers_total=0.0;
                 totalQty +=items.get(i).getQty();
                 Log.e("totalQty",""+totalQty);
+
+
+
+     /*    //tahani code
                 discount_oofers_total=0;
                 for(int j=0;j<list_discount_offers.size();j++)
                 {
@@ -977,7 +1033,13 @@ public class SalesInvoice extends Fragment {
                         discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
                         Log.e("discount_oofers_total",""+discount_oofers_total);
                     }
-                }
+                }*/
+
+
+
+
+
+
                 itemTotal = itemTotal - itemDiscVal;
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
@@ -992,7 +1054,7 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue = totalTaxValue + itemTax;
             }
 
-            netTotal = netTotal + subTotal - totalDiscount-discount_oofers_total + totalTaxValue;
+            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
            // discount_oofers_total=0;
 
         }

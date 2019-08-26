@@ -204,7 +204,10 @@ public class AddItemsFragment2 extends DialogFragment {
 
         try {
             item.setUnit(unit);
-            item.setQty(Float.parseFloat(qty.trim()));
+            //****************************
+            item.setQty(Float.parseFloat(qty));
+            Log.e("setQty",""+Float.parseFloat(qty));
+            Log.e("setQty",""+Float.parseFloat(qty)+Float.parseFloat(bonus));
             item.setPrice(Float.parseFloat(price.trim()));
             if (bonus == "")
                 item.setBonus(Float.parseFloat("0.0"));
