@@ -431,7 +431,7 @@
                 </TableLayout>
 
                 <TextView
-                    android:id="@+id/textView64"
+                    android:id="@+id/notelast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
@@ -440,6 +440,7 @@
                     android:textSize="32sp" />
 
                 <TableRow
+                    android:id="@+id/sing"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"

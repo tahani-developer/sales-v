@@ -1224,8 +1224,13 @@ public class SalesInvoice extends Fragment {
         dialogs.setContentView(R.layout.printdialog_tally);
 //            fill_theVocher( voucher);
 
-
-        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+        List <CompanyInfo>comp=mDbHandler.getAllCompanyInfo();
+        CompanyInfo companyInfo = null;
+        if(comp.size()!=0){
+         companyInfo =comp.get(0);}
+        else {
+            Toast.makeText(getActivity(), "Please Add Company Information", Toast.LENGTH_SHORT).show();
+        }
 
         TextView compname,tel,taxNo,vhNo,date,custname,note,vhType,paytype,total,discount,tax,ammont,textW;
 
