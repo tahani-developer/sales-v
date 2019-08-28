@@ -1014,30 +1014,66 @@ public class PrintVoucher extends AppCompatActivity {
 
     void printTally(Voucher voucher) {
 
-        Bitmap bitmap = convertLayoutToImageTally(voucher);
+        Bitmap bitmap = null;
+        Bitmap bitmap2 = null;
+        List<Item> items1=new ArrayList<>();
+        for (int j = 0; j < items.size(); j++) {
 
-        try {
-            Settings settings = obj.getAllSettings().get(0);
-            File file = savebitmap(bitmap, settings.getNumOfCopy());
-            Log.e("save image ", "" + file.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                items1.add(items.get(j));
+
+            }
         }
+
+        Log.e("Items1__",""+items1.size()+"    "+(items1.size()<=20));
+
+        if(items1.size()<=20){
+             bitmap = convertLayoutToImageTally(voucher,1,0,items1.size(),items1);
+            try {
+                Settings settings = obj.getAllSettings().get(0);
+                File file = savebitmap(bitmap, settings.getNumOfCopy(),"org");
+                Log.e("save image ", "" + file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+
+            Settings settings = obj.getAllSettings().get(0);
+            for(int i=0;i<settings.getNumOfCopy();i++) {
+                bitmap = convertLayoutToImageTally(voucher, 0,0,20,items1);
+                bitmap2 = convertLayoutToImageTally(voucher, 1,20,items1.size(),items1);
+
+
+                try {
+
+                    File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
+                    File file = savebitmap(bitmap, 1,"fir"+""+i);
+
+                    Log.e("save image ", "" + file.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
 
 
     }
 
-    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+    public static File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleM/";
         File file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
         }
         for (int i = 0; i < numCope; i++) {
-            String targetPdf = directory_path + "testimageVoucher" + i + ".png";
+            String targetPdf = directory_path + "testimageVoucher" + i+""+next + ".png";
             f = new File(targetPdf);
 
 
@@ -1238,7 +1274,209 @@ public class PrintVoucher extends AppCompatActivity {
         return bitmap;// creates bitmap and returns the same
     }
 
-    private Bitmap convertLayoutToImageTally(Voucher voucher) {
+    private Bitmap convertLayoutToImageTally(Voucher voucher,int okShow,int start,int end,List<Item>items) {
+        LinearLayout linearView = null;
+
+        final Dialog dialogs = new Dialog(PrintVoucher.this);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.setCancelable(false);
+        dialogs.setContentView(R.layout.printdialog_tally);
+//            fill_theVocher( voucher);
+
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
+
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,noteLast;
+        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
+
+        compname = (TextView) dialogs.findViewById(R.id.compname);
+        tel = (TextView) dialogs.findViewById(R.id.tel);
+        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
+        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
+        date = (TextView) dialogs.findViewById(R.id.date);
+        custname = (TextView) dialogs.findViewById(R.id.custname);
+        note = (TextView) dialogs.findViewById(R.id.note);
+        vhType = (TextView) dialogs.findViewById(R.id.vhType);
+        paytype = (TextView) dialogs.findViewById(R.id.paytype);
+        total = (TextView) dialogs.findViewById(R.id.total);
+        discount = (TextView) dialogs.findViewById(R.id.discount);
+        tax = (TextView) dialogs.findViewById(R.id.tax);
+        ammont = (TextView) dialogs.findViewById(R.id.ammont);
+        textW = (TextView) dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
+        TableLayout sumLayout = (TableLayout) dialogs.findViewById(R.id.table);
+        noteLast =(TextView) dialogs.findViewById(R.id.notelast);
+        TableRow sing=(TableRow) dialogs.findViewById(R.id.sing);
+//
+
+        if(okShow==0){
+            sumLayout.setVisibility(View.GONE);
+            noteLast.setVisibility(View.GONE);
+            sing.setVisibility(View.GONE);
+        }else{
+            sumLayout.setVisibility(View.VISIBLE);
+            noteLast.setVisibility(View.VISIBLE);
+            sing.setVisibility(View.VISIBLE);
+        }
+
+
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                if(isFinishPrint) {
+//                    try {
+//                        closeBT();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                dialogs.dismiss();
+//                }
+            }
+        });
+
+
+        String voucherTyp = "";
+        switch (voucher.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+        img.setImageBitmap(companyInfo.getLogo());
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        vhNo.setText("" + voucher.getVoucherNumber());
+        date.setText(voucher.getVoucherDate());
+        custname.setText(voucher.getCustName());
+        note.setText(voucher.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+        total.setText("" + voucher.getSubTotal());
+        discount.setText("" + voucher.getVoucherDiscount());
+        tax.setText("" + voucher.getTax());
+        ammont.setText("" + voucher.getNetSales());
+
+
+        if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        } else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = start; j <end; j++) {
+
+            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                final TableRow row = new TableRow(PrintVoucher.this);
+
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(PrintVoucher.this);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(32);
+
+                    switch (i) {
+                        case 0:
+                            textView.setText(items.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+
+                        case 1:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getUnit());
+                                textView.setLayoutParams(lp2);
+                            } else {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                            }
+                            break;
+
+                        case 2:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            } else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
+                            textView.setText("" + items.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+
+                        case 4:
+                            String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+
+                tabLayout.addView(row);
+            }
+        }
+
+
+        dialogs.show();
+
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+
+        return bitmap;// creates bitmap and returns the same
+    }
+
+    private Bitmap convertLayoutToImageTallySub(Voucher voucher) {
         LinearLayout linearView = null;
 
         final Dialog dialogs = new Dialog(PrintVoucher.this);
@@ -1269,8 +1507,7 @@ public class PrintVoucher extends AppCompatActivity {
         ammont = (TextView) dialogs.findViewById(R.id.ammont);
         textW = (TextView) dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
-//
-
+        TableLayout sumLayout = (TableLayout) dialogs.findViewById(R.id.table);
 
         doneinsewooprint.setOnClickListener(new View.OnClickListener() {
             @Override
