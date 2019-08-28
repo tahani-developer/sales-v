@@ -316,4 +316,5 @@
     <string name="no_offer_for_credit">No Offer For Credit Invoice</string>
     <string name="max_discount">Max Discount Fpr credit</string>
     <string name="companiname">Companey name</string>
+    <string name="fill_name">Please fill  the companey name</string>
 </resources>

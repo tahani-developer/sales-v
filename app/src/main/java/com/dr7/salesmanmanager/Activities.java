@@ -345,6 +345,7 @@ public class Activities extends AppCompatActivity implements
         // salesInvoice.itemsListAdapter.ite setItemsList(itemsList);
         salesInvoice.itemsListAdapter.notifyDataSetChanged();
         salesInvoice.calculateTotals();
+
     }
 
     @Override

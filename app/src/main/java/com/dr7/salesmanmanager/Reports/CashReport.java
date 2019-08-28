@@ -32,6 +32,7 @@ import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
+import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -514,7 +515,7 @@ public class CashReport  extends AppCompatActivity {
 //                    printCustom(" \n ", 1, 0);
                     }
 
-                    printCustom(companyInfo.getCompanyName() + " \n ", 1, 0);
+                    printCustom(companyInfo.getCompanyName() + "     \n     ", 1, 0);
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
@@ -600,10 +601,10 @@ public class CashReport  extends AppCompatActivity {
 //            Pos pos=new Pos();
 //           pos.POS_SetCharSetAndCodePage(0x00,0x00);
 
-//            Arabic864 arabic = new Arabic864();
-//            byte[] arabicArr = arabic.Convert(msg, false);
-//            mmOutputStream.write(arabicArr);
-               mmOutputStream.write(msg.getBytes());
+            Arabic864 arabic = new Arabic864();
+            byte[] arabicArr = arabic.Convert(msg, false);
+            mmOutputStream.write(arabicArr);
+//               mmOutputStream.write(msg.getBytes());
 
 //            outputStream.write(PrinterCommands.LF);
             //outputStream.write(cc);
@@ -616,45 +617,57 @@ public class CashReport  extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     void sendData() throws IOException {
         try {
-
+            CompanyInfo companyInfo = new CompanyInfo();
             Log.e("******", "here");
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
-            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-            String nameCompany=companyInfo.getCompanyName().toString();
 
-            // the text typed by the user
-            String msg;
+            try {
+                companyInfo = obj.getAllCompanyInfo().get(0);
+            } catch (Exception e) {
+                companyInfo.setCompanyName("Companey Name");
+                companyInfo.setTaxNo(0);
+                companyInfo.setCompanyTel(00000);
+//                companyInfo.setLogo();
+            }
 
-            for (int i = 1; i <= numOfCopy; i++) {
+            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != 0) {
+//            String nameCompany=companyInfo.getCompanyName().toString();
+
+                // the text typed by the user
+                String msg;
+
+                for (int i = 1; i <= numOfCopy; i++) {
                     msg = "       " + "\n" +
 
                             "       " + "\n" +
-                            "اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash ))+
-                            "الاجمالي   " + convertToEnglish(decimalFormat.format(net)) +
-                            "الدفع شيك   " +convertToEnglish(decimalFormat.format( creditPayment ))+
-                            "الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment ))+
+                            "اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash)) +"\n" +
+                            "الاجمالي   " + convertToEnglish(decimalFormat.format(net)) +"\n" +
+                            "الدفع شيك   " + convertToEnglish(decimalFormat.format(creditPayment)) +"\n" +
+                            "الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment)) +"\n" +
                             "----------------------------------------------" + "\n" +
-                            "إجمالي المبيعات : "+total + "\n" +
-                            "المبيعات ذمم : " +credit+ "\n" +
-                            "المبيعات نقدا: " +cash + "\n" +
+                            "إجمالي المبيعات : " + convertToEnglish(decimalFormat.format(total ))+ "\n" +
+                            "المبيعات ذمم : " +convertToEnglish(decimalFormat.format( credit)) + "\n" +
+                            "المبيعات نقدا: " +convertToEnglish(decimalFormat.format( cash)) + "\n" +
                             "----------------------------------------------" + "\n" +
-                            "هاتف : " + companyInfo.getcompanyTel() +"    الرقم الضريبي : "  + companyInfo.getTaxNo() + "\n" +
-                            companyInfo.getCompanyName() + "\n" +
+                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                            "                          "+   companyInfo.getCompanyName() + "\n           " +
                             "       " + "\n" +
                             "       ";
 
-                printCustom(msg + "\n", 1, 2);
+                    printCustom(msg + "\n", 1, 2);
+                }
             }
 
-            closeBT();
+                closeBT();
 
-        } catch (NullPointerException e) {
-            closeBT();
-            e.printStackTrace();
-        } catch (Exception e) {
-            closeBT();
-            e.printStackTrace();
-        }
+            } catch(NullPointerException e){
+                closeBT();
+                e.printStackTrace();
+            } catch(Exception e){
+                closeBT();
+                e.printStackTrace();
+            }
+
     }
 
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {

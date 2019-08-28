@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
@@ -39,6 +40,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarException;
 
 public class ImportJason extends AppCompatActivity{
 
@@ -153,7 +155,8 @@ public class ImportJason extends AppCompatActivity{
                 Log.e("finalJson*********" , finalJson);
 
                 JSONObject parentObject = new JSONObject(finalJson);
-
+                try
+                {
                 JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
                 customerList.clear();
                 for (int i = 0; i < parentArrayCustomers.length(); i++) {
@@ -183,7 +186,13 @@ public class ImportJason extends AppCompatActivity{
 
                     customerList.add(Customer);
                 }
-
+                }
+                catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                try
+                {
                 JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
                 itemUnitDetailsList.clear();
                 for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
@@ -197,7 +206,13 @@ public class ImportJason extends AppCompatActivity{
 
                     itemUnitDetailsList.add(item);
                 }
-
+            }
+            catch (JSONException e)
+            {
+                Log.e("Import Data", e.getMessage().toString());
+            }
+                try
+                {
                 JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
                 itemsMasterList.clear();
                 for (int i = 0; i < parentArrayItems_Master.length(); i++) {
@@ -214,7 +229,13 @@ public class ImportJason extends AppCompatActivity{
                     item.setItemL(finalObject.getDouble("ItemL"));
                     itemsMasterList.add(item);
                 }
-
+                }
+                catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                try
+                {
                 JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
 
                 priceListDpList.clear();
@@ -232,9 +253,15 @@ public class ImportJason extends AppCompatActivity{
 
                     priceListDpList.add(item);
                 }
+                }
+                catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
                 Log.e("priceList " , ""+ priceListDpList.get(0).getPrice());
 
-
+                try
+                {
                 JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
                 priceListMpList.clear();
                 for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {
@@ -249,6 +276,13 @@ public class ImportJason extends AppCompatActivity{
 
                     priceListMpList.add(item);
                 }
+            }catch (JSONException e)
+            {
+                Log.e("Import Data", e.getMessage().toString());
+            }
+
+            try
+            {
 
                 JSONArray parentArraySales_Team = parentObject.getJSONArray("Sales_Team");
                 salesTeamList.clear();
@@ -264,6 +298,14 @@ public class ImportJason extends AppCompatActivity{
 
                     salesTeamList.add(item);
                 }
+            }
+            catch (JSONException e)
+            {
+                Log.e("Import Data", e.getMessage().toString());
+            }
+
+            try
+            {
 
                 JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
                 salesManItemsBalanceList.clear();
@@ -278,6 +320,11 @@ public class ImportJason extends AppCompatActivity{
 
                     salesManItemsBalanceList.add(item);
                 }
+            }catch (JSONException e)
+            {
+                Log.e("Import Data", e.getMessage().toString());
+            }
+
 
 //                JSONArray parentArraySalesmanAndStoreLink = parentObject.getJSONArray("SalesmanAndStoreLink");
 //                salesManAndStoreLinksList.clear();
@@ -291,7 +338,8 @@ public class ImportJason extends AppCompatActivity{
 //
 //                    salesManAndStoreLinksList.add(item);
 //                }
-
+                try
+                {
                 JSONArray parentArraySalesMan = parentObject.getJSONArray("SALESMEN");
                 salesMenList.clear();
                 for (int i = 0; i < parentArraySalesMan.length(); i++) {
@@ -304,6 +352,13 @@ public class ImportJason extends AppCompatActivity{
                     Log.e("*******" , finalObject.getString("SALESNO"));
                     salesMenList.add(salesMan);
                 }
+                }catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
+                try
+                {
 
                 JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("customer_prices");
                 customerPricesList.clear();
@@ -317,53 +372,79 @@ public class ImportJason extends AppCompatActivity{
 
                     customerPricesList.add(price);
                 }
-
-                JSONArray parentArrayOffers = parentObject.getJSONArray("VN_PROMOTION");
-                offersList.clear();
-                for (int i = 0; i < parentArrayOffers.length(); i++) {
-                    JSONObject finalObject = parentArrayOffers.getJSONObject(i);
-
-                    Offers offer = new Offers();
-                    offer.setPromotionID(finalObject.getInt("PROMOID"));
-                    offer.setPromotionType(finalObject.getInt("PROMOTYPE"));
-                    offer.setFromDate(finalObject.getString("BDTAE"));
-                    offer.setToDate(finalObject.getString("PEDTAE"));
-                    offer.setItemNo(finalObject.getString("ITEMCODE"));
-                    offer.setItemQty(finalObject.getDouble("PQTY"));
-                    offer.setBonusQty(finalObject.getDouble("BQTY"));
-                    offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
-
-                    offersList.add(offer);
+                }catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
                 }
 
-                JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
-                salesmanStationsList.clear();
-                for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
-                    JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
 
-                    SalesmanStations station = new SalesmanStations();
-                    station.setSalesmanNo(finalObject.getString("SALESMAN_NO"));
-                    station.setDate(finalObject.getString("DATE_"));
-                    station.setLatitude(finalObject.getString("LATITUDE"));
-                    station.setLongitude(finalObject.getString("LONGITUDE"));
-                    station.setSerial(finalObject.getInt("SERIAL"));
-                    station.setCustNo(finalObject.getString("ACCCODE"));
-                    station.setCustName(finalObject.getString("ACCNAME"));
+                try
+                {
+                    JSONArray parentArrayOffers = parentObject.getJSONArray("VN_PROMOTION");
+                    offersList.clear();
+                    for (int i = 0; i < parentArrayOffers.length(); i++) {
+                        JSONObject finalObject = parentArrayOffers.getJSONObject(i);
 
-                    salesmanStationsList.add(station);
+                        Offers offer = new Offers();
+                        offer.setPromotionID(finalObject.getInt("PROMOID"));
+                        offer.setPromotionType(finalObject.getInt("PROMOTYPE"));
+                        offer.setFromDate(finalObject.getString("BDTAE"));
+                        offer.setToDate(finalObject.getString("PEDTAE"));
+                        offer.setItemNo(finalObject.getString("ITEMCODE"));
+                        offer.setItemQty(finalObject.getDouble("PQTY"));
+                        offer.setBonusQty(finalObject.getDouble("BQTY"));
+                        offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
+
+                        offersList.add(offer);
+                    }
+
+
+                }catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
                 }
-                JSONArray parentArrayQuantityOffers = parentObject.getJSONArray("QTY_OFFERS");
-                qtyOffersList.clear();
-                for (int i = 0; i < parentArrayQuantityOffers.length(); i++) {
-                    JSONObject finalObject = parentArrayQuantityOffers.getJSONObject(i);
 
-                    QtyOffers qtyOffers = new QtyOffers();
-                    qtyOffers.setQTY(finalObject.getDouble("QTY"));
-                    qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
-                    qtyOffersList.add(qtyOffers);
-                    Log.e("qtyOffersList", "=" + qtyOffersList.size());
+                try
+                {
+                    JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
+                    salesmanStationsList.clear();
+                    for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
+                        JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
+
+                        SalesmanStations station = new SalesmanStations();
+                        station.setSalesmanNo(finalObject.getString("SALESMAN_NO"));
+                        station.setDate(finalObject.getString("DATE_"));
+                        station.setLatitude(finalObject.getString("LATITUDE"));
+                        station.setLongitude(finalObject.getString("LONGITUDE"));
+                        station.setSerial(finalObject.getInt("SERIAL"));
+                        station.setCustNo(finalObject.getString("ACCCODE"));
+                        station.setCustName(finalObject.getString("ACCNAME"));
+
+                        salesmanStationsList.add(station);
+                    }
+                }catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
                 }
-                Log.e("salesmanStationsList ", "********" + salesmanStationsList.size());
+
+                try
+                {
+                    JSONArray parentArrayQuantityOffers = parentObject.getJSONArray("QTY_OFFERS");
+                    qtyOffersList.clear();
+                    for (int i = 0; i < parentArrayQuantityOffers.length(); i++) {
+                        JSONObject finalObject = parentArrayQuantityOffers.getJSONObject(i);
+
+                        QtyOffers qtyOffers = new QtyOffers();
+                        qtyOffers.setQTY(finalObject.getDouble("QTY"));
+                        qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
+                        qtyOffersList.add(qtyOffers);
+                        Log.e("qtyOffersList", "=" + qtyOffersList.size());
+                    }
+                    Log.e("salesmanStationsList ", "********" + salesmanStationsList.size());
+                }catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");

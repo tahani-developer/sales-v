@@ -44,7 +44,7 @@ public class CustomerListShow extends DialogFragment {
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
-
+    public static double Max_Discount_value=0;
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
@@ -257,6 +257,7 @@ public class CustomerListShow extends DialogFragment {
                     Customer.setCashCredit(finalObject.getInt("CashCredit"));
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
+                    Customer.setMax_discount(finalObject.getDouble("Max_Discount"));
 
                     customerList.add(Customer);
                 }

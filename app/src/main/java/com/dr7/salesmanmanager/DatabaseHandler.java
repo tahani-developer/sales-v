@@ -44,7 +44,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 57;
+    private static final int DATABASE_VERSION = 58;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -90,6 +90,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PAY_METHOD0 = "PAY_METHOD";
     private static final String CUST_LAT = "CUST_LAT";
     private static final String CUST_LONG = "CUST_LONG";
+    private static final String MAX_DISCOUNT = "MAX_DISCOUNT";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -359,7 +360,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CREDIT_LIMIT + " INTEGER,"
                 + PAY_METHOD0 + " INTEGER,"
                 + CUST_LAT + " TEXT,"
-                + CUST_LONG + " TEXT" + ")";
+                + CUST_LONG + " TEXT,"
+                + MAX_DISCOUNT + " REAL" + ")";
+
         db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -659,7 +662,13 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
         try{
             db.execSQL("ALTER TABLE SETTING ADD PRINT_METHOD TEXT NOT NULL DEFAULT '1'");
         }catch (Exception e)
@@ -866,6 +875,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PAY_METHOD0, customer.getPayMethod());
         values.put(CUST_LAT, customer.getCustLat());
         values.put(CUST_LONG, customer.getCustLong());
+        values.put(MAX_DISCOUNT, customer.getMax_discount());
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1473,6 +1483,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
+                customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1505,7 +1516,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
                 customer.setCustLat(cursor.getString(9));
                 customer.setCustLong(cursor.getString(10));
-
+                customer.setMax_discount(Double.parseDouble(cursor.getString(11)));
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());

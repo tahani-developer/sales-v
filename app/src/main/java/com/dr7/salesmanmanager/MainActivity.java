@@ -300,13 +300,21 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            ExportJason obj = null;
+
+                            Log.e("sumExport",""+sum_chech_export_lists);
+                            openPasswordDialog(6);
+
+
+                          /*  ExportJason obj = null;
                             try {
                                 obj = new ExportJason(MainActivity.this);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            obj.startExportDatabase();
+                            obj.startExportDatabase();*/
+
+
+
                             //obj.storeInDatabase();
 
                         }
@@ -740,6 +748,16 @@ public class MainActivity extends AppCompatActivity
                     else if (flag == 5) {
                         ImportJason obj = new ImportJason(MainActivity.this);
                         obj.startParsing();
+
+                    }
+                    else if (flag == 6) {
+                        ExportJason obj = null;
+                        try {
+                            obj = new ExportJason(MainActivity.this);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        obj.startExportDatabase();
 
                     }
                 } else

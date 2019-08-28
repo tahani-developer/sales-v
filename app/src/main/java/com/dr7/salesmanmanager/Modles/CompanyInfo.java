@@ -39,6 +39,10 @@ public class CompanyInfo {
         return taxNo;
     }
 
+    public void setCompanyTel(int companyTel) {
+        this.companyTel = companyTel;
+    }
+
     public void setTaxNo(int taxNo) {
         this.taxNo = taxNo;
     }

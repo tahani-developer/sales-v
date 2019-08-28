@@ -9,6 +9,7 @@ package com.dr7.salesmanmanager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -513,10 +514,20 @@ public class CPCLSample2 {
     }
 
     private String CashReport_kArabic() {
+        String companney_name="";
         decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-        dataArabic_Report+="                                        "+companyInfo.getCompanyName() + "                            \n \n" +
+        if(companyInfo.getCompanyName().equals(""))
+        {
+            companney_name="Companey";
+            //Please fill  the companey name
+            Toast.makeText(context, R.string.fill_name, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            companney_name=companyInfo.getCompanyName();
+        }
+        dataArabic_Report+="                                        "+ companney_name+ "                            \n \n" +
                 "  الرقم الضريبي :  " + companyInfo.getTaxNo() +  " \n "+
                 "        -----------------------------------------------------------------------  " + " \n "+
       "التاريخ  :     " + date.getText() +  " \n "+
