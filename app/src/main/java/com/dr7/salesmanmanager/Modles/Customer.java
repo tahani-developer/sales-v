@@ -1,5 +1,7 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.util.Log;
+
 /**
  * Created by mohd darras on 15/04/2018.
  */
@@ -18,6 +20,7 @@ public class Customer {
     private int payMethod;
     private String custLat;
     private String custLong;
+    private double max_discount;
 
 
     private String customerAccount, customerName;
@@ -26,10 +29,9 @@ public class Customer {
 
     }
 
-    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
-                    String priceListId, int cashCredit, String salesManNumber, double creditLimit,
-                    String customerAccount, String customerName, int payMethod, String custLat, String custLong) {
-
+    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
+                    int cashCredit, String salesManNumber, double creditLimit,
+                    int payMethod, String custLat, String custLong, double max_discount, String customerAccount, String customerName) {
         this.companyNumber = companyNumber;
         this.custId = custId;
         this.custName = custName;
@@ -39,11 +41,12 @@ public class Customer {
         this.cashCredit = cashCredit;
         this.salesManNumber = salesManNumber;
         this.creditLimit = creditLimit;
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
         this.payMethod = payMethod;
         this.custLat = custLat;
         this.custLong = custLong;
+        this.max_discount = max_discount;
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
     }
 
     public Customer(String custId, String custName) {
@@ -53,6 +56,21 @@ public class Customer {
 
     public int getCompanyNumber() {
         return companyNumber;
+    }
+
+    public double getMax_discount() {
+        return max_discount;
+    }
+
+    public void setMax_discount(double max_discount) {
+      try {
+          this.max_discount = max_discount;
+      }
+      catch (Exception e)
+      {
+          Log.e("ExceptionMaxDiscount",""+max_discount);
+          max_discount=0;
+      }
     }
 
     public void setCompanyNumber(int companyNumber) {

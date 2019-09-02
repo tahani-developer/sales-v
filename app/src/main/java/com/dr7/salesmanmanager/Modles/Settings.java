@@ -21,13 +21,14 @@ public class Settings {
     private int bonusNotAlowed;
     private int noOffer_for_credit;
     private  int amountOfMaxDiscount;
+    private  int customer_authorized;
     public Settings(){
 
     }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase, int allowMinus,
                     int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange, int canChangePrice,
-                    int readDiscountFromOffers, int workOnline, int paymethodCheck,int bonusNotAlowed ,int noOffer_for_credit,int amountOfMaxDiscount) {
+                    int readDiscountFromOffers, int workOnline, int paymethodCheck,int bonusNotAlowed ,int noOffer_for_credit,int amountOfMaxDiscount,int customer_authorized) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -47,6 +48,15 @@ public class Settings {
         this.bonusNotAlowed=bonusNotAlowed;
         this.noOffer_for_credit=noOffer_for_credit;
         this.amountOfMaxDiscount=amountOfMaxDiscount;
+        this.customer_authorized=customer_authorized;
+    }
+
+    public int getCustomer_authorized() {
+        return customer_authorized;
+    }
+
+    public void setCustomer_authorized(int customer_authorized) {
+        this.customer_authorized = customer_authorized;
     }
 
     public int getAmountOfMaxDiscount() {

@@ -300,13 +300,21 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            ExportJason obj = null;
+
+                            Log.e("sumExport",""+sum_chech_export_lists);
+                            openPasswordDialog(6);
+
+
+                          /*  ExportJason obj = null;
                             try {
                                 obj = new ExportJason(MainActivity.this);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            obj.startExportDatabase();
+                            obj.startExportDatabase();*/
+
+
+
                             //obj.storeInDatabase();
 
                         }
@@ -328,7 +336,7 @@ public class MainActivity extends AppCompatActivity
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-//                            openPasswordDialog(5);
+                            openPasswordDialog(5);
 //                            transactions = mDbHandler.getAlltransactions();
 //                            for (int i = 0; i < transactions.size(); i++)
 //                                if (transactions.get(i).getIsPosted() == 0)
@@ -338,61 +346,61 @@ public class MainActivity extends AppCompatActivity
 //                                    break ;//  sum=1
 //
 //                                }
-                            vouchers = mDbHandler.getAllVouchers();
-                            for (int i = 0; i < vouchers.size(); i++)
-                                if (vouchers.get(i).getIsPosted() == 0)
-                                {
-                                    sum_chech_export_lists++;//  sum=1
-                                    break;
-                                }
-
-                            items = mDbHandler.getAllItems();
-                            for (int i = 0; i < items.size(); i++)
-                                if (items.get(i).getIsPosted() == 0) {
-                                    sum_chech_export_lists++;//  sum=2
-                                    break;
-                                }
-                            payments = mDbHandler.getAllPayments();
-
-                            for (int i = 0; i < payments.size(); i++)
-                                if (payments.get(i).getIsPosted() == 0) {
-                                    sum_chech_export_lists++;//  sum=4
-                                    Log.e("sumExport",""+sum_chech_export_lists);
-                                    break;
-
-                                }
-
-                            paymentsPaper = mDbHandler.getAllPaymentsPaper();
-
-                            for (int i = 0; i < paymentsPaper.size(); i++)
-                                if (paymentsPaper.get(i).getIsPosted() == 0) {
-                                    sum_chech_export_lists++;//  sum=5
-                                    break;
-
-                                }
-
-                            addedCustomer = mDbHandler.getAllAddedCustomer();
-
-                            for (int i = 0; i < addedCustomer.size(); i++)
-                                if (addedCustomer.get(i).getIsPosted() == 0) {
-                                    sum_chech_export_lists++;//  sum=6
-                                    Log.e("sumExport",""+sum_chech_export_lists);
-                                    break;
-
-                                }
-                            if(sum_chech_export_lists>0)
-                            {
-                                Toast.makeText(MainActivity.this, "Please Do Export All Data Before importing the data ", Toast.LENGTH_SHORT).show();
-                                sum_chech_export_lists=0;
-
-
-                            }
-                            else {
-                                Log.e("sumExport",""+sum_chech_export_lists);
-                                openPasswordDialog(5);
-
-
-                            }
+//                            vouchers = mDbHandler.getAllVouchers();
+//                            for (int i = 0; i < vouchers.size(); i++)
+//                                if (vouchers.get(i).getIsPosted() == 0)
+//                                {
+//                                    sum_chech_export_lists++;//  sum=1
+//                                    break;
+//                                }
+//
+//                            items = mDbHandler.getAllItems();
+//                            for (int i = 0; i < items.size(); i++)
+//                                if (items.get(i).getIsPosted() == 0) {
+//                                    sum_chech_export_lists++;//  sum=2
+//                                    break;
+//                                }
+//                            payments = mDbHandler.getAllPayments();
+//
+//                            for (int i = 0; i < payments.size(); i++)
+//                                if (payments.get(i).getIsPosted() == 0) {
+//                                    sum_chech_export_lists++;//  sum=4
+//                                    Log.e("sumExport",""+sum_chech_export_lists);
+//                                    break;
+//
+//                                }
+//
+//                            paymentsPaper = mDbHandler.getAllPaymentsPaper();
+//
+//                            for (int i = 0; i < paymentsPaper.size(); i++)
+//                                if (paymentsPaper.get(i).getIsPosted() == 0) {
+//                                    sum_chech_export_lists++;//  sum=5
+//                                    break;
+//
+//                                }
+//
+//                            addedCustomer = mDbHandler.getAllAddedCustomer();
+//
+//                            for (int i = 0; i < addedCustomer.size(); i++)
+//                                if (addedCustomer.get(i).getIsPosted() == 0) {
+//                                    sum_chech_export_lists++;//  sum=6
+//                                    Log.e("sumExport",""+sum_chech_export_lists);
+//                                    break;
+//
+//                                }
+//                            if(sum_chech_export_lists>0)
+//                            {
+//                                Toast.makeText(MainActivity.this, "Please Do Export All Data Before importing the data ", Toast.LENGTH_SHORT).show();
+//                                sum_chech_export_lists=0;
+//
+//
+//                            }
+//                            else {
+////                                Log.e("sumExport",""+sum_chech_export_lists);
+//                                openPasswordDialog(5);
+//
+//
+//                            }
 
 
 
@@ -742,6 +750,16 @@ public class MainActivity extends AppCompatActivity
                         obj.startParsing();
 
                     }
+                    else if (flag == 6) {
+                        ExportJason obj = null;
+                        try {
+                            obj = new ExportJason(MainActivity.this);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        obj.startExportDatabase();
+
+                    }
                 } else
                     Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
             }
@@ -791,6 +809,7 @@ public class MainActivity extends AppCompatActivity
             final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
             final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
             final CheckBox noOfferForCredit = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
+            final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -841,6 +860,8 @@ public class MainActivity extends AppCompatActivity
                     workOnline.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 1)
                     paymetod_check.setChecked(true);
+                if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1)
+                    customerAuthor.setChecked(true);
 //                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
 //                    noOfferForCredit.setChecked(true);
 
@@ -886,15 +907,16 @@ public class MainActivity extends AppCompatActivity
                                 int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
                                 int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
                                 int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
+                                int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
 
 
                                 mDbHandler.deleteAllSettings();
 
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
+                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
+                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
 
                                 dialog.dismiss();
                             } else

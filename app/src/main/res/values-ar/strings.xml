@@ -248,7 +248,7 @@
 
     <string name="visit_steps">خطوات الزيارة/البيعة</string>
     <string name="visit_purpose">التخطيط/هدف الزيارة</string>
-    <string name="payment">بيع</string>
+    <string name="payment">المدفوعات</string>
     <string name="bank_up">تحصيل</string>
     <string name="entering_categories">ادخال صنف</string>
     <string name="visit_presentation_space">زيارة مساحة العرض</string>
@@ -305,15 +305,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_splashscreen">Splashscreen</string>
     <string name="bonus_not_allowed">عدم اعطاء مجاني</string>
-    <string name="date">Date</string>
-    <string name="cash_sale">Cash sales</string>
-    <string name="credit_sales">Credit Sales</string>
-    <string name="total_sales">Total Sales</string>
-    <string name="netpayment">Net</string>
-    <string name="total_cash">Total Cash</string>
-    <string name="sales">Sales</string>
-    <string name="no_offer_for_credit">No Offer For Credit Invoice</string>
-    <string name="max_discount">Max Discount Fpr credit</string>
-    <string name="action_printer_setting">Print Setting</string>
-    <string name="companiname">Companey name</string>
+    <string name="date">التاريخ</string>
+    <string name="cash_sale">المبيعات نقدا </string>
+    <string name="credit_sales">المبيعات ذمم</string>
+    <string name="total_sales">اجمالي المبيعات</string>
+    <string name="netpayment">الصافي</string>
+    <string name="total_cash">المجموع نقدا</string>
+    <string name="sales">مبيعات</string>
+    <string name="no_offer_for_credit">    منع العروض للفواتير ذمم
+    </string>
+    <string name="max_discount">الحد الأعلى للخصومات ذمم</string>
+    <string name="action_printer_setting">اعدادات الطباعة</string>
+    <string name="companiname">اسم الشركة</string>
+    <string name="fill_name">من فضلك أدخل اسم ومعلومات  الشركة </string>
+    <string name="CustomerAuthorize">Customer Authorized</string>
 </resources>

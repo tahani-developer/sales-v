@@ -9,6 +9,8 @@ package com.dr7.salesmanmanager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -321,6 +323,7 @@ public class CPCLSample2 {
     }
 
     String ArabicDataPrinter() {
+        double total_Qty=0;
 
         String DataArabic = "";
         String voucherTyp = "";
@@ -352,12 +355,14 @@ public class CPCLSample2 {
 
                 "--------------------------------------------------------------------------------" + "\n";
         if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+            total_Qty=0;
 
             DataArabic += " السلعة           " + "العدد      " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" +
                     "--------------------------------------------------------------------------------" + "\n";
 
             for (int i = 0; i < itemforPrint.size(); i++) {
                 if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+                    total_Qty+=itemforPrint.get(i).getQty();
 
                     String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
 //                    amount = convertToEnglish(amount);
@@ -381,10 +386,12 @@ public class CPCLSample2 {
             }
 //           (itemsString + "\n", 0, 2);
         } else {
+            total_Qty=0;
             DataArabic += " السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n" +
                     "--------------------------------------------------------------------------------" + "\n";
             for (int i = 0; i < itemforPrint.size(); i++) {
                 if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+                    total_Qty+=itemforPrint.get(i).getQty();
                     String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
 
 
@@ -411,9 +418,10 @@ public class CPCLSample2 {
 //            (itemsString2 + "\n", 0, 2);
         }
         DataArabic += "--------------------------------------------------------------------------------" + "\n" +
-
+                "اجمالي الكمية  : " + total_Qty + "\n" +
                 "المجموع  : " + voucherforPrint.getSubTotal() + "\n" +
-                "الخصم    : " + voucherforPrint.getVoucherDiscount() + "\n" +
+                "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" +   Log.e("getTotalVoucherDiscount",""+voucherforPrint.getTotalVoucherDiscount())+
+
                 "الضريبة  : " + voucherforPrint.getTax() + "\n" +
                 "الصافي   : " + voucherforPrint.getNetSales() + "\n" +
                 "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n" +
@@ -421,7 +429,7 @@ public class CPCLSample2 {
                 "المستلم : ________________ التوقيع : __________" + "\n" +
                 "--------------------------------------------------------------------------------" + "\n";
 
-
+      Log.e("total_Qty",""+total_Qty);
         return DataArabic;
     }
 
@@ -513,10 +521,20 @@ public class CPCLSample2 {
     }
 
     private String CashReport_kArabic() {
+        String companney_name="";
         decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-        dataArabic_Report+="                                        "+companyInfo.getCompanyName() + "                            \n \n" +
+        if(companyInfo.getCompanyName().equals(""))
+        {
+            companney_name="Companey";
+            //Please fill  the companey name
+            Toast.makeText(context, R.string.fill_name, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            companney_name=companyInfo.getCompanyName();
+        }
+        dataArabic_Report+="                                        "+ companney_name+ "                            \n \n" +
                 "  الرقم الضريبي :  " + companyInfo.getTaxNo() +  " \n "+
                 "        -----------------------------------------------------------------------  " + " \n "+
       "التاريخ  :     " + date.getText() +  " \n "+

@@ -28,16 +28,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     private List<Customer> custList;
     private CustomerListShow customerListShow;
 
-    public CustomersListAdapter( CustomerListShow customerListShow , Context context, List<Customer> custList)
-    {
+    public CustomersListAdapter(CustomerListShow customerListShow, Context context, List<Customer> custList) {
         this.context = context;
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
     }
 
-    public void setItemsList(List<Customer> custList)
-    {
+    public void setItemsList(List<Customer> custList) {
         this.custList = custList;
     }
 
@@ -66,14 +64,14 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
     public View getView(final int i, View view, ViewGroup viewGroup) {
 
         final ViewHolder holder = new ViewHolder();
-        view = View.inflate(context, R.layout.customers_item,null);
+        view = View.inflate(context, R.layout.customers_item, null);
 
         holder.linearLayout = (LinearLayout) view.findViewById(R.id.LinearLayout01);
         holder.custAccountTextView = (TextView) view.findViewById(R.id.custAccTextView);
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
 
 
-        holder.custAccountTextView.setText(""+custList.get(i).getCustId());
+        holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -84,9 +82,10 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
-                CustomerListShow.CreditLimit=custList.get(i).getCreditLimit();
+                CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
+                CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
 
-                if(custList.get(i).getIsSuspended() == 1){
+                if (custList.get(i).getIsSuspended() == 1) {
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 180);
                     ViewGroup group = (ViewGroup) toast.getView();
