@@ -209,7 +209,7 @@ public class CashReport  extends AppCompatActivity {
                         case 0:
 
                             Intent i=new Intent(CashReport.this,BluetoothConnectMenu.class);
-                            i.putExtra("printKey","2");
+                            i.putExtra("printKey","3");
                             startActivity(i);
 
 //                                                             lk30.setChecked(true);

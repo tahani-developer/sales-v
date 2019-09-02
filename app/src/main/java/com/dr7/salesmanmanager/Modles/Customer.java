@@ -1,5 +1,7 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.util.Log;
+
 /**
  * Created by mohd darras on 15/04/2018.
  */
@@ -61,7 +63,14 @@ public class Customer {
     }
 
     public void setMax_discount(double max_discount) {
-        this.max_discount = max_discount;
+      try {
+          this.max_discount = max_discount;
+      }
+      catch (Exception e)
+      {
+          Log.e("ExceptionMaxDiscount",""+max_discount);
+          max_discount=0;
+      }
     }
 
     public void setCompanyNumber(int companyNumber) {

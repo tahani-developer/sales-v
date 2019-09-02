@@ -437,6 +437,8 @@ public class ImportJason extends AppCompatActivity{
                         QtyOffers qtyOffers = new QtyOffers();
                         qtyOffers.setQTY(finalObject.getDouble("QTY"));
                         qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
+                        qtyOffers.setPaymentType(finalObject.getInt("PAYMENT_TYPE"));
+
                         qtyOffersList.add(qtyOffers);
                         Log.e("qtyOffersList", "=" + qtyOffersList.size());
                     }
@@ -531,6 +533,7 @@ public class ImportJason extends AppCompatActivity{
             mHandler.deleteAllCustomerPrice();
             mHandler.deleteAllOffers();
             mHandler.deleteAllSalesmenStations();
+            mHandler.deleteAllOffersQty();
 
             for (int i = 0; i < customerList.size(); i++) {
                 mHandler.addCustomer(customerList.get(i));

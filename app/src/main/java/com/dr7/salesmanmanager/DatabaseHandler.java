@@ -44,7 +44,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 58;
+    private static final int DATABASE_VERSION = 60;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -53,6 +53,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String QTY_OFFERS="QTY_OFFERS";
     private static final String QTY ="QTY";
     private static final String DISCOUNT_VALUE ="DISCOUNT_VALUE";
+    private static final String PAYMENT_TYPE ="PAYMENT_TYPE";
     //__________________________________________________________________
     private static final String ACTIVE_KEY="ACTIVE_KEY";
     private static final String KEY_VALUE ="KEY_VALUE";
@@ -202,7 +203,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String BONUS_NOT_ALLOWED = "BONUS_NOT_ALLOWED";
     private static final String NO_OFFERS_FOR_CREDIT_INVOICE="NO_OFFERS_FOR_CREDIT_INVOICE";
     private static final String AMOUNT_OF_MAX_DISCOUNT="AMOUNT_OF_MAX_DISCOUNT";
-
+    private static final String Customer_Authorized="Customer_Authorized";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -344,7 +345,9 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
                 + QTY + " REAL,"
-                + DISCOUNT_VALUE + " REAL"+ ")";
+                + DISCOUNT_VALUE + " REAL,"
+                + PAYMENT_TYPE + " INTEGER"+ ")";
+
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -513,7 +516,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PAYMETHOD_CHECK+ " INTEGER,"
                 + BONUS_NOT_ALLOWED+ " INTEGER,"
                 + NO_OFFERS_FOR_CREDIT_INVOICE+ " INTEGER, "
-                + AMOUNT_OF_MAX_DISCOUNT+ " INTEGER" + ")";
+                + AMOUNT_OF_MAX_DISCOUNT+ " INTEGER,"
+                + Customer_Authorized+ " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -663,7 +667,20 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try{
+            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE QTY_OFFERS ADD  PAYMENT_TYPE  INTEGER NOT NULL DEFAULT '0'");
 
         }catch (Exception e)
         {
@@ -675,6 +692,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+
 
 
         try{
@@ -819,7 +837,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         try {
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
                 + QTY + " REAL,"
-                + DISCOUNT_VALUE + " REAL"+ ")";
+                + DISCOUNT_VALUE + " REAL,"
+                + PAYMENT_TYPE + " INTEGER"+ ")";
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         }
         catch (Exception e) {
@@ -834,6 +853,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(QTY,qtyOffers.getQTY());
         values.put(DISCOUNT_VALUE,qtyOffers.getDiscountValue());
+        values.put(PAYMENT_TYPE,qtyOffers.getPaymentType());
         db.insert(QTY_OFFERS, null, values);
         db.close();
 
@@ -1048,7 +1068,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
-                           int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount) {
+                           int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1071,6 +1091,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(BONUS_NOT_ALLOWED,bonusNotAlowed);
         values.put(NO_OFFERS_FOR_CREDIT_INVOICE,noOfferForCredid);
         values.put(AMOUNT_OF_MAX_DISCOUNT,amountOfMaxDiscount);
+        values.put(Customer_Authorized,customerOthoriz);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1324,6 +1345,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setBonusNotAlowed(Integer.parseInt(cursor.getString(16)));
                 setting.setNoOffer_for_credit(Integer.parseInt(cursor.getString(17)));
                 setting.setAmountOfMaxDiscount(Integer.parseInt(cursor.getString(18)));
+                setting.setCustomer_authorized(Integer.parseInt(cursor.getString(19)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1516,7 +1538,12 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
                 customer.setCustLat(cursor.getString(9));
                 customer.setCustLong(cursor.getString(10));
-                customer.setMax_discount(Double.parseDouble(cursor.getString(11)));
+                try {
+                    customer.setMax_discount(Double.parseDouble(cursor.getString(11)));
+                }catch(NumberFormatException e){
+                    Log.e("setMax_discount",""+e.getMessage());
+                    customer.setMax_discount(0);
+                }
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1562,6 +1589,52 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return vouchers;
     }
+    //****************************getAllVoucherBy Customer No ***************************************
+    public List<Voucher> getAllVouchers_CustomerNo(String CustomerNo) {
+        List<Voucher> vouchers = new ArrayList<Voucher>();
+        // Select All Query
+
+        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where CUST_NUMBER = '" + CustomerNo + "' ";
+        Log.e("select",""+selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Voucher Voucher = new Voucher();
+
+                Voucher.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                Voucher.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                Voucher.setVoucherType(Integer.parseInt(cursor.getString(2)));
+                Voucher.setVoucherDate(cursor.getString(3));
+                Voucher.setSaleManNumber(Integer.parseInt(cursor.getString(4)));
+                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(10)));//5
+                Voucher.setVoucherDiscountPercent(Double.parseDouble(cursor.getString(6)));
+                Voucher.setRemark(cursor.getString(7));
+                Voucher.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                Voucher.setIsPosted(Integer.parseInt(cursor.getString(9)));
+                Voucher.setTotalVoucherDiscount(Double.parseDouble(cursor.getString(10)));
+                Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
+                Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
+                Voucher.setCustName(cursor.getString(14));
+                Voucher.setCustNumber(cursor.getString(15));
+                Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
+
+                // Adding transaction to list
+                vouchers.add(Voucher);
+            } while (cursor.moveToNext());
+        }
+
+        return vouchers;
+    }
+
+
+
+
+
+    //***********************************************************************************************
 // to retrive items number and name to inventory report
     public List<ItemsMaster> getItemMaster() {
         List<ItemsMaster> masters = new ArrayList<ItemsMaster>();
@@ -1788,6 +1861,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 QtyOffers new_Value_Qty_offers=new QtyOffers();
                 new_Value_Qty_offers.setQTY(Double.parseDouble(cursor.getString(0)));
                 new_Value_Qty_offers.setDiscountValue(Double.parseDouble(cursor.getString(1)));
+                new_Value_Qty_offers.setPaymentType(Integer.parseInt(cursor.getString(2)));
                 qtyOffers.add(new_Value_Qty_offers);
 
             } while (cursor.moveToNext());
@@ -2363,6 +2437,11 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllOffers() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + VS_PROMOTION);
+        db.close();
+    }
+    public void deleteAllOffersQty() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + QTY_OFFERS);
         db.close();
     }
 

@@ -177,7 +177,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                             if (offer.size() != 0) {
 
-                                                if (offer.get(0).getPromotionType() == 0) {
+                                                if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
                                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                             holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),

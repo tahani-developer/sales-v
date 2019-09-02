@@ -84,8 +84,9 @@ public class SalesInvoice extends Fragment {
     private static int salesMan;
     static int index;
     public static List<Payment> payment_unposted ;
+    public static List<Voucher> sales_voucher_unposted ;
     public List<QtyOffers> list_discount_offers;
-    double max_cridit, available_balance, account_balance, cash_cridit, unposted_payment, unposted_voucher;
+    double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou,unposted_payment, unposted_voucher;
     public ListView itemsListView;
     public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
@@ -96,7 +97,7 @@ public class SalesInvoice extends Fragment {
     private EditText remarkEditText;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
-    public double totalDiscount=0,discount_oofers_total=0, sum_discount=0;;
+    public double totalDiscount=0,discount_oofers_total_cash=0, discount_oofers_total_credit=0,sum_discount=0;;
     private TextView taxTextView, subTotalTextView, netTotalTextView;
     public TextView discTextView;
     public ImageButton discountButton;
@@ -109,6 +110,7 @@ public class SalesInvoice extends Fragment {
   public  int payMethod;
     boolean isFinishPrint=false;
     double total_Qty=0.0;
+    double totalQty_forPrint=0;
 
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -338,12 +340,23 @@ public class SalesInvoice extends Fragment {
                 switch (checkedId) {
                     case R.id.creditRadioButton:
                         payMethod = 0;
-                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
+                        discTextView.setText("0.0");
+                        netTotalTextView.setText("0.0");
+                        netTotal = 0.0;
+                        totalDiscount=0;
+                        sum_discount=0;
+                       // if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
                             clearLayoutData();
+
                         break;
                     case R.id.cashRadioButton:
                         payMethod = 1;
-                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
+                        discTextView.setText("0.0");
+                        netTotalTextView.setText("0.0");
+                        netTotal = 0.0;
+                        totalDiscount=0;
+                        sum_discount=0;
+                      //  if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
                             clearLayoutData();
                         break;
                 }
@@ -473,105 +486,104 @@ public class SalesInvoice extends Fragment {
                                             0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
                                             CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
                                     if (payMethod == 0) {
-                                        if (customer_is_authrized()) {
+                                        if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1)
+                                        {
 
-                                            mDbHandler.addVoucher(voucher);
-                                            Log.e("paymethod", "" + voucher.getPayMethod());
+                                            if (customer_is_authrized()) {
+
+                                                mDbHandler.addVoucher(voucher);
+                                                Log.e("paymethod", "" + voucher.getPayMethod());
+                                                for (int i = 0; i < items.size(); i++) {
+
+                                                    Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                                            items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                                            items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                            items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+                                                    totalQty_forPrint+=items.get(i).getQty();
+                                                    Log.e("totalQty_forPrint",""+totalQty_forPrint);
+
+                                                    itemsList.add(item);
+
+                                                    mDbHandler.addItem(item);
+                                                    itemForPrint.add(item);
+
+                                                    if (voucherType != 506)
+                                                        mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                                    else
+                                                        mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+                                                }
 
 
-                                            for (int i = 0; i < items.size(); i++) {
+                                                if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                                                    new JSONTask().execute();
+                                                }
 
-                                                Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
-                                                        items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
-                                                        items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
-                                                        items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
-
-                                                itemsList.add(item);
-
-                                                mDbHandler.addItem(item);
-                                                itemForPrint.add(item);
-
-                                                if (voucherType != 506)
-                                                    mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-                                                else
-                                                    mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-
-                                            }
-
-
-                                            if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
-                                                new JSONTask().execute();
-                                            }
-
-                                            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                                if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                                    Log.e("test",""+voucher.getTotalVoucherDiscount() );
 //                                                try {
 //                                                    findBT();
 //                                                    openBT();f
 
 
+                                                    int printer = mDbHandler.getPrinterSetting();
 
-                                                int printer = mDbHandler.getPrinterSetting();
-
-                                                switch (printer) {
-                                                    case 0:
-                                                        Intent i=new Intent(getActivity().getBaseContext(),BluetoothConnectMenu.class);
-                                                        i.putExtra("printKey","1");
-                                                        startActivity(i);
+                                                    switch (printer) {
+                                                        case 0:
+                                                            Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                                                            i.putExtra("printKey", "1");
+                                                            startActivity(i);
 //                                                             lk30.setChecked(true);
-                                                        break;
-                                                    case 1:
+                                                            break;
+                                                        case 1:
 
-                                                        try {
-                                                            findBT();
-                                                            openBT(1);
-                                                        } catch (IOException e)
-                                                        {
-                                                            e.printStackTrace();
-                                                        }
+                                                            try {
+                                                                findBT();
+                                                                openBT(1);
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
 //                                                             lk31.setChecked(true);
-                                                        break;
-                                                    case 2:
+                                                            break;
+                                                        case 2:
 
-                                                        try {
-                                                            findBT();
-                                                            openBT(2);
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
+                                                            try {
+                                                                findBT();
+                                                                openBT(2);
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
 //                                                             lk32.setChecked(true);
-                                                        break;
-                                                    case 3:
+                                                            break;
+                                                        case 3:
 
-                                                        try {
-                                                            findBT();
-                                                            openBT(3);
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
+                                                            try {
+                                                                findBT();
+                                                                openBT(3);
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
 //                                                             qs.setChecked(true);
-                                                        break;
-                                                    case 4:
-                                                        printTally(voucher);
-                                                        break;
+                                                            break;
+                                                        case 4:
+                                                            printTally(voucher);
+                                                            break;
 
-                                                }
-
-
-
-
-
+                                                    }
 
 
 //                                                } catch (IOException ex) {
 //                                                }
-                                            } else {
-                                                hiddenDialog();
-                                            }
-                                            mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+                                                } else {
+                                                    hiddenDialog();
+                                                }
+                                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
 
-                                        } else {
-                                            Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
-                                        }
+                                            }
+                                            else {
+                                                Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
+                                            }
+                                    }
 
 
                                     } else {
@@ -692,19 +704,43 @@ public class SalesInvoice extends Fragment {
 
     public boolean customer_is_authrized() {
         unposted_payment = 0;
+      //  unposted_sales_vou = 0;
+        double unposted_sales_cash=0,unposted_sales_credit=0;
         max_cridit = CustomerListShow.CreditLimit;
         cash_cridit = CustomerListShow.CashCredit;
         Log.e("max_cridit", "" + max_cridit + "casCre" + cash_cridit);
+       // *******************************************************
         payment_unposted = mDbHandler.getAllPayments_customerNo(voucher.getCustNumber());
         for (int i = 0; i < payment_unposted.size(); i++) {
             Log.e("unposted_payment", "" + payment_unposted.size() + "\tcusNO" + voucher.getCustNumber());
             if (payment_unposted.get(i).getIsPosted() == 0) {
                 unposted_payment += payment_unposted.get(i).getAmount();
-                Log.e("unposted_payment", "" + unposted_payment + "\tcusNO" + voucher.getCustNumber());
+
             }
         }
+        Log.e("unposted_payment", "" + unposted_payment + "\tcusNO" + voucher.getCustNumber());
+        // *******************************************************
+        sales_voucher_unposted=mDbHandler.getAllVouchers_CustomerNo(voucher.getCustNumber());
+        Log.e("salesvouch_size",""+sales_voucher_unposted.size());
+        for (int j=0;j<sales_voucher_unposted.size();j++)
+        {
+            if(sales_voucher_unposted.get(j).getIsPosted()==0 )
+            {
+                if( sales_voucher_unposted.get(j).getPayMethod()==0)
+                unposted_sales_credit+=sales_voucher_unposted.get(j).getNetSales();
+                else
+                {
+                    unposted_sales_cash+=sales_voucher_unposted.get(j).getNetSales();
+                }
+
+
+            }
+        }
+
+        Log.e("unposted_sales== ",""+unposted_sales_vou);
+
 //        if(max_cridit>=cash_cridit) {
-        available_balance = max_cridit - cash_cridit + unposted_payment;
+        available_balance = max_cridit - cash_cridit-unposted_sales_credit  + unposted_payment;
 //        }
 //        else
         Log.e("max_cridit", "small");
@@ -823,18 +859,20 @@ public class SalesInvoice extends Fragment {
 //        paymentTermRadioGroup.check(R.id.creditRadioButton);
         remarkEditText.setText("");
         clearItemsList();
-        calculateTotals();
+//        calculateTotals();
         subTotalTextView.setText("0.000");
         taxTextView.setText("0.000");
+        netTotalTextView.setText("");
         netTotalTextView.setText("0.000");
         discTextView.setText("0.000");
-        subTotal = 0;
-        totalTaxValue = 0;
-        netTotal = 0;
-        totalDiscount = 0;
+        subTotal =0.0;
+        totalTaxValue =0.0;
+        netTotal = 0.0;
+        totalDiscount = 0.0;
+        sum_discount=0.0;
         items.clear();
         itemsList.clear();
-        calculateTotals();
+//        calculateTotals();
 
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
@@ -842,40 +880,260 @@ public class SalesInvoice extends Fragment {
     }
 
     public void calculateTotals() {
-        calculateTotals_cridit();
-//        double itemTax, itemTotal, itemTotalAfterTax,
-//                itemTotalPerc, itemDiscVal, posPrice,totalQty=0;
-//        //**********************************************************************
-//        list_discount_offers=mDbHandler.getDiscountOffers();
-//        Log.e("list_discount_offers",""+list_discount_offers);
+
+        discTextView.setText("0.0");
+        netTotalTextView.setText("0.0");
+//        calculateTotals_cridit();
+        double itemTax, itemTotal, itemTotalAfterTax,
+                itemTotalPerc, itemDiscVal, posPrice,totalQty=0;
+        //**********************************************************************
+        list_discount_offers=mDbHandler.getDiscountOffers();
+        Log.e("list_discount_offers",""+list_discount_offers);
+        String itemGroup;
+        subTotal = 0.0;
+        totalTaxValue = 0.0;
+        netTotal = 0.0;
+        totalDiscount=0;
+        sum_discount=0;
+
+
+        //Include tax
+        if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
+            totalQty=0.0;
+            for (int i = 0; i < items.size(); i++) {
+                totalQty +=items.get(i).getQty();
+                //  Log.e("totalQty",""+totalQty);
+                discount_oofers_total_cash=0;
+                for(int j=0;j<list_discount_offers.size();j++) {
+                    if (payMethod == 1) {
+                        if (list_discount_offers.get(j).getPaymentType() == 1) {
+                            if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+                                Log.e("discount_oofers_total", "" + discount_oofers_total_cash);
+                            }
+                        }
+                    }
+                        else {
+                        if (list_discount_offers.get(j).getPaymentType() == 0) {
+                            if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
+                                Log.e("discount_oofecredit", "" + discount_oofers_total_credit);
+                            }
+                        }
+                        }
+                        }
+                    }
+
+
+            if (discount_oofers_total_cash > 0)
+                sum_discount = discount_oofers_total_cash;
+            if(discount_oofers_total_credit>0)
+                sum_discount = discount_oofers_total_credit;
+
+            try {
+                totalDiscount=sum_discount;
+//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+            } catch (NumberFormatException e) {
+                totalDiscount = 0.0;
+            }
+
+            for (int i = 0; i < items.size(); i++) {
+                itemGroup = items.get(i).getCategory();
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
+                    itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
+                }
+                else
+                    {
+                    itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
+                    itemTotal = items.get(i).getAmount();
+                    }
+                itemTotalAfterTax = items.get(i).getAmount() + itemTax;
+                subTotal = subTotal + itemTotal;
+            }
+            for (int i = 0; i < items.size(); i++) {
+                itemTotal = items.get(i).getAmount();
+                itemTotalPerc = itemTotal / subTotal;
+                itemDiscVal = (itemTotalPerc * totalDiscount);
+                items.get(i).setTotalDiscVal(itemDiscVal);
+                //************************************************************
+//                totalQty +=items.get(i).getQty();
+////                Log.e("totalQty",""+totalQty);
+                itemGroup = items.get(i).getCategory();
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
+                } else {
+                    itemTotal = itemTotal - itemDiscVal;
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                }
+
+                items.get(i).setTaxValue(itemTax);
+                totalTaxValue = totalTaxValue + itemTax;
+            }
+
+            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
+//              netTotal = netTotal + subTotal -sum_discount + totalTaxValue;
+
+
+        }
+
+        else {
+            totalQty=0.0;
+            for (int i = 0; i < items.size(); i++) {
+
+                totalQty +=items.get(i).getQty();
+              //  Log.e("totalQty",""+totalQty);
+
+                discount_oofers_total_cash=0;
+                for(int j=0;j<list_discount_offers.size();j++) {
+                    if (payMethod == 1) {
+                        if (list_discount_offers.get(j).getPaymentType() == 1) {
+                            if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+                                Log.e("discount_oofers_total", "" + discount_oofers_total_cash);
+                            }
+                        }
+                    }
+                    else {
+                        if (list_discount_offers.get(j).getPaymentType() == 0) {
+                            if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
+                                Log.e("discount_oofecredit", "" + discount_oofers_total_credit);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (discount_oofers_total_cash > 0)
+                sum_discount = discount_oofers_total_cash;
+            if(discount_oofers_total_credit>0)
+                sum_discount = discount_oofers_total_credit;
+
+            try {
+                totalDiscount=sum_discount;
+//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+            } catch (NumberFormatException e) {
+                totalDiscount = 0.0;
+            }
+
+            for (int i = 0; i < items.size(); i++) {
+
+
+                itemGroup = items.get(i).getCategory();
+
+
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
+                    itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
+                } else {
+                    itemTax = items.get(i).getAmount() -
+                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
+                }
+
+
+                itemTotal = items.get(i).getAmount() - itemTax;
+                itemTotalAfterTax = items.get(i).getAmount();
+                subTotal = subTotal + itemTotal;
+            }
+
+            for (int i = 0; i < items.size(); i++) {
+
+
+                itemGroup = items.get(i).getCategory();
+
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
+                } else {
+                    itemTax = items.get(i).getAmount() -
+                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
+                }
+
+                itemTotal = items.get(i).getAmount() - itemTax;
+                itemTotalPerc = itemTotal / subTotal;
+                itemDiscVal = (itemTotalPerc * totalDiscount);
+                items.get(i).setVoucherDiscount( (float)itemDiscVal);
+                items.get(i).setTotalDiscVal(itemDiscVal);
+          //      discount_oofers_total=0.0;
+//                totalQty +=items.get(i).getQty();
+//                Log.e("totalQty",""+totalQty);
+
+
+
+
+
+
+                itemTotal = itemTotal - itemDiscVal;
+
+                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
+                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
+                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
+                } else {
+                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
+                }
+
+
+                items.get(i).setTaxValue(itemTax);
+                totalTaxValue = totalTaxValue + itemTax;
+            }
+
+            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
+           // discount_oofers_total=0;
+
+        }
+
+//        double discount_All_invoice=discount_oofers_total+Double.parseDouble(discTextView.getText().toString());
+        subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
+        taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+
+//        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
+        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(totalDiscount+""))));
+        netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+
+        subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
+        taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
+//        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
+
+//        discTextView.setText(convertToEnglish(totalDiscount+""));
+        totalDiscount=0.0;
+
+
+    }
+    public void calculateTotals_cridit() {
+        double itemTax, itemTotal=0, itemTotalAfterTax,
+                itemTotalPerc, itemDiscVal, posPrice,totalQty=0,total_Amount=0;
+
+        //**********************************************************************
 //        String itemGroup;
 //        subTotal = 0.0;
 //        totalTaxValue = 0.0;
 //        netTotal = 0.0;
-//        //Include tax
-//        if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
-//            for (int i = 0; i < items.size(); i++) {
-//                totalQty +=items.get(i).getQty();
-//                //  Log.e("totalQty",""+totalQty);
-//                discount_oofers_total=0;
-//                for(int j=0;j<list_discount_offers.size();j++)
-//                {
-//                    if(totalQty>=list_discount_offers.get(j).getQTY())
-//                    {
-//                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
-//                        Log.e("discount_oofers_total",""+discount_oofers_total);
+//        double discount_credit=0;
+//        //  Exclude  ------> TaxClarcKind() == 0
+//        if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0)
+//        {
+//            for (int i = 0; i < items.size(); i++)
+//            {
+//                totalQty += items.get(i).getQty();
+//                discount_oofers_total = 0;
+//                if (payMethod== 1) {
+//                    list_discount_offers = mDbHandler.getDiscountOffers();
+//                    for (int j = 0; j < list_discount_offers.size(); j++) {
+//                        if (totalQty >= list_discount_offers.get(j).getQTY()) {
+//                            discount_oofers_total = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                        }
 //                    }
 //                }
-//            }
-//            if (discount_oofers_total > 0)
-//                sum_discount = discount_oofers_total;
 //
-//            try {
-//                totalDiscount=sum_discount;
-////                totalDiscount = Float.parseFloat(discTextView.getText().toString());
-//            } catch (NumberFormatException e) {
-//                totalDiscount = 0.0;
+//
 //            }
+//
+//
 //
 //            for (int i = 0; i < items.size(); i++) {
 //                itemGroup = items.get(i).getCategory();
@@ -885,68 +1143,78 @@ public class SalesInvoice extends Fragment {
 //                    itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
 //                }
 //                else
-//                    {
+//                {
 //                    itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
 //                    itemTotal = items.get(i).getAmount();
-//                    }
+//                }
 //                itemTotalAfterTax = items.get(i).getAmount() + itemTax;
 //                subTotal = subTotal + itemTotal;
 //            }
+//
 //            for (int i = 0; i < items.size(); i++) {
 //                itemTotal = items.get(i).getAmount();
+//                total_Amount+=itemTotal;
 //                itemTotalPerc = itemTotal / subTotal;
 //                itemDiscVal = (itemTotalPerc * totalDiscount);
 //                items.get(i).setTotalDiscVal(itemDiscVal);
 //                //************************************************************
-//                totalQty +=items.get(i).getQty();
-//                Log.e("totalQty",""+totalQty);
-//                /* tahani code
-//                discount_oofers_total=0.0;
-//                for(int j=0;j<list_discount_offers.size();j++)
-//                {
-//
-//                    if(totalQty>=list_discount_offers.get(j).getQTY())
-//                    {
-//                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
-//                        Log.e("discount_oofers_total",""+discount_oofers_total);
-//                    }
-//                }
-//                */
 //                itemGroup = items.get(i).getCategory();
 //                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
 //                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
 //                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
 //                } else {
 //                    itemTotal = itemTotal - itemDiscVal;
+//                    total_Amount+=itemTotal;
 //                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
 //                }
 //
 //                items.get(i).setTaxValue(itemTax);
 //                totalTaxValue = totalTaxValue + itemTax;
 //            }
+//            if (discount_oofers_total > 0) {
+//                sum_discount = discount_oofers_total;
+//            }
 //
-//            netTotal = netTotal + subTotal - totalDiscount-discount_oofers_total + totalTaxValue;
-////              netTotal = netTotal + subTotal -sum_discount + totalTaxValue;
-//
+//            try {
+//                totalDiscount=sum_discount;
+////                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+//            } catch (NumberFormatException e) {
+//                totalDiscount = 0.0;
+//            }
+//            if (payMethod == 0) {
+//                double maxDiscount = CustomerListShow.Max_Discount_value;
+//                discount_credit = (total_Amount * maxDiscount)/100;
+//                Log.e("discount_credit",""+discount_credit);
+//            }
+//           if(payMethod==0) {
+//               netTotal = netTotal + subTotal - totalDiscount - discount_credit + totalTaxValue;
+//           }
+//           else{
+//               netTotal = netTotal + subTotal - totalDiscount  + totalTaxValue;
+////               netTotal = netTotal + subTotal - totalDiscount - discount_oofers_total + totalTaxValue;
+//           }
 //
 //        }
-//
+//      //********************************************  Include  ------> TaxClarcKind() == 1
 //        else {
 //
 //            for (int i = 0; i < items.size(); i++) {
 //
-//                totalQty +=items.get(i).getQty();
-//              //  Log.e("totalQty",""+totalQty);
-//
-//                discount_oofers_total=0;
-//                for(int j=0;j<list_discount_offers.size();j++)
-//                {
-//
-//                    if(totalQty>=list_discount_offers.get(j).getQTY())
-//                    {
-//                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
-//                        Log.e("discount_oofers_total",""+discount_oofers_total);
+//                totalQty += items.get(i).getQty();
+//                discount_oofers_total = 0;
+//                if (payMethod == 1) {
+//                    list_discount_offers = mDbHandler.getDiscountOffers();
+//                    for (int j = 0; j < list_discount_offers.size(); j++) {
+//                        if (totalQty >= list_discount_offers.get(j).getQTY()) {
+//                            discount_oofers_total = totalQty * list_discount_offers.get(j).getDiscountValue(); }
 //                    }
+//                }
+//
+//                if (payMethod== 0) {
+//
+//                    double maxDiscount = CustomerListShow.Max_Discount_value;
+//
+//                    discount_credit = totalQty * maxDiscount;
 //                }
 //
 //            }
@@ -1001,256 +1269,43 @@ public class SalesInvoice extends Fragment {
 //                itemDiscVal = (itemTotalPerc * totalDiscount);
 //                items.get(i).setVoucherDiscount( (float)itemDiscVal);
 //                items.get(i).setTotalDiscVal(itemDiscVal);
-//          //      discount_oofers_total=0.0;
-//                totalQty +=items.get(i).getQty();
-//                Log.e("totalQty",""+totalQty);
-//
-//
-//
-//     /*    //tahani code
-//                discount_oofers_total=0;
-//                for(int j=0;j<list_discount_offers.size();j++)
-//                {
-//
-//                    if(totalQty>=list_discount_offers.get(j).getQTY())
-//                    {
-//                        discount_oofers_total=totalQty*list_discount_offers.get(j).getDiscountValue();
-//                        Log.e("discount_oofers_total",""+discount_oofers_total);
-//                    }
-//                }*/
-//
-//
-//
-//
-//
 //
 //                itemTotal = itemTotal - itemDiscVal;
-//
 //                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
 //                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
 //                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
 //                } else {
 //                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
 //                }
-//
-//
 //                items.get(i).setTaxValue(itemTax);
 //                totalTaxValue = totalTaxValue + itemTax;
 //            }
-//
-//            netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
-//           // discount_oofers_total=0;
-//
+//            if(payMethod==0) {
+//                netTotal = netTotal + subTotal - totalDiscount - discount_credit + totalTaxValue;
+//            }
+//            else{
+//                netTotal = netTotal + subTotal - totalDiscount  + totalTaxValue;
+////                netTotal = netTotal + subTotal - totalDiscount - discount_oofers_total + totalTaxValue;
+//            }
 //        }
-//
-//        double discount_All_invoice=discount_oofers_total+Double.parseDouble(discTextView.getText().toString());
 //        subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
 //        taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-//
-////        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
-//        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_oofers_total+""))));
+//        if(payMethod==0) {//credit
+//            discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_credit + ""))));
+//            discTextView.setText(convertToEnglish(discount_credit+""));
+//        }
+//        else{
+//            //cash
+//            discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_oofers_total + ""))));
+//            discTextView.setText(convertToEnglish(discount_oofers_total+""));
+//        }
 //        netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
-//
 //        subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
 //        taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
 //        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
-//
-//        discTextView.setText(convertToEnglish(discount_oofers_total+""));
 //        discount_oofers_total=0.0;
-
-    }
-    public void calculateTotals_cridit() {
-        double itemTax, itemTotal, itemTotalAfterTax,
-                itemTotalPerc, itemDiscVal, posPrice,totalQty=0;
-        //**********************************************************************
-        String itemGroup;
-        subTotal = 0.0;
-        totalTaxValue = 0.0;
-        netTotal = 0.0;
-        double discount_credit=0;
-        //  Exclude  ------> TaxClarcKind() == 0
-        if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0)
-        {
-            for (int i = 0; i < items.size(); i++)
-            {
-                totalQty += items.get(i).getQty();
-                discount_oofers_total = 0;
-                if (payMethod== 1) {
-                    list_discount_offers = mDbHandler.getDiscountOffers();
-                    for (int j = 0; j < list_discount_offers.size(); j++) {
-                        if (totalQty >= list_discount_offers.get(j).getQTY()) {
-                            discount_oofers_total = totalQty * list_discount_offers.get(j).getDiscountValue();
-                        }
-                    }
-                }
-
-                if (payMethod == 0) {
-                    double maxDiscount = CustomerListShow.Max_Discount_value;
-                    discount_credit = totalQty * maxDiscount;
-                }
-            }
-
-            if (discount_oofers_total > 0)
-                sum_discount = discount_oofers_total;
-
-            try {
-                totalDiscount=sum_discount;
-//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
-            } catch (NumberFormatException e) {
-                totalDiscount = 0.0;
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-                itemGroup = items.get(i).getCategory();
-                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
-                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
-                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
-                    itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
-                }
-                else
-                {
-                    itemTax = items.get(i).getAmount() * items.get(i).getTaxPercent() * 0.01;
-                    itemTotal = items.get(i).getAmount();
-                }
-                itemTotalAfterTax = items.get(i).getAmount() + itemTax;
-                subTotal = subTotal + itemTotal;
-            }
-            for (int i = 0; i < items.size(); i++) {
-                itemTotal = items.get(i).getAmount();
-                itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
-                items.get(i).setTotalDiscVal(itemDiscVal);
-                //************************************************************
-                itemGroup = items.get(i).getCategory();
-                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
-                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
-                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
-                } else {
-                    itemTotal = itemTotal - itemDiscVal;
-                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
-                }
-
-                items.get(i).setTaxValue(itemTax);
-                totalTaxValue = totalTaxValue + itemTax;
-            }
-           if(payMethod==0) {
-               netTotal = netTotal + subTotal - totalDiscount - discount_credit + totalTaxValue;
-           }
-           else{
-               netTotal = netTotal + subTotal - totalDiscount  + totalTaxValue;
-//               netTotal = netTotal + subTotal - totalDiscount - discount_oofers_total + totalTaxValue;
-           }
-        }
-      //********************************************  Include  ------> TaxClarcKind() == 1
-        else {
-
-            for (int i = 0; i < items.size(); i++) {
-
-                totalQty += items.get(i).getQty();
-                discount_oofers_total = 0;
-                if (payMethod == 1) {
-                    list_discount_offers = mDbHandler.getDiscountOffers();
-                    for (int j = 0; j < list_discount_offers.size(); j++) {
-                        if (totalQty >= list_discount_offers.get(j).getQTY()) {
-                            discount_oofers_total = totalQty * list_discount_offers.get(j).getDiscountValue(); }
-                    }
-                }
-
-                if (payMethod== 0) {
-
-                    double maxDiscount = CustomerListShow.Max_Discount_value;
-
-                    discount_credit = totalQty * maxDiscount;
-                }
-
-            }
-
-
-
-            if (discount_oofers_total > 0)
-                sum_discount = discount_oofers_total;
-
-            try {totalDiscount=sum_discount;
-//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
-            } catch (NumberFormatException e) {
-                totalDiscount = 0.0;
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-
-
-                itemGroup = items.get(i).getCategory();
-
-
-                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
-                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
-                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
-                    itemTotal = items.get(i).getQty() * items.get(i).getPosPrice() - itemTax;
-                } else {
-                    itemTax = items.get(i).getAmount() -
-                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
-                }
-
-
-                itemTotal = items.get(i).getAmount() - itemTax;
-                itemTotalAfterTax = items.get(i).getAmount();
-                subTotal = subTotal + itemTotal;
-            }
-
-            for (int i = 0; i < items.size(); i++) {
-
-
-                itemGroup = items.get(i).getCategory();
-
-                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
-                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
-                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
-                } else {
-                    itemTax = items.get(i).getAmount() -
-                            (items.get(i).getAmount() / (1 + items.get(i).getTaxPercent() * 0.01));
-                }
-
-                itemTotal = items.get(i).getAmount() - itemTax;
-                itemTotalPerc = itemTotal / subTotal;
-                itemDiscVal = (itemTotalPerc * totalDiscount);
-                items.get(i).setVoucherDiscount( (float)itemDiscVal);
-                items.get(i).setTotalDiscVal(itemDiscVal);
-
-                itemTotal = itemTotal - itemDiscVal;
-                if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
-                    itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
-                    itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
-                } else {
-                    itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
-                }
-                items.get(i).setTaxValue(itemTax);
-                totalTaxValue = totalTaxValue + itemTax;
-            }
-            if(payMethod==0) {
-                netTotal = netTotal + subTotal - totalDiscount - discount_credit + totalTaxValue;
-            }
-            else{
-                netTotal = netTotal + subTotal - totalDiscount  + totalTaxValue;
-//                netTotal = netTotal + subTotal - totalDiscount - discount_oofers_total + totalTaxValue;
-            }
-        }
-        subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
-        taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-        if(payMethod==0) {//credit
-            discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_credit + ""))));
-            discTextView.setText(convertToEnglish(discount_credit+""));
-        }
-        else{
-            //cash
-            discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discount_oofers_total + ""))));
-            discTextView.setText(convertToEnglish(discount_oofers_total+""));
-        }
-        netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
-        subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
-        taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
-        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
-        discount_oofers_total=0.0;
-        discount_credit=0;
+//        discount_credit=0;
+//        total_Amount=0;
 
 
     }
@@ -1361,7 +1416,7 @@ public class SalesInvoice extends Fragment {
 
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText("" + voucher.getTotalVoucherDiscount());
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -1536,7 +1591,7 @@ public class SalesInvoice extends Fragment {
 
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText("" + totalDiscount);
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -1694,7 +1749,7 @@ public class SalesInvoice extends Fragment {
         remark.setText(remark.getText().toString() + voucher.getRemark());
         cust.setText(cust.getText().toString() + voucher.getCustName());
         totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
-        discount.setText(discount.getText().toString() + voucher.getVoucherDiscount());
+        discount.setText(discount.getText().toString() +totalDiscount);
         tax.setText(tax.getText().toString() + voucher.getTax());
         netSale.setText(netSale.getText().toString() + voucher.getNetSales());
 
@@ -2235,7 +2290,8 @@ public class SalesInvoice extends Fragment {
                     mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("اجمالي الكمية:  " + convertToEnglish(threeDForm.format(voucher.getTotalQty())) + " : " + " \n ", 1, 0);
                     printCustom("المجموع  : " + voucher.getSubTotal() + "\n", 1, 2);
-                    printCustom("الخصم    : " + voucher.getVoucherDiscount() + "\n", 1, 2);
+                    printCustom("الخصم    : " +voucher.getTotalVoucherDiscount()+ "\n", 1, 2);
+
                     printCustom("الضريبة  : " + voucher.getTax() + "\n", 1, 2);
                     printCustom("الصافي   : " + voucher.getNetSales() + "\n", 1, 2);
                     if (voucher.getVoucherType() != 506) {

@@ -257,7 +257,7 @@ public class CustomerListShow extends DialogFragment {
                     Customer.setCashCredit(finalObject.getInt("CashCredit"));
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
-                    Customer.setMax_discount(finalObject.getDouble("Max_Discount"));
+                    Customer.setMax_discount(finalObject.getDouble("MAXDISC"));
 
                     customerList.add(Customer);
                 }

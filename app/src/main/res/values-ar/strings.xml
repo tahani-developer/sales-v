@@ -318,4 +318,5 @@
     <string name="action_printer_setting">اعدادات الطباعة</string>
     <string name="companiname">اسم الشركة</string>
     <string name="fill_name">من فضلك أدخل اسم ومعلومات  الشركة </string>
+    <string name="CustomerAuthorize">Customer Authorized</string>
 </resources>

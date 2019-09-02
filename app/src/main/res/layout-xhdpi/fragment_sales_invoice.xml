@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
-            android:text="@string/app_disc_l" />
+            android:text="@string/app_disc_l"
+            tools:visibility="gone" />
 
         <ImageButton
             android:id="@+id/addItemImgButton2"

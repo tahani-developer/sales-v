@@ -317,4 +317,5 @@
     <string name="max_discount">Max Discount Fpr credit</string>
     <string name="companiname">Companey name</string>
     <string name="fill_name">Please fill  the companey name</string>
+    <string name="CustomerAuthorize">Customer Authorized</string>
 </resources>
