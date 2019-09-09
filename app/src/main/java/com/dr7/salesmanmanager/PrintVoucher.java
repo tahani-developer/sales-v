@@ -1067,7 +1067,7 @@ public class PrintVoucher extends AppCompatActivity {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleM/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleS/";
         File file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
@@ -1319,7 +1319,8 @@ public class PrintVoucher extends AppCompatActivity {
             noteLast.setVisibility(View.VISIBLE);
             sing.setVisibility(View.VISIBLE);
         }
-
+        img.setVisibility(View.INVISIBLE);
+        compname.setVisibility(View.INVISIBLE);
 
 
         doneinsewooprint.setOnClickListener(new View.OnClickListener() {

@@ -1091,15 +1091,15 @@ public class SalesInvoice extends Fragment {
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
 
-//        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
+       discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(totalDiscount+""))));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
         subTotalTextView.setText(convertToEnglish(subTotalTextView.getText().toString()));
         taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
-//        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
+        netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
 
-//        discTextView.setText(convertToEnglish(totalDiscount+""));
+        discTextView.setText(convertToEnglish(decimalFormat.format(totalDiscount)+""));
         totalDiscount=0.0;
 
 
