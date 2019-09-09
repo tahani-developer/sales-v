@@ -901,7 +901,9 @@ public class SalesInvoice extends Fragment {
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             totalQty=0.0;
             for (int i = 0; i < items.size(); i++) {
-                totalQty +=items.get(i).getQty();
+                if(items.get(i).getDisc()==0) {  // if not exist discount on item x
+                    totalQty += items.get(i).getQty();
+                }
                 //  Log.e("totalQty",""+totalQty);
                 discount_oofers_total_cash=0;
                 for(int j=0;j<list_discount_offers.size();j++) {
@@ -1091,7 +1093,7 @@ public class SalesInvoice extends Fragment {
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
 
-       discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
+        discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(totalDiscount+""))));
         netTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
 
@@ -1099,7 +1101,7 @@ public class SalesInvoice extends Fragment {
         taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
         netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
 
-        discTextView.setText(convertToEnglish(decimalFormat.format(totalDiscount)+""));
+        discTextView.setText(convertToEnglish(totalDiscount+""));
         totalDiscount=0.0;
 
 

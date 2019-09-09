@@ -156,7 +156,7 @@ public class AddItemsFragment2 extends DialogFragment {
             public void onClick(View view) {
                 listener.addItemsToList(List);
                 AddItemsFragment2.this.dismiss();
-            }
+          }
         });
         return view;
     }
