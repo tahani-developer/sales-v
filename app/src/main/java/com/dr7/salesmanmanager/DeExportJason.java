@@ -53,7 +53,7 @@ public class DeExportJason extends AppCompatActivity {
         this.mHandler = new DatabaseHandler(context);
     }
 
-    void startExportDatabase() {
+    void startExportDatabase() { 
 
         jsonArrayVouchers = new JSONArray();
         jsonArrayItems = new JSONArray();
