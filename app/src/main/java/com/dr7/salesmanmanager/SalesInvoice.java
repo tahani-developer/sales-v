@@ -1515,7 +1515,7 @@ public class SalesInvoice extends Fragment {
         return bit;// creates bitmap and returns the same
     }
 
-    private Bitmap convertLayoutToImageTally(Voucher voucher) {
+    private Bitmap convertLayoutToImageTally(Voucher voucher,int okShow,int start,int end,List<Item>items) {
         LinearLayout linearView=null;
 
         final Dialog dialogs=new Dialog(getActivity());
@@ -1548,6 +1548,9 @@ public class SalesInvoice extends Fragment {
         ammont=(TextView)dialogs.findViewById(R.id.ammont);
         textW=(TextView)dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
+        TableLayout sumLayout = (TableLayout) dialogs.findViewById(R.id.table);
+        TextView noteLast =(TextView) dialogs.findViewById(R.id.notelast);
+        TableRow sing=(TableRow) dialogs.findViewById(R.id.sing);
 //
 
         TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
@@ -1597,6 +1600,18 @@ public class SalesInvoice extends Fragment {
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
+        if(okShow==0){
+            sumLayout.setVisibility(View.GONE);
+            noteLast.setVisibility(View.GONE);
+            sing.setVisibility(View.GONE);
+        }else{
+            sumLayout.setVisibility(View.VISIBLE);
+            noteLast.setVisibility(View.VISIBLE);
+            sing.setVisibility(View.VISIBLE);
+        }
+        img.setVisibility(View.INVISIBLE);
+        compname.setVisibility(View.INVISIBLE);
+
 
 
         if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
@@ -1638,7 +1653,7 @@ public class SalesInvoice extends Fragment {
                                 textView.setText("" + itemsList.get(j).getUnit());
                                 textView.setLayoutParams(lp2);
                             }else{
-                                textView.setText("" + items.get(j).getQty());
+                                textView.setText("" + itemsList.get(j).getQty());
                                 textView.setLayoutParams(lp2);
                             }
                             break;
@@ -2108,32 +2123,85 @@ public class SalesInvoice extends Fragment {
     }
 
 
+//    void printTally(Voucher voucher) {
+//
+//        Bitmap bitmap = convertLayoutToImageTally(voucher);
+//
+//        try {
+//            Settings settings = mDbHandler.getAllSettings().get(0);
+//            File file = savebitmap(bitmap, settings.getNumOfCopy());
+//            Log.e("save image ", "" + file.getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
+
     void printTally(Voucher voucher) {
 
-        Bitmap bitmap = convertLayoutToImageTally(voucher);
+        Bitmap bitmap = null;
+        Bitmap bitmap2 = null;
+        List<Item> items1=new ArrayList<>();
+        for (int j = 0; j < items.size(); j++) {
 
-        try {
-            Settings settings = mDbHandler.getAllSettings().get(0);
-            File file = savebitmap(bitmap, settings.getNumOfCopy());
-            Log.e("save image ", "" + file.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                items1.add(items.get(j));
+
+            }
         }
+
+        Log.e("Items1__",""+items1.size()+"    "+(items1.size()<=17));
+
+        if(items1.size()<=17){
+            bitmap = convertLayoutToImageTally(voucher,1,0,items1.size(),items1);
+            try {
+                Settings settings = mDbHandler.getAllSettings().get(0);
+                File file = savebitmap(bitmap, settings.getNumOfCopy(),"org");
+                Log.e("save image ", "" + file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+
+            Settings settings = mDbHandler.getAllSettings().get(0);
+            for(int i=0;i<settings.getNumOfCopy();i++) {
+                bitmap = convertLayoutToImageTally(voucher, 0,0,17,items1);
+                bitmap2 = convertLayoutToImageTally(voucher, 1,17,items1.size(),items1);
+
+
+                try {
+
+                    File file = savebitmap(bitmap, 1,"fir"+""+i);
+                    File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
+
+                    Log.e("save image ", "" + file.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
 
 
     }
 
-    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+
+
+    public static File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleS/";
         File file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
         }
         for (int i = 0; i < numCope; i++) {
-            String targetPdf = directory_path + "testimageSales" + i + ".png";
+            String targetPdf = directory_path + "testimageSales" + i +""+next +  ".png";
             f = new File(targetPdf);
 
 
