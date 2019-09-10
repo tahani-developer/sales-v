@@ -1088,7 +1088,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
         values.put(WORK_ONLINE, workOnline);
         values.put(PAYMETHOD_CHECK, payMethodCheck);
-        values.put(BONUS_NOT_ALLOWED,bonusNotAlowed);
+        values.put(BONUS_NOT_ALLOWED,bonusNotAlowed);//16
         values.put(NO_OFFERS_FOR_CREDIT_INVOICE,noOfferForCredid);
         values.put(AMOUNT_OF_MAX_DISCOUNT,amountOfMaxDiscount);
         values.put(Customer_Authorized,customerOthoriz);
@@ -2139,17 +2139,19 @@ DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
+
+            SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
             do {
-                SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
+
                 salesManItemsBalance.setSalesManNo(cursor.getString(0));
                 salesManItemsBalance.setItemNo(cursor.getString(1));
                 salesManItemsBalance.setQty(Double.parseDouble(cursor.getString(2)));
-
-
                 salesManItemsBalanceList.add(salesManItemsBalance);
             } while (cursor.moveToNext());
+            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+
         }
-        Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+    //Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
 
         return salesManItemsBalanceList;
     }

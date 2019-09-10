@@ -372,7 +372,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:checked="true"
                 android:text="@string/paymethod_check"
                 android:textColor="@color/text_view_color"
                 android:textSize="18dp" />
@@ -381,7 +380,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:checked="true"
                 android:text="@string/bonus_not_allowed"
                 android:textColor="@color/text_view_color"
                 android:textSize="18dp" />

@@ -754,10 +754,14 @@ public class MainActivity extends AppCompatActivity
                         ExportJason obj = null;
                         try {
                             obj = new ExportJason(MainActivity.this);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+                            obj.startExportDatabase();
                         }
-                        obj.startExportDatabase();
+                        catch (JSONException e) {
+                            Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+
+                        }
 
                     }
                 } else
@@ -856,14 +860,19 @@ public class MainActivity extends AppCompatActivity
                 if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
                     readDiscount.setChecked(true);
 
+                if (mDbHandler.getAllSettings().get(0).getBonusNotAlowed() == 1)
+                    bonusNotAlowed.setChecked(true);
+
                 if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1)
                     workOnline.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 1)
                     paymetod_check.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1)
                     customerAuthor.setChecked(true);
+
 //                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
 //                    noOfferForCredit.setChecked(true);
+
 
             }
             noOfferForCredit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

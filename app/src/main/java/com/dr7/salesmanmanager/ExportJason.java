@@ -65,6 +65,7 @@ public class ExportJason extends AppCompatActivity {
             }
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
+
         for (int i = 0; i < salesManItemsBalanceList.size(); i++)
         {
             salesManItemsBalanceList.get(i).getSalesManNo();
