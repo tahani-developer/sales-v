@@ -879,8 +879,8 @@ public class SalesInvoice extends Fragment {
         voucherNumberTextView.setText(vn);
     }
 
-    public void calculateTotals() {
-
+    public void calculateTotals()
+    {
         discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
@@ -895,14 +895,28 @@ public class SalesInvoice extends Fragment {
         netTotal = 0.0;
         totalDiscount=0;
         sum_discount=0;
+        float flagBonus=0;
+        float  amountBonus=0;
 
 
         //Include tax
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             totalQty=0.0;
             for (int i = 0; i < items.size(); i++) {
-                if(items.get(i).getDisc()==0) {  // if not exist discount on item x
-                    totalQty += items.get(i).getQty();
+                flagBonus=0;
+                amountBonus=0;
+
+                if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                    if(items.get(i).getItemName().equals("(bonus)"))
+                    {
+                        flagBonus=items.get(i-1).getQty();
+                        amountBonus=items.get(i).getQty();
+                        totalQty = totalQty -flagBonus;
+
+                    }else{
+                        totalQty = totalQty + items.get(i).getQty();
+                    }
+
                 }
                 //  Log.e("totalQty",""+totalQty);
                 discount_oofers_total_cash=0;
@@ -911,6 +925,7 @@ public class SalesInvoice extends Fragment {
                         if (list_discount_offers.get(j).getPaymentType() == 1) {
                             if (totalQty >= list_discount_offers.get(j).getQTY()) {
                                 discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 Log.e("discount_oofers_total", "" + discount_oofers_total_cash);
                             }
                         }
@@ -984,8 +999,21 @@ public class SalesInvoice extends Fragment {
         else {
             totalQty=0.0;
             for (int i = 0; i < items.size(); i++) {
+                flagBonus=0;
+                amountBonus=0;
 
-                totalQty +=items.get(i).getQty();
+                if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                    if(items.get(i).getItemName().equals("(bonus)"))
+                    {
+                        flagBonus=items.get(i-1).getQty();
+                        amountBonus=items.get(i).getQty();
+                        totalQty = totalQty -flagBonus;
+
+                    }else{
+                        totalQty = totalQty + items.get(i).getQty();
+                    }
+
+                }
               //  Log.e("totalQty",""+totalQty);
 
                 discount_oofers_total_cash=0;
@@ -1008,6 +1036,7 @@ public class SalesInvoice extends Fragment {
                     }
                 }
             }
+
 
 
             if (discount_oofers_total_cash > 0)
@@ -1512,7 +1541,8 @@ public class SalesInvoice extends Fragment {
         linearView.setDrawingCacheEnabled(true);
         linearView.buildDrawingCache();
         Bitmap bit = linearView.getDrawingCache();
-        return bit;// creates bitmap and returns the same
+        return bit;
+        // creates bitmap and returns the same
     }
 
     private Bitmap convertLayoutToImageTally(Voucher voucher,int okShow,int start,int end,List<Item>items) {

@@ -302,16 +302,21 @@ public class MainActivity extends AppCompatActivity
 
 
                             Log.e("sumExport",""+sum_chech_export_lists);
-                            openPasswordDialog(6);
-
-
-                          /*  ExportJason obj = null;
+                            if(mDbHandler.getAllSettings().get(0).getPassowrd_data()==1) {
+                                openPasswordDialog(6);
+                            }
+                            else{
+                                ExportJason obj = null;
                             try {
                                 obj = new ExportJason(MainActivity.this);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            obj.startExportDatabase();*/
+                            obj.startExportDatabase();
+
+                            }
+
+
 
 
 
@@ -329,14 +334,35 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, SalesmanMap.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_imp_data) {
+        }
+
+//                else{
+//
+//                        LocaleAppUtils.setLocale(new Locale("en"));
+//                        LocaleAppUtils.setConfigChange(MainActivity.this);
+//                        finish();
+//                        startActivity(getIntent());
+//                }
+
+
+
+        else if (id == R.id.nav_imp_data) {
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to update data ? This will take few minutes !")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            openPasswordDialog(5);
+                            if(mDbHandler.getAllSettings().get(0).getPassowrd_data()==1) {
+                                openPasswordDialog(5);
+                            }
+                            else{
+                                ImportJason obj = new ImportJason(MainActivity.this);
+                                obj.startParsing();
+
+
+                            }
+
 //                            transactions = mDbHandler.getAlltransactions();
 //                            for (int i = 0; i < transactions.size(); i++)
 //                                if (transactions.get(i).getIsPosted() == 0)
@@ -814,6 +840,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
             final CheckBox noOfferForCredit = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
             final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
+            final CheckBox passowrdData_checkbox = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
+            final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -869,12 +897,43 @@ public class MainActivity extends AppCompatActivity
                     paymetod_check.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1)
                     customerAuthor.setChecked(true);
+                if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1)
+                    passowrdData_checkbox.setChecked(true);
+                if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
+                    arabicLanguage_checkbox.setChecked(true);
+//                    LocaleAppUtils.setLocale(new Locale("ar"));
+//                    LocaleAppUtils.setConfigChange(MainActivity.this);
+//                    finish();
+//                    startActivity(getIntent());
+                }
+                else{
+//                        LocaleAppUtils.setLocale(new Locale("en"));
+//                        LocaleAppUtils.setConfigChange(MainActivity.this);
+
+//                        finish();
+//                        startActivity(getIntent());
+                }
+
+
+
+
 
 //                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
 //                    noOfferForCredit.setChecked(true);
 
 
             }
+            arabicLanguage_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                   if( arabicLanguage_checkbox.isChecked())
+                   {
+                        LocaleAppUtils.setLocale(new Locale("ar"));
+                    }
+                   else {    LocaleAppUtils.setLocale(new Locale("en"));}
+
+                }
+            });
             noOfferForCredit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -888,6 +947,9 @@ public class MainActivity extends AppCompatActivity
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    LocaleAppUtils.setConfigChange(MainActivity.this);
+                    finish();
+                    startActivity(getIntent());
 
                     if (!(linkEditText.getText().toString().equals(""))) {
                         if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
@@ -917,15 +979,16 @@ public class MainActivity extends AppCompatActivity
                                 int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
                                 int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
                                 int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
-
+                                int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
+                                int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
 
                                 mDbHandler.deleteAllSettings();
 
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
 
                                 dialog.dismiss();
                             } else

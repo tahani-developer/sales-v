@@ -174,6 +174,7 @@ public class ExportJason extends AppCompatActivity {
                         + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim()
                         + "&" + "LOAD_VAN=" + jsonArrayBalance.toString().trim();//sales_man_item_balance
                 URLConnection conn = url.openConnection();
+
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 try {

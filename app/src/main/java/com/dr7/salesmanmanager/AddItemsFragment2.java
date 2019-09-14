@@ -266,6 +266,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
                 item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
+
                 Log.e("log =" , item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
             } else {
@@ -278,7 +279,7 @@ public class AddItemsFragment2 extends DialogFragment {
         }
 
 
-        if ((!item.getItemName().equals("")) && item.getAmount() > 0 ) {
+        if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
             List.add(item);
             Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 180);

@@ -19,7 +19,8 @@
     <string name="app_stock_onhand">Stock On Hand Report Report</string>
     <string name="app_cust_log_rep">Customer Log Report</string>
     <string name="app_receipt">Payment</string>
-    <string name="title_activity_main">Blutooth Connection </string>
+<!--    <string name="title_activity_main">Blutooth Connection </string>-->
+    <string name="title_activity_main"> </string>
     <string name="app_sign_out">Day End</string>
     <string name="customers_locations">Customers Locations</string>
     <string name="sales_man_map">Salesman Map</string>
@@ -318,4 +319,6 @@
     <string name="companiname">Companey name</string>
     <string name="fill_name">Please fill  the companey name</string>
     <string name="CustomerAuthorize">Customer Authorized</string>
+    <string name="passowrddata">Password imp/exp Data</string>
+    <string name="arabic_language">Arabic Language</string>
 </resources>
