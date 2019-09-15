@@ -8,18 +8,26 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +42,9 @@ import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
 import com.ganesh.intermecarabic.Arabic864;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -47,6 +58,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.dr7.salesmanmanager.ReceiptVoucher.savebitmap;
 
 //import com.dr7.salesmanmanager.Pos;
 
@@ -244,6 +257,10 @@ public class CashReport  extends AppCompatActivity {
                             }
 //                                                             qs.setChecked(true);
                             break;
+                        case 4:
+                            printTally();
+                            break;
+
                     }
 
 //                    try {
@@ -325,12 +342,132 @@ public class CashReport  extends AppCompatActivity {
 
 
 
+
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    void printTally() {
+        Bitmap bitmap = convertLayoutToImageTally();
+        try {
+            Settings settings = obj.getAllSettings().get(0);
+            File file = savebitmap(bitmap, settings.getNumOfCopy());
+            Log.e("save image ", "" + file.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        File f = null;
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleS/";
+        File file = new File(directory_path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        for (int i = 0; i < numCope; i++) {
+            String targetPdf = directory_path + "testimageCash" + i + ".png";
+            f = new File(targetPdf);
+//        f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        }
+        return f;
+    }
+
+    private Bitmap convertLayoutToImageTally() {
+        LinearLayout linearView=null;
+
+        final Dialog dialogs=new Dialog(CashReport.this);
+        dialogs.setContentView(R.layout.print_layout_talley_printer);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//*******************************************initial ***************************************************************
+        TextView  tel,taxNo,compname,datepri, cash_sal, credit_sale, total_sale,
+                cash_paymenttext, cheque_Paymenttext, nettext,total_cashtext;
+
+        LinearLayout reportprint_linear=(LinearLayout)dialogs.findViewById(R.id.linear_print_cash_report) ;
+
+        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
+        taxNo=(TextView)dialogs.findViewById(R.id.taxNo);
+        tel=(TextView)dialogs.findViewById(R.id.tel);
+        datepri=(TextView)dialogs.findViewById(R.id.date_editReport_cash);
+        cash_sal=(TextView)dialogs.findViewById(R.id.text_cash_sales);
+        credit_sale=(TextView)dialogs.findViewById(R.id.text_credit_sales);
+        total_sale=(TextView)dialogs.findViewById(R.id.text_total_sales);
+
+        cash_paymenttext=(TextView)dialogs.findViewById(R.id.text_cash_PaymentReport);
+        cheque_Paymenttext =(TextView)dialogs.findViewById(R.id.text_cheque_paymentReport);
+        nettext=(TextView)dialogs.findViewById(R.id.text_net_paymentReport);
+
+        total_cashtext=(TextView)dialogs.findViewById(R.id.text_total_cash);
+
+//        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
+//        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+
+
+        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+//************************************************fill layout *********************************************************************
+//        if(!companyInfo.getLogo().equals(null))
+//        {
+//            companey_logo.setImageBitmap(companyInfo.getLogo());
+//
+//        }
+        taxNo.setText(companyInfo.getTaxNo() +"");
+        tel.setText(companyInfo.getcompanyTel()+"");
+        compname.setText(companyInfo.getCompanyName() );
+        datepri.setText(date.getText().toString());
+        cash_sal.setText(convertToEnglish(decimalFormat.format( cash )));
+        credit_sale.setText(convertToEnglish(decimalFormat.format(credit )));
+        total_sale.setText(convertToEnglish(decimalFormat.format(total)));
+
+        cash_paymenttext.setText(convertToEnglish(decimalFormat.format( cashPayment )));
+        cheque_Paymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment )));
+        nettext.setText(convertToEnglish(decimalFormat.format(net )));
+        total_cashtext.setText(convertToEnglish(decimalFormat.format( total_cash )));
+//        dialogs.show();
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView  = (LinearLayout)dialogs.findViewById(R.id.linear_print_cash_report);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+
+        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+//
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+        return bitmap;// creates bitmap and returns the same
+        // creates bitmap and returns the same
     }
     void send_dataSewoo() throws IOException {
         try {

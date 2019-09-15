@@ -18,7 +18,8 @@
     <string name="app_stock_onhand">تقرير المخزون في اليد</string>
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
     <string name="app_receipt">سند قبض</string>
-    <string name="title_activity_main">الأتصال بالبلوتوث </string>
+<!--    <string name="title_activity_main">الأتصال بالبلوتوث </string>-->
+    <string name="title_activity_main"></string>
     <string name="app_sign_out">نهاية اليوم</string>
     <string name="customers_locations">موقع العميل</string>
     <string name="sales_man_map">خريطة المندوب</string>
@@ -318,5 +319,8 @@
     <string name="action_printer_setting">اعدادات الطباعة</string>
     <string name="companiname">اسم الشركة</string>
     <string name="fill_name">من فضلك أدخل اسم ومعلومات  الشركة </string>
-    <string name="CustomerAuthorize">Customer Authorized</string>
+    <string name="CustomerAuthorize"> التأكد من رصيد العميل المالي </string>
+    <string name="passowrddata">    كلمة مرور للبيانات
+    </string>
+    <string name="arabic_language">لغة عربية </string>
 </resources>

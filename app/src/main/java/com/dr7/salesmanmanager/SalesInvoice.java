@@ -879,8 +879,8 @@ public class SalesInvoice extends Fragment {
         voucherNumberTextView.setText(vn);
     }
 
-    public void calculateTotals() {
-
+    public void calculateTotals()
+    {
         discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
@@ -895,14 +895,28 @@ public class SalesInvoice extends Fragment {
         netTotal = 0.0;
         totalDiscount=0;
         sum_discount=0;
+        float flagBonus=0;
+        float  amountBonus=0;
 
 
         //Include tax
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             totalQty=0.0;
             for (int i = 0; i < items.size(); i++) {
-                if(items.get(i).getDisc()==0) {  // if not exist discount on item x
-                    totalQty += items.get(i).getQty();
+                flagBonus=0;
+                amountBonus=0;
+
+                if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                    if(items.get(i).getItemName().equals("(bonus)"))
+                    {
+                        flagBonus=items.get(i-1).getQty();
+                        amountBonus=items.get(i).getQty();
+                        totalQty = totalQty -flagBonus;
+
+                    }else{
+                        totalQty = totalQty + items.get(i).getQty();
+                    }
+
                 }
                 //  Log.e("totalQty",""+totalQty);
                 discount_oofers_total_cash=0;
@@ -911,6 +925,7 @@ public class SalesInvoice extends Fragment {
                         if (list_discount_offers.get(j).getPaymentType() == 1) {
                             if (totalQty >= list_discount_offers.get(j).getQTY()) {
                                 discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 Log.e("discount_oofers_total", "" + discount_oofers_total_cash);
                             }
                         }
@@ -984,8 +999,21 @@ public class SalesInvoice extends Fragment {
         else {
             totalQty=0.0;
             for (int i = 0; i < items.size(); i++) {
+                flagBonus=0;
+                amountBonus=0;
 
-                totalQty +=items.get(i).getQty();
+                if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                    if(items.get(i).getItemName().equals("(bonus)"))
+                    {
+                        flagBonus=items.get(i-1).getQty();
+                        amountBonus=items.get(i).getQty();
+                        totalQty = totalQty -flagBonus;
+
+                    }else{
+                        totalQty = totalQty + items.get(i).getQty();
+                    }
+
+                }
               //  Log.e("totalQty",""+totalQty);
 
                 discount_oofers_total_cash=0;
@@ -1008,6 +1036,7 @@ public class SalesInvoice extends Fragment {
                     }
                 }
             }
+
 
 
             if (discount_oofers_total_cash > 0)
@@ -1512,10 +1541,11 @@ public class SalesInvoice extends Fragment {
         linearView.setDrawingCacheEnabled(true);
         linearView.buildDrawingCache();
         Bitmap bit = linearView.getDrawingCache();
-        return bit;// creates bitmap and returns the same
+        return bit;
+        // creates bitmap and returns the same
     }
 
-    private Bitmap convertLayoutToImageTally(Voucher voucher) {
+    private Bitmap convertLayoutToImageTally(Voucher voucher,int okShow,int start,int end,List<Item>items) {
         LinearLayout linearView=null;
 
         final Dialog dialogs=new Dialog(getActivity());
@@ -1548,6 +1578,9 @@ public class SalesInvoice extends Fragment {
         ammont=(TextView)dialogs.findViewById(R.id.ammont);
         textW=(TextView)dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout=(TableLayout)dialogs.findViewById(R.id.tab);
+        TableLayout sumLayout = (TableLayout) dialogs.findViewById(R.id.table);
+        TextView noteLast =(TextView) dialogs.findViewById(R.id.notelast);
+        TableRow sing=(TableRow) dialogs.findViewById(R.id.sing);
 //
 
         TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
@@ -1597,6 +1630,18 @@ public class SalesInvoice extends Fragment {
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
+        if(okShow==0){
+            sumLayout.setVisibility(View.GONE);
+            noteLast.setVisibility(View.GONE);
+            sing.setVisibility(View.GONE);
+        }else{
+            sumLayout.setVisibility(View.VISIBLE);
+            noteLast.setVisibility(View.VISIBLE);
+            sing.setVisibility(View.VISIBLE);
+        }
+        img.setVisibility(View.INVISIBLE);
+        compname.setVisibility(View.INVISIBLE);
+
 
 
         if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
@@ -1638,7 +1683,7 @@ public class SalesInvoice extends Fragment {
                                 textView.setText("" + itemsList.get(j).getUnit());
                                 textView.setLayoutParams(lp2);
                             }else{
-                                textView.setText("" + items.get(j).getQty());
+                                textView.setText("" + itemsList.get(j).getQty());
                                 textView.setLayoutParams(lp2);
                             }
                             break;
@@ -2108,32 +2153,85 @@ public class SalesInvoice extends Fragment {
     }
 
 
+//    void printTally(Voucher voucher) {
+//
+//        Bitmap bitmap = convertLayoutToImageTally(voucher);
+//
+//        try {
+//            Settings settings = mDbHandler.getAllSettings().get(0);
+//            File file = savebitmap(bitmap, settings.getNumOfCopy());
+//            Log.e("save image ", "" + file.getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
+
     void printTally(Voucher voucher) {
 
-        Bitmap bitmap = convertLayoutToImageTally(voucher);
+        Bitmap bitmap = null;
+        Bitmap bitmap2 = null;
+        List<Item> items1=new ArrayList<>();
+        for (int j = 0; j < items.size(); j++) {
 
-        try {
-            Settings settings = mDbHandler.getAllSettings().get(0);
-            File file = savebitmap(bitmap, settings.getNumOfCopy());
-            Log.e("save image ", "" + file.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                items1.add(items.get(j));
+
+            }
         }
+
+        Log.e("Items1__",""+items1.size()+"    "+(items1.size()<=17));
+
+        if(items1.size()<=17){
+            bitmap = convertLayoutToImageTally(voucher,1,0,items1.size(),items1);
+            try {
+                Settings settings = mDbHandler.getAllSettings().get(0);
+                File file = savebitmap(bitmap, settings.getNumOfCopy(),"org");
+                Log.e("save image ", "" + file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }else {
+
+            Settings settings = mDbHandler.getAllSettings().get(0);
+            for(int i=0;i<settings.getNumOfCopy();i++) {
+                bitmap = convertLayoutToImageTally(voucher, 0,0,17,items1);
+                bitmap2 = convertLayoutToImageTally(voucher, 1,17,items1.size(),items1);
+
+
+                try {
+
+                    File file = savebitmap(bitmap, 1,"fir"+""+i);
+                    File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
+
+                    Log.e("save image ", "" + file.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
 
 
     }
 
-    public static File savebitmap(Bitmap bmp, int numCope) throws IOException {
+
+
+    public static File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleS/";
         File file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
         }
         for (int i = 0; i < numCope; i++) {
-            String targetPdf = directory_path + "testimageSales" + i + ".png";
+            String targetPdf = directory_path + "testimageSales" + i +""+next +  ".png";
             f = new File(targetPdf);
 
 

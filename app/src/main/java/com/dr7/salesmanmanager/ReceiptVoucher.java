@@ -875,7 +875,7 @@ public class ReceiptVoucher extends Fragment {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSale/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSaleS/";
         File file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
@@ -1009,7 +1009,7 @@ public class ReceiptVoucher extends Fragment {
         LinearLayout linearView=null;
 
         final Dialog dialogs=new Dialog(getActivity());
-        dialogs.setContentView(R.layout.print_payment_cash);
+        dialogs.setContentView(R.layout.print_payment_cash_tally);
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 //*******************************************initial ***************************************************************
         TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
@@ -1044,6 +1044,10 @@ public class ReceiptVoucher extends Fragment {
         });
 
 //************************************************fill layout *********************************************************************
+
+        companey_logo.setVisibility(View.INVISIBLE);
+        compname.setVisibility(View.INVISIBLE);
+
         if(!companyInfo.getLogo().equals(null))
         {
             companey_logo.setImageBitmap(companyInfo.getLogo());

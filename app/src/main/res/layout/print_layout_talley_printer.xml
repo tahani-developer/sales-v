@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="1500dp"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layoutDirection="rtl"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/done_button"
+        android:gravity="center"
+        android:text="@string/app_cancel"
+        android:textColor="@color/totals_color"
+        android:textSize="32sp" />
+    <LinearLayout
+        android:layout_width="1500dp"
+        android:layout_height="match_parent"
+        android:layoutDirection="rtl"
+        android:orientation="vertical"
+        android:id="@+id/linear_print_cash_report">
+
+        <TextView
+            android:id="@+id/textView_companey_Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:text="@string/companiname"
+            android:textColor="@color/text_view_color"
+            android:textSize="42sp" />
+
+
+        <ImageView
+            android:id="@+id/img2"
+            tools:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="114dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/clear" />
+
+
+
+        <TableRow
+            android:layout_width="1500dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="هاتف :"
+                android:textColor="@color/add_button"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tel"
+                android:layout_width="477dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/add_button"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="الرقم الضريبي : "
+                android:textColor="@color/add_button"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/taxNo"
+                android:layout_width="482dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/add_button"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <LinearLayout
+            android:layout_width="1500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:text="التاريخ : "
+                android:textColor="@color/text_view_color"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/date_editReport_cash"
+                android:layout_width="931dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+            <!--<Button-->
+            <!--android:id="@+id/preview_cash_report"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:textColor="@color/text_view_color"-->
+            <!--android:background="@color/done_button"-->
+            <!--android:layout_marginLeft="100dp"-->
+            <!--android:layout_marginStart="150dp"-->
+            <!--android:text="@string/preview" />-->
+            <!--<Button-->
+            <!--android:id="@+id/print_cash_report"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:textColor="@color/text_view_color"-->
+            <!--android:background="@color/colorblue1"-->
+            <!--android:layout_marginLeft="100dp"-->
+            <!--android:layout_marginStart="120dp"-->
+            <!--android:text="@string/print" />-->
+            <!--<ImageView-->
+            <!--android:id="@+id/pic_reportCash"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:visibility="invisible"/>-->
+        </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/textVi12"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:text="&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;"-->
+
+<!--            android:textColor="@color/text_view_color"-->
+<!--            android:textSize="18sp" />-->
+
+        <TableLayout
+            android:id="@+id/TableSalesReport"
+            android:layout_width="1500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+
+            >
+
+            <TableRow
+
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="1dp"
+                    android:text="المبيعات نقدا : "
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_cash_sales"
+                    android:layout_width="912dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="1dp"
+                    android:text=" المبيعات ذمم:  "
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_credit_sales"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow
+
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="1dp"
+                    android:text="إجمالي المبيعات : "
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_total_sales"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+        <TextView
+            android:id="@+id/textVi1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+
+        <TableLayout
+            android:id="@+id/TablePaymentReport"
+            android:layout_width="1500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white">
+
+            <TableRow android:layout_marginTop="10dp">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    android:text="الدفع نقدا :"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_cash_PaymentReport"
+                    android:layout_width="982dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="1dp"
+                    android:text="الدفع شيك  : "
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_cheque_paymentReport"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="1dp"
+                    android:text="الاجمالي "
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text_net_paymentReport"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+
+                    android:padding="1dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+            </TableRow>
+
+
+        </TableLayout>
+        <TextView
+            android:id="@+id/textVi13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+        <TableRow
+            android:layout_width="1500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layoutDirection="rtl">
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+
+                android:text="اجمالي المقبوضات  : "
+                android:textColor="@color/text_view_color"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_total_cash"
+                android:layout_width="1242dp"
+                android:layout_height="wrap_content"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+    </LinearLayout>
+
+</LinearLayout>

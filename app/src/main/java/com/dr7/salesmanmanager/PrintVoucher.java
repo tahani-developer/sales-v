@@ -1025,9 +1025,9 @@ public class PrintVoucher extends AppCompatActivity {
             }
         }
 
-        Log.e("Items1__",""+items1.size()+"    "+(items1.size()<=20));
+        Log.e("Items1__",""+items1.size()+"    "+(items1.size()<=17));
 
-        if(items1.size()<=20){
+        if(items1.size()<=17){
              bitmap = convertLayoutToImageTally(voucher,1,0,items1.size(),items1);
             try {
                 Settings settings = obj.getAllSettings().get(0);
@@ -1041,14 +1041,14 @@ public class PrintVoucher extends AppCompatActivity {
 
             Settings settings = obj.getAllSettings().get(0);
             for(int i=0;i<settings.getNumOfCopy();i++) {
-                bitmap = convertLayoutToImageTally(voucher, 0,0,20,items1);
-                bitmap2 = convertLayoutToImageTally(voucher, 1,20,items1.size(),items1);
+                bitmap = convertLayoutToImageTally(voucher, 0,0,17,items1);
+                bitmap2 = convertLayoutToImageTally(voucher, 1,17,items1.size(),items1);
 
 
                 try {
 
-                    File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
                     File file = savebitmap(bitmap, 1,"fir"+""+i);
+                    File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
 
                     Log.e("save image ", "" + file.getAbsolutePath());
                 } catch (IOException e) {

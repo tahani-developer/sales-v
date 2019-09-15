@@ -65,6 +65,7 @@ public class ExportJason extends AppCompatActivity {
             }
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
+
         for (int i = 0; i < salesManItemsBalanceList.size(); i++)
         {
             salesManItemsBalanceList.get(i).getSalesManNo();
@@ -173,6 +174,7 @@ public class ExportJason extends AppCompatActivity {
                         + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim()
                         + "&" + "LOAD_VAN=" + jsonArrayBalance.toString().trim();//sales_man_item_balance
                 URLConnection conn = url.openConnection();
+
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 try {
