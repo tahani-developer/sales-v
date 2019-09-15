@@ -175,11 +175,11 @@ public class SalesInvoice extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
-        try {
-            closeBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            closeBT();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
         list_discount_offers=new ArrayList<>();
@@ -449,7 +449,7 @@ public class SalesInvoice extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int l) {
 
                         if (!clicked) {
-
+                            Log.e("sales invoice","kkk");
                             clicked = true;
                             int listSize = itemsListView.getCount();
                             if (listSize == 0)
@@ -2232,8 +2232,8 @@ public class SalesInvoice extends Fragment {
                 companyInfo.setCompanyTel(00000);
 //                companyInfo.setLogo();
                             }
-
-            if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=0) {
+//&& !companyInfo.getLogo().equals(null)
+            if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&&companyInfo.getTaxNo()!=0) {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
