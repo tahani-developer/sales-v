@@ -766,8 +766,8 @@ public class CashReport  extends AppCompatActivity {
                 companyInfo.setCompanyTel(00000);
 //                companyInfo.setLogo();
             }
-
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != 0) {
+//&& !companyInfo.getLogo().equals(null)
+            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != 0) {
 //            String nameCompany=companyInfo.getCompanyName().toString();
 
                 // the text typed by the user

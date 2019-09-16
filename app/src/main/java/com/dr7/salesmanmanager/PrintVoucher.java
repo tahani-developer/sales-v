@@ -1241,7 +1241,7 @@ public class PrintVoucher extends AppCompatActivity {
         }
 
 
-        dialogs.show();
+//        dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
@@ -1444,7 +1444,7 @@ public class PrintVoucher extends AppCompatActivity {
         }
 
 
-        dialogs.show();
+       dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout

@@ -175,11 +175,11 @@ public class SalesInvoice extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
-        try {
-            closeBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            closeBT();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         decimalFormat = new DecimalFormat("##.00");
         mDbHandler = new DatabaseHandler(getActivity());
         list_discount_offers=new ArrayList<>();
@@ -461,7 +461,16 @@ public class SalesInvoice extends Fragment {
 
                                 double totalDisc = Double.parseDouble(discTextView.getText().toString());
                                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-                                double tax = Double.parseDouble(taxTextView.getText().toString());
+                                double tax=0;
+                                try{
+                                     tax = Double.parseDouble(taxTextView.getText().toString());
+                                     Log.e("tax error ",""+tax+"   "+taxTextView.getText().toString());
+                                }catch (Exception e){
+                                    tax=0;
+                                    Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
+
+                                }
+
                                 double netSales = Double.parseDouble(netTotalTextView.getText().toString());
                                 if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
                                     Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
@@ -579,12 +588,11 @@ public class SalesInvoice extends Fragment {
                                                 }
                                                 mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
 
-                                            }
-                                            else {
+                                            } else {
                                                 Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
                                             }
-                                    }
-                                        else{//setting not authorizing
+                                        }else {
+
                                             mDbHandler.addVoucher(voucher);
                                             Log.e("paymethod", "" + voucher.getPayMethod());
                                             for (int i = 0; i < items.size(); i++) {
@@ -593,8 +601,8 @@ public class SalesInvoice extends Fragment {
                                                         items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                                                         items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
                                                         items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
-                                                totalQty_forPrint+=items.get(i).getQty();
-                                                Log.e("totalQty_forPrint",""+totalQty_forPrint);
+                                                totalQty_forPrint += items.get(i).getQty();
+                                                Log.e("totalQty_forPrint", "" + totalQty_forPrint);
 
                                                 itemsList.add(item);
 
@@ -614,7 +622,7 @@ public class SalesInvoice extends Fragment {
                                             }
 
                                             if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-                                                Log.e("test",""+voucher.getTotalVoucherDiscount() );
+                                                Log.e("test", "" + voucher.getTotalVoucherDiscount());
 //                                                try {
 //                                                    findBT();
 //                                                    openBT();f
@@ -672,6 +680,7 @@ public class SalesInvoice extends Fragment {
                                                 hiddenDialog();
                                             }
                                             mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+
 
                                         }
 
