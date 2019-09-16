@@ -1866,7 +1866,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             }
             while (cursor.moveToNext());
         }
-        Log.e("keyvalue", "Db" + keyvalue);
+//        Log.e("keyvalue", "Db" + keyvalue);
         return keyvalue;
     }
 
@@ -1886,7 +1886,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
-        Log.e("new_Value_Qty_offers", "Db" + qtyOffers);
+//        Log.e("new_Value_Qty_offers", "Db" + qtyOffers);
         return qtyOffers;
     }
 
@@ -2158,15 +2158,16 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
 
-            SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
-            do {
 
+            do {
+                SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
                 salesManItemsBalance.setSalesManNo(cursor.getString(0));
                 salesManItemsBalance.setItemNo(cursor.getString(1));
                 salesManItemsBalance.setQty(Double.parseDouble(cursor.getString(2)));
                 salesManItemsBalanceList.add(salesManItemsBalance);
             } while (cursor.moveToNext());
-            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(1).getQty());
 
         }
     //Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());

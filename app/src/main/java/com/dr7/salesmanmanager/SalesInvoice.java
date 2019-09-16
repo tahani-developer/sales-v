@@ -584,6 +584,96 @@ public class SalesInvoice extends Fragment {
                                                 Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
                                             }
                                     }
+                                        else{//setting not authorizing
+                                            mDbHandler.addVoucher(voucher);
+                                            Log.e("paymethod", "" + voucher.getPayMethod());
+                                            for (int i = 0; i < items.size(); i++) {
+
+                                                Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
+                                                        items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                                                        items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), 0,
+                                                        items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+                                                totalQty_forPrint+=items.get(i).getQty();
+                                                Log.e("totalQty_forPrint",""+totalQty_forPrint);
+
+                                                itemsList.add(item);
+
+                                                mDbHandler.addItem(item);
+                                                itemForPrint.add(item);
+
+                                                if (voucherType != 506)
+                                                    mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+                                                else
+                                                    mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+                                            }
+
+
+                                            if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                                                new JSONTask().execute();
+                                            }
+
+                                            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+                                                Log.e("test",""+voucher.getTotalVoucherDiscount() );
+//                                                try {
+//                                                    findBT();
+//                                                    openBT();f
+
+
+                                                int printer = mDbHandler.getPrinterSetting();
+
+                                                switch (printer) {
+                                                    case 0:
+                                                        Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                                                        i.putExtra("printKey", "1");
+                                                        startActivity(i);
+//                                                             lk30.setChecked(true);
+                                                        break;
+                                                    case 1:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(1);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk31.setChecked(true);
+                                                        break;
+                                                    case 2:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(2);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             lk32.setChecked(true);
+                                                        break;
+                                                    case 3:
+
+                                                        try {
+                                                            findBT();
+                                                            openBT(3);
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+//                                                             qs.setChecked(true);
+                                                        break;
+                                                    case 4:
+                                                        printTally(voucher);
+                                                        break;
+
+                                                }
+
+
+//                                                } catch (IOException ex) {
+//                                                }
+                                            } else {
+                                                hiddenDialog();
+                                            }
+                                            mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+
+                                        }
 
 
                                     } else {
@@ -905,6 +995,8 @@ public class SalesInvoice extends Fragment {
             for (int i = 0; i < items.size(); i++) {
                 flagBonus=0;
                 amountBonus=0;
+                discount_oofers_total_cash=0;
+                discount_oofers_total_credit=0;
 
                 if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
                     if(items.get(i).getItemName().equals("(bonus)"))
@@ -919,7 +1011,7 @@ public class SalesInvoice extends Fragment {
 
                 }
                 //  Log.e("totalQty",""+totalQty);
-                discount_oofers_total_cash=0;
+
                 for(int j=0;j<list_discount_offers.size();j++) {
                     if (payMethod == 1) {
                         if (list_discount_offers.get(j).getPaymentType() == 1) {
@@ -1001,6 +1093,8 @@ public class SalesInvoice extends Fragment {
             for (int i = 0; i < items.size(); i++) {
                 flagBonus=0;
                 amountBonus=0;
+                discount_oofers_total_cash=0;
+                discount_oofers_total_credit=0;
 
                 if(items.get(i).getDisc()==0 ) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
                     if(items.get(i).getItemName().equals("(bonus)"))
@@ -1016,7 +1110,7 @@ public class SalesInvoice extends Fragment {
                 }
               //  Log.e("totalQty",""+totalQty);
 
-                discount_oofers_total_cash=0;
+
                 for(int j=0;j<list_discount_offers.size();j++) {
                     if (payMethod == 1) {
                         if (list_discount_offers.get(j).getPaymentType() == 1) {
@@ -1718,7 +1812,7 @@ public class SalesInvoice extends Fragment {
                 tabLayout.addView(row);
             }
         }
-        dialogs.show();
+//        dialogs.show();
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);

@@ -25,6 +25,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
+
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
@@ -47,6 +49,21 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
+
+        try
+        {
+            if(mDHandler.getAllSettings().get(0).getArabic_language()==1)
+            {
+                LocaleAppUtils.setLocale(new Locale("ar"));
+                LocaleAppUtils.setConfigChange(Login.this);
+//            finish();
+//            startActivity(getIntent());
+            }
+
+        }catch (Exception e)
+        {
+
+        }
      //   model_key.setKey(123);
 
         Log.e("model", "model_key" + model_key.getKey());
