@@ -1104,7 +1104,7 @@ public class ReceiptVoucher extends Fragment {
         custname.setText(payment.getCustName());
         date.setText(payment.getPayDate());
         cashNo.setText(payment.getVoucherNumber()+"");
-        dialogs.show();
+//        dialogs.show();
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView  = (LinearLayout)dialogs.findViewById(R.id.print_invoice);
 
