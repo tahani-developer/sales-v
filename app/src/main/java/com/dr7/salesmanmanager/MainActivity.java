@@ -132,11 +132,18 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         mainTextView = (TextView) findViewById(R.id.mainTextView);
+        settext2();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
         checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
         checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
+        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
+        {
+            checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+            checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+        }
 
         checkInLinearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -901,17 +908,6 @@ public class MainActivity extends AppCompatActivity
                     passowrdData_checkbox.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     arabicLanguage_checkbox.setChecked(true);
-//                    LocaleAppUtils.setLocale(new Locale("ar"));
-//                    LocaleAppUtils.setConfigChange(MainActivity.this);
-//                    finish();
-//                    startActivity(getIntent());
-                }
-                else{
-//                        LocaleAppUtils.setLocale(new Locale("en"));
-//                        LocaleAppUtils.setConfigChange(MainActivity.this);
-
-//                        finish();
-//                        startActivity(getIntent());
                 }
 
 
@@ -950,6 +946,7 @@ public class MainActivity extends AppCompatActivity
                     LocaleAppUtils.setConfigChange(MainActivity.this);
                     finish();
                     startActivity(getIntent());
+                    settext2();
 
                     if (!(linkEditText.getText().toString().equals(""))) {
                         if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
