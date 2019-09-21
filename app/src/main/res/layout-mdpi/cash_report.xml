@@ -29,6 +29,7 @@
             android:gravity="center_vertical"
             android:text="@string/app_cash_report"
             android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="25dp" />
 
@@ -118,7 +119,7 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -130,10 +131,9 @@
 
             <TextView
                 android:id="@+id/text_cash_sales"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -144,7 +144,7 @@
             android:layout_marginTop="5dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -156,10 +156,9 @@
 
             <TextView
                 android:id="@+id/text_credit_sales"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -170,7 +169,7 @@
             android:layout_marginTop="10dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -182,10 +181,9 @@
 
             <TextView
                 android:id="@+id/text_total_sales"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -227,7 +225,7 @@
             android:background="@color/layer3">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -239,10 +237,9 @@
 
             <TextView
                 android:id="@+id/text_cash_PaymentReport"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -254,7 +251,7 @@
             android:background="@color/layer3">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -266,10 +263,9 @@
 
             <TextView
                 android:id="@+id/text_cheque_paymentReport"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -281,7 +277,7 @@
             android:background="@color/layer3">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -293,10 +289,9 @@
 
             <TextView
                 android:id="@+id/text_net_paymentReport"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="12dp"
@@ -307,7 +302,7 @@
             android:background="@color/layer3">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -319,10 +314,9 @@
 
             <TextView
                 android:id="@+id/text_total_cash"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:gravity="left"
                 android:padding="1dp"
                 android:textColor="@color/text_view_color"
                 android:textSize="15dp"

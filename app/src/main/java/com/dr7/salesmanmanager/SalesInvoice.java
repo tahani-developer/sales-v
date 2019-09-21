@@ -472,16 +472,17 @@ public class SalesInvoice extends Fragment {
 
                                 double totalDisc = Double.parseDouble(discTextView.getText().toString());
                                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-                                double tax=0;
+                                double tax=0, netSales=0;
                                 try{
                                      tax = Double.parseDouble(taxTextView.getText().toString());
+                                     netSales = Double.parseDouble(netTotalTextView.getText().toString());
                                 }catch (Exception e){
                                     tax=0;
                                     Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
 
                                 }
 
-                                double netSales = Double.parseDouble(netTotalTextView.getText().toString());
+
                                 if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
                                     Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
 
@@ -599,9 +600,9 @@ public class SalesInvoice extends Fragment {
 
                }
            }
-               else{
-
-
+               else {
+//                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                   Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
                }
 
 
@@ -2219,7 +2220,7 @@ public class SalesInvoice extends Fragment {
 
                     if (companyInfo.getLogo() != null) {
 
-                        mmOutputStream.write(bitmapdata);
+//                        mmOutputStream.write(bitmapdata);
                         printCustom(" \n ", 1, 0);
                     }
 

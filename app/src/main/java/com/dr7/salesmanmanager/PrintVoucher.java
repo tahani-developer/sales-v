@@ -73,6 +73,7 @@ public class PrintVoucher extends AppCompatActivity {
     private BluetoothPort bluetoothPort;
     List<Voucher> vouchers;
     public static List<Item> items;
+
     List<CompanyInfo> companeyinfo;
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
@@ -102,6 +103,7 @@ public class PrintVoucher extends AppCompatActivity {
     String itemsString;
     String itemsString2 = "";
     DatabaseHandler obj;
+     static double TOTAL=0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -917,7 +919,7 @@ public class PrintVoucher extends AppCompatActivity {
 
                     if (companyInfo.getLogo() != null) {
 
-                        mmOutputStream.write(bitmapdata);
+//                        mmOutputStream.write(bitmapdata);
 
                     }
 

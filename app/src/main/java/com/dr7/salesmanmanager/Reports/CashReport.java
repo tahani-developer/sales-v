@@ -136,6 +136,7 @@ public class CashReport  extends AppCompatActivity {
                     credit = 0;
                     total = 0;
                     for (int n = 0; n < voucher.size(); n++) {
+
                         if (filters(n)) {
                             switch (voucher.get(n).getPayMethod()) {
                                 case 0:
@@ -156,7 +157,9 @@ public class CashReport  extends AppCompatActivity {
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
                     Log.e("cash", "" + cash + "\t credit= " + credit + "total=" + total);
                     //  clearPayment();
+                    cashPayment=0;creditPayment=0;net=0;total_cash=0;
                     for (int i = 0; i < payments.size(); i++) {
+//                        cashPayment=0;creditPayment=0;net=0;total_cash=0;
                         Log.e("paym",""+payments.get(i).getAmount());
                         if (filters_payment(i)) {
 
