@@ -16,20 +16,15 @@ import com.dr7.salesmanmanager.Modles.Voucher;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class ExportJason extends AppCompatActivity {
@@ -173,15 +168,29 @@ public class ExportJason extends AppCompatActivity {
                         + "&" + "Added_Customers=" + jsonArrayAddedCustomer.toString().trim()
                         + "&" + "TABLE_TRANSACTIONS=" + jsonArrayTransactions.toString().trim()
                         + "&" + "LOAD_VAN=" + jsonArrayBalance.toString().trim();//sales_man_item_balance
-                URLConnection conn = url.openConnection();
 
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
+//                URLConnection conn = url.openConnection();
+//
+//                conn.setDoOutput(true);
+//                conn.setDoInput(true);
+
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
                 try {
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                    wr.write(table1);
+//                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+//                    wr.write(table1);
+//
+//                    wr.flush();
 
+                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                    wr.writeBytes(table1);
                     wr.flush();
+                    wr.close();
+
                 } catch (Exception e){
                     Log.e("here****" , e.getMessage());
                 }
@@ -189,7 +198,7 @@ public class ExportJason extends AppCompatActivity {
 
                 // get response
                 reader = new BufferedReader(new
-                        InputStreamReader(conn.getInputStream()));
+                        InputStreamReader(httpURLConnection.getInputStream()));
 
                 StringBuilder sb = new StringBuilder();
                 String line = null;
