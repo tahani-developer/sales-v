@@ -108,11 +108,12 @@ public class CPCLSample2 {
         this.cpclPrinter.printForm();
     }
 
-    public void imageTest(int count, Bitmap testB) throws IOException {
-        this.cpclPrinter.setForm(0, 200, 200, 406, count);
+    public void imageTest(int count, Bitmap testB) throws IOException {//
+        this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+30 , count);
         this.cpclPrinter.setMedia(this.paperType);
 
-        this.cpclPrinter.printBitmap(testB, 1, 100);
+        this.cpclPrinter.printBitmap(testB, 400, 50);
+
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
         this.cpclPrinter.printForm();
@@ -263,12 +264,21 @@ public class CPCLSample2 {
         }
         int nLineWidth = 1140;
         String Arabicdata = ArabicDataPrinter();
+        String test="        ";
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
         try {
-            this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
+            this.cpclPrinter.setForm(0, 200, 200, 1700, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
+
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 18, 360, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+//            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();

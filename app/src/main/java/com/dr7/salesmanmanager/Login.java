@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.activeKey;
@@ -25,6 +26,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
+
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
@@ -38,6 +41,7 @@ public class Login extends AppCompatActivity {
     activeKey model_key;
     int key_int;
     Context context;
+    TextView loginText;
 
     DatabaseHandler mDHandler;
 
@@ -47,6 +51,26 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
+        loginText=(TextView)findViewById(R.id.logInTextView);
+
+
+        try {
+            if(mDHandler.getAllSettings().size()!=0) {
+                if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
+                    LocaleAppUtils.setLocale(new Locale("ar"));
+                    LocaleAppUtils.setConfigChange(Login.this);
+
+                } else {
+                    LocaleAppUtils.setLocale(new Locale("en"));
+                    LocaleAppUtils.setConfigChange(Login.this);
+
+                }
+            }
+
+        }catch (Exception e)
+        {
+
+        }
      //   model_key.setKey(123);
 
         Log.e("model", "model_key" + model_key.getKey());

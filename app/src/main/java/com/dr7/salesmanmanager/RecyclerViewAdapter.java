@@ -121,12 +121,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
                     discountLinearLayout.setVisibility(View.INVISIBLE);
                 }
-             if (mHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {
+             if (mHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
                  bonusLinearLayout.setVisibility(View.VISIBLE);
                 }
              else{
-                 bonus.setText("0");
-                 bonusLinearLayout.setVisibility(View.INVISIBLE);
+//                 bonus.setText("0");
+//                 bonusLinearLayout.setVisibility(View.INVISIBLE);
+                 bonus.setEnabled(false);
                 }
 
                 if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {

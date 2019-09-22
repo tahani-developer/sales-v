@@ -24,7 +24,7 @@
     <string name="app_sign_out">Day End</string>
     <string name="customers_locations">Customers Locations</string>
     <string name="sales_man_map">Salesman Map</string>
-    <string name="app_day_start">Day Start</string>
+    <string name="app_day_start">Log In</string>
     <string name="app_cust_no">Customer Account</string>
     <string name="app_sign_in_visit">Customer Check In</string>
     <string name="app_sign_out_visit">Customer Check Out</string>
@@ -321,4 +321,6 @@
     <string name="CustomerAuthorize">Customer Authorized</string>
     <string name="passowrddata">Password imp/exp Data</string>
     <string name="arabic_language">Arabic Language</string>
+
+    <string name="error_companey_info">   please enter company information for print </string>
 </resources>

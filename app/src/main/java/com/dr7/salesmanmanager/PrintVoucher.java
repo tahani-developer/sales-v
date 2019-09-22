@@ -73,6 +73,7 @@ public class PrintVoucher extends AppCompatActivity {
     private BluetoothPort bluetoothPort;
     List<Voucher> vouchers;
     public static List<Item> items;
+
     List<CompanyInfo> companeyinfo;
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
@@ -102,6 +103,7 @@ public class PrintVoucher extends AppCompatActivity {
     String itemsString;
     String itemsString2 = "";
     DatabaseHandler obj;
+     static double TOTAL=0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -301,7 +303,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                     hiddenDialog(vouch);
                                                 }
                                             } else {
-                                                Toast.makeText(PrintVoucher.this, "please enter All companey info", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
@@ -917,7 +919,7 @@ public class PrintVoucher extends AppCompatActivity {
 
                     if (companyInfo.getLogo() != null) {
 
-                        mmOutputStream.write(bitmapdata);
+//                        mmOutputStream.write(bitmapdata);
 
                     }
 
@@ -1631,7 +1633,7 @@ public class PrintVoucher extends AppCompatActivity {
         }
 
 
-        dialogs.show();
+//        dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
@@ -1677,6 +1679,8 @@ public class PrintVoucher extends AppCompatActivity {
             int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
             Log.e("nocopy", "" + numOfCopy);
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
+            if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=0) {
             pic.setImageBitmap(companyInfo.getLogo());
             pic.setDrawingCacheEnabled(true);
             bitmap = pic.getDrawingCache();
@@ -1684,8 +1688,6 @@ public class PrintVoucher extends AppCompatActivity {
             printPic.init(bitmap);
             byte[] bitmapdata = printPic.printDraw();
 
-
-            if (companyInfo != null) {
 
                 for (int i = 1; i <= numOfCopy; i++) {
                     Thread.sleep(1000);
@@ -1762,9 +1764,11 @@ public class PrintVoucher extends AppCompatActivity {
 
                 }
                 closeBT();
-            } else
-                Toast.makeText(PrintVoucher.this, " please enter company information", Toast.LENGTH_LONG).show();
 
+
+
+        }
+            else{   Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();}
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (Exception e) {

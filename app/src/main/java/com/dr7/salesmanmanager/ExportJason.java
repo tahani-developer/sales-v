@@ -67,8 +67,6 @@ public class ExportJason extends AppCompatActivity {
             salesManItemsBalanceList.get(i).getItemNo();
             salesManItemsBalanceList.get(i).getQty();
             jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
-//            jsonArrayBalance.put(getObj());
-//            Log.e("json_balance ",""+jsonArrayBalance.toString());
         }
 
         vouchers = mHandler.getAllVouchers();

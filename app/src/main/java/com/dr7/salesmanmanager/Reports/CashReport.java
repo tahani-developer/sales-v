@@ -93,6 +93,7 @@ public class CashReport  extends AppCompatActivity {
     volatile boolean stopWorker;
     DatabaseHandler obj;
     private ImageView pic;
+    CompanyInfo companyInfo;
 
 
 
@@ -123,6 +124,7 @@ public class CashReport  extends AppCompatActivity {
         nettext = (TextView) findViewById(R.id.text_net_paymentReport);
         total_cashtext=(TextView) findViewById(R.id.text_total_cash);
         pic=(ImageView)findViewById(R.id.pic_reportCash);
+         companyInfo=new CompanyInfo();
 
 
         preview.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +136,7 @@ public class CashReport  extends AppCompatActivity {
                     credit = 0;
                     total = 0;
                     for (int n = 0; n < voucher.size(); n++) {
+
                         if (filters(n)) {
                             switch (voucher.get(n).getPayMethod()) {
                                 case 0:
@@ -154,7 +157,9 @@ public class CashReport  extends AppCompatActivity {
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
                     Log.e("cash", "" + cash + "\t credit= " + credit + "total=" + total);
                     //  clearPayment();
+                    cashPayment=0;creditPayment=0;net=0;total_cash=0;
                     for (int i = 0; i < payments.size(); i++) {
+//                        cashPayment=0;creditPayment=0;net=0;total_cash=0;
                         Log.e("paym",""+payments.get(i).getAmount());
                         if (filters_payment(i)) {
 
@@ -217,50 +222,55 @@ public class CashReport  extends AppCompatActivity {
             public void onClick(View v) {
                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
                     int printer = obj.getPrinterSetting();
+                    companyInfo=obj.getAllCompanyInfo().get(0);
+                    if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=-1) {
+                        switch (printer) {
+                            case 0:
 
-                    switch (printer) {
-                        case 0:
-
-                            Intent i=new Intent(CashReport.this,BluetoothConnectMenu.class);
-                            i.putExtra("printKey","3");
-                            startActivity(i);
+                                Intent i = new Intent(CashReport.this, BluetoothConnectMenu.class);
+                                i.putExtra("printKey", "3");
+                                startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                            break;
-                        case 1:
+                                break;
+                            case 1:
 
-                            try {
-                                findBT();
-                                openBT(1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    findBT();
+                                    openBT(1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 //                                                             lk31.setChecked(true);
-                            break;
-                        case 2:
+                                break;
+                            case 2:
 
-                            try {
-                                findBT();
-                                openBT(2);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    findBT();
+                                    openBT(2);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 //                                                             lk32.setChecked(true);
-                            break;
-                        case 3:
+                                break;
+                            case 3:
 
-                            try {
-                                findBT();
-                                openBT(3);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    findBT();
+                                    openBT(3);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 //                                                             qs.setChecked(true);
-                            break;
-                        case 4:
-                            printTally();
-                            break;
+                                break;
+                            case 4:
+                                printTally();
+                                break;
 
+                        }
+                    }
+                    else{
+                        Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                     }
 
 //                    try {

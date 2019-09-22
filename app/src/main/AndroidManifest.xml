@@ -76,6 +76,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
 
+
         <activity
             android:name=".Reports.Reports"
             android:label="@string/title_activity_main"

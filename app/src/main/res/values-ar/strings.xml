@@ -23,7 +23,7 @@
     <string name="app_sign_out">نهاية اليوم</string>
     <string name="customers_locations">موقع العميل</string>
     <string name="sales_man_map">خريطة المندوب</string>
-    <string name="app_day_start">بداية اليوم</string>
+    <string name="app_day_start">تسجيل الدخول </string>
     <string name="app_cust_no">حساب العميل</string>
     <string name="app_sign_in_visit">دخول العميل</string>
     <string name="app_sign_out_visit">خروج العميل</string>
@@ -323,4 +323,5 @@
     <string name="passowrddata">    كلمة مرور للبيانات
     </string>
     <string name="arabic_language">لغة عربية </string>
+    <string name="error_companey_info">  أدخل معلومات الشركة للطباعة </string>
 </resources>
