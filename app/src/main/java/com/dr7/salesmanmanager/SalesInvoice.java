@@ -221,6 +221,11 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
 
         itemsList = new ArrayList<>();
+//        voucherType = 504;
+        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+        String vn2 = voucherNumber + "";
+        voucherNumberTextView.setText(vn2);
+
 
 
         custInfoImgButton.setVisibility(View.INVISIBLE);
@@ -554,55 +559,61 @@ public class SalesInvoice extends Fragment {
 
            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
                Log.e("test", "" + voucher.getTotalVoucherDiscount());
-               int printer = mDbHandler.getPrinterSetting();
-               companyInfo=mDbHandler.getAllCompanyInfo().get(0);
-               if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=-1) {
-               switch (printer) {
-                   case 0:
-                       Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
-                       i.putExtra("printKey", "1");
-                       startActivity(i);
+
+               try {
+                   int printer = mDbHandler.getPrinterSetting();
+                   companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                   if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                       switch (printer) {
+                           case 0:
+                               Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                               i.putExtra("printKey", "1");
+                               startActivity(i);
 //                                                             lk30.setChecked(true);
-                       break;
-                   case 1:
+                               break;
+                           case 1:
 
-                       try {
-                           findBT();
-                           openBT(1);
-                       } catch (IOException e) {
-                           e.printStackTrace();
-                       }
+                               try {
+                                   findBT();
+                                   openBT(1);
+                               } catch (IOException e) {
+                                   e.printStackTrace();
+                               }
 //                                                             lk31.setChecked(true);
-                       break;
-                   case 2:
+                               break;
+                           case 2:
 
-                       try {
-                           findBT();
-                           openBT(2);
-                       } catch (IOException e) {
-                           e.printStackTrace();
-                       }
+                               try {
+                                   findBT();
+                                   openBT(2);
+                               } catch (IOException e) {
+                                   e.printStackTrace();
+                               }
 //                                                             lk32.setChecked(true);
-                       break;
-                   case 3:
+                               break;
+                           case 3:
 
-                       try {
-                           findBT();
-                           openBT(3);
-                       } catch (IOException e) {
-                           e.printStackTrace();
-                       }
+                               try {
+                                   findBT();
+                                   openBT(3);
+                               } catch (IOException e) {
+                                   e.printStackTrace();
+                               }
 //                                                             qs.setChecked(true);
-                       break;
-                   case 4:
-                       printTally(voucher);
-                       break;
+                               break;
+                           case 4:
+                               printTally(voucher);
+                               break;
 
-               }
-           }
-               else {
+                       }
+                   } else {
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                       Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                   }
+               }
+               catch(Exception e){
                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
                }
 
 
@@ -778,7 +789,7 @@ public class SalesInvoice extends Fragment {
         items.clear();
         itemsList.clear();
 //        calculateTotals();
-
+        voucherType = 504;
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);

@@ -437,57 +437,61 @@ public class ReceiptVoucher extends Fragment {
 //                                intent.putExtra("flag" , "1");
 //                                startActivity(intent);
                                 CompanyInfo companyInfo=new CompanyInfo();
-                                int printer = mDbHandler.getPrinterSetting();
-                                companyInfo=mDbHandler.getAllCompanyInfo().get(0);
-                                if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=-1) {
+                                try {
+                                    int printer = mDbHandler.getPrinterSetting();
+                                    companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
 
-                                    switch (printer) {
-                                        case 0:
-
-                                            Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
-                                            i.putExtra("printKey", "2");
-                                            startActivity(i);
+                                        switch (printer) {
+                                            case 0:
+                                                Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                                                i.putExtra("printKey", "2");
+                                                startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                                            break;
-                                        case 1:
+                                                break;
+                                            case 1:
 
-                                            try {
-                                                findBT();
-                                                openBT(1);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                                try {
+                                                    findBT();
+                                                    openBT(1);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
 //                                                             lk31.setChecked(true);
-                                            break;
-                                        case 2:
+                                                break;
+                                            case 2:
 
-                                            try {
-                                                findBT();
-                                                openBT(2);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                                try {
+                                                    findBT();
+                                                    openBT(2);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
 //                                                             lk32.setChecked(true);
-                                            break;
-                                        case 3:
+                                                break;
+                                            case 3:
 
-                                            try {
-                                                findBT();
-                                                openBT(3);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                                try {
+                                                    findBT();
+                                                    openBT(3);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
 //                                                             qs.setChecked(true);
-                                            break;
-                                        case 4:
-                                            printTally();
-                                            break;
+                                                break;
+                                            case 4:
+                                                printTally();
+                                                break;
+
+                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
 
                                     }
                                 }
-                                else{
-                                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                                catch(Exception e){
+                                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
                                 }
 

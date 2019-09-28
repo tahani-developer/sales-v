@@ -32,6 +32,8 @@ import static com.dr7.salesmanmanager.Reports.CashReport.credit;
 import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 import static com.dr7.salesmanmanager.Reports.CashReport.net;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCash;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
 import static com.dr7.salesmanmanager.Reports.CashReport.total;
 import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
@@ -112,7 +114,7 @@ public class CPCLSample2 {
         this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+30 , count);
         this.cpclPrinter.setMedia(this.paperType);
 
-        this.cpclPrinter.printBitmap(testB, 400, 50);
+        this.cpclPrinter.printBitmap(testB, 450, 50);//x=400
 
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
@@ -297,6 +299,11 @@ public class CPCLSample2 {
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();
@@ -519,9 +526,14 @@ public class CPCLSample2 {
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
         try {
-            this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
+            this.cpclPrinter.setForm(0, 200, 200, 800, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             this.cpclPrinter.printForm();
         } catch (IOException var12) {
             var12.printStackTrace();
@@ -534,31 +546,35 @@ public class CPCLSample2 {
         String companney_name="";
         decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
-        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-        if(companyInfo.getCompanyName().equals(""))
-        {
-            companney_name="Companey";
-            //Please fill  the companey name
-            Toast.makeText(context, R.string.fill_name, Toast.LENGTH_SHORT).show();
+        try {
+
+
+            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+            if (companyInfo.getCompanyName().equals("")) {
+                companney_name = "Companey";
+                //Please fill  the companey name
+                Toast.makeText(context, R.string.fill_name, Toast.LENGTH_SHORT).show();
+            } else {
+                companney_name = companyInfo.getCompanyName();
+            }
+            dataArabic_Report += "                                        " + companney_name + "                            \n \n" +
+                    "  الرقم الضريبي :  " + companyInfo.getTaxNo() + " \n " +
+                    "        -----------------------------------------------------------------------  " + " \n " +
+                    "التاريخ  :     " + date.getText() + " \n " +
+                    "المبيعات نقدا :     " + convertToEnglish(decimalFormat.format(cash - returnCash)) + " \n " +
+                    "المبيعات ذمم :     " + convertToEnglish(decimalFormat.format(credit - returnCridet)) + " \n " +
+                    "إجمالي المبيعات :     " + convertToEnglish(decimalFormat.format(total - returnCash - returnCridet)) + " \n " +
+                    "\n" +
+                    "        -----------------------------------------------------------------------  " + " \n " +
+                    "الدفع نقدا :     " + convertToEnglish(decimalFormat.format(cashPayment)) + " \n " +
+                    "الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment)) + " \n " +
+                    "الاجمالي :     " + convertToEnglish(decimalFormat.format(net)) + " \n " +
+                    "\n" +
+                    "        -----------------------------------------------------------------------  " + " \n " +
+                    "اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n ";
+        }catch (Exception e){
+            Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
         }
-        else{
-            companney_name=companyInfo.getCompanyName();
-        }
-        dataArabic_Report+="                                        "+ companney_name+ "                            \n \n" +
-                "  الرقم الضريبي :  " + companyInfo.getTaxNo() +  " \n "+
-                "        -----------------------------------------------------------------------  " + " \n "+
-      "التاريخ  :     " + date.getText() +  " \n "+
-      "المبيعات نقدا :     " +  convertToEnglish(decimalFormat.format( cash ))+ " \n "+
-      "المبيعات ذمم :     " + convertToEnglish(decimalFormat.format(credit ))+  " \n "+
-      "إجمالي المبيعات :     " + convertToEnglish(decimalFormat.format(total)) + " \n "+
-      "\n"+
-                "        -----------------------------------------------------------------------  " + " \n "+
-      "الدفع نقدا :     " +convertToEnglish(decimalFormat.format( cashPayment )) + " \n "+
-      "الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment ))+ " \n "+
-      "الاجمالي :     " + convertToEnglish(decimalFormat.format(net ))+ " \n "+
-      "\n"+
-                "        -----------------------------------------------------------------------  "  + " \n "+
-      "اجمالي المقبوضات :     " +convertToEnglish(decimalFormat.format( total_cash ))+ " \n ";
     return  dataArabic_Report;
 
     }
