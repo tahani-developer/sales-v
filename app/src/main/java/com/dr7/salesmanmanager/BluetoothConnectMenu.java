@@ -648,7 +648,7 @@ public class BluetoothConnectMenu extends Activity {
         tax = (TextView) dialog_footer.findViewById(R.id.tax);
         ammont = (TextView) dialog_footer.findViewById(R.id.ammont);
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount())));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
         Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
@@ -732,7 +732,7 @@ public class BluetoothConnectMenu extends Activity {
         vhType.setText(voucherTyp);
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount())));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 

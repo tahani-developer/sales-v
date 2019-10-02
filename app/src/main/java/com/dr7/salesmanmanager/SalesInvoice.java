@@ -1611,7 +1611,7 @@ public class SalesInvoice extends Fragment {
 //                tabLayout.addView(row);
 //            }
 //        }
-////        dialogs.show();
+//        dialogs.show();
 //
 ////        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
 //        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
@@ -2050,10 +2050,10 @@ public class SalesInvoice extends Fragment {
         Bitmap bitmap = null;
         Bitmap bitmap2 = null;
         List<Item> items1=new ArrayList<>();
-        for (int j = 0; j < items.size(); j++) {
+        for (int j = 0; j < itemsList.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
-                items1.add(items.get(j));
+            if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
+                items1.add(itemsList.get(j));
 
             }
         }
@@ -2094,7 +2094,6 @@ public class SalesInvoice extends Fragment {
 
 
     }
-
 
 
     private Bitmap convertLayoutToImageTally(Voucher voucher,int okShow,int start,int end,List<Item>items) {
@@ -2299,6 +2298,7 @@ public class SalesInvoice extends Fragment {
 
         return bitmap;// creates bitmap and returns the same
     }
+
 
     public static File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -1167,7 +1167,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText("" + voucher.getVoucherDiscount());///
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -1370,7 +1370,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText("" + voucher.getTotalVoucherDiscount());
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -1451,7 +1451,7 @@ public class PrintVoucher extends AppCompatActivity {
         }
 
 
-       dialogs.show();
+//       dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
