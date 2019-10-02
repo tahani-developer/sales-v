@@ -89,7 +89,7 @@ public class CashReport  extends AppCompatActivity {
 
     byte[] readBuffer;
     int readBufferPosition;
-    int counter;
+    public static double counter,returnCash=0,returnCridet=0;
     volatile boolean stopWorker;
     DatabaseHandler obj;
     private ImageView pic;
@@ -110,9 +110,14 @@ public class CashReport  extends AppCompatActivity {
         //************************* initial *************************************
         decimalFormat = new DecimalFormat("##.00");
         payments = new ArrayList<Payment>();
-       obj = new DatabaseHandler(CashReport.this);
-        payments = obj.getAllPayments();
-        voucher = obj.getAllVouchers();
+        try {
+            obj = new DatabaseHandler(CashReport.this);
+            payments = obj.getAllPayments();
+            voucher = obj.getAllVouchers();
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Empty Data base", Toast.LENGTH_SHORT).show();
+        }
         date = (EditText) findViewById(R.id.date_editReport_cash);
         preview = (Button) findViewById(R.id.preview_cash_report);
         print = (Button) findViewById(R.id.print_cash_report);
@@ -132,35 +137,45 @@ public class CashReport  extends AppCompatActivity {
             public void onClick(View v) {
                 clear();
                 if (!date.getText().toString().equals("")) {
-                    cash = 0;
-                    credit = 0;
-                    total = 0;
+                    cash = 0;      credit = 0;   total = 0;
+                    returnCridet=0;returnCash=0;
                     for (int n = 0; n < voucher.size(); n++) {
-
                         if (filters(n)) {
                             switch (voucher.get(n).getPayMethod()) {
                                 case 0:
                                     paymethod = 0;
-                                    credit += voucher.get(n).getNetSales();
+                                            if(voucher.get(n).getVoucherType()==506)
+                                            {      returnCridet+=voucher.get(n).getNetSales();
+
+                                            }
+                                            else if(voucher.get(n).getVoucherType()==504) {
+                                                credit += voucher.get(n).getNetSales();
+                                            }
                                     break;
                                 case 1:
                                     paymethod = 1;
-                                    cash += voucher.get(n).getNetSales();
+
+                                    if(voucher.get(n).getVoucherType()==506)
+                                    {      returnCash+=voucher.get(n).getNetSales();
+
+                                    }
+                                    else if(voucher.get(n).getVoucherType()==504) {
+                                        cash += voucher.get(n).getNetSales();
+                                    }
                                     break;
                             }
                         }
                     }
 
-                    total = cash + credit;
-                    cash_sal.setText(convertToEnglish(decimalFormat.format(cash ))+ "");
-                    credit_sale.setText(convertToEnglish(decimalFormat.format(credit ))+ "");
+                    total = cash + credit-returnCash-returnCridet;
+                    double T_cash=cash-returnCash;
+                    double T_credit=credit-returnCridet;
+                    cash_sal.setText(convertToEnglish(decimalFormat.format(T_cash ))+ "");
+                    credit_sale.setText(convertToEnglish(decimalFormat.format(T_credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
-                    Log.e("cash", "" + cash + "\t credit= " + credit + "total=" + total);
                     //  clearPayment();
                     cashPayment=0;creditPayment=0;net=0;total_cash=0;
                     for (int i = 0; i < payments.size(); i++) {
-//                        cashPayment=0;creditPayment=0;net=0;total_cash=0;
-                        Log.e("paym",""+payments.get(i).getAmount());
                         if (filters_payment(i)) {
 
                                 switch ( payments.get(i).getPayMethod() ) {
@@ -177,11 +192,8 @@ public class CashReport  extends AppCompatActivity {
                     cash_paymenttext.setText(convertToEnglish(decimalFormat.format(cashPayment))+"");
                     creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
-                    Log.e("cash_p", "" + cashPayment + "\t creditPaymenttext= " + creditPayment + "nettext=" + net);
-                    total_cash=net+cash;
+                    total_cash=net+cash-returnCash;
                     total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
-                    Log.e("totalcash","="+net+cash);
-
                     }
 
                 else
@@ -221,63 +233,74 @@ public class CashReport  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
-                    int printer = obj.getPrinterSetting();
-                    companyInfo=obj.getAllCompanyInfo().get(0);
-                    if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=-1) {
-                        switch (printer) {
-                            case 0:
 
-                                Intent i = new Intent(CashReport.this, BluetoothConnectMenu.class);
-                                i.putExtra("printKey", "3");
-                                startActivity(i);
+                    try {
+                        int printer = obj.getPrinterSetting();
+                        companyInfo = obj.getAllCompanyInfo().get(0);
+                        if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                            if (printer != -1)
+                            {
+                                switch (printer) {
+                                    case 0:
+
+                                        Intent i = new Intent(CashReport.this, BluetoothConnectMenu.class);
+                                        i.putExtra("printKey", "3");
+                                        startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                                break;
-                            case 1:
+                                        break;
+                                    case 1:
 
-                                try {
-                                    findBT();
-                                    openBT(1);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                        try {
+                                            findBT();
+                                            openBT(1);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 //                                                             lk31.setChecked(true);
-                                break;
-                            case 2:
+                                        break;
+                                    case 2:
 
-                                try {
-                                    findBT();
-                                    openBT(2);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                        try {
+                                            findBT();
+                                            openBT(2);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 //                                                             lk32.setChecked(true);
-                                break;
-                            case 3:
+                                        break;
+                                    case 3:
 
-                                try {
-                                    findBT();
-                                    openBT(3);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                                        try {
+                                            findBT();
+                                            openBT(3);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
 //                                                             qs.setChecked(true);
-                                break;
-                            case 4:
-                                printTally();
-                                break;
+                                        break;
+                                    case 4:
+                                        printTally();
+                                        break;
 
+                                }
                         }
+                            else{
+                                Toast.makeText(CashReport.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                        }
+                    }catch (NumberFormatException e){
+                        Toast.makeText(CashReport.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
                     }
-                    else{
+                    catch ( NullPointerException e){
+                        Toast.makeText(CashReport.this,  R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e){
                         Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
-                    }
 
-//                    try {
-////                        findBT();
-////                        openBT();
-//                    } catch (IOException ex) {
-//                    }
+                    }
                 } else {
                    // hiddenDialog();
                 }
@@ -854,7 +877,7 @@ public class CashReport  extends AppCompatActivity {
         String date = voucher.get(n).getVoucherDate() ;
 
         try {
-                if ((formatDate(date).after(formatDate(date_text)) || formatDate(date).equals(formatDate(date_text))))
+                if (( formatDate(date).equals(formatDate(date_text))))
                     return true;
             }
 

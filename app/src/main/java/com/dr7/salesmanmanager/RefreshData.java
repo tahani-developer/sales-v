@@ -127,32 +127,35 @@ import java.util.List;
                     Log.e("finalJson*********" , finalJson);
 
                     JSONObject parentObject = new JSONObject(finalJson);
+                    try {
 
-                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS_BALANCE");
-                    customerList.clear();
-                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
-                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
-                        Customer Customer = new Customer();
-                        Customer.setCustId(finalObject.getString("CUSTID"));
-                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
-                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
-                        customerList.add(Customer);
-                    }
+                        JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS_BALANCE");
+                        customerList.clear();
+                        for (int i = 0; i < parentArrayCustomers.length(); i++) {
+                            JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+                            Customer Customer = new Customer();
+                            Customer.setCustId(finalObject.getString("CUSTID"));
+                            Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                            Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                            customerList.add(Customer);
+                        }
+                    }catch (Exception e)
+                    {Log.e("Refresh_data",""+e.getMessage().toString());}
 
                 } catch (MalformedURLException e) {
-                    Log.e("Customer", "********ex1");
+                    Log.e("Refresh_data", "********ex1");
                     e.printStackTrace();
                 } catch (IOException e) {
-                    Log.e("Customer", e.getMessage().toString());
+                    Log.e("Refresh_data", e.getMessage().toString());
                     e.printStackTrace();
 
                 } catch (JSONException e) {
-                    Log.e("Customer", "********ex3  "+e.toString());
+                    Log.e("Refresh_data", "********ex3  "+e.toString());
                     e.printStackTrace();
                 } finally {
-                    Log.e("Customer", "********finally");
+                    Log.e("Refresh_data", "********finally");
                     if (connection != null) {
-                        Log.e("Customer", "********ex4");
+                        Log.e("Refresh_data", "********ex4");
                         // connection.disconnect();
                     }
                     try {

@@ -240,54 +240,59 @@ public class PrintVoucher extends AppCompatActivity {
                                                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
 //                                                     try {
                                                     Log.e("voucher", "  " + vouch.getVoucherNumber());
+                                                    try {
 
-                                                    int printer = obj.getPrinterSetting();
+                                                        int printer = obj.getPrinterSetting();
 
 
-
-                                                    switch (printer) {
-                                                        case 0:
-                                                            vouch1 = vouch;
-                                                            Intent i = new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
-                                                            i.putExtra("printKey", "0");
-                                                            startActivity(i);
+                                                        switch (printer) {
+                                                            case 0:
+                                                                vouch1 = vouch;
+                                                                Intent i = new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
+                                                                i.putExtra("printKey", "0");
+                                                                startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                                                            break;
-                                                        case 1:
+                                                                break;
+                                                            case 1:
 
-                                                            try {
-                                                                findBT(Integer.parseInt(textView.getText().toString()));
-                                                                openBT(vouch, 1);
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                                try {
+                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    openBT(vouch, 1);
+                                                                } catch (IOException e) {
+                                                                    e.printStackTrace();
+                                                                }
 //                                                             lk31.setChecked(true);
-                                                            break;
-                                                        case 2:
+                                                                break;
+                                                            case 2:
 
-                                                            try {
-                                                                findBT(Integer.parseInt(textView.getText().toString()));
-                                                                openBT(vouch, 2);
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                                try {
+                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    openBT(vouch, 2);
+                                                                } catch (IOException e) {
+                                                                    e.printStackTrace();
+                                                                }
 //                                                             lk32.setChecked(true);
-                                                            break;
-                                                        case 3:
+                                                                break;
+                                                            case 3:
 
-                                                            try {
-                                                                findBT(Integer.parseInt(textView.getText().toString()));
-                                                                openBT(vouch, 3);
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                                try {
+                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    openBT(vouch, 3);
+                                                                } catch (IOException e) {
+                                                                    e.printStackTrace();
+                                                                }
 //                                                             qs.setChecked(true);
-                                                            break;
+                                                                break;
 
-                                                        case 4:
-                                                            printTally(vouch);
-                                                            break;
+                                                            case 4:
+                                                                printTally(vouch);
+                                                                break;
+
+                                                        }
+                                                    }
+                                                    catch(Exception e){
+                                                        Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
                                                     }
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:layoutDirection="rtl"
@@ -18,11 +18,11 @@
         android:gravity="center"
         android:text="@string/app_cancel"
         android:textColor="@color/totals_color"
-        android:textSize="20sp" />
+       android:textSize="15sp" />
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="650dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"
@@ -43,12 +43,13 @@
         <!--android:textColor="@color/add_button"-->
         <!--android:textSize="18sp" />-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
                             <ImageView
                                 android:id="@+id/img"
+                                android:layout_gravity="center"
                                 android:layout_width="match_parent"
                                 android:layout_height="100dp"
                                 app:srcCompat="@drawable/ic_launcher"
@@ -63,7 +64,7 @@
                                 android:textStyle="bold"
                                 android:text="الصقور للبرمجيات "
                                 android:textColor="@color/add_button"
-                                android:textSize="20sp"
+                               android:textSize="15sp"
                                 android:layout_margin="10dp"
                                 tools:visibility="visible" />
 
@@ -85,15 +86,15 @@
                         android:layout_height="wrap_content"
                         android:text="هاتف :"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/tel"
-                        android:layout_width="70dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/textView15"
@@ -101,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:text="الرقم الضريبي : "
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/taxNo"
@@ -138,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:text="رقم الفاتورة :"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/vhNo"
@@ -146,7 +147,7 @@
                         android:layout_height="wrap_content"
 
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/date2"
@@ -154,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:text="التاريخ :"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/date"
@@ -162,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                 </TableRow>
 
@@ -178,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:text="اسم العميل :  "
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/custname"
@@ -187,7 +188,7 @@
 
                         android:layout_weight="2"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                 </TableRow>
 
@@ -203,20 +204,20 @@
                         android:layout_height="wrap_content"
                         android:text="ملاحظة : "
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/note"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="3dp">
 
@@ -226,7 +227,7 @@
                         android:layout_height="wrap_content"
                         android:text="نوع الفاتورة :"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/vhType"
@@ -234,13 +235,13 @@
                         android:layout_height="wrap_content"
                         android:text="فاتورة بيع "
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="3dp">
 
@@ -250,7 +251,7 @@
                         android:layout_height="wrap_content"
                         android:text="طريقة الدفع :"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/paytype"
@@ -258,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:text="نقدا"
                         android:textColor="@color/add_button"
-                        android:textSize="20sp" />
+                       android:textSize="15sp" />
 
                 </TableRow>
 
@@ -268,19 +269,19 @@
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="       __________________________________________________________"
+                android:layout_gravity="center"
+                android:text="__________________________________"
                 android:textColor="@color/add_button"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
             <TextView
                 android:id="@+id/notelast"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:visibility="invisible"
-                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة . "
+                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة  هذه الفاتورة  . "
                 android:textColor="@color/add_button"
-                android:textSize="20sp" />
+               android:textSize="15sp" />
 
 
 
