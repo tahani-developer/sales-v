@@ -275,12 +275,12 @@
 
                 <TableLayout
                     android:id="@+id/tab"
-                    android:layout_width="500dp"
+                    android:layout_width="550dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp">
 
                     <TableRow
-                        android:layout_width="500dp"
+                        android:layout_width="550dp"
                         android:layout_height="wrap_content">
 
                         <TextView
@@ -334,6 +334,16 @@
                             android:textColor="@color/add_button"
                             android:textSize="15sp"
                             android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/textView381"-->
+<!--                            android:layout_width="50dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="center"-->
+<!--                            android:visibility="invisible"-->
+<!--                            android:text="المج"-->
+<!--                            android:textColor="@color/add_button"-->
+<!--                            android:textSize="15sp"-->
+<!--                            android:textStyle="bold" />-->
 
                     </TableRow>
                 </TableLayout>
@@ -353,6 +363,26 @@
                     android:id="@+id/table"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView172"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="اجمالي الكمية  : "
+                            android:textColor="@color/add_button"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/total_qty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/add_button"
+                            android:textSize="15sp" />
+                    </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"

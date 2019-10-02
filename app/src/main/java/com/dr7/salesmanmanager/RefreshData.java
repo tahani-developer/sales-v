@@ -197,7 +197,7 @@ import java.util.List;
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.progress_dialog);
                 Window window = dialog.getWindow();
-                window.setLayout(700, 350);
+                window.setLayout(500, 200);
 
                 pb = (ProgressBar) dialog.findViewById(R.id.progress);
 

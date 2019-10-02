@@ -43,6 +43,26 @@
                 android:id="@+id/table"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textView172"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="اجمالي الكمية  : "
+                        android:textColor="@color/add_button"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/total_qty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/add_button"
+                        android:textSize="15sp" />
+                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
     android:padding="10dp"
     android:orientation="vertical">
 
@@ -11,8 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Update Database..."
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:gravity="center"
         android:layout_marginHorizontal="20dp"
-        android:textColor="@color/text_view_color"/>
+        android:textColor="@color/done_button"/>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -20,5 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+
         android:indeterminate="true" />
 </LinearLayout>

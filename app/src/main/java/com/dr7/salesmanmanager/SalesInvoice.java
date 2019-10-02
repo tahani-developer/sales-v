@@ -1611,7 +1611,7 @@ public class SalesInvoice extends Fragment {
                 tabLayout.addView(row);
             }
         }
-//        dialogs.show();
+        dialogs.show();
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
