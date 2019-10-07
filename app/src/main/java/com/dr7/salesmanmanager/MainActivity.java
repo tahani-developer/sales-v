@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 openAddCustomerDialog();
+//                mDbHandler.updateSalesManItemBalance("1","1144",100);
             }
         });
 
@@ -360,15 +361,20 @@ public class MainActivity extends AppCompatActivity
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            if(mDbHandler.getAllSettings().get(0).getPassowrd_data()==1) {
-                                openPasswordDialog(5);
-                            }
-                            else{
-                                ImportJason obj = new ImportJason(MainActivity.this);
-                                obj.startParsing();
+                            try {
+                                if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
+                                    openPasswordDialog(5);
+                                } else {
+                                    ImportJason obj = new ImportJason(MainActivity.this);
+                                    obj.startParsing();
 
 
+                                }
+                            }catch (Exception e)
+                            {
+                                Toast.makeText(MainActivity.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
                             }
+
 
 //                            transactions = mDbHandler.getAlltransactions();
 //                            for (int i = 0; i < transactions.size(); i++)

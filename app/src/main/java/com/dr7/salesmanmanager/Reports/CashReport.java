@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -94,6 +95,7 @@ public class CashReport  extends AppCompatActivity {
     DatabaseHandler obj;
     private ImageView pic;
     CompanyInfo companyInfo;
+    List<Item> vouchersales;
 
 
 
@@ -110,6 +112,9 @@ public class CashReport  extends AppCompatActivity {
         //************************* initial *************************************
         decimalFormat = new DecimalFormat("##.00");
         payments = new ArrayList<Payment>();
+        vouchersales=new ArrayList<Item>();
+
+
         try {
             obj = new DatabaseHandler(CashReport.this);
             payments = obj.getAllPayments();
@@ -232,14 +237,14 @@ public class CashReport  extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+                try{
                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
 
                     try {
                         int printer = obj.getPrinterSetting();
                         companyInfo = obj.getAllCompanyInfo().get(0);
                         if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
-                            if (printer != -1)
-                            {
+                            if (printer != -1) {
                                 switch (printer) {
                                     case 0:
 
@@ -284,26 +289,28 @@ public class CashReport  extends AppCompatActivity {
                                         break;
 
                                 }
-                        }
-                            else{
+                            } else {
                                 Toast.makeText(CashReport.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                         }
-                    }catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         Toast.makeText(CashReport.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
-                    }
-                    catch ( NullPointerException e){
-                        Toast.makeText(CashReport.this,  R.string.error_companey_info, Toast.LENGTH_SHORT).show();
-                    }
-                    catch (Exception e){
+                    } catch (NullPointerException e) {
+                        Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
                         Toast.makeText(CashReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
 
                     }
                 } else {
-                   // hiddenDialog();
+                    // hiddenDialog();
                 }
+            }
+                catch(Exception e){
+                    Toast.makeText(CashReport.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

@@ -324,4 +324,7 @@
     </string>
     <string name="arabic_language">لغة عربية </string>
     <string name="error_companey_info">  أدخل معلومات الشركة للطباعة </string>
+    <string name="fill_setting">
+    رجاء أدخل اعدادات البرنامج لاتمام العملية
+    </string>
 </resources>

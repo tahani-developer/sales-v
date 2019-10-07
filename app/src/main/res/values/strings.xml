@@ -323,4 +323,5 @@
     <string name="arabic_language">Arabic Language</string>
 
     <string name="error_companey_info">   please enter company information for print </string>
+    <string name="fill_setting">Please enter setting app</string>
 </resources>

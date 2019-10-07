@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
     android:layoutDirection="rtl"
@@ -18,11 +18,11 @@
         android:gravity="center"
         android:text="@string/app_cancel"
         android:textColor="@color/totals_color"
-       android:textSize="16sp" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="500dp"
+        android:layout_width="550dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"
@@ -35,7 +35,7 @@
         <!--            android:orientation="vertical">-->
 
         <LinearLayout
-            android:layout_width="500dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TableLayout
@@ -71,7 +71,6 @@
                         android:textColor="@color/add_button"
                         android:textSize="15sp" />
 
-
                     <TextView
                         android:id="@+id/wa1"
                         android:layout_width="100dp"
@@ -104,17 +103,6 @@
                         android:textStyle="bold"
                         android:textColor="@color/add_button"
                         android:textSize="15sp" />
-<!--                    <TextView-->
-<!--                        android:id="@+id/textView362"-->
-<!--                        android:layout_width="100dp"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:visibility="invisible"-->
-
-<!--                        android:gravity="center"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:text="العدد"-->
-<!--                        android:textColor="@color/add_button"-->
-<!--                        android:textSize="15sp" />-->
                 </TableRow>
             </TableLayout>
 
@@ -124,14 +112,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:visibility="invisible"
-                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة  . "
+                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع  قيمة هذه الفاتورة . "
                 android:textColor="@color/add_button"
-               android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
         </LinearLayout>
         <!--        </ScrollView>-->
     </LinearLayout>
 
 </LinearLayout>
-<!--    قيمة هذه الفاتورة-->

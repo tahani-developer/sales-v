@@ -648,7 +648,7 @@ public class BluetoothConnectMenu extends Activity {
         tax = (TextView) dialog_footer.findViewById(R.id.tax);
         ammont = (TextView) dialog_footer.findViewById(R.id.ammont);
         total.setText("" + voucher.getSubTotal());
-        discount.setText(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount())));
+        discount.setText(convertToEnglish(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount()))));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
         Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
@@ -732,7 +732,7 @@ public class BluetoothConnectMenu extends Activity {
         vhType.setText(voucherTyp);
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount())));
+        discount.setText(convertToEnglish(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount()))));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -764,6 +764,7 @@ public class BluetoothConnectMenu extends Activity {
                     TextView textView = new TextView(BluetoothConnectMenu.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(14);
+                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
 
                     switch (i) {
@@ -804,7 +805,7 @@ public class BluetoothConnectMenu extends Activity {
 //                            amount = convertToEnglish(amount);
                             amount =String.valueOf(decimalFormat.format(Double.parseDouble(amount)));
                             textView.setText(convertToEnglish(amount));
-                            textView.setText(amount);
+//                            textView.setText(amount);
                             textView.setLayoutParams(lp2);
                             break;
                     }

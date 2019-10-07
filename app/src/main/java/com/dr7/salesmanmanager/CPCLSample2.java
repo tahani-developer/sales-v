@@ -526,7 +526,7 @@ public class CPCLSample2 {
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
         try {
-            this.cpclPrinter.setForm(0, 200, 200, 800, numOfCopy);
+            this.cpclPrinter.setForm(0, 200, 200, 920, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
             try {
@@ -547,6 +547,7 @@ public class CPCLSample2 {
         decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
         try {
+            total_cash=net+cash-returnCash;
 
 
             CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
@@ -570,8 +571,13 @@ public class CPCLSample2 {
                     "الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment)) + " \n " +
                     "الاجمالي :     " + convertToEnglish(decimalFormat.format(net)) + " \n " +
                     "\n" +
-                    "        -----------------------------------------------------------------------  " + " \n " +
-                    "اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n ";
+                    "        -----------------------------------------------------------------------  " + " \n "+
+
+                    "اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "+
+                    "                                                                                    " +
+                    "                                                                                    " ;
+
+
         }catch (Exception e){
             Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
         }

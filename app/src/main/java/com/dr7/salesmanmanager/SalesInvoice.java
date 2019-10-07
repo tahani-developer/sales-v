@@ -74,6 +74,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
+
 
 public class SalesInvoice extends Fragment {
     private static String smokeGA = "دخان";
@@ -90,7 +94,8 @@ public class SalesInvoice extends Fragment {
     public ListView itemsListView;
     public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
-    private ImageButton addItemImgButton2, custInfoImgButton, SaveData;
+    private ImageView  custInfoImgButton, SaveData;
+    private CircleImageView addItemImgButton2;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
@@ -99,6 +104,7 @@ public class SalesInvoice extends Fragment {
     private double subTotal, totalTaxValue, netTotal;
     public double totalDiscount=0,discount_oofers_total_cash=0, discount_oofers_total_credit=0,sum_discount=0;;
     private TextView taxTextView, subTotalTextView, netTotalTextView;
+    public static  TextView totalQty_textView;
     public TextView discTextView;
     public ImageButton discountButton;
     private DecimalFormat decimalFormat;
@@ -197,7 +203,7 @@ public class SalesInvoice extends Fragment {
         itemForPrint=new ArrayList<>();
         threeDForm = new DecimalFormat("0.000");
 
-        addItemImgButton2 = (ImageButton) view.findViewById(R.id.addItemImgButton2);
+        addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
         connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
@@ -214,8 +220,11 @@ public class SalesInvoice extends Fragment {
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
         pic = (ImageView) view.findViewById(R.id.pic_sale);
-
         discTextView = (TextView) view.findViewById(R.id.discTextView);
+
+        totalQty_textView = (TextView) view.findViewById(R.id.items_quntity);
+
+
         subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
         taxTextView = (TextView) view.findViewById(R.id.taxTextView);
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
@@ -417,6 +426,7 @@ public class SalesInvoice extends Fragment {
 
         itemsListAdapter = new ItemsListAdapter(getActivity(), items);
         itemsListView.setAdapter(itemsListAdapter);
+//        totalQty_textView.setText(items.size()+"");
 
 
         itemsListView.setOnItemLongClickListener(onItemLongClickListener);
@@ -454,6 +464,8 @@ public class SalesInvoice extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                total_items_quantity=0;
+                totalQty_textView.setText("+0");
                 itemForPrint.clear();
                 clicked = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -633,6 +645,8 @@ public class SalesInvoice extends Fragment {
     }
 
     public boolean customer_is_authrized() {
+        if(cash.isChecked())
+            return  true;
         unposted_payment = 0;
         double unposted_sales_cash=0,unposted_sales_credit=0;
         max_cridit = CustomerListShow.CreditLimit;
@@ -682,9 +696,12 @@ public class SalesInvoice extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             switch (i) {
                                 case 0:
+                                    total_items_quantity-=items.get(position).getQty();
+                                    totalQty_textView.setText("+"+total_items_quantity);
                                     items.remove(position);
                                     itemsListView.setAdapter(itemsListAdapter);
                                     calculateTotals();
+
                                     break;
                                 case 1:
 //                                    salesInvoiceInterfaceListener.displayUpdateItems();
@@ -721,7 +738,12 @@ public class SalesInvoice extends Fragment {
                                             if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
                                                     availableQty >= Float.parseFloat(qty.getText().toString()) ||
                                                     voucherType == 506) {
+                                                total_items_quantity-=items.get(position).getQty();
+                                                Log.e("total_itemsbefore",""+total_items_quantity);
                                                 items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
+                                                total_items_quantity+=items.get(position).getQty();
+                                                Log.e("total_itemsafter",""+total_items_quantity);
+                                                totalQty_textView.setText("+"+total_items_quantity);
                                                 if (items.get(position).getDiscType() == 0)
                                                     items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
                                                 else
@@ -748,6 +770,8 @@ public class SalesInvoice extends Fragment {
                                     break;
                                 case 2:
                                     clearItemsList();
+                                    total_items_quantity=0;
+                                    totalQty_textView.setText("+"+total_items_quantity);
                                     break;
                             }
                         }
@@ -793,6 +817,8 @@ public class SalesInvoice extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
+        total_items_quantity=0;
+        totalQty_textView.setText("+0");
     }
 
     public void calculateTotals()
@@ -2107,7 +2133,7 @@ public class SalesInvoice extends Fragment {
 
 
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-//        doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
+        TextView  doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
         TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,noteLast;
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
@@ -2144,21 +2170,21 @@ public class SalesInvoice extends Fragment {
         img.setVisibility(View.INVISIBLE);
         compname.setVisibility(View.INVISIBLE);
 
-//
-//        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-////                if(isFinishPrint) {
-////                    try {
-////                        closeBT();
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-//                dialogs.dismiss();
-////                }
-//            }
-//        });
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                if(isFinishPrint) {
+//                    try {
+//                        closeBT();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                dialogs.dismiss();
+//                }
+            }
+        });
 
 
         String voucherTyp = "";
@@ -2185,7 +2211,7 @@ public class SalesInvoice extends Fragment {
 
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText("" + voucher.getTotalVoucherDiscount());
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
@@ -2266,7 +2292,7 @@ public class SalesInvoice extends Fragment {
         }
 
 
-        dialogs.show();
+//        dialogs.show();
 
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout

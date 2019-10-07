@@ -21,7 +21,7 @@
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="2dp"
         android:background="@color/layer2"
         android:orientation="horizontal"
@@ -51,17 +51,47 @@
             android:text="@string/app_disc_l"
             tools:visibility="gone" />
 
-        <ImageButton
-            android:id="@+id/addItemImgButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/add_items" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/addItemImgButton2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:background="@drawable/add_items" />-->
 
         <ImageView
             android:id="@+id/pic_sale"
+            android:visibility="gone"
             android:layout_width="200dp"
             android:layout_height="60dp"/>
+        <RelativeLayout
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/addItemImgButton2"
+                android:clickable="true"
+                android:layout_width="60dp"
+
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/items2"
+                app:civ_border_color="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/items_quntity"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_alignTop="@+id/addItemImgButton2"
+                android:text="+0"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25dp" />
+        </RelativeLayout>
             <!--android:visibility="invisible"/>-->
 
     </LinearLayout>
