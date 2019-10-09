@@ -147,7 +147,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     @Override
                     public void onClick(View v) {
 
-                        if (!price.getText().toString().equals("") && !price.getText().toString().equals("0")) {
+                        if (!price.getText().toString().equals("") && !price.getText().toString().equals("0") && !(Double.parseDouble(unitQty.getText().toString()) == 0)) {
 
                             Boolean check = check_Discount(unitWeight, unitQty, price, bonus, discount, radioGroup);
                             if (!check)
@@ -300,7 +300,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                             dialog.dismiss();
                         } else
-                            Toast.makeText(view.getContext(), "Invalid price", Toast.LENGTH_LONG).show();
+                            Toast.makeText(view.getContext(), "Invalid price or Qty", Toast.LENGTH_LONG).show();
 
 
                     }
