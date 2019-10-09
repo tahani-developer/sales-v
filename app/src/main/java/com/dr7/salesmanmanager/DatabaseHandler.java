@@ -1835,6 +1835,51 @@ DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public List<Item> getUnPostedItems() {
+        List<Item> items = new ArrayList<Item>();
+
+        String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
+                " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
+                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.SALES_MAN_NUMBER , M.VOUCHER_DATE " +
+                "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
+                "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE and D.IS_POSTED = '0'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+//            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+                Item item = new Item();
+
+                item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
+                item.setVoucherType(Integer.parseInt(cursor.getString(1)));
+                item.setItemNo(cursor.getString(2));
+                item.setItemName(cursor.getString(3));
+                item.setUnit(cursor.getString(4));
+                item.setQty(Float.parseFloat(cursor.getString(5)));
+                item.setPrice(Float.parseFloat(cursor.getString(6)));
+                item.setBonus(Float.parseFloat(cursor.getString(7)));
+                item.setDisc(Float.parseFloat(cursor.getString(8)));
+                item.setDiscPerc(cursor.getString(9));
+                item.setTotalDiscVal(cursor.getFloat(10));
+                item.setVoucherDiscount(cursor.getFloat(10));
+                item.setTaxValue(Double.parseDouble(cursor.getString(11)));
+                item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
+                item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
+                item.setYear(cursor.getString(14));
+                item.setIsPosted(Integer.parseInt(cursor.getString(15)));
+                item.setSalesmanNo(cursor.getString(16));
+                item.setDate(cursor.getString(17));
+
+
+                // Adding transaction to list
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public List<String> getAllExistingCategories() {
         List<String> categories = new ArrayList<>();
         String selectQuery = "select DISTINCT CateogryID from Items_Master";
@@ -2548,20 +2593,19 @@ DatabaseHandler extends SQLiteOpenHelper {
     List<Item> vouchersales;
     public void updateSalesManItemBalance(String salesmanNo,String itemNo,double qty) {
         db = this.getWritableDatabase();
-        int unposted_sales=0;
-        int unposted__return=0;
         ContentValues values = new ContentValues();
 
-        unposted_sales=( getAllItems_bySalesman_No(Integer.parseInt(itemNo),504,salesmanNo));
-        unposted__return= ( getAllItems_bySalesman_No(Integer.parseInt(itemNo),506,salesmanNo));
+//        int unposted_sales=0;
+//        int unposted__return=0;
+//        unposted_sales=( getAllItems_bySalesman_No(Integer.parseInt(itemNo),504,salesmanNo));
+//        unposted__return= ( getAllItems_bySalesman_No(Integer.parseInt(itemNo),506,salesmanNo));
+//
+//        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
+//
+//            double newQty=qty-unposted_sales+unposted__return;
+//            Log.e("newqty",""+newQty);
 
-        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
-
-            double newQty=qty-unposted_sales+unposted__return;
-            Log.e("newqty",""+newQty);
-
-            values.put(Qty5, newQty);
-//            db.update(SalesManItemsBalance, values, itemNo=);
+            values.put(Qty5, qty);
             db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
 
         }
@@ -2573,7 +2617,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
        +" And M.VOUCHER_TYPE ='" +vouchType+"'";
         Log.e("Select",""+selectQuery);
-        int total_qty=0;
+       String total_qty="";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2581,10 +2625,10 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "************************" + selectQuery);
             do {
                 // Adding transaction to list
-               total_qty=cursor.getInt(0);
+               total_qty=cursor.getString(0);
             } while (cursor.moveToNext());
         }
-        return total_qty;
+        return Integer.parseInt(total_qty);
 
     }
 

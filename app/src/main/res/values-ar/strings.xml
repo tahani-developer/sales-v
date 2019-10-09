@@ -45,7 +45,7 @@
     <string name="action_add_cust">اضف عميل</string>
     <string name="action_settings">الاعدادات</string>
     <string name="action_company_info">معلومات الشركة</string>
-    <string name="de_export">فك التصدير</string>
+    <string name="de_export"> اعادة  التصدير</string>
     <string name="action_print_voucher">طباعة فاتورة</string>
     <string name="action_print_payment">طباعة سند قبض</string>
     <string name="title_activity_activities">العمليات</string>

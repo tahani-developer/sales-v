@@ -33,6 +33,7 @@ public class Item {
     private double itemL;
     private double minSalePrice;
     private double posPrice;
+    private String salesmanNo;
 
     public Item()
     {
@@ -304,6 +305,14 @@ public class Item {
 
     public void setPosPrice(double posPrice) {
         this.posPrice = posPrice;
+    }
+
+    public String getSalesmanNo() {
+        return salesmanNo;
+    }
+
+    public void setSalesmanNo(String salesmanNo) {
+        this.salesmanNo = salesmanNo;
     }
 
     public JSONObject getJSONObject() {

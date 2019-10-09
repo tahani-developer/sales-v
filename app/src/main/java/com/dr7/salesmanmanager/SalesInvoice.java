@@ -565,9 +565,9 @@ public class SalesInvoice extends Fragment {
            }
 
 
-           if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
-               new JSONTask().execute();
-           }
+//           if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+//               new JSONTask().execute();
+//           }
 
            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
                Log.e("test", "" + voucher.getTotalVoucherDiscount());
@@ -1071,7 +1071,7 @@ public class SalesInvoice extends Fragment {
         taxTextView.setText(convertToEnglish(taxTextView.getText().toString()));
         netTotalTextView.setText(convertToEnglish(netTotalTextView.getText().toString()));
 
-        discTextView.setText(convertToEnglish(totalDiscount+""));
+        discTextView.setText(String.valueOf(convertToEnglish(decimalFormat.format(totalDiscount))+""));
         totalDiscount=0.0;
 
 
@@ -1439,7 +1439,7 @@ public class SalesInvoice extends Fragment {
                         case 4:
                             String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
                             amount = convertToEnglish(amount);
-                            textView.setText(amount);
+                            textView.setText(decimalFormat.format(amount));
                             textView.setLayoutParams(lp2);
                             break;
                     }

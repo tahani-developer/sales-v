@@ -181,6 +181,8 @@ public class ExportJason extends AppCompatActivity {
 
                 HttpResponse response = client.execute(request);
 
+
+
                 BufferedReader in = new BufferedReader(new
                         InputStreamReader(response.getEntity().getContent()));
 
