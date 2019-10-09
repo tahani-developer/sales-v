@@ -151,14 +151,16 @@ public class ExportJason extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+            String ipAddress = "";
 
+            try {
+                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
 
-            String ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+            } catch (Exception e) {
+                Toast.makeText(ExportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+            }
 
-
-
-            try
-            {
+            try {
 
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();

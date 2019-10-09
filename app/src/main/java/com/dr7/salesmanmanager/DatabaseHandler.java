@@ -2545,4 +2545,80 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custNo, null);
     }
 
+    List<Item> vouchersales;
+    public void updateSalesManItemBalance(String salesmanNo,String itemNo,double qty) {
+        db = this.getWritableDatabase();
+        int unposted_sales=0;
+        int unposted__return=0;
+        ContentValues values = new ContentValues();
+
+        unposted_sales=( getAllItems_bySalesman_No(Integer.parseInt(itemNo),504,salesmanNo));
+        unposted__return= ( getAllItems_bySalesman_No(Integer.parseInt(itemNo),506,salesmanNo));
+
+        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
+
+            double newQty=qty-unposted_sales+unposted__return;
+            Log.e("newqty",""+newQty);
+
+            values.put(Qty5, newQty);
+//            db.update(SalesManItemsBalance, values, itemNo=);
+            db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
+
+        }
+
+
+    public int  getAllItems_bySalesman_No( int itemNo,int  vouchType,String salesmanNo){
+        String selectQuery ="select IFNULL(sum(D.UNIT_QTY+BONUS),0) As Sold_Qty"+
+        " from SALES_VOUCHER_DETAILS D, SALES_VOUCHER_MASTER M"+
+               " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
+       +" And M.VOUCHER_TYPE ='" +vouchType+"'";
+        Log.e("Select",""+selectQuery);
+        int total_qty=0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+                // Adding transaction to list
+               total_qty=cursor.getInt(0);
+            } while (cursor.moveToNext());
+        }
+        return total_qty;
+
+    }
+
+//    public List<Item> getAllItems_bySalesman_No() {
+//
+//        List<Item> items = new ArrayList<Item>();
+//        String salesma=Login.salesMan;
+//        // Select All Query
+//        String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
+//                " D.UNIT ,D.UNIT_QTY , D.IS_POSTED " +
+//                "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
+//                "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE and M.IS_POSTED = 0  and M.SALES_MAN_NUMBER = '" + salesma + "'";
+//        Log.e("","");
+//        db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        if (cursor.moveToFirst()) {
+//            Log.i("DatabaseHandler", "************************" + selectQuery);
+//            do {
+//                Item item = new Item();
+//
+//                item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
+//                item.setVoucherType(Integer.parseInt(cursor.getString(1)));
+//                item.setItemNo(cursor.getString(2));
+//                item.setItemName(cursor.getString(3));
+//                item.setUnit(cursor.getString(4));
+//                item.setQty(Float.parseFloat(cursor.getString(5)));
+//                item.setIsPosted(Integer.parseInt(cursor.getString(6)));
+//
+//
+//                // Adding transaction to list
+//                items.add(item);
+//            } while (cursor.moveToNext());
+//        }
+//        return items;
+//    }
 }

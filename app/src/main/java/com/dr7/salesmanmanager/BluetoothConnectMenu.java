@@ -13,6 +13,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -434,6 +438,7 @@ public class BluetoothConnectMenu extends Activity {
                 if (this.dialog.isShowing()) {
                     this.dialog.dismiss();
                 }
+                double total_Qty=0;
 
                 Toast toast = Toast.makeText(BluetoothConnectMenu.this.context, "Now Printing ", Toast.LENGTH_SHORT);
                 toast.show();
@@ -607,7 +612,7 @@ public class BluetoothConnectMenu extends Activity {
                 voucherTyp = "طلب جديد";
                 break;
         }
-        if (!companyInfo.getLogo().equals(null))
+        if (companyInfo.getLogo()!=(null))
         {
         img.setImageBitmap(companyInfo.getLogo());
         }
@@ -651,15 +656,17 @@ public class BluetoothConnectMenu extends Activity {
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
         TextView doneinsewooprint = (TextView) dialog_footer.findViewById(R.id.done);
 
-        TextView total, discount, tax, ammont, textW;
+        TextView total, discount, tax, ammont, Total_qty_total;
         total = (TextView) dialog_footer.findViewById(R.id.total);
         discount = (TextView) dialog_footer.findViewById(R.id.discount);
         tax = (TextView) dialog_footer.findViewById(R.id.tax);
         ammont = (TextView) dialog_footer.findViewById(R.id.ammont);
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText(convertToEnglish(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount()))));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
+        Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
+        Total_qty_total.setText(count+"");
         linearView = (LinearLayout) dialog_footer.findViewById(R.id.ll);
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -689,7 +696,7 @@ public class BluetoothConnectMenu extends Activity {
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
-        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,total_qty_text;
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
@@ -706,6 +713,9 @@ public class BluetoothConnectMenu extends Activity {
         tax = (TextView) dialogs.findViewById(R.id.tax);
         ammont = (TextView) dialogs.findViewById(R.id.ammont);
         textW = (TextView) dialogs.findViewById(R.id.wa1);
+        total_qty_text= (TextView) dialogs.findViewById(R.id.total_qty);
+        //total_qty
+
         TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
         String voucherTyp = "";
         switch (voucher.getVoucherType()) {
@@ -721,7 +731,7 @@ public class BluetoothConnectMenu extends Activity {
         }
 //        img.setImageBitmap(companyInfo.getLogo());
         compname.setText(companyInfo.getCompanyName());
-        if (!companyInfo.getLogo().equals(null))
+        if (companyInfo.getLogo()!=(null))
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
@@ -736,10 +746,11 @@ public class BluetoothConnectMenu extends Activity {
         vhType.setText(voucherTyp);
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         total.setText("" + voucher.getSubTotal());
-        discount.setText("" + voucher.getVoucherDiscount());
+        discount.setText(convertToEnglish(String.valueOf(decimalFormat.format( voucher.getTotalVoucherDiscount()))));
         tax.setText("" + voucher.getTax());
         ammont.setText("" + voucher.getNetSales());
 
+       int count=0;
 
         if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
             textW.setVisibility(View.GONE);
@@ -754,6 +765,7 @@ public class BluetoothConnectMenu extends Activity {
         lp3.setMargins(0, 7, 0, 0);
         for (int j = 0; j < items.size(); j++) {
             if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                count+=items.get(j).getQty();
                 final TableRow row = new TableRow(BluetoothConnectMenu.this);
 
 
@@ -766,6 +778,7 @@ public class BluetoothConnectMenu extends Activity {
                     TextView textView = new TextView(BluetoothConnectMenu.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(14);
+                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
 
                     switch (i) {
@@ -806,7 +819,7 @@ public class BluetoothConnectMenu extends Activity {
 //                            amount = convertToEnglish(amount);
                             amount =String.valueOf(decimalFormat.format(Double.parseDouble(amount)));
                             textView.setText(convertToEnglish(amount));
-                            textView.setText(amount);
+//                            textView.setText(amount);
                             textView.setLayoutParams(lp2);
                             break;
                     }
@@ -814,12 +827,14 @@ public class BluetoothConnectMenu extends Activity {
                 }
 
 
+
                 tabLayout.addView(row);
             }
         }
 
 
-
+        total_qty_text.setText(count+"");
+        Log.e("countItem",""+count);
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
@@ -852,6 +867,7 @@ public class BluetoothConnectMenu extends Activity {
 
         return bit;// creates bitmap and returns the same
     }
+    int count=0;
     private Bitmap convertLayoutToImage_Body(Voucher voucher,List<Item> items,int visible) {
         LinearLayout linearView = null;
         final Dialog dialogs = new Dialog(BluetoothConnectMenu.this);
@@ -862,6 +878,7 @@ public class BluetoothConnectMenu extends Activity {
         TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
         TextView  total, discount, tax, ammont, textW;
         textW = (TextView) dialogs.findViewById(R.id.wa1);
+//        int count=0;
         TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
         TableRow row_header=(TableRow)dialogs.findViewById(R.id.row_header);
         if(visible==0)
@@ -888,6 +905,7 @@ public class BluetoothConnectMenu extends Activity {
         for (int j = 0; j < items.size(); j++) {
 
             if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                count+=items.get(j).getQty();
                 final TableRow row = new TableRow(BluetoothConnectMenu.this);
 
 
@@ -900,6 +918,7 @@ public class BluetoothConnectMenu extends Activity {
                     TextView textView = new TextView(BluetoothConnectMenu.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(14);
+                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
 
                     switch (i) {

@@ -31,6 +31,8 @@ import com.dr7.salesmanmanager.Modles.Item;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -45,6 +47,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public static List<Item> jsonItemsList;
     RecyclerView recyclerView;
     ListView verticalList;
+    public  static   int total_items_quantity=0;
     private float descPerc;
     boolean added = false;
     private static String smokeGA = "دخان";
@@ -206,8 +209,10 @@ public class AddItemsFragment2 extends DialogFragment {
             item.setUnit(unit);
             //****************************
             item.setQty(Float.parseFloat(qty));
+            total_items_quantity+=item.getQty();
+            totalQty_textView.setText("+ "+total_items_quantity);
             Log.e("setQty",""+Float.parseFloat(qty));
-            Log.e("setQty",""+Float.parseFloat(qty)+Float.parseFloat(bonus));
+            Log.e("total_items_quantity",""+total_items_quantity);
             item.setPrice(Float.parseFloat(price.trim()));
             if (bonus == "")
                 item.setBonus(Float.parseFloat("0.0"));

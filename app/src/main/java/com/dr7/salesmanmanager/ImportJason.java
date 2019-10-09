@@ -70,6 +70,7 @@ public class ImportJason extends AppCompatActivity{
 
     public void startParsing(){
         List<Settings> settings =  mHandler.getAllSettings();
+        System.setProperty("http.keepAlive", "false");
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";

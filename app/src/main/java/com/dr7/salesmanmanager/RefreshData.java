@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
 
 import org.json.JSONArray;
@@ -35,6 +36,7 @@ import java.util.List;
         DatabaseHandler mHandler;
 
         public static List<Customer> customerList = new ArrayList<>();
+        public  static  List<SalesManItemsBalance> salesManItemsBalanceList= new ArrayList<>();
         public RefreshData(Context context){
             this.context = context ;
             this.mHandler = new DatabaseHandler(context);
@@ -142,6 +144,27 @@ import java.util.List;
                     }catch (Exception e)
                     {Log.e("Refresh_data",""+e.getMessage().toString());}
 
+                    try {
+
+                        JSONArray parentArrayItemQty = parentObject.getJSONArray("SalesMan_Items_Balance");
+                        salesManItemsBalanceList.clear();
+                        for (int i = 0; i < parentArrayItemQty.length(); i++) {
+                            JSONObject finalObject = parentArrayItemQty.getJSONObject(i);
+                            SalesManItemsBalance salesManItemsBalance=new SalesManItemsBalance();
+                            salesManItemsBalance.setCompanyNo(finalObject.getInt("ComapnyNo"));
+                            salesManItemsBalance.setSalesManNo(finalObject.getString("SalesManNo"));
+                            salesManItemsBalance.setItemNo(finalObject.getString("ItemNo"));
+                            salesManItemsBalance.setQty( finalObject.getDouble("Qty"));
+
+                            salesManItemsBalanceList.add(salesManItemsBalance);
+                        }
+                    }catch (Exception e)
+                    {Log.e("Refresh_salesmanItem",""+e.getMessage().toString());}
+
+
+
+
+
                 } catch (MalformedURLException e) {
                     Log.e("Refresh_data", "********ex1");
                     e.printStackTrace();
@@ -197,7 +220,7 @@ import java.util.List;
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.progress_dialog);
                 Window window = dialog.getWindow();
-                window.setLayout(700, 350);
+                window.setLayout(500, 200);
 
                 pb = (ProgressBar) dialog.findViewById(R.id.progress);
 
@@ -217,6 +240,13 @@ import java.util.List;
                 }
                 for (int i = 0; i < customerList.size(); i++) {
                      mHandler.updateCustomersPayment_Info(customerList.get(i).getCreditLimit(),customerList.get(i).getCashCredit(),customerList.get(i).getCustId());
+                }
+                for(int i=0;i<salesManItemsBalanceList.size();i++)
+                {
+//                    mHandler.updateSalesManItemBalance("1","1144",100);
+                    mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(i).getSalesManNo(),
+                            salesManItemsBalanceList.get(i).getItemNo(),salesManItemsBalanceList.get(i).getQty());
+
                 }
 
                 return "Finish Store";
