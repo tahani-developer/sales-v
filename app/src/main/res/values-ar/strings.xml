@@ -47,7 +47,7 @@
     <string name="action_company_info">معلومات الشركة</string>
     <string name="de_export">فك التصدير</string>
     <string name="action_print_voucher">طباعة فاتورة</string>
-    <string name="action_print_payment">طباعة فاتورة دفع</string>
+    <string name="action_print_payment">طباعة سند قبض</string>
     <string name="title_activity_activities">العمليات</string>
 
     <string name="add_cust">اضافة عميل</string>
