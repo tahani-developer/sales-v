@@ -224,7 +224,7 @@ import java.util.List;
 
                 pb = (ProgressBar) dialog.findViewById(R.id.progress);
 
-                dialog.show();
+                 dialog.show();
             }
 
             @Override
