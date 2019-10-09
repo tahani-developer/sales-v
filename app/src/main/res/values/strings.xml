@@ -48,6 +48,7 @@
     <string name="action_company_info">Company Info</string>
     <string name="de_export">De-Export</string>
     <string name="action_print_voucher">Print Voucher</string>
+    <string name="action_print_payment">Print Payment</string>
     <string name="action_printer_setting">Print Setting</string>
     <string name="title_activity_activities">Activities</string>
 

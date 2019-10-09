@@ -57,7 +57,6 @@ import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.FileNotFoundException;
@@ -248,6 +247,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.action_print_voucher) {
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
+            startActivity(intent);
+
+        } else if (id == R.id.action_print_payment) {
+            Intent intent = new Intent(MainActivity.this, PrintPayment.class);
             startActivity(intent);
 
 //        } else if (id == R.id.action_add_cust) {

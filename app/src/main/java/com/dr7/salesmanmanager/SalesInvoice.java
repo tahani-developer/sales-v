@@ -1258,6 +1258,7 @@ public class SalesInvoice extends Fragment {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     void send_dataSewoo(Voucher voucher) throws IOException {
         try {
             testB =convertLayoutToImage(voucher);
@@ -1273,6 +1274,7 @@ public class SalesInvoice extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
 
@@ -1387,7 +1389,7 @@ public class SalesInvoice extends Fragment {
                                 textView.setText("" + itemsList.get(j).getUnit());
                                 textView.setLayoutParams(lp2);
                             } else {
-                                textView.setText("" + items.get(j).getQty());
+                                textView.setText("" + itemsList.get(j).getQty());
                                 textView.setLayoutParams(lp2);
                             }
                             break;
@@ -1653,6 +1655,7 @@ public class SalesInvoice extends Fragment {
         return total;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     public void hiddenDialog() {
         final Dialog dialog = new Dialog(getActivity());
@@ -2050,10 +2053,10 @@ public class SalesInvoice extends Fragment {
         Bitmap bitmap = null;
         Bitmap bitmap2 = null;
         List<Item> items1=new ArrayList<>();
-        for (int j = 0; j < items.size(); j++) {
+        for (int j = 0; j < itemsList.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
-                items1.add(items.get(j));
+            if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
+                items1.add(itemsList.get(j));
 
             }
         }

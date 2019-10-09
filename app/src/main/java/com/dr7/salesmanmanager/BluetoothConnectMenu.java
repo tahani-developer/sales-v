@@ -13,9 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,6 +37,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.port.android.BluetoothPort;
@@ -57,6 +55,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintVoucher.TOTAL;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
@@ -94,7 +93,9 @@ public class BluetoothConnectMenu extends Activity {
     List<Item> long_listItems;
     Voucher voucherforPrint;
     List<Item> itemforPrint;
+    List<Payment>payList;
     DecimalFormat decimalFormat;
+    Payment payforBank;
 
     static {
         fileName = dir + "//BTPrinter";
@@ -517,9 +518,19 @@ public class BluetoothConnectMenu extends Activity {
 //                        itemForPrint.clear();
 
                         } else {
-                            if (count == 2) {
+                            if (count == 2||count==4) {
+                                if(count==2){
+                                payList=paymentsforPrint;
+                                payforBank=ReceiptVoucher.payment;
                                 sample.printMultilingualFontCash();
                                 paymentsforPrint.clear();
+                                }
+                                else {
+                                    payList=PrintPayment.payment;
+                                    payforBank=pay1;
+                                    sample.printMultilingualFontCash();
+                                    paymentsforPrint.clear();
+                                }
                             } else if (count == 3) {
                                 sample.printMultilingualFontCashReport();
 
