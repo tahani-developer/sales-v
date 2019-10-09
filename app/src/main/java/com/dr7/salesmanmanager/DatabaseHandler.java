@@ -2035,6 +2035,33 @@ DatabaseHandler extends SQLiteOpenHelper {
         return paymentsList;
     }
 
+    public List<Payment> getRequestedPaymentsPaper(int voucherNo) {
+
+        List<Payment> paymentsList = new ArrayList<Payment>();
+        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER + " where VOUCHER_NUMBER = '" + voucherNo  + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Payment payment = new Payment();
+
+                payment.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                payment.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                payment.setCheckNumber(Integer.parseInt(cursor.getString(2)));
+                payment.setBank(cursor.getString(3));
+                payment.setDueDate(cursor.getString(4));
+                payment.setAmount(Double.parseDouble(cursor.getString(5)));
+                payment.setIsPosted(Integer.parseInt(cursor.getString(6)));
+                payment.setYear(Integer.parseInt(cursor.getString(7)));
+
+                paymentsList.add(payment);
+            } while (cursor.moveToNext());
+        }
+
+        return paymentsList;
+    }
+
     public List<Voucher> getStockRequestVouchers() {
         List<Voucher> vouchers = new ArrayList<Voucher>();
         // Select All Query
