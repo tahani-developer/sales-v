@@ -77,6 +77,7 @@ public class AddItemsFragment2 extends DialogFragment {
         List = new ArrayList<Item>();
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().setCanceledOnTouchOutside(false);
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 

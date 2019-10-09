@@ -905,7 +905,7 @@ public class MainActivity extends AppCompatActivity
                     bonusNotAlowed.setChecked(true);
 
                 if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1)
-                    workOnline.setChecked(true);
+//                    workOnline.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 1)
                     paymetod_check.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1)

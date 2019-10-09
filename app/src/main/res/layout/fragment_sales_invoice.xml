@@ -132,7 +132,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -142,7 +141,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"
             android:gravity="center_vertical"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
@@ -154,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
+
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp" />

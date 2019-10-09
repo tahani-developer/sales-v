@@ -74,23 +74,21 @@
                 android:id="@+id/addItemImgButton2"
                 android:clickable="true"
                 android:layout_width="60dp"
-
                 android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/items2"
                 app:civ_border_color="@color/colorPrimaryDark"/>
-
+<!--            android:layout_marginLeft="50dp"-->
             <TextView
                 android:id="@+id/items_quntity"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
                 android:layout_alignTop="@+id/addItemImgButton2"
+                android:layout_alignLeft="@id/addItemImgButton2"
                 android:text="+0"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="25dp" />
+                android:textSize="20dp" />
         </RelativeLayout>
             <!--android:visibility="invisible"/>-->
 
