@@ -244,39 +244,44 @@ public class RefreshData {
                 mHandler.updateCustomersPayment_Info(customerList.get(i).getCreditLimit(), customerList.get(i).getCashCredit(), customerList.get(i).getCustId());
             }
 
-
-            List<Item> items = mHandler.getUnPostedItems();
-            for (int i = 0; i < items.size(); i++) {
-                double currentQty = 0;
-                for (int k = 0; k < salesManItemsBalanceList.size(); k++) {
-
-                    if (salesManItemsBalanceList.get(k).getItemNo().equals("76178245"))
-                        Log.e("*********azraq", "" + salesManItemsBalanceList.get(k).getQty());
-
-                    if (salesManItemsBalanceList.get(k).getItemNo().equals("6008165345657"))
-                        Log.e("*************mix", "" + salesManItemsBalanceList.get(k).getQty());
-
-                    if (items.get(i).getItemNo().equals(salesManItemsBalanceList.get(k).getItemNo())
-                            && items.get(i).getSalesmanNo().equals(salesManItemsBalanceList.get(k).getSalesManNo())) {
-
-                        double stockQty = salesManItemsBalanceList.get(k).getQty();
-                        if (items.get(i).getVoucherType() == 504)
-                            currentQty = stockQty - items.get(i).getQty();
-                        else if (items.get(i).getVoucherType() == 506)
-                            currentQty = stockQty + items.get(i).getQty();
-
-                        salesManItemsBalanceList.get(k).setQty(currentQty);
-                        mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(k).getSalesManNo(), salesManItemsBalanceList.get(k).getItemNo(), currentQty);
-
-                        break;
-                    }
-
-                }
-//                for(int k=0 ; k<salesManItemsBalanceList.size( ) ; k++) {
+//
+//            List<Item> items = mHandler.getUnPostedItems();
+//            for (int i = 0; i < items.size(); i++) {
+//                double currentQty_sal = 0;
+//                double currentQty_ret = 0;
+//                double currentQty=0;
+//                for (int k = 0; k < salesManItemsBalanceList.size(); k++) {
+//
+//                    if (salesManItemsBalanceList.get(k).getItemNo().equals("76178245"))
+//                        Log.e("*********azraq", "" + salesManItemsBalanceList.get(k).getQty());
+//
+//                    if (items.get(i).getItemNo().equals(salesManItemsBalanceList.get(k).getItemNo())
+//                            && items.get(i).getSalesmanNo().equals(salesManItemsBalanceList.get(k).getSalesManNo())) {
+//
+//                        double stockQty = salesManItemsBalanceList.get(k).getQty();
+//                        if (items.get(i).getVoucherType() == 504) {
+//                            currentQty_sal += items.get(i).getQty();
+////                            currentQty = stockQty - items.get(i).getQty();
+//                        }
+//                        else if (items.get(i).getVoucherType() == 506) {
+//                            currentQty_ret += items.get(i).getQty();
+////                            currentQty = stockQty + items.get(i).getQty();
+////                        salesManItemsBalanceList.get(k).setQty(currentQty);
+//                        }
+//                        currentQty=stockQty+currentQty_sal-currentQty_ret;
+//                        Log.e("qtyQty", "" + currentQty);
+//
+//                        mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(k).getSalesManNo(), salesManItemsBalanceList.get(k).getItemNo(), currentQty);
+//
+//                        break;
+//                    }
+//
+//                }
+                for(int k=0 ; k<salesManItemsBalanceList.size( ) ; k++) {
 //                    mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(k).getSalesManNo(),"76178245",salesManItemsBalanceList.get(k).getQty());
-//                    Log.e("list",""+salesManItemsBalanceList.get(k).getQty());
-//                    mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(k).getSalesManNo(),
-//                            salesManItemsBalanceList.get(k).getItemNo(),salesManItemsBalanceList.get(k).getQty());
+                    Log.e("list",""+salesManItemsBalanceList.get(k).getQty());
+                    mHandler.updateSalesManItemBalance(salesManItemsBalanceList.get(k).getSalesManNo(),
+                            salesManItemsBalanceList.get(k).getItemNo(),salesManItemsBalanceList.get(k).getQty());
             }
 
             return "Finish Store";

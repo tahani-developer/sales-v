@@ -2595,29 +2595,29 @@ DatabaseHandler extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-//        int unposted_sales=0;
-//        int unposted__return=0;
-//        unposted_sales=( getAllItems_bySalesman_No(Integer.parseInt(itemNo),504,salesmanNo));
-//        unposted__return= ( getAllItems_bySalesman_No(Integer.parseInt(itemNo),506,salesmanNo));
-//
-//        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
-//
-//            double newQty=qty-unposted_sales+unposted__return;
-//            Log.e("newqty",""+newQty);
+        int unposted_sales=0;
+        int unposted__return=0;
+        unposted_sales=( getAllItems_bySalesman_No(itemNo,504,salesmanNo));
+        unposted__return= ( getAllItems_bySalesman_No(itemNo,506,salesmanNo));
 
-            values.put(Qty5, qty);
+        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
+
+            double newQty=(qty-unposted_sales )+unposted__return;
+            Log.e("newqty",""+newQty);
+
+            values.put(Qty5, newQty);
             db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
 
         }
 
 
-    public int  getAllItems_bySalesman_No( int itemNo,int  vouchType,String salesmanNo){
+    public int  getAllItems_bySalesman_No( String itemNo,int  vouchType,String salesmanNo){
         String selectQuery ="select IFNULL(sum(D.UNIT_QTY+BONUS),0) As Sold_Qty"+
         " from SALES_VOUCHER_DETAILS D, SALES_VOUCHER_MASTER M"+
                " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
        +" And M.VOUCHER_TYPE ='" +vouchType+"'";
         Log.e("Select",""+selectQuery);
-       String total_qty="";
+     int total_qty=0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2625,10 +2625,11 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "************************" + selectQuery);
             do {
                 // Adding transaction to list
-               total_qty=cursor.getString(0);
+               total_qty=Integer.parseInt(cursor.getString(0));
             } while (cursor.moveToNext());
         }
-        return Integer.parseInt(total_qty);
+//        int t=Integer.parseInt(total_qty);
+        return total_qty;
 
     }
 

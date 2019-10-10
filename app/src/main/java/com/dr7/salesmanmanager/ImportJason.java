@@ -561,6 +561,7 @@ public class ImportJason extends AppCompatActivity{
 
             if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
                 Log.e("In***" , " in");
+
                 mHandler.deleteAllSalesManItemsBalance();
                 for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
                     mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList.get(i));
