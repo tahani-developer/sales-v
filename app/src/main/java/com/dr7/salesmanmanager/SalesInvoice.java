@@ -459,11 +459,11 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    closeBT();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    closeBT();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 total_items_quantity=0;
                 totalQty_textView.setText("+0");
                 itemForPrint.clear();
@@ -1966,12 +1966,12 @@ public class SalesInvoice extends Fragment {
 
     void findBT() {
 
-        try {
-            /*  very important **********************************************************/
-            closeBT();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            /*  very important **********************************************************/
+//            closeBT();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         itemsString = "";
         itemsString2 = "";
@@ -2436,15 +2436,18 @@ public class SalesInvoice extends Fragment {
 //                companyInfo.setLogo();
                             }
 
-            if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&& !companyInfo.getLogo().equals(null)&&companyInfo.getTaxNo()!=-1) {
+            //&& !companyInfo.getLogo().equals(null)
+            if (!companyInfo.getCompanyName().equals("")&& companyInfo.getcompanyTel()!=0&&companyInfo.getTaxNo()!=-1) {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
-
-                PrintPic printPic = PrintPic.getInstance();
-                printPic.init(bitmap);
-                byte[] bitmapdata = printPic.printDraw();
-
+try {
+    PrintPic printPic = PrintPic.getInstance();
+    printPic.init(bitmap);
+    byte[] bitmapdata = printPic.printDraw();
+}catch (Exception e){
+    Log.e("pic sales invoice ","**");
+}
 
                 for (int i = 1; i <= numOfCopy; i++) {
                     Thread.sleep(1000);
