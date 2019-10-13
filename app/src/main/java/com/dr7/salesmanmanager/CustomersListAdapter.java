@@ -84,7 +84,10 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
+                if(custList.get(i).getCustId()=="1225") {
+                    Log.e("customerList-no", "" + custList.get(i).getCustId() + "\t cus cash" + custList.get(i).getCashCredit() + "     " + custList.get(i).getCreditLimit());
 
+                }
                 if (custList.get(i).getIsSuspended() == 1) {
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 180);

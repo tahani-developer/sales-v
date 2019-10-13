@@ -174,6 +174,7 @@ public class Activities extends AppCompatActivity implements
         receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         isFragmentBlank = false;
+        AddItemsFragment2.total_items_quantity=0;
     }
 
     private void displayReceipt() {
@@ -322,6 +323,7 @@ public class Activities extends AppCompatActivity implements
                 receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 isFragmentBlank = true;
+//                salesInvoice.total_items_quantity=0
 
             }
         });
@@ -390,6 +392,7 @@ public class Activities extends AppCompatActivity implements
 
     public void back() {
         super.onBackPressed();
+
     }
 
     @Override

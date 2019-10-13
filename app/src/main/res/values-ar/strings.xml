@@ -63,7 +63,7 @@
     <string name="app_tax">الضريبة : </string>
     <string name="app_net_sales">الصافي : </string>
     <string name="total_qty">الكمية كاملة : </string>
-
+    <string name="total_qty_inventory">اجمالي الكمية   </string>
 
     <string name="app_item_no">رقم المادة</string>
     <string name="app_desc">الوصف</string>
@@ -328,4 +328,7 @@
     <string name="fill_setting">
     رجاء أدخل اعدادات البرنامج لاتمام العملية
     </string>
+    <string name="warning_message"> تحذير </string>
+    <string name="not_authoriz">     عفوا , رصيد العميل غير كافي ... </string>
+    <string name="change_qty">تعديل الكمية</string>
 </resources>

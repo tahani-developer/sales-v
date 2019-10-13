@@ -150,17 +150,49 @@
     <!--android:background="@color/layer2"-->
     <!--android:layout_margin="20dp"-->
     <!--&gt;-->
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_report"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_alignParentTop="true"
+
         android:background="@color/layer2"
         android:orientation="vertical"
      >
 
     </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/layer3"
+        android:layout_alignBottom="@id/recyclerView_report"
+        android:orientation="horizontal">
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="@string/total_qty_inventory"
+
+        android:textColor="@color/done_button"/>
+        <TextView
+            android:id="@+id/total_qty_text"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center"
+
+            android:textColor="@color/add_button"/>
+    </LinearLayout>
+    </RelativeLayout>
+
     <!--</ScrollView>-->
 
 
