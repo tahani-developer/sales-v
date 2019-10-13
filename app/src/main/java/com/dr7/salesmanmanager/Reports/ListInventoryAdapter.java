@@ -23,11 +23,13 @@ import java.util.List;
 
 import static com.dr7.salesmanmanager.R.color.layer4;
 
+
 public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdapter.ViewHolder>
 {
-    List<inventoryReportItem> inventorylist;
+    static List<inventoryReportItem> inventorylist;
 
     Context context;
+  static int  totalQty_inventory=0;
 
     DatabaseHandler MHandler;
 
@@ -64,7 +66,19 @@ public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdap
 
     @Override
     public int getItemCount() {
+
         return inventorylist.size();
+//
+    }
+    public  static int  TotalQtyInventoey()
+    {
+        for(int i=0;i<inventorylist.size();i++)
+        {
+            totalQty_inventory+=inventorylist.get(i).getQty();
+
+        }
+        return totalQty_inventory;
+
     }
 
     public  class  ViewHolder extends  RecyclerView.ViewHolder

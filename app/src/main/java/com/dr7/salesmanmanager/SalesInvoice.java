@@ -283,6 +283,7 @@ public class SalesInvoice extends Fragment {
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
                                     clearItemsList();
+                                    clearLayoutData();
 
                                     switch (checkedId) {
                                         case R.id.salesRadioButton:
@@ -365,24 +366,30 @@ public class SalesInvoice extends Fragment {
                 switch (checkedId) {
                     case R.id.creditRadioButton:
                         payMethod = 0;
-                        discTextView.setText("0.0");
-                        netTotalTextView.setText("0.0");
-                        netTotal = 0.0;
-                        totalDiscount=0;
-                        sum_discount=0;
-                       // if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
+
+                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                        {
+                            discTextView.setText("0.0");
+                            netTotalTextView.setText("0.0");
+                            netTotal = 0.0;
+                            totalDiscount=0;
+                            sum_discount=0;
                             clearLayoutData();
+                        }
 
                         break;
                     case R.id.cashRadioButton:
                         payMethod = 1;
-                        discTextView.setText("0.0");
-                        netTotalTextView.setText("0.0");
-                        netTotal = 0.0;
-                        totalDiscount=0;
-                        sum_discount=0;
-                      //  if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
+
+                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                        {
+                            discTextView.setText("0.0");
+                            netTotalTextView.setText("0.0");
+                            netTotal = 0.0;
+                            totalDiscount=0;
+                            sum_discount=0;
                             clearLayoutData();
+                        }
                         break;
                 }
             }
@@ -464,8 +471,7 @@ public class SalesInvoice extends Fragment {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
-                total_items_quantity=0;
-                totalQty_textView.setText("+0");
+
                 itemForPrint.clear();
                 clicked = false;
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -517,16 +523,18 @@ public class SalesInvoice extends Fragment {
                                             if (customer_is_authrized()) {
 
                                                 AddVoucher();
+                                                clearLayoutData();
                                             } else {
-                                                Toast.makeText(getActivity(), "Sorry, you are not authorized for this service to verify your financial account", Toast.LENGTH_SHORT).show();
+                                                reCheck_customerAuthorize();// test
                                             }
                                         } else {// you should not authorize customer account balance
 
                                             AddVoucher();
+                                            clearLayoutData();
                                         }
                                 }
 
-                                clearLayoutData();
+//                                clearLayoutData();
                             }
                             //not empty list
                         }
@@ -541,6 +549,27 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+    public  void reCheck_customerAuthorize()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.not_authoriz));
+        builder.setTitle(getResources().getString(R.string.warning_message));
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+//                if (customer_is_authrized()) {
+//
+//                    AddVoucher();
+//                    clearLayoutData();
+//                }
+                dialogInterface.dismiss();
+            }
+
+
+        });
+        builder.create().show();
+
     }
    public void  AddVoucher(){
 
@@ -701,6 +730,7 @@ public class SalesInvoice extends Fragment {
                                     items.remove(position);
                                     itemsListView.setAdapter(itemsListAdapter);
                                     calculateTotals();
+                                    clearLayoutData();
 
                                     break;
                                 case 1:
@@ -770,6 +800,7 @@ public class SalesInvoice extends Fragment {
                                     break;
                                 case 2:
                                     clearItemsList();
+                                    clearLayoutData();
                                     total_items_quantity=0;
                                     totalQty_textView.setText("+"+total_items_quantity);
                                     break;
@@ -819,6 +850,7 @@ public class SalesInvoice extends Fragment {
         voucherNumberTextView.setText(vn);
         total_items_quantity=0;
         totalQty_textView.setText("+0");
+
     }
 
     public void calculateTotals()

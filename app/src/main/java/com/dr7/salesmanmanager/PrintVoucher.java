@@ -104,6 +104,7 @@ public class PrintVoucher extends AppCompatActivity {
     String itemsString2 = "";
     DatabaseHandler obj;
      static double TOTAL=0;
+    DecimalFormat decimalFormat;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -115,6 +116,7 @@ public class PrintVoucher extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        decimalFormat = new DecimalFormat("##.00");
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo = new ArrayList<CompanyInfo>();
@@ -708,14 +710,15 @@ public class PrintVoucher extends AppCompatActivity {
                 row = row.substring(0, 21) + items.get(j).getUnit() + row.substring(21, row.length());
                 row = row.substring(0, 31) + items.get(j).getQty() + row.substring(31, row.length());
                 row = row.substring(0, 41) + items.get(j).getPrice() + row.substring(41, row.length());
-                row = row.substring(0, 52) + new DecimalFormat("#.##").format(Double.valueOf(amount));
+                row = row.substring(0, 52) +decimalFormat.format(Double.valueOf(amount));
                 row = row.trim();
                 itemsString = itemsString + "\n" + row;
 
                 String row2 = items.get(j).getItemName() + "                                             ";
                 row2 = row2.substring(0, 21) + items.get(j).getUnit() + row2.substring(21, row2.length());
                 row2 = row2.substring(0, 31) + items.get(j).getPrice() + row2.substring(31, row2.length());
-                row2 = row2.substring(0, 42) + new DecimalFormat("#.##").format(Double.valueOf(amount));
+
+                row2 = row2.substring(0, 42) +convertToEnglish(decimalFormat.format(Double.valueOf(amount)));
                 row2 = row2.trim();
                 itemsString2 = itemsString2 + "\n" + row2;
             }
@@ -931,7 +934,7 @@ public class PrintVoucher extends AppCompatActivity {
                     printCustom(companyInfo.getCompanyName() + "\n", 1, 1);
                     printCustom("هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", 1, 2);
                     printCustom("----------------------------------------------" + "\n", 1, 2);
-                    printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "          التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
+                    printCustom("رقم الفاتورة : " + voucher.getVoucherNumber() + "   التاريخ: " + voucher.getVoucherDate() + "\n", 1, 2);
                     mmOutputStream.write(PrinterCommands.FEED_LINE);
                     printCustom("اسم العميل   : " + voucher.getCustName() + "\n", 1, 2);
                     printCustom("ملاحظة        : " + voucher.getRemark() + "\n", 1, 2);

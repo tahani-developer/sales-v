@@ -65,6 +65,7 @@
     <string name="app_tax">Tax : </string>
     <string name="app_net_sales">Net Sales : </string>
     <string name="total_qty">Total Qty : </string>
+    <string name="total_qty_inventory">Total Qty  </string>
 
 
     <string name="app_item_no">Item No</string>
@@ -325,4 +326,7 @@
 
     <string name="error_companey_info">   please enter company information for print </string>
     <string name="fill_setting">Please enter setting app</string>
+    <string name="warning_message">Warning Message</string>
+    <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
+    <string name="change_qty">Change Qty</string>
 </resources>

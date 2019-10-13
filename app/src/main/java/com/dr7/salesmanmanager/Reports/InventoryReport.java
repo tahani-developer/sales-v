@@ -33,13 +33,17 @@ import com.dr7.salesmanmanager.RecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Reports.ListInventoryAdapter.totalQty_inventory;
+
 public class InventoryReport extends AppCompatActivity {
     EditText item_number2, item_name;
     Button preview2;
+   public static TextView total_qtyText;
     List<inventoryReportItem> itemsReportinventory;
     SearchView search;
     RecyclerView recyclerView;
     Context context;
+//    int totalQty_inventory=0;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -53,6 +57,7 @@ public class InventoryReport extends AppCompatActivity {
         DatabaseHandler obj = new DatabaseHandler(InventoryReport.this);
         itemsReportinventory = obj.getInventory_db();
         item_number2 = (EditText) findViewById(R.id.item_number_inventory);
+        total_qtyText = (TextView) findViewById(R.id.total_qty_text);
         preview2 = (Button) findViewById(R.id.preview_button_inventory);
         //---------------   to load Inventory report  accourding to item number---------------------
         preview2.setOnClickListener(new View.OnClickListener() {
@@ -70,9 +75,12 @@ public class InventoryReport extends AppCompatActivity {
 
                     ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_number, context);
                     recyclerView.setAdapter(adapter);
+                  setTextTotalQty( adapter.TotalQtyInventoey());
                 } else {
                     ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
                     recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
+                    Log.e("totalqty",""+ adapter.getItemCount());
                 }
 
             }
@@ -92,6 +100,7 @@ public class InventoryReport extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         final ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
         recyclerView.setAdapter(adapter);
+        setTextTotalQty( adapter.TotalQtyInventoey());
 
 //      load  Inventory Report  when choose item from spinner category
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -111,10 +120,12 @@ public class InventoryReport extends AppCompatActivity {
                     }
                     ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList, context);
                     recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
                 } else
                     {
                     ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
                     recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
                     }
 
 
@@ -166,11 +177,13 @@ public class InventoryReport extends AppCompatActivity {
                     }
                     ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_name, context);
                     recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
                 }
                 else
                     {
                     ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
                     recyclerView.setAdapter(adapter);
+                        setTextTotalQty( adapter.TotalQtyInventoey());
                     }
 
                 return false;
@@ -183,7 +196,12 @@ public class InventoryReport extends AppCompatActivity {
         itemsReportinventory.clear();
 
     }
+public static void setTextTotalQty(int qty)
+{
+  total_qtyText.setText(qty+"");
+  totalQty_inventory=0;
 
+}
 }
 
 

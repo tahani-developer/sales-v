@@ -2616,7 +2616,6 @@ DatabaseHandler extends SQLiteOpenHelper {
         " from SALES_VOUCHER_DETAILS D, SALES_VOUCHER_MASTER M"+
                " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
        +" And M.VOUCHER_TYPE ='" +vouchType+"'";
-        Log.e("Select",""+selectQuery);
      int total_qty=0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
