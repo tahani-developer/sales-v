@@ -700,6 +700,7 @@ public class PrintVoucher extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
         itemsString = "";
+        itemsString2="";
         for (int j = 0; j < items.size(); j++) {
 
             if (voucherNo == items.get(j).getVoucherNumber()) {
@@ -710,7 +711,7 @@ public class PrintVoucher extends AppCompatActivity {
                 row = row.substring(0, 21) + items.get(j).getUnit() + row.substring(21, row.length());
                 row = row.substring(0, 31) + items.get(j).getQty() + row.substring(31, row.length());
                 row = row.substring(0, 41) + items.get(j).getPrice() + row.substring(41, row.length());
-                row = row.substring(0, 52) +decimalFormat.format(Double.valueOf(amount));
+                row = row.substring(0, 52) +convertToEnglish(decimalFormat.format(Double.valueOf(amount)));
                 row = row.trim();
                 itemsString = itemsString + "\n" + row;
 

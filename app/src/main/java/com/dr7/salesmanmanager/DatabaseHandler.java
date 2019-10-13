@@ -1713,7 +1713,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setDiscPerc(cursor.getString(9));
                 item.setTotalDiscVal(cursor.getFloat(10));
                 item.setVoucherDiscount(cursor.getFloat(10));
-                item.setTaxValue(Double.parseDouble(cursor.getString(11)));
+                item.setTaxValue(cursor.getDouble(11));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
                 item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
                 item.setYear(cursor.getString(14));

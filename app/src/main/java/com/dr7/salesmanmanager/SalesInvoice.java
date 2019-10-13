@@ -2004,7 +2004,7 @@ public class SalesInvoice extends Fragment {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
+        DecimalFormat threeDForm = new DecimalFormat("0.000");
         itemsString = "";
         itemsString2 = "";
         for (int j = 0; j < itemsList.size(); j++) { // don't know why is it here :/
@@ -2015,14 +2015,14 @@ public class SalesInvoice extends Fragment {
             row = row.substring(0, 21) + itemsList.get(j).getUnit() + row.substring(21, row.length());
             row = row.substring(0, 31) + itemsList.get(j).getQty() + row.substring(31, row.length());
             row = row.substring(0, 41) + itemsList.get(j).getPrice() + row.substring(41, row.length());
-            row = row.substring(0, 52) + new DecimalFormat("#.##").format(Double.valueOf(amount));
+            row = row.substring(0, 52) + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(amount))));
             row = row.trim();
             itemsString = itemsString + "\n" + row;
 
             String row2 = itemsList.get(j).getItemName() + "                                             ";
-            row2 = row2.substring(0, 21) + itemsList.get(j).getUnit() + row2.substring(21, row2.length());
+            row2 = row2.substring(0, 21) + itemsList.get(j).getQty() + row2.substring(21, row2.length());
             row2 = row2.substring(0, 31) + itemsList.get(j).getPrice() + row2.substring(31, row2.length());
-            row2 = row2.substring(0, 42) + new DecimalFormat("#.##").format(Double.valueOf(amount));
+            row2 = row2.substring(0, 42) + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(amount))));
             row2 = row2.trim();
             itemsString2 = itemsString2 + "\n" + row2;
 
