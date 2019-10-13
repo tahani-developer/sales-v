@@ -1270,7 +1270,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        Drawable bgDrawable = linearView.getBackground(); 
+        Drawable bgDrawable = linearView.getBackground();
         if (bgDrawable != null) {
             bgDrawable.draw(canvas);
         } else {
