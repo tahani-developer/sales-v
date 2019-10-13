@@ -53,7 +53,7 @@ public class Activities extends AppCompatActivity implements
     boolean canClose;
 
 
-    @Override
+    @Override 
     public void displayFindItemFragment() {
         try {
             AddItemsFragment addItemsFragment = new AddItemsFragment();
