@@ -681,7 +681,6 @@ public class ESCPSample2
 		{
 			payList=paymentsforPrint;
 			payforBank=ReceiptVoucher.payment;
-			Log.e("cc==>",""+pay1.getPayMethod());
 
 		}else{
 			payList=paymentPrinter;

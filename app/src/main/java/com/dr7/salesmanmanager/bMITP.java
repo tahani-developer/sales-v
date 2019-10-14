@@ -437,24 +437,25 @@ public class bMITP extends Activity {
                           break;
 
                       case 2:
-                          sample.printMultilingualFontPayCash(0);
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFontPayCash(0);
+                          }
                           Log.e("Re","print");
                           paymentsforPrint.clear();
                           break;
 
                       case 3:
-
-                         sample.printMultilingualFontCashReport();
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFontCashReport();
+                          }
                           break;
 
                       case 4:
                           Log.e("pay","print");
-                          sample.printMultilingualFontPayCash(1);
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFontPayCash(1);
+                          }
                           paymentPrinter.clear();
-                          break;
-
-                      case 5:
-
                           break;
 
                   }
