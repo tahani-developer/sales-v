@@ -2689,23 +2689,3 @@ DatabaseHandler extends SQLiteOpenHelper {
          return true;
      }
 }
-/*  List<Offers> offers = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + VS_PROMOTION;
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Offers offer = new Offers();
-                offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
-                offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
-                offer.setFromDate(cursor.getString(2));
-                offer.setToDate(cursor.getString(3));
-                offer.setItemNo(cursor.getString(4));
-                offer.setItemQty(Double.parseDouble(cursor.getString(5)));
-                offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
-                offer.setBonusItemNo(cursor.getString(7));
-
-                offers.add(offer);
-            } while (cursor.moveToNext());
-        }*/

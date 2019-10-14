@@ -462,12 +462,16 @@ public class ReceiptVoucher extends Fragment {
                                                 break;
                                             case 2:
 
-                                                try {
-                                                    findBT();
-                                                    openBT(2);
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
+//                                                try {
+//                                                    findBT();
+//                                                    openBT(2);
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+
+                                                Intent O = new Intent(getActivity(), bMITP.class);
+                                                O.putExtra("printKey", "2");
+                                                startActivity(O);
 //                                                             lk32.setChecked(true);
                                                 break;
                                             case 3:
@@ -583,13 +587,18 @@ public class ReceiptVoucher extends Fragment {
                                         break;
                                     case 2:
 
-                                        try {
-                                            findBT();
-                                            openBT(2);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+//                                        try {
+//                                            findBT();
+//                                            openBT(2);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
 //                                                             lk32.setChecked(true);
+
+                                        Intent O = new Intent(getActivity(), bMITP.class);
+                                        O.putExtra("printKey", "2");
+                                        startActivity(O);
+
                                         break;
                                     case 3:
 

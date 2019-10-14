@@ -26,6 +26,7 @@ import java.util.List;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 //import maes.tech.intentanim.CustomIntent;
+//commit test
 
 public class Activities extends AppCompatActivity implements
         SalesInvoice.SalesInvoiceInterface, AddItemsFragment.AddItemsInterface,
@@ -52,7 +53,7 @@ public class Activities extends AppCompatActivity implements
     boolean canClose;
 
 
-    @Override
+    @Override 
     public void displayFindItemFragment() {
         try {
             AddItemsFragment addItemsFragment = new AddItemsFragment();

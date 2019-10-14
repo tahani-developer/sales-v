@@ -268,13 +268,20 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 break;
                                                             case 2:
 
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
-                                                                    openBT(vouch, 2);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+//                                                                    openBT(vouch, 2);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
 //                                                             lk32.setChecked(true);
+
+                                                                vouch1 = vouch;
+                                                                Intent o = new Intent(PrintVoucher.this, bMITP.class);
+                                                                o.putExtra("printKey", "0");
+                                                                startActivity(o);
+
+
                                                                 break;
                                                             case 3:
 
@@ -700,6 +707,7 @@ public class PrintVoucher extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
         itemsString = "";
+        itemsString2="";
         for (int j = 0; j < items.size(); j++) {
 
             if (voucherNo == items.get(j).getVoucherNumber()) {
@@ -710,7 +718,7 @@ public class PrintVoucher extends AppCompatActivity {
                 row = row.substring(0, 21) + items.get(j).getUnit() + row.substring(21, row.length());
                 row = row.substring(0, 31) + items.get(j).getQty() + row.substring(31, row.length());
                 row = row.substring(0, 41) + items.get(j).getPrice() + row.substring(41, row.length());
-                row = row.substring(0, 52) +decimalFormat.format(Double.valueOf(amount));
+                row = row.substring(0, 52) +convertToEnglish(decimalFormat.format(Double.valueOf(amount)));
                 row = row.trim();
                 itemsString = itemsString + "\n" + row;
 
@@ -1273,7 +1281,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        Drawable bgDrawable = linearView.getBackground(); 
+        Drawable bgDrawable = linearView.getBackground();
         if (bgDrawable != null) {
             bgDrawable.draw(canvas);
         } else {
