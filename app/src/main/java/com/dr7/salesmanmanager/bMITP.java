@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.request.android.RequestHandler;
 
@@ -34,9 +35,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import static com.dr7.salesmanmanager.PrintPayment.pay1;
+import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
@@ -65,6 +70,9 @@ public class bMITP extends Activity {
     static  String idname;
     DatabaseHandler obj;
     String getData;
+    List<Payment>payList;
+    Payment payforBank;
+
     List<Item> allStudents;
 
     static {
@@ -414,46 +422,53 @@ public class bMITP extends Activity {
                     settings=0;
                 }
                 try {
-for(int i=0;i<settings;i++){
-                        sample.printMultilingualFontEsc(0);
-}
+
+                  switch (count){
+
+                      case 0:
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFontEsc(0);
+                          }
+                          break;
+                      case 1:
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFontEsc(1);
+                          }
+                          break;
+
+                      case 2:
+                          payList=paymentsforPrint;
+                          payforBank=ReceiptVoucher.payment;
+                          sample.printMultilingualFontPayCash();
+                          paymentsforPrint.clear();
+                          break;
+
+                      case 3:
+
+                         sample.printMultilingualFontCashReport();
+                          break;
+
+                      case 4:
+
+                          payList=PrintPayment.payment;
+                          payforBank=pay1;
+                          sample.printMultilingualFontPayCash();
+                          paymentsforPrint.clear();
+                          break;
+
+                      case 5:
+
+                          break;
+
+                  }
+
+
 //                    sample.printMultilingualFont();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
-//                try {
-//                    CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-////                  Log.e("salesVoucher","=" + SalesInvoice.items.get(0).getVoucherNumber());
-//                    if((count==0)||(count==1)) {
-////                        sample.dmStamp(1,companyInfo.getLogo());
-//                        sample.printMultilingualFont(count,companyInfo.getLogo());
-//
-////                        itemForPrint.clear();
-//                    }else{
-//                        if(count==2)
-//                        {
-//                            sample.printMultilingualFontCash();
-//                            paymentsforPrint.clear();
-//                        }
-//                        else if(count==3){
-//                            sample.printMultilingualFontCashReport();
-//
-//                        }
-//                    }
-
                     finish();
-//                    Bitmap bitmap= BitmapFactory.decodeResource(getResources(), R.drawable.clear);
-//                    Bitmap testB =convertLayoutToImage(vouch,items);
-//                    ByteArrayOutputStream stream=new ByteArrayOutputStream();
-//                    testB.compress(Bitmap.CompressFormat.PNG, 90, stream);
-//                    sample.dmStamp(1,testB);
-//                    sample.imageTest(1,testB);
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+
 
                 if (bMITP.this.chkDisconnect.isChecked()) {
                     bMITP.this.registerReceiver(bMITP.this.disconnectReceiver, new IntentFilter("android.bluetooth.device.action.ACL_CONNECTED"));

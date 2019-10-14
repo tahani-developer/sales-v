@@ -41,6 +41,7 @@ import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
+import com.dr7.salesmanmanager.bMITP;
 import com.ganesh.intermecarabic.Arabic864;
 
 import java.io.ByteArrayOutputStream;
@@ -266,13 +267,19 @@ public class CashReport  extends AppCompatActivity {
                                         break;
                                     case 2:
 
-                                        try {
-                                            findBT();
-                                            openBT(2);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+//                                        try {
+//                                            findBT();
+//                                            openBT(2);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
 //                                                             lk32.setChecked(true);
+
+
+                                        Intent O= new Intent(CashReport.this, bMITP.class);
+                                        O.putExtra("printKey", "3");
+                                        startActivity(O);
+
                                         break;
                                     case 3:
 
