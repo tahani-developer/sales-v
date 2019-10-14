@@ -268,13 +268,20 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 break;
                                                             case 2:
 
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
-                                                                    openBT(vouch, 2);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+//                                                                    openBT(vouch, 2);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
 //                                                             lk32.setChecked(true);
+
+                                                                vouch1 = vouch;
+                                                                Intent o = new Intent(PrintVoucher.this, bMITP.class);
+                                                                o.putExtra("printKey", "0");
+                                                                startActivity(o);
+
+
                                                                 break;
                                                             case 3:
 
