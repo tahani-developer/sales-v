@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Vector;
 
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
+import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 
 // Source code recreated from a .class file by IntelliJ IDEA
@@ -70,8 +71,7 @@ public class bMITP extends Activity {
     static  String idname;
     DatabaseHandler obj;
     String getData;
-    List<Payment>payList;
-    Payment payforBank;
+
 
     List<Item> allStudents;
 
@@ -437,9 +437,8 @@ public class bMITP extends Activity {
                           break;
 
                       case 2:
-                          payList=paymentsforPrint;
-                          payforBank=ReceiptVoucher.payment;
-                          sample.printMultilingualFontPayCash();
+                          sample.printMultilingualFontPayCash(0);
+                          Log.e("Re","print");
                           paymentsforPrint.clear();
                           break;
 
@@ -449,11 +448,9 @@ public class bMITP extends Activity {
                           break;
 
                       case 4:
-
-                          payList=PrintPayment.payment;
-                          payforBank=pay1;
-                          sample.printMultilingualFontPayCash();
-                          paymentsforPrint.clear();
+                          Log.e("pay","print");
+                          sample.printMultilingualFontPayCash(1);
+                          paymentPrinter.clear();
                           break;
 
                       case 5:
