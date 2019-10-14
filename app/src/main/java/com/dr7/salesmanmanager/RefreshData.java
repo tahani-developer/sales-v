@@ -22,6 +22,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -36,6 +37,7 @@ public class RefreshData {
     private Context context;
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
+    boolean start=false;
 
     public static List<Customer> customerList = new ArrayList<>();
     public static List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
@@ -50,9 +52,107 @@ public class RefreshData {
         if (settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new JSONTask().execute(URL_TO_HIT);
+            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+//            if(start==true) {
+                new JSONTask().execute(URL_TO_HIT);
+//            }
+//            else{
+//                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
+//
+//            }
+
+
+
+
         }
     }
+
+
+    private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+
+
+                String link = URL_TO_HIT;
+
+
+                String data = null;
+                try {
+                    data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                            URLEncoder.encode(String.valueOf('4'), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                URL url = new URL(link);
+
+                URLConnection conn = url.openConnection();
+
+
+
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+
+                reader = new BufferedReader(new
+                        InputStreamReader(conn.getInputStream()));
+
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // Read Server Response
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                String finalJson = sb.toString();
+                Log.e("finalJson'4'", finalJson);
+                if(finalJson.contains("FAIL"))
+                {
+                    start=false;
+                }
+                else
+                if(finalJson.contains("SUCCESS"))
+                {start=true;}
+            } catch (MalformedURLException e) {
+                Log.e("import_unpostvoucher", "********ex1"+e.getMessage());
+                e.printStackTrace();
+            }  catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return "Finish";
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+
 
     void storeInDatabase() {
         new SQLTask().execute(URL_TO_HIT);

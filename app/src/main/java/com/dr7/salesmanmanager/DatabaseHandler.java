@@ -1713,8 +1713,14 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setDiscPerc(cursor.getString(9));
                 item.setTotalDiscVal(cursor.getFloat(10));
                 item.setVoucherDiscount(cursor.getFloat(10));
-                item.setTaxValue(Double.parseDouble(cursor.getString(11)));
-                item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
+                try {
+
+                    item.setTaxValue(Double.parseDouble(cursor.getString(11)));
+                    item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
+                }catch (Exception e)
+                {
+                    Log.e("DBHandler","impo"+e.getMessage());
+                }
                 item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
                 item.setYear(cursor.getString(14));
                 item.setIsPosted(Integer.parseInt(cursor.getString(15)));
@@ -2665,4 +2671,41 @@ DatabaseHandler extends SQLiteOpenHelper {
 //        }
 //        return items;
 //    }
+
+     public boolean isAllVoucher_posted() {
+         String selectQuery = "SELECT * FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
+         db = this.getWritableDatabase();
+         Cursor cursor = db.rawQuery(selectQuery, null);
+         if (cursor.moveToFirst()) {
+             int x = cursor.getInt(0);
+             if (x >= 0) {
+                 Log.e("selectQuery", "" + selectQuery);
+                 return false;
+
+
+             } else
+                 return true;
+         }
+         return true;
+     }
 }
+/*  List<Offers> offers = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + VS_PROMOTION;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Offers offer = new Offers();
+                offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
+                offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
+                offer.setFromDate(cursor.getString(2));
+                offer.setToDate(cursor.getString(3));
+                offer.setItemNo(cursor.getString(4));
+                offer.setItemQty(Double.parseDouble(cursor.getString(5)));
+                offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
+                offer.setBonusItemNo(cursor.getString(7));
+
+                offers.add(offer);
+            } while (cursor.moveToNext());
+        }*/

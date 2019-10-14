@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity
     LocationManager locationManager;
     LocationListener locationListener;
     double latitude, longitude;
+    boolean isPosted = true;
 
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
@@ -368,8 +369,18 @@ public class MainActivity extends AppCompatActivity
                                 if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                     openPasswordDialog(5);
                                 } else {
-                                    ImportJason obj = new ImportJason(MainActivity.this);
-                                    obj.startParsing();
+
+                                    isPosted=mDbHandler.isAllVoucher_posted();
+                                    if(isPosted==true)
+                                    {
+                                        ImportJason obj = new ImportJason(MainActivity.this);
+                                        obj.startParsing();
+                                    }
+                                    else{
+                                        Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+
+
+                                    }
 
 
                                 }
@@ -377,72 +388,6 @@ public class MainActivity extends AppCompatActivity
                             {
                                 Toast.makeText(MainActivity.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
                             }
-
-
-//                            transactions = mDbHandler.getAlltransactions();
-//                            for (int i = 0; i < transactions.size(); i++)
-//                                if (transactions.get(i).getIsPosted() == 0)
-//                                {
-//                                    sum_chech_export_lists++;
-//                                    Log.e("sumExport",""+sum_chech_export_lists);
-//                                    break ;//  sum=1
-//
-//                                }
-//                            vouchers = mDbHandler.getAllVouchers();
-//                            for (int i = 0; i < vouchers.size(); i++)
-//                                if (vouchers.get(i).getIsPosted() == 0)
-//                                {
-//                                    sum_chech_export_lists++;//  sum=1
-//                                    break;
-//                                }
-//
-//                            items = mDbHandler.getAllItems();
-//                            for (int i = 0; i < items.size(); i++)
-//                                if (items.get(i).getIsPosted() == 0) {
-//                                    sum_chech_export_lists++;//  sum=2
-//                                    break;
-//                                }
-//                            payments = mDbHandler.getAllPayments();
-//
-//                            for (int i = 0; i < payments.size(); i++)
-//                                if (payments.get(i).getIsPosted() == 0) {
-//                                    sum_chech_export_lists++;//  sum=4
-//                                    Log.e("sumExport",""+sum_chech_export_lists);
-//                                    break;
-//
-//                                }
-//
-//                            paymentsPaper = mDbHandler.getAllPaymentsPaper();
-//
-//                            for (int i = 0; i < paymentsPaper.size(); i++)
-//                                if (paymentsPaper.get(i).getIsPosted() == 0) {
-//                                    sum_chech_export_lists++;//  sum=5
-//                                    break;
-//
-//                                }
-//
-//                            addedCustomer = mDbHandler.getAllAddedCustomer();
-//
-//                            for (int i = 0; i < addedCustomer.size(); i++)
-//                                if (addedCustomer.get(i).getIsPosted() == 0) {
-//                                    sum_chech_export_lists++;//  sum=6
-//                                    Log.e("sumExport",""+sum_chech_export_lists);
-//                                    break;
-//
-//                                }
-//                            if(sum_chech_export_lists>0)
-//                            {
-//                                Toast.makeText(MainActivity.this, "Please Do Export All Data Before importing the data ", Toast.LENGTH_SHORT).show();
-//                                sum_chech_export_lists=0;
-//
-//
-//                            }
-//                            else {
-////                                Log.e("sumExport",""+sum_chech_export_lists);
-//                                openPasswordDialog(5);
-//
-//
-//                            }
 
 
 
@@ -788,8 +733,19 @@ public class MainActivity extends AppCompatActivity
                         openPrintSetting();
                     }
                     else if (flag == 5) {
-                        ImportJason obj = new ImportJason(MainActivity.this);
-                        obj.startParsing();
+
+                        isPosted=mDbHandler.isAllVoucher_posted();
+                        if(isPosted==true)
+                        {
+                            ImportJason obj = new ImportJason(MainActivity.this);
+                            obj.startParsing();
+                        }
+                        else{
+
+                            Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+
+
+                        }
 
                     }
                     else if (flag == 6) {

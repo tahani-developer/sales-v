@@ -331,4 +331,11 @@
     <string name="warning_message"> تحذير </string>
     <string name="not_authoriz">     عفوا , رصيد العميل غير كافي ... </string>
     <string name="change_qty">تعديل الكمية</string>
+    <string name="failImpo_export_data">
+    قم بتصدير البيانات قبل استيراد بيانات جديدة
+
+    </string>
+    <string name="failStockSoft_export_data">
+         قم بترحيل الفواتير في برنامج المستودعات لاستيراد بيانات جديدة
+    </string>
 </resources>
