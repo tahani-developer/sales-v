@@ -276,9 +276,9 @@ public class CashReport  extends AppCompatActivity {
 //                                                             lk32.setChecked(true);
 
 
-                                        Intent O= new Intent(CashReport.this, bMITP.class);
-                                        O.putExtra("printKey", "3");
-                                        startActivity(O);
+                                        Intent O1= new Intent(CashReport.this, bMITP.class);
+                                        O1.putExtra("printKey", "3");
+                                        startActivity(O1);
 
                                         break;
                                     case 3:
@@ -294,6 +294,13 @@ public class CashReport  extends AppCompatActivity {
                                     case 4:
                                         printTally();
                                         break;
+                                    case 5:
+                                        Intent O= new Intent(CashReport.this, bMITP.class);
+                                        O.putExtra("printKey", "3");
+                                        startActivity(O);
+
+                                        break;
+
 
                                 }
                             } else {

@@ -305,6 +305,19 @@ public class PrintPayment extends AppCompatActivity {
                                                                 printTally(pay);
                                                                 break;
 
+
+                                                            case 5:
+
+
+                                                                paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
+                                                                pay1 = pay;
+                                                                Intent O1 = new Intent(PrintPayment.this, bMITP.class);
+                                                                O1.putExtra("printKey", "4");
+                                                                startActivity(O1);
+                                                                Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
+
+//                                                                MTP.setChecked(true);
+
                                                         }
                                                     }
                                                     catch(Exception e){

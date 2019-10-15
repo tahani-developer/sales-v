@@ -608,7 +608,7 @@ public class ESCPSample2
 						if (itemforPrint.get(i).getItemName().length() <= 12) {
 							String space = itemforPrint.get(i).getItemName();
 							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
-								space = " " + space;
+								space =  space+" " ;
 							}
 							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
@@ -639,7 +639,7 @@ public class ESCPSample2
 						if (itemforPrint.get(i).getItemName().length() <= 12) {
 							String space = itemforPrint.get(i).getItemName();
 							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
-								space = " " + space;
+								space =  space+" ";
 							}
 							char nam=itemforPrint.get(i).getItemName().charAt(0);
 							if(!ifEnglish(nam)){

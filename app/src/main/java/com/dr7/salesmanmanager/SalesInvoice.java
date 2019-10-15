@@ -631,9 +631,9 @@ public class SalesInvoice extends Fragment {
 //                                   e.printStackTrace();
 //                               }
 //                                                             lk32.setChecked(true);
-                               Intent O= new Intent(getActivity().getBaseContext(), bMITP.class);
-                              O.putExtra("printKey", "1");
-                               startActivity(O);
+                               Intent O1= new Intent(getActivity().getBaseContext(), bMITP.class);
+                              O1.putExtra("printKey", "1");
+                               startActivity(O1);
 
 
                                break;
@@ -649,6 +649,17 @@ public class SalesInvoice extends Fragment {
                                break;
                            case 4:
                                printTally(voucher);
+                               break;
+
+
+                           case 5:
+
+//                                                             MTP.setChecked(true);
+                               Intent O= new Intent(getActivity().getBaseContext(), bMITP.class);
+                               O.putExtra("printKey", "1");
+                               startActivity(O);
+
+
                                break;
 
                        }
