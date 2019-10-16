@@ -150,7 +150,7 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
             }
 
-            return "Finish Store";
+            return "";
         }
 
         @Override
@@ -171,7 +171,7 @@ public class ImportJason extends AppCompatActivity{
                 Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
 
             }
-            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
         }
     }
 
