@@ -469,9 +469,9 @@ public class ReceiptVoucher extends Fragment {
 //                                                    e.printStackTrace();
 //                                                }
 
-                                                Intent O = new Intent(getActivity(), bMITP.class);
-                                                O.putExtra("printKey", "2");
-                                                startActivity(O);
+                                                Intent O1 = new Intent(getActivity(), bMITP.class);
+                                                O1.putExtra("printKey", "2");
+                                                startActivity(O1);
 //                                                             lk32.setChecked(true);
                                                 break;
                                             case 3:
@@ -486,6 +486,14 @@ public class ReceiptVoucher extends Fragment {
                                                 break;
                                             case 4:
                                                 printTally();
+                                                break;
+                                            case 5:
+
+
+                                                Intent O = new Intent(getActivity(), bMITP.class);
+                                                O.putExtra("printKey", "2");
+                                                startActivity(O);
+//                                                             MTP.setChecked(true);
                                                 break;
 
                                         }
@@ -613,6 +621,15 @@ public class ReceiptVoucher extends Fragment {
                                     case 4:
                                         printTally();
                                         break;
+
+                                    case 5:
+
+                                        Intent O1 = new Intent(getActivity(), bMITP.class);
+                                        O1.putExtra("printKey", "2");
+                                        startActivity(O1);
+
+                                        break;
+//                                                             MTP.setChecked(true);
 
                                 }
 

@@ -298,6 +298,16 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 printTally(vouch);
                                                                 break;
 
+                                                            case 5:
+
+                                                                vouch1 = vouch;
+                                                                Intent o1 = new Intent(PrintVoucher.this, bMITP.class);
+                                                                o1.putExtra("printKey", "0");
+                                                                startActivity(o1);
+
+
+                                                                break;
+
                                                         }
                                                     }
                                                     catch(Exception e){
@@ -1110,7 +1120,7 @@ public class PrintVoucher extends AppCompatActivity {
         final Dialog dialogs = new Dialog(PrintVoucher.this);
         dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogs.setCancelable(false);
-        dialogs.setContentView(R.layout.printdialog_tally);
+        dialogs.setContentView(R.layout.printdialog);
 //            fill_theVocher( voucher);
 
 
