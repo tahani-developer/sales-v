@@ -427,12 +427,14 @@ public class bMITP extends Activity {
 
                       case 0:
                           for(int i=0;i<settings;i++) {
-                              sample.printMultilingualFontEsc(0);
+//                              sample.printMultilingualFontEsc(0);
+                              sample.printMultilingualFontEsc3(0);
                           }
                           break;
                       case 1:
                           for(int i=0;i<settings;i++) {
-                              sample.printMultilingualFontEsc(1);
+//                              sample.printMultilingualFontEsc(1);
+                              sample.printMultilingualFontEsc3(1);
                           }
                           break;
 

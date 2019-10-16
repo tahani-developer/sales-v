@@ -5,11 +5,19 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
@@ -52,11 +60,13 @@ public class ESCPSample2
 	DecimalFormat decimalFormat;
 	List<Payment>payList;
 	Payment payforBank;
+	Context context;
 	public ESCPSample2(Context context)
 	{
 		posPtr = new ESCPOSPrinter();
 		obj = new DatabaseHandler(context);
 		decimalFormat = new DecimalFormat("00.00");
+		this.context=context;
 //		posPtr = new ESCPOSPrinter("EUC-KR"); // Korean.
 //		posPtr = new ESCPOSPrinter("BIG5"); // Big5
 	}
@@ -638,13 +648,16 @@ public class ESCPSample2
 
 						if (itemforPrint.get(i).getItemName().length() <= 12) {
 							String space = itemforPrint.get(i).getItemName();
-							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
-								space =  space+" ";
+							int m=(12 - itemforPrint.get(i).getItemName().length());
+							Log.e("true22",""+m);
+
+							for (int g = 0; g <m ; g++) {
+								space =  space+"   ";
 							}
 							char nam=itemforPrint.get(i).getItemName().charAt(0);
 							if(!ifEnglish(nam)){
 								Log.e("true22",""+nam);
-								posPtr.printAndroidFont(null,true,  space + "  " + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+								posPtr.printAndroidFont(null,true,  space + "     " + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 							}else {
 								Log.e("false22",""+nam);
 								posPtr.printAndroidFont(null,true,  convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\t\t\t\t" +itemforPrint.get(i).getPrice()  + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" +space + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
@@ -652,15 +665,15 @@ public class ESCPSample2
 							}
 
 						} else {
-							String space = itemforPrint.get(i).getItemName().substring(0, 10);
+							String space = itemforPrint.get(i).getItemName().substring(0, 12);
 //                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
 //                            space = " " + space;
 //                        }
-							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+							String fullString = itemforPrint.get(i).getItemName().substring(12, itemforPrint.get(i).getItemName().length() - 1);
 
 							char nam=itemforPrint.get(i).getItemName().charAt(0);
 							if(!ifEnglish(nam)) {
-								posPtr.printAndroidFont( null,true,  space + "\t\t\t\t"  + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+								posPtr.printAndroidFont( null,true,  space + "     "  + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 								Log.e("true233",""+nam);
 							}else {
 								posPtr.printAndroidFont( null,true,  convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\t\t\t\t"  +itemforPrint.get(i).getPrice()  + "\t\t\t\t" +itemforPrint.get(i).getQty()  + "\t\t\t\t" +space  + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
@@ -692,9 +705,298 @@ public class ESCPSample2
 
 	}
 
+	public void printMultilingualFontEsc2(int count) throws UnsupportedEncodingException {
+		if (count == 0) {
+			voucherforPrint = vouch1;
+			itemforPrint = items;
+		} else {
+			voucherforPrint = voucher;
+			itemforPrint = itemForPrint;
+		}
+		int nLineWidth = 550;
+		double total_Qty=0;
+
+		try {
+
+			String voucherTyp = "";
+			switch (voucherforPrint.getVoucherType()) {
+				case 504:
+					voucherTyp = "فاتورة بيع";
+					break;
+				case 506:
+					voucherTyp = "فاتورة مرتجعات";
+					break;
+				case 508:
+					voucherTyp = "طلب جديد";
+					break;
+			}
+
+			posPtr.setAsync(false);
+			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//			public int printAndroidFont(Typeface typeface, boolean isBold, String textString, int widthDots, int textSize, int alignment)
+			posPtr.printBitmap(companyInfo.getLogo(),ESCPOSConst.LK_ALIGNMENT_CENTER,150);
+
+//			posPtr.printAndroidFont(null,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+"    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(null,true,"اسم العميل   : " + voucherforPrint.getCustName() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(null,true,"ملاحظة        : " + voucherforPrint.getRemark() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(null,true,"نوع الفاتورة : " +voucherTyp+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(null,true,"طريقة الدفع  : " +  (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا")+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+			if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+				total_Qty=0;
+				posPtr.printAndroidFont(null,true," السلعة              " + "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" +  "سعر الوحدة" + "\t\t\t" +"المجموع" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+				posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 
+				for (int i = 0; i < itemforPrint.size(); i++) {
+					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+						total_Qty+=itemforPrint.get(i).getQty();
 
+						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+						if (itemforPrint.get(i).getItemName().length() <= 12) {
+							String space = itemforPrint.get(i).getItemName();
+							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+								space =  space+" " ;
+							}
+							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+						} else {
+							String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//                            space = " " + space;
+//                        }
+							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+							posPtr.printAndroidFont( null,true,space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+						}
+
+
+					}
+				}
+			} else {
+				total_Qty=0;
+				posPtr.printAndroidFont(  null,true," السلعة              " + "العدد" + "\t\t\t" + "سعر الوحدة" + "\t\t\t" + "المجموع" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+				for (int i = 0; i < itemforPrint.size(); i++) {
+					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+						total_Qty+=itemforPrint.get(i).getQty();
+						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+
+						posPtr.printAndroidFont(null,true,  itemforPrint.get(i).getItemName()+"\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+						posPtr.printAndroidFont(null,true,   "   "+convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t\t\t\t\t" +itemforPrint.get(i).getQty() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                        posPtr.printAndroidFont(  null,true,"---------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+
+//						if (itemforPrint.get(i).getItemName().length() <= 12) {
+//							String space = itemforPrint.get(i).getItemName();
+//							int m=(12 - itemforPrint.get(i).getItemName().length());
+//							Log.e("true22",""+m);
+//
+//							for (int g = 0; g <m ; g++) {
+//								space =  space+"   ";
+//							}
+//							char nam=itemforPrint.get(i).getItemName().charAt(0);
+//							if(!ifEnglish(nam)){
+//								Log.e("true22",""+nam);
+//								posPtr.printAndroidFont(null,true,  itemforPrint.get(i).getItemName()+"\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//
+//								posPtr.printAndroidFont(null,true,   "\t\t\t\t\t\t\t"+itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//							}else {
+//								Log.e("false22",""+nam);
+//								posPtr.printAndroidFont(null,true,  convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\t\t\t\t" +itemforPrint.get(i).getPrice()  + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" +space + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+//
+//							}
+//
+//						} else {
+//							String space = itemforPrint.get(i).getItemName().substring(0, 12);
+////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+////                            space = " " + space;
+////                        }
+//							String fullString = itemforPrint.get(i).getItemName().substring(12, itemforPrint.get(i).getItemName().length() - 1);
+//
+//							char nam=itemforPrint.get(i).getItemName().charAt(0);
+//							if(!ifEnglish(nam)) {
+//								posPtr.printAndroidFont( null,true,  space + "     "  + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//								Log.e("true233",""+nam);
+//							}else {
+//								posPtr.printAndroidFont( null,true,  convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\t\t\t\t"  +itemforPrint.get(i).getPrice()  + "\t\t\t\t" +itemforPrint.get(i).getQty()  + "\t\t\t\t" +space  + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+//								Log.e("false233",""+nam);
+//
+//							}
+//						}
+
+					}
+				}
+
+			}
+
+//			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(  null,true, "اجمالي الكمية  : " + total_Qty + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "المجموع  : " + voucherforPrint.getSubTotal() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "الضريبة  : " + voucherforPrint.getTax() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "الصافي   : " + voucherforPrint.getNetSales() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true, "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ التوقيع : __________" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.lineFeed(4);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+	public void printMultilingualFontEsc3(int count) throws UnsupportedEncodingException {
+		if (count == 0) {
+			voucherforPrint = vouch1;
+			itemforPrint = items;
+		} else {
+			voucherforPrint = voucher;
+			itemforPrint = itemForPrint;
+		}
+		int nLineWidth = 550;
+		double total_Qty=0;
+
+		try {
+
+			String voucherTyp = "";
+			switch (voucherforPrint.getVoucherType()) {
+				case 504:
+					voucherTyp = "فاتورة بيع";
+					break;
+				case 506:
+					voucherTyp = "فاتورة مرتجعات";
+					break;
+				case 508:
+					voucherTyp = "طلب جديد";
+					break;
+			}
+
+			posPtr.setAsync(false);
+			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+			posPtr.printBitmap(companyInfo.getLogo(),ESCPOSConst.LK_ALIGNMENT_CENTER,150);
+
+			posPtr.printAndroidFont(null,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+"    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(null,true,"اسم العميل   : " + voucherforPrint.getCustName() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null,true,"ملاحظة        : " + voucherforPrint.getRemark() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null,true,"نوع الفاتورة : " +voucherTyp+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null,true,"طريقة الدفع  : " +  (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا")+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+			if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+				total_Qty=0;
+				posPtr.printAndroidFont(null,true," السلعة                          " + "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" +  "سعر الوحدة" + "\t\t\t" +"المجموع" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+				posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+
+				for (int i = 0; i < itemforPrint.size(); i++) {
+					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+						total_Qty+=itemforPrint.get(i).getQty();
+
+						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+						if (itemforPrint.get(i).getItemName().length() <= 12) {
+							String space = itemforPrint.get(i).getItemName();
+							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+								space =  space+" " ;
+							}
+							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+						} else {
+							String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//                            space = " " + space;
+//                        }
+							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+							posPtr.printAndroidFont( null,true,space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+						}
+
+
+					}
+				}
+			} else {
+				total_Qty=0;
+				posPtr.printAndroidFont(  null,true," السلعة                          " + "العدد" + "\t\t\t" + "سعر الوحدة" + "\t\t\t" + "المجموع" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+				for (int i = 0; i < itemforPrint.size(); i++) {
+					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+						total_Qty+=itemforPrint.get(i).getQty();
+						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+		             	posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
+
+					}
+				}
+
+			}
+
+			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, "اجمالي الكمية  : " + total_Qty + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "المجموع  : " + voucherforPrint.getSubTotal() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "الضريبة  : " + voucherforPrint.getTax() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "الصافي   : " + voucherforPrint.getNetSales() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ التوقيع : __________" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.lineFeed(4);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
+
+Bitmap itemPrint (String prices,String totals,String qtys,String items){
+
+
+	final Dialog dialogs = new Dialog(context);
+	dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	dialogs.setCancelable(true);
+	dialogs.setContentView(R.layout.tabres);
+
+	TextView price,total,qty,item;
+
+	price=(TextView)dialogs.findViewById(R.id.price);
+	total=(TextView)dialogs.findViewById(R.id.total);
+	qty=(TextView)dialogs.findViewById(R.id.qty);
+	item=(TextView)dialogs.findViewById(R.id.ittem);
+	LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
+	price.setText(prices);
+	total.setText(totals);
+	qty.setText(qtys);
+	item.setText(items);
+
+	linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+			View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+	linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+	Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+	Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+	Canvas canvas = new Canvas(bitmap);
+	Drawable bgDrawable = linearView.getBackground();
+	if (bgDrawable != null) {
+		bgDrawable.draw(canvas);
+	} else {
+		canvas.drawColor(Color.WHITE);
+	}
+	linearView.draw(canvas);
+	return bitmap;
+
+}
 
 	public void printMultilingualFontPayCash(int count) throws UnsupportedEncodingException {
 
