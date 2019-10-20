@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -117,6 +118,7 @@ public class SalesInvoice extends Fragment {
     boolean isFinishPrint=false;
     double total_Qty=0.0;
     double totalQty_forPrint=0;
+    Voucher voucherShow;
 
     static String rowToBeUpdated[] = {"", "", "", "", "", "", "", ""};
 
@@ -631,6 +633,9 @@ public class SalesInvoice extends Fragment {
 //                                   e.printStackTrace();
 //                               }
 //                                                             lk32.setChecked(true);
+                               voucherShow=voucher;
+
+                               convertLayoutToImagew(getActivity());
                                Intent O1= new Intent(getActivity().getBaseContext(), bMITP.class);
                               O1.putExtra("printKey", "1");
                                startActivity(O1);
@@ -655,6 +660,8 @@ public class SalesInvoice extends Fragment {
                            case 5:
 
 //                                                             MTP.setChecked(true);
+                               voucherShow=voucher;
+                               convertLayoutToImage(voucher);
                                Intent O= new Intent(getActivity().getBaseContext(), bMITP.class);
                                O.putExtra("printKey", "1");
                                startActivity(O);
@@ -1439,6 +1446,172 @@ public class SalesInvoice extends Fragment {
         for (int j = 0; j < itemsList.size(); j++) {
 
             if (voucher.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
+                final TableRow row = new TableRow(getActivity());
+
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(getActivity());
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+
+                    switch (i) {
+                        case 0:
+                            textView.setText(itemsList.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+
+                        case 1:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getUnit());
+                                textView.setLayoutParams(lp2);
+                            } else {
+                                textView.setText("" + itemsList.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                            }
+                            break;
+
+                        case 2:
+                            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + itemsList.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            } else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
+                            textView.setText("" + itemsList.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+
+                        case 4:
+                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(""+convertToEnglish(threeDForm.format(Double.parseDouble(amount))));
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+
+                tabLayout.addView(row);
+            }
+        }
+        dialogs.show();
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit = linearView.getDrawingCache();
+        return bit;
+        // creates bitmap and returns the same
+    }
+
+    public Bitmap convertLayoutToImagew(Context context) {
+        LinearLayout linearView = null;
+
+        final Dialog dialogs = new Dialog(context);
+        dialogs.setContentView(R.layout.printdialog);
+        dialogs.setCanceledOnTouchOutside(true);
+        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
+
+        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
+        compname = (TextView) dialogs.findViewById(R.id.compname);
+        tel = (TextView) dialogs.findViewById(R.id.tel);
+        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
+        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
+        date = (TextView) dialogs.findViewById(R.id.date);
+        custname = (TextView) dialogs.findViewById(R.id.custname);
+        note = (TextView) dialogs.findViewById(R.id.note);
+        vhType = (TextView) dialogs.findViewById(R.id.vhType);
+        paytype = (TextView) dialogs.findViewById(R.id.paytype);
+        total = (TextView) dialogs.findViewById(R.id.total);
+        discount = (TextView) dialogs.findViewById(R.id.discount);
+        tax = (TextView) dialogs.findViewById(R.id.tax);
+        ammont = (TextView) dialogs.findViewById(R.id.ammont);
+        textW = (TextView) dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
+//
+
+        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+
+        String voucherTyp = "";
+        switch (voucherShow.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+
+        img.setImageBitmap(companyInfo.getLogo());
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        vhNo.setText("" + voucherShow.getVoucherNumber());
+        date.setText(voucherShow.getVoucherDate());
+        custname.setText(voucherShow.getCustName());
+        note.setText(voucherShow.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucherShow.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+        total.setText("" + voucherShow.getSubTotal());
+        discount.setText("" + voucherShow.getTotalVoucherDiscount());
+        tax.setText("" + voucherShow.getTax());
+        ammont.setText("" + voucherShow.getNetSales());
+
+
+        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        } else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = 0; j < itemsList.size(); j++) {
+
+            if (voucherShow.getVoucherNumber() == itemsList.get(j).getVoucherNumber()) {
                 final TableRow row = new TableRow(getActivity());
 
 
