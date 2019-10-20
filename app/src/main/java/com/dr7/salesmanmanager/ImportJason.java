@@ -77,9 +77,9 @@ public class ImportJason extends AppCompatActivity{
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
 //            if(start==true) {
-                new JSONTask().execute(URL_TO_HIT);
+//                new JSONTask().execute(URL_TO_HIT);
 //            }
 //            else{
 //                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
@@ -163,6 +163,14 @@ public class ImportJason extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            if(start==true)
+            {
+                new JSONTask().execute(URL_TO_HIT);
+            }
+            else{
+                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
+
+            }
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
         }
     }
