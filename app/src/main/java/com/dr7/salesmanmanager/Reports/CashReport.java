@@ -275,6 +275,7 @@ public class CashReport  extends AppCompatActivity {
 //                                        }
 //                                                             lk32.setChecked(true);
 
+                                        convertLayoutToImage();
 
                                         Intent O1= new Intent(CashReport.this, bMITP.class);
                                         O1.putExtra("printKey", "3");
@@ -295,6 +296,7 @@ public class CashReport  extends AppCompatActivity {
                                         printTally();
                                         break;
                                     case 5:
+                                        convertLayoutToImage();
                                         Intent O= new Intent(CashReport.this, bMITP.class);
                                         O.putExtra("printKey", "3");
                                         startActivity(O);

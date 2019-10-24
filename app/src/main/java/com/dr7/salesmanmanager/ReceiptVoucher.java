@@ -468,7 +468,7 @@ public class ReceiptVoucher extends Fragment {
 //                                                } catch (IOException e) {
 //                                                    e.printStackTrace();
 //                                                }
-
+                                                convertLayoutToImage(getActivity());
                                                 Intent O1 = new Intent(getActivity(), bMITP.class);
                                                 O1.putExtra("printKey", "2");
                                                 startActivity(O1);
@@ -489,7 +489,7 @@ public class ReceiptVoucher extends Fragment {
                                                 break;
                                             case 5:
 
-
+                                                convertLayoutToImage(getActivity());
                                                 Intent O = new Intent(getActivity(), bMITP.class);
                                                 O.putExtra("printKey", "2");
                                                 startActivity(O);
@@ -603,6 +603,7 @@ public class ReceiptVoucher extends Fragment {
 //                                        }
 //                                                             lk32.setChecked(true);
 
+                                        convertLayoutToImage(getActivity());
                                         Intent O = new Intent(getActivity(), bMITP.class);
                                         O.putExtra("printKey", "2");
                                         startActivity(O);
@@ -623,7 +624,7 @@ public class ReceiptVoucher extends Fragment {
                                         break;
 
                                     case 5:
-
+                                        convertLayoutToImage(getActivity());
                                         Intent O1 = new Intent(getActivity(), bMITP.class);
                                         O1.putExtra("printKey", "2");
                                         startActivity(O1);
@@ -862,7 +863,7 @@ public class ReceiptVoucher extends Fragment {
     void send_dataSewoo() throws IOException {
         try {
             Log.e("send","'yes");
-            testB =convertLayoutToImage();
+            testB =convertLayoutToImage(getActivity());
 
             printPic = PrintPic.getInstance();
             printPic.init(testB);
@@ -929,7 +930,7 @@ public class ReceiptVoucher extends Fragment {
     }
 
 
-    private Bitmap convertLayoutToImage() {
+    public Bitmap convertLayoutToImage(Context context) {
         LinearLayout linearView=null;
 
         final Dialog dialogs=new Dialog(getActivity());

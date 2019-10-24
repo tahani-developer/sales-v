@@ -183,9 +183,10 @@
             android:name=".bMITP"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"
+        android:theme="@android:style/Theme.Dialog"
             android:excludeFromRecents="true"
             />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

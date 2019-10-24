@@ -282,6 +282,7 @@ public class PrintPayment extends AppCompatActivity {
 
                                                                 paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
                                                                 pay1 = pay;
+                                                                convertLayoutToImage(pay);
                                                                 Intent O = new Intent(PrintPayment.this, bMITP.class);
                                                                 O.putExtra("printKey", "4");
                                                                 startActivity(O);
@@ -311,6 +312,7 @@ public class PrintPayment extends AppCompatActivity {
 
                                                                 paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
                                                                 pay1 = pay;
+                                                                convertLayoutToImage(pay);
                                                                 Intent O1 = new Intent(PrintPayment.this, bMITP.class);
                                                                 O1.putExtra("printKey", "4");
                                                                 startActivity(O1);
