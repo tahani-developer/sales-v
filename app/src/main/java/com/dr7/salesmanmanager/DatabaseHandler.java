@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -16,6 +19,7 @@ import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
+import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
@@ -44,12 +48,23 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 64;
+    private static final int DATABASE_VERSION = 66;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+//----------------------------------------------------------------------
+    private static final String ITEMS_QTY_OFFER  = "ITEMS_QTY_OFFER";
+
+    private static final String ITEMNAME = "ITEMNAME";
+    private static final String ITEMNO = "ITEMNO";
+    private static final String AMOUNT_QTY = "AMOUNT_QTY";
+    private static final String FROMDATE = "FROMDATE";
+    private static final String TODATE = "TODATE";
+    private static final String DISCOUNT = "DISCOUNT";
+
+    //------------------------------------------------------------------
     private static final String QTY_OFFERS="QTY_OFFERS";
     private static final String QTY ="QTY";
     private static final String DISCOUNT_VALUE ="DISCOUNT_VALUE";
@@ -343,6 +358,15 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+                + ITEMNAME + " TEXT,"
+                + ITEMNO + " INTEGER,"
+                + AMOUNT_QTY + " INTEGER,"
+                + FROMDATE + " TEXT,"
+                + TODATE + " TEXT,"
+                + DISCOUNT + " REAL" + ")";
+        db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
@@ -864,7 +888,45 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
 
+        try {
+            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+                    + ITEMNAME + " TEXT,"
+                    + ITEMNO + " INTEGER,"
+                    + AMOUNT_QTY + " INTEGER,"
+                    + FROMDATE + " TEXT,"
+                    + TODATE + " TEXT,"
+                    + DISCOUNT + " REAL" + ")";
+            db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
+        }
+          catch (Exception e) {
+                Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
+            }
+
+
     }
+    public void add_Items_Qty_Offer(ItemsQtyOffer itemsQtyOffer)
+    {
+        try {
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(ITEMNAME, itemsQtyOffer.getItem_name());
+            values.put(ITEMNO, itemsQtyOffer.getItem_no());
+            values.put(AMOUNT_QTY, itemsQtyOffer.getItemQty());
+            values.put(FROMDATE, itemsQtyOffer.getFromDate());
+            values.put(TODATE, itemsQtyOffer.getToDate());
+            values.put(DISCOUNT, itemsQtyOffer.getDiscount_value());
+            db.insert(ITEMS_QTY_OFFER, null, values);
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+
+
+
     public void addQtyOffers(QtyOffers qtyOffers)
     {
         db = this.getReadableDatabase();
@@ -1536,6 +1598,34 @@ DatabaseHandler extends SQLiteOpenHelper {
         return customers;
     }
 
+    // get customer cridit limit and cash credit balance  by customer No
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public List<Customer> getCustomer_byNo(String number) {
+        List<Customer> customer_balance = new ArrayList<Customer>();
+        String selectQuery = " SELECT  CASH_CREDIT , CREDIT_LIMIT from "+ CUSTOMER_MASTER +" where CUS_ID ='"+ number +"'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Customer customer = new Customer();
+
+                customer.setCashCredit(Integer.parseInt(cursor.getString(0)));
+                customer.setCreditLimit(Double.parseDouble(cursor.getString(1)));
+//
+                customer_balance.add(customer);
+                Log.e("CASH_CREDIT",""+customer_balance.get(0).getCashCredit());
+                Log.e("CREDIT_LIMIT",""+customer_balance.get(0).getCreditLimit());
+            } while (cursor.moveToNext());
+        }
+        return customer_balance;
+    }
+
+
+
+
+
     public List<Customer> getCustomersBySalesMan(String salesMan) {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query
@@ -1919,6 +2009,39 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 //        Log.e("keyvalue", "Db" + keyvalue);
         return keyvalue;
+    }
+
+    public List<ItemsQtyOffer> getItemsQtyOffer() {
+        List<ItemsQtyOffer> itemsQtyOffers = new ArrayList<>();
+        String selectQuery = "select * from " + ITEMS_QTY_OFFER;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+
+                    ItemsQtyOffer new_Value_Qty_offers = new ItemsQtyOffer();
+                    new_Value_Qty_offers.setItem_name((cursor.getString(0)));
+                    new_Value_Qty_offers.setItem_no(cursor.getString(1));
+                    new_Value_Qty_offers.setItemQty(Double.parseDouble(cursor.getString(2)));
+                    new_Value_Qty_offers.setFromDate(cursor.getString(3));
+                    new_Value_Qty_offers.setToDate(cursor.getString(4));
+                    new_Value_Qty_offers.setDiscount_value(Double.parseDouble(cursor.getString(5)));
+
+
+                    itemsQtyOffers.add(new_Value_Qty_offers);
+                } catch (NumberFormatException e) {
+                    Log.e("getitemsQtyOffers", "NumberFormatException" + e.getMessage());
+                } catch (Exception e) {
+                    Log.e("getitemsQtyOffers", "" + e.getMessage());
+
+
+                }
+
+            } while (cursor.moveToNext());
+        }
+
+        return itemsQtyOffers;
     }
 
     public List<QtyOffers> getDiscountOffers()
@@ -2557,6 +2680,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + PAYMENTS + " where IS_POSTED = '1' ");
         db.execSQL("delete from " + PAYMENTS_PAPER + " where IS_POSTED = '1' ");
         db.close();
+    }
+    public  void  deletItemsOfferQty(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEMS_QTY_OFFER);
+        db.close();
+
+
     }
     public List<Payment> getAllPayments_customerNo( String CustomerNo) {
 

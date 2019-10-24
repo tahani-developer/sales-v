@@ -78,6 +78,7 @@ public class AddItemsFragment2 extends DialogFragment {
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
+        getDialog().setCancelable(false);
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
@@ -175,6 +176,7 @@ public class AddItemsFragment2 extends DialogFragment {
         this.listener = null;
     }
 
+
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
@@ -197,92 +199,95 @@ public class AddItemsFragment2 extends DialogFragment {
             TextView messageTextView = (TextView) group.getChildAt(0);
             messageTextView.setTextSize(15);
             toast.show();
+
             return false;
         }
+//        else {
 
-        item = new Item();
-        item.setItemNo(itemNumber);
-        item.setItemName(itemName);
-        item.setTax(Float.parseFloat(tax.trim()));
-        item.setCategory(category);
-
-        try {
-            item.setUnit(unit);
-            //****************************
-            item.setQty(Float.parseFloat(qty));
-            total_items_quantity+=item.getQty();
-            totalQty_textView.setText("+ "+total_items_quantity);
-            Log.e("setQty",""+Float.parseFloat(qty));
-            Log.e("total_items_quantity",""+total_items_quantity);
-            item.setPrice(Float.parseFloat(price.trim()));
-            if (bonus == "")
-                item.setBonus(Float.parseFloat("0.0"));
-            else
-                item.setBonus(Float.parseFloat(bonus));
+            item = new Item();
+            item.setItemNo(itemNumber);
+            item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
-            item.setPosPrice(Float.parseFloat(posPrice.trim()));
+            item.setCategory(category);
 
-        } catch (NumberFormatException e) {
-            item.setUnit("");
-            item.setQty(0);
-            item.setPrice(0);
-            item.setBonus(0);
-            item.setDisc(0);
-            item.setDiscPerc("0");
-            item.setAmount(0);
-            Log.e("Add new item error", e.getMessage().toString());
-        }
+            try {
+                item.setUnit(unit);
+                //****************************
+                item.setQty(Float.parseFloat(qty));
+                total_items_quantity += item.getQty();
+                totalQty_textView.setText("+ " + total_items_quantity);
+                Log.e("setQty", "" + Float.parseFloat(qty));
+                Log.e("total_items_quantity", "" + total_items_quantity);
+                item.setPrice(Float.parseFloat(price.trim()));
+                if (bonus == "")
+                    item.setBonus(Float.parseFloat("0.0"));
+                else
+                    item.setBonus(Float.parseFloat(bonus));
+                item.setTax(Float.parseFloat(tax.trim()));
+                item.setPosPrice(Float.parseFloat(posPrice.trim()));
 
-
-        if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-            item.setDiscType(1);
-        } else {
-            item.setDiscType(0);
-        }
-
-        try {
-            if (item.getDiscType() == 0) {
-                item.setDisc(Float.parseFloat(discount.trim()));
-                item.setDiscPerc((item.getQty() * item.getPrice() *
-                        (Float.parseFloat(discount.trim()) / 100)) + "");
-
-            } else {
-                item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
-                item.setDisc(item.getQty() * item.getPrice() *
-                        (Float.parseFloat(discount.trim())) / 100);
+            } catch (NumberFormatException e) {
+                item.setUnit("");
+                item.setQty(0);
+                item.setPrice(0);
+                item.setBonus(0);
+                item.setDisc(0);
+                item.setDiscPerc("0");
+                item.setAmount(0);
+                Log.e("Add new item error", e.getMessage().toString());
             }
-            descPerc = ((item.getQty() * item.getPrice() *
-                    (Float.parseFloat(discount.trim()) / 100)));
 
 
-        } catch (NumberFormatException e) {
-            item.setDisc(0);
-            item.setDiscPerc("0");
-        }
+            if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
+                item.setDiscType(1);
+            } else {
+                item.setDiscType(0);
+            }
 
-        try {
-            if (item.getDiscType() == 0) {
+            try {
+                if (item.getDiscType() == 0) {
+                    item.setDisc(Float.parseFloat(discount.trim()));
+                    item.setDiscPerc((item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim()) / 100)) + "");
 
-                itemGroup = item.getCategory();
+                } else {
+                    item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
+                    item.setDisc(item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim())) / 100);
+                }
+                descPerc = ((item.getQty() * item.getPrice() *
+                        (Float.parseFloat(discount.trim()) / 100)));
+
+
+            } catch (NumberFormatException e) {
+                item.setDisc(0);
+                item.setDiscPerc("0");
+            }
+
+            try {
+                if (item.getDiscType() == 0) {
+
+                    itemGroup = item.getCategory();
 
                 /*if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
                     item.setAmount(item.getQty() * (float)item.getPosPrice()  - item.getDisc());
                 else*/
 
 
-                item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
+                    item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
 
-                Log.e("log =" , item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
+                    Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
-            } else {
+                } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
-                item.setAmount(item.getQty() * item.getPrice() - descPerc);
-                Log.e("log ==" , item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                    item.setAmount(item.getQty() * item.getPrice() - descPerc);
+                    Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                }
+            } catch (NumberFormatException e) {
+                item.setAmount(0);
             }
-        } catch (NumberFormatException e) {
-            item.setAmount(0);
-        }
+//        }
 
 
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
@@ -307,4 +312,6 @@ public class AddItemsFragment2 extends DialogFragment {
         }
     }
 
+
 }
+
