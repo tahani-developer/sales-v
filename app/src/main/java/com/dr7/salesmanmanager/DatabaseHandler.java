@@ -2818,4 +2818,47 @@ DatabaseHandler extends SQLiteOpenHelper {
          }
          return true;
      }
+
+    public double getMinOfferQty(double total) {
+        String selectQuery = "SELECT MAX (AMOUNT_QTY) FROM " + ITEMS_QTY_OFFER+
+                " WHERE '"+total+"' >= AMOUNT_QTY";
+        double limitOffer=0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                limitOffer=cursor.getDouble(0);
+                Log.e("limitDB",""+limitOffer);
+
+            } while (cursor.moveToNext());
+        }
+
+        return limitOffer;
+    }
+
+    public double getDiscValue_From_ItemsQtyOffer(String itemNo, double total_items_quantity) {
+        String selectQuery = "SELECT DISCOUNT FROM " + ITEMS_QTY_OFFER +
+                " WHERE ITEMNO =  '"+itemNo+"'  and  AMOUNT_QTY = '"+total_items_quantity+"'";
+
+        double discount_value=0;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                discount_value=cursor.getDouble(0);
+                Log.e("discount_value",""+discount_value+"\t"+itemNo);
+
+            } while (cursor.moveToNext());
+        }
+
+        return discount_value;
+
+
+
+
+
+    }
 }

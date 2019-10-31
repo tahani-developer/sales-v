@@ -75,6 +75,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -84,6 +85,7 @@ import java.util.UUID;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
+import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
 
 public class SalesInvoice extends Fragment {
@@ -145,6 +147,7 @@ public class SalesInvoice extends Fragment {
     OutputStream mmOutputStream;
     InputStream mmInputStream;
     Thread workerThread;
+    List<ItemsQtyOffer> offers_ItemsQtyOffer;
 
 
     byte[] readBuffer;
@@ -187,6 +190,7 @@ public class SalesInvoice extends Fragment {
     SimpleDateFormat df,df2;
     String voucherDate,voucherYear;
     CompanyInfo companyInfo;
+    double limit_offer=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -205,7 +209,7 @@ public class SalesInvoice extends Fragment {
         df2 = new SimpleDateFormat("yyyy");
        voucherYear = df2.format(currentTimeAndDate);
         voucherYear = convertToEnglish(voucherYear);
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("00.00");
         mDbHandler = new DatabaseHandler(getActivity());
         list_discount_offers=new ArrayList<>();
         itemsQtyOfferList=new ArrayList<>();
@@ -229,6 +233,7 @@ public class SalesInvoice extends Fragment {
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
+        discountButton.setVisibility(View.GONE);
         pic = (ImageView) view.findViewById(R.id.pic_sale);
         discTextView = (TextView) view.findViewById(R.id.discTextView);
 
@@ -250,6 +255,11 @@ public class SalesInvoice extends Fragment {
         custInfoImgButton.setVisibility(View.INVISIBLE);
         connect.setVisibility(View.INVISIBLE);
         companyInfo=new CompanyInfo();
+        offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
+        limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
+        Log.e("limit_sales",""+limit_offer);
+
+
 
         if (MainActivity.checknum == 1)
             Customer_nameSales.setText(CustomerListShow.Customer_Name.toString());
@@ -386,6 +396,7 @@ public class SalesInvoice extends Fragment {
                             sum_discount=0;
                             clearLayoutData();
                         }
+                        calculateTotals();
 
                         break;
                     case R.id.cashRadioButton:
@@ -400,6 +411,7 @@ public class SalesInvoice extends Fragment {
                             sum_discount=0;
                             clearLayoutData();
                         }
+                        calculateTotals();
                         break;
                 }
             }
@@ -756,6 +768,9 @@ public class SalesInvoice extends Fragment {
             return false;
 
     }
+    double updaQty=0,currentDisc=0;
+    float disount_totalnew=0;
+    Offers appliedOffer = null;
 
     public OnItemLongClickListener onItemLongClickListener =
             new AdapterView.OnItemLongClickListener() {
@@ -773,8 +788,10 @@ public class SalesInvoice extends Fragment {
                                     total_items_quantity-=items.get(position).getQty();
                                     totalQty_textView.setText("+"+total_items_quantity);
                                     items.remove(position);
+
                                     itemsListView.setAdapter(itemsListAdapter);
                                     calculateTotals();
+
 //                                    clearLayoutData();
 
                                     break;
@@ -788,6 +805,8 @@ public class SalesInvoice extends Fragment {
 //                                    rowToBeUpdated[5] = items.get(position).getDiscPerc().replaceAll("[%:,]","");
 //                                    rowToBeUpdated[6] = items.get(position).getDiscType() + "";
 //                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
+
+
 
 
                                     final Dialog dialog = new Dialog(getActivity());
@@ -816,6 +835,22 @@ public class SalesInvoice extends Fragment {
                                                 total_items_quantity-=items.get(position).getQty();
                                                 Log.e("total_itemsbefore",""+total_items_quantity);
                                                 items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
+                                                updaQty=Double.parseDouble(qty.getText().toString());
+//                                                currentDisc=items.get(position).getDisc();
+//                                                if(items.get(position).getDisc()!=0) {
+                                                List<Offers> offer = checkOffers(items.get(position).getItemNo());
+                                                if(offer.size()>0)
+                                                {
+                                                    appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
+                                                    if (appliedOffer != null) {
+
+                                                        disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
+                                                        items.get(position).setDisc(disount_totalnew);
+
+
+                                                    }
+                                                }
+
                                                 total_items_quantity+=items.get(position).getQty();
                                                 Log.e("total_itemsafter",""+total_items_quantity);
                                                 totalQty_textView.setText("+"+total_items_quantity);
@@ -823,9 +858,9 @@ public class SalesInvoice extends Fragment {
                                                     items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
                                                 else
                                                     items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
-
-                                                itemsListView.setAdapter(itemsListAdapter);
                                                 calculateTotals();
+                                                itemsListView.setAdapter(itemsListAdapter);
+
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
@@ -864,6 +899,62 @@ public class SalesInvoice extends Fragment {
     public int getIndex() {
         return index;
     }
+    private Offers getAppliedOffer(String itemNo, String qty, int flag) {
+
+        double qtyy = Double.parseDouble(qty);
+        List<Offers> offer = checkOffers(itemNo);
+
+        List<Double> itemQtys = new ArrayList<>();
+        for (int i = 0; i < offer.size(); i++) {
+            itemQtys.add(offer.get(i).getItemQty());
+        }
+        Collections.sort(itemQtys);
+
+        double iq = itemQtys.get(0);
+        for (int i = 0; i < itemQtys.size(); i++) {
+            if (qtyy >= itemQtys.get(i))
+                iq = itemQtys.get(i);
+        }
+
+        for (int i = 0; i < offer.size(); i++) {
+            if (iq == offer.get(i).getItemQty())
+                return offer.get(i);
+        }
+
+        return null;
+    }
+
+    private List<Offers> checkOffers(String itemNo) {
+
+        Offers offer = null;
+        List<Offers> Offers = new ArrayList<>();
+        try {
+            Date currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String date = df.format(currentTimeAndDate);
+            date = convertToEnglish(date);
+
+
+            List<Offers> offers = mDbHandler.getAllOffers();
+
+
+            for (int i = 0; i < offers.size(); i++) {
+                Log.e("log2 " , date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
+                if (itemNo.equals(offers.get(i).getItemNo()) &&
+                        (formatDate(date).after(formatDate(offers.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers.get(i).getFromDate()))) &&
+                        (formatDate(date).before(formatDate(offers.get(i).getToDate())) || formatDate(date).equals(offers.get(i).getToDate()))) {
+
+                    offer = offers.get(i);
+                    Offers.add(offer);
+                }
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return Offers;
+    }
+
 
     private void clearItemsList() {
         items.clear();
@@ -900,6 +991,7 @@ public class SalesInvoice extends Fragment {
 
     public void calculateTotals()
     {
+        Log.e("TOTAL",""+total_items_quantity);
         discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
@@ -916,80 +1008,84 @@ public class SalesInvoice extends Fragment {
         sum_discount = 0;
         float flagBonus = 0;
         float amountBonus = 0;
-        int low = 0, middle = 0, high = 0, conter = 0;
-        double qty_1 = 0, qty_2 = 0;
         totalQty = 0.0;
         double limit_offer=0;
-        //Include tax
+        //Excluclude tax
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
             totalQty=0.0;
+            try {
+
+                limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+            }catch (Exception e){
+                limit_offer=0;
+            }
             for (int i = 0; i < items.size(); i++) {
                 discount_oofers_total_cash = 0;
                 discount_oofers_total_credit = 0;
-                disc_items_total=0;
+                disc_items_total = 0;
+                disc_items_value = 0;
 
-                if (items.get(i).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
-                    if (items.get(i).getItemName().equals("(bonus)")) {
-                        flagBonus = items.get(i - 1).getQty();
-                        amountBonus = items.get(i).getQty();
-                        totalQty = totalQty - flagBonus;
+                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+                    for (int b = 0; b < items.size(); b++) {
 
-                    } else {//item without discount
-                        totalQty = totalQty + items.get(i).getQty();
-                    }
 
-                }
-                else{
-                    totalDiscount+=items.get(i).getDisc();
-                    totalQty+=items.get(i).getQty();
-                }
-                // ******************************Items Qty Offer By special qty***********************************
-                try {
-                    limit_offer = itemsQtyOfferList.get(0).getItemQty();
-                }catch (Exception e)
-                {Log.e("limit_offer","empty");}
-                    if (totalQty >= limit_offer)
-                    {//10
+                                if (checkOffers_no(items.get(b).getItemNo())) {
+//                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
+                                        disc_items_value+=items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(),limit_offer);
+                                        if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
+                                            disount_totalnew = 0;
+                                            items.get(b).setDisc(disount_totalnew);
+                                            itemsListView.setAdapter(itemsListAdapter);
 
-                            for (int k = 0; k < itemsQtyOfferList.size(); k++) {
-
-                                {
-                                    if (checkOffers(items.get(i).getItemNo())) {
-                                        if (items.get(i).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())) {
-//                                            if (items.get(i).getQty() >= itemsQtyOfferList.get(k).getItemQty()) {
-
-                                                // here
-                                                disc_items_value = items.get(i).getQty() * itemsQtyOfferList.get(k).getDiscount_value();
-                                                Log.e("disc_items_value ", " " + disc_items_value);
-//                                            }
                                         }
 
-                                    }
-                                    Log.e("checkOffers", "false");
+
+//
+                                                          }
+                    }
+
+
+                }
+
+                else {// all item without discount item
+                    totalQty = 0.0;
+                    for (int x = 0; x < items.size(); x++) {
+                        if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                            if (items.get(x).getItemName().equals("(bonus)")) {
+                                flagBonus = items.get(x - 1).getQty();
+                                amountBonus = items.get(x).getQty();
+                                totalQty = totalQty - flagBonus;
+
+                            } else {//item without discount
+                                totalQty = totalQty + items.get(x).getQty();
+                            }
+
+                        }
+
+
+                    }
+                    for (int j = 0; j < list_discount_offers.size(); j++) {
+//                            totalDiscount=0;
+                        if (payMethod == 1) {
+                            if (list_discount_offers.get(j).getPaymentType() == 1) {
+                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                    discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
-                    }
-                    else {// total qty less than  special qty offer (10)
-                        for (int j = 0; j < list_discount_offers.size(); j++) {
-                            if (payMethod == 1) {
-                                if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                    if (totalQty >= list_discount_offers.get(j).getQTY()) {
-                                        discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
-//                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
-                                    }
-                                }
-                            } else {
-                                if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                    if (totalQty >= list_discount_offers.get(j).getQTY()) {
-                                        discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
-                                    }
+                        } else {
+                            if (list_discount_offers.get(j).getPaymentType() == 0) {
+                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                    discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
                         }
-
                     }
-//
                 }
+                }
+//            }
+            //**********************************************************************************************************************************************
+
                 disc_items_total += disc_items_value;
                 totalDiscount += disc_items_total;
                 Log.e("disc_items_total ", " " + disc_items_total);
@@ -1003,8 +1099,6 @@ public class SalesInvoice extends Fragment {
 
             try {
                 totalDiscount+=sum_discount;
-//                totalDiscount=sum_discount;
-//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -1053,54 +1147,65 @@ public class SalesInvoice extends Fragment {
 
         else {
             totalQty=0.0;
+            try {
+
+                limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+            }catch (Exception e){
+                limit_offer=0;
+            }
+            Log.e("limit_offer",""+limit_offer);
             for (int i = 0; i < items.size(); i++) {
                 discount_oofers_total_cash = 0;
                 discount_oofers_total_credit = 0;
-                disc_items_total=0;
+                disc_items_total = 0;
+                disc_items_value = 0;
 
-                if (items.get(i).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
-                    if (items.get(i).getItemName().equals("(bonus)")) {
-                        flagBonus = items.get(i - 1).getQty();
-                        amountBonus = items.get(i).getQty();
-                        totalQty = totalQty - flagBonus;
+                if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+                    for (int b = 0; b < items.size(); b++) {
 
-                    } else {//item without discount
-                        totalQty = totalQty + items.get(i).getQty();
-                    }
+                        if (checkOffers_no(items.get(b).getItemNo())) {
+//                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
+                            disc_items_value+=items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(),limit_offer);
+                            Log.e("disc_items_value ", " " + disc_items_value);
 
-                }
-                else{
-                    totalDiscount+=items.get(i).getDisc();
-                    totalQty+=items.get(i).getQty();
-                }
-                // ******************************Items Qty Offer By special qty***********************************
-                try {
-                    limit_offer = itemsQtyOfferList.get(0).getItemQty();
-                }catch (Exception e)
-                {Log.e("limit_offer","empty");}
-                if (totalQty >= limit_offer)
-                {//10
-
-                    for (int k = 0; k < itemsQtyOfferList.size(); k++) {
-
-                        {
-                            if (checkOffers(items.get(i).getItemNo())) {
-                                if (items.get(i).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())) {
-//                                            if (items.get(i).getQty() >= itemsQtyOfferList.get(k).getItemQty()) {
-
-                                    // here
-                                    disc_items_value = items.get(i).getQty() * itemsQtyOfferList.get(k).getDiscount_value();
-                                    Log.e("disc_items_value ", " " + disc_items_value);
-//                                            }
-                                }
+                            if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
+                                disount_totalnew = 0;
+                                items.get(b).setDisc(disount_totalnew);
+                                itemsListView.setAdapter(itemsListAdapter);
 
                             }
-                            Log.e("checkOffers", "false");
+
+
+
                         }
+
+
+
+
                     }
+
+
                 }
-                else {// total qty less than  special qty offer (10)
+
+                else {// all item without discount item
+                    totalQty = 0.0;
+                    for (int x = 0; x < items.size(); x++) {
+                        if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                            if (items.get(x).getItemName().equals("(bonus)")) {
+                                flagBonus = items.get(x - 1).getQty();
+                                amountBonus = items.get(x).getQty();
+                                totalQty = totalQty - flagBonus;
+
+                            } else {//item without discount
+                                totalQty = totalQty + items.get(x).getQty();
+                            }
+
+                        }
+
+
+                    }
                     for (int j = 0; j < list_discount_offers.size(); j++) {
+//                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
                                 if (totalQty >= list_discount_offers.get(j).getQTY()) {
@@ -1116,21 +1221,83 @@ public class SalesInvoice extends Fragment {
                             }
                         }
                     }
-
                 }
-//
             }
+
+            //**********************************************************************************************************************************************
+
+
+            // ******************************Items Qty Offer By special qty***********************************
+//                try {
+//                    limit_offer = itemsQtyOfferList.get(0).getItemQty();
+//                } catch (Exception e) {
+//                    Log.e("limit_offer", "empty");
+//                }
+//                if (totalQty >= limit_offer && limit_offer != 0) {//10
+//                    for (int b = 0; b < items.size(); b++) {
+//                        for (int k = 0; k < itemsQtyOfferList.size(); k++) {
+//
+//                            {
+//                                if (checkOffers_no(items.get(b).getItemNo())) {
+//                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())) {
+////
+//
+//                                        disc_items_value += items.get(b).getQty() * itemsQtyOfferList.get(k).getDiscount_value();
+//                                        if (items.get(b).getDisc() != 0) {
+//                                            disount_totalnew = 0;
+//                                            items.get(b).setDisc(disount_totalnew);
+//                                            itemsListView.setAdapter(itemsListAdapter);
+//
+//                                        }
+//
+//
+//                                    }
+//
+//
+//                                    Log.e("disc_items_value ", " " + disc_items_value);
+//                                }
+//
+//                            }
+//                            Log.e("checkOffers", "false");
+//                        }
+//                    }
+//                }
+//
+//                else {// total qty less than  special qty offer (10)
+//                    for (int j = 0; j < list_discount_offers.size(); j++) {
+////                            totalDiscount=0;
+//                        if (payMethod == 1) {
+//                            if (list_discount_offers.get(j).getPaymentType() == 1) {
+//                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+//                                    discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+////                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
+//                                }
+//                            }
+//                        } else {
+//                            if (list_discount_offers.get(j).getPaymentType() == 0) {
+//                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+//                                    discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                }
+//
+
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
             Log.e("disc_items_total ", " " + disc_items_total);
+
+
             if (discount_oofers_total_cash > 0)
                 sum_discount = discount_oofers_total_cash;
-            if(discount_oofers_total_credit>0)
+            if (discount_oofers_total_credit > 0)
                 sum_discount = discount_oofers_total_credit;
 
+
             try {
-                totalDiscount=sum_discount;
-//                totalDiscount = Float.parseFloat(discTextView.getText().toString());
+                totalDiscount+=sum_discount;
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -1174,15 +1341,6 @@ public class SalesInvoice extends Fragment {
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setVoucherDiscount( (float)itemDiscVal);
                 items.get(i).setTotalDiscVal(itemDiscVal);
-          //      discount_oofers_total=0.0;
-//                totalQty +=items.get(i).getQty();
-//                Log.e("totalQty",""+totalQty);
-
-
-
-
-
-
                 itemTotal = itemTotal - itemDiscVal;
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
@@ -1198,11 +1356,10 @@ public class SalesInvoice extends Fragment {
             }
 
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
-           // discount_oofers_total=0;
 
         }
 
-//        double discount_All_invoice=discount_oofers_total+Double.parseDouble(discTextView.getText().toString());
+
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
 
@@ -1219,25 +1376,37 @@ public class SalesInvoice extends Fragment {
 
 
     }
-    private boolean checkOffers(String itemNo) {
+
+    class QtySorter implements Comparator<ItemsQtyOffer> {
+        @Override
+        public int compare(ItemsQtyOffer one, ItemsQtyOffer another) {
+            int returnVal = 0;
+
+            if (one.getItemQty() < another.getItemQty()) {
+                returnVal = -1;
+            } else if (one.getItemQty() > another.getItemQty()) {
+                returnVal = 1;
+            } else if (one.getItemQty() == another.getItemQty()) {
+                returnVal = 0;
+            }
+            return returnVal;
+        }
+
+    }
+    private Boolean checkOffers_no(String itemNo) {
 
         Offers offer = null;
         List<ItemsQtyOffer> Offers = new ArrayList<>();
         try {
-            Date currentTimeAndDate = Calendar.getInstance().getTime();
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+//            Date currentTimeAndDate = Calendar.getInstance().getTime();
+//            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
-
-
-            List<ItemsQtyOffer> offers = mDbHandler.getItemsQtyOffer();
-
-
-            for (int i = 0; i < offers.size(); i++) {
-                Log.e("log2 " , date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
-                if (itemNo.equals(offers.get(i).getItem_no()) &&
-                        (formatDate(date).after(formatDate(offers.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers.get(i).getFromDate()))) &&
-                        (formatDate(date).before(formatDate(offers.get(i).getToDate())) || formatDate(date).equals(offers.get(i).getToDate()))) {
+            for (int i = 0; i < offers_ItemsQtyOffer.size(); i++) {
+                Log.e("log2 " , date + "  " + offers_ItemsQtyOffer.get(i).getFromDate() + " " + offers_ItemsQtyOffer.get(i).getToDate());
+                if (itemNo.equals(offers_ItemsQtyOffer.get(i).getItem_no()) &&
+                        (formatDate(date).after(formatDate(offers_ItemsQtyOffer.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers_ItemsQtyOffer.get(i).getFromDate()))) &&
+                        (formatDate(date).before(formatDate(offers_ItemsQtyOffer.get(i).getToDate())) || formatDate(date).equals(offers_ItemsQtyOffer.get(i).getToDate()))) {
 
                    return true;
                 }
@@ -1248,31 +1417,6 @@ public class SalesInvoice extends Fragment {
         }
         return false;
     }
-//
-//    private Offers getAppliedOffer(String itemNo, String qty, int flag) {
-//
-//        double qtyy = Double.parseDouble(qty);
-//        List<Offers> offer = checkOffers(itemNo);
-//
-//        List<Double> itemQtys = new ArrayList<>();
-//        for (int i = 0; i < offer.size(); i++) {
-//            itemQtys.add(offer.get(i).getItemQty());
-//        }
-//        Collections.sort(itemQtys);
-//
-//        double iq = itemQtys.get(0);
-//        for (int i = 0; i < itemQtys.size(); i++) {
-//            if (qtyy >= itemQtys.get(i))
-//                iq = itemQtys.get(i);
-//        }
-//
-//        for (int i = 0; i < offer.size(); i++) {
-//            if (iq == offer.get(i).getItemQty())
-//                return offer.get(i);
-//        }
-//
-//        return null;
-//    }
 public Date formatDate(String date) throws ParseException {
 
     String myFormat = "dd/MM/yyyy"; //In which you need put here

@@ -50,6 +50,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  static   int total_items_quantity=0;
     private float descPerc;
     boolean added = false;
+    double  flagBonus=0,amountBonus=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
 
@@ -213,11 +214,9 @@ public class AddItemsFragment2 extends DialogFragment {
             try {
                 item.setUnit(unit);
                 //****************************
+
                 item.setQty(Float.parseFloat(qty));
-                total_items_quantity += item.getQty();
-                totalQty_textView.setText("+ " + total_items_quantity);
-                Log.e("setQty", "" + Float.parseFloat(qty));
-                Log.e("total_items_quantity", "" + total_items_quantity);
+
                 item.setPrice(Float.parseFloat(price.trim()));
                 if (bonus == "")
                     item.setBonus(Float.parseFloat("0.0"));
@@ -291,13 +290,29 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
-            List.add(item);
-            Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(15);
-            toast.show();
+            if (item.getItemName().equals("(bonus)")) {
+                flagBonus = List.get(List.size() - 1).getQty();
+                total_items_quantity -= flagBonus;
+                Log.e("flagBonus", "" + flagBonus);
+//               ?     amountBonus = items.get(i).getQty();
+//                    totalQty = totalQty - flagBonus;
+            }
+            else {
+                total_items_quantity += item.getQty();
+                totalQty_textView.setText("+ " + total_items_quantity);
+                Log.e("setQty", "" + Float.parseFloat(qty));
+                Log.e("total_items_quantity", "" + total_items_quantity);
+            }
+
+
+                List.add(item);
+                Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 180);
+                ViewGroup group = (ViewGroup) toast.getView();
+                TextView messageTextView = (TextView) group.getChildAt(0);
+                messageTextView.setTextSize(15);
+                toast.show();
+
 
             return true;
 
