@@ -338,4 +338,12 @@
     <string name="failStockSoft_export_data">
          قم بترحيل الفواتير في برنامج المستودعات لاستيراد بيانات جديدة
     </string>
+    <string name="kind_item">النوع</string>
+    <string name="all_item">كل العناصر </string>
+    <string name="app_account_report"> تقرير كشف حساب  </string>
+    <string name="last_account">Last Account</string>
+    <string name="transfer_name">Transfer Name</string>
+    <string name="Debtor">Debtor</string>
+    <string name="Creditor">Creditor</string>
+    <string name="Final_customer_balance">Final customer balance</string>
 </resources>

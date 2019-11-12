@@ -144,12 +144,7 @@
     </LinearLayout>
 
 
-    <!--<ScrollView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@color/layer2"-->
-    <!--android:layout_margin="20dp"-->
-    <!--&gt;-->
+
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"

@@ -105,7 +105,7 @@ public class SalesInvoice extends Fragment {
     public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
     private ImageView  custInfoImgButton, SaveData;
-    private CircleImageView addItemImgButton2;
+    private CircleImageView addItemImgButton2,refreshData;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
@@ -197,11 +197,6 @@ public class SalesInvoice extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
-//        try {
-//            closeBT();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
          currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
          voucherDate = df.format(currentTimeAndDate);
@@ -218,7 +213,21 @@ public class SalesInvoice extends Fragment {
         threeDForm = new DecimalFormat("0.000");
 
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
+        refreshData = (CircleImageView) view.findViewById(R.id.refresh_data);
+        refreshData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+                obj.startParsing();
+            }
+        });
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
+        custInfoImgButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openReport_CustomerInfo();
+            }
+        });
         connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
         Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
@@ -249,10 +258,6 @@ public class SalesInvoice extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn2 = voucherNumber + "";
         voucherNumberTextView.setText(vn2);
-
-
-
-        custInfoImgButton.setVisibility(View.INVISIBLE);
         connect.setVisibility(View.INVISIBLE);
         companyInfo=new CompanyInfo();
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
@@ -443,12 +448,12 @@ public class SalesInvoice extends Fragment {
                 salesInvoiceInterfaceListener.displayFindItemFragment2();
             }
         });
-        custInfoImgButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                salesInvoiceInterfaceListener.displayCustInfoFragment();
-            }
-        });
+//        custInfoImgButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                salesInvoiceInterfaceListener.displayCustInfoFragment();
+//            }
+//        });
 
         itemsListView = (ListView) view.findViewById(R.id.itemsListView);
         items = new ArrayList<>();
@@ -572,6 +577,45 @@ public class SalesInvoice extends Fragment {
         });
         return view;
     }
+
+    private void openReport_CustomerInfo() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.activity_account__report);
+//
+//        final EditText amount = (EditText) dialog.findViewById(R.id.amount_discount_cridit);
+//        Button okButton = (Button) dialog.findViewById(R.id.okBut_discount);
+//        Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut_discount);
+
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!amount.getText().toString().equals("")) {
+//                    amountOfmaxDiscount = Integer.parseInt(amount.getText().toString());
+//                    Log.e("amountOfmaxDiscount", "" + amountOfmaxDiscount);
+//                    //  mDbHandler.getAllSettings().get(0).setAmountOfMaxDiscount(amountOfmaxDiscount);
+//                    dialog.dismiss();
+//                } else
+//                    Toast.makeText(MainActivity.this, "Incorrect Input !", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+        dialog.show();
+
+
+
+
+
+    }
+
     public  void reCheck_customerAuthorize()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

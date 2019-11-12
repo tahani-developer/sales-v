@@ -12,6 +12,7 @@ import android.support.annotation.RequiresApi;
 import android.util.ArrayMap;
 import android.util.Log;
 
+import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -48,13 +49,24 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 66;
+    private static final int DATABASE_VERSION = 67;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+
+    private static final String ACCOUNT_REPORT  = "ACCOUNT_REPORT";
+
+    private static final String DATE = "DATE";
+    private static final String TRANSFER_NAME = "TRANSFER_NAME";
+    private static final String DEBTOR = "DEBTOR";
+    private static final String CREDITOR = "CREDITOR";
+    private static final String CUST_BALANCE = "CUST_BALANCE";
+
 //----------------------------------------------------------------------
+
     private static final String ITEMS_QTY_OFFER  = "ITEMS_QTY_OFFER";
 
     private static final String ITEMNAME = "ITEMNAME";
@@ -127,6 +139,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String IsSuspended1 = "IsSuspended";
     private static final String ITEM_L1 = "ITEM_L";
     private static final String ITEM_F_D = "F_D";
+    private static final String KIND_ITEM= "KIND_ITEM";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -359,6 +372,17 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+                + DATE + " TEXT,"
+                + TRANSFER_NAME + " TEXT,"
+                + DEBTOR + " TEXT,"
+                + CREDITOR + " TEXT,"
+                + TODATE + " TEXT,"
+                + CUST_BALANCE + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+
         String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE " + ITEMS_QTY_OFFER + "("
                 + ITEMNAME + " TEXT,"
                 + ITEMNO + " INTEGER,"
@@ -428,7 +452,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + Barcode1 + " TEXT,"
                 + IsSuspended1 + " INTEGER,"
                 + ITEM_L1 + " INTEGER,"
-                + ITEM_F_D + " REAL"
+                + ITEM_F_D + " REAL,"
+                + KIND_ITEM + " KIND_ITEM"
                 + ")";
 
         db.execSQL(CREATE_TABLE_Items_Master);
@@ -694,6 +719,13 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE Items_Master ADD KIND_ITEM  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
         try{
             db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
@@ -833,6 +865,18 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+                    + DATE + " TEXT,"
+                    + TRANSFER_NAME + " TEXT,"
+                    + DEBTOR + " TEXT,"
+                    + CREDITOR + " TEXT,"
+                    + TODATE + " TEXT,"
+                    + CUST_BALANCE + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
+
+
+        }catch (Exception e){    Log.e(TAG, e.getMessage().toString());}
 
         try{
 
@@ -904,6 +948,27 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+    public void addAccount_report(Account_Report account_report)
+    {
+        try {
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(DATE, account_report.getDate());
+            values.put(TRANSFER_NAME,account_report.getTransfer_name());
+            values.put(DEBTOR,account_report.getDebtor());
+            values.put(CREDITOR, account_report.getCreditor());
+            values.put(CUST_BALANCE, account_report.getCust_balance());
+
+            db.insert(ACCOUNT_REPORT, null, values);
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("DBAccount_Report",""+e.getMessage());
+
+        }
+
+    }
+
     public void add_Items_Qty_Offer(ItemsQtyOffer itemsQtyOffer)
     {
         try {
@@ -1004,6 +1069,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(IsSuspended1, item.getIsSuspended());
         values.put(ITEM_L1, item.getItemL());
         values.put(ITEM_F_D, item.getPosPrice());
+        values.put(KIND_ITEM,item.getKind_item());
+
 
         db.insert(Items_Master, null, values);
         db.close();
@@ -1767,6 +1834,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 itemsMaster.setBarcode(cursor.getString(4));
                 itemsMaster.setIsSuspended(Integer.parseInt(cursor.getString(5)));
                 itemsMaster.setItemL(Double.parseDouble(cursor.getString(6)));
+                itemsMaster.setKind_item(cursor.getString(7));
                 masters.add(itemsMaster);
             }
             while(cursor.moveToNext());
@@ -1854,7 +1922,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String salesMan = Login.salesMan;
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S , Price_List_D P\n" +
                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo = '1' and S.SalesManNo = '" + salesMan +"'";
 
@@ -1880,6 +1948,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+                item.setKind_item(cursor.getString(10));
 
                 // Adding transaction to list
                 items.add(item);
@@ -1897,7 +1966,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String PriceListId = CustomerListShow.PriceListId;
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C , Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo = '1' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
@@ -1923,6 +1992,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setBarcode(cursor.getString(7));
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+                item.setKind_item(cursor.getString(10));
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());
@@ -1990,6 +2060,20 @@ DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return categories;
+    }
+    public List<String> getAllKindItems() {
+        List<String> kind_items= new ArrayList<>();
+        String selectQuery = "select DISTINCT KIND_ITEM from Items_Master";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                kind_items.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        return kind_items;
     }
 
     public int getActiveKeyValue() {

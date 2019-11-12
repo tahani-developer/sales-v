@@ -24,43 +24,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:background="@color/layer2"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
-
-        <ImageButton
-            android:id="@+id/newImgBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/new_inv" />
-
-        <ImageButton
-            android:id="@+id/saveInvoiceData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/save_btn" />
-
-        <ImageButton
-            android:id="@+id/discButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/ic_disc"
-            android:text="@string/app_disc_l"
-            tools:visibility="gone" />
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/addItemImgButton2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="10dp"-->
-<!--            android:background="@drawable/add_items" />-->
         <RelativeLayout
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             >
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -84,29 +57,72 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="25dp" />
         </RelativeLayout>
+        <ImageButton
+            android:id="@+id/saveInvoiceData"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/save_btn" />
 
-        <ImageView
-            android:id="@+id/pic_sale"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:visibility="invisible"/>
+        <ImageButton
+            android:id="@+id/newImgBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/new_inv" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh_data"
+            android:clickable="true"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/reload_arrow"
+            app:civ_border_color="@color/colorPrimaryDark"/>
+
+
+
+        <ImageButton
+            android:id="@+id/discButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_disc"
+            android:text="@string/app_disc_l"
+            tools:visibility="gone" />
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/addItemImgButton2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:background="@drawable/add_items" />-->
+
+
+
+
         <ImageButton
             android:id="@+id/custInfoImgBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="invisible"
+           android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/cust_info" />
+            android:background="@drawable/info_customer" />
 
 
         <ImageView
             android:id="@+id/balanceImgBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="invisible"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="3dp"
             android:background="@drawable/balance_img" />
+        <ImageView
+            android:id="@+id/pic_sale"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:visibility="gone"/>
+
 
     </LinearLayout>
 
@@ -156,6 +172,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
+
 
 
 
@@ -264,7 +281,7 @@
         android:id="@+id/row5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView

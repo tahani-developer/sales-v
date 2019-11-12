@@ -330,6 +330,8 @@ public class ImportJason extends AppCompatActivity{
                     item.setPosPrice(finalObject.getDouble("F_D"));
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
+
+                    item.setKind_item(finalObject.getString("ItemK"));
                     itemsMasterList.add(item);
                 }
                 }
