@@ -21,12 +21,43 @@ public class Customer {
     private String custLat;
     private String custLong;
     private double max_discount;
+    private String ACCPRC;// customer rate for price
+
 
 
     private String customerAccount, customerName;
 
     public Customer() {
 
+    }
+
+    public String getACCPRC() {
+        return ACCPRC;
+    }
+
+    public void setACCPRC(String ACCPRC) {
+        this.ACCPRC = ACCPRC;
+    }
+
+    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
+                    int cashCredit, String salesManNumber, double creditLimit,
+                    int payMethod, String custLat, String custLong, double max_discount, String ACCPRC, String customerAccount, String customerName) {
+        this.companyNumber = companyNumber;
+        this.custId = custId;
+        this.custName = custName;
+        this.address = address;
+        this.isSuspended = isSuspended;
+        this.priceListId = priceListId;
+        this.cashCredit = cashCredit;
+        this.salesManNumber = salesManNumber;
+        this.creditLimit = creditLimit;
+        this.payMethod = payMethod;
+        this.custLat = custLat;
+        this.custLong = custLong;
+        this.max_discount = max_discount;
+        this.ACCPRC = ACCPRC;
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
     }
 
     public Customer(int companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,

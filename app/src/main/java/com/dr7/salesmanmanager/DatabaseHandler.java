@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 67;
+    private static final int DATABASE_VERSION = 68;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -64,6 +64,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String DEBTOR = "DEBTOR";
     private static final String CREDITOR = "CREDITOR";
     private static final String CUST_BALANCE = "CUST_BALANCE";
+    private static final String CUST_NUMBER_REPORT = "CUST_NUMBER_REPORT";
 
 //----------------------------------------------------------------------
 
@@ -119,6 +120,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CUST_LAT = "CUST_LAT";
     private static final String CUST_LONG = "CUST_LONG";
     private static final String MAX_DISCOUNT = "MAX_DISCOUNT";
+    private static final String ACCPRC = "ACCPRC";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -378,7 +380,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + DEBTOR + " TEXT,"
                 + CREDITOR + " TEXT,"
                 + TODATE + " TEXT,"
-                + CUST_BALANCE + " TEXT" + ")";
+                + CUST_BALANCE + " TEXT,"
+                 +CUST_NUMBER_REPORT + " TEXT"+
+                ")";
         db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -414,7 +418,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PAY_METHOD0 + " INTEGER,"
                 + CUST_LAT + " TEXT,"
                 + CUST_LONG + " TEXT,"
-                + MAX_DISCOUNT + " REAL" + ")";
+                + MAX_DISCOUNT + " REAL,"
+                +ACCPRC+ " TEXT"
+                + ")";
 
         db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
 
@@ -720,6 +726,12 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
             db.execSQL("ALTER TABLE Items_Master ADD KIND_ITEM  TEXT NOT NULL DEFAULT ''");
         }catch (Exception e)
         {
@@ -872,7 +884,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                     + DEBTOR + " TEXT,"
                     + CREDITOR + " TEXT,"
                     + TODATE + " TEXT,"
-                    + CUST_BALANCE + " TEXT" + ")";
+                    + CUST_BALANCE + " TEXT,"
+                    +CUST_NUMBER_REPORT + " TEXT"
+                    + ")";
             db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
 
 
@@ -958,7 +972,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(DEBTOR,account_report.getDebtor());
             values.put(CREDITOR, account_report.getCreditor());
             values.put(CUST_BALANCE, account_report.getCust_balance());
-
+            values.put(CUST_NUMBER_REPORT, account_report.getCust_no());
             db.insert(ACCOUNT_REPORT, null, values);
             db.close();
         }
@@ -1041,6 +1055,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CUST_LAT, customer.getCustLat());
         values.put(CUST_LONG, customer.getCustLong());
         values.put(MAX_DISCOUNT, customer.getMax_discount());
+        values.put(ACCPRC, customer.getACCPRC());
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1464,9 +1479,37 @@ DatabaseHandler extends SQLiteOpenHelper {
         return visitrate;
     }
 
-    //--------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------------
+    //****************************get Account Report for  Customer No ***************************************
+    public List<Account_Report> getِAccountReport() {
+        String CustomerNo =  CustomerListShow.Customer_Account;
+        List<Account_Report> account_reports = new ArrayList<Account_Report>();
+        // Select All Query
+
+        String selectQuery = "SELECT  * FROM " + ACCOUNT_REPORT +" where CUST_NUMBER_REPORT = '" + CustomerNo + "' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Account_Report account_report=new Account_Report();
+                account_report.setDate(cursor.getString(0));
+                account_report.setTransfer_name(cursor.getString(1));
+                account_report.setDebtor(cursor.getString(2));
+                account_report.setCreditor(cursor.getString(3));
+                account_report.setCust_balance(cursor.getString(4));
+                account_report.setCust_no(cursor.getString(5));
+                account_reports.add(account_report);
+            } while (cursor.moveToNext());
+        }
+
+        return account_reports;
+    }
 
 
+
+//*************************************************************************************************
     public List<Settings> getAllSettings() {
         List<Settings> settings = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_SETTING;
@@ -1657,6 +1700,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
+                customer.setACCPRC(cursor.getString(13));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1715,14 +1759,15 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
-                customer.setCustLat(cursor.getString(9));
-                customer.setCustLong(cursor.getString(10));
+                customer.setCustLat(cursor.getString(10));
+                customer.setCustLong(cursor.getString(11));
                 try {
-                    customer.setMax_discount(Double.parseDouble(cursor.getString(11)));
+                    customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 }catch(NumberFormatException e){
                     Log.e("setMax_discount",""+e.getMessage());
                     customer.setMax_discount(0);
                 }
+                customer.setACCPRC(cursor.getString(13));
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1891,6 +1936,26 @@ DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public String getRateOfCustomer()
+    {
+       String rate="";
+        String customer_id = CustomerListShow.Customer_Account;
+        String selectQuery = "select DISTINCT  cusMaster.ACCPRC  from CUSTOMER_MASTER cusMaster  where cusMaster.CUS_ID ='"+customer_id+"' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                rate=cursor.getString(0);
+                Log.e("rate ",""+rate+"\t"+customer_id);
+            }
+            while (cursor.moveToNext());
+        }
+        return  rate;
+
+
+    }
+
     public List<inventoryReportItem> getInventory_db() {
 
         List<inventoryReportItem> items_inventory = new ArrayList<>();
@@ -1917,17 +1982,17 @@ DatabaseHandler extends SQLiteOpenHelper {
     return  items_inventory;
     }
 
-    public List<Item> getAllJsonItems() {
+    public List<Item> getAllJsonItems(String rate ) {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         String salesMan = Login.salesMan;
+//        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM \n" +
-                "                from Items_Master M , SalesMan_Items_Balance S , Price_List_D P\n" +
-                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo = '1' and S.SalesManNo = '" + salesMan +"'";
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
 
         Log.e("***" , selectQuery);
-
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1958,7 +2023,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<Item> getAllJsonItems2()
+    public List<Item> getAllJsonItems2(String rate)
     {
 
         List<Item> items = new ArrayList<>();
@@ -1966,9 +2031,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         String PriceListId = CustomerListShow.PriceListId;
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM \n" +
-                "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C , Price_List_D P\n" +
-                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo = '1' and S.SalesManNo = '" + salesMan + "'" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC  \n" +
+                "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
+                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
 
         Log.e("***" , selectQuery);
@@ -2637,6 +2702,11 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Qty5, existQty);
         db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
     }
+    public void deletAcountReport() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ACCOUNT_REPORT);
+        db.close();
+    }
 
     public void deleteVoucher(int voucherNumber) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -2945,4 +3015,30 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+    public double getMaxDiscValue_ForCustomer(String customerNo) {
+        String selectQuery = "SELECT MAX_DISCOUNT FROM " + CUSTOMER_MASTER +
+                " WHERE CUS_ID  =  '"+customerNo+"' ";
+
+        double max_discount=0;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                max_discount=cursor.getDouble(0);
+                Log.e("max_discount_value",""+max_discount+"\t"+customerNo);
+
+            } while (cursor.moveToNext());
+        }
+
+        return max_discount;
+
+
+
+
+
+    }
+//    select MAX_DISCOUNT from CUSTOMER_MASTER where CUS_ID = '1002'
+
 }

@@ -11,9 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Modles.Account_Report"></activity>
-        <activity android:name=".Splashscreen"></activity>
-        <activity android:name=".bluetoothprinter"></activity>
+        <activity
+            android:name=".Reports.AccountReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"
+       />
+        <activity android:name=".Modles.Account_Report"
+            />
+        <activity android:name=".Splashscreen" />
+        <activity android:name=".bluetoothprinter" />
         <activity
             android:name=".Login"
             android:screenOrientation="landscape"
@@ -28,12 +35,12 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PrintVoucher"
             android:label="@string/title_activity_main"
@@ -63,7 +70,7 @@
             android:name=".Reports.ItemsReport"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.TransactionsReport"
             android:label="@string/title_activity_main"
@@ -88,12 +95,12 @@
             android:name=".Reports.InventoryReport"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.CashReport"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BluetoothConnectMenu"
             android:excludeFromRecents="true"
@@ -130,6 +137,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
+
     <supports-screens
         android:anyDensity="true"
         android:compatibleWidthLimitDp="800"
@@ -148,7 +156,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

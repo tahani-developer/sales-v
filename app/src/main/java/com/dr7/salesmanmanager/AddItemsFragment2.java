@@ -2,10 +2,14 @@ package com.dr7.salesmanmanager;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -80,17 +84,17 @@ public class AddItemsFragment2 extends DialogFragment {
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
-        getDialog().setCancelable(false);
+        setCancelable(false);
         String s="";
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
-
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
 
         if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
-            jsonItemsList = mHandler.getAllJsonItems();
+            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
         else
-            jsonItemsList = mHandler.getAllJsonItems2();
+            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
 
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -113,7 +117,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
         final Spinner Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
         List<String> Kind_item = mHandler.getAllKindItems();
-        Log.e("kindlist_db",""+Kind_item.size());
         Kind_item.add(0 ,getResources().getString(R.string.all_item));
 
       final  ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, Kind_item);
@@ -203,6 +206,45 @@ public class AddItemsFragment2 extends DialogFragment {
 
         Button done = (Button) view.findViewById(R.id.done);
 
+        Button cancel = (Button) view.findViewById(R.id.cancel_btn);
+        cancel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                builder2.setCancelable(false);
+                builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
+                builder2.setIcon(android.R.drawable.ic_dialog_alert);
+                builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        float count=0;
+
+//                        total_items_quantity -= List.size();
+//                        totalQty_textView.setText("+"+0);
+//                        total_items_quantity=0;
+                        for(int j=0;j<List.size();j++)
+                        {
+                            count+=List.get(j).getQty();
+                        }
+//                        Log.e("count",""+count);
+//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+                        total_items_quantity-=count;
+                        totalQty_textView.setText(total_items_quantity+"");
+                        List.clear();
+//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+                        AddItemsFragment2.this.dismiss();
+
+
+                    }
+                });
+
+                builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                builder2.create().show();
+            }
+        });
+
         done.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,6 +264,10 @@ public class AddItemsFragment2 extends DialogFragment {
         super.onDetach();
         this.listener = null;
     }
+//    @Override
+//    public void onBackPressed() {
+//
+//    }
 
 
     @SuppressLint("ResourceAsColor")

@@ -273,6 +273,7 @@ public class Item {
     }
 
     public float getPrice() {
+        Log.e("price Item",""+price);
         return price;
     }
 
