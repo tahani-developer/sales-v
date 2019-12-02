@@ -3,18 +3,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dr7.salesmanmanager">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Modles.Account_Report"></activity>
+        <activity android:name=".Splashscreen"></activity>
+        <activity android:name=".bluetoothprinter"></activity>
+        <activity
+            android:name=".Login"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activities"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".PrintVoucher"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.Reports"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.CustomerLogReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.VouchersReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.PaymentDetailsReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.ItemsReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Reports.TransactionsReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.StockRequestVouchersReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.StockRequestItemsReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.StockRequestReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Reports.InventoryReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Reports.CashReport"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".BluetoothConnectMenu"
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog" /> <!-- <activity -->
+        <!-- android:name=".CPCL2Menu" -->
+        <!-- android:label="@string/title_activity_main" -->
+        <!-- android:screenOrientation="landscape" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SalesmanMap"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PrintPayment"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".bMITP"
+            android:excludeFromRecents="true"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Dialog" />
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+    </application>
     <supports-screens
         android:anyDensity="true"
         android:compatibleWidthLimitDp="800"
@@ -25,172 +140,17 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Splashscreen">
+    <uses-permission android:name="android.permission.CAMERA" />
 
-        </activity>
-
-        <activity android:name=".bluetoothprinter">
-
-        </activity>
-
-        <activity
-            android:name=".Login"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
-        <activity
-            android:name=".Activities"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity
-            android:name=".PrintVoucher"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-
-        <activity
-            android:name=".Reports.Reports"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.CustomerLogReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.VouchersReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.PaymentDetailsReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.ItemsReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity
-            android:name=".Reports.TransactionsReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.StockRequestVouchersReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.StockRequestItemsReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".Reports.StockRequestReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Reports.InventoryReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity
-            android:name=".Reports.CashReport"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-
-        <activity
-            android:name=".BluetoothConnectMenu"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Dialog"
-            android:excludeFromRecents="true"
-            />
-
-        
-        <!--<activity-->
-            <!--android:name=".CPCL2Menu"-->
-            <!--android:label="@string/title_activity_main"-->
-            <!--android:screenOrientation="landscape"-->
-            <!--android:theme="@style/AppTheme.NoActionBar" />-->
-
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".SalesmanMap"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".PrintPayment"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".bMITP"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
-        android:theme="@android:style/Theme.Dialog"
-            android:excludeFromRecents="true"
-            />
-
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-    </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

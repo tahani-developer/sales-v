@@ -21,53 +21,20 @@
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="2dp"
+        android:layout_height="70dp"
+
         android:background="@color/layer2"
+        android:padding="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp">
-
-        <ImageButton
-            android:id="@+id/newImgBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/new_inv" />
-
-        <ImageButton
-            android:id="@+id/saveInvoiceData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/save_btn" />
-
-        <ImageButton
-            android:id="@+id/discButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/ic_disc"
-            android:text="@string/app_disc_l"
-            tools:visibility="gone" />
-
-<!--        <ImageButton-->
-<!--            android:id="@+id/addItemImgButton2"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginHorizontal="10dp"-->
-<!--            android:background="@drawable/add_items" />-->
-
-        <ImageView
-            android:id="@+id/pic_sale"
-            android:visibility="gone"
-            android:layout_width="200dp"
-            android:layout_height="60dp"/>
+        >
         <RelativeLayout
 
             android:layout_width="wrap_content"
 
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             >
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -78,18 +45,75 @@
                 android:layout_alignParentTop="true"
                 android:src="@drawable/items2"
                 app:civ_border_color="@color/colorPrimaryDark"/>
-<!--            android:layout_marginLeft="50dp"-->
+            <!--            android:layout_marginLeft="50dp"-->
             <TextView
                 android:id="@+id/items_quntity"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginTop="25dp"
                 android:layout_alignTop="@+id/addItemImgButton2"
-                android:layout_alignLeft="@id/addItemImgButton2"
+                android:layout_marginLeft="55dp"
+                android:layout_marginTop="20dp"
                 android:text="+0"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="20dp" />
+
+                android:textSize="18sp" />
         </RelativeLayout>
+        <ImageButton
+            android:id="@+id/saveInvoiceData"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/save_btn" />
+
+        <ImageButton
+            android:id="@+id/newImgBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+
+            android:layout_marginRight="20dp"
+            android:background="@drawable/new_inv" />
+
+
+
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/addItemImgButton2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:background="@drawable/add_items" />-->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh_data"
+            android:clickable="true"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/reload_arrow"
+            app:civ_border_color="@color/colorPrimaryDark"/>
+        <ImageButton
+            android:id="@+id/custInfoImgBtn"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/info_customer" />
+
+        <ImageView
+            android:id="@+id/pic_sale"
+            android:visibility="gone"
+            android:layout_width="200dp"
+            android:layout_height="60dp"/>
+
+        <ImageButton
+            android:id="@+id/discButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_disc"
+            android:text="@string/app_disc_l"
+            tools:visibility="gone" />
+
             <!--android:visibility="invisible"/>-->
 
     </LinearLayout>
@@ -143,12 +167,12 @@
             android:textColor="@color/add_button"
             android:textSize="12sp" />
 
-        <ImageButton
-            android:id="@+id/custInfoImgBtn"
-            android:layout_width="35dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="2dp"
-            android:background="@drawable/cust_info" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/custInfoImgBtn"-->
+<!--            android:layout_width="35dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="2dp"-->
+<!--            android:background="@drawable/cust_info" />-->
 
 
         <ImageView
@@ -365,7 +389,7 @@
     <LinearLayout
         android:id="@+id/row7"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="290dp"
         android:layout_gravity="fill"
         android:orientation="vertical">
 
@@ -381,7 +405,7 @@
     <LinearLayout
         android:id="@+id/totals"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:columnCount="8">
 

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  static   int total_items_quantity=0;
     private float descPerc;
     boolean added = false;
+    double  flagBonus=0,amountBonus=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
 
@@ -78,6 +80,8 @@ public class AddItemsFragment2 extends DialogFragment {
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
+        getDialog().setCancelable(false);
+        String s="";
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
@@ -88,23 +92,65 @@ public class AddItemsFragment2 extends DialogFragment {
         else
             jsonItemsList = mHandler.getAllJsonItems2();
 
+        //    test
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+        recyclerView.setAdapter(adapter);
+
         final Spinner categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
-        categories.add(0, "no filter");
+        categories.add(0, getResources().getString(R.string.all_item));
 
         final ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, categories);
         categorySpinner.setAdapter(ad);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
-        recyclerView.setAdapter(adapter);
+//        final RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+//        recyclerView.setAdapter(adapter);
+
+        // ****************************** Kind Item Spenner*****************************************************
+
+        final Spinner Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
+        List<String> Kind_item = mHandler.getAllKindItems();
+        Log.e("kindlist_db",""+Kind_item.size());
+        Kind_item.add(0 ,getResources().getString(R.string.all_item));
+
+      final  ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, Kind_item);
+        Kind_item_Spinner.setAdapter(adapter_kind);
+        //kind item
+        Kind_item_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    for (int j = 0; j < jsonItemsList.size(); j++) {
+                        Log.e("llog",jsonItemsList.get(j).getKind_item() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+                        if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
+                            filteredList.add(jsonItemsList.get(j));
+                    }
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    recyclerView.setAdapter(adapter);
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
+                if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                     ArrayList<Item> filteredList = new ArrayList<>();
                     for (int k = 0; k < jsonItemsList.size(); k++) {
                         if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
@@ -120,6 +166,8 @@ public class AddItemsFragment2 extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                recyclerView.setAdapter(adapter);
 
             }
         });
@@ -175,6 +223,7 @@ public class AddItemsFragment2 extends DialogFragment {
         this.listener = null;
     }
 
+
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
@@ -197,102 +246,119 @@ public class AddItemsFragment2 extends DialogFragment {
             TextView messageTextView = (TextView) group.getChildAt(0);
             messageTextView.setTextSize(15);
             toast.show();
+
             return false;
         }
+//        else {
 
-        item = new Item();
-        item.setItemNo(itemNumber);
-        item.setItemName(itemName);
-        item.setTax(Float.parseFloat(tax.trim()));
-        item.setCategory(category);
-
-        try {
-            item.setUnit(unit);
-            //****************************
-            item.setQty(Float.parseFloat(qty));
-            total_items_quantity+=item.getQty();
-            totalQty_textView.setText("+ "+total_items_quantity);
-            Log.e("setQty",""+Float.parseFloat(qty));
-            Log.e("total_items_quantity",""+total_items_quantity);
-            item.setPrice(Float.parseFloat(price.trim()));
-            if (bonus == "")
-                item.setBonus(Float.parseFloat("0.0"));
-            else
-                item.setBonus(Float.parseFloat(bonus));
+            item = new Item();
+            item.setItemNo(itemNumber);
+            item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
-            item.setPosPrice(Float.parseFloat(posPrice.trim()));
+            item.setCategory(category);
 
-        } catch (NumberFormatException e) {
-            item.setUnit("");
-            item.setQty(0);
-            item.setPrice(0);
-            item.setBonus(0);
-            item.setDisc(0);
-            item.setDiscPerc("0");
-            item.setAmount(0);
-            Log.e("Add new item error", e.getMessage().toString());
-        }
+            try {
+                item.setUnit(unit);
+                //****************************
 
+                item.setQty(Float.parseFloat(qty));
 
-        if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-            item.setDiscType(1);
-        } else {
-            item.setDiscType(0);
-        }
+                item.setPrice(Float.parseFloat(price.trim()));
+                if (bonus == "")
+                    item.setBonus(Float.parseFloat("0.0"));
+                else
+                    item.setBonus(Float.parseFloat(bonus));
+                item.setTax(Float.parseFloat(tax.trim()));
+                item.setPosPrice(Float.parseFloat(posPrice.trim()));
 
-        try {
-            if (item.getDiscType() == 0) {
-                item.setDisc(Float.parseFloat(discount.trim()));
-                item.setDiscPerc((item.getQty() * item.getPrice() *
-                        (Float.parseFloat(discount.trim()) / 100)) + "");
-
-            } else {
-                item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
-                item.setDisc(item.getQty() * item.getPrice() *
-                        (Float.parseFloat(discount.trim())) / 100);
+            } catch (NumberFormatException e) {
+                item.setUnit("");
+                item.setQty(0);
+                item.setPrice(0);
+                item.setBonus(0);
+                item.setDisc(0);
+                item.setDiscPerc("0");
+                item.setAmount(0);
+                Log.e("Add new item error", e.getMessage().toString());
             }
-            descPerc = ((item.getQty() * item.getPrice() *
-                    (Float.parseFloat(discount.trim()) / 100)));
 
 
-        } catch (NumberFormatException e) {
-            item.setDisc(0);
-            item.setDiscPerc("0");
-        }
+            if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
+                item.setDiscType(1);
+            } else {
+                item.setDiscType(0);
+            }
 
-        try {
-            if (item.getDiscType() == 0) {
+            try {
+                if (item.getDiscType() == 0) {
+                    item.setDisc(Float.parseFloat(discount.trim()));
+                    item.setDiscPerc((item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim()) / 100)) + "");
 
-                itemGroup = item.getCategory();
+                } else {
+                    item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
+                    item.setDisc(item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim())) / 100);
+                }
+                descPerc = ((item.getQty() * item.getPrice() *
+                        (Float.parseFloat(discount.trim()) / 100)));
+
+
+            } catch (NumberFormatException e) {
+                item.setDisc(0);
+                item.setDiscPerc("0");
+            }
+
+            try {
+                if (item.getDiscType() == 0) {
+
+                    itemGroup = item.getCategory();
 
                 /*if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
                     item.setAmount(item.getQty() * (float)item.getPosPrice()  - item.getDisc());
                 else*/
 
 
-                item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
+                    item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
 
-                Log.e("log =" , item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
+                    Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
-            } else {
+                } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
-                item.setAmount(item.getQty() * item.getPrice() - descPerc);
-                Log.e("log ==" , item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                    item.setAmount(item.getQty() * item.getPrice() - descPerc);
+                    Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                }
+            } catch (NumberFormatException e) {
+                item.setAmount(0);
             }
-        } catch (NumberFormatException e) {
-            item.setAmount(0);
-        }
+//        }
 
 
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
-            List.add(item);
-            Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(15);
-            toast.show();
+            if (item.getItemName().equals("(bonus)")) {
+                flagBonus = List.get(List.size() - 1).getQty();
+                total_items_quantity -= flagBonus;
+                Log.e("flagBonus", "" + flagBonus);
+//               ?     amountBonus = items.get(i).getQty();
+//                    totalQty = totalQty - flagBonus;
+            }
+            else {
+                total_items_quantity += item.getQty();
+                totalQty_textView.setText("+ " + total_items_quantity);
+                Log.e("setQty", "" + Float.parseFloat(qty));
+                Log.e("total_items_quantity", "" + total_items_quantity);
+            }
+
+
+                List.add(item);
+                Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 180);
+                ViewGroup group = (ViewGroup) toast.getView();
+                TextView messageTextView = (TextView) group.getChildAt(0);
+                messageTextView.setTextSize(15);
+                toast.show();
+
 
             return true;
 
@@ -307,4 +373,6 @@ public class AddItemsFragment2 extends DialogFragment {
         }
     }
 
+
 }
+

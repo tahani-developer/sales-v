@@ -73,12 +73,21 @@ public class AddItemsStockFragment extends DialogFragment {
         else
             jsonItemsList = mHandler.getAllJsonItems2();
 
+        // ****************************** Category Spinner Spenner*****************************************************
+
         final Spinner categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0 , "no filter");
 
         ArrayAdapter<String> ad = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, categories);
         categorySpinner.setAdapter(ad);
+
+
+
+
+
+
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView2);
@@ -103,6 +112,7 @@ public class AddItemsStockFragment extends DialogFragment {
                     recyclerView.setAdapter(adapter);
                 }
             }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

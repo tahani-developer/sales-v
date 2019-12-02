@@ -34,21 +34,58 @@ public class Item {
     private double minSalePrice;
     private double posPrice;
     private String salesmanNo;
+    private  String Kind_item;
 
     public Item()
     {
 
     }
-    //constructor for add item recycler
-    public Item(String itemNo, String itemName, float qty, String category, String barcode, float price ,double itemL) {
+
+    public String getKind_item() {
+        return Kind_item;
+    }
+
+    public void setKind_item(String kind_item) {
+        Kind_item = kind_item;
+    }
+
+    public Item(String itemNo, String itemName, String unit, String date, float qty, String category, String barcode,
+                float price, float bonus, float disc, float amount, String discPerc, float voucherDiscount, int filling,
+                int voucherNumber, int voucherType, double taxValue, float taxPercent, double totalDiscVal, int discType, String description,
+                int companyNumber, String year, int isPosted,
+                double itemL, double minSalePrice, double posPrice, String salesmanNo, String kind_item) {
         this.itemNo = itemNo;
         this.itemName = itemName;
+        this.unit = unit;
+        this.date = date;
         this.qty = qty;
         this.category = category;
         this.barcode = barcode;
         this.price = price;
+        this.bonus = bonus;
+        this.disc = disc;
+        this.amount = amount;
+        this.discPerc = discPerc;
+        this.voucherDiscount = voucherDiscount;
+        this.filling = filling;
+        this.voucherNumber = voucherNumber;
+        this.voucherType = voucherType;
+        this.taxValue = taxValue;
+        this.taxPercent = taxPercent;
+        this.totalDiscVal = totalDiscVal;
+        this.discType = discType;
+        this.description = description;
+        this.companyNumber = companyNumber;
+        this.year = year;
+        this.isPosted = isPosted;
         this.itemL = itemL;
+        this.minSalePrice = minSalePrice;
+        this.posPrice = posPrice;
+        this.salesmanNo = salesmanNo;
+        Kind_item = kind_item;
     }
+
+    //constructor for add item recycler
 
     //constructor for sales invoice
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,

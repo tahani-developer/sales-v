@@ -141,6 +141,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            String do_="my";
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(false);
             progressDialog.setMessage("Loading...");
