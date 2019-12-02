@@ -255,6 +255,153 @@ public class CPCLSample2 {
 
     }
 
+
+//    public void printMultilingualFont2(int count,Bitmap testB) throws UnsupportedEncodingException {
+//        if (count == 0) {
+//            voucherforPrint = vouch1;
+//            itemforPrint = items;
+//        } else {
+//            voucherforPrint = voucher;
+//            itemforPrint = itemForPrint;
+////            Log.e("print sales ..",""+itemsList.get(0).getItemName()+" \n"+itemforPrint.get(0));
+//        }
+//        int nLineWidth = 1140;
+//        String Arabicdata = "";//ArabicDataPrinter();
+//        String test="        ";
+//        int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
+//
+//        try {
+//            this.cpclPrinter.setForm(0, 200, 200, 1700, numOfCopy);
+//            this.cpclPrinter.setMedia(this.paperType);
+//
+//
+//            double total_Qty=0;
+//
+//            String DataArabic = "";
+//            String voucherTyp = "";
+//            switch (voucherforPrint.getVoucherType()) {
+//                case 504:
+//                    voucherTyp = "فاتورة بيع";
+//                    break;
+//                case 506:
+//                    voucherTyp = "فاتورة مرتجعات";
+//                    break;
+//                case 508:
+//                    voucherTyp = "طلب جديد";
+//                    break;
+//            }
+//
+//
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//
+//
+//            DataArabic += "                             "+companyInfo.getCompanyName() + "                             \n" +
+//                    "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+//                    "--------------------------------------------------------------------------------" + "\n" +
+//                    "رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n" +
+//
+//                    "اسم العميل   : " + voucherforPrint.getCustName() + "\n" +
+//                    "ملاحظة        : " + voucherforPrint.getRemark() + "\n" +
+//                    "نوع الفاتورة : " + voucherTyp + "\n" +
+//                    "طريقة الدفع  : " + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n" +
+//
+//                    "--------------------------------------------------------------------------------" + "\n";
+//            this.cpclPrinter.printAndroidFont(DataArabic, nLineWidth, 18, 360, 0);
+//
+////            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+////                total_Qty=0;
+////
+////                DataArabic += " السلعة           " + "العدد      " + "الوزن    " + "سعر الوحدة   " + "المجموع  " + "\n" +
+////                        "--------------------------------------------------------------------------------" + "\n";
+////
+////                for (int i = 0; i < itemforPrint.size(); i++) {
+////                    if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+////                        total_Qty+=itemforPrint.get(i).getQty();
+////
+////                        String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+//////                    amount = convertToEnglish(amount);
+////                        if (itemforPrint.get(i).getItemName().length() <= 12) {
+////                            String space = itemforPrint.get(i).getItemName();
+////                            for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+////                                space = " " + space;
+////                            }
+//////                            DataArabic += space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n";
+////                        } else {
+////                            String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//////                            space = " " + space;
+//////                        }
+////                            String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+//////                            DataArabic += space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n" + fullString + "\n";
+////                        }
+////
+////
+////                    }
+////                }
+//////           (itemsString + "\n", 0, 2);
+////            } else {
+////                total_Qty=0;
+//////                DataArabic += " السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n" +
+//////                        "--------------------------------------------------------------------------------" + "\n";
+////                for (int i = 0; i < itemforPrint.size(); i++) {
+////                    if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+////                        total_Qty+=itemforPrint.get(i).getQty();
+////                        String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+////
+////
+////                        if (itemforPrint.get(i).getItemName().length() <= 12) {
+////                            String space = itemforPrint.get(i).getItemName();
+////                            for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+////                                space = " " + space;
+////                            }
+////                            DataArabic += space + "  " + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n";
+////                        } else {
+////                            String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//////                            space = " " + space;
+//////                        }
+////                            String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+//////                            DataArabic += space + "\t\t\t"  + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n" + fullString + "\n";
+////                        }
+////
+////
+//////                    amount = convertToEnglish(amount);
+////                    }
+////                }
+////
+//////            (itemsString2 + "\n", 0, 2);
+////            }
+//            Arabicdata += "--------------------------------------------------------------------------------" + "\n" +
+//                    "اجمالي الكمية  : " + total_Qty + "\n" +
+//                    "المجموع  : " + voucherforPrint.getSubTotal() + "\n" +
+//                    "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" +   Log.e("getTotalVoucherDiscount",""+voucherforPrint.getTotalVoucherDiscount())+
+//
+//                    "الضريبة  : " + voucherforPrint.getTax() + "\n" +
+//                    "الصافي   : " + voucherforPrint.getNetSales() + "\n" +
+//                    "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n" +
+//                    "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n" +
+//                    "المستلم : ________________ التوقيع : __________" + "\n" +
+//                    "--------------------------------------------------------------------------------" + "\n";
+//
+//            Log.e("total_Qty",""+total_Qty);
+//
+//
+//
+//            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 18, 360, 0);
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
+////            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 360, 0);
+//            this.cpclPrinter.printForm();
+//        } catch (IOException var12) {
+//            var12.printStackTrace();
+//        }
+//
+//    }
+
     public void printMultilingualFont(int count,Bitmap testB) throws UnsupportedEncodingException {
         if (count == 0) {
             voucherforPrint = vouch1;
