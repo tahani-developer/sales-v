@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity
                             if(mDbHandler.getAllSettings().get(0).getPassowrd_data()==1) {
                                 openPasswordDialog(6);
                             }
-                            else{
+                            else{ 
                                 ExportJason obj = null;
                             try {
                                 obj = new ExportJason(MainActivity.this);
