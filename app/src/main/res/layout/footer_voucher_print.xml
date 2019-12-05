@@ -37,7 +37,7 @@
             android:text="       __________________________________________________________"
 
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="15sp" />
 
 
         <TableLayout
@@ -53,18 +53,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="اجمالي الكمية  : "
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="15sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/total_qty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="15sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </TableRow>
 
 
@@ -77,18 +77,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="المجموع :"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2011"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow
@@ -100,18 +100,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="الخصم :"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/discount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow
@@ -123,18 +123,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="الضريبة : "
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow
@@ -146,18 +146,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="الصافي : "
-                    android:textStyle="bold"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ammont"
-                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </TableRow>
         </TableLayout>
 
@@ -166,29 +166,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:visibility="invisible"
             android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة . "
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            android:visibility="invisible" />
+
         <TextView
             android:id="@+id/notelast2"
-            android:layout_width="wrap_content"
+            android:layout_width="650dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
 
-            android:textStyle="bold"
             android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب "
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/notelast3"
-            android:layout_width="wrap_content"
+            android:layout_width="650dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:text=" واتعهد بدفع قيمة هذه الفاتورة . "
             android:textColor="@color/add_button"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TableRow
             android:id="@+id/sing"
@@ -202,9 +204,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="المستلم : "
-                android:textStyle="bold"
                 android:textColor="@color/add_button"
-                android:textSize="16sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView65"
@@ -212,16 +214,16 @@
                 android:layout_height="wrap_content"
                 android:text="___________"
                 android:textColor="@color/add_button"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/textView67"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="التوقيع :"
-                android:textStyle="bold"
                 android:textColor="@color/add_button"
-                android:textSize="16sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/textView66"
@@ -229,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:text="__________"
                 android:textColor="@color/add_button"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
         </TableRow>
 
     </LinearLayout>
