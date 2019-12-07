@@ -537,8 +537,13 @@ public class BluetoothConnectMenu extends Activity {
                                     sample.printMultilingualFontCash(4);
                                     paymentsforPrint.clear();
                                 }
-                            } else if (count == 3) {
+                            }
+                            else if (count == 3) {
                                 sample.printMultilingualFontCashReport();
+
+                            }
+                            else if (count == 5) {
+                                sample.printMultilingualFont_AccountReport();
 
                             }
                         }

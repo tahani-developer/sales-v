@@ -488,6 +488,12 @@ public class bMITP extends Activity {
                           }
                           paymentPrinter.clear();
                           break;
+                      case 5:
+                          for(int i=0;i<settings;i++) {
+                              sample.printMultilingualFont_AccountReport();
+                          }
+
+                          break;
 
                   }
 

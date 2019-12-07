@@ -336,7 +336,7 @@ public class VouchersReport extends AppCompatActivity {
             to_date.setText(sdf.format(myCalendar.getTime()));
     }
 
-    public Date formatDate (String date) throws ParseException {
+    public  Date formatDate (String date) throws ParseException {
 
             String myFormat = "dd/MM/yyyy"; //In which you need put here
             SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);

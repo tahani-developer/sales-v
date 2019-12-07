@@ -68,10 +68,12 @@ public class AddItemsStockFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_items_stock_dialog, container, false);
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+        String rate_customer=mHandler.getRateOfCustomer();
+        Log.e("rate addItem",""+rate_customer);
         if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
-            jsonItemsList = mHandler.getAllJsonItems();
+            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
         else
-            jsonItemsList = mHandler.getAllJsonItems2();
+            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
 
         // ****************************** Category Spinner Spenner*****************************************************
 

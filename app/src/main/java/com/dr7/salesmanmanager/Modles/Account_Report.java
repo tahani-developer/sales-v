@@ -11,13 +11,24 @@ public class Account_Report {
     private String debtor;
     private String creditor;
     private String cust_balance;
+    private  String cust_no;
 
-    public Account_Report(String date, String transfer_name, String debtor, String creditor, String cust_balance) {
+
+    public Account_Report(String date, String transfer_name, String debtor, String creditor, String cust_balance, String cust_no) {
         this.date = date;
         this.transfer_name = transfer_name;
         this.debtor = debtor;
         this.creditor = creditor;
         this.cust_balance = cust_balance;
+        this.cust_no = cust_no;
+    }
+
+    public String getCust_no() {
+        return cust_no;
+    }
+
+    public void setCust_no(String cust_no) {
+        this.cust_no = cust_no;
     }
 
     public Account_Report() {

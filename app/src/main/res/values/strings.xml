@@ -124,6 +124,7 @@
     <string name="app_confirm_dialog">Confirm</string>
     <string name="app_confirm_dialog_msg">Are you sure you want to close current activity?</string>
     <string name="app_confirm_dialog_clear">Are you sure you want to clear all ?</string>
+    <string name="app_alert_dialog_maxDiscount">Sorry , total discount is greater than max discount</string>
     <string name="app_confirm_dialog_save">Are you sure you want to save the data ?</string>
     <string name="app_confirm_dialog_clear_item">Do you want to delete this item ?</string>
     <string name="app_disc_type">Discount Type</string>
@@ -297,12 +298,15 @@
     <string name="failStockSoft_export_data">Please check Stock software before import new data</string>
     <string name="kind_item">Kind</string>
     <string name="all_item">All Item</string>
-    <string name="app_account_report">Account Report </string>
-    <string name="last_account">Last Account</string>
+    <string name="app_account_report">Account Statment</string>
+    <string name="last_account">Previous balance</string>
     <string name="transfer_name">Transfer Name</string>
     <string name="Debtor">Debtor</string>
     <string name="Creditor">Creditor</string>
-    <string name="Final_customer_balance">Final customer balance</string>
+    <string name="Final_customer_balance">Account  balance</string>
+    <string name="max_discount_customer">Max Discount</string>
+    <string name="app_alert">Alert</string>
+    <string name="app_confirm_dialog_exceedDis">Sorrey you are exceed the max Discount value for this customer</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
