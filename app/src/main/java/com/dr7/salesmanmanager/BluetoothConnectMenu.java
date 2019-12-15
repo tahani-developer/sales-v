@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Vector;
 
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
+import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.TOTAL;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
@@ -525,15 +526,15 @@ public class BluetoothConnectMenu extends Activity {
                         } else {
                             if (count == 2||count==4) {
                                 if(count==2){
-                                payList=paymentsforPrint;
-                                payforBank=ReceiptVoucher.payment;
-                                sample.printMultilingualFontCash();
+//                                payList=paymentsforPrint;
+//                                payforBank=ReceiptVoucher.payment;
+                                sample.printMultilingualFontCash(2);
                                 paymentsforPrint.clear();
                                 }
                                 else {
-                                    payList=PrintPayment.payment;
-                                    payforBank=pay1;
-                                    sample.printMultilingualFontCash();
+//                                    payList=paymentPrinter;
+//                                    payforBank=pay1;
+                                    sample.printMultilingualFontCash(4);
                                     paymentsforPrint.clear();
                                 }
                             }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.AccountReport;
 import com.sewoo.jpos.printer.CPCLPrinter;
@@ -23,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.PrintPayment.pay1;
+import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.payment;
@@ -48,6 +51,9 @@ public class CPCLSample2 {
     Context context;
     Voucher voucherforPrint;
     List<Item> itemforPrint;
+
+    List<Payment>payList;
+    Payment payforBank;
 
     public CPCLSample2(Context context) {
         this.context = context;
@@ -437,10 +443,10 @@ public class CPCLSample2 {
     }
 
 
-    public void printMultilingualFontCash() throws UnsupportedEncodingException {
+    public void printMultilingualFontCash(int count) throws UnsupportedEncodingException {
 
         int nLineWidth = 1140;
-        String Arabicdata = bankArabic();
+        String Arabicdata = bankArabic(count);
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
         try {
@@ -599,25 +605,37 @@ public class CPCLSample2 {
     }
 
 
-    String bankArabic() {
+    String bankArabic(int count) {
+
+
+            if(count==2){
+                payList=paymentsforPrint;
+                payforBank=ReceiptVoucher.payment;
+
+            }
+            else {
+                payList=paymentPrinter;
+                payforBank=pay1;
+            }
+
 
         String dataArabic = "";
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-        if (payment.getPayMethod() == 1) {
+        if (payforBank.getPayMethod() == 1) {
 
             dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
                     "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                          "--------------------------------------------------------------------------------" + "\n" +"                                        "+
                     " سند قبض " + "                                        \n\n" +
-                    "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                    "رقم السند: " + payforBank.getVoucherNumber() + "         التاريخ: " + payforBank.getPayDate() + "\n" +
                     "       " + "\n" +
                     "وصلني من السيد/السادة: " + "\t" +
-                    payment.getCustName() + "\n" +
-                    "ملاحظة: " + payment.getRemark() + "\n" +
-                    "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                    "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
+                    payforBank.getCustName() + "\n" +
+                    "ملاحظة: " + payforBank.getRemark() + "\n" +
+                    "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
+                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
 
 
         } else {
@@ -626,34 +644,34 @@ public class CPCLSample2 {
                     "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                     "--------------------------------------------------------------------------------" + "\n" +"                                        "+
                     " سند قبض " + "                                        \n\n" +
-                    "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                    "رقم السند: " + payforBank.getVoucherNumber() + "         التاريخ: " + payforBank.getPayDate() + "\n" +
                     "       " + "\n" +
                     "وصلني من السيد/السادة: " + "\t" +
-                    payment.getCustName() + "\n" +
-                    "ملاحظة: " + payment.getRemark() + "\n" +
-                    "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                    "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
+                    payforBank.getCustName() + "\n" +
+                    "ملاحظة: " + payforBank.getRemark() + "\n" +
+                    "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
+                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
                     "--------------------------------------------------------------------------------" + "\n\n" +
                     "        القيمة     " + "      التاريخ      " + "   رقم الشيك         " + "  البنك    " + "\n" +
                     "--------------------------------------------------------------------------------" + "\n" +
                     "       " + "\n";
 
-            for (int i = 0; i < paymentsforPrint.size(); i++) {
+            for (int i = 0; i < payList.size(); i++) {
 
-                if (paymentsforPrint.get(i).getBank().length() <= 12) {
-                    String space = paymentsforPrint.get(i).getBank();
-                    for (int g = 0; g < 12 - paymentsforPrint.get(i).getBank().length(); g++) {
+                if (payList.get(i).getBank().length() <= 12) {
+                    String space = payList.get(i).getBank();
+                    for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
                         space += "\t";
                     }//"\t\t\t\t" +
-                    dataArabic +="\t\t"+space+ paymentsforPrint.get(i).getCheckNumber()+"\t\t\t\t"+ paymentsforPrint.get(i).getDueDate()+"\t\t\t" + paymentsforPrint.get(i).getAmount() + "\n";
+                    dataArabic +="\t\t"+space+ payList.get(i).getCheckNumber()+"\t\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n";
 //                    dataArabic += "\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space + "\n";
                 } else {
-                    String space = paymentsforPrint.get(i).getBank().substring(0, 10);
+                    String space = payList.get(i).getBank().substring(0, 10);
 //                    for (int g = 0; g <  paymentsforPrint.get(i).getBank().length()-12; g++) {
 //                        space+= "\t" ;
 //                    }
-                    String fullString = paymentsforPrint.get(i).getBank().substring(10, paymentsforPrint.get(i).getBank().length() - 1);
-                    dataArabic += "\t\t"+space +"\t\t\t"+ paymentsforPrint.get(i).getCheckNumber() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t" + paymentsforPrint.get(i).getAmount() + "\n" + fullString + "\n";
+                    String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
+                    dataArabic += "\t\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n";
 //                    dataArabic +=   "\n\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
                 }
             }
