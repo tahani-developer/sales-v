@@ -22,7 +22,7 @@
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
 
         android:background="@color/layer2"
         android:padding="10dp"
@@ -41,45 +41,46 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/addItemImgButton2"
                 android:clickable="true"
-                android:layout_width="80dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/items2"
                 app:civ_border_color="@color/colorPrimaryDark"/>
             <!--            android:layout_marginLeft="50dp"-->
             <TextView
                 android:id="@+id/items_quntity"
-                android:layout_width="28dp"
-                android:layout_height="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/addItemImgButton2"
+                android:layout_alignParentRight="@+id/addItemImgButton2"
 
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="40dp"
+
+                android:padding="3dp"
+                android:textStyle="bold"
                 android:text="+"
-
-                android:textColor="@color/colorPrimaryDark"
-
-                android:textSize="25sp" />
+                android:textColor="@color/second_color"
+                android:textSize="20sp" />
         </RelativeLayout>
         <ImageButton
             android:id="@+id/saveInvoiceData"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/save_btn" />
 
         <ImageButton
             android:id="@+id/newImgBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
 
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/new_inv" />
         <ImageButton
             android:id="@+id/max_disc"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc" />
 
@@ -99,8 +100,8 @@
             android:clickable="true"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginRight="20dp"
-            android:visibility="gone"
+            android:layout_marginRight="10dp"
+            android:visibility="visible"
             android:src="@drawable/reload_arrow"
             app:civ_border_color="@color/colorPrimaryDark"/>
         <ImageButton
@@ -134,8 +135,17 @@
     <LinearLayout
         android:id="@+id/row2"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:elevation="3dp"
+            android:background="@drawable/back_border_edit">
 
         <TextView
             android:layout_width="wrap_content"
@@ -143,19 +153,29 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
+            android:textStyle="bold"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/voucherNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="12sp" />
+            android:text=""
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:elevation="3dp"
+            android:background="@drawable/back_border_edit">
 
         <TextView
             android:layout_width="wrap_content"
@@ -164,9 +184,10 @@
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:gravity="center_vertical"
+            android:textStyle="bold"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/invoiceCustomerName"
@@ -175,9 +196,11 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
+            android:text=""
             android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="12sp" />
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp" />
+        </LinearLayout>
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/custInfoImgBtn"-->
@@ -209,7 +232,7 @@
             android:id="@+id/transKindRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/layer1"
+            android:background="@color/layer4"
             android:orientation="horizontal"
             android:paddingLeft="2dp"
             android:paddingRight="2dp">
@@ -220,7 +243,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_trans_kind"
                 android:textColor="@color/second_color"
-                android:textSize="12dp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -231,7 +254,7 @@
                 android:checked="true"
                 android:text="@string/app_sales_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/retSalesRadioButton"
@@ -241,7 +264,7 @@
                 android:checked="false"
                 android:text="@string/app_ret_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/orderRadioButton"
@@ -251,7 +274,7 @@
                 android:checked="false"
                 android:text="@string/app_cust_order"
                 android:textColor="@color/text_view_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
         </RadioGroup>
 
@@ -259,11 +282,11 @@
             android:id="@+id/paymentTermRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
-            android:background="@color/layer1"
+            android:layout_marginLeft="20dp"
+            android:background="@color/layer4"
             android:orientation="horizontal"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp">
+            android:paddingLeft="20dp"
+            android:paddingRight="30dp">
 
             <TextView
                 android:id="@+id/tv"
@@ -271,7 +294,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/payemtnTerm"
                 android:textColor="@color/second_color"
-                android:textSize="12dp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -281,7 +304,7 @@
                 android:layout_marginLeft="1dp"
                 android:text="@string/app_credit"
                 android:textColor="@color/text_view_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/cashRadioButton"
@@ -291,7 +314,7 @@
                 android:checked="true"
                 android:text="@string/app_cash"
                 android:textColor="@color/text_view_color"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
         </RadioGroup>
     </LinearLayout>
 
@@ -314,7 +337,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:textColor="@color/totals_color" />
 
     </LinearLayout>
@@ -337,7 +360,7 @@
             android:layout_weight="1"
             android:text="@string/app_item_no"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -347,7 +370,7 @@
             android:layout_weight="1"
             android:text="@string/app_desc"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -356,7 +379,7 @@
             android:layout_weight="1"
             android:text="@string/app_qty"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -365,7 +388,7 @@
             android:layout_weight="1"
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -374,7 +397,7 @@
             android:layout_weight="1"
             android:text="@string/app_bonus"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -383,7 +406,7 @@
             android:layout_weight="1"
             android:text="@string/app_line_disc"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
 
@@ -393,7 +416,7 @@
             android:layout_weight="1"
             android:text="@string/app_amount"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -401,7 +424,7 @@
     <LinearLayout
         android:id="@+id/row7"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="270dp"
         android:layout_gravity="fill"
         android:orientation="vertical">
 
@@ -422,7 +445,7 @@
         android:columnCount="8">
 
         <LinearLayout
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="10dp">
@@ -433,7 +456,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_sub_total"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -443,14 +466,14 @@
                 android:paddingHorizontal="10dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="5dp">
@@ -461,7 +484,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_disc"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="@string/app_disc" />
 
@@ -472,13 +495,13 @@
                 android:paddingHorizontal="10dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="5dp">
@@ -489,7 +512,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_tax"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="@string/app_tax" />
 
@@ -500,14 +523,14 @@
                 android:paddingHorizontal="10dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="130dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginHorizontal="5dp">
@@ -518,17 +541,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_net_sales"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/netSalesTextView1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
         </LinearLayout>

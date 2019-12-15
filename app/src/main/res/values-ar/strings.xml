@@ -352,4 +352,9 @@
     <string name="max_discount_customer"> الحد الاعلى للخصم </string>
     <string name="app_alert">تنبيه !!</string>
     <string name="app_confirm_dialog_exceedDis">عفوا أنت تجاوزت الحد الأقصى لقيمة الخصم لهذا العميل</string>
+    <string name="hideQty">
+         اخفاء الكميات لمندوب المبيعات
+       </string>
+    <string name="lockcash">قفل تقرير الكاش </string>
+    <string name="showpass">اظهار </string>
 </resources>

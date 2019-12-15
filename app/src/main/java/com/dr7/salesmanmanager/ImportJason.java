@@ -259,6 +259,7 @@ public class ImportJason extends AppCompatActivity{
 
                 String finalJson = sb.toString();
                 Log.e("finalJson*********" , finalJson);
+                String rate_customer="";
 
                 JSONObject parentObject = new JSONObject(finalJson);
                 try
@@ -289,7 +290,23 @@ public class ImportJason extends AppCompatActivity{
                     }
                     Customer.setCustLat(finalObject.getString("LATITUDE"));
                     Customer.setCustLong(finalObject.getString("LONGITUDE"));
-                    Customer.setACCPRC(finalObject.getString("ACCPRC"));
+
+
+                    try {
+                        rate_customer=finalObject.getString("ACCPRC");
+                        if(!rate_customer.equals("null"))
+                        Customer.setACCPRC(rate_customer);
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
 
                     customerList.add(Customer);
                 }
@@ -334,8 +351,18 @@ public class ImportJason extends AppCompatActivity{
                     item.setPosPrice(finalObject.getDouble("F_D"));
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
+                    try {
+                      if(  finalObject.getString("ITEMK")=="")
+                          item.setKind_item("***");
+                      else
+                        item.setKind_item(finalObject.getString("ITEMK")); // here ?
 
-                    item.setKind_item(finalObject.getString("ItemK"));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ErrorImport","Item_Kind_null");
+
+                    }
                     itemsMasterList.add(item);
                 }
                 }

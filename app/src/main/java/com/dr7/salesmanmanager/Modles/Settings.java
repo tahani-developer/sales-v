@@ -24,6 +24,55 @@ public class Settings {
     private  int customer_authorized;
     private  int passowrd_data;
     private int arabic_language;
+    private int  hide_qty;
+    private int lock_cashreport;
+
+    public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
+                    int allowMinus, int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange,
+                    int canChangePrice, int readDiscountFromOffers, int workOnline, int paymethodCheck, int bonusNotAlowed, int noOffer_for_credit,
+                    int amountOfMaxDiscount, int customer_authorized, int passowrd_data, int arabic_language, int hide_qty, int lock_cashreport) {
+        IpAddress = ipAddress;
+        this.transactionType = transactionType;
+        this.serial = serial;
+        this.taxClarcKind = taxClarcKind;
+        this.priceByCust = priceByCust;
+        this.useWeightCase = useWeightCase;
+        this.allowMinus = allowMinus;
+        this.numOfCopy = numOfCopy;
+        this.salesManCustomers = salesManCustomers;
+        this.minSalePric = minSalePric;
+        this.printMethod = printMethod;
+        this.allowOutOfRange = allowOutOfRange;
+        this.canChangePrice = canChangePrice;
+        this.readDiscountFromOffers = readDiscountFromOffers;
+        this.workOnline = workOnline;
+        this.paymethodCheck = paymethodCheck;
+        this.bonusNotAlowed = bonusNotAlowed;
+        this.noOffer_for_credit = noOffer_for_credit;
+        this.amountOfMaxDiscount = amountOfMaxDiscount;
+        this.customer_authorized = customer_authorized;
+        this.passowrd_data = passowrd_data;
+        this.arabic_language = arabic_language;
+        this.hide_qty = hide_qty;
+        this.lock_cashreport = lock_cashreport;
+    }
+
+    public int getHide_qty() {
+        return hide_qty;
+    }
+
+    public void setHide_qty(int hide_qty) {
+        this.hide_qty = hide_qty;
+    }
+
+    public int getLock_cashreport() {
+        return lock_cashreport;
+    }
+
+    public void setLock_cashreport(int lock_cashreport) {
+        this.lock_cashreport = lock_cashreport;
+    }
+
     public Settings(){
 
     }

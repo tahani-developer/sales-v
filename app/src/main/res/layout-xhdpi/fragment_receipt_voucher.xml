@@ -20,21 +20,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/row1"
-        android:layout_marginBottom="3dp"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/layer2"
         >
         <ImageButton
             android:id="@+id/ClearForm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_height="60dp"
             android:background="@drawable/new_inv"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="40dp"
             />
 
         <ImageButton
             android:id="@+id/SaveData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:background="@drawable/save_btn"
             android:layout_marginRight="20dp"
             />
@@ -53,6 +55,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/back_border_edit"
         android:id="@+id/row2"
         >
 
@@ -155,10 +160,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/back_border_edit"
+
             android:text="@string/app_paymentDetails"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/layer2"
+
             android:textSize="@dimen/content_xlarge"
+            android:textStyle="bold"
             android:gravity="center_horizontal"
             android:textColor="@color/text_view_color"
             />

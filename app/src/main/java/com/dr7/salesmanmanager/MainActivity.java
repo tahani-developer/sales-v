@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -717,6 +718,18 @@ public class MainActivity extends AppCompatActivity
         final EditText password = (EditText) dialog.findViewById(R.id.editText1);
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+        final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
+//        EditText et1 = (EditText) this.findViewById(R.id.editText1);
+        cb_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cb_show.isChecked()) {
+                    password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    password.setInputType(129);
+                }
+            }
+        });
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -817,6 +830,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
             final CheckBox passowrdData_checkbox = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
             final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
+            final CheckBox hideQty_checkbox = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
+            final CheckBox lockcash_checkbox = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -876,6 +891,12 @@ public class MainActivity extends AppCompatActivity
                     passowrdData_checkbox.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     arabicLanguage_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getHide_qty() == 1) {
+                    hideQty_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getLock_cashreport() == 1) {
+                    lockcash_checkbox.setChecked(true);
                 }
 
 
@@ -946,14 +967,16 @@ public class MainActivity extends AppCompatActivity
                                 int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
                                 int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
                                 int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
+                                int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
+                                int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
 
                                 mDbHandler.deleteAllSettings();
 
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport);
+                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport);
+                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport);
 
                                 dialog.dismiss();
                             } else

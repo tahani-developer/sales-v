@@ -229,6 +229,7 @@ public class SalesInvoice extends Fragment {
             public void onClick(View v) {
                 RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
                 obj.startParsing();
+//                calculateTotals();
             }
         });
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
@@ -816,6 +817,10 @@ public class SalesInvoice extends Fragment {
         double discount_total_voucher=0;
         maxDiscounr_value=mDbHandler.getMaxDiscValue_ForCustomer(CustomerListShow.Customer_Account);
         discount_voucher=((maxDiscounr_value*subTotal)/100);
+        if(discount_voucher==0)// الحد الاعلى لخصم الزبون =0 يسمح ببيعه
+        {
+            return true;
+        }
         String disc=discTextView.getText().toString();
         if(disc!="")
         {

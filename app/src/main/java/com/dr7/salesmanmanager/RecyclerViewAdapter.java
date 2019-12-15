@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +74,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.category.setText("" + items.get(holder.getAdapterPosition()).getCategory());
-        holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
+
+        if(MHandler.getAllSettings().get(0).getHide_qty()==1) {
+            holder.row_qty.setVisibility(View.GONE);
+//            holder.unitQty.setVisibility(View.GONE);
+        }
+        else{
+            holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
+        }
+
         holder.price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
@@ -421,6 +430,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         LinearLayout linearLayout;
         CardView cardView;
+        TableRow row_qty;
         TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode,posprice;
 
         public viewHolder(View itemView) {
@@ -436,6 +446,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tax = itemView.findViewById(R.id.textViewTax);
             barcode = itemView.findViewById(R.id.textViewBarcode);
             posprice= itemView.findViewById(R.id.textViewPosPrice);
+            row_qty=itemView.findViewById(R.id.row_qty);
         }
     }
 
