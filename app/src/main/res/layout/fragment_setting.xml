@@ -418,6 +418,22 @@
                 android:text="@string/arabic_language"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
+            <CheckBox
+                android:id="@+id/hideQty_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/hideQty"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp" />
+            <CheckBox
+                android:id="@+id/lockcash_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/lockcash"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

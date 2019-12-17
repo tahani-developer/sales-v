@@ -307,6 +307,9 @@
     <string name="max_discount_customer">Max Discount</string>
     <string name="app_alert">Alert</string>
     <string name="app_confirm_dialog_exceedDis">Sorrey you are exceed the max Discount value for this customer</string>
+    <string name="hideQty">Hide Qty for salesMan</string>
+    <string name="lockcash">Lock Cash Report</string>
+    <string name="showpass">Show Passowrd</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

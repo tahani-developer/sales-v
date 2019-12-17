@@ -130,15 +130,32 @@
     </android.support.v7.widget.RecyclerView>
 
 
-    <Button
-        android:id="@+id/done"
-        android:layout_width="150dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="@string/app_done"
-        android:background="@color/done_button"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/second_color"
+            android:gravity="center"
+            android:text="@string/app_done"
+            android:textColor="@color/white" />
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/done_button"
+            android:gravity="center"
+            android:text="@string/app_cancel"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -79,7 +79,7 @@
             android:clickable="true"
             android:layout_width="60dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+            android:visibility="visible"
 
             android:src="@drawable/reload_arrow"
             app:civ_border_color="@color/colorPrimaryDark"/>

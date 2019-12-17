@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 69;
+    private static final int DATABASE_VERSION = 71;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -236,6 +236,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String Customer_Authorized="Customer_Authorized";
     private static final String Password_Data="Password_Data";
     private static final String Arabic_Language="Arabic_Language";
+    private static final String HideQty="HideQty";
+    private static final String LockCashReport="LockCashReport";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -568,15 +570,19 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PRINT_METHOD + " INTEGER,"
                 + CAN_CHANGE_PRICE + " INTEGER,"
                 + ALLOW_OUT_OF_RANGE+  " INTEGER,"
-                + READ_DISCOUNT_FROM_OFFERS+  " INTEGER,"
-                + WORK_ONLINE+  " INTEGER,"
-                + PAYMETHOD_CHECK+ " INTEGER,"
-                + BONUS_NOT_ALLOWED+ " INTEGER,"
-                + NO_OFFERS_FOR_CREDIT_INVOICE+ " INTEGER, "
-                + AMOUNT_OF_MAX_DISCOUNT+ " INTEGER,"
-                + Customer_Authorized+ " INTEGER,"
-                + Password_Data+ " INTEGER,"
-                + Arabic_Language+ " INTEGER" + ")";
+                + READ_DISCOUNT_FROM_OFFERS + " INTEGER,"
+                + WORK_ONLINE + " INTEGER,"
+                + PAYMETHOD_CHECK + " INTEGER,"
+                + BONUS_NOT_ALLOWED + " INTEGER,"
+                + NO_OFFERS_FOR_CREDIT_INVOICE + " INTEGER, "
+                + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
+                + Customer_Authorized + " INTEGER,"
+                + Password_Data + " INTEGER,"
+                + Arabic_Language + " INTEGER,"
+                + HideQty + " INTEGER,"
+                + LockCashReport + " INTEGER"
+
+                + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -725,6 +731,19 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD LockCashReport  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -1230,7 +1249,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
-                           int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz, int passowrdData,int arabicLanguage) {
+                           int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
+                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1256,6 +1276,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Customer_Authorized,customerOthoriz);
         values.put(Password_Data,passowrdData);
         values.put(Arabic_Language,arabicLanguage);
+        values.put(HideQty,hideQty);
+        values.put(LockCashReport,lock_cashreport);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1540,6 +1562,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setCustomer_authorized(Integer.parseInt(cursor.getString(19)));
                 setting.setPassowrd_data(Integer.parseInt(cursor.getString(20)));
                 setting.setArabic_language(Integer.parseInt(cursor.getString(21)));
+                setting.setHide_qty(Integer.parseInt(cursor.getString(22)));
+                setting.setLock_cashreport(Integer.parseInt(cursor.getString(23)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

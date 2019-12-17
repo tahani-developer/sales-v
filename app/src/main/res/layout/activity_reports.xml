@@ -96,6 +96,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/inventory_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="85dp"
                 android:background="@drawable/report_back"
