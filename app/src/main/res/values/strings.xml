@@ -310,6 +310,12 @@
     <string name="hideQty">Hide Qty for salesMan</string>
     <string name="lockcash">Lock Cash Report</string>
     <string name="showpass">Show Passowrd</string>
+    <string name="transaction">Transaction</string>
+    <string name="accept">Accept</string>
+    <string name="voucherNo">Voucher No :</string>
+    <string name="toStore">To Store:</string>
+    <string name="loadingItem">Loading Item ....</string>
+    <string name="zero_value_taxAndNetSales">Wrong Input  for zero value in taxAnd netSales</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

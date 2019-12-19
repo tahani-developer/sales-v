@@ -461,7 +461,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + IsSuspended1 + " INTEGER,"
                 + ITEM_L1 + " INTEGER,"
                 + ITEM_F_D + " REAL,"
-                + KIND_ITEM + " KIND_ITEM"
+                + KIND_ITEM + " TEXT"
                 + ")";
 
         db.execSQL(CREATE_TABLE_Items_Master);
@@ -1824,7 +1824,12 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Voucher.setIsPosted(Integer.parseInt(cursor.getString(9)));
                 Voucher.setTotalVoucherDiscount(Double.parseDouble(cursor.getString(10)));
                 Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
-                Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                try {
+                    Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                }catch (NullPointerException e)
+                {
+                    Voucher.setTax(0);
+                }
                 Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
@@ -2053,6 +2058,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         List<Item> items = new ArrayList<>();
         // Select All Query
         String PriceListId = CustomerListShow.PriceListId;
+        String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
         String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC  \n" +
@@ -2072,10 +2078,20 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Item item = new Item();
 
                 item.setItemNo(cursor.getString(0));
+                String itno=cursor.getString(0);
                 item.setItemName(cursor.getString(1));
                 item.setCategory(cursor.getString(2));
                 item.setQty(Float.parseFloat(cursor.getString(3)));
-                item.setPrice(Float.parseFloat(cursor.getString(4)));
+                if(Float.parseFloat(cursor.getString(4))== 0){
+                    priceItem= getPriceforItem(itno,rate);
+                    Log.e("priceItem=",""+priceItem+"\t"+cursor.getString(0));
+                    Log.e("noItem=",""+cursor.getString(4));
+                    item.setPrice(Float.parseFloat(priceItem));
+
+                }
+                else{
+                    item.setPrice(Float.parseFloat(cursor.getString(4)));
+                }
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
                 item.setBarcode(cursor.getString(7));
@@ -2088,6 +2104,43 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return items;
+    }
+
+    private String getPriceforItem(String itemNo,String rate) {
+
+        // Select All Query
+        String salesMan = Login.salesMan;
+        String price="";
+        String selectQuery2 ="select  Price from PRICE_LIST_D where ItemNo = '"+itemNo+"' and PrNo='"+rate+"' ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor_price = db.rawQuery(selectQuery2, null);
+        if (cursor_price.moveToFirst()){
+            price=cursor_price.getString(0);
+        }
+
+        cursor_price.close();
+
+        return price;
+
+        /*
+        * //        String selectQuery2 = "select DISTINCT  P.Price  \n" +
+//                "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+//                "                where  P.ItemNo = '"+itemNo+"' and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
+* //        Log.e("DatabaseHandler", "***************************************" + cursor_price.getCount());
+        // looping through all rows and adding to list
+//        if (cursor_price.moveToFirst()) {
+//
+//            do {
+//                price=cursor_price.getString(0);
+//                Log.e("price=",""+price);
+
+
+
+
+//            } while (cursor_price.moveToNext());
+//        }*/
+
     }
 
     public List<Item> getUnPostedItems() {

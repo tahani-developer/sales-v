@@ -352,7 +352,7 @@ public class ImportJason extends AppCompatActivity{
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
                     try {
-                      if(  finalObject.getString("ITEMK")=="")
+                      if(  finalObject.getString("ITEMK") == "" ||  finalObject.getString("ITEMK") == "null")
                           item.setKind_item("***");
                       else
                         item.setKind_item(finalObject.getString("ITEMK")); // here ?
@@ -361,6 +361,7 @@ public class ImportJason extends AppCompatActivity{
                     catch (Exception e)
                     {
                         Log.e("ErrorImport","Item_Kind_null");
+                        item.setKind_item("***");
 
                     }
                     itemsMasterList.add(item);

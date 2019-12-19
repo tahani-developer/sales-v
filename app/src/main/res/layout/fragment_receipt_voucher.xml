@@ -189,14 +189,14 @@
 
         <Button
             android:id="@+id/addCheck"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:textColor="@color/layer5"
-            android:padding="5dp"
             android:layout_marginStart="50dp"
+            android:layout_marginLeft="200dp"
+            android:background="@color/colorAccent"
+            android:padding="5dp"
             android:text="@string/add_check"
-            android:layout_marginLeft="200dp" />
+            android:textColor="@color/layer5" />
 
     </LinearLayout>
 
