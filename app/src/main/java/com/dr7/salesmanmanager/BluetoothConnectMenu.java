@@ -524,7 +524,7 @@ public class BluetoothConnectMenu extends Activity {
                                 }
 
                                 try {
-                                            Thread.sleep(9000);
+                                            Thread.sleep(8000);
                                         } catch (InterruptedException e) {
                                             e.printStackTrace();
                                         }
