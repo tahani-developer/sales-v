@@ -201,7 +201,7 @@
             android:id="@+id/addCheck"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:background="@color/colorAccent"
+            android:background="@color/red_background"
             android:textColor="@color/layer5"
             android:padding="5dp"
             android:layout_marginStart="100dp"

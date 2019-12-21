@@ -93,8 +93,10 @@ public class AddItemsFragment2 extends DialogFragment {
 
         if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
             jsonItemsList = mHandler.getAllJsonItems(rate_customer);
-        else
+        else {
+            Log.e("pricebucus","chick");
             jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
+        }
 
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

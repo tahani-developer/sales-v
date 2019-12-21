@@ -146,7 +146,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
                         String data = mOriginalValues.get(i).getCustName();
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
+                        if (data.toLowerCase().contains(constraint.toString())) {
                             FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName()));
                             Log.e("here" , "*********2" + constraint + "*" + data);
                         }

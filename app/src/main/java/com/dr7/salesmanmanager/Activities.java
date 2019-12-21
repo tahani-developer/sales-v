@@ -35,7 +35,7 @@ public class Activities extends AppCompatActivity implements
 
 {
 
-    private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView;
+    private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
     private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
 
@@ -44,6 +44,7 @@ public class Activities extends AppCompatActivity implements
     private LinearLayout salesInvoiceLayout;
 
     private SalesInvoice salesInvoice;
+    private  Transaction_Fragment transaction_fragment;
 
     private StockRequest stockRequest;
 
@@ -134,6 +135,8 @@ public class Activities extends AppCompatActivity implements
         activitySelected = -1;
         isFragmentBlank = true;
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
+        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
+        transaction_imageview.setOnClickListener(onClickListener);
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
@@ -176,6 +179,25 @@ public class Activities extends AppCompatActivity implements
         supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         isFragmentBlank = false;
         AddItemsFragment2.total_items_quantity=0;
+    }
+    private void displayTransactionFragment() {
+        activitySelected = 0;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        transaction_fragment = new Transaction_Fragment();
+//        transaction_fragment.setListener(this);
+        FragmentTransaction transaction =
+                getFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+//        getFragmentManager().popBackStack();
+        //transaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        transaction.replace(R.id.fragmentContainer, transaction_fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+//        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+//        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        isFragmentBlank = false;
+//        AddItemsFragment2.total_items_quantity=0;
     }
 
     private void displayReceipt() {
@@ -303,7 +325,30 @@ public class Activities extends AppCompatActivity implements
                     } else {
                         displayStockRequest();
                     }
+                    break;
+                case R.id.transaction_ImageView:
+                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
+                    if (!isFragmentBlank) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                        builder2.setCancelable(false);
+                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
 
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                displayTransactionFragment();
+                            }
+                        });
+
+                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                        builder2.create().show();
+                    } else {
+                        displayTransactionFragment();
+                    }
+
+//                    displayTransactionFragment();
+                    break;
             }
         }
     };

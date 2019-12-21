@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
+            android:textColor="@color/text_view_color"
             android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:ems="10"
@@ -47,16 +48,17 @@
             android:textSize="20dp"
             android:background="@color/done_button"
             android:text="@string/app_done" />
-        <Button
-            android:id="@+id/button_cancel_key"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:textSize="20dp"
-            android:layout_marginTop="50dp"
-            android:background="@color/cardview_dark_background"
-            android:text="@string/app_cancel" />
+
+    <Button
+        android:id="@+id/button_cancel_key"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/cancel_button"
+        android:text="@string/app_cancel"
+        android:textSize="20dp" />
 </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

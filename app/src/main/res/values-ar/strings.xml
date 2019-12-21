@@ -357,4 +357,11 @@
        </string>
     <string name="lockcash">قفل تقرير الكاش </string>
     <string name="showpass">اظهار </string>
+    <string name="transaction">Transaction</string>
+    <string name="accept">موافق</string>
+    <string name="voucherNo">رقم الفاتورة :</string>
+    <string name="toStore">الى المخزن:</string>
+    <string name="loadingItem">جاري التحميل.... </string>
+    <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
+    </string>
 </resources>

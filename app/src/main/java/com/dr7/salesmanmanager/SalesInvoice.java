@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -21,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.print.PrintHelper;
@@ -40,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
@@ -92,6 +96,9 @@ import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.ProgressDialog.STYLE_SPINNER;
+import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
+import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
@@ -156,6 +163,7 @@ public class SalesInvoice extends Fragment {
     InputStream mmInputStream;
     Thread workerThread;
     List<ItemsQtyOffer> offers_ItemsQtyOffer;
+    ProgressDialog dialog_progress;
 
 
     byte[] readBuffer;
@@ -462,11 +470,33 @@ public class SalesInvoice extends Fragment {
         });
 
         addItemImgButton2.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                salesInvoiceInterfaceListener.displayFindItemFragment2();
+                new SalesInvoice.Task().execute();
             }
         });
+
+
+
+
+
+//
+//                salesInvoiceInterfaceListener.displayFindItemFragment2();
+//
+//
+//                Handler handler = new Handler();
+//
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        dialog.dismiss();
+//                    }
+//                }, 5000);
+
+
+
+
 //        custInfoImgButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -542,14 +572,26 @@ public class SalesInvoice extends Fragment {
                                 double totalDisc = Double.parseDouble(discTextView.getText().toString());
                                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
                                 double tax=0, netSales=0;
+                                String netsale_txt="";
+                                netsale_txt=netTotalTextView.getText().toString();
+                                Log.e("textNt",""+netsale_txt);
+
                                 try{
                                      tax = Double.parseDouble(taxTextView.getText().toString());
                                      netSales = Double.parseDouble(netTotalTextView.getText().toString());
+                                     Log.e("netSales_isnan",""+Double.isNaN(netSales));
+
                                 }catch (Exception e){
                                     tax=0;
                                     Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
 
                                 }
+                                if(netSales!=0 && !Double.isNaN(netSales) ){// test nan
+
+                                    Log.e("not zero ","tax="+tax+"\t"+ netSales);
+                                    //******************************
+
+
 
 
                                 if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
@@ -622,6 +664,22 @@ public class SalesInvoice extends Fragment {
                                             }//end else
                                         }
                                 }
+                                }
+                                else{// if tax ==0 or net sales==0 don't save data
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
+                                    builder.setTitle(getResources().getString(R.string.warning_message));
+                                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+
+
+                                    });
+                                    builder.create().show();
+
+                                }
 
 //                                clearLayoutData();
                             }
@@ -638,6 +696,58 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+    class Task extends AsyncTask<String, Integer, String> {
+        ProgressBar pb;
+        TextView title_progresspar;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            for (int i = 0; i < 100; i++) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                publishProgress(i);
+            }
+            salesInvoiceInterfaceListener.displayFindItemFragment2();
+            return "items";
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+//            pb.setProgress(values[0]);
+//            dialog_progress.setProgress(values);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+            dialog_progress = new ProgressDialog(getActivity());
+            dialog_progress.setCancelable(false);
+            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
+            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+            dialog_progress.show();
+        }
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+            dialog_progress.dismiss();
+
+            if (result != null) {
+
+            } else {
+                Toast.makeText(getActivity(), "Not able to fetch data ", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void showMaxDiscountDialog() {
@@ -916,6 +1026,7 @@ public class SalesInvoice extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             switch (i) {
                                 case 0:
+                                    String st="";
                                     total_items_quantity-=items.get(position).getQty();
                                     totalQty_textView.setText("+"+total_items_quantity);
                                     items.remove(position);
