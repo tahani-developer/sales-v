@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="650dp"
+        android:layout_width="920dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"
@@ -31,10 +31,10 @@
 
         <TextView
             android:id="@+id/textView63"
-            android:layout_width="wrap_content"
+            android:layout_width="920dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="       __________________________________________________________"
+            android:text="       ____________________________________________________"
 
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -173,7 +173,7 @@
 
         <TextView
             android:id="@+id/notelast2"
-            android:layout_width="650dp"
+            android:layout_width="920dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
 
@@ -184,7 +184,7 @@
 
         <TextView
             android:id="@+id/notelast3"
-            android:layout_width="650dp"
+            android:layout_width="920dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:text=" واتعهد بدفع قيمة هذه الفاتورة . "

@@ -451,6 +451,8 @@ public class BluetoothConnectMenu extends Activity {
                     CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
                     if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
 //                  Log.e("salesVoucher","=" + SalesInvoice.items.get(0).getVoucherNumber());
+
+
                         if ((count == 0) || (count == 1)) {
 //                        sample.dmStamp(1,companyInfo.getLogo());
                             if (count == 0) {
@@ -482,10 +484,16 @@ public class BluetoothConnectMenu extends Activity {
                                 sample.imageTest(1, bit_voucher_Headre);
                                 size_subList = Math.ceil(long_listItems.size() / 30.0);
                                 int n = 0, k = 30;
+
                                 for (int i = 0; i < size_subList; i++) {//3
                                     if (long_listItems.size() <= 30) {
                                         Bitmap bit_voucher_Body = convertLayoutToImage_Body(voucherforPrint, long_listItems, 0);
                                         sample.imageTest(1, bit_voucher_Body);
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                     } else {
                                         try {
                                             Thread.sleep(1000);
@@ -515,10 +523,15 @@ public class BluetoothConnectMenu extends Activity {
 
                                 }
 
-
+                                try {
+                                            Thread.sleep(8000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
 
                                 Bitmap bit_voucher_Footer = convertLayoutToImage_Footer(voucherforPrint, long_listItems);
                                 sample.imageTest(1, bit_voucher_Footer);
+
                             }
 
 //                        itemForPrint.clear();

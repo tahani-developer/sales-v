@@ -891,8 +891,10 @@ public class ESCPSample2
 
 			posPtr.setAsync(false);
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-			posPtr.printBitmap(companyInfo.getLogo(),ESCPOSConst.LK_ALIGNMENT_CENTER,150);
-
+			if(companyInfo.getLogo()!=null) {
+				posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER);
+				Log.e("12222print","pyyy");
+			}
 			posPtr.printAndroidFont(null,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+"    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
