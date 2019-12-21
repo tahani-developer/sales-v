@@ -572,17 +572,21 @@ public class SalesInvoice extends Fragment {
                                 double totalDisc = Double.parseDouble(discTextView.getText().toString());
                                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
                                 double tax=0, netSales=0;
+                                String netsale_txt="";
+                                netsale_txt=netTotalTextView.getText().toString();
+                                Log.e("textNt",""+netsale_txt);
+
                                 try{
                                      tax = Double.parseDouble(taxTextView.getText().toString());
                                      netSales = Double.parseDouble(netTotalTextView.getText().toString());
-                                     Log.e("netSales",""+netTotalTextView.getText().toString());
+                                     Log.e("netSales_isnan",""+Double.isNaN(netSales));
 
                                 }catch (Exception e){
                                     tax=0;
                                     Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
 
                                 }
-                                if(netSales!=0){// test nan
+                                if(netSales!=0 && !Double.isNaN(netSales) ){// test nan
 
                                     Log.e("not zero ","tax="+tax+"\t"+ netSales);
                                     //******************************

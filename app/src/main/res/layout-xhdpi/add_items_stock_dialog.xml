@@ -73,6 +73,6 @@
         android:layout_gravity="center"
         android:textColor="@color/layer5"
         android:text="@string/app_done"
-        android:background="@color/colorAccent"/>
+        android:background="@color/done_button"/>
 
 </LinearLayout>

@@ -85,7 +85,7 @@
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="50dp"
-                    android:background="@color/done_button"
+                    android:background="@color/red_background"
                     android:text="@string/preview"
                     android:textColor="@color/layer5" />
 

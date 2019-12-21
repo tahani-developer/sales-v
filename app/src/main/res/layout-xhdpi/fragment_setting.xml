@@ -12,8 +12,7 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
-        android:fillViewport="true"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -459,9 +458,9 @@
         <Button
             android:id="@+id/okBut"
             android:layout_width="120dp"
-            android:layout_height="25dp"
+            android:layout_height="10dp"
             android:layout_marginHorizontal="15dp"
-            android:background="@color/add_button"
+            android:background='@color/   android:background="@color/done_button"'
             android:text="@string/save"
             android:textColor="@color/layer5"
             android:textStyle="bold"
@@ -472,7 +471,7 @@
             android:layout_width="120dp"
             android:layout_height="25dp"
             android:layout_marginHorizontal="15dp"
-            android:background="@color/done_button"
+            android:background="@color/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold"

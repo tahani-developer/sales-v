@@ -204,7 +204,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textColor="@color/layer5"
-            android:background="@color/done_button"
+            android:background="@color/red_background"
             android:layout_marginRight="20dp"
             android:layout_marginEnd="20dp"
             android:text="@string/preview" />

@@ -4,7 +4,7 @@
     android:layout_height="400dp"
     android:minWidth="500dp"
     android:minHeight="500dp"
-    android:background="@color/layer1"
+    android:background="@color/layer3"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -139,7 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:background="@color/add_button"
+        android:background="@color/colorblue1"
         android:text="@string/app_ok"
         android:textColor="@color/layer5"
         android:textStyle="bold" />

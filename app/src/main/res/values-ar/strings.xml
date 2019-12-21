@@ -362,7 +362,6 @@
     <string name="voucherNo">رقم الفاتورة :</string>
     <string name="toStore">الى المخزن:</string>
     <string name="loadingItem">جاري التحميل.... </string>
-    <string name="zero_value_taxAndNetSales">
-    ادخال خاطئ للقيمة صفر في الضريبة وصافي المبيعات
+    <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
     </string>
 </resources>
