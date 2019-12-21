@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingEnd="5dp"
-    android:layoutDirection="rtl"
+
     android:paddingHorizontal="5dp"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
@@ -225,7 +225,7 @@
         android:id="@+id/row3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_margin="5dp"
         android:orientation="horizontal">
 
         <RadioGroup
@@ -351,7 +351,7 @@
         android:paddingBottom="1dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:paddingTop="1dp">
+        android:paddingTop="5dp">
 
         <TextView
 
@@ -420,11 +420,15 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp">
     <LinearLayout
         android:id="@+id/row7"
         android:layout_width="match_parent"
-        android:layout_height="270dp"
+        android:layout_alignParentTop="true"
+        android:layout_height="match_parent"
         android:layout_gravity="fill"
         android:orientation="vertical">
 
@@ -441,7 +445,9 @@
         android:id="@+id/totals"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_alignBottom="@id/row7"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:columnCount="8">
 
         <LinearLayout
@@ -556,5 +562,6 @@
                 tools:text="0.000" />
         </LinearLayout>
     </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

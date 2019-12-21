@@ -595,7 +595,7 @@ public class BluetoothConnectMenu extends Activity {
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
         TextView doneinsewooprint = (TextView) dialog_Header.findViewById(R.id.done);
 
-        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype;
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype,salesName     ;
         ImageView img = (ImageView) dialog_Header.findViewById(R.id.img);
         compname = (TextView) dialog_Header.findViewById(R.id.compname);
         tel = (TextView) dialog_Header.findViewById(R.id.tel);
@@ -606,6 +606,7 @@ public class BluetoothConnectMenu extends Activity {
         note = (TextView) dialog_Header.findViewById(R.id.note);
         vhType = (TextView) dialog_Header.findViewById(R.id.vhType);
         paytype = (TextView) dialog_Header.findViewById(R.id.paytype);
+        salesName = (TextView) dialog_Header.findViewById(R.id.salesman_name);
         String voucherTyp = "";
         switch (voucher.getVoucherType()) {
             case 504:
@@ -631,6 +632,7 @@ public class BluetoothConnectMenu extends Activity {
         custname.setText(voucher.getCustName());
         note.setText(voucher.getRemark());
         vhType.setText(voucherTyp);
+        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         dialog_Header.show();
 
@@ -700,9 +702,10 @@ public class BluetoothConnectMenu extends Activity {
 
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
-        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,total_qty_text;
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,total_qty_text,salesName;
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
@@ -711,6 +714,7 @@ public class BluetoothConnectMenu extends Activity {
         vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
         date = (TextView) dialogs.findViewById(R.id.date);
         custname = (TextView) dialogs.findViewById(R.id.custname);
+        salesName = (TextView) dialogs.findViewById(R.id.salesman_name);
         note = (TextView) dialogs.findViewById(R.id.note);
         vhType = (TextView) dialogs.findViewById(R.id.vhType);
         paytype = (TextView) dialogs.findViewById(R.id.paytype);
@@ -748,6 +752,7 @@ public class BluetoothConnectMenu extends Activity {
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
         custname.setText(voucher.getCustName());
+        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
         note.setText(voucher.getRemark());
         vhType.setText(voucherTyp);
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));

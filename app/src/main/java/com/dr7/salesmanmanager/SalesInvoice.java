@@ -698,8 +698,6 @@ public class SalesInvoice extends Fragment {
         return view;
     }
     class Task extends AsyncTask<String, Integer, String> {
-        ProgressBar pb;
-        TextView title_progresspar;
 
         @Override
         protected String doInBackground(String... strings) {

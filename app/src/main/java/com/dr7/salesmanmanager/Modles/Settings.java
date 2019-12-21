@@ -26,11 +26,20 @@ public class Settings {
     private int arabic_language;
     private int  hide_qty;
     private int lock_cashreport;
+    private String salesMan_name;
+
+    public String getSalesMan_name() {
+        return salesMan_name;
+    }
+
+    public void setSalesMan_name(String salesMan_name) {
+        this.salesMan_name = salesMan_name;
+    }
 
     public Settings(String ipAddress, int transactionType, int serial, int taxClarcKind, int priceByCust, int useWeightCase,
                     int allowMinus, int numOfCopy, int salesManCustomers, int minSalePric, int printMethod, int allowOutOfRange,
                     int canChangePrice, int readDiscountFromOffers, int workOnline, int paymethodCheck, int bonusNotAlowed, int noOffer_for_credit,
-                    int amountOfMaxDiscount, int customer_authorized, int passowrd_data, int arabic_language, int hide_qty, int lock_cashreport) {
+                    int amountOfMaxDiscount, int customer_authorized, int passowrd_data, int arabic_language, int hide_qty, int lock_cashreport, String salesMan_name) {
         IpAddress = ipAddress;
         this.transactionType = transactionType;
         this.serial = serial;
@@ -55,6 +64,7 @@ public class Settings {
         this.arabic_language = arabic_language;
         this.hide_qty = hide_qty;
         this.lock_cashreport = lock_cashreport;
+        this.salesMan_name= salesMan_name;
     }
 
     public int getHide_qty() {
