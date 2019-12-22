@@ -23,6 +23,34 @@
         android:layout_height="5dp"
         android:background="@color/add_button" />
 
+    <TextView
+        android:id="@+id/textView25"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Print name shape " />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radioButton_normalnam"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Normal" />
+
+        <RadioButton
+            android:id="@+id/radioButton_large_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Large Name" />
+    </RadioGroup>
+
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
