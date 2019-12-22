@@ -548,7 +548,7 @@ public class BluetoothConnectMenu extends Activity {
 //                                    payList=paymentPrinter;
 //                                    payforBank=pay1;
                                     sample.printMultilingualFontCash(4);
-                                    paymentsforPrint.clear();
+//                                    paymentsforPrint.clear();
                                 }
                             }
                             else if (count == 3) {

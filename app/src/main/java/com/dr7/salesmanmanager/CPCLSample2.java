@@ -637,6 +637,9 @@ public class CPCLSample2 {
                     "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
                     "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
 
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
 
         } else {
 
@@ -675,6 +678,10 @@ public class CPCLSample2 {
 //                    dataArabic +=   "\n\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
                 }
             }
+
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
 
 
         }

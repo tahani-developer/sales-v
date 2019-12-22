@@ -612,8 +612,12 @@ public class SalesInvoice extends Fragment {
 
 
                                                 if(virefyMaxDescount()){
-                                                    AddVoucher();
-                                                    clearLayoutData();
+                                                    if(!remarkEditText.getText().toString().equals("")) {
+                                                        AddVoucher();
+                                                        clearLayoutData();
+                                                    }else{
+                                                        Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
 
                                                       else{
@@ -641,8 +645,12 @@ public class SalesInvoice extends Fragment {
 
 
                                             if(virefyMaxDescount()){
+                                                if (!remarkEditText.getText().toString().equals("")){
                                                 AddVoucher();
                                                 clearLayoutData();
+                                            }else{
+                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
+                                            }
                                             }
 
                                             else{

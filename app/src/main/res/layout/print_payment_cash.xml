@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:layoutDirection="rtl"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -408,4 +409,48 @@
 </LinearLayout>
 
 </LinearLayout>
+
+    <TableRow
+        android:id="@+id/sing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/textView68"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="المستلم : "
+            android:textColor="@color/add_button"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView65"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:text="______________"
+            android:textColor="@color/add_button"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView67"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="التوقيع :"
+            android:textColor="@color/add_button"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView66"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:text="_______________"
+            android:textColor="@color/add_button"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </TableRow>
 </LinearLayout>
