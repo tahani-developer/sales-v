@@ -447,9 +447,17 @@ public class bMITP extends Activity {
                           printVoucher = vouch1;
                           itemPrint = items;
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
-                          for(int i=0;i<settings;i++) {
+                          if(false) {
+                              for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
-                              sample.printMultilingualFontEsc3(0,printVoucher,itemPrint);
+                                  sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+                              }
+                          }else {
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+                              }
+
                           }
                           break;
                       case 1:
@@ -457,11 +465,19 @@ public class bMITP extends Activity {
                           itemPrint = itemForPrint;
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
 //
+                          if(false){
                           for(int i=0;i<settings;i++) {
 //                              sample.printMultilingualFontEsc(1);
                               sample.printMultilingualFontEsc3(1,printVoucher,itemPrint);
 
+                          }}
+                          else {
+                          for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                              sample.printMultilingualFontEscEjapy(1, printVoucher, itemPrint);
                           }
+
+                      }
                           break;
 
                       case 2:
