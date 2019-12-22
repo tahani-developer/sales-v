@@ -173,32 +173,6 @@
 
                 </TableRow>
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="3dp">
-
-                    <TextView
-                        android:id="@+id/ed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="اسم العميل :  "
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/custname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -278,6 +252,58 @@
                 </TableRow>
 
             </TableLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="اسم المندوب  :  "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/salesman_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/ed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="اسم العميل :  "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/custname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
 
             <TextView
                 android:id="@+id/textView26"
