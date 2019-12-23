@@ -141,11 +141,24 @@ public class AddItemsFragment2 extends DialogFragment {
         // ****************************** Kind Item Spenner*****************************************************
 
         final Spinner Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
-        List<String> Kind_item = mHandler.getAllKindItems();
+        List<String> Kind_item=new ArrayList<>();
+        try {
+            Kind_item = mHandler.getAllKindItems();
+            Log.e("Kind_item",""+Kind_item.get(0));
+
+
+        }
+        catch (Exception e)
+        {
+            Kind_item.add(0 ,getResources().getString(R.string.all_item));
+            Log.e("ExceptionKind_item",""+Kind_item.get(0));
+
+        }
         Kind_item.add(0 ,getResources().getString(R.string.all_item));
 
-      final  ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, Kind_item);
+        final  ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, Kind_item);
         Kind_item_Spinner.setAdapter(adapter_kind);
+
         //kind item
         Kind_item_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

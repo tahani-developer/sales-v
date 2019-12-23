@@ -352,7 +352,7 @@ public class ImportJason extends AppCompatActivity{
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
                     try {
-                      if(  finalObject.getString("ITEMK") == "" ||  finalObject.getString("ITEMK") == "null")
+                      if(  finalObject.getString("ITEMK") == "" ||  finalObject.getString("ITEMK") == null || finalObject.getString("ITEMK") == "null")
                           item.setKind_item("***");
                       else
                         item.setKind_item(finalObject.getString("ITEMK")); // here ?

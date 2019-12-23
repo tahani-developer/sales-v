@@ -2141,6 +2141,25 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+    public boolean checkItemNoTableCustomerPricess(String itemNo){
+        String custNum = CustomerListShow.Customer_Account;
+        String selectQuery ="  select DISTINCT  C.ItemNumber\n" +
+                "        FROM  CustomerPrices C\n" +
+                "        where  CustomerNumber= '"+custNum+"' and ItemNumber= '"+itemNo+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+          return  true;
+
+        }
+
+        return false;
+    }
+    /*      select DISTINCT  C.ItemNumber
+        FROM  CustomerPrices C
+        where  CustomerNumber= '1110000001' and ItemNumber= '30000188'*/
     public List<Item> getAllJsonItemsNotInCustomerPrices(String rate){
         List<Item> items = new ArrayList<>();
         // Select All Query
@@ -2307,16 +2326,29 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     public List<String> getAllKindItems() {
         List<String> kind_items= new ArrayList<>();
-        String selectQuery = "select DISTINCT KIND_ITEM from Items_Master";
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            String selectQuery = "select DISTINCT KIND_ITEM from Items_Master";
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            Log.e("DB_Exception","cursor"+cursor.getCount());
 
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                kind_items.add(cursor.getString(0));
-            } while (cursor.moveToNext());
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    if(cursor.getString(0)== "null")
+                    { kind_items.add("**");}
+
+                    kind_items.add(cursor.getString(0));
+
+                    Log.e("DB_Exception","kind_items"+cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
+        }catch (Exception e)
+        {
+          kind_items.add("**");
+          Log.e("DB_Exception","kind_items"+e.getMessage());
         }
+
         return kind_items;
     }
 

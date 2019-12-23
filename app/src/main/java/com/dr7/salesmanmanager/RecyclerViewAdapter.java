@@ -74,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.linearLayout.setBackgroundColor(R.color.done_button);
 
         holder.itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
+
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.category.setText("" + items.get(holder.getAdapterPosition()).getCategory());
@@ -86,7 +87,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
         }
 
-       if( holder.getAdapterPosition()<= size_customerpriceslist){
+       if(checkTypePriceTable(items.get(holder.getAdapterPosition()).getItemNo())){
            holder.imagespecial.setVisibility(View.VISIBLE);
        }
        else{
@@ -329,6 +330,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+    }
+
+    private boolean checkTypePriceTable(String itemNumber) {
+       if( MHandler.checkItemNoTableCustomerPricess(itemNumber))
+           return true;
+       return false;
     }
 
     private List<Offers> checkOffers(String itemNo) {
