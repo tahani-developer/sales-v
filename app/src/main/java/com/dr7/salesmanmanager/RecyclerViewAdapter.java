@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -33,6 +34,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
 
@@ -83,6 +86,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
         }
 
+       if( holder.getAdapterPosition()<= size_customerpriceslist){
+           holder.imagespecial.setVisibility(View.VISIBLE);
+       }
+       else{
+           holder.imagespecial.setVisibility(View.GONE);
+       }
         holder.price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
@@ -432,6 +441,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         CardView cardView;
         TableRow row_qty;
         TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode,posprice;
+        ImageView imagespecial;
 
         public viewHolder(View itemView) {
             super(itemView);
@@ -447,6 +457,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             barcode = itemView.findViewById(R.id.textViewBarcode);
             posprice= itemView.findViewById(R.id.textViewPosPrice);
             row_qty=itemView.findViewById(R.id.row_qty);
+            imagespecial=itemView.findViewById(R.id.imagespecial);
         }
     }
 
