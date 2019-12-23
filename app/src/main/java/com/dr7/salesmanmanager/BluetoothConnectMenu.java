@@ -1220,7 +1220,7 @@ public class BluetoothConnectMenu extends Activity {
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
-                textViews.setTypeface(null, Typeface.BOLD);
+//                textViews.setTypeface(null, Typeface.BOLD);
                 textViews.setTextColor(getResources().getColor(R.color.text_view_color));
                 textViews.setText(items.get(j).getItemName());
 //                rows.addView(textView);
@@ -1482,7 +1482,7 @@ public class BluetoothConnectMenu extends Activity {
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
-                textViews.setTypeface(null, Typeface.BOLD);
+//                textViews.setTypeface(null, Typeface.BOLD);
                 textViews.setTextColor(getResources().getColor(R.color.text_view_color));
                 textViews.setText(items.get(j).getItemName());
 
