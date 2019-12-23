@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.port.android.BluetoothPort;
@@ -470,7 +471,15 @@ public class BluetoothConnectMenu extends Activity {
                                     long_listItems.add(itemforPrint.get(j));
                                 }
                             }
-                            if(false){
+
+                            int printShape=0;
+                            List<PrinterSetting> printerSettings=obj.getPrinterSetting_();
+
+                            if(printerSettings.size()!=0){
+                                printShape=printerSettings.get(0).getPrinterShape();
+                            }
+
+                            if(printShape==0){
                             if (TOTAL < 20) {
 //                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
                                 Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
@@ -1220,7 +1229,7 @@ public class BluetoothConnectMenu extends Activity {
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
-                textViews.setTypeface(null, Typeface.BOLD);
+//                textViews.setTypeface(null, Typeface.BOLD);
                 textViews.setTextColor(getResources().getColor(R.color.text_view_color));
                 textViews.setText(items.get(j).getItemName());
 //                rows.addView(textView);
@@ -1482,7 +1491,7 @@ public class BluetoothConnectMenu extends Activity {
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
-                textViews.setTypeface(null, Typeface.BOLD);
+//                textViews.setTypeface(null, Typeface.BOLD);
                 textViews.setTextColor(getResources().getColor(R.color.text_view_color));
                 textViews.setText(items.get(j).getItemName());
 

@@ -1106,7 +1106,7 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
 
-        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter;
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name;
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
@@ -1116,36 +1116,57 @@ public class MainActivity extends AppCompatActivity
         dotMatrix=(RadioButton) dialog.findViewById(R.id.dotMatrix);
         MTPPrinter=(RadioButton) dialog.findViewById(R.id.MTP);
         Button save = (Button) dialog.findViewById(R.id.save);
+        normalnam=(RadioButton) dialog.findViewById(R.id.radioButton_normalnam);
+        large_name=(RadioButton) dialog.findViewById(R.id.radioButton_large_name);
+        List<PrinterSetting> printer = mDbHandler.getPrinterSetting_();
+//        Log.e("printer_Seting",""+printer.get(0).getPrinterName()+"   "+printer.get(0).getPrinterShape());
+if(printer.size()!=0) {
+    switch (printer.get(0).getPrinterName()) {
+        case 0:
+            lk30.setChecked(true);
+            break;
+        case 1:
+            lk31.setChecked(true);
+            break;
+        case 2:
+            lk32.setChecked(true);
+            break;
+        case 3:
+            qs.setChecked(true);
+            break;
+        case 4:
+            dotMatrix.setChecked(true);
+            break;
+        case 5:
+            MTPPrinter.setChecked(true);
+            break;
 
-        int printer = mDbHandler.getPrinterSetting();
+    }
 
-        switch (printer) {
-            case 0:
-                lk30.setChecked(true);
-                break;
-            case 1:
-                lk31.setChecked(true);
-                break;
-            case 2:
-                lk32.setChecked(true);
-                break;
-            case 3:
-                qs.setChecked(true);
-                break;
-            case 4:
-                dotMatrix.setChecked(true);
-                break;
-            case 5:
-                MTPPrinter.setChecked(true);
-                break;
-
-        }
+    switch (printer.get(0).getPrinterShape()){
+        case 0:
+            normalnam.setChecked(true);
+            break;
+        case 1:
+            large_name.setChecked(true);
+            break;
+    }
+}else {
+    lk30.setChecked(true);
+    normalnam.setChecked(true);
+}
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDbHandler.deleteAllPrinterSetting();
                 PrinterSetting printerSetting = new PrinterSetting();
+
+                if(normalnam.isChecked()){
+                    printerSetting.setPrinterShape(0);
+                }else  if(large_name.isChecked()){
+                    printerSetting.setPrinterShape(1);
+                }
 
                 if (lk30.isChecked()) {
                     printerSetting.setPrinterName(0);

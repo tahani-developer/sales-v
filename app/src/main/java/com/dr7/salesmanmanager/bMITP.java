@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.request.android.RequestHandler;
@@ -440,14 +441,19 @@ public class bMITP extends Activity {
                     settings=0;
                 }
                 try {
+                    int printShape=0;
+                    List<PrinterSetting> printerSettings=obj.getPrinterSetting_();
 
+                    if(printerSettings.size()!=0){
+                        printShape=printerSettings.get(0).getPrinterShape();
+                    }
                   switch (count){
 
                       case 0:
                           printVoucher = vouch1;
                           itemPrint = items;
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
-                          if(false) {
+                          if(printShape==0) {
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
@@ -465,7 +471,7 @@ public class bMITP extends Activity {
                           itemPrint = itemForPrint;
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
 //
-                          if(false){
+                          if(printShape==0){
                           for(int i=0;i<settings;i++) {
 //                              sample.printMultilingualFontEsc(1);
                               sample.printMultilingualFontEsc3(1,printVoucher,itemPrint);
