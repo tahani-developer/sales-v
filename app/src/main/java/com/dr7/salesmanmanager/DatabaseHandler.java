@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 72;
+    private static final int DATABASE_VERSION = 73;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -89,6 +89,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String PRINTER_SETTING_TABLE="PRINTER_SETTING_TABLE";
     private static final String PRINTER_SETTING ="PRINTER_SETTING";
+    private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -475,8 +476,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         //-----------------------------------------------------
 
         String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
-
-                + PRINTER_SETTING + " INTEGER"+ ")";
+                + PRINTER_SETTING +" INTEGER ,"
+                + PRINTER_SHAPE + " INTEGER"+ ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -905,6 +906,13 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.e(TAG, e.getMessage().toString());
         }
         try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
             String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
                     + DATE + " TEXT,"
                     + TRANSFER_NAME + " TEXT,"
@@ -1060,6 +1068,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(PRINTER_SETTING,printer.getPrinterName());
+        values.put(PRINTER_SHAPE,printer.getPrinterShape());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -2412,6 +2421,30 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+
+
+    public  List<PrinterSetting> getPrinterSetting_()
+    {// int keyvalue=0;
+        List<PrinterSetting> keyvalue=new ArrayList<>();
+        String selectQuery = "select * from "+ PRINTER_SETTING_TABLE;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                PrinterSetting printerSetting=new PrinterSetting();
+                printerSetting.setPrinterName(cursor.getInt(0));
+                printerSetting.setPrinterShape(cursor.getInt(1));
+                keyvalue.add(printerSetting);
+            } while (cursor.moveToNext());
+        }
+
+        return keyvalue;
+
+
+    }
+
 
 
     public List<String> getAllexistingUnits(String itemNo) {
