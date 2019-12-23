@@ -969,7 +969,7 @@ public class ReceiptVoucher extends Fragment {
         });
 
 //************************************************fill layout *********************************************************************
-        if(!companyInfo.getLogo().equals(null))
+        if(companyInfo.getLogo()!=null)
         {
             companey_logo.setImageBitmap(companyInfo.getLogo());
 

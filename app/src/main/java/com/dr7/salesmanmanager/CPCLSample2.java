@@ -17,6 +17,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.AccountReport;
+import com.sewoo.jpos.command.ESCPOSConst;
 import com.sewoo.jpos.printer.CPCLPrinter;
 
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class CPCLSample2 {
     public CPCLSample2(Context context) {
         this.context = context;
         obj = new DatabaseHandler(context);
+        decimalFormat = new DecimalFormat("##.00");
     }
 
     public void selectGapPaper() {
@@ -117,11 +119,22 @@ public class CPCLSample2 {
         this.cpclPrinter.printForm();
     }
 
-    public void imageTest(int count, Bitmap testB) throws IOException {//
+    public void imageTestArabic(int count, Bitmap testB) throws IOException {//
         this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+30 , count);
         this.cpclPrinter.setMedia(this.paperType);
 
         this.cpclPrinter.printBitmap(testB, 450, 50);//x=400
+
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
+        this.cpclPrinter.printForm();
+    }
+
+    public void imageTestEnglish(int count, Bitmap testB) throws IOException {//
+        this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+30 , count);
+        this.cpclPrinter.setMedia(this.paperType);
+
+        this.cpclPrinter.printBitmap(testB, 0, 50);//x=400
 
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
@@ -261,6 +274,10 @@ public class CPCLSample2 {
         }
 
     }
+
+
+
+
 
 
 //    public void printMultilingualFont2(int count,Bitmap testB) throws UnsupportedEncodingException {
@@ -442,6 +459,231 @@ public class CPCLSample2 {
 
     }
 
+//    public void printAndroidFontSalesInvoice(int count,List<Item> itemforPrint,Voucher voucherforPrint) throws UnsupportedEncodingException {
+//        int nLineWidth = 550;
+////        String data = "Receipt";
+////        Object var4 = null;
+//
+//        try {
+////            this.cpclPrinter.setForm(0, 200, 200, 200, count);
+////            this.cpclPrinter.setMedia(this.paperType);
+////            this.cpclPrinter.printAndroidFont(data, nLineWidth, 100, 0, 1);
+////            this.cpclPrinter.printAndroidFont("الاحد", nLineWidth, 24, 120, 0);
+////            this.cpclPrinter.printAndroidFont("Center Alignment", nLineWidth, 24, 150, 1);
+////            this.cpclPrinter.printAndroidFont("Right Alignment", nLineWidth, 24, 180, 2);
+////            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF, "SANS_SERIF : 1234iwIW", nLineWidth, 24, 210, 0);
+////            this.cpclPrinter.printAndroidFont(Typeface.SERIF, "SERIF : 1234iwIW", nLineWidth, 24, 240, 0);
+////            this.cpclPrinter.printAndroidFont(Typeface.MONOSPACE, "MONOSPACE : 1234iwIW", nLineWidth, 24, 270, 0);
+//
+//
+//            double total_Qty=0;
+//
+//
+//            String voucherTyp = "Sales Invoice";
+//            switch (voucherforPrint.getVoucherType()) {
+//                case 504:
+//                    voucherTyp = "Sales Invoice";
+//                    break;
+//                case 506:
+//                    voucherTyp = "Return Invoice";
+//                    break;
+//                case 508:
+//                    voucherTyp = "New Order";
+//                    break;
+//            }
+//
+////                posPtr.setAsync(false);
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//            if(companyInfo.getLogo()!=null) {
+////                    this.cpclPrinter.printBitmap(companyInfo.getLogo(), nLineWidth, 24, 120, 0);
+//                Log.e("12222print","pyyy");
+//            }
+//            this.cpclPrinter.setForm(0, 200, 200, 100, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 100, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Tel : " + companyInfo.getcompanyTel()+"    " + "Tax No: " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 100, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Voucher No :" + voucherforPrint.getVoucherNumber()+"    " + "          Date: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 100, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 100, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Store No. : " +  Login.salesMan/* + "\n" */  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"SalesMan Name :" +obj.getAllSettings().get(0).getSalesMan_name() /* + "\n" */, nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Customer Name :" + voucherforPrint.getCustName() /* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Remark : " + voucherforPrint.getRemark()/* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Voucher Type : " +voucherTyp/* + "\n" */  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"Pay Method : " +  (voucherforPrint.getPayMethod() == 0 ? "Credit" : "Cash")/* + "\n" */  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//
+//            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+//                total_Qty=0;
+//                this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                this.cpclPrinter.setMedia(this.paperType);
+//                this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true," Item No.                          " + "QTY" + "\t\t\t" + "الوزن" + "\t\t\t" +  "Price" + "\t\t\t" +"Total" /* + "\n" */ , nLineWidth, 24, 120, 0);
+//                this.cpclPrinter.printForm();
+//
+//                this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                this.cpclPrinter.setMedia(this.paperType);
+//                this.cpclPrinter.printAndroidFont(Typeface.SANS_SERIF,true,"--------------------------------------------------------------------------------" /* + "\n" */  , nLineWidth, 24, 120, 0);
+//                this.cpclPrinter.printForm();
+//
+//                for (int i = 0; i < itemforPrint.size(); i++) {
+//                    if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+//                        total_Qty+=itemforPrint.get(i).getQty();
+//
+//                        String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+////						if (itemforPrint.get(i).getItemName().length() <= 12) {
+////							String space = itemforPrint.get(i).getItemName();
+////							for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+////								space =  space+" " ;
+////							}
+////							posPtr.printAndroidFont(null,true,space + "  " + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))))+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+////
+////						} else {
+////							String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//////                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//////                            space = " " + space;
+//////                        }
+////							String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+////							posPtr.printAndroidFont( null,true,space + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + fullString + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+////
+////						}
+//                        String space = itemforPrint.get(i).getItemNo();
+//                        for (int g = 0; g < (20 - itemforPrint.get(i).getItemNo().length()); g++) {
+//                            space =  space+" " ;
+//                        }
+//                        this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                        this.cpclPrinter.setMedia(this.paperType);
+//                        this.cpclPrinter.printAndroidFont( Typeface.SANS_SERIF,true,space+ "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, 120, 0);
+//                        this.cpclPrinter.printForm();
+//
+//
+//
+//                    }
+//                }
+//            } else {
+//                total_Qty=0;
+//                this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                this.cpclPrinter.setMedia(this.paperType);
+//                this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true," Item No.                          " + "Qty" + "\t\t\t" + "Price" + "\t\t\t" + "Total" /* + "\n" */ , nLineWidth, 24, 120, 0);
+//                this.cpclPrinter.printForm();
+//
+//                this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                this.cpclPrinter.setMedia(this.paperType);
+//                this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true,"--------------------------------------------------------------------------------" /* + "\n" */ , nLineWidth, 24, 120, 0);
+//                this.cpclPrinter.printForm();
+//
+//                for (int i = 0; i < itemforPrint.size(); i++) {
+//                    if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+//                        total_Qty+=itemforPrint.get(i).getQty();
+//                        String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+////						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
+//                        String space = itemforPrint.get(i).getItemNo();
+//                        for (int g = 0; g < (20 - itemforPrint.get(i).getItemNo().length()); g++) {
+//                            space =  space+" " ;
+//                        }
+//                        this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//                        this.cpclPrinter.setMedia(this.paperType);
+//                        this.cpclPrinter.printAndroidFont( null,true,space  + "\t\t\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, 120, 0);
+//                        this.cpclPrinter.printForm();
+//                    }
+//                }
+//
+//            }
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "Total Qty : " + total_Qty/* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "Total     : " + voucherforPrint.getSubTotal()/* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "Discount  : " + voucherforPrint.getTotalVoucherDiscount() /* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "Tax       : " + voucherforPrint.getTax() /* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "Net Total : " + voucherforPrint.getNetSales() /* + "\n" */  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "I received the goods complete and in good condition and free from any defects and I pledge to pay the value of this invoice." /* + "\n" */ , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "" + "\n"  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true,  "The recipient : ____________  Signature : __________" + "\n"  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//
+//            this.cpclPrinter.setForm(0, 200, 200, 50, count);
+//            this.cpclPrinter.setMedia(this.paperType);
+//            this.cpclPrinter.printAndroidFont(  Typeface.SANS_SERIF,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, 120, 0);
+//            this.cpclPrinter.printForm();
+//        } catch (IOException var6) {
+//            var6.printStackTrace();
+//        }
+//
+//    }
 
     public void printMultilingualFontCash(int count) throws UnsupportedEncodingException {
 
@@ -637,6 +879,9 @@ public class CPCLSample2 {
                     "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
                     "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
 
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
 
         } else {
 
@@ -675,6 +920,10 @@ public class CPCLSample2 {
 //                    dataArabic +=   "\n\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
                 }
             }
+
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
 
 
         }
@@ -732,7 +981,7 @@ public class CPCLSample2 {
 
     private String CashReport_kArabic() {
         String companney_name="";
-        decimalFormat = new DecimalFormat("##.00");
+//        decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
         try {
             total_cash=net+cash-returnCash;
@@ -776,7 +1025,7 @@ public class CPCLSample2 {
     private String AcountReport_Arabic()
     {
         String companney_name="";
-        decimalFormat = new DecimalFormat("##.00");
+//        decimalFormat = new DecimalFormat("##.00");
         String dataArabic_Report="";
         try {
             total_cash=net+cash-returnCash;
