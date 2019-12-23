@@ -95,8 +95,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
                         android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textView15"
@@ -111,8 +110,7 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textSize="18sp" />
 
                 </TableRow>
 
@@ -153,8 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
                     android:textColor="@color/add_button"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/date2"
@@ -169,8 +166,7 @@
                     android:layout_width="116dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/add_button"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
 
             </TableRow>
             <TextView
@@ -272,8 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/add_button"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
             </TableRow>
 
@@ -569,8 +564,7 @@
                     android:layout_height="wrap_content"
                     android:text="Recipient : "
                     android:textColor="@color/add_button"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView65"
@@ -587,8 +581,7 @@
                     android:layout_height="wrap_content"
                     android:text="Signature : "
                     android:textColor="@color/add_button"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView66"

@@ -1164,7 +1164,7 @@ public class BluetoothConnectMenu extends Activity {
                     TextView textView = new TextView(BluetoothConnectMenu.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(14);
-                    textView.setTypeface(null, Typeface.BOLD);
+//                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
 
                     switch (i) {
@@ -1432,7 +1432,7 @@ public class BluetoothConnectMenu extends Activity {
                     TextView textView = new TextView(BluetoothConnectMenu.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(14);
-                    textView.setTypeface(null, Typeface.BOLD);
+//                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
 
                     switch (i) {
