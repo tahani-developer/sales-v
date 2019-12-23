@@ -1202,7 +1202,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null,true, "Total     : " + voucherforPrint.getSubTotal()/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "Discount  : " + voucherforPrint.getTotalVoucherDiscount() /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "Tax       : " + voucherforPrint.getTax() /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "Net Total : " + voucherforPrint.getNetSales() /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "Net Total : " + voucherforPrint.getNetSales()  + "\n\n\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "I received the goods complete and in good condition and free from any defects and I pledge to pay the value of this invoice." /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true,  "The recipient : ____________  Signature : __________" + "\n"  , nLineWidth, 22, ESCPOSConst.LK_ALIGNMENT_CENTER);
