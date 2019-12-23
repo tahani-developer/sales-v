@@ -36,6 +36,7 @@ import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 
 /**
@@ -49,7 +50,9 @@ public class AddItemsFragment2 extends DialogFragment {
     Button addToListButton, doneButton;
     SearchView search;
     private ArrayList<String> itemsList;
-    public static List<Item> jsonItemsList;
+//    public static  List<Item> jsonItemsList;
+//    public static List<Item> jsonItemsList2;
+//    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
     ListView verticalList;
     public  static   int total_items_quantity=0;
@@ -79,24 +82,44 @@ public class AddItemsFragment2 extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        jsonItemsList = new ArrayList<>();
+//        jsonItemsList = new ArrayList<>();
+//        jsonItemsList2= new ArrayList<>();
+//        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
         String s="";
+        int size_firstlist=0;
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
-        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
-
-        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
-            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
-        else {
-            Log.e("pricebucus","chick");
-            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
-        }
+//        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
+//
+//        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
+//            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
+//        else {
+//
+//            jsonItemsList2 = mHandler.getAllJsonItems2(rate_customer);
+//            size_firstlist=jsonItemsList2.size();
+//
+//            jsonItemsList=mHandler.getAllJsonItemsNotInCustomerPrices(rate_customer);
+//            int count=jsonItemsList2.size()+jsonItemsList.size();
+//
+//            for(int i=0;i<count;i++)
+//            {
+//                if(i<size_firstlist)
+//                {
+//                    jsonItemsList_intermidiate.add(jsonItemsList2.get(i));
+//                }
+//                else
+//                jsonItemsList_intermidiate.add(jsonItemsList.get(i-size_firstlist));
+//            }
+//            jsonItemsList=jsonItemsList_intermidiate;
+//            Log.e("size after ",""+jsonItemsList.size());
+//
+//        }
 
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

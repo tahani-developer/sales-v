@@ -104,8 +104,13 @@ import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
 
 public class SalesInvoice extends Fragment {
+    public static  List<Item> jsonItemsList;
+    public static List<Item> jsonItemsList2;
+    public static List<Item> jsonItemsList_intermidiate;
+    public  static  int size_customerpriceslist=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
+
     Bitmap testB;
     byte[] printIm;
     PrintPic printPic;
@@ -209,6 +214,7 @@ public class SalesInvoice extends Fragment {
     CompanyInfo companyInfo;
     double limit_offer=0;
     ImageButton maxDiscount;
+    int size_firstlist=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -290,6 +296,10 @@ public class SalesInvoice extends Fragment {
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
         Log.e("limit_sales",""+limit_offer);
+        //*****************************fill list items json*******************************************
+        fillListItemJson();
+
+        //*************************************************************************
 
 
 
@@ -473,7 +483,8 @@ public class SalesInvoice extends Fragment {
 
             @Override
             public void onClick(View view) {
-                new SalesInvoice.Task().execute();
+                salesInvoiceInterfaceListener.displayFindItemFragment2();
+//                new SalesInvoice.Task().execute();
             }
         });
 
@@ -705,11 +716,72 @@ public class SalesInvoice extends Fragment {
         });
         return view;
     }
+
+    private void fillListItemJson() {
+        String s="";
+        List<String> itemNoList=mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+        jsonItemsList = new ArrayList<>();
+        jsonItemsList2= new ArrayList<>();
+        jsonItemsList_intermidiate = new ArrayList<>();
+        String rate_customer=mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+
+        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+        else {
+
+            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+            size_firstlist=jsonItemsList2.size();
+            size_customerpriceslist=size_firstlist;
+
+            for(int k=0;k<size_firstlist;k++)
+            {
+                jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
+            }
+         //*********************************   **///////////////////////////////
+
+            jsonItemsList=mDbHandler.getAllJsonItems(rate_customer); // from price list d
+
+            for(int i=0;i<jsonItemsList.size();i++)
+            {
+                for(int j=0;j<itemNoList.size();j++)
+                if(jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
+//                    Log.e("after",""+jsonItemsList.get(i).getItemNo().toString()+"\t"+itemNoList.get(j).toString());
+                    jsonItemsList_intermidiate.add(size_firstlist,jsonItemsList.get(i));
+                    size_firstlist++;
+
+
+                }else {
+
+                }
+
+            }
+
+            jsonItemsList=jsonItemsList_intermidiate;
+
+
+
+//            int count=jsonItemsList2.size()+jsonItemsList.size();
+//
+//            for(int i=0;i<count;i++)
+//            {
+//                if(i<size_firstlist)
+//                {
+//                    jsonItemsList_intermidiate.add(jsonItemsList2.get(i));
+//                }
+//                else
+//                    jsonItemsList_intermidiate.add(jsonItemsList.get(i-size_firstlist));
+//            }
+//            jsonItemsList=jsonItemsList_intermidiate;
+//            Log.e("size after ",""+jsonItemsList.size());
+
+        }
+    }
+
     class Task extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 200; i++) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -731,7 +803,7 @@ public class SalesInvoice extends Fragment {
         @Override
         protected void onPreExecute() {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -746,6 +818,7 @@ public class SalesInvoice extends Fragment {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
+
             dialog_progress.dismiss();
 
             if (result != null) {
@@ -1070,10 +1143,10 @@ public class SalesInvoice extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             float availableQty = 0;
-                                            List<Item> jsonItemsList = AddItemsFragment2.jsonItemsList;
-                                            for (int i = 0; i < jsonItemsList.size(); i++) {
-                                                if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
-                                                    availableQty = jsonItemsList.get(i).getQty();
+                                            List<Item> jsonItemsList_insal =jsonItemsList;
+                                            for (int i = 0; i < jsonItemsList_insal.size(); i++) {
+                                                if (items.get(position).getItemNo().equals(jsonItemsList_insal.get(i).getItemNo())) {
+                                                    availableQty = jsonItemsList_insal.get(i).getQty();
                                                     break;
                                                 }
                                             }

@@ -2094,8 +2094,6 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setQty(Float.parseFloat(cursor.getString(3)));
                 if(Float.parseFloat(cursor.getString(4))== 0){
                     priceItem= getPriceforItem(itno,rate);
-                    Log.e("priceItem=",""+priceItem+"\t"+cursor.getString(0));
-                    Log.e("noItem=",""+cursor.getString(4));
                     item.setPrice(Float.parseFloat(priceItem));
 
                 }
@@ -2115,6 +2113,100 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
+    public List<String> getItemNumbersNotInPriceListD(){
+        List<String> itemNoList=new ArrayList<>();
+        String selectQuery ="SELECT DISTINCT   pr_list.ItemNo \n"+
+      " FROM Price_List_D pr_list \n " +
+            "    EXCEPT \n" +
+       " select    cast( ItemNumber as text)"+
+       " from CustomerPrices ";
+
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.e("getAItemsNotInC", "***************************************" + cursor.getCount());
+            do {
+
+                itemNoList.add(cursor.getString(0));
+
+            } while (cursor.moveToNext());
+        }
+        Log.e("item size",""+itemNoList.size());
+
+        return itemNoList;
+
+
+
+    }
+    public List<Item> getAllJsonItemsNotInCustomerPrices(String rate){
+        List<Item> items = new ArrayList<>();
+        // Select All Query
+        String PriceListId = CustomerListShow.PriceListId;
+        String priceItem="";
+        String custNum = CustomerListShow.Customer_Account;
+        String salesMan = Login.salesMan;
+        String selectQuery ="select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC\n" +
+                "    from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
+                "    where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo  and P.PrNo = '"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '"+salesMan+"'\n" +
+                "    and\n" +
+                "    M.ItemNo  IN \n" +
+                "            (  SELECT DISTINCT   pr_list.ItemNo\n" +
+                "                    FROM Price_List_D pr_list\n" +
+                "                    EXCEPT\n" +
+                "                    select    cast( ItemNumber as text)\n" +
+                "    from CustomerPrices\n" +
+                "\n" +
+                ")";
+
+        Log.e("***" , selectQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.e("getAItemsNotInC", "***************************************" + cursor.getCount());
+            do {
+                Item item = new Item();
+
+                item.setItemNo(cursor.getString(0));
+                String itno = cursor.getString(0);
+                item.setItemName(cursor.getString(1));
+                item.setCategory(cursor.getString(2));
+                item.setQty(Float.parseFloat(cursor.getString(3)));
+                item.setPrice(Float.parseFloat(cursor.getString(4)));
+                item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+                item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+                item.setBarcode(cursor.getString(7));
+                item.setItemL(Double.parseDouble(cursor.getString(8)));
+                item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+                item.setKind_item(cursor.getString(10));
+                // Adding transaction to list
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+
+        return items;
+
+
+
+    }
+    /*      String selectQuery ="select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC\n" +
+                "    from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
+                "    where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo  and P.PrNo = '"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '"+salesMan+"'\n" +
+                "    and\n" +
+                "    M.ItemNo  IN \n" +
+                "            (  SELECT DISTINCT   pr_list.ItemNo\n" +
+                "                    FROM Price_List_D pr_list\n" +
+                "                    EXCEPT\n" +
+                "                    select    cast( ItemNumber as text)\n" +
+                "    from CustomerPrices\n" +
+                "\n" +
+                ")";*/
+
 
     private String getPriceforItem(String itemNo,String rate) {
 
