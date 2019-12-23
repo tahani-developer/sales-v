@@ -1845,11 +1845,15 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
                 try {
                     Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                    Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
                 }catch (NullPointerException e)
                 {
                     Voucher.setTax(0);
+                    Voucher.setNetSales(-1);
+                    Log.e("NullPointerException","tax and netsales");
                 }
-                Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
+
+
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));

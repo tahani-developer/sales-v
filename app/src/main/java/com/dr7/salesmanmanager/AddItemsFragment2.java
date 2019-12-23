@@ -144,14 +144,12 @@ public class AddItemsFragment2 extends DialogFragment {
         List<String> Kind_item=new ArrayList<>();
         try {
             Kind_item = mHandler.getAllKindItems();
-            Log.e("Kind_item",""+Kind_item.get(0));
-
 
         }
         catch (Exception e)
         {
             Kind_item.add(0 ,getResources().getString(R.string.all_item));
-            Log.e("ExceptionKind_item",""+Kind_item.get(0));
+
 
         }
         Kind_item.add(0 ,getResources().getString(R.string.all_item));
