@@ -2123,6 +2123,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 items.add(item);
             } while (cursor.moveToNext());
         }
+        else{
+//           items= getAllJsonItems(rate);
+//           Log.e("not_pricesincustomerprices",""+items.size());
+        }
 
         return items;
     }

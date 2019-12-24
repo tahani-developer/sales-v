@@ -60,6 +60,7 @@ import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
+import static com.dr7.salesmanmanager.Reports.AccountReport.acount_report_list;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
@@ -523,7 +524,7 @@ public class bMITP extends Activity {
                           break;
                       case 5:
                           for(int i=0;i<settings;i++) {
-                              sample.printMultilingualFont_AccountReport();
+                              sample.printMultilingualFont_AccountReport(acount_report_list);
                           }
 
                           break;

@@ -718,61 +718,49 @@ public class SalesInvoice extends Fragment {
     }
 
     private void fillListItemJson() {
-        String s="";
-        List<String> itemNoList=mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+        String s = "";
+        List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
         jsonItemsList = new ArrayList<>();
-        jsonItemsList2= new ArrayList<>();
+        jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
-        String rate_customer=mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
         else {
-
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
-            size_firstlist=jsonItemsList2.size();
-            size_customerpriceslist=size_firstlist;
 
-            for(int k=0;k<size_firstlist;k++)
-            {
-                jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
-            }
-         //*********************************   **///////////////////////////////
+            size_firstlist = jsonItemsList2.size();
+            if (size_firstlist != 0) {
+                size_customerpriceslist = size_firstlist;
 
-            jsonItemsList=mDbHandler.getAllJsonItems(rate_customer); // from price list d
+                for (int k = 0; k < size_firstlist; k++) {
+                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
+                }
+                //****************************************************************************************
 
-            for(int i=0;i<jsonItemsList.size();i++)
-            {
-                for(int j=0;j<itemNoList.size();j++)
-                if(jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
-//                    Log.e("after",""+jsonItemsList.get(i).getItemNo().toString()+"\t"+itemNoList.get(j).toString());
-                    jsonItemsList_intermidiate.add(size_firstlist,jsonItemsList.get(i));
-                    size_firstlist++;
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+
+                for (int i = 0; i < jsonItemsList.size(); i++) {
+                    for (int j = 0; j < itemNoList.size(); j++)
+                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
+                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
+                            size_firstlist++;
 
 
-                }else {
+                        } else {
+
+                        }
 
                 }
+                jsonItemsList = jsonItemsList_intermidiate;
 
+            } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
+                Log.e("jsonItemsList2size", "zero");
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
             }
 
-            jsonItemsList=jsonItemsList_intermidiate;
-
-
-
-//            int count=jsonItemsList2.size()+jsonItemsList.size();
-//
-//            for(int i=0;i<count;i++)
-//            {
-//                if(i<size_firstlist)
-//                {
-//                    jsonItemsList_intermidiate.add(jsonItemsList2.get(i));
-//                }
-//                else
-//                    jsonItemsList_intermidiate.add(jsonItemsList.get(i-size_firstlist));
-//            }
-//            jsonItemsList=jsonItemsList_intermidiate;
-//            Log.e("size after ",""+jsonItemsList.size());
+//            Collections.sort(jsonItemsList<itemNoList>);
 
         }
     }

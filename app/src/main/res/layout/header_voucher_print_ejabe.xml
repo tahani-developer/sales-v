@@ -126,11 +126,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Voucher No :"
+                        android:textStyle="bold"
                         android:textColor="@color/add_button"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/vhNo"
+                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/add_button"

@@ -89,7 +89,7 @@
                 android:textSize="16sp" />
 
             <Button
-                android:id="@+id/preview_cash_report"
+                android:id="@+id/preview_account_report"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:textColor="@color/white"
@@ -99,7 +99,7 @@
                 android:layout_marginStart="50dp"
                 android:text="@string/preview" />
             <Button
-                android:id="@+id/print_cash_report"
+                android:id="@+id/print_account_report"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:textColor="@color/white"

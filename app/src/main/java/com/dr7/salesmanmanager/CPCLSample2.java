@@ -55,6 +55,7 @@ public class CPCLSample2 {
 
     List<Payment>payList;
     Payment payforBank;
+    List<AccountReport> listAccountreportPrint;
 
     public CPCLSample2(Context context) {
         this.context = context;
@@ -1211,3 +1212,33 @@ Log.e("printMultilingual","ontCash_EJABI");
         return newValue;
     }
 }
+/*
+     total_Qty=0;
+            DataArabic += " السلعة              " + "العدد   " + "سعر الوحدة   " + "المجموع  " + "\n" +
+                    "--------------------------------------------------------------------------------" + "\n";
+            for (int i = 0; i < itemforPrint.size(); i++) {
+                if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+                    total_Qty+=itemforPrint.get(i).getQty();
+                    String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
+
+
+                    if (itemforPrint.get(i).getItemName().length() <= 12) {
+                        String space = itemforPrint.get(i).getItemName();
+                        for (int g = 0; g < 12 - itemforPrint.get(i).getItemName().length(); g++) {
+                            space = " " + space;
+                        }
+                        DataArabic += space + "  " + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n";
+                    } else {
+                        String space = itemforPrint.get(i).getItemName().substring(0, 10);
+//                        for (int g = 0; g < 16 - itemforPrint.get(i).getItemName().length(); g++) {
+//                            space = " " + space;
+//                        }
+                        String fullString = itemforPrint.get(i).getItemName().substring(10, itemforPrint.get(i).getItemName().length() - 1);
+                        DataArabic += space + "\t\t\t"  + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" + amount + "\n" + fullString + "\n";
+                    }
+
+
+//                    amount = convertToEnglish(amount);
+                }
+            }
+            */

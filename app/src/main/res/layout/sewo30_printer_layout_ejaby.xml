@@ -63,7 +63,6 @@
                 android:text="الصقور للبرمجيات "
                 android:textColor="@color/add_button"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 tools:visibility="visible" />
 
             <TableLayout
@@ -142,6 +141,7 @@
                     android:layout_width="102dp"
                     android:layout_height="wrap_content"
                     android:text="Voucher No :"
+                    android:textStyle="bold"
                     android:textColor="@color/add_button"
                     android:textSize="17sp" />
 
@@ -150,6 +150,7 @@
                     android:layout_width="104dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
+                    android:textStyle="bold"
                     android:textColor="@color/add_button"
                     android:textSize="18sp" />
 
