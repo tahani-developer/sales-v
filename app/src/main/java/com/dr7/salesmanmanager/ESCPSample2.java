@@ -1337,6 +1337,111 @@ public class ESCPSample2
 
 
 	}
+	public void printMultilingualFontPayCash_EJABI(int count) throws UnsupportedEncodingException {
+
+		if(count==0)
+		{
+			payList=paymentsforPrint;
+			payforBank=ReceiptVoucher.payment;
+
+		}else{
+			payList=paymentPrinter;
+			payforBank=PrintPayment.pay1;
+			Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
+			Log.e("payforBank 0000 ==>",""+payforBank.getPayMethod());
+		}
+
+		int nLineWidth = 550;
+		try {
+
+			posPtr.setAsync(false);
+			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+			if(companyInfo.getLogo()!=null) {
+				posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 250);
+			}
+			if (payforBank.getPayMethod() == 1) {
+				posPtr.printAndroidFont(  null, companyInfo.getCompanyName() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Tel No :" + companyInfo.getcompanyTel() +"    "+ "Tax No :" + companyInfo.getTaxNo() /*+ "\n"*/, nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Cash Receipt"+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Receipt No:" + payforBank.getVoucherNumber()+"        " + "Date : " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "I received from Mr. / Messrs:" +payforBank.getCustName() /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Remark :" + payforBank.getRemark() /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Amount received: " + payforBank.getAmount() /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Payment Method: " + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+			} else {
+				posPtr.printAndroidFont(  null, companyInfo.getCompanyName() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Tel No :" + companyInfo.getcompanyTel() +"    "+ "    Tax No :" + companyInfo.getTaxNo() /*+ "\n"*/, nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Cash Receipt"+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "Receipt No: " + payforBank.getVoucherNumber()+"        " + "Date : " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null, "I received from Mr. / Messrs: " +payforBank.getCustName()/*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Remark :" + payforBank.getRemark() /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Amount received: " + payforBank.getAmount() /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "Payment Method: " + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" /*+ "\n"*/ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//				posPtr.printAndroidFont(  null,true, "        Value     " + "      Date      " + "   Cheque No          " + "  Bank Name   " + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "        Cheque No        " + "      Date      " + "         Value       "  + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+
+//				for (int i = 0; i < payList.size(); i++) {
+//
+//					if (payList.get(i).getBank().length() <= 12) {
+//						String space = payList.get(i).getBank();
+//						for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
+//							space += "\t";
+//						}//"\t\t\t\t" +
+//						posPtr.printAndroidFont(  null,true, "\t\t"+space+ payList.get(i).getCheckNumber()+"\t\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//
+////                    dataArabic += "\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space + "\n";
+//					} else {
+//						String space = payList.get(i).getBank().substring(0, 10);
+////                    for (int g = 0; g <  payList.get(i).getBank().length()-12; g++) {
+////                        space+= "\t" ;
+////                    }
+//						String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
+//						posPtr.printAndroidFont(  null,true, "\t\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+////                    dataArabic +=   "\n\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+//					}
+//				}
+
+
+				for (int i = 0; i < payList.size(); i++) {
+
+					if ((""+payList.get(i).getCheckNumber()).length() <= 20) {
+						String space = ""+payList.get(i).getCheckNumber();
+						for (int g = 0; g < 20 - (""+payList.get(i).getCheckNumber()).length(); g++) {
+							space += " ";
+						}//"\t\t\t\t" +
+						posPtr.printAndroidFont(  null, "\t\t"+space+"\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" +payList.get(i).getBank()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+//                    dataArabic += "\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space + "\n";
+					} else {
+						String space = (""+payList.get(i).getCheckNumber()).substring(0, 20);
+//                    for (int g = 0; g <  payList.get(i).getBank().length()-12; g++) {
+//                        space+= "\t" ;
+//                    }
+						String fullString = (""+payList.get(i).getCheckNumber()).substring(20, payList.get(i).getBank().length() - 1);
+						posPtr.printAndroidFont(  null, "\t\t"+space +"\t\t\t"+ payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n"+ payList.get(i).getBank(), nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//                    dataArabic +=   "\n\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+					}
+				}
+
+
+			}
+			posPtr.lineFeed(2);
+			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null, "          Recipient ---------------            Signature --------------         " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+			posPtr.lineFeed(4);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
 
 	public void printMultilingualFontCashReport() throws UnsupportedEncodingException {
 

@@ -707,6 +707,29 @@ public class CPCLSample2 {
         }
 
     }
+    public void printMultilingualFontCash_EJABI(int count) throws UnsupportedEncodingException {
+Log.e("printMultilingual","ontCash_EJABI");
+        int nLineWidth = 1140;
+        String Arabicdata = bankEnglish(count);
+        Log.e("printMultilingual",""+Arabicdata);
+        int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
+
+        try {
+//            imageTestEnglish(0,);
+            this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
+            this.cpclPrinter.setMedia(this.paperType);
+            this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 200, 0);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            this.cpclPrinter.printForm();
+        } catch (IOException var12) {
+            var12.printStackTrace();
+        }
+
+    }
 
     public void RSS1(int count) throws UnsupportedEncodingException {
         String rsscommand = "B RSS-EXPSTACK 2 40 10 10 [01]98898765432106[3202]012345\r\n";
@@ -925,6 +948,123 @@ public class CPCLSample2 {
             dataArabic+="\n\n"+
                     "--------------------------------------------------------------------------------" + "\n" +
                     "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+
+
+        }
+
+
+        return dataArabic;
+
+    }
+
+    String bankEnglish(int count) {
+
+        Log.e("printMultilingual","bankEnglish");
+        if(count==2){
+            payList=paymentsforPrint;
+            payforBank=ReceiptVoucher.payment;
+
+        }
+        else {
+            payList=paymentPrinter;
+            payforBank=pay1;
+        }
+
+
+        String dataArabic = "";
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        String firstName="",LASTnAME="";
+
+        if(payforBank.getCustName().length()<20){
+            firstName=payforBank.getCustName();
+            LASTnAME="";
+        }else{
+            firstName=payforBank.getCustName().substring(0,20);
+            LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
+        }
+
+        if (payforBank.getPayMethod() == 1) {
+
+
+            dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
+                    "    Tel No :" + companyInfo.getcompanyTel() + "             Tax No :" + companyInfo.getTaxNo() + "\n" +
+                    "--------------------------------------------------------------------------------" + "\n" +"                                        "+
+                    "Cash Receipt" + "                                        \n\n" +
+                    "Receipt No:" + payforBank.getVoucherNumber() + "             Date :" + payforBank.getPayDate() + "\n" +
+                    "       " + "\n" +
+                    "I received from Mr. / Messrs:" + "\t" +
+                    firstName + "\n" +LASTnAME+"\n"+
+                    "Remark :" + payforBank.getRemark() + "\n" +
+                    "Amount received:" + payforBank.getAmount() + "\n" +
+                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n";
+
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+
+        } else {
+
+            dataArabic = "                                        "+companyInfo.getCompanyName() + "                             \n" +
+                    "Tel No : " + companyInfo.getcompanyTel() + "              Tax No : " + companyInfo.getTaxNo() + "\n" +
+                    "--------------------------------------------------------------------------------" + "\n" +"                                        "+
+                    "Cash Receipt" + "                                        \n\n" +
+                    "Receipt No:" + payforBank.getVoucherNumber() + "              Date: " + payforBank.getPayDate() + "\n" +
+                    "       " + "\n" +
+                    "I received from Mr. / Messrs: " + "\t" +
+                    firstName + "\n" +LASTnAME+"\n"+
+                    "Remark: " + payforBank.getRemark() + "\n" +
+                    "Amount received: " + payforBank.getAmount() + "\n" +
+                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n" +
+                    "--------------------------------------------------------------------------------" + "\n\n" +
+                    "        Cheque No        " + "      Date      " + "         Value       "  + "\n" +
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "       " + "\n";
+
+//            for (int i = 0; i < payList.size(); i++) {
+//
+//                if (payList.get(i).getBank().length() <= 12) {
+//                    String space = payList.get(i).getBank();
+//                    for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
+//                        space += "\t";
+//                    }//"\t\t\t\t" +
+//                    dataArabic +="\t\t"+space+ payList.get(i).getCheckNumber()+"\t\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n";
+////                    dataArabic += "\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space + "\n";
+//                } else {
+//                    String space = payList.get(i).getBank().substring(0, 10);
+////                    for (int g = 0; g <  paymentsforPrint.get(i).getBank().length()-12; g++) {
+////                        space+= "\t" ;
+////                    }
+//                    String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
+//                    dataArabic += "\t\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n";
+////                    dataArabic +=   "\n\t\t\t\t" + paymentsforPrint.get(i).getAmount() + "\t\t\t\t" + paymentsforPrint.get(i).getDueDate() + "\t\t\t\t" + paymentsforPrint.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+//                }
+//            }
+
+            for (int i = 0; i < payList.size(); i++) {
+
+                if ((""+payList.get(i).getCheckNumber()).length() <= 20) {
+                    String space = ""+payList.get(i).getCheckNumber();
+                    for (int g = 0; g < 20 - (""+payList.get(i).getCheckNumber()).length(); g++) {
+                        space += " ";
+                    }//"\t\t\t\t" +
+                    dataArabic+="\t\t"+space+"\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" +payList.get(i).getBank()+"\n";
+
+//                    dataArabic += "\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space + "\n";
+                } else {
+                    String space = (""+payList.get(i).getCheckNumber()).substring(0, 20);
+//                    for (int g = 0; g <  payList.get(i).getBank().length()-12; g++) {
+//                        space+= "\t" ;
+//                    }
+                    String fullString = (""+payList.get(i).getCheckNumber()).substring(20, payList.get(i).getBank().length() - 1);
+                    dataArabic+=  "\t\t"+space +"\t\t\t"+ payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n"+ payList.get(i).getBank();
+//                    dataArabic +=   "\n\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+                }
+            }
+
+            dataArabic+="\n\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
 
 
         }
