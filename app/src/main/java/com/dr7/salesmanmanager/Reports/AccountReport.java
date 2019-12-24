@@ -46,14 +46,14 @@ import java.util.Set;
 
 import static org.apache.http.impl.cookie.DateUtils.formatDate;
 
-public class AccountReport extends AppCompatActivity {
+public class AccountReport extends AppCompatActivity implements View.OnClickListener {
 
     Calendar myCalendar;
-    EditText from_date;
-    EditText to_date;
+   public static  EditText from_date;
+  public static   EditText to_date;
     DatabaseHandler mDbHandler;
-    Button preview_cash_report;
-    List<Account_Report> acount_report_list;
+    Button preview_report,printReport;
+   public static  List<Account_Report> acount_report_list;
     Date currentTimeAndDate;
     SimpleDateFormat df;
     String today;
@@ -85,184 +85,100 @@ public class AccountReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_report);
         mDbHandler = new DatabaseHandler(AccountReport.this);
-         currentTimeAndDate = Calendar.getInstance().getTime();
-         df = new SimpleDateFormat("dd/MM/yyyy");
-         today = df.format(currentTimeAndDate);
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        today = df.format(currentTimeAndDate);
         myCalendar = Calendar.getInstance();
-        table_Account_Report=(TableLayout)findViewById(R.id.tableAccountReport);
+        table_Account_Report = (TableLayout) findViewById(R.id.tableAccountReport);
 
-        companyInfo=new CompanyInfo();
+        companyInfo = new CompanyInfo();
 
         acount_report_list = new ArrayList<Account_Report>();
         acount_report_list = mDbHandler.getِAccountReport();
         from_date = (EditText) findViewById(R.id.fromDate_accountReport);
         to_date = (EditText) findViewById(R.id.toDate_accountReport);
-        account_balance=(TextView)findViewById(R.id.account_balance);
+        account_balance = (TextView) findViewById(R.id.account_balance);
         from_date.setText(today);
         to_date.setText(today);
-        preview_cash_report = (Button) findViewById(R.id.preview_cash_report);
-        preview_cash_report.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        preview_report = (Button) findViewById(R.id.preview_account_report);
+        printReport = (Button) findViewById(R.id.print_account_report);
+        printReport.setOnClickListener(this);
+        preview_report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 clear();
-                    if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
+                if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
 //                        totalSold = 0 ; totalBonus = 0 ; totalSales = 0 ;
 //                        for (int n = 0; n < acount_report_list.size(); n++) {
-                            for (int n = 0; n < 3; n++) {
+                    for (int n = 0; n < 3; n++) {
 //                            if (filters(n)) {
-                                TableRow row = new TableRow(AccountReport.this);
-                                row.setPadding(5, 10, 5, 10);
+                        TableRow row = new TableRow(AccountReport.this);
+                        row.setPadding(5, 10, 5, 10);
 
-                                if (n % 2 == 0)
-                                    row.setBackgroundColor(ContextCompat.getColor(AccountReport.this, R.color.layer2));
-                                else
-                                    row.setBackgroundColor(ContextCompat.getColor(AccountReport.this, R.color.layer3));
+                        if (n % 2 == 0)
+                            row.setBackgroundColor(ContextCompat.getColor(AccountReport.this, R.color.layer2));
+                        else
+                            row.setBackgroundColor(ContextCompat.getColor(AccountReport.this, R.color.layer3));
 
-                                float calTotalSales = 0;
-                                for (int i = 0; i < 5; i++) {
+                        float calTotalSales = 0;
+                        for (int i = 0; i < 5; i++) {
 
-                                    String[] record = {
+                            String[] record = {
 //                                            items.get(n).getItemNo() + "",
 //                                            items.get(n).getItemName() + "",
 //                                            items.get(n).getQty() + "",
 //                                            items.get(n).getBonus() + "",
-                                            "26/11/2019","sales","500","0","650"};
+                                    "26/11/2019", "sales", "500", "0", "650"};
 
 //                                    calTotalSales = (items.get(n).getQty() * items.get(n).getPrice()) - items.get(n).getDisc();
 //                                    record[4] = calTotalSales + "";
 //                                    record[4] = calTotalSales + "";
 
-                                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                                    row.setLayoutParams(lp);
+                            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                            row.setLayoutParams(lp);
 
-                                    TextView textView = new TextView(AccountReport.this);
-                                    textView.setText(record[i]);
-                                    textView.setTextColor(ContextCompat.getColor(AccountReport.this, R.color.colorPrimary));
-                                    textView.setGravity(Gravity.CENTER);
+                            TextView textView = new TextView(AccountReport.this);
+                            textView.setText(record[i]);
+                            textView.setTextColor(ContextCompat.getColor(AccountReport.this, R.color.colorPrimary));
+                            textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                    textView.setLayoutParams(lp2);
+                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                            textView.setLayoutParams(lp2);
 
-                                    row.addView(textView);
-                                }
+                            row.addView(textView);
+                        }
 
 //                                totalSold = totalSold + items.get(n).getQty();
 //                                totalBonus = totalBonus + items.get(n).getBonus();
 //                                totalSales = totalSales + calTotalSales ;
 
-                                table_Account_Report.addView(row);
+                        table_Account_Report.addView(row);
 //                            }// end filters
-                        }
+                    }
 
 //                        texttotalSold.setText(totalSold+"");
 //                        textTotalBonus.setText(totalBonus+"");
 //                        texttotalSales.setText(convertToEnglish(decimalFormat.format(totalSales)));
-                    } else {
-                        Toast.makeText(AccountReport.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
-                    }
+                } else {
+                    Toast.makeText(AccountReport.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
                 }
-            });
+            }
+        });
 
 
-            preview_cash_report.setOnTouchListener(new View.OnTouchListener() {
+            preview_report.setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
 
                     if(event.getAction() == MotionEvent.ACTION_UP) {
-                        preview_cash_report.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+                        preview_report.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
                     } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                        preview_cash_report.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+                        preview_report.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
                     }
                     return false;
                 }
             });
-            Button  print_cash_report=(Button)findViewById(R.id.print_cash_report);
-            print_cash_report.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-
-                            try {
-                                int printer = mDbHandler.getPrinterSetting();
-                                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
-                                    if (printer != -1) {
-                                        switch (printer) {
-                                            case 0:
-
-                                                Intent i = new Intent(AccountReport.this, BluetoothConnectMenu.class);
-                                                i.putExtra("printKey", "3");
-                                                startActivity(i);
-
-//                                                             lk30.setChecked(true);
-                                                break;
-                                            case 1:
-
-                                          Intent printer1= new Intent(AccountReport.this, bMITP.class);
-                                                printer1.putExtra("printKey", "5");
-                                                startActivity(printer1);
-//                                                             lk31.setChecked(true);
-                                                break;
-                                            case 2:
-//                                                             lk32.setChecked(true);
-                                                Intent O1= new Intent(AccountReport.this, bMITP.class);
-                                                O1.putExtra("printKey", "5");
-                                                startActivity(O1);
-
-                                                break;
-                                            case 3:
-
-//                                                try {
-//                                                    findBT();
-//                                                    openBT(3);
-//                                                } catch (IOException e) {
-//                                                    e.printStackTrace();
-//                                                }
-//                                                             qs.setChecked(true);
-                                                break;
-                                            case 4:
-//                                                printTally();
-                                                break;
-                                            case 5:// printer.setChecked(true)
-//                                                convertLayoutToImage();
-                                                Intent printer5= new Intent(AccountReport.this, bMITP.class);
-                                                printer5.putExtra("printKey", "5");
-                                                startActivity(printer5);
-
-                                                break;
-
-
-                                        }
-                                    } else {
-                                        Toast.makeText(AccountReport.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
-                                }
-                            } catch (NumberFormatException e) {
-                                Toast.makeText(AccountReport.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
-                            } catch (NullPointerException e) {
-                                Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
-
-                            }
-                        } else {
-                            // hiddenDialog();
-                        }
-                    }
-                    catch(Exception e){
-                        Toast.makeText(AccountReport.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-
-
-                });
-
 
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -413,6 +329,91 @@ public class AccountReport extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.print_account_report: {
+                try {
+                    if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+
+                        try {
+                            int printer = mDbHandler.getPrinterSetting();
+                            companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                                if (printer != -1) {
+                                    switch (printer) {
+                                        case 0:
+
+                                            Intent i = new Intent(AccountReport.this, BluetoothConnectMenu.class);
+                                            i.putExtra("printKey", "5");
+                                            startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                                            break;
+                                        case 1:
+
+                                            Intent printer1 = new Intent(AccountReport.this, bMITP.class);
+                                            printer1.putExtra("printKey", "5");
+                                            startActivity(printer1);
+//                                                             lk31.setChecked(true);
+                                            break;
+                                        case 2:
+//                                                             lk32.setChecked(true);
+                                            Intent O1 = new Intent(AccountReport.this, bMITP.class);
+                                            O1.putExtra("printKey", "5");
+                                            startActivity(O1);
+
+                                            break;
+                                        case 3:
+
+//                                                try {
+//                                                    findBT();
+//                                                    openBT(3);
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                                             qs.setChecked(true);
+                                            break;
+                                        case 4:
+//                                                printTally();
+                                            break;
+                                        case 5:// printer.setChecked(true)
+//                                                convertLayoutToImage();
+                                            Intent printer5 = new Intent(AccountReport.this, bMITP.class);
+                                            printer5.putExtra("printKey", "5");
+                                            startActivity(printer5);
+
+                                            break;
+
+
+                                    }
+                                } else {
+                                    Toast.makeText(AccountReport.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(AccountReport.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
+                        } catch (NullPointerException e) {
+                            Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            Toast.makeText(AccountReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+
+                        }
+                    } else {
+                        // hiddenDialog();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(AccountReport.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            break;
+        }
+
     }
 }
 
