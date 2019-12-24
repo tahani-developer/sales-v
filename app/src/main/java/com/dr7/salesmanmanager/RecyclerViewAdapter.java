@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Offers;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context context;
     boolean added = false;
     DatabaseHandler MHandler;
+    DecimalFormat threeDForm ;
 
     public RecyclerViewAdapter(List<Item> items, Context context) {
         this.items = items;
@@ -93,7 +95,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
        else{
            holder.imagespecial.setVisibility(View.GONE);
        }
-        holder.price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
+        holder.price.setText("" +  threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()));
+        Log.e("format",""+ threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()));
+//       *******************************//////////////////////*
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
         holder.posprice.setText(items.get(holder.getAdapterPosition()).getPosPrice()+"");
@@ -450,6 +454,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode,posprice;
         ImageView imagespecial;
 
+
         public viewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cardView);
@@ -465,6 +470,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             posprice= itemView.findViewById(R.id.textViewPosPrice);
             row_qty=itemView.findViewById(R.id.row_qty);
             imagespecial=itemView.findViewById(R.id.imagespecial);
+            threeDForm = new DecimalFormat("00.000");
         }
     }
 

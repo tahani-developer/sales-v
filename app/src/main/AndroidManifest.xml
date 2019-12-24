@@ -11,14 +11,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ScanActivity"></activity>
         <activity
             android:name=".Reports.AccountReport"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"
-       />
-        <activity android:name=".Modles.Account_Report"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Modles.Account_Report" />
         <activity android:name=".Splashscreen" />
         <activity android:name=".bluetoothprinter" />
         <activity
@@ -159,5 +158,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
 </manifest>
