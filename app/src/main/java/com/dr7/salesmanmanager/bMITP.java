@@ -488,9 +488,15 @@ public class bMITP extends Activity {
 
                       case 2:
 
+                          if(printShape==0){
                           for(int i=0;i<settings;i++) {
                               sample.printMultilingualFontPayCash(0);
 
+                          }}else {
+                              for(int i=0;i<settings;i++) {
+                                  sample.printMultilingualFontPayCash_EJABI(0);
+
+                              }
                           }
                           Log.e("Re","print");
 
@@ -505,8 +511,13 @@ public class bMITP extends Activity {
 
                       case 4:
                           Log.e("pay","print");
+                          if(printShape==0){
                           for(int i=0;i<settings;i++) {
                               sample.printMultilingualFontPayCash(1);
+                          }}else {
+                              for(int i=0;i<settings;i++) {
+                                  sample.printMultilingualFontPayCash_EJABI(1);
+                              }
                           }
                           paymentPrinter.clear();
                           break;

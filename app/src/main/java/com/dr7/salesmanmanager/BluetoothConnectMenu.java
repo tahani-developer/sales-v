@@ -448,6 +448,12 @@ public class BluetoothConnectMenu extends Activity {
                 CPCLSample2 sample = new CPCLSample2(BluetoothConnectMenu.this);
                 sample.selectContinuousPaper();
                 try {
+                    int printShape=0;
+                    List<PrinterSetting> printerSettings=obj.getPrinterSetting_();
+
+                    if(printerSettings.size()!=0){
+                        printShape=printerSettings.get(0).getPrinterShape();
+                    }
 
                     CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
                     if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
@@ -472,12 +478,8 @@ public class BluetoothConnectMenu extends Activity {
                                 }
                             }
 
-                            int printShape=0;
-                            List<PrinterSetting> printerSettings=obj.getPrinterSetting_();
 
-                            if(printerSettings.size()!=0){
-                                printShape=printerSettings.get(0).getPrinterShape();
-                            }
+
 
                             if(printShape==0){
                             if (TOTAL < 20) {
@@ -619,13 +621,23 @@ public class BluetoothConnectMenu extends Activity {
                                 if(count==2){
 //                                payList=paymentsforPrint;
 //                                payforBank=ReceiptVoucher.payment;
-                                sample.printMultilingualFontCash(2);
+                                    if(printShape==0) {
+                                        sample.printMultilingualFontCash(2);
+                                    }else {
+                                        sample.printMultilingualFontCash_EJABI(2);
+
+                                    }
                                 paymentsforPrint.clear();
                                 }
                                 else {
 //                                    payList=paymentPrinter;
 //                                    payforBank=pay1;
-                                    sample.printMultilingualFontCash(4);
+                                    if(printShape==0) {
+                                        sample.printMultilingualFontCash(4);
+                                    }else {
+                                        sample.printMultilingualFontCash_EJABI(4);
+
+                                    }
 //                                    paymentsforPrint.clear();
                                 }
                             }
