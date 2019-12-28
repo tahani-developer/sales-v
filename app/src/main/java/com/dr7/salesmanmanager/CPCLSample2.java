@@ -60,7 +60,7 @@ public class CPCLSample2 {
     public CPCLSample2(Context context) {
         this.context = context;
         obj = new DatabaseHandler(context);
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
     }
 
     public void selectGapPaper() {

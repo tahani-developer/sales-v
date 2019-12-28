@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class StockRequest extends Fragment {
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
-
+  public static List<Item> jsonItemsList;
     public List<Item> getItemsStockList() {
         return this.items;
     }
@@ -64,6 +65,11 @@ public class StockRequest extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_stock_request, container, false);
         mDbHandler = new DatabaseHandler(getActivity());
+        jsonItemsList = new ArrayList<>();
+        String rate_customer=mDbHandler.getRateOfCustomer();
+        Log.e("rate addItem",""+rate_customer);
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
 
         addItemImgButton = (ImageButton) view.findViewById(R.id.addItemImgButton);

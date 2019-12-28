@@ -27,7 +27,7 @@ public class ItemsListAdapter extends BaseAdapter {
     {
         this.context = context;
         this.itemList = itemList;
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
     }
 
     public void setItemsList(List<Item> itemList)

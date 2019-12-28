@@ -49,7 +49,7 @@ public class ItemsReport extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.items_report);
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
 
         items = new ArrayList<Item>();
         DatabaseHandler obj = new DatabaseHandler(ItemsReport.this);

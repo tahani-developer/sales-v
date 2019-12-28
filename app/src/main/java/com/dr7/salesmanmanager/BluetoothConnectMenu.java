@@ -198,7 +198,7 @@ public class BluetoothConnectMenu extends Activity {
         this.context = this;
         obj = new DatabaseHandler(BluetoothConnectMenu.this);
         long_listItems = new ArrayList<Item>();
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
 
 
 //

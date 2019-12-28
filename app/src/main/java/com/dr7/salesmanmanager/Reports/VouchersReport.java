@@ -56,7 +56,7 @@ public class VouchersReport extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vouchers_report);
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
