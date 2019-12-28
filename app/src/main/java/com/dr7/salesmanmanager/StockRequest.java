@@ -52,6 +52,8 @@ public class StockRequest extends Fragment {
     private int voucherNumber;
   public static List<Item> jsonItemsList;
     CompanyInfo companyInfo;
+   public static List<Item> listItemStock;
+   Voucher voucherStock;
     public List<Item> getItemsStockList() {
         return this.items;
     }
@@ -129,7 +131,6 @@ public class StockRequest extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
@@ -153,8 +154,13 @@ public class StockRequest extends Fragment {
                             int salesMan = Integer.parseInt(Login.salesMan);
 
                             double total = Double.parseDouble(totalQty.getText().toString());
-                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
-                                    salesMan, remark, total, 0));
+                            voucherStock= new Voucher(0, voucherNumber, voucherDate,
+                                    salesMan, remark, total, 0);
+//                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
+//                                    salesMan, remark, total, 0));
+                            mDbHandler.addRequestVoucher(voucherStock);
+
+
 
 
                             for (int i = 0; i < items.size(); i++) {
@@ -185,6 +191,7 @@ public class StockRequest extends Fragment {
                 if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
                     switch (printer) {
                         case 0:
+                            listItemStock=items;
                             Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
                             i.putExtra("printKey", "6");
                             startActivity(i);
