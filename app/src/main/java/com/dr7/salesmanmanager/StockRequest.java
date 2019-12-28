@@ -4,10 +4,14 @@ package com.dr7.salesmanmanager;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +23,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -42,7 +50,8 @@ public class StockRequest extends Fragment {
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
-
+  public static List<Item> jsonItemsList;
+    CompanyInfo companyInfo;
     public List<Item> getItemsStockList() {
         return this.items;
     }
@@ -64,6 +73,12 @@ public class StockRequest extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_stock_request, container, false);
         mDbHandler = new DatabaseHandler(getActivity());
+        jsonItemsList = new ArrayList<>();
+        String rate_customer=mDbHandler.getRateOfCustomer();
+        companyInfo=new CompanyInfo();
+        Log.e("rate addItem",""+rate_customer);
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
 
         addItemImgButton = (ImageButton) view.findViewById(R.id.addItemImgButton);
@@ -146,6 +161,8 @@ public class StockRequest extends Fragment {
                                 mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
                                         items.get(i).getItemName(), items.get(i).getQty(), voucherDate));
                             }
+                            printStock();
+
                         }
                         clearLayoutData();
                     }
@@ -158,6 +175,92 @@ public class StockRequest extends Fragment {
 
 
         return view;
+    }
+
+    private void printStock() {
+        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+            try {
+                int printer = mDbHandler.getPrinterSetting();
+                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                    switch (printer) {
+                        case 0:
+                            Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                            i.putExtra("printKey", "6");
+                            startActivity(i);
+//                                                             lk30.setChecked(true);
+                            break;
+                        case 1:
+
+//                            try {
+//                                findBT();
+//                                openBT(1);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             lk31.setChecked(true);
+                            break;
+                        case 2:
+
+//                               try {
+//                                   findBT();
+//                                   openBT(2);
+//                               } catch (IOException e) {
+//                                   e.printStackTrace();
+//                               }
+////                                                             lk32.setChecked(true);
+//                            voucherShow = voucher;
+//
+//                            convertLayoutToImagew(getActivity());
+//                            Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+//                            O1.putExtra("printKey", "1");
+//                            startActivity(O1);
+
+
+                            break;
+                        case 3:
+
+//                            try {
+//                                findBT();
+//                                openBT(3);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                                                             qs.setChecked(true);
+                            break;
+                        case 4:
+//                            printTally(voucher);
+//                            break;
+
+
+                        case 5:
+
+//                                                             MTP.setChecked(true);
+//                            voucherShow = voucher;
+//                            convertLayoutToImage(voucher);
+                            Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            O.putExtra("printKey", "1");
+                            startActivity(O);
+
+
+                            break;
+
+                    }
+                } else {
+//                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+//                                                } catch (IOException ex) {
+//                                                }
+        } else {
+//            hiddenDialog();
+        }
     }
 
     public AdapterView.OnItemLongClickListener onItemLongClickListener =

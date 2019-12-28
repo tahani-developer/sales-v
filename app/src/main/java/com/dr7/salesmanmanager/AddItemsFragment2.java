@@ -61,6 +61,12 @@ public class AddItemsFragment2 extends DialogFragment {
     double  flagBonus=0,amountBonus=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
+    final String result="";
+    int indexfirstpeces=0;
+    String  firstString="";
+    String secondString="";
+    String lower="";
+    String upper="";
 
 
     public AddItemsInterface getListener() {
@@ -212,10 +218,13 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
         search = view.findViewById(R.id.mSearch);
+
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 return false;
+
             }
 
             @Override
@@ -224,13 +233,54 @@ public class AddItemsFragment2 extends DialogFragment {
 //                adapter.getFilter().filter(query);
 
                 if (query != null && query.length() > 0) {
+                    String[] arrOfStr = query.split(" ");
+                    int [] countResult=new int[arrOfStr.length];
+                    Log.e("arrOfString", "" + arrOfStr.toString());
+                    boolean check=true;
+
+
+//                    indexfirstpeces=query.indexOf(" ");
+//                    if(indexfirstpeces !=-1) {
+//                        firstString = query.substring(0, indexfirstpeces);
+//                        secondString = query.substring(indexfirstpeces, query.length());
+//                        Log.e("query", "" + indexfirstpeces + firstString + "\t" + secondString);
+//         ((jsonItemsList.get(k).getItemName().toLowerCase().contains(arrOfStr[j])) || jsonItemsList.get(k).getItemName().toUpperCase().contains(arrOfStr[j])))
+
                     ArrayList<Item> filteredList = new ArrayList<>();
                     for (int k = 0; k < jsonItemsList.size(); k++) {
-                        if (jsonItemsList.get(k).getItemName().toUpperCase().contains(query))
-                            filteredList.add(jsonItemsList.get(k));
+                        for (int j = 0; j < arrOfStr.length; j++) {
+                            Log.e("arrOfStr", "" + arrOfStr[j]);
+                            lower=arrOfStr[j].toLowerCase();
+                            upper=arrOfStr[j].toUpperCase();
+                            if (jsonItemsList.get(k).getItemName().contains(lower) || (jsonItemsList.get(k).getItemName().contains(upper)))
+                                countResult[j]=0;
+                            else
+                                countResult[j]=1;
+
+                            if(j==arrOfStr.length-1)
+                            {
+                                for(int b=0;b<countResult.length;b++)
+                                {
+                                    if(countResult[b]!=0)
+                                        check=false;
+                                }
+                                if(check)
+                                {  filteredList.add(jsonItemsList.get(k));
+
+                                }
+                            }
+
+
+
+                        }
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
-                    recyclerView.setAdapter(adapter);
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                        recyclerView.setAdapter(adapter);
+//                    }
+//                    else{ RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+//                        recyclerView.setAdapter(adapter);}
+
+
                 } else {
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
                     recyclerView.setAdapter(adapter);

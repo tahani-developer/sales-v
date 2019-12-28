@@ -35,6 +35,7 @@
                     android:layout_height="50sp"
                     android:text="Test Item"
                     android:layout_gravity="left"
+                    android:visibility="gone"
 
                     android:src="@drawable/specialred"
                  />

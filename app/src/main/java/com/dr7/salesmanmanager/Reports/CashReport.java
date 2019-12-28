@@ -111,7 +111,7 @@ public class CashReport  extends AppCompatActivity {
             e.printStackTrace();
         }
         //************************* initial *************************************
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
         payments = new ArrayList<Payment>();
         vouchersales=new ArrayList<Item>();
 

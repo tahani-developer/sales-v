@@ -117,7 +117,7 @@ public class PrintVoucher extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo = new ArrayList<CompanyInfo>();
@@ -1930,7 +1930,7 @@ public class PrintVoucher extends AppCompatActivity {
                     printCustom("------------------------------------------" + "\n", 1, 0);
 
                     int serial = 1;
-                    DecimalFormat threeDForm = new DecimalFormat("0.000");
+                    DecimalFormat threeDForm = new DecimalFormat("00.000");
                     for (int j = 0; j < items.size(); j++) {
                         if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
                             String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());

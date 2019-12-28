@@ -73,7 +73,7 @@ public class ESCPSample2
 	{
 		posPtr = new ESCPOSPrinter();
 		obj = new DatabaseHandler(context);
-		decimalFormat = new DecimalFormat("00.00");
+		decimalFormat = new DecimalFormat("00.000");
 		this.context=context;
 //		posPtr = new ESCPOSPrinter("EUC-KR"); // Korean.
 //		posPtr = new ESCPOSPrinter("BIG5"); // Big5
@@ -1180,7 +1180,7 @@ public class ESCPSample2
 				}
 			} else {
 				total_Qty=0;
-				posPtr.printAndroidFont(  null," Item No.                      " + "Qty" + "\t\t\t" + "Price" + "\t\t\t" + "Total" /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(  null," Item No.                  " + "Qty" + "\t\t\t" + "Price" + "\t\t\t" + "Total" /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,"--------------------------------------------------------------------------------" /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
@@ -1192,7 +1192,7 @@ public class ESCPSample2
 							for (int g = 0; g < (20 - itemforPrint.get(i).getItemNo().length()); g++) {
 								space =  space+" " ;
 							}
-						posPtr.printAndroidFont( null,space  + "\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+						posPtr.printAndroidFont( null,space  + "\t\t" + itemforPrint.get(i).getQty() + "\t\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 					}
 				}

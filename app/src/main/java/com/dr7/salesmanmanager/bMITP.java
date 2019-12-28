@@ -528,6 +528,19 @@ public class bMITP extends Activity {
                           }
 
                           break;
+                      case 6:
+                          if(printShape==0)
+                          {}
+                          else{
+
+                              for(int i=0;i<settings;i++) {
+
+                              }
+
+                          }
+
+
+                          break;
 
                   }
 

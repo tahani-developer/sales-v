@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     Bitmap visitPic = null;
     ImageView visitPicture;
     int amountOfmaxDiscount = 0;
+    public static TextView tvresult;
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
@@ -133,6 +134,19 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tvresult = (TextView) findViewById(R.id.tvresult);
+
+        Button btn = (Button) findViewById(R.id.btn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);

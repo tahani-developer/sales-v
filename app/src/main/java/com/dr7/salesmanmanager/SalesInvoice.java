@@ -228,13 +228,13 @@ public class SalesInvoice extends Fragment {
         df2 = new SimpleDateFormat("yyyy");
        voucherYear = df2.format(currentTimeAndDate);
         voucherYear = convertToEnglish(voucherYear);
-        decimalFormat = new DecimalFormat("00.00");
+        decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
         list_discount_offers=new ArrayList<>();
         itemsQtyOfferList=new ArrayList<>();
         object = new bluetoothprinter();
         itemForPrint=new ArrayList<>();
-        threeDForm = new DecimalFormat("0.000");
+        threeDForm = new DecimalFormat("00.000");
 
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
         refreshData = (CircleImageView) view.findViewById(R.id.refresh_data);

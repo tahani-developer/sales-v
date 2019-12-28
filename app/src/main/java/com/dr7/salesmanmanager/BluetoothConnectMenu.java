@@ -198,7 +198,7 @@ public class BluetoothConnectMenu extends Activity {
         this.context = this;
         obj = new DatabaseHandler(BluetoothConnectMenu.this);
         long_listItems = new ArrayList<Item>();
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
 
 
 //
@@ -545,7 +545,8 @@ public class BluetoothConnectMenu extends Activity {
                                 Bitmap bit_voucher_Footer = convertLayoutToImage_Footer(voucherforPrint, long_listItems);
                                 sample.imageTestArabic(1, bit_voucher_Footer);
 
-                            }}else {
+                            }}
+                            else {
 
                             if (TOTAL < 20) {
 //                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
@@ -557,7 +558,8 @@ public class BluetoothConnectMenu extends Activity {
                                     e.printStackTrace();
                                 }
                                 TOTAL = 0;
-                            } else {
+                            }
+                            else {
                                 Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
                                 sample.imageTestEnglish(1, bit_voucher_Headre);
                                 size_subList = Math.ceil(long_listItems.size() / 30.0);
@@ -649,6 +651,80 @@ public class BluetoothConnectMenu extends Activity {
                                 sample.printMultilingualFont_AccountReport();
 
                             }
+                            else if(count == 6)
+                            {// print stock request
+                                if (TOTAL < 20) {
+//                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
+                                    Bitmap bit = convertLayoutToImageEjape(voucherforPrint, itemforPrint);
+                                    sample.imageTestEnglish(1, bit);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    TOTAL = 0;
+                                }
+                                else {
+                                    Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
+                                    sample.imageTestEnglish(1, bit_voucher_Headre);
+                                    size_subList = Math.ceil(long_listItems.size() / 30.0);
+                                    int n = 0, k = 30;
+
+                                    for (int i = 0; i < size_subList; i++) {//3
+                                        if (long_listItems.size() <= 30) {
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems, 0);
+                                            sample.imageTestEnglish(1, bit_voucher_Body);
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else {
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+
+                                            if (i == size_subList - 1) {
+                                                k = long_listItems.size();
+
+                                            }
+
+
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems.subList(n, k), n);
+                                            sample.imageTestEnglish(1, bit_voucher_Body);
+                                            Log.e("n+k", " \t" + n + " " + k);
+                                            n = n + 30;
+                                            k = n + 30;
+                                            try {
+                                                Thread.sleep(2000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+
+                                    }
+
+                                    try {
+                                        Thread.sleep(8000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Bitmap bit_voucher_Footer = convertLayoutToImage_Footer_ejabe(voucherforPrint, long_listItems);
+                                    sample.imageTestEnglish(1, bit_voucher_Footer);
+
+                                }
+
+
+
+
+
+                            }
+
                         }
 
                         finish();

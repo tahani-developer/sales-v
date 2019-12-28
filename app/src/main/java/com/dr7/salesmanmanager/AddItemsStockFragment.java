@@ -29,6 +29,8 @@ import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.StockRequest.jsonItemsList;
+
 
 public class AddItemsStockFragment extends DialogFragment {
 
@@ -37,7 +39,7 @@ public class AddItemsStockFragment extends DialogFragment {
     Button addToListButton, doneButton;
     SearchView search ;
     private ArrayList<String> itemsList;
-    private List<Item> jsonItemsList;
+//    private List<Item> jsonItemsList;
     RecyclerView recyclerView;
     private float descPerc;
     boolean added = false;
@@ -60,7 +62,7 @@ public class AddItemsStockFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        jsonItemsList = new ArrayList<>();
+
         List = new ArrayList<Item>();
         List.clear();
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -68,12 +70,12 @@ public class AddItemsStockFragment extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_items_stock_dialog, container, false);
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
-        String rate_customer=mHandler.getRateOfCustomer();
-        Log.e("rate addItem",""+rate_customer);
-        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
-            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
-        else
-            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
+//        String rate_customer=mHandler.getRateOfCustomer();
+//        Log.e("rate addItem",""+rate_customer);
+//        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
+//            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
+//        else
+//            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
 
         // ****************************** Category Spinner Spenner*****************************************************
 
