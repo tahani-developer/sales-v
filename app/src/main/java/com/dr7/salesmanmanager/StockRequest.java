@@ -238,6 +238,8 @@ public class StockRequest extends Fragment {
 //                                                             MTP.setChecked(true);
 //                            voucherShow = voucher;
 //                            convertLayoutToImage(voucher);
+
+
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O.putExtra("printKey", "1");
                             startActivity(O);
