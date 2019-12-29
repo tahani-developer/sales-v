@@ -45,7 +45,8 @@ public class StockRequest extends Fragment {
     public ListView itemsListView;
     private ImageButton addItemImgButton, newImgBtn, SaveData;
     private EditText remarkEditText;
-    private TextView totalQty, voucherNumberTextView;
+    private TextView  voucherNumberTextView;
+    public static TextView totalQty;
     public List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
@@ -55,6 +56,8 @@ public class StockRequest extends Fragment {
    public static List<Item> listItemStock;
     public static  Voucher voucherStock;
 
+
+    public static Voucher voucherStockItem;
     public List<Item> getItemsStockList() {
         return this.items;
     }
@@ -142,7 +145,6 @@ public class StockRequest extends Fragment {
                         if (listSize == 0)
                             Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
                         else {
-                            String s="";
 
                             String remark = " " + remarkEditText.getText().toString();
 
@@ -161,7 +163,6 @@ public class StockRequest extends Fragment {
                                     salesMan, remark, total, 0);
 //                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
 //                                    salesMan, remark, total, 0));
-                            Log.e("voucherNumber",""+voucherNumber);
                             mDbHandler.addRequestVoucher(voucherStock);
 
 
@@ -174,7 +175,7 @@ public class StockRequest extends Fragment {
                             printStock();
 
                         }
-//                        clearLayoutData();
+
                     }
                 });
 
@@ -249,9 +250,12 @@ public class StockRequest extends Fragment {
 //                                                             MTP.setChecked(true);
 //                            voucherShow = voucher;
 //                            convertLayoutToImage(voucher);
+                            listItemStock=items;
+                            voucherStockItem=voucherStock;
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
-                            O.putExtra("printKey", "1");
+                            O.putExtra("printKey", "6");
                             startActivity(O);
+                            clearLayoutData();
 
 
                             break;
@@ -315,7 +319,7 @@ public class StockRequest extends Fragment {
 
     private void clearLayoutData() {
         remarkEditText.setText(" ");
-        clearItemsList();
+        totalQty.setText("");
         calculateTotals();
 
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
@@ -323,7 +327,7 @@ public class StockRequest extends Fragment {
         voucherNumberTextView.setText(vn);
     }
 
-    private void clearItemsList() {
+    public void clearItemsList() {
         items.clear();
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
