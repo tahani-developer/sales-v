@@ -233,43 +233,45 @@ public class AddItemsFragment2 extends DialogFragment {
 
             @Override
             public boolean onQueryTextChange(String query) {
-                itemsList_forFilter= new ArrayList<Item>();
-                ArrayList<Item> filteredList = new ArrayList<>();
+                //FILTER AS YOU TYPE
+//                adapter.getFilter().filter(query);
+
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
-                    String[] arrLower = new String[arrOfStr.length];
-                    String[] arrUpper = new String[arrOfStr.length];
-                    for (int i = 0; i < arrOfStr.length; i++)
-                    {
-                        arrLower[i] = arrOfStr[i].toLowerCase();
-                        arrUpper[i] = arrOfStr[i].toUpperCase();
+                    int [] countResult=new int[arrOfStr.length];
+                    Log.e("arrOfString", "" + arrOfStr.toString()+" \n   "+arrOfStr[0]+" \n  "+arrOfStr.length);
 
-                    }
-//                    for(int b=0;b<jsonItemsList.size();b++)
-//                    {
-//                        itemsList_forFilter.add(jsonItemsList.get(b));
-//                    }
+                    ArrayList<Item> filteredList = new ArrayList<>();
 
 //                    "jkgb".matches()
 
-                    for (int k = 0; k < jsonItemsList.size(); k++) {
-                        for (int j = 0; j < arrOfStr.length; j++) {
+                    boolean isFound=false;
+                    for(int i=0;i<jsonItemsList.size();i++){
+                        for(int j=0;j<arrOfStr.length;j++){
+                        String lowers=arrOfStr[j].toLowerCase();
+                        String uppers=arrOfStr[j].toUpperCase();
 
-                            if (jsonItemsList.get(k).getItemName().contains(arrLower[j]) || (jsonItemsList.get(k).getItemName().contains(arrUpper[j])))
-                            {
-                                filteredList.add(jsonItemsList.get(k));
-                            }
-//
-//                            if (!(itemsList_forFilter.get(k).getItemName().contains(arrLower[j]) || (itemsList_forFilter.get(k).getItemName().contains(arrUpper[j]))))
-//                                   itemsList_forFilter.remove(k);
-                                //                                filteredList.add(itemsList_forFilter.get(k));
-                            else{
+                            if(jsonItemsList.get(i).getItemName().toLowerCase().contains(lowers)||jsonItemsList.get(i).getItemName().toUpperCase().contains(uppers)){
 
+                                isFound=true;
+
+                            }else {
+                                isFound=false;
+                                break;
                             }
+
+
                         }
+                        if(isFound){
+                            filteredList.add(jsonItemsList.get(i));
+                        }
+
+
                     }
+
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
                     recyclerView.setAdapter(adapter);
+
 
 
                 } else {
@@ -331,12 +333,7 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         return view;
     }
-/*//                    indexfirstpeces=query.indexOf(" ");
-//                    if(indexfirstpeces !=-1) {
-//                        firstString = query.substring(0, indexfirstpeces);
-//                        secondString = query.substring(indexfirstpeces, query.length());
-//                        Log.e("query", "" + indexfirstpeces + firstString + "\t" + secondString);
-//         ((jsonItemsList.get(k).getItemName().toLowerCase().contains(arrOfStr[j])) || jsonItemsList.get(k).getItemName().toUpperCase().contains(arrOfStr[j])))*/
+
     public void setListener(AddItemsInterface listener) {
         this.listener = listener;
     }
