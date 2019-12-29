@@ -45,7 +45,8 @@ public class StockRequest extends Fragment {
     public ListView itemsListView;
     private ImageButton addItemImgButton, newImgBtn, SaveData;
     private EditText remarkEditText;
-    private TextView totalQty, voucherNumberTextView;
+    private TextView  voucherNumberTextView;
+    public static TextView totalQty;
     public List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
@@ -315,7 +316,8 @@ public class StockRequest extends Fragment {
 
     private void clearLayoutData() {
         remarkEditText.setText(" ");
-
+        totalQty.setText("");
+        calculateTotals();
 
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
         String vn = voucherNumber + "";
@@ -327,7 +329,7 @@ public class StockRequest extends Fragment {
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
 
-        calculateTotals();
+
     }
 
     public class ItemsListStockAdapter extends BaseAdapter {

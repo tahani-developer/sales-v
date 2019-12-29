@@ -57,6 +57,7 @@ import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.listItemStock;
+import static com.dr7.salesmanmanager.StockRequest.totalQty;
 import static com.dr7.salesmanmanager.StockRequest.voucherStockItem;
 
 public class ESCPSample2
@@ -1493,14 +1494,12 @@ public class ESCPSample2
 					Log.e("12222print","pyyy");
 				}
 				posPtr.printAndroidFont(null,"\n"+companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(null,"Tel : " + companyInfo.getcompanyTel()+"    " + "Tax No: " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null,true,"Voucher No :" + voucherStockItems.getVoucherNumber()+"    " + "          Date: " + voucherStockItems.getVoucherDate() /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(null,"Store No. : " +  Login.salesMan/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                posPtr.printAndroidFont(null,"Stock Request" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+                posPtr.printAndroidFont(null,"Store No. : " +  Login.salesMan/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null,"SalesMan Name :" +voucherStockItems.getSaleManNumber()/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(null,"Customer Name :" + voucherStockItems.getCustName() /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null,"Remark : " + voucherStockItems.getRemark()/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(null,"Voucher Type : " +"New Order"/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 //				posPtr.printAndroidFont(null,"Pay Method : " +  (voucherStockItems.getPayMethod() == 0 ? "Credit" : "Cash")/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1536,11 +1535,14 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null, "Total Qty : " + total_Qty/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 
-			posPtr.lineFeed(2);
+//			posPtr.lineFeed(2);
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(  null, "          Recipient ---------------            Signature --------------         " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+//			posPtr.printAndroidFont(  null, "          Recipient ---------------            Signature --------------         " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			posPtr.lineFeed(4);
+
+			listItemStock.clear();
+			totalQty.setText("0.00");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

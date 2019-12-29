@@ -536,8 +536,7 @@ public class bMITP extends Activity {
                               for(int i=0;i<settings;i++) {
                                   sample.printMultilingualFontStock_EJABI(0);
                               }
-                              StockRequest stockRequest=new StockRequest();
-                              stockRequest.clearItemsList();
+
 
 
                           }
