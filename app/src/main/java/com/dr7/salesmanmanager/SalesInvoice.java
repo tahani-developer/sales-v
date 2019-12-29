@@ -105,6 +105,7 @@ import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
 public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList;
+
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
     public  static  int size_customerpriceslist=0;

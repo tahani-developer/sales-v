@@ -3291,6 +3291,35 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
     }
+
+    public String getSalesmanName() {
+        String custId=CustomerListShow.Customer_Account;
+        String selectQuery ="select S.salesManName \n" +
+                "from Sales_Team S, CUSTOMER_MASTER C \n" +
+                "WHERE\n" +
+                "S.SalesManNo =  CAST(ifnull(C.SALES_MAN_NO,0) as INTEGER)\n" +
+                "AND\n" +
+                "CUS_ID = '"+custId+"'";
+        String customr_Name="";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                customr_Name=cursor.getString(0);
+                Log.e("nam",""+customr_Name+"\t"+custId);
+
+            } while (cursor.moveToNext());
+        }
+
+
+        return  customr_Name;
+
+    }
+    /*
+
+*/
 //    select MAX_DISCOUNT from CUSTOMER_MASTER where CUS_ID = '1002'
 
 }

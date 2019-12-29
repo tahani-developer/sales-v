@@ -49,11 +49,12 @@ public class StockRequest extends Fragment {
     public List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
-    private int voucherNumber;
+    public static  int voucherNumber;
   public static List<Item> jsonItemsList;
     CompanyInfo companyInfo;
    public static List<Item> listItemStock;
-   Voucher voucherStock;
+    public static  Voucher voucherStock;
+
     public List<Item> getItemsStockList() {
         return this.items;
     }
@@ -101,6 +102,7 @@ public class StockRequest extends Fragment {
 
 
         items = new ArrayList<>();
+        listItemStock= new ArrayList<>();
         itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
         itemsListAdapter = new ItemsListStockAdapter(getActivity(), items);
         itemsListView.setAdapter(itemsListAdapter);
@@ -140,6 +142,7 @@ public class StockRequest extends Fragment {
                         if (listSize == 0)
                             Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
                         else {
+                            String s="";
 
                             String remark = " " + remarkEditText.getText().toString();
 
@@ -158,6 +161,7 @@ public class StockRequest extends Fragment {
                                     salesMan, remark, total, 0);
 //                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
 //                                    salesMan, remark, total, 0));
+                            Log.e("voucherNumber",""+voucherNumber);
                             mDbHandler.addRequestVoucher(voucherStock);
 
 
@@ -170,7 +174,7 @@ public class StockRequest extends Fragment {
                             printStock();
 
                         }
-                        clearLayoutData();
+//                        clearLayoutData();
                     }
                 });
 
@@ -206,7 +210,7 @@ public class StockRequest extends Fragment {
 //                                e.printStackTrace();
 //                            }
 ////                                                             lk31.setChecked(true);
-                            break;
+//                            break;
                         case 2:
 
 //                               try {
@@ -224,7 +228,7 @@ public class StockRequest extends Fragment {
 //                            startActivity(O1);
 
 
-                            break;
+//                            break;
                         case 3:
 
 //                            try {
@@ -234,7 +238,7 @@ public class StockRequest extends Fragment {
 //                                e.printStackTrace();
 //                            }
 //                                                             qs.setChecked(true);
-                            break;
+//                            break;
                         case 4:
 //                            printTally(voucher);
 //                            break;
