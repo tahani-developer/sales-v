@@ -250,6 +250,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //                        itemsList_forFilter.add(jsonItemsList.get(b));
 //                    }
 
+//                    "jkgb".matches()
 
                     for (int k = 0; k < jsonItemsList.size(); k++) {
                         for (int j = 0; j < arrOfStr.length; j++) {
