@@ -235,50 +235,38 @@ public class AddItemsFragment2 extends DialogFragment {
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
                     int [] countResult=new int[arrOfStr.length];
-                    Log.e("arrOfString", "" + arrOfStr.toString());
-                    boolean check=true;
-
-
-//                    indexfirstpeces=query.indexOf(" ");
-//                    if(indexfirstpeces !=-1) {
-//                        firstString = query.substring(0, indexfirstpeces);
-//                        secondString = query.substring(indexfirstpeces, query.length());
-//                        Log.e("query", "" + indexfirstpeces + firstString + "\t" + secondString);
-//         ((jsonItemsList.get(k).getItemName().toLowerCase().contains(arrOfStr[j])) || jsonItemsList.get(k).getItemName().toUpperCase().contains(arrOfStr[j])))
+                    Log.e("arrOfString", "" + arrOfStr.toString()+" \n   "+arrOfStr[0]+" \n  "+arrOfStr.length);
 
                     ArrayList<Item> filteredList = new ArrayList<>();
-                    for (int k = 0; k < jsonItemsList.size(); k++) {
-                        for (int j = 0; j < arrOfStr.length; j++) {
-                            Log.e("arrOfStr", "" + arrOfStr[j]);
-                            lower=arrOfStr[j].toLowerCase();
-                            upper=arrOfStr[j].toUpperCase();
-                            if (jsonItemsList.get(k).getItemName().contains(lower) || (jsonItemsList.get(k).getItemName().contains(upper)))
-                                countResult[j]=0;
-                            else
-                                countResult[j]=1;
 
-                            if(j==arrOfStr.length-1)
-                            {
-                                for(int b=0;b<countResult.length;b++)
-                                {
-                                    if(countResult[b]!=0)
-                                        check=false;
-                                }
-                                if(check)
-                                {  filteredList.add(jsonItemsList.get(k));
 
-                                }
+                    boolean isFound=false;
+                    for(int i=0;i<jsonItemsList.size();i++){
+                        for(int j=0;j<arrOfStr.length;j++){
+                        String lowers=arrOfStr[j].toLowerCase();
+                        String uppers=arrOfStr[j].toUpperCase();
+
+                            if(jsonItemsList.get(i).getItemName().toLowerCase().contains(lowers)||jsonItemsList.get(i).getItemName().toUpperCase().contains(uppers)){
+
+                                isFound=true;
+
+                            }else {
+                                isFound=false;
+                                break;
                             }
 
 
-
                         }
+                        if(isFound){
+                            filteredList.add(jsonItemsList.get(i));
+                        }
+
+
                     }
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
-                        recyclerView.setAdapter(adapter);
-//                    }
-//                    else{ RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
-//                        recyclerView.setAdapter(adapter);}
+
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    recyclerView.setAdapter(adapter);
+
 
 
                 } else {
