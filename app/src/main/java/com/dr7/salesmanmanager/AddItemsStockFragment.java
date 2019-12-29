@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.dr7.salesmanmanager.StockRequest.jsonItemsList;
+import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
 
 
 public class AddItemsStockFragment extends DialogFragment {
@@ -183,6 +184,7 @@ public class AddItemsStockFragment extends DialogFragment {
         item.setItemNo(itemNumber);
         item.setItemName(itemName);
         item.setTax(Float.parseFloat(tax.trim()));
+        item.setVoucherNumber(voucherNumber);
 
         try {
             item.setUnit(unit);

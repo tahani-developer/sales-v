@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
+import com.google.zxing.common.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
     private static List<Item> List;
+    public  List<Item> itemsList_forFilter;
     private Item item;
     Button addToListButton, doneButton;
     SearchView search;
@@ -67,6 +69,7 @@ public class AddItemsFragment2 extends DialogFragment {
     String secondString="";
     String lower="";
     String upper="";
+
 
 
     public AddItemsInterface getListener() {
@@ -218,6 +221,7 @@ public class AddItemsFragment2 extends DialogFragment {
         });
 
         search = view.findViewById(R.id.mSearch);
+
 
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
