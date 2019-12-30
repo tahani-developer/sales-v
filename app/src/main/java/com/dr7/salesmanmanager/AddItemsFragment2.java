@@ -3,9 +3,13 @@ package com.dr7.salesmanmanager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -39,18 +43,22 @@ import java.util.List;
 
 import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AddItemsFragment2 extends DialogFragment {
-
-
+    public static  List<Item> jsonItemsList;
+    public static List<Item> jsonItemsList2;
+    public static List<Item> jsonItemsList_intermidiate;
     private static List<Item> List;
+    public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     private Item item;
     Button addToListButton, doneButton;
     SearchView search;
+    TextView barcode;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
@@ -69,8 +77,9 @@ public class AddItemsFragment2 extends DialogFragment {
     String secondString="";
     String lower="";
     String upper="";
+    int size_firstlist=0;
 
-
+    private static DatabaseHandler mDbHandler;
 
     public AddItemsInterface getListener() {
         return listener;
@@ -90,6 +99,7 @@ public class AddItemsFragment2 extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mDbHandler = new DatabaseHandler(getActivity());
 
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2= new ArrayList<>();
@@ -104,6 +114,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+
+        fillListItemJson();
+
 //        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
 //
 //        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
@@ -281,6 +294,29 @@ public class AddItemsFragment2 extends DialogFragment {
                 return false;
             }
         });
+        //***************************************************************************************
+        barcode=(TextView)view.findViewById(R.id.barcode);
+        barcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                barcode.setText("");//
+                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+                intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+                intentIntegrator.setBeepEnabled(true);
+                intentIntegrator.setCameraId(0);
+                intentIntegrator.setOrientationLocked(true);
+                intentIntegrator.setPrompt("SCAN");
+//                intentIntegrator.setBarcodeImageEnabled(false);
+                intentIntegrator.initiateScan();
+
+//                Intent intent=new Intent(LoadingOrder.this,QrReader.class);
+//                startActivity(intent);
+            }
+        });
+
+
+        //***************************************************************************************
 
 
         Button done = (Button) view.findViewById(R.id.done);
@@ -333,6 +369,76 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         return view;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (Result != null) {
+            String barcodeValue;
+            if (Result.getContents() == null) {
+                Log.d("MainActivity", "cancelled scan");
+                Toast.makeText(getActivity(), "cancelled", Toast.LENGTH_SHORT).show();
+                barcodeValue = "cancelled";
+            } else {
+                Log.d("MainActivity", "Scanned");
+                Toast.makeText(getActivity(), "Scanned -> " + Result.getContents(), Toast.LENGTH_SHORT).show();
+
+                barcodeValue = Result.getContents();
+//                String[] arrayString = barcodeValue.split(" ");
+
+//Log.e("barcode_value ",""+barcodeValue+"\n"+"th ="+arrayString[0]+"\n"+"w ="+arrayString[1]+"\n"+"l ="
+//        +arrayString[2]+"\n"+"grad ="+arrayString[3]);
+//                searchByBundleNo(barcodeValue);
+                String s="";
+                searchByBarcodeNo(barcodeValue);
+                barcode.setText(barcodeValue+"");
+                Log.e("bar","found"+barcodeValue);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    void searchByBarcodeNo(String barcode) {
+
+        Log.e("bar","found"+barcode);
+
+
+        if(!barcode.equals("cancelled"))
+        {
+                ArrayList<Item> filteredList = new ArrayList<>();
+                for (int k = 0; k < jsonItemsList.size(); k++) {
+                    if (jsonItemsList.get(k).getBarcode().equals(barcode))
+                        filteredList.add(jsonItemsList.get(k));
+                }
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                recyclerView.setAdapter(adapter);
+
+
+
+        } else {
+            Log.e("bar","notfound");
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+            recyclerView.setAdapter(adapter);
+        }
+    }
+    /*//        int no = 0;
+//
+//        if (!barcodeValue.equals("cancelled")) {
+//            for (int k = 0; k < bundles.size(); k++) {
+//                if ((bundles.get(k).getBundleNo()).equals(Bundul)) {
+//                    no = k;
+//                    items.setSelection(no);
+//                    items.requestFocusFromTouch();
+//                    items.setSelection(no);
+//
+//                    break;
+//                }
+//            }
+//
+//        } else {
+//            ItemsListAdapter adapter = new ItemsListAdapter(LoadingOrder.this, bundles);
+//            items.setAdapter(adapter);
+//        }*/
 
     public void setListener(AddItemsInterface listener) {
         this.listener = listener;
@@ -348,6 +454,53 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //    }
 
+    private void fillListItemJson() {
+        String s = "";
+        List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+        jsonItemsList = new ArrayList<>();
+        jsonItemsList2 = new ArrayList<>();
+        jsonItemsList_intermidiate = new ArrayList<>();
+        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+
+        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+        else {
+            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+
+            size_firstlist = jsonItemsList2.size();
+            if (size_firstlist != 0) {
+                size_customerpriceslist = size_firstlist;
+
+                for (int k = 0; k < size_firstlist; k++) {
+                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
+                }
+                //****************************************************************************************
+
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+
+                for (int i = 0; i < jsonItemsList.size(); i++) {
+                    for (int j = 0; j < itemNoList.size(); j++)
+                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
+                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
+                            size_firstlist++;
+
+
+                        } else {
+
+                        }
+
+                }
+                jsonItemsList = jsonItemsList_intermidiate;
+
+            } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
+                Log.e("jsonItemsList2size", "zero");
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+            }
+
+//            Collections.sort(jsonItemsList<itemNoList>);
+
+        }
+    }
 
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
@@ -381,10 +534,17 @@ public class AddItemsFragment2 extends DialogFragment {
             item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
             item.setCategory(category);
-
+// test new order
             try {
                 item.setUnit(unit);
                 //****************************
+//                if(voucherType==508)
+//                {
+//                    item.setQty(Float.parseFloat("0.0"));
+//                }
+//                else {
+//                    item.setQty(Float.parseFloat(qty));
+//                }
 
                 item.setQty(Float.parseFloat(qty));
 

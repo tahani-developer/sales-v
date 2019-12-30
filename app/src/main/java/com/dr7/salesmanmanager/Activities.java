@@ -214,17 +214,17 @@ public class Activities extends AppCompatActivity implements
                 e.printStackTrace();
             }
             super.onPreExecute();
-            dialog_progress = new ProgressDialog(Activities.this);
-            dialog_progress.setCancelable(false);
-            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
-            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog_progress.show();
+//            dialog_progress = new ProgressDialog(Activities.this);
+//            dialog_progress.setCancelable(false);
+//            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
+//            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            dialog_progress.show();
         }
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 
-            dialog_progress.dismiss();
+//            dialog_progress.dismiss();
 
             if (result != null) {
 
@@ -365,8 +365,8 @@ public class Activities extends AppCompatActivity implements
                                     saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
                                     receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                                     supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                                    new Task().execute();
-//                                    displaySaleInvoice();
+//                                    new Task().execute();
+                                    displaySaleInvoice();
                                 }
                             });
                             builder.setNegativeButton(getResources().getString(R.string.app_no), null);
@@ -377,8 +377,8 @@ public class Activities extends AppCompatActivity implements
                             saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
                             receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                             supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                            new Task().execute();
-//                            displaySaleInvoice();
+//                            new Task().execute();
+                            displaySaleInvoice();
                         }//displaySaleInvoice();
 
                     } else
