@@ -2130,6 +2130,46 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
+    public List<Item> getAllJsonItemsStock( ) {
+        List<Item> items = new ArrayList<Item>();
+        // Select All Query
+        String salesMan = Login.salesMan;
+//        String cusNo="5";
+        String PriceListId = CustomerListShow.PriceListId;
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+
+        Log.e("***" , selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            do {
+                Item item = new Item();
+
+                item.setItemNo(cursor.getString(0));
+                item.setItemName(cursor.getString(1));
+                item.setCategory(cursor.getString(2));
+                item.setQty(Float.parseFloat(cursor.getString(3)));
+                item.setPrice(Float.parseFloat(cursor.getString(4)));
+                item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+                item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+                item.setBarcode(cursor.getString(7));
+                item.setItemL(Double.parseDouble(cursor.getString(8)));
+
+                item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+                item.setKind_item(cursor.getString(10));
+
+                // Adding transaction to list
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+
+        return items;
+    }
     public List<String> getItemNumbersNotInPriceListD(){
         List<String> itemNoList=new ArrayList<>();
         String selectQuery ="SELECT DISTINCT   pr_list.ItemNo \n"+

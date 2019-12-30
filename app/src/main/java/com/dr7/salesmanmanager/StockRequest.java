@@ -83,7 +83,7 @@ public class StockRequest extends Fragment {
         String rate_customer=mDbHandler.getRateOfCustomer();
         companyInfo=new CompanyInfo();
         Log.e("rate addItem",""+rate_customer);
-            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+            jsonItemsList = mDbHandler.getAllJsonItemsStock();
 
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
 
@@ -200,6 +200,7 @@ public class StockRequest extends Fragment {
                             Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
                             i.putExtra("printKey", "6");
                             startActivity(i);
+                            clearLayoutData();
 //                                                             lk30.setChecked(true);
                             break;
                         case 1:

@@ -69,6 +69,7 @@ import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.listItemStock;
+import static com.dr7.salesmanmanager.StockRequest.totalQty;
 import static com.dr7.salesmanmanager.StockRequest.voucherStock;
 
 import  com.dr7.salesmanmanager.StockRequest.*;
@@ -666,6 +667,8 @@ public class BluetoothConnectMenu extends Activity {
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
+                                    listItemStock.clear();
+                                    totalQty.setText("0.000");
 //                                    TOTAL = 0;
 //                                }
 //                                else {

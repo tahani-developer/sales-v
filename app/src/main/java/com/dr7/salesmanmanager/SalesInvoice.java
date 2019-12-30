@@ -298,7 +298,7 @@ public class SalesInvoice extends Fragment {
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
         Log.e("limit_sales",""+limit_offer);
         //*****************************fill list items json*******************************************
-        fillListItemJson();
+//        fillListItemJson();
 
         //*************************************************************************
 
@@ -484,8 +484,8 @@ public class SalesInvoice extends Fragment {
 
             @Override
             public void onClick(View view) {
-                salesInvoiceInterfaceListener.displayFindItemFragment2();
-//                new SalesInvoice.Task().execute();
+//                salesInvoiceInterfaceListener.displayFindItemFragment2();
+                new SalesInvoice.Task().execute();
             }
         });
 
@@ -778,6 +778,8 @@ public class SalesInvoice extends Fragment {
                 }
                 publishProgress(i);
             }
+
+
             salesInvoiceInterfaceListener.displayFindItemFragment2();
             return "items";
         }
@@ -889,10 +891,12 @@ public class SalesInvoice extends Fragment {
               mDbHandler.addItem(item);
               itemForPrint.add(item);
 
-              if (voucherType != 506)
+              if (voucherType == 504)
                   mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-              else
+              else    if (voucherType ==506){
                   mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
+
+              }
 
           }
 
