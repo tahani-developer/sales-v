@@ -191,7 +191,7 @@ public class AddItemsFragment2 extends DialogFragment {
                             filteredList.add(jsonItemsList.get(j));
                     }
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
-                    recyclerView.setAdapter(adapter); 
+                    recyclerView.setAdapter(adapter);
                 } else {
                     RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
                     recyclerView.setAdapter(adapter);
