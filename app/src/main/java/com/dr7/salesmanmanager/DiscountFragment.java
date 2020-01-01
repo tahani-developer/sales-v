@@ -147,11 +147,11 @@ public class DiscountFragment extends DialogFragment {
         }
     }
 
-    public double getDiscountValue() {
+    public  static double getDiscountValue() {
         return discountValue;
     }
 
-    public double getDiscountPerc() {
+    public static double getDiscountPerc() {
         return discountPerc;
     }
 }

@@ -99,13 +99,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.ProgressDialog.STYLE_SPINNER;
 import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
 import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
+import static com.dr7.salesmanmanager.Activities.discvalue_static;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
-
+import  com.dr7.salesmanmanager.Activities;
 public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList;
-
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
     public  static  int size_customerpriceslist=0;
@@ -269,7 +269,7 @@ public class SalesInvoice extends Fragment {
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         discountButton = (ImageButton) view.findViewById(R.id.discButton);
-        discountButton.setVisibility(View.GONE);
+//        discountButton.setVisibility(View.GONE);
         pic = (ImageView) view.findViewById(R.id.pic_sale);
         discTextView = (TextView) view.findViewById(R.id.discTextView);
 
@@ -280,6 +280,7 @@ public class SalesInvoice extends Fragment {
         taxTextView = (TextView) view.findViewById(R.id.taxTextView);
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
         maxDiscount=(ImageButton) view.findViewById(R.id.max_disc);
+        maxDiscount.setVisibility(View.GONE);
         maxDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -484,7 +485,7 @@ public class SalesInvoice extends Fragment {
 
             @Override
             public void onClick(View view) {
-//                salesInvoiceInterfaceListener.displayFindItemFragment2();
+//                salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
                 new SalesInvoice.Task().execute();
             }
         });
@@ -770,9 +771,9 @@ public class SalesInvoice extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 200; i++) {
+            for (int i = 0; i < 10; i++) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -793,11 +794,11 @@ public class SalesInvoice extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             super.onPreExecute();
             dialog_progress = new ProgressDialog(getActivity());
             dialog_progress.setCancelable(false);
@@ -1300,13 +1301,14 @@ public class SalesInvoice extends Fragment {
         voucherNumberTextView.setText(vn);
         total_items_quantity=0;
         totalQty_textView.setText("+0");
+        discvalue_static=0;
 
     }
 
     public void calculateTotals()
     {
         Log.e("TOTAL",""+total_items_quantity);
-        discTextView.setText("0.0");
+//        discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
         double itemTax, itemTotal, itemTotalAfterTax,
@@ -1319,7 +1321,12 @@ public class SalesInvoice extends Fragment {
         totalTaxValue = 0.0;
         netTotal = 0.0;
         totalDiscount = 0;
-        sum_discount = 0;
+//        double disc_dentail=Double.parseDouble(discTextView.getText().toString());
+        totalDiscount+=discvalue_static;
+        //test discount item with discount total voucher
+//        sum_discount +=DiscountFragment.getDiscountPerc();
+//        sum_discount +=DiscountFragment.getDiscountValue();
+//        Log.e("sum_discount","="+DiscountFragment.getDiscountPerc()+"\t"+ DiscountFragment.getDiscountValue());
         float flagBonus = 0;
         float amountBonus = 0;
         totalQty = 0.0;
@@ -1406,13 +1413,14 @@ public class SalesInvoice extends Fragment {
 
 
                 if (discount_oofers_total_cash > 0)
-                    sum_discount = discount_oofers_total_cash;
+                    sum_discount += discount_oofers_total_cash;
                 if (discount_oofers_total_credit > 0)
-                    sum_discount = discount_oofers_total_credit;
+                    sum_discount += discount_oofers_total_credit;
 
 
             try {
                 totalDiscount+=sum_discount;
+                Log.e("totalDiscount",""+totalDiscount);
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -1605,9 +1613,9 @@ public class SalesInvoice extends Fragment {
 
 
             if (discount_oofers_total_cash > 0)
-                sum_discount = discount_oofers_total_cash;
+                sum_discount += discount_oofers_total_cash;
             if (discount_oofers_total_credit > 0)
-                sum_discount = discount_oofers_total_credit;
+                sum_discount += discount_oofers_total_credit;
 
 
             try {
@@ -1674,6 +1682,7 @@ public class SalesInvoice extends Fragment {
         }
 
 
+
         subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
         taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
 
@@ -1687,6 +1696,7 @@ public class SalesInvoice extends Fragment {
 
         discTextView.setText(String.valueOf(convertToEnglish(decimalFormat.format(totalDiscount))+""));
         totalDiscount=0.0;
+        sum_discount = 0;
 
 
     }

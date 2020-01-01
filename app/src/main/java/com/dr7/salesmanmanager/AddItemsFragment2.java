@@ -17,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +30,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -58,7 +62,8 @@ public class AddItemsFragment2 extends DialogFragment {
     private Item item;
     Button addToListButton, doneButton;
     SearchView search;
-    TextView barcode;
+   public static EditText barcode;
+    ImageView barcodebtn;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
@@ -295,25 +300,58 @@ public class AddItemsFragment2 extends DialogFragment {
             }
         });
         //***************************************************************************************
-        barcode=(TextView)view.findViewById(R.id.barcode);
-        barcode.setOnClickListener(new View.OnClickListener() {
+        barcode=(EditText)view.findViewById(R.id.barcode);
+//        barcode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                barcode.setText("");
+////                 Intent i=new Intent(getActivity(),ScanActivity.class);
+////                 startActivity(i);
+//            }
+//        });
+        barcodebtn=(ImageView)view.findViewById(R.id.searchBarcode);
+        barcodebtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                barcode.setText("");//
-                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-                intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
-                intentIntegrator.setBeepEnabled(true);
-                intentIntegrator.setCameraId(0);
-                intentIntegrator.setOrientationLocked(true);
-                intentIntegrator.setPrompt("SCAN");
-//                intentIntegrator.setBarcodeImageEnabled(false);
-                intentIntegrator.initiateScan();
+                String s=barcode.getText().toString();
+                if(!s.equals("")) {
+                    searchByBarcodeNo(s + "");
+                }
+                else{
+                    Intent i=new Intent(getActivity(),ScanActivity.class);
+                    startActivity(i);
+                    searchByBarcodeNo(s + "");
 
-//                Intent intent=new Intent(LoadingOrder.this,QrReader.class);
-//                startActivity(intent);
+                }
+
             }
         });
+//        barcode.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//                if(s.toString()!="") {
+//                    searchByBarcodeNo(s + "");
+//                }
+//                else{
+//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+//                    recyclerView.setAdapter(adapter);
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
 
 
         //***************************************************************************************
@@ -369,56 +407,75 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         return view;
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (Result != null) {
-            String barcodeValue;
-            if (Result.getContents() == null) {
-                Log.d("MainActivity", "cancelled scan");
-                Toast.makeText(getActivity(), "cancelled", Toast.LENGTH_SHORT).show();
-                barcodeValue = "cancelled";
-            } else {
-                Log.d("MainActivity", "Scanned");
-                Toast.makeText(getActivity(), "Scanned -> " + Result.getContents(), Toast.LENGTH_SHORT).show();
-
-                barcodeValue = Result.getContents();
-//                String[] arrayString = barcodeValue.split(" ");
-
-//Log.e("barcode_value ",""+barcodeValue+"\n"+"th ="+arrayString[0]+"\n"+"w ="+arrayString[1]+"\n"+"l ="
-//        +arrayString[2]+"\n"+"grad ="+arrayString[3]);
-//                searchByBundleNo(barcodeValue);
-                String s="";
-                searchByBarcodeNo(barcodeValue);
-                barcode.setText(barcodeValue+"");
-                Log.e("bar","found"+barcodeValue);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-    void searchByBarcodeNo(String barcode) {
-
-        Log.e("bar","found"+barcode);
-
-
-        if(!barcode.equals("cancelled"))
+    /*//                new com.google.zxing.integration.android.IntentIntegrator(getActivity()).initiateScan();
+//
+//                barcode.setText("");
+//                IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+//
+//                intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+//                intentIntegrator.setBeepEnabled(true);
+//                intentIntegrator.setCameraId(0);
+//                intentIntegrator.setOrientationLocked(true);
+//                intentIntegrator.setPrompt("SCAN");
+////                intentIntegrator.setBarcodeImageEnabled(false);
+//                intentIntegrator.initiateScan();
+////                IntentIntegrator.forSupportFragment(AddItemsFragment2.this);*/
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//
+//        if (Result != null) {
+//            String barcodeValue;
+//
+//            Log.e("bar","found"+data);
+//            if (Result.getContents() == null) {
+//                Log.d("MainActivity", "cancelled scan");
+//                Toast.makeText(getActivity(), "cancelled", Toast.LENGTH_SHORT).show();
+//                barcodeValue = "cancelled";
+//            } else {
+//                Log.d("MainActivity", "Scanned");
+//                Toast.makeText(getActivity(), "Scanned -> " + Result.getContents(), Toast.LENGTH_SHORT).show();
+//
+//                barcodeValue = Result.getContents();
+////                String[] arrayString = barcodeValue.split(" ");
+//
+////Log.e("barcode_value ",""+barcodeValue+"\n"+"th ="+arrayString[0]+"\n"+"w ="+arrayString[1]+"\n"+"l ="
+////        +arrayString[2]+"\n"+"grad ="+arrayString[3]);
+////                searchByBundleNo(barcodeValue);
+//
+//                searchByBarcodeNo(barcodeValue);
+//                barcode.setText(barcodeValue+"");
+//                Log.e("bar","found"+barcodeValue);
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
+   public  void searchByBarcodeNo(String barcodeValue) {
+        if(!barcodeValue.equals(""))
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
                 for (int k = 0; k < jsonItemsList.size(); k++) {
-                    if (jsonItemsList.get(k).getBarcode().equals(barcode))
+                    if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
                         filteredList.add(jsonItemsList.get(k));
+                    }
                 }
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
                 recyclerView.setAdapter(adapter);
+                Log.e("filteredList=","" + filteredList.size());
+                if(filteredList.size()==0)
+                {
+                    Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                }
 
 
 
         } else {
-            Log.e("bar","notfound");
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
             recyclerView.setAdapter(adapter);
+
+
         }
     }
     /*//        int no = 0;
@@ -456,16 +513,22 @@ public class AddItemsFragment2 extends DialogFragment {
 
     private void fillListItemJson() {
         String s = "";
-        List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
         String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
 
-        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
+        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+            Log.e("jsonItemsList", "zero"+jsonItemsList.size());
+        }
+
         else {
+            List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+            Log.e("itemNoList", "zero"+itemNoList.size());
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+            Log.e("jsonItemsList2", "zero"+jsonItemsList2.size());
 
             size_firstlist = jsonItemsList2.size();
             if (size_firstlist != 0) {
@@ -475,8 +538,9 @@ public class AddItemsFragment2 extends DialogFragment {
                     jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
                 }
                 //****************************************************************************************
-
+                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList_intermidiate.size());
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+                Log.e("jsonIpricelistd", "zero"+jsonItemsList.size());
 
                 for (int i = 0; i < jsonItemsList.size(); i++) {
                     for (int j = 0; j < itemNoList.size(); j++)
@@ -485,12 +549,15 @@ public class AddItemsFragment2 extends DialogFragment {
                             size_firstlist++;
 
 
+
                         } else {
 
                         }
 
                 }
+                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList_intermidiate.size());
                 jsonItemsList = jsonItemsList_intermidiate;
+                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList.size());
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
                 Log.e("jsonItemsList2size", "zero");

@@ -206,7 +206,7 @@
     <string name="by_payment_Term">By Payment Method</string>
     <string name="customer_number">Customer Number</string>
     <string name="preview">Preview</string>
-    <string name="item_number">Item Number</string>
+    <string name="item_number">Item No</string>
     <string name="item_name">Item Name</string>
     <string name="unit_qty">Unit Qty</string>
     <string name="total_sold_qty">Total Sold Qty</string>
@@ -317,6 +317,7 @@
     <string name="loadingItem">Loading Item ....</string>
     <string name="zero_value_taxAndNetSales">Wrong value  for zero netSales</string>
     <string name="salesman_name">Sales man name</string>
+    <string name="cusSuspended">Sorry, this customer has been suspended</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

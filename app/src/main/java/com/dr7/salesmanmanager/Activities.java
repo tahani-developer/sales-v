@@ -114,13 +114,15 @@ public class Activities extends AppCompatActivity implements
         }
     }
 
-
+ public  static   double discvalue_static=0;
     @Override
     public void addDiscount(double discount, int iDiscType) {
 
-        salesInvoice.sum_discount=discount;
-//        salesInvoice.sum_discount=0;
+//        salesInvoice.sum_discount+=discount;
 
+//        salesInvoice.sum_discount=0;
+        Log.e("addDiscount","discount"+discount);
+        discvalue_static=discount;
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals();
     }
@@ -195,6 +197,7 @@ public class Activities extends AppCompatActivity implements
                 }
                 publishProgress(i);
             }
+            discvalue_static=0;
             displaySaleInvoice();
             return "items";
         }
@@ -366,6 +369,7 @@ public class Activities extends AppCompatActivity implements
                                     receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                                     supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                    new Task().execute();
+                                    discvalue_static=0;
                                     displaySaleInvoice();
                                 }
                             });
@@ -378,6 +382,7 @@ public class Activities extends AppCompatActivity implements
                             receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                             supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                            new Task().execute();
+                            discvalue_static=0;
                             displaySaleInvoice();
                         }//displaySaleInvoice();
 

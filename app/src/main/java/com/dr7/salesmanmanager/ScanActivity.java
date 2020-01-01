@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.zxing.Result;
 
@@ -37,8 +38,11 @@ public class ScanActivity extends AppCompatActivity
             // Do something with the result here
             // Log.v("tag", rawResult.getText()); // Prints scan results
             // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
+            AddItemsFragment2.barcode.setText(""+rawResult.getText());
+            Log.e("RESULT",""+rawResult.getText());
+//           AddItemsFragment2.searchByBarcodeNo(rawResult.getText());
 
-            MainActivity.tvresult.setText(rawResult.getText());
+//            MainActivity.tvresult.setText(rawResult.getText());
             onBackPressed();
 
             // If you would like to resume scanning, call this method below:

@@ -1474,7 +1474,7 @@ public class ESCPSample2
 				}
 			}
 
-
+			String salesmaname=obj.getSalesmanName();
 
 
 				String voucherTyp = "Sales Invoice";
@@ -1491,16 +1491,16 @@ public class ESCPSample2
 				}
 
 				posPtr.setAsync(false);
-				if(companyInfo.getLogo()!=null) {
-					posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER,250);
-					Log.e("12222print","pyyy");
-				}
+//				if(companyInfo.getLogo()!=null) {
+//					posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER,250);
+//					Log.e("12222print","pyyy");
+//				}
 				posPtr.printAndroidFont(null,"\n"+companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null,true,"Voucher No :" + voucherStockItems.getVoucherNumber()+"    " + "          Date: " + voucherStockItems.getVoucherDate() /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
                 posPtr.printAndroidFont(null,"Stock Request" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
                 posPtr.printAndroidFont(null,"Store No. : " +  Login.salesMan/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(null,"SalesMan Name :" +voucherStockItems.getSaleManNumber()/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(null,"SalesMan Name :" +salesmaname/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null,"Remark : " + voucherStockItems.getRemark()/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 //				posPtr.printAndroidFont(null,"Pay Method : " +  (voucherStockItems.getPayMethod() == 0 ? "Credit" : "Cash")/* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(null,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);

@@ -2171,12 +2171,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
     public List<String> getItemNumbersNotInPriceListD(){
+        String customerId=CustomerListShow.Customer_Account;
         List<String> itemNoList=new ArrayList<>();
-        String selectQuery ="SELECT DISTINCT   pr_list.ItemNo \n"+
-      " FROM Price_List_D pr_list \n " +
+        String selectQuery ="SELECT DISTINCT   listItemNo.ItemNo \n"+
+      " FROM Items_Master listItemNo \n " +
             "    EXCEPT \n" +
        " select    cast( ItemNumber as text)"+
-       " from CustomerPrices ";
+       " from CustomerPrices  where CustomerNumber = '"+customerId+"' ";
 
 
         db = this.getWritableDatabase();
