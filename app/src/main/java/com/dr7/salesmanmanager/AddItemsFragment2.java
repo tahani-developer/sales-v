@@ -22,6 +22,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -101,6 +102,7 @@ public class AddItemsFragment2 extends DialogFragment {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -327,32 +329,32 @@ public class AddItemsFragment2 extends DialogFragment {
 
             }
         });
-//        barcode.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                if(s.toString()!="") {
-//                    searchByBarcodeNo(s + "");
-//                }
-//                else{
-//                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
-//                    recyclerView.setAdapter(adapter);
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+        barcode.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
 
+//                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+//                {
+//                    // your action here
+//                    return true;
+//                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+                    {   barcode.setText("");
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                        recyclerView.setAdapter(adapter);
+                        return true;
+
+                    }
+
+                }
+                return false;
+            }
+        });
 
         //***************************************************************************************
 
