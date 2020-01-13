@@ -1,7 +1,9 @@
 package com.dr7.salesmanmanager;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -10,7 +12,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -43,10 +52,12 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import com.google.zxing.common.StringUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
+import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
+//import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
@@ -60,6 +71,9 @@ public class AddItemsFragment2 extends DialogFragment {
     private static List<Item> List;
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
+    Context context;
+
+    public static final int REQUEST_Camera = 1;
     private Item item;
     Button addToListButton, doneButton;
     SearchView search;
@@ -84,6 +98,7 @@ public class AddItemsFragment2 extends DialogFragment {
     String lower="";
     String upper="";
     int size_firstlist=0;
+     public   static String s="";
 
     private static DatabaseHandler mDbHandler;
 
@@ -116,7 +131,7 @@ public class AddItemsFragment2 extends DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
-        String s="";
+
         int size_firstlist=0;
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
@@ -259,7 +274,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
                     int [] countResult=new int[arrOfStr.length];
-                    Log.e("arrOfString", "" + arrOfStr.toString()+" \n   "+arrOfStr[0]+" \n  "+arrOfStr.length);
+
 
                     ArrayList<Item> filteredList = new ArrayList<>();
 
@@ -316,14 +331,26 @@ public class AddItemsFragment2 extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                String s=barcode.getText().toString();
+                 s=barcode.getText().toString();
                 if(!s.equals("")) {
                     searchByBarcodeNo(s + "");
                 }
                 else{
-                    Intent i=new Intent(getActivity(),ScanActivity.class);
-                    startActivity(i);
-                    searchByBarcodeNo(s + "");
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera);
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+                        {//just for first time
+                            Log.e("requestresult" ,"PERMISSION_GRANTED");
+                            Intent i=new Intent(getActivity(),ScanActivity.class);
+                            startActivity(i);
+                            searchByBarcodeNo(s + "");
+                        }
+                    } else {
+                        Intent i=new Intent(getActivity(),ScanActivity.class);
+                        startActivity(i);
+                        searchByBarcodeNo(s + "");
+                    }
+
 
                 }
 
@@ -528,9 +555,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
         else {
             List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
-            Log.e("itemNoList", "zero"+itemNoList.size());
+
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
-            Log.e("jsonItemsList2", "zero"+jsonItemsList2.size());
+
 
             size_firstlist = jsonItemsList2.size();
             if (size_firstlist != 0) {
@@ -540,9 +567,9 @@ public class AddItemsFragment2 extends DialogFragment {
                     jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
                 }
                 //****************************************************************************************
-                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList_intermidiate.size());
+
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
-                Log.e("jsonIpricelistd", "zero"+jsonItemsList.size());
+
 
                 for (int i = 0; i < jsonItemsList.size(); i++) {
                     for (int j = 0; j < itemNoList.size(); j++)
@@ -557,12 +584,12 @@ public class AddItemsFragment2 extends DialogFragment {
                         }
 
                 }
-                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList_intermidiate.size());
+
                 jsonItemsList = jsonItemsList_intermidiate;
-                Log.e("jsonItemsListermidiate", "zero"+jsonItemsList.size());
+
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
-                Log.e("jsonItemsList2size", "zero");
+
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
             }
 
@@ -726,7 +753,26 @@ public class AddItemsFragment2 extends DialogFragment {
             return false;
         }
     }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case REQUEST_Camera: {
+//
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Log.e("requestresult" ,"REQUEST_Camera");
+//                    Intent i=new Intent(getActivity(),ScanActivity.class);
+//                    startActivity(i);
+//                    searchByBarcodeNo(s + "");
+//                } else {
+//                    Toast.makeText(getActivity(), "check permission Camera ", Toast.LENGTH_SHORT).show();
+//
+//                }
+//                return;
+//            }
+//        }
+//        }
+    }
 
 
-}
 

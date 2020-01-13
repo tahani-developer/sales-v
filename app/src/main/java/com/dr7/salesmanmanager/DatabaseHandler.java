@@ -1906,6 +1906,48 @@ DatabaseHandler extends SQLiteOpenHelper {
         return vouchers;
     }
 
+    public Voucher getAllVouchers_VoucherNo(int voucherNo) {
+//        List<Voucher> vouchers = new ArrayList<Voucher>();
+        // Select All Query
+        Log.e("voucherNoDB",""+voucherNo);
+
+        Voucher Voucher= new Voucher();
+
+        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "' ";
+        Log.e("select",""+selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                Voucher.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                Voucher.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                Voucher.setVoucherType(Integer.parseInt(cursor.getString(2)));
+                Voucher.setVoucherDate(cursor.getString(3));
+                Voucher.setSaleManNumber(Integer.parseInt(cursor.getString(4)));
+                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(10)));//5
+                Voucher.setVoucherDiscountPercent(Double.parseDouble(cursor.getString(6)));
+                Voucher.setRemark(cursor.getString(7));
+                Voucher.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                Voucher.setIsPosted(Integer.parseInt(cursor.getString(9)));
+                Voucher.setTotalVoucherDiscount(Double.parseDouble(cursor.getString(10)));
+                Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
+                Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
+                Voucher.setCustName(cursor.getString(14));
+                Voucher.setCustNumber(cursor.getString(15));
+                Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
+
+                // Adding transaction to list
+
+            } while (cursor.moveToNext());
+        }
+
+        return Voucher;
+    }
+
 
 
 
@@ -2577,7 +2619,39 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return paymentsList;
     }
+    public Payment getPayments_voucherNo(int vouchNo) {
+        Payment payment = new Payment();
+       String cusNo=CustomerListShow.Customer_Account;
+//        List<Payment> paymentsList = new ArrayList<Payment>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + PAYMENTS+" where VOUCHER_NUMBER = '" + vouchNo  + "' and CUSTOMER_NUMBER = '"+cusNo+"'";
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+//                Payment payment = new Payment();
+
+                payment.setCompanyNumber(cursor.getInt(0));
+                payment.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                payment.setPayDate(cursor.getString(2));
+                payment.setCustNumber(cursor.getString(3));
+                payment.setAmount(Double.parseDouble(cursor.getString(4)));
+                payment.setRemark(cursor.getString(5));
+                payment.setSaleManNumber(Integer.parseInt(cursor.getString(6)));
+                payment.setIsPosted(Integer.parseInt(cursor.getString(7)));
+                payment.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                payment.setCustName(cursor.getString(9));
+                payment.setYear(Integer.parseInt(cursor.getString(10)));
+
+
+            } while (cursor.moveToNext());
+        }
+
+        return payment;
+    }
 
     public List<Payment> getAllPaymentsPaper() {
 
@@ -3358,9 +3432,40 @@ DatabaseHandler extends SQLiteOpenHelper {
         return  customr_Name;
 
     }
-    /*
+    public int getLastVoucherNo(int vouchType){
+        int voucNo=0;
+        String cusNo=CustomerListShow.Customer_Account;
+        String selectQuery ="select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER WHERE VOUCHER_TYPE = '"+vouchType+"' AND CUST_NUMBER ='"+cusNo+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
-*/
-//    select MAX_DISCOUNT from CUSTOMER_MASTER where CUS_ID = '1002'
+        if (cursor.moveToFirst()) {
+
+                cursor.moveToLast();
+                voucNo=cursor.getInt(0);
+                Log.e("voucNo=",""+voucNo+"\t");
+
+        }
+        else{voucNo = -1;}
+        return  voucNo;
+
+     }
+    public int getLastVoucherNo_payment(){
+        int voucNo=0;
+        String cusNo=CustomerListShow.Customer_Account;
+        String selectQuery ="SELECT max (VOUCHER_NUMBER) FROM PAYMENTS  where  CUSTOMER_NUMBER = '"+cusNo+"' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            cursor.moveToLast();
+            voucNo=cursor.getInt(0);
+            Log.e("voucNoPAYMENTS=",""+voucNo+"\t");
+
+        }
+        return  voucNo;
+
+    }
 
 }

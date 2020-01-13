@@ -62,6 +62,8 @@ import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.AccountReport.acount_report_list;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
+import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
+import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
 // Source code recreated from a .class file by IntelliJ IDEA
@@ -541,6 +543,24 @@ public class bMITP extends Activity {
 
                           }
 
+
+                          break;
+                      case 7:// print last voucher
+                          printVoucher = vouchLast;
+                          itemPrint = itemForPrintLast;
+//                          convertLayoutToImageW(bMITP.this,sample,settings);
+                          if(printShape==0) {
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+                              }
+                          }else {
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+                              }
+
+                          }
 
                           break;
 

@@ -67,6 +67,8 @@ import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
+import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
+import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.listItemStock;
 import static com.dr7.salesmanmanager.StockRequest.totalQty;
@@ -465,14 +467,19 @@ public class BluetoothConnectMenu extends Activity {
 //                  Log.e("salesVoucher","=" + SalesInvoice.items.get(0).getVoucherNumber());
 
 
-                        if ((count == 0) || (count == 1)) {
+                        if ((count == 0) || (count == 1) || (count==7)) {
 //                        sample.dmStamp(1,companyInfo.getLogo());
                             if (count == 0) {
-                                voucherforPrint = vouch1;
+                                voucherforPrint = vouch1;// from print voucher
                                 itemforPrint = items;
-                            } else {
-                                voucherforPrint = voucher;
+                            } else  if(count==1){
+                                voucherforPrint = voucher;// from sales invoice
                                 itemforPrint = itemForPrint;
+                            }
+                            else if(count==7)
+                            { voucherforPrint = vouchLast;// from sales invoice
+                                itemforPrint = itemForPrintLast;
+
                             }
 //                                sample.printMultilingualFont(count, companyInfo.getLogo());
                             for (int j = 0; j < itemforPrint.size(); j++) {
@@ -624,7 +631,7 @@ public class BluetoothConnectMenu extends Activity {
 //                        itemForPrint.clear();
 
                         } else {
-                            if (count == 2||count==4) {
+                            if (count == 2||count==4 || count==8) {//  (8) for print last payment===> ReciptVoucher
                                 if(count==2){
 //                                payList=paymentsforPrint;
 //                                payforBank=ReceiptVoucher.payment;
@@ -640,9 +647,9 @@ public class BluetoothConnectMenu extends Activity {
 //                                    payList=paymentPrinter;
 //                                    payforBank=pay1;
                                     if(printShape==0) {
-                                        sample.printMultilingualFontCash(4);
+                                        sample.printMultilingualFontCash(count);
                                     }else {
-                                        sample.printMultilingualFontCash_EJABI(4);
+                                        sample.printMultilingualFontCash_EJABI(count);
 
                                     }
 //                                    paymentsforPrint.clear();
@@ -1258,7 +1265,7 @@ public class BluetoothConnectMenu extends Activity {
         lp2.setMargins(0, 7, 0, 0);
         lp3.setMargins(0, 7, 0, 0);
         for (int j = 0; j < items.size(); j++) {
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+            if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {//here chech voucher type
                 count+=items.get(j).getQty();
                 final TableRow row = new TableRow(BluetoothConnectMenu.this);
 
@@ -1648,7 +1655,7 @@ public class BluetoothConnectMenu extends Activity {
 
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+           if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())){
                 count+=items.get(j).getQty();
                 final TableRow row = new TableRow(BluetoothConnectMenu.this);
 

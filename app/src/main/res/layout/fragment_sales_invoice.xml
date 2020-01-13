@@ -103,7 +103,12 @@
 <!--            android:background="@drawable/add_items" />-->
 
 
-
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pic_Re_print"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/images_print"
+            />
 
         <ImageButton
             android:id="@+id/custInfoImgBtn"

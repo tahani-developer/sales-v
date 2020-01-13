@@ -44,7 +44,8 @@ public class ExportJason extends AppCompatActivity {
 
     private Context context;
     private ProgressDialog progressDialog;
-    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer, jsonArrayTransactions, jsonArrayBalance;
+    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -56,6 +57,7 @@ public class ExportJason extends AppCompatActivity {
     public static List<Voucher> requestVouchers = new ArrayList<>();
     public static List<Item> requestItems = new ArrayList<>();
      public  static  List<SalesManItemsBalance> salesManItemsBalanceList=new ArrayList<>();
+    public  static  List<Item> stockRequestListList=new ArrayList<>();
 
     public ExportJason(Context context) throws JSONException {
         this.context = context;
@@ -70,7 +72,7 @@ public class ExportJason extends AppCompatActivity {
             if (transactions.get(i).getIsPosted() == 0) {
                 transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
-            }
+            }//******************************************
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
 
@@ -81,6 +83,16 @@ public class ExportJason extends AppCompatActivity {
             salesManItemsBalanceList.get(i).getQty();
             jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
         }
+        //******************************************
+        stockRequestListList=mHandler.getAllStockRequestItems();
+        jsonArrayStockRequest=new JSONArray();
+
+        for (int i = 0; i < stockRequestListList.size(); i++)
+        {
+
+            jsonArrayStockRequest.put(stockRequestListList.get(i).getJSONObject());
+        }
+        //********************************************
 
         vouchers = mHandler.getAllVouchers();
         jsonArrayVouchers = new JSONArray();

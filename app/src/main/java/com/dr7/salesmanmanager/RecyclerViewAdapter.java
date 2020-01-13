@@ -104,7 +104,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
 
-        holder.price.setText("" +  threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()));
+        holder.price.setText(convertToEnglish( threeDForm.format(items.get(holder.getAdapterPosition()).getPrice())));
+
         Log.e("format",""+ threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()));
 //       *******************************//////////////////////*
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());

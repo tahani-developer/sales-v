@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
@@ -69,11 +70,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ReceiptVoucher extends Fragment {
-
+    private CircleImageView rePrintimage;
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
     PrintPic printPic;
@@ -121,6 +124,12 @@ public class ReceiptVoucher extends Fragment {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+    int voucherNoReprint=0;
+    public  static Payment payment_rePrint;
+
+    public  static List <Payment> paymentPrinter;
+    static Payment pay1;
+
 
    /* public static void test3(){
         customername.setText(CustomerListFragment.Customer_Name.toString());
@@ -170,6 +179,31 @@ public class ReceiptVoucher extends Fragment {
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
         pic=(ImageView)view.findViewById(R.id.pic_receipt);
         paymentsforPrint=new ArrayList<>();
+        rePrintimage= (CircleImageView) view.findViewById(R.id.pic_Re_print);
+
+//
+//        vouchers = obj.getAllVouchers();
+
+        rePrintimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    voucherNoReprint = mDbHandler.getLastVoucherNo_payment();
+                    Log.e("voucherNoRe", "" +voucherNoReprint);
+                    if(voucherNoReprint!=0 )
+                    {     printLastPaymentpaper(voucherNoReprint);}
+                    else{
+                        Toast.makeText(context, "No Payment For This Customer", Toast.LENGTH_SHORT).show();
+                    }
+
+//
+                }
+                catch (Exception e)
+                {Log.e("ExcepvoucherNoRe", "" +e.getMessage());
+                    voucherNoReprint=0;
+                }
+            }
+        });
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
@@ -697,6 +731,109 @@ public class ReceiptVoucher extends Fragment {
         });
 
         return view;
+    }
+
+
+
+//    pay = payment.get(n);
+    private void printLastPaymentpaper(int voucherNo) {
+        payment_rePrint=mDbHandler.getPayments_voucherNo(voucherNo);
+        Log.e("payment_rePrint",""+payment_rePrint.getCustName());
+        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+//                                                     try {
+//            Log.e("pay", "  " + pay.getVoucherNumber());
+            try {
+
+                int printer = mDbHandler.getPrinterSetting();
+
+
+                switch (printer) {
+                    case 0:
+                        pay1 = payment_rePrint;
+                        paymentPrinter=mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                        i.putExtra("printKey", "8");
+                        startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                        break;
+                    case 1:
+
+//                        try {
+//                            findBT(voucherNo);
+//                            openBT(payment_rePrint, 1);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+////                                                             lk31.setChecked(true);
+//                        break;
+                    case 2:
+
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+//                                                                    openBT(pay, 2);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
+
+                        paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        pay1 = payment_rePrint;
+//                        convertLayoutToImage(payment_rePrint);
+                        Intent O = new Intent(getActivity(), bMITP.class);
+                        O.putExtra("printKey", "8");
+                        startActivity(O);
+                        Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
+
+
+//                                                             lk32.setChecked(true);
+                        break;
+                    case 3:
+
+//                        try {
+//                            findBT(Integer.parseInt(voucherNo);
+//                            openBT(pay, 3);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                                                             qs.setChecked(true);
+                        break;
+
+                    case 4:
+//                        printTally();
+//                        break;
+//
+
+                    case 5:
+
+
+                        paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        pay1 = payment_rePrint;
+//                        convertLayoutToImage(pay);
+                        Intent O1 = new Intent(getActivity(), bMITP.class);
+                        O1.putExtra("printKey", "8");
+                        startActivity(O1);
+                        Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
+
+//                                                                MTP.setChecked(true);
+
+                }
+            }
+            catch(Exception e){
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+//
+//                                                         master(vouch);
+//                                                     testB =convertLayoutToImage(v);
+
+
+//                                                     } catch (IOException ex) {
+//                                                     }
+        } else {
+//            hiddenDialog(pay);
+        }
     }
 
     public void clearForm() {

@@ -318,6 +318,7 @@
     <string name="zero_value_taxAndNetSales">Wrong value  for zero netSales</string>
     <string name="salesman_name">Sales man name</string>
     <string name="cusSuspended">Sorry, this customer has been suspended</string>
+    <string name="scanbarcode">Scan BR</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 openAddCustomerDialog();
+
 //                mDbHandler.updateSalesManItemBalance("1","1144",100);
             }
         });

@@ -364,6 +364,9 @@
     <string name="loadingItem">جاري التحميل.... </string>
     <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
     </string>
-    <string name="salesman_name">Sales man name</string>
-    <string name="cusSuspended">Sorry, this customer has been suspended</string>
+    <string name="salesman_name">اسم المندوب </string>
+    <string name="cusSuspended">
+    عذرا لقد تم ايقاف هذا العميل
+    </string>
+    <string name="scanbarcode">Scan BR</string>
 </resources>

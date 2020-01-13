@@ -236,6 +236,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
 
@@ -260,7 +261,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 1:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 1);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -289,7 +290,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 3:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 3);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -366,6 +367,10 @@ public class PrintVoucher extends AppCompatActivity {
                 return false;
             }
         });
+
+    }
+
+    private void printVoucher() {
 
     }
 
@@ -714,7 +719,7 @@ public class PrintVoucher extends AppCompatActivity {
         dialog.show();
     }
 
-    void findBT(int voucherNo) {
+    void findBT(int voucherNo,Voucher voucher) {
 //        try {
 //            /*  very important **********************************************************/
 //            closeBT();
@@ -724,8 +729,8 @@ public class PrintVoucher extends AppCompatActivity {
         itemsString = "";
         itemsString2="";
         for (int j = 0; j < items.size(); j++) {
-
-            if (voucherNo == items.get(j).getVoucherNumber()) {
+//            ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType()))
+            if ((voucherNo == items.get(j).getVoucherNumber())&&(items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                 amount = convertToEnglish(amount);
 
@@ -1052,7 +1057,7 @@ public class PrintVoucher extends AppCompatActivity {
         List<Item> items1=new ArrayList<>();
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+            if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 items1.add(items.get(j));
 
             }
@@ -1212,7 +1217,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+           if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 final TableRow row = new TableRow(PrintVoucher.this);
 
 
@@ -1932,7 +1937,8 @@ public class PrintVoucher extends AppCompatActivity {
                     int serial = 1;
                     DecimalFormat threeDForm = new DecimalFormat("00.000");
                     for (int j = 0; j < items.size(); j++) {
-                        if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                        if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
+
                             String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                             String amountATax = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue());
                             amount = convertToEnglish(amount);

@@ -14,6 +14,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.print.PrintHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -100,17 +102,23 @@ import static android.app.ProgressDialog.STYLE_SPINNER;
 import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
 import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
+import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera;
+import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
+import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
 import  com.dr7.salesmanmanager.Activities;
 public class SalesInvoice extends Fragment {
-    public static  List<Item> jsonItemsList;
-    public static List<Item> jsonItemsList2;
-    public static List<Item> jsonItemsList_intermidiate;
+    RecyclerView recyclerView;
+
+//    public static  List<Item> jsonItemsList;
+//    public static List<Item> jsonItemsList2;
+//    public static List<Item> jsonItemsList_intermidiate;
     public  static  int size_customerpriceslist=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
+    public static List<Item> itemForPrintLast;
 
     Bitmap testB;
     byte[] printIm;
@@ -126,7 +134,7 @@ public class SalesInvoice extends Fragment {
     public static List<Item> items;
     public ItemsListAdapter itemsListAdapter;
     private ImageView  custInfoImgButton, SaveData;
-    private CircleImageView addItemImgButton2,refreshData;
+    private CircleImageView addItemImgButton2,refreshData,rePrintimage;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
@@ -141,6 +149,7 @@ public class SalesInvoice extends Fragment {
     private DecimalFormat decimalFormat;
     public static TextView voucherNumberTextView, Customer_nameSales;
      static ArrayList<Item> itemForPrint;
+
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     private int voucherNumber;
@@ -157,6 +166,7 @@ public class SalesInvoice extends Fragment {
     String itemsString2 = "";
 
     static Voucher voucher;
+    static  Voucher voucherForPrint;
    static List<Item> itemsList;
 
     bluetoothprinter object;
@@ -171,7 +181,7 @@ public class SalesInvoice extends Fragment {
     List<ItemsQtyOffer> offers_ItemsQtyOffer;
     ProgressDialog dialog_progress;
 
-
+    boolean vocherClick=true;
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
@@ -207,7 +217,6 @@ public class SalesInvoice extends Fragment {
         public void displayFindItemFragment2();
     }
 
-
     SalesInvoiceInterface salesInvoiceInterfaceListener;
     Date currentTimeAndDate;
     SimpleDateFormat df,df2;
@@ -216,12 +225,14 @@ public class SalesInvoice extends Fragment {
     double limit_offer=0;
     ImageButton maxDiscount;
     int size_firstlist=0;
+    int voucherNo=0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
+
          currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
          voucherDate = df.format(currentTimeAndDate);
@@ -231,13 +242,40 @@ public class SalesInvoice extends Fragment {
         voucherYear = convertToEnglish(voucherYear);
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
+//        jsonItemsList = new ArrayList<>();
+//        jsonItemsList2 = new ArrayList<>();
+//        jsonItemsList_intermidiate = new ArrayList<>();
         list_discount_offers=new ArrayList<>();
         itemsQtyOfferList=new ArrayList<>();
         object = new bluetoothprinter();
         itemForPrint=new ArrayList<>();
         threeDForm = new DecimalFormat("00.000");
 
+
+
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
+        rePrintimage= (CircleImageView) view.findViewById(R.id.pic_Re_print);
+        rePrintimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                     voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                     if(voucherNo!= 0 && voucherNo!=-1)
+                     {  voucherForPrint= mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                         Log.e("no", "" +voucherForPrint.getCustName()+"\t voucherType"+voucherType);
+                         printLastVoucher(voucherNo, voucherForPrint);}
+                     else{
+                         Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
+
+                     }
+
+                }
+                catch (Exception e)
+                {Log.e("ExceptionReprint", "" +e.getMessage());
+                    voucherNo=0;
+                }
+            }
+        });
         refreshData = (CircleImageView) view.findViewById(R.id.refresh_data);
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -263,7 +301,11 @@ public class SalesInvoice extends Fragment {
         cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
         credit = (RadioButton) view.findViewById(R.id.creditRadioButton);
         retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
+
         salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
+        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+        salesRadioButton.setChecked(true);
+
         orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
@@ -297,12 +339,17 @@ public class SalesInvoice extends Fragment {
         companyInfo=new CompanyInfo();
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
-        Log.e("limit_sales",""+limit_offer);
+        itemForPrintLast = new ArrayList<Item>();
+        itemForPrintLast = mDbHandler.getAllItems();//test
+        Log.e("itemForPrintLast",""+itemForPrintLast.size());
         //*****************************fill list items json*******************************************
 //        fillListItemJson();
 
         //*************************************************************************
 
+        salesRadioButton.setOnClickListener(RADIOCLECKED);
+        retSalesRadioButton.setOnClickListener(RADIOCLECKED);
+        orderRadioButton.setOnClickListener(RADIOCLECKED);
 
 
         if (MainActivity.checknum == 1)
@@ -337,91 +384,104 @@ public class SalesInvoice extends Fragment {
         voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, final int checkedId) {
                 paymentTermRadioGroup.setVisibility(View.VISIBLE);
-                if (itemsListView.getCount() > 0) {
-                    new android.support.v7.app.AlertDialog.Builder(getActivity())
-                            .setTitle("Confirm Update")
-                            .setCancelable(false)
-                            .setMessage("Are you sure you want clear the list !")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
 
-                                    clearItemsList();
-                                    clearLayoutData();
+                    if (itemsListView.getCount() > 0) {
+                        if(vocherClick) {
 
-                                    switch (checkedId) {
-                                        case R.id.salesRadioButton:
-                                            voucherType = 504;
-                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                            String vn1 = voucherNumber + "";
-                                            voucherNumberTextView.setText(vn1);
-                                            break;
-                                        case R.id.retSalesRadioButton:
-                                            voucherType = 506;
-                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                            String vn2 = voucherNumber + "";
-                                            voucherNumberTextView.setText(vn2);
-                                            break;
-                                        case R.id.orderRadioButton:
-                                            voucherType = 508;
-                                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                            String vn3 = voucherNumber + "";
-                                            voucherNumberTextView.setText(vn3);
-                                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                                            break;
+                        new android.support.v7.app.AlertDialog.Builder(getActivity())
+                                .setTitle("Confirm Update")
+                                .setCancelable(false)
+                                .setMessage("Are you sure you want clear the list !")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+
+                                        clearItemsList();
+                                        clearLayoutData();
+
+                                        switch (checkedId) {
+                                            case R.id.salesRadioButton:
+                                                voucherType = 504;
+                                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                String vn1 = voucherNumber + "";
+                                                voucherNumberTextView.setText(vn1);
+                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                break;
+                                            case R.id.retSalesRadioButton:
+                                                voucherType = 506;
+                                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                String vn2 = voucherNumber + "";
+                                                voucherNumberTextView.setText(vn2);
+                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                break;
+                                            case R.id.orderRadioButton:
+                                                voucherType = 508;
+                                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                String vn3 = voucherNumber + "";
+                                                voucherNumberTextView.setText(vn3);
+                                                paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                break;
+
+                                        }
                                     }
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    Log.e("voucherType ", "" + voucherType);
-                                    switch (voucherType) {
-                                        case 504:
-                                            voucherTypeRadioGroup.check(R.id.salesRadioButton);
-//                                            salesRadioButton.setSelected(true);
-//                                            retSalesRadioButton.setSelected(false);
-//                                            orderRadioButton.setSelected(false);
-                                            break;
-                                        case 506:
-                                            voucherTypeRadioGroup.check(R.id.retSalesRadioButton);
-//                                            salesRadioButton.setSelected(false);
-//                                            retSalesRadioButton.setSelected(true);
-//                                            orderRadioButton.setSelected(false);
-                                            break;
-                                        case 508:
-                                            voucherTypeRadioGroup.check(R.id.orderRadioButton);
-//                                            salesRadioButton.setSelected(false);
-//                                            retSalesRadioButton.setSelected(false);
-//                                            orderRadioButton.setSelected(true);
-                                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                                            break;
-                                    }
-                                }
-                            })
-                            .show();
-                } else {
-                    switch (checkedId) {
-                        case R.id.salesRadioButton:
-                            voucherType = 504;
-                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                            String vn1 = voucherNumber + "";
-                            voucherNumberTextView.setText(vn1);
-                            break;
-                        case R.id.retSalesRadioButton:
-                            voucherType = 506;
-                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                            String vn2 = voucherNumber + "";
-                            voucherNumberTextView.setText(vn2);
-                            break;
-                        case R.id.orderRadioButton:
-                            voucherType = 508;
-                            voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                            String vn3 = voucherNumber + "";
-                            voucherNumberTextView.setText(vn3);
-                            paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                            break;
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                String s = "";
+//                                    int  id=voucherTypeRadioGroup.getCheckedRadioButtonId();
+
+                                                refreshRadiogroup(voucherType);
+                                                vocherClick = true;
+
+
+                                                dialog.dismiss();
+                                            }
+                                        }
+
+                                )
+                                .show();
                     }
-                }
+                    } else {
+                        switch (checkedId) {
+                            case R.id.salesRadioButton:
+                                voucherType = 504;
+                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                String vn1 = voucherNumber + "";
+                                voucherNumberTextView.setText(vn1);
+                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+
+                                break;
+                            case R.id.retSalesRadioButton:
+                                voucherType = 506;
+                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                String vn2 = voucherNumber + "";
+                                voucherNumberTextView.setText(vn2);
+                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                break;
+                            case R.id.orderRadioButton:
+                                voucherType = 508;
+                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                String vn3 = voucherNumber + "";
+                                voucherNumberTextView.setText(vn3);
+                                paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                break;
+                        }
+                    }
+
             }
         });
 
@@ -718,62 +778,295 @@ public class SalesInvoice extends Fragment {
         });
         return view;
     }
-
-    private void fillListItemJson() {
-        String s = "";
-        List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
-        jsonItemsList = new ArrayList<>();
-        jsonItemsList2 = new ArrayList<>();
-        jsonItemsList_intermidiate = new ArrayList<>();
-        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
-
-        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
-            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
-        else {
-            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
-
-            size_firstlist = jsonItemsList2.size();
-            if (size_firstlist != 0) {
-                size_customerpriceslist = size_firstlist;
-
-                for (int k = 0; k < size_firstlist; k++) {
-                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
-                }
-                //****************************************************************************************
-
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
-
-                for (int i = 0; i < jsonItemsList.size(); i++) {
-                    for (int j = 0; j < itemNoList.size(); j++)
-                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
-                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
-                            size_firstlist++;
+    View.OnClickListener RADIOCLECKED   =new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            vocherClick=true;
+        }
+    } ;
 
 
-                        } else {
+    private void refreshRadiogroup(int voucherType) {
+        if(vocherClick) {
+            switch (voucherType) {
+                case 504:
+                    vocherClick = false;
+                    voucherTypeRadioGroup.check(R.id.salesRadioButton);
 
-                        }
+//                                            salesRadioButton.setSelected(true);
+//                                            retSalesRadioButton.setSelected(false);
+//                                            orderRadioButton.setSelected(false);
+                    break;
+                case 506:
+                    vocherClick = false;
+                    voucherTypeRadioGroup.check(R.id.retSalesRadioButton);
 
-                }
-                jsonItemsList = jsonItemsList_intermidiate;
+//                                            salesRadioButton.setSelected(false);
+//                                            retSalesRadioButton.setSelected(true);
+//                                            orderRadioButton.setSelected(false);
+                    break;
+                case 508:
+                    vocherClick = false;
+                    voucherTypeRadioGroup.check(R.id.orderRadioButton);
 
-            } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
-                Log.e("jsonItemsList2size", "zero");
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+//                                            salesRadioButton.setSelected(false);
+//                                            retSalesRadioButton.setSelected(false);
+//                                            orderRadioButton.setSelected(true);
+                    paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                    break;
             }
-
-//            Collections.sort(jsonItemsList<itemNoList>);
-
         }
     }
+
+    static Voucher vouchLast;
+    private void printLastVoucher(int voucher_no, Voucher vouchPrint) {
+        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+
+            try {
+                int printer = mDbHandler.getPrinterSetting();
+                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                    switch (printer) {
+                        case 0:
+                            vouchLast = vouchPrint;
+                            Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                            i.putExtra("printKey", "7");
+                            startActivity(i);
+//                                                             lk30.setChecked(true);
+                            break;
+                        case 1:
+
+//                            try {
+//                                findBT();
+//                                openBT(1);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             lk31.setChecked(true);
+//                            break;
+                        case 2://                               try {
+//                                   findBT();
+//                                   openBT(2);
+//                               } catch (IOException e) {
+//                                   e.printStackTrace();
+//                               }
+////                                                             lk32.setChecked(true);
+//                            voucher = vouchPrint;
+////                            vouch1 = vouch;
+////                            voucherPrint=vouch;
+//
+//
+//                            convertLayoutToImagew(getActivity());
+//                            Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+//                            O1.putExtra("printKey", "1");
+//                            startActivity(O1);
+//
+//
+//                            break;
+                        case 3:
+
+//                            try {
+//                                findBT();
+//                                openBT(3);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             qs.setChecked(true);
+//                            break;
+                        case 4:
+//                            printTally(vouchPrint);
+//                            break;
+
+
+                        case 5:
+
+//                                                             MTP.setChecked(true);
+                            vouchLast = vouchPrint;
+                            convertLayoutToImage(vouchPrint);
+
+                            Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            O.putExtra("printKey", "7");
+                            startActivity(O);
+
+
+
+
+
+
+                            break;
+
+                    }
+                } else {
+//                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+//                                                } catch (IOException ex) {
+//                                                }
+        } else {
+            hiddenDialog();
+        }
+
+
+
+
+//        if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("") && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0 && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
+//            if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
+////                                                     try {
+//                Log.e("voucher", "  " + vouch.getVoucherNumber());
+//                try {
+//
+//                    int printer = obj.getPrinterSetting();
+//
+//
+//                    switch (printer) {
+//                        case 0:
+//                            vouch1 = vouch;
+//                            Intent i = new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
+//                            i.putExtra("printKey", "0");
+//                            startActivity(i);
+//
+////                                                             lk30.setChecked(true);
+//                            break;
+//                        case 1:
+//
+//                            try {
+//                                findBT(Integer.parseInt(textView.getText().toString()),vouch);
+//                                openBT(vouch, 1);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             lk31.setChecked(true);
+//                            break;
+//                        case 2:
+//
+////                                                                try {
+////                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+////                                                                    openBT(vouch, 2);
+////                                                                } catch (IOException e) {
+////                                                                    e.printStackTrace();
+////                                                                }
+////                                                             lk32.setChecked(true);
+//
+//                            vouch1 = vouch;
+//                            voucherPrint=vouch;
+//                            convertLayoutToImageW();
+//                            Intent o = new Intent(PrintVoucher.this, bMITP.class);
+//                            o.putExtra("printKey", "0");
+//                            startActivity(o);
+//
+//
+//                            break;
+//                        case 3:
+//
+//                            try {
+//                                findBT(Integer.parseInt(textView.getText().toString()),vouch);
+//                                openBT(vouch, 3);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             qs.setChecked(true);
+//                            break;
+//
+//                        case 4:
+//                            printTally(vouch);
+//                            break;
+//
+//                        case 5:
+//
+//                            vouch1 = vouch;
+//                            voucherPrint=vouch;
+//                            convertLayoutToImageW();
+//                            Intent o1 = new Intent(PrintVoucher.this, bMITP.class);
+//                            o1.putExtra("printKey", "0");
+//                            startActivity(o1);
+//
+//
+//                            break;
+//
+//                    }
+//                }
+//                catch(Exception e){
+//                    Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+//
+//                }
+//
+//
+////
+////                                                         master(vouch);
+////                                                     testB =convertLayoutToImage(v);
+//
+//
+////                                                     } catch (IOException ex) {
+////                                                     }
+//            } else {
+//                hiddenDialog(vouch);
+//            }
+//        } else {
+//            Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+//        }
+    }
+
+//    private void fillListItemJson() {
+//        String s = "";
+//        List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+//        jsonItemsList = new ArrayList<>();
+//        jsonItemsList2 = new ArrayList<>();
+//        jsonItemsList_intermidiate = new ArrayList<>();
+//        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+//
+//        if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0)
+//            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+//        else {
+//            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+//
+//            size_firstlist = jsonItemsList2.size();
+//            if (size_firstlist != 0) {
+//                size_customerpriceslist = size_firstlist;
+//
+//                for (int k = 0; k < size_firstlist; k++) {
+//                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
+//                }
+//                //****************************************************************************************
+//
+//                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+//
+//                for (int i = 0; i < jsonItemsList.size(); i++) {
+//                    for (int j = 0; j < itemNoList.size(); j++)
+//                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
+//                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
+//                            size_firstlist++;
+//
+//
+//                        } else {
+//
+//                        }
+//
+//                }
+//                jsonItemsList = jsonItemsList_intermidiate;
+//
+//            } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
+//                Log.e("jsonItemsList2size", "zero");
+//                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+//            }
+//
+////            Collections.sort(jsonItemsList<itemNoList>);
+//
+//        }
+//    }
 
     class Task extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100; i++) {
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -1138,9 +1431,12 @@ public class SalesInvoice extends Fragment {
                                         public void onClick(View v) {
                                             float availableQty = 0;
                                             List<Item> jsonItemsList_insal =jsonItemsList;
-                                            for (int i = 0; i < jsonItemsList_insal.size(); i++) {
-                                                if (items.get(position).getItemNo().equals(jsonItemsList_insal.get(i).getItemNo())) {
-                                                    availableQty = jsonItemsList_insal.get(i).getQty();
+                                            Log.e("jsonItemsList",""+jsonItemsList.size());
+                                            for (int i = 0; i < jsonItemsList.size(); i++) {
+                                                if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
+                                                    availableQty = jsonItemsList.get(i).getQty();
+                                                    Log.e("availableQty",""+availableQty);
+
                                                     break;
                                                 }
                                             }
@@ -1179,6 +1475,7 @@ public class SalesInvoice extends Fragment {
                                                 dialog.dismiss();
                                             } else {
                                                 Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+                                              Log.e("qty",  qty.getText().toString());
                                                 dialog.dismiss();
                                             }
                                         }
@@ -3673,5 +3970,50 @@ try {
             }
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_Camera: {
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("requestresult" ,"REQUEST_Camera");
+                    Intent i=new Intent(getActivity(),ScanActivity.class);
+                    startActivity(i);
+//                    searchByBarcodeNo(s + "");
+                } else {
+                    Toast.makeText(getActivity(), "check permission Camera ", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+        }
+    }
+//    public  void searchByBarcodeNo(String barcodeValue) {
+//        if(!barcodeValue.equals(""))
+//        {
+//            ArrayList<Item> filteredList = new ArrayList<>();
+//            for (int k = 0; k < jsonItemsList.size(); k++) {
+//                if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
+//                    filteredList.add(jsonItemsList.get(k));
+//                }
+//            }
+//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+//            recyclerView.setAdapter(adapter);
+//            Log.e("filteredList=","" + filteredList.size());
+//            if(filteredList.size()==0)
+//            {
+//                Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+//            }
+//
+//
+//
+//        } else {
+//            RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+//            recyclerView.setAdapter(adapter);
+//
+//
+//        }
+//    }
 
 }// class salesInvoice

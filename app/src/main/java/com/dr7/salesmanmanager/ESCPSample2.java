@@ -1153,7 +1153,7 @@ public class ESCPSample2
 
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
-					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+					if ((voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber())&& (itemforPrint.get(i).getVoucherType()== voucherforPrint.getVoucherType())) {
 						total_Qty+=itemforPrint.get(i).getQty();
 
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
@@ -1191,7 +1191,7 @@ public class ESCPSample2
 				posPtr.printAndroidFont(  null,"--------------------------------------------------------------------------------" /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
-					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+					if ((voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber())&& (itemforPrint.get(i).getVoucherType()== voucherforPrint.getVoucherType())) {
 						total_Qty+=itemforPrint.get(i).getQty();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
 						String amounts=convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))));
