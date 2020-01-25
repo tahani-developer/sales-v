@@ -107,6 +107,7 @@ public class PrintVoucher extends AppCompatActivity {
      static double TOTAL=0;
     DecimalFormat decimalFormat;
 
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +142,7 @@ public class PrintVoucher extends AppCompatActivity {
         to_date.setText(today);
 
         myCalendar = Calendar.getInstance();
+
 
         from_date.setOnClickListener(new View.OnClickListener() {
             @Override

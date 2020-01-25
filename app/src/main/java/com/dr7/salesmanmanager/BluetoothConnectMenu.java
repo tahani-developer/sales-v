@@ -68,6 +68,7 @@ import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
+import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
 import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.listItemStock;
@@ -109,6 +110,9 @@ public class BluetoothConnectMenu extends Activity {
     List<Payment>payList;
     DecimalFormat decimalFormat;
     Payment payforBank;
+
+    public  static  int valueCheckHidPrice=0;
+
 
     static {
         fileName = dir + "//BTPrinter";
@@ -485,6 +489,7 @@ public class BluetoothConnectMenu extends Activity {
                             for (int j = 0; j < itemforPrint.size(); j++) {
 
                                 if (voucherforPrint.getVoucherNumber() == itemforPrint.get(j).getVoucherNumber()) {
+                                    Log.e("cherforPrint",""+voucherforPrint.getVoucherNumber()+"\t VoucherNumber"+itemforPrint.get(j).getVoucherNumber());
                                     TOTAL++;
                                     long_listItems.add(itemforPrint.get(j));
                                 }
@@ -1180,6 +1185,10 @@ public class BluetoothConnectMenu extends Activity {
 
     private Bitmap convertLayoutToImageEjape(Voucher voucher,List<Item> items) {
         LinearLayout linearView = null;
+        int CusId=Integer.parseInt(voucher.getCustNumber());
+
+        valueCheckHidPrice=obj.getHideValuForCustomer(CusId);
+        Log.e("valueHidPriceBluDBase",""+valueCheckHidPrice);
 
         final Dialog dialogs = new Dialog(BluetoothConnectMenu.this);
         dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1192,8 +1201,17 @@ public class BluetoothConnectMenu extends Activity {
 
         TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
-        TextView compname,store, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,total_qty_text,salesName;
+        TextView compname,store, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,
+                total_qty_text,salesName,textViewPrice,textviewTotal;
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
+        TableRow totalrow,discountrow,netrow,taxrow;
+        totalrow=(TableRow) dialogs.findViewById(R.id.rowTotal);
+        discountrow=(TableRow) dialogs.findViewById(R.id.rowDiscount);
+
+        netrow=(TableRow) dialogs.findViewById(R.id.rowNetTotal);
+        taxrow=(TableRow) dialogs.findViewById(R.id.rowTax);
+        textViewPrice = (TextView) dialogs.findViewById(R.id.textViewPrice);
+        textviewTotal = (TextView) dialogs.findViewById(R.id.textViewTotal);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
         tel = (TextView) dialogs.findViewById(R.id.tel);
@@ -1214,6 +1232,16 @@ public class BluetoothConnectMenu extends Activity {
         total_qty_text= (TextView) dialogs.findViewById(R.id.total_qty);
         String salesmaname=obj.getSalesmanName();
         salesName.setText(salesmaname);
+        // to hide price in voucher
+        if (valueCheckHidPrice == 1) {
+            totalrow.setVisibility(View.GONE);
+            discountrow.setVisibility(View.GONE);
+            netrow.setVisibility(View.GONE);
+            taxrow.setVisibility(View.GONE);
+            textViewPrice.setVisibility(View.INVISIBLE);
+            textviewTotal.setVisibility(View.INVISIBLE);
+
+        }
         //total_qty
 
         TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
@@ -1277,7 +1305,7 @@ public class BluetoothConnectMenu extends Activity {
                     row.setLayoutParams(lp);
 
                     TextView textView = new TextView(BluetoothConnectMenu.this);
-                    textView.setGravity(Gravity.CENTER);
+                    textView.setGravity(Gravity.LEFT);//test
                     textView.setTextSize(14);
 //                    textView.setTypeface(null, Typeface.BOLD);
                     textView.setTextColor(getResources().getColor(R.color.text_view_color));
@@ -1310,18 +1338,32 @@ public class BluetoothConnectMenu extends Activity {
                             break;
 
                         case 3:
-                            textView.setText("" + items.get(j).getPrice());
-                            textView.setLayoutParams(lp2);
+                            if(valueCheckHidPrice==1)
+                            {
+                                textView.setText("\t\t\t\t\t\t");
+                            }
+                            else{
+                                textView.setText("" + items.get(j).getPrice());
+                                textView.setLayoutParams(lp2);
+                            }
+
                             break;
 
 
                         case 4:
-                            String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                            if(valueCheckHidPrice==1)
+                            {
+                                textView.setText("\t\t\t\t\t\t");
+                            }
+                            else{
+                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
 //                            amount = convertToEnglish(amount);
-                            amount =String.valueOf(decimalFormat.format(Double.parseDouble(amount)));
-                            textView.setText(convertToEnglish(amount));
+                                amount =String.valueOf(decimalFormat.format(Double.parseDouble(amount)));
+                                textView.setText(convertToEnglish(amount));
 //                            textView.setText(amount);
-                            textView.setLayoutParams(lp2);
+                                textView.setLayoutParams(lp2);
+                            }
+
                             break;
                     }
                     row.addView(textView);

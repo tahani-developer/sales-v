@@ -319,6 +319,7 @@
     <string name="salesman_name">Sales man name</string>
     <string name="cusSuspended">Sorry, this customer has been suspended</string>
     <string name="scanbarcode">Scan BR</string>
+    <string name="hidePrice">Hide Price</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

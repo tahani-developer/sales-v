@@ -104,6 +104,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
                     customerCheckInFragment.settext1();
                 }
+                CustomerListShow.CustHideValu=custList.get(i).getHide_val();
 
                 customerListShow.dismiss();
             }

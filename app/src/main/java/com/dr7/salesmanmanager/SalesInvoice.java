@@ -39,6 +39,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -226,6 +227,9 @@ public class SalesInvoice extends Fragment {
     ImageButton maxDiscount;
     int size_firstlist=0;
     int voucherNo=0;
+    CheckBox check_HidePrice;
+     public  static  int valueCheckHidPrice=0;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -250,8 +254,8 @@ public class SalesInvoice extends Fragment {
         object = new bluetoothprinter();
         itemForPrint=new ArrayList<>();
         threeDForm = new DecimalFormat("00.000");
-
-
+        valueCheckHidPrice=CustomerListShow.CustHideValu;
+       Log.e("valueCheckHidPrice",""+valueCheckHidPrice);
 
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
         rePrintimage= (CircleImageView) view.findViewById(R.id.pic_Re_print);
@@ -339,9 +343,8 @@ public class SalesInvoice extends Fragment {
         companyInfo=new CompanyInfo();
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
-        itemForPrintLast = new ArrayList<Item>();
-        itemForPrintLast = mDbHandler.getAllItems();//test
-        Log.e("itemForPrintLast",""+itemForPrintLast.size());
+        refrechItemForReprint();
+
         //*****************************fill list items json*******************************************
 //        fillListItemJson();
 
@@ -449,37 +452,66 @@ public class SalesInvoice extends Fragment {
                                 .show();
                     }
                     } else {
-                        switch (checkedId) {
-                            case R.id.salesRadioButton:
-                                voucherType = 504;
-                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                String vn1 = voucherNumber + "";
-                                voucherNumberTextView.setText(vn1);
-                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                        if(vocherClick) {
+                            new android.support.v7.app.AlertDialog.Builder(getActivity())
+                                    .setTitle("Confirm Update")
+                                    .setCancelable(false)
+                                    .setMessage("Are you sure you want change  voucher type !")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            switch (checkedId) {
+                                                case R.id.salesRadioButton:
+                                                    voucherType = 504;
+                                                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                    String vn1 = voucherNumber + "";
+                                                    voucherNumberTextView.setText(vn1);
+                                                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
 
-                                break;
-                            case R.id.retSalesRadioButton:
-                                voucherType = 506;
-                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                String vn2 = voucherNumber + "";
-                                voucherNumberTextView.setText(vn2);
-                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                break;
-                            case R.id.orderRadioButton:
-                                voucherType = 508;
-                                voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                                String vn3 = voucherNumber + "";
-                                voucherNumberTextView.setText(vn3);
-                                paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                break;
-                        }
+                                                    break;
+                                                case R.id.retSalesRadioButton:
+                                                    voucherType = 506;
+                                                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                    String vn2 = voucherNumber + "";
+                                                    voucherNumberTextView.setText(vn2);
+                                                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                    break;
+                                                case R.id.orderRadioButton:
+                                                    voucherType = 508;
+                                                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                                                    String vn3 = voucherNumber + "";
+                                                    voucherNumberTextView.setText(vn3);
+                                                    paymentTermRadioGroup.setVisibility(View.INVISIBLE);
+                                                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                                                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                    break;
+                                            }
+                                        }
+                                    }
+
+                                    )
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            String s = "";
+//                                    int  id=voucherTypeRadioGroup.getCheckedRadioButtonId();
+
+                                            refreshRadiogroup(voucherType);
+                                            vocherClick = true;
+
+
+                                            dialog.dismiss();
+                                        }
+                                    }
+
+                            )
+                                    .show();
+
+                    }
                     }
 
             }
@@ -718,12 +750,12 @@ public class SalesInvoice extends Fragment {
 
 
                                             if(virefyMaxDescount()){
-                                                if (!remarkEditText.getText().toString().equals("")){
+//                                                if (!remarkEditText.getText().toString().equals("")){
                                                 AddVoucher();
                                                 clearLayoutData();
-                                            }else{
-                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-                                            }
+//                                            }else{
+//                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
+//                                            }
                                             }
 
                                             else{
@@ -778,6 +810,14 @@ public class SalesInvoice extends Fragment {
         });
         return view;
     }
+
+    private void refrechItemForReprint() {
+        itemForPrintLast = new ArrayList<Item>();
+        itemForPrintLast = mDbHandler.getAllItems();//test
+        Log.e("itemForPrintLast",""+itemForPrintLast.size());
+
+    }
+
     View.OnClickListener RADIOCLECKED   =new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -1599,6 +1639,7 @@ public class SalesInvoice extends Fragment {
         total_items_quantity=0;
         totalQty_textView.setText("+0");
         discvalue_static=0;
+        refrechItemForReprint();
 
     }
 

@@ -134,6 +134,11 @@
             android:layout_width="60dp"
             android:layout_height="50dp"
             android:src="@drawable/images_print" />
+<!--        <CheckBox-->
+<!--            android:id="@+id/checkBox_hidePriceVoucher"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:text="@string/hidePrice"-->
+<!--            android:layout_width="wrap_content" />-->
 
             <!--android:visibility="invisible"/>-->
 

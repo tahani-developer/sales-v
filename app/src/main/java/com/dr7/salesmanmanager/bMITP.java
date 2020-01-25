@@ -456,12 +456,12 @@ public class bMITP extends Activity {
                           printVoucher = vouch1;
                           itemPrint = items;
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
-                          if(printShape==0) {
+                          if(printShape==0) {//Normal print (Arabic)
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
                               }
-                          }else {
+                          }else {// just for ejabi customer (English Voucher ) and for  Large Name
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
                                   sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);

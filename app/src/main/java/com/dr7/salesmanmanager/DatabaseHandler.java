@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 73;
+    private static final int DATABASE_VERSION = 74;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -122,6 +122,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CUST_LONG = "CUST_LONG";
     private static final String MAX_DISCOUNT = "MAX_DISCOUNT";
     private static final String ACCPRC = "ACCPRC";
+    private static final String HIDE_VAL = "HIDE_VAL";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -423,7 +424,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CUST_LAT + " TEXT,"
                 + CUST_LONG + " TEXT,"
                 + MAX_DISCOUNT + " REAL,"
-                +ACCPRC+ " TEXT"
+                +ACCPRC+ " TEXT,"
+                +HIDE_VAL+ " INTEGER"
+
+
                 + ")";
 
         db.execSQL(CREATE_TABLE_CUSTOMER_MASTER);
@@ -734,6 +738,13 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
         try{
             db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
         }catch (Exception e)
@@ -1092,6 +1103,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CUST_LONG, customer.getCustLong());
         values.put(MAX_DISCOUNT, customer.getMax_discount());
         values.put(ACCPRC, customer.getACCPRC());
+        values.put(HIDE_VAL, customer.getHide_val());
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1580,6 +1592,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setCustomer_authorized(Integer.parseInt(cursor.getString(19)));
                 setting.setPassowrd_data(Integer.parseInt(cursor.getString(20)));
                 setting.setArabic_language(Integer.parseInt(cursor.getString(21)));
+
                 setting.setHide_qty(Integer.parseInt(cursor.getString(22)));
                 setting.setLock_cashreport(Integer.parseInt(cursor.getString(23)));
                 setting.setSalesMan_name(cursor.getString(24));
@@ -1744,6 +1757,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 customer.setACCPRC(cursor.getString(13));
+                customer.setHide_val(cursor.getInt(14));
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -1811,6 +1825,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                     customer.setMax_discount(0);
                 }
                 customer.setACCPRC(cursor.getString(13));
+                customer.setHide_val(cursor.getInt(14));
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -3028,9 +3043,10 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void updateSalesManItemsBalance1(float qty , int salesMan, String itemNo) {
         db = this.getWritableDatabase();
+        String s="";
 
         String selectQuery = "select Qty from SalesMan_Items_Balance " +
-                " where ItemNo = " + itemNo + " and SalesManNo = " + salesMan;
+                " where ItemNo = '"+itemNo+"'  and SalesManNo = '"+salesMan+"' " ;
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         float existQty = 0;
@@ -3042,10 +3058,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         existQty -= qty;
 
         Log.e("qty1 ***" , ""+existQty);
+        db.execSQL("update SalesMan_Items_Balance SET  Qty = '"+existQty+"' where SalesManNo = '"+salesMan+"' and  ItemNo = '"+itemNo+"'");
 
-        ContentValues values = new ContentValues();
-        values.put(Qty5, existQty);
-        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
     }
 
     public void updateSalesManItemsBalance2(float qty , int salesMan, String itemNo) {
@@ -3432,39 +3446,63 @@ DatabaseHandler extends SQLiteOpenHelper {
         return  customr_Name;
 
     }
-    public int getLastVoucherNo(int vouchType){
-        int voucNo=0;
-        String cusNo=CustomerListShow.Customer_Account;
-        String selectQuery ="select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER WHERE VOUCHER_TYPE = '"+vouchType+"' AND CUST_NUMBER ='"+cusNo+"'";
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
-
-                cursor.moveToLast();
-                voucNo=cursor.getInt(0);
-                Log.e("voucNo=",""+voucNo+"\t");
-
-        }
-        else{voucNo = -1;}
-        return  voucNo;
-
-     }
-    public int getLastVoucherNo_payment(){
-        int voucNo=0;
-        String cusNo=CustomerListShow.Customer_Account;
-        String selectQuery ="SELECT max (VOUCHER_NUMBER) FROM PAYMENTS  where  CUSTOMER_NUMBER = '"+cusNo+"' ";
+    public int getLastVoucherNo(int vouchType) {
+        int voucNo = 0;
+        String cusNo = CustomerListShow.Customer_Account;
+        String selectQuery = "select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER WHERE VOUCHER_TYPE = '" + vouchType + "' AND CUST_NUMBER ='" + cusNo + "'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
 
             cursor.moveToLast();
-            voucNo=cursor.getInt(0);
-            Log.e("voucNoPAYMENTS=",""+voucNo+"\t");
+            voucNo = cursor.getInt(0);
+            Log.e("voucNoBD=", "" + voucNo + "\t");
+
+        } else {
+            voucNo = -1;
+        }
+        return voucNo;
+
+    }
+
+    public int getLastVoucherNo_payment() {
+        int voucNo = 0;
+        String cusNo = CustomerListShow.Customer_Account;
+        String selectQuery = "SELECT max (VOUCHER_NUMBER) FROM PAYMENTS  where  CUSTOMER_NUMBER = '" + cusNo + "' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            cursor.moveToLast();
+            voucNo = cursor.getInt(0);
+            Log.e("voucNoPAYMENTS=", "" + voucNo + "\t");
 
         }
-        return  voucNo;
+        return voucNo;
+
+    }
+
+    public int getHideValuForCustomer(int customerId) {
+        int HideVal = 0;
+        String selectQuery = "select HIDE_VAL\n" +
+                "        from CUSTOMER_MASTER\n" +
+                "        where CUSTOMER_MASTER.CUS_ID = '" + customerId + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            cursor.moveToLast();
+            HideVal = cursor.getInt(0);
+            Log.e("HideValDB=", "" + HideVal + "\t");
+
+        } else {
+            HideVal = 0;
+        }
+        return HideVal;
 
     }
 

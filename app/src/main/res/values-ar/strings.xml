@@ -369,4 +369,5 @@
     عذرا لقد تم ايقاف هذا العميل
     </string>
     <string name="scanbarcode">Scan BR</string>
+    <string name="hidePrice">Hide Price</string>
 </resources>

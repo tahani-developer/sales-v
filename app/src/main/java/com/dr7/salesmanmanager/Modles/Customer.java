@@ -22,8 +22,37 @@ public class Customer {
     private String custLong;
     private double max_discount;
     private String ACCPRC;// customer rate for price
+    private int Hide_val;
 
+    public int getHide_val() {
+        return Hide_val;
+    }
 
+    public void setHide_val(int hide_val) {
+        Hide_val = hide_val;
+    }
+
+    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
+                    String priceListId, int cashCredit, String salesManNumber, double creditLimit, int payMethod, String custLat, String custLong,
+                    double max_discount, String ACCPRC, int hide_val, String customerAccount, String customerName) {
+        this.companyNumber = companyNumber;
+        this.custId = custId;
+        this.custName = custName;
+        this.address = address;
+        this.isSuspended = isSuspended;
+        this.priceListId = priceListId;
+        this.cashCredit = cashCredit;
+        this.salesManNumber = salesManNumber;
+        this.creditLimit = creditLimit;
+        this.payMethod = payMethod;
+        this.custLat = custLat;
+        this.custLong = custLong;
+        this.max_discount = max_discount;
+        this.ACCPRC = ACCPRC;
+        Hide_val = hide_val;
+        this.customerAccount = customerAccount;
+        this.customerName = customerName;
+    }
 
     private String customerAccount, customerName;
 
