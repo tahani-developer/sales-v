@@ -369,5 +369,8 @@
     عذرا لقد تم ايقاف هذا العميل
     </string>
     <string name="scanbarcode">Scan BR</string>
-    <string name="hidePrice">Hide Price</string>
+    <string name="hidePrice">اخفاء السعر</string>
+    <string name="return_type">مرتجعات</string>
+    <string name="new_type">جديد</string>
+    <string name="TypeVoucher">نوع الفاتورة :</string>
 </resources>

@@ -1633,6 +1633,7 @@ public class SalesInvoice extends Fragment {
         itemsList.clear();
 //        calculateTotals();
         voucherType = 504;
+        salesRadioButton.setChecked(true);
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);

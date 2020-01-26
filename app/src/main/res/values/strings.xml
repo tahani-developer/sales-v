@@ -320,6 +320,9 @@
     <string name="cusSuspended">Sorry, this customer has been suspended</string>
     <string name="scanbarcode">Scan BR</string>
     <string name="hidePrice">Hide Price</string>
+    <string name="return_type">Return</string>
+    <string name="new_type">New</string>
+    <string name="TypeVoucher">Type Voucher :</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -31,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -106,6 +107,8 @@ public class PrintVoucher extends AppCompatActivity {
     DatabaseHandler obj;
      static double TOTAL=0;
     DecimalFormat decimalFormat;
+    RadioGroup  voucherTypeRadioGroup;
+    int voucherType = 504;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -142,6 +145,17 @@ public class PrintVoucher extends AppCompatActivity {
         to_date.setText(today);
 
         myCalendar = Calendar.getInstance();
+        voucherTypeRadioGroup = (RadioGroup) findViewById(R.id.transKindRadioGroup);
+        voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.salesRadioButton: voucherType = 504; break;
+                    case R.id.retSalesRadioButton: voucherType = 506; break;
+                    case R.id.orderRadioButton: voucherType = 508; break;
+                }
+            }
+        });
 
 
         from_date.setOnClickListener(new View.OnClickListener() {
@@ -420,17 +434,19 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     public boolean filters(int n) {
+        Log.e("filtersvoucher",""+voucherType);
 
 
         String fromDate = from_date.getText().toString().trim();
         String toDate = to_date.getText().toString();
 
         String date = vouchers.get(n).getVoucherDate();
+        int  vouchType=vouchers.get(n).getVoucherType();
 
         try {
-            Log.e("tag", "*****" + date + "***" + fromDate);
+            Log.e("tag", "*****" + date + "***" + fromDate+"\t vouchtype"+vouchType);
             if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
-                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
+                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) && (vouchType==voucherType))
                 return true;
 
         } catch (ParseException e) {

@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
-import static com.dr7.salesmanmanager.StockRequest.jsonItemsList;
 import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
 
 
@@ -47,12 +47,13 @@ public class AddItemsStockFragment extends DialogFragment {
     Button addToListButton, doneButton;
     SearchView search ;
     private ArrayList<String> itemsList;
-//    private List<Item> jsonItemsList;
+    private List<Item> jsonItemsList;
     RecyclerView recyclerView;
     private float descPerc;
     boolean added = false;
     public static EditText barcode;
     ImageView barcodebtn;
+    CompanyInfo companyInfo;
 
     public AddItemsInterface getListener() {
         return listener;
@@ -89,6 +90,9 @@ public class AddItemsStockFragment extends DialogFragment {
 //            jsonItemsList = mHandler.getAllJsonItems(rate_customer);
 //        else
 //            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
+        jsonItemsList = new ArrayList<>();
+        companyInfo = new CompanyInfo();
+        jsonItemsList = mHandler.getAllJsonItemsStock();
 
         // ****************************** Category Spinner Spenner*****************************************************
 

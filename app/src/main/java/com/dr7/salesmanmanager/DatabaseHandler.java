@@ -1592,8 +1592,12 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setCustomer_authorized(Integer.parseInt(cursor.getString(19)));
                 setting.setPassowrd_data(Integer.parseInt(cursor.getString(20)));
                 setting.setArabic_language(Integer.parseInt(cursor.getString(21)));
+                try {
+                    setting.setHide_qty(Integer.parseInt(cursor.getString(22)));
 
-                setting.setHide_qty(Integer.parseInt(cursor.getString(22)));
+                } catch (Exception e) {
+                    setting.setHide_qty(0);
+                }
                 setting.setLock_cashreport(Integer.parseInt(cursor.getString(23)));
                 setting.setSalesMan_name(cursor.getString(24));
                 settings.add(setting);
