@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="20dp"
     android:paddingEnd="20dp"
-    android:paddingHorizontal="20dp"
+    android:id="@+id/mainlyout"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingStart="20dp"
@@ -24,23 +24,66 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:background="@color/layer2"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="5dp"
         android:paddingTop="5dp">
+        <RelativeLayout
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/addItemImgButton2"
+                android:clickable="true"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+
+                android:layout_alignParentTop="true"
+                android:src="@drawable/items2"
+                app:civ_border_color="@color/colorPrimaryDark"/>
+
+            <TextView
+                android:id="@+id/items_quntity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/addItemImgButton2"
+                android:layout_marginRight="30dp"
+
+
+                android:layout_marginTop="30dp"
+                android:text="+"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="25dp" />
+        </RelativeLayout>
+        <ImageButton
+            android:id="@+id/saveInvoiceData"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/save_btn" />
 
         <ImageButton
             android:id="@+id/newImgBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/new_inv" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/refresh_data"
+            android:clickable="true"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:visibility="visible"
 
-        <ImageButton
-            android:id="@+id/saveInvoiceData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/save_btn" />
+            android:src="@drawable/reload_arrow"
+            app:civ_border_color="@color/colorPrimaryDark"/>
+
+
 
         <ImageButton
             android:id="@+id/discButton"
@@ -49,7 +92,7 @@
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
             android:text="@string/app_disc_l"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/addItemImgButton2"-->
@@ -57,56 +100,50 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_marginHorizontal="10dp"-->
 <!--            android:background="@drawable/add_items" />-->
-        <RelativeLayout
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/addItemImgButton2"
-                android:clickable="true"
-                android:layout_width="60dp"
-                android:layout_height="50dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/items2"
-                app:civ_border_color="@color/colorPrimaryDark"/>
 
-            <TextView
-                android:id="@+id/items_quntity"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignTop="@+id/addItemImgButton2"
-                android:layout_marginLeft="55dp"
-                android:layout_marginTop="25dp"
-                android:text="+0"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="25dp" />
-        </RelativeLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pic_Re_print"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/images_print"
+            />
 
+        <ImageButton
+            android:id="@+id/custInfoImgBtn"
+           android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/info_customer" />
+        <CheckBox
+            android:id="@+id/checkBox_hidePriceVoucher"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:text="@string/hidePrice"
+            android:layout_width="wrap_content" />
+        <ImageButton
+            android:id="@+id/max_disc"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_disc" />
+
+        <ImageView
+            android:id="@+id/balanceImgBtn"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/balance_img" />
         <ImageView
             android:id="@+id/pic_sale"
             android:layout_width="200dp"
             android:layout_height="60dp"
-            android:visibility="invisible"/>
-        <ImageButton
-            android:id="@+id/custInfoImgBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="invisible"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/cust_info" />
+            android:visibility="gone"/>
 
 
-        <ImageView
-            android:id="@+id/balanceImgBtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:visibility="invisible"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="3dp"
-            android:background="@drawable/balance_img" />
 
     </LinearLayout>
 
@@ -114,49 +151,79 @@
     <LinearLayout
         android:id="@+id/row2"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:text="@string/voucher_number"
-            android:textColor="@color/text_view_color"
-            android:textSize="17sp" />
-
-        <TextView
-            android:id="@+id/voucherNumber"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="15sp" />
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:elevation="3dp"
+            android:background="@drawable/back_border_edit">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/voucher_number"
+                android:textStyle="bold"
+                android:textColor="@color/text_view_color"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/voucherNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:gravity="center_vertical"
-            android:text="@string/cust_name"
-            android:textColor="@color/text_view_color"
-            android:textSize="17sp" />
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:elevation="3dp"
+            android:background="@drawable/back_border_edit">
 
-        <TextView
-            android:id="@+id/invoiceCustomerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:text="@string/cust_name"
+                android:textColor="@color/text_view_color"
+                android:textSize="15sp" />
 
-            android:gravity="center_vertical"
-            android:textColor="@color/add_button"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/invoiceCustomerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:text=""
+                android:gravity="center_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="14sp" />
+        </LinearLayout>
 
+        <!--        <ImageButton-->
+        <!--            android:id="@+id/custInfoImgBtn"-->
+        <!--            android:layout_width="35dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginHorizontal="2dp"-->
+        <!--            android:background="@drawable/cust_info" />-->
 
 
     </LinearLayout>
@@ -166,6 +233,7 @@
         android:id="@+id/row3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/layer2"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
@@ -173,7 +241,7 @@
             android:id="@+id/transKindRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/layer1"
+            android:background="@color/layer2"
             android:orientation="horizontal"
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
@@ -224,7 +292,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
-            android:background="@color/layer1"
+            android:background="@color/layer2"
             android:orientation="horizontal"
             android:paddingLeft="8dp"
             android:paddingRight="8dp">
@@ -264,7 +332,7 @@
         android:id="@+id/row5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -278,7 +346,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/totals_color" />
+            android:textColor="@color/text_view_color" />
 
     </LinearLayout>
 

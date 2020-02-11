@@ -53,13 +53,6 @@ public class RefreshData {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
             new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-//            if(start==true) {
-                new JSONTask().execute(URL_TO_HIT);
-//            }
-//            else{
-//                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
-//
-//            }
 
 
 
@@ -133,7 +126,7 @@ public class RefreshData {
                 e.printStackTrace();
             }
 
-            return "Finish";
+            return "";
         }
 
         @Override
@@ -146,7 +139,15 @@ public class RefreshData {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+                        if(start==true) {
+            new JSONTask().execute(URL_TO_HIT);
+            }
+            else{
+                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
+
+            }
+
         }
     }
 

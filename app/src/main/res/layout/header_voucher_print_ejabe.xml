@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+   
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/cancel_button"
+        android:gravity="center"
+        android:text="@string/app_cancel"
+        android:textColor="@color/totals_color"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+       
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <!--        <ScrollView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:orientation="vertical">-->
+        <!--<TextView-->
+        <!--android:id="@+id/ss"-->
+        <!--android:layout_width="506dp"-->
+        <!--android:layout_height="209dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:padding="5dp"-->
+        <!--android:text='" اسم العميل   :لجين للمواد الغذائية \n الصقور للبرمجيات اسم العميل   :لجين للمواد الغذائية الصقور للبرمجياتاسم العميل   :لجين للمواد الغذائية الصقور للبرمجياتاسم العميل   :لجين للمواد الغذائية الصقور للبرمجيات اسم العميل   :لجين للمواد الغذائية الصقور للبرمجيات " اسم العميل   :لجين للمواد الغذائية \n الصقور للبرمجيات اسم العميل   :لجين للمواد الغذائية الصقور للبرمجياتاسم العميل   :لجين للمواد الغذائية الصقور للبرمجياتاسم العميل   :لجين للمواد الغذائية الصقور للبرمجيات اسم العميل   :لجين للمواد الغذائية الصقور للبرمجيات'-->
+        <!--android:textColor="@color/add_button"-->
+        <!--android:textSize="18sp" />-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/ic_launcher"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/compname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="الصقور للبرمجيات "
+                android:textColor="@color/add_button"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:visibility="visible" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tel No : "
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tel"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tax No :"
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/taxNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/textVieZw1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Voucher No :"
+                        android:textStyle="bold"
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/vhNo"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/add_button"
+
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/date2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date :"
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/add_button"
+                        android:textSize="16sp" />
+
+                </TableRow>
+
+                <TextView
+                    android:id="@+id/textView644"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="________________________________________"
+                    android:textColor="@color/add_button"
+
+
+                    android:textSize="18sp" />
+
+
+            </TableLayout>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/names"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="Store No :"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/store"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="SalesMan Name :"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/salesman_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/ed"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="Customer Name : "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/custname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp">
+
+                <TextView
+                    android:id="@+id/eda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remark :"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp">
+
+                <TextView
+                    android:id="@+id/textViews1"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="Voucher Type :"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/vhType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="فاتورة بيع "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp">
+
+                <TextView
+                    android:id="@+id/textViews1t"
+                    android:layout_width="144dp"
+                    android:layout_height="wrap_content"
+                    android:text="Pay Method :"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/paytype"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="نقدا"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="       __________________________________________________________"
+                android:textColor="@color/add_button"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/notelast"
+                android:layout_width="500dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة . "
+                android:textColor="@color/add_button"
+                android:textSize="18sp"
+                android:visibility="invisible" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

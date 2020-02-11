@@ -3,7 +3,9 @@ package com.dr7.salesmanmanager;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -35,7 +37,7 @@ public class Activities extends AppCompatActivity implements
 
 {
 
-    private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView;
+    private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
     private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
 
@@ -44,6 +46,7 @@ public class Activities extends AppCompatActivity implements
     private LinearLayout salesInvoiceLayout;
 
     private SalesInvoice salesInvoice;
+    private  Transaction_Fragment transaction_fragment;
 
     private StockRequest stockRequest;
 
@@ -51,6 +54,7 @@ public class Activities extends AppCompatActivity implements
 
     private boolean isFragmentBlank;
     boolean canClose;
+    ProgressDialog dialog_progress;
 
 
     @Override 
@@ -110,13 +114,15 @@ public class Activities extends AppCompatActivity implements
         }
     }
 
-
+ public  static   double discvalue_static=0;
     @Override
     public void addDiscount(double discount, int iDiscType) {
 
-        salesInvoice.sum_discount=discount;
-//        salesInvoice.sum_discount=0;
+//        salesInvoice.sum_discount+=discount;
 
+//        salesInvoice.sum_discount=0;
+        Log.e("addDiscount","discount"+discount);
+        discvalue_static=discount;
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals();
     }
@@ -134,6 +140,8 @@ public class Activities extends AppCompatActivity implements
         activitySelected = -1;
         isFragmentBlank = true;
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
+        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
+        transaction_imageview.setOnClickListener(onClickListener);
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
@@ -171,11 +179,81 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, salesInvoice);
         transaction.addToBackStack(null);
         transaction.commit();
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+//        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         isFragmentBlank = false;
         AddItemsFragment2.total_items_quantity=0;
+    }
+    class Task extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            for (int i = 0; i < 100; i++) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                publishProgress(i);
+            }
+            discvalue_static=0;
+            displaySaleInvoice();
+            return "items";
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+//            pb.setProgress(values[0]);
+//            dialog_progress.setProgress(values);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+//            dialog_progress = new ProgressDialog(Activities.this);
+//            dialog_progress.setCancelable(false);
+//            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
+//            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            dialog_progress.show();
+        }
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+//            dialog_progress.dismiss();
+
+            if (result != null) {
+
+            } else {
+                Toast.makeText(Activities.this, "Not able to fetch data ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void displayTransactionFragment() {
+        activitySelected = 0;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        transaction_fragment = new Transaction_Fragment();
+//        transaction_fragment.setListener(this);
+        FragmentTransaction transaction =
+                getFragmentManager().beginTransaction();
+//        transaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+//        getFragmentManager().popBackStack();
+        //transaction.setCustomAnimations(android.R.anim.slide_in_left, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        transaction.replace(R.id.fragmentContainer, transaction_fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+//        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+//        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//        isFragmentBlank = false;
+//        AddItemsFragment2.total_items_quantity=0;
     }
 
     private void displayReceipt() {
@@ -220,6 +298,7 @@ public class Activities extends AppCompatActivity implements
         isFragmentBlank = false;
     }
 
+
     private OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -237,6 +316,11 @@ public class Activities extends AppCompatActivity implements
                             builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+                                    receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                                    supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                    new Task().execute();
+                                    discvalue_static=0;
                                     displaySaleInvoice();
                                 }
                             });
@@ -245,7 +329,11 @@ public class Activities extends AppCompatActivity implements
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                         } else {
-
+                            saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+                            receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                            supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                            new Task().execute();
+                            discvalue_static=0;
                             displaySaleInvoice();
                         }//displaySaleInvoice();
 
@@ -294,16 +382,47 @@ public class Activities extends AppCompatActivity implements
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+//                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
                                 displayStockRequest();
+//                                new TaskStock().execute();
                             }
                         });
 
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
+//                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
                         displayStockRequest();
+
+                    }
+                    break;
+                case R.id.transaction_ImageView:
+                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
+                    if (!isFragmentBlank) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                        builder2.setCancelable(false);
+                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                displayTransactionFragment();
+                            }
+                        });
+
+                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                        builder2.create().show();
+                    } else {
+//                        displayTransactionFragment();
                     }
 
+//                    displayTransactionFragment();
+                    break;
             }
         }
     };

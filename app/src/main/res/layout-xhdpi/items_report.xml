@@ -163,11 +163,11 @@
             android:id="@+id/preview"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:textColor="@color/text_view_color"
-            android:background="@color/done_button"
-            android:layout_marginLeft="70dp"
             android:layout_marginStart="70dp"
-            android:text="@string/preview" />
+            android:layout_marginLeft="70dp"
+            android:background="@color/red_background"
+            android:text="@string/preview"
+            android:textColor="@color/text_view_color" />
 
     </LinearLayout>
 

@@ -11,36 +11,71 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView"
-        android:fillViewport="true"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+        android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/ip_name_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_ip"
-            android:textColor="@color/text_view_color"
-            android:textSize="20dp"
-            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/link"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginHorizontal="10dp"
-            android:padding="5dp"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
 
-            android:textColor="@color/add_button" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/server_ip"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-    </LinearLayout>
+                    <EditText
+                        android:id="@+id/link"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/back_border_edit"
+
+                        android:padding="5dp"
+                        android:textColor="@color/add_button" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/salesman_name"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/salesman_name_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/back_border_edit"
+                        android:layout_marginHorizontal="10dp"
+                        android:padding="5dp"
+                        android:textColor="@color/add_button" />
+
+                </LinearLayout>
+            </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -416,6 +451,22 @@
                 android:text="@string/arabic_language"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/hideQty_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/hideQty"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/lockcash_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/lockcash"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -433,7 +484,7 @@
             android:layout_width="100dp"
             android:layout_height="35dp"
             android:layout_marginHorizontal="15dp"
-            android:background="@color/add_button"
+            android:background="@color/done_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
             android:textStyle="bold" />
@@ -443,7 +494,7 @@
             android:layout_width="100dp"
             android:layout_height="35dp"
             android:layout_marginHorizontal="15dp"
-            android:background="@color/done_button"
+            android:background="@color/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold" />

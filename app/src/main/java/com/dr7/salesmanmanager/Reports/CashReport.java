@@ -111,7 +111,7 @@ public class CashReport  extends AppCompatActivity {
             e.printStackTrace();
         }
         //************************* initial *************************************
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
         payments = new ArrayList<Payment>();
         vouchersales=new ArrayList<Item>();
 
@@ -275,6 +275,7 @@ public class CashReport  extends AppCompatActivity {
 //                                        }
 //                                                             lk32.setChecked(true);
 
+                                        convertLayoutToImage();
 
                                         Intent O1= new Intent(CashReport.this, bMITP.class);
                                         O1.putExtra("printKey", "3");
@@ -295,6 +296,7 @@ public class CashReport  extends AppCompatActivity {
                                         printTally();
                                         break;
                                     case 5:
+                                        convertLayoutToImage();
                                         Intent O= new Intent(CashReport.this, bMITP.class);
                                         O.putExtra("printKey", "3");
                                         startActivity(O);
@@ -490,8 +492,8 @@ public class CashReport  extends AppCompatActivity {
         tel.setText(companyInfo.getcompanyTel()+"");
         compname.setText(companyInfo.getCompanyName() );
         datepri.setText(date.getText().toString());
-        cash_sal.setText(convertToEnglish(decimalFormat.format( cash )));
-        credit_sale.setText(convertToEnglish(decimalFormat.format(credit )));
+        cash_sal.setText(convertToEnglish(decimalFormat.format(( cash-returnCash ))));
+        credit_sale.setText(convertToEnglish(decimalFormat.format((credit-returnCridet) )));
         total_sale.setText(convertToEnglish(decimalFormat.format(total)));
 
         cash_paymenttext.setText(convertToEnglish(decimalFormat.format( cashPayment )));
@@ -595,8 +597,8 @@ public class CashReport  extends AppCompatActivity {
         tel.setText(companyInfo.getcompanyTel()+"");
         compname.setText(companyInfo.getCompanyName() );
         datepri.setText(date.getText().toString());
-        cash_sal.setText(convertToEnglish(decimalFormat.format( cash )));
-        credit_sale.setText(convertToEnglish(decimalFormat.format(credit )));
+        cash_sal.setText(convertToEnglish(decimalFormat.format( cash-returnCash )));
+        credit_sale.setText(convertToEnglish(decimalFormat.format(credit -returnCridet)));
         total_sale.setText(convertToEnglish(decimalFormat.format(total)));
 
         cash_paymenttext.setText(convertToEnglish(decimalFormat.format( cashPayment )));
@@ -710,8 +712,8 @@ public class CashReport  extends AppCompatActivity {
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
-                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format(cash ))+ " : " + " \n ", 1, 0);
-                    printCustom("المبيعات ذمم   " +convertToEnglish(decimalFormat.format( credit ))+ " : " + " \n ", 1, 0);
+                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash-returnCash) ))+ " : " + " \n ", 1, 0);
+                    printCustom("المبيعات ذمم   " +convertToEnglish(decimalFormat.format( (credit-returnCridet) ))+ " : " + " \n ", 1, 0);
                     printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
@@ -837,8 +839,8 @@ public class CashReport  extends AppCompatActivity {
                             "الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment)) +"\n" +
                             "----------------------------------------------" + "\n" +
                             "إجمالي المبيعات : " + convertToEnglish(decimalFormat.format(total ))+ "\n" +
-                            "المبيعات ذمم : " +convertToEnglish(decimalFormat.format( credit)) + "\n" +
-                            "المبيعات نقدا: " +convertToEnglish(decimalFormat.format( cash)) + "\n" +
+                            "المبيعات ذمم : " +convertToEnglish(decimalFormat.format( (credit-returnCridet)) )+ "\n" +
+                            "المبيعات نقدا: " +convertToEnglish(decimalFormat.format( (cash-returnCash))) + "\n" +
                             "----------------------------------------------" + "\n" +
                             "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                             "                          "+   companyInfo.getCompanyName() + "\n           " +

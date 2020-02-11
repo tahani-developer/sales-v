@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity
     Bitmap visitPic = null;
     ImageView visitPicture;
     int amountOfmaxDiscount = 0;
+    public static TextView tvresult;
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     int sum_chech_export_lists=0;
+     public static String languagelocalApp="";
+     DrawerLayout drawer_layout;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -124,6 +129,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +137,31 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        drawer_layout=findViewById(R.id.drawer_layout);
+        if(languagelocalApp.equals("ar"))
+        {
+            drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        else{
+            if(languagelocalApp.equals("en"))
+            {
+                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+
+        }
+        tvresult = (TextView) findViewById(R.id.tvresult);
+
+        Button btn = (Button) findViewById(R.id.btn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);
@@ -192,6 +223,7 @@ public class MainActivity extends AppCompatActivity
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 openAddCustomerDialog();
+
 //                mDbHandler.updateSalesManItemBalance("1","1144",100);
             }
         });
@@ -289,6 +321,7 @@ public class MainActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -420,6 +453,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_clear_local) {
 
             mDbHandler.deleteAllPostedData();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -714,6 +748,18 @@ public class MainActivity extends AppCompatActivity
         final EditText password = (EditText) dialog.findViewById(R.id.editText1);
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+        final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
+//        EditText et1 = (EditText) this.findViewById(R.id.editText1);
+        cb_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cb_show.isChecked()) {
+                    password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    password.setInputType(129);
+                }
+            }
+        });
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -792,6 +838,7 @@ public class MainActivity extends AppCompatActivity
             final EditText orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
             final EditText paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
             final EditText paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
+            final EditText salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
             final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
 
             final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
@@ -814,6 +861,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
             final CheckBox passowrdData_checkbox = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
             final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
+            final CheckBox hideQty_checkbox = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
+            final CheckBox lockcash_checkbox = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -825,6 +874,7 @@ public class MainActivity extends AppCompatActivity
                 orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
                 paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(1) + 1));//test
                 paymentEditTextCheque.setText("" + (mDbHandler.getMaxSerialNumber(4) + 1));
+                salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
 
                 if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
                     bluetooth.setChecked(true);
@@ -873,6 +923,16 @@ public class MainActivity extends AppCompatActivity
                     passowrdData_checkbox.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     arabicLanguage_checkbox.setChecked(true);
+                    languagelocalApp="ar";
+                }
+                else{
+                    languagelocalApp="en";
+                }
+                if (mDbHandler.getAllSettings().get(0).getHide_qty() == 1) {
+                    hideQty_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getLock_cashreport() == 1) {
+                    lockcash_checkbox.setChecked(true);
                 }
 
 
@@ -890,8 +950,11 @@ public class MainActivity extends AppCompatActivity
                    if( arabicLanguage_checkbox.isChecked())
                    {
                         LocaleAppUtils.setLocale(new Locale("ar"));
+                       languagelocalApp="ar";
                     }
-                   else {    LocaleAppUtils.setLocale(new Locale("en"));}
+                   else {    LocaleAppUtils.setLocale(new Locale("en"));
+                             languagelocalApp="en";
+                   }
 
                 }
             });
@@ -943,14 +1006,17 @@ public class MainActivity extends AppCompatActivity
                                 int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
                                 int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
                                 int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
+                                int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
+                                int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
+                                String salesmanname=salesmanNmae.getText().toString();
 
                                 mDbHandler.deleteAllSettings();
 
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
+                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
+                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
 
                                 dialog.dismiss();
                             } else
@@ -1077,7 +1143,7 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
 
-        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter;
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name;
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
@@ -1087,36 +1153,57 @@ public class MainActivity extends AppCompatActivity
         dotMatrix=(RadioButton) dialog.findViewById(R.id.dotMatrix);
         MTPPrinter=(RadioButton) dialog.findViewById(R.id.MTP);
         Button save = (Button) dialog.findViewById(R.id.save);
+        normalnam=(RadioButton) dialog.findViewById(R.id.radioButton_normalnam);
+        large_name=(RadioButton) dialog.findViewById(R.id.radioButton_large_name);
+        List<PrinterSetting> printer = mDbHandler.getPrinterSetting_();
+//        Log.e("printer_Seting",""+printer.get(0).getPrinterName()+"   "+printer.get(0).getPrinterShape());
+if(printer.size()!=0) {
+    switch (printer.get(0).getPrinterName()) {
+        case 0:
+            lk30.setChecked(true);
+            break;
+        case 1:
+            lk31.setChecked(true);
+            break;
+        case 2:
+            lk32.setChecked(true);
+            break;
+        case 3:
+            qs.setChecked(true);
+            break;
+        case 4:
+            dotMatrix.setChecked(true);
+            break;
+        case 5:
+            MTPPrinter.setChecked(true);
+            break;
 
-        int printer = mDbHandler.getPrinterSetting();
+    }
 
-        switch (printer) {
-            case 0:
-                lk30.setChecked(true);
-                break;
-            case 1:
-                lk31.setChecked(true);
-                break;
-            case 2:
-                lk32.setChecked(true);
-                break;
-            case 3:
-                qs.setChecked(true);
-                break;
-            case 4:
-                dotMatrix.setChecked(true);
-                break;
-            case 5:
-                MTPPrinter.setChecked(true);
-                break;
-
-        }
+    switch (printer.get(0).getPrinterShape()){
+        case 0:
+            normalnam.setChecked(true);
+            break;
+        case 1:
+            large_name.setChecked(true);
+            break;
+    }
+}else {
+    lk30.setChecked(true);
+    normalnam.setChecked(true);
+}
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDbHandler.deleteAllPrinterSetting();
                 PrinterSetting printerSetting = new PrinterSetting();
+
+                if(normalnam.isChecked()){
+                    printerSetting.setPrinterShape(0);
+                }else  if(large_name.isChecked()){
+                    printerSetting.setPrinterShape(1);
+                }
 
                 if (lk30.isChecked()) {
                     printerSetting.setPrinterName(0);

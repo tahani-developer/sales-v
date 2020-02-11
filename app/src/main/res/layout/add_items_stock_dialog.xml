@@ -7,51 +7,195 @@
     android:minHeight="500dp"
     android:background="@color/layer3"
     android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
+        android:background="@color/layer2"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/barcode"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/barcode"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="40dp"
+            android:drawableRight="@drawable/ic_clear_black_24dp"
+            android:hint="Type  barcode"
+            android:layout_weight="3"
+            android:background="@drawable/back_border_edit"
+            />
+        <ImageView
+            android:id="@+id/searchBarcode"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:src="@drawable/search_btn"
+            android:layout_weight="1"/>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingVertical="5dp"
-        android:paddingHorizontal="20dp"
+        android:paddingHorizontal="10dp"
         >
         <TextView
             android:id="@+id/textViewItemName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_gravity="center"
             android:gravity="center"
+            android:visibility="gone"
+            android:fontFamily="cursive"
             android:text="@string/app_add_items"
             android:textColor="@color/text_view_color"
             android:textSize="25sp" />
-
-        <Spinner
-            android:id="@+id/cat"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:padding="3dp"
-            android:layout_gravity="center"
-            android:layout_height="45dp"
-            android:layout_marginHorizontal="150dp"
-            android:background="@color/layer3"
-            android:gravity="center" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/search_btn"/>
-
-        <android.support.v7.widget.SearchView
-            android:id="@+id/mSearch"
-            android:layout_width="0dp"
+        <LinearLayout
             android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            app:defaultQueryHint="Search.."
-            />
+            android:background="@drawable/back_border_edit"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="@string/category" />
+
+            <Spinner
+                android:id="@+id/cat"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:padding="3dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_border_edit"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="@string/kind_item" />
+
+            <Spinner
+                android:id="@+id/spinner_kind_item"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:padding="3dp"
+                android:layout_gravity="center"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_border_edit"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorPrimary"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:text="@string/item_name" />
+
+            <android.support.v7.widget.SearchView
+                android:id="@+id/mSearch"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="2"
+                android:layout_marginLeft="10dp"
+
+                app:defaultQueryHint="Search.."
+                />
+        </LinearLayout>
 
     </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingVertical="5dp"-->
+<!--        android:paddingHorizontal="20dp"-->
+<!--        >-->
+<!--        <TextView-->
+<!--            android:id="@+id/textViewItemName"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/app_add_items"-->
+<!--            android:textColor="@color/text_view_color"-->
+<!--            android:textSize="25sp" />-->
+
+<!--        <Spinner-->
+<!--            android:id="@+id/cat"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:padding="3dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_height="45dp"-->
+<!--            android:layout_marginHorizontal="150dp"-->
+<!--            android:background="@color/layer3"-->
+<!--            android:gravity="center" />-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:background="@drawable/search_btn"/>-->
+
+<!--        <android.support.v7.widget.SearchView-->
+<!--            android:id="@+id/mSearch"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            app:defaultQueryHint="Search.."-->
+<!--            />-->
+
+<!--    </LinearLayout>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView2"
@@ -65,15 +209,33 @@
     </android.support.v7.widget.RecyclerView>
 
 
-    <Button
-        android:id="@+id/done2"
-        android:layout_width="200dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="@color/layer5"
-        android:text="@string/app_done"
-        android:background="@color/colorAccent"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/done2"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/second_color"
+            android:gravity="center"
+            android:text="@string/app_done"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/cancel_button"
+            android:gravity="center"
+            android:text="@string/app_cancel"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </LinearLayout>

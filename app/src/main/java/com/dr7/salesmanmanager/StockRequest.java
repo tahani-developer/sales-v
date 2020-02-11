@@ -4,10 +4,16 @@ package com.dr7.salesmanmanager;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +25,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -37,11 +47,19 @@ public class StockRequest extends Fragment {
     public ListView itemsListView;
     private ImageButton addItemImgButton, newImgBtn, SaveData;
     private EditText remarkEditText;
-    private TextView totalQty, voucherNumberTextView;
+    private TextView voucherNumberTextView;
+    public static TextView totalQty;
     public List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
-    private int voucherNumber;
+    public static int voucherNumber;
+//    public static List<Item> jsonItemsList;
+    CompanyInfo companyInfo;
+    public static List<Item> listItemStock;
+    public static Voucher voucherStock;
+    ProgressDialog dialog_progress;
+
+    public static Voucher voucherStockItem;
 
     public List<Item> getItemsStockList() {
         return this.items;
@@ -64,26 +82,30 @@ public class StockRequest extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_stock_request, container, false);
         mDbHandler = new DatabaseHandler(getActivity());
+//        jsonItemsList = new ArrayList<>();
+        String rate_customer = mDbHandler.getRateOfCustomer();
+        companyInfo = new CompanyInfo();
+//        jsonItemsList = mDbHandler.getAllJsonItemsStock();
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
-
         addItemImgButton = (ImageButton) view.findViewById(R.id.addItemImgButton);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         totalQty = (TextView) view.findViewById(R.id.total_qty);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumberTextView);
-
         voucherNumberTextView.setText(voucherNumber + "");
-
         addItemImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stockInterFace.displayFindItemStockFragment();
+                new TaskStock().execute();
+                // here
+
             }
         });
 
 
         items = new ArrayList<>();
+        listItemStock = new ArrayList<>();
         itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
         itemsListAdapter = new ItemsListStockAdapter(getActivity(), items);
         itemsListView.setAdapter(itemsListAdapter);
@@ -114,7 +136,6 @@ public class StockRequest extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
                 builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int l) {
@@ -138,16 +159,20 @@ public class StockRequest extends Fragment {
                             int salesMan = Integer.parseInt(Login.salesMan);
 
                             double total = Double.parseDouble(totalQty.getText().toString());
-                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
-                                    salesMan, remark, total, 0));
+                            voucherStock = new Voucher(0, voucherNumber, voucherDate,
+                                    salesMan, remark, total, 0);
+//                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
+//                                    salesMan, remark, total, 0));
+                            mDbHandler.addRequestVoucher(voucherStock);
 
 
                             for (int i = 0; i < items.size(); i++) {
                                 mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
                                         items.get(i).getItemName(), items.get(i).getQty(), voucherDate));
                             }
+                            printStock();
                         }
-                        clearLayoutData();
+
                     }
                 });
 
@@ -158,6 +183,144 @@ public class StockRequest extends Fragment {
 
 
         return view;
+    }
+    class TaskStock extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            for (int i = 0; i < 100; i++) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                publishProgress(i);
+            }
+            stockInterFace.displayFindItemStockFragment();
+            return "items";
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+            dialog_progress = new ProgressDialog(getActivity());
+            dialog_progress.setCancelable(false);
+            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
+            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog_progress.show();
+        }
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            dialog_progress.dismiss();
+
+            if (result != null) {
+
+            } else {
+                Toast.makeText(getActivity(), "Not able to fetch data ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void printStock() {
+        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+            try {
+                int printer = mDbHandler.getPrinterSetting();
+                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                    switch (printer) {
+                        case 0:
+                            listItemStock = items;
+                            Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                            i.putExtra("printKey", "6");
+                            startActivity(i);
+                            clearLayoutData();
+//                                                             lk30.setChecked(true);
+                            break;
+                        case 1:
+
+//                            try {
+//                                findBT();
+//                                openBT(1);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+////                                                             lk31.setChecked(true);
+//                            break;
+                        case 2:
+
+//                               try {
+//                                   findBT();
+//                                   openBT(2);
+//                               } catch (IOException e) {
+//                                   e.printStackTrace();
+//                               }
+////                                                             lk32.setChecked(true);
+//                            voucherShow = voucher;
+//
+//                            convertLayoutToImagew(getActivity());
+//                            Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+//                            O1.putExtra("printKey", "1");
+//                            startActivity(O1);
+
+
+//                            break;
+                        case 3:
+
+//                            try {
+//                                findBT();
+//                                openBT(3);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                                                             qs.setChecked(true);
+//                            break;
+                        case 4:
+//                            printTally(voucher);
+//                            break;
+
+
+                        case 5:
+
+//                                                             MTP.setChecked(true);
+//                            voucherShow = voucher;
+//                            convertLayoutToImage(voucher);
+                            listItemStock = items;
+                            voucherStockItem = voucherStock;
+                            Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            O.putExtra("printKey", "6");
+                            startActivity(O);
+                            clearLayoutData();
+
+
+                            break;
+
+                    }
+                } else {
+//                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+//                                                } catch (IOException ex) {
+//                                                }
+        } else {
+//            hiddenDialog();
+        }
     }
 
     public AdapterView.OnItemLongClickListener onItemLongClickListener =
@@ -201,7 +364,7 @@ public class StockRequest extends Fragment {
 
     private void clearLayoutData() {
         remarkEditText.setText(" ");
-        clearItemsList();
+        totalQty.setText("");
         calculateTotals();
 
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
@@ -209,7 +372,7 @@ public class StockRequest extends Fragment {
         voucherNumberTextView.setText(vn);
     }
 
-    private void clearItemsList() {
+    public void clearItemsList() {
         items.clear();
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
@@ -254,7 +417,7 @@ public class StockRequest extends Fragment {
             itemNoTextView.setText(itemList.get(i).getItemNo());
             itemNameTextView.setText(itemList.get(i).getItemName());
             qtyTextView.setText(String.valueOf(itemList.get(i).getQty()));
-          //  qtyTextView.setText(String.valueOf(itemList.get(i).getQty() * Integer.parseInt(itemList.get(i).getUnit())));
+            //  qtyTextView.setText(String.valueOf(itemList.get(i).getQty() * Integer.parseInt(itemList.get(i).getUnit())));
 
             return myView;
         }

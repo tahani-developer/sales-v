@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="@color/done_button"
+        android:background="@color/cancel_button"
         android:gravity="center"
         android:text="@string/app_cancel"
         android:textColor="@color/totals_color"
@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="650dp"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"
@@ -59,12 +59,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
+                android:layout_margin="10dp"
                 android:gravity="center"
-                android:textStyle="bold"
                 android:text="الصقور للبرمجيات "
                 android:textColor="@color/add_button"
-                android:textSize="16sp"
-                android:layout_margin="10dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 tools:visibility="visible" />
 
             <TableLayout
@@ -85,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:text="هاتف :"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -94,8 +94,8 @@
                         android:layout_height="wrap_content"
 
                         android:textColor="@color/add_button"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="18sp"
+                        />
 
                     <TextView
                         android:id="@+id/textView15"
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:text="الرقم الضريبي : "
                         android:textColor="@color/add_button"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -112,7 +112,7 @@
                         android:layout_height="wrap_content"
 
                         android:textColor="@color/add_button"
-                        android:textSize="15sp" />
+                        android:textSize="18sp" />
 
                 </TableRow>
 
@@ -121,12 +121,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:visibility="gone"
                     android:text="________________________________________"
-
-
                     android:textColor="@color/add_button"
-                    android:textSize="18sp" />
+
+
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
 
                 <TableRow
@@ -140,65 +140,39 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="رقم الفاتورة :"
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/vhNo"
-                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/date2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="التاريخ :"
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/date"
-                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                 </TableRow>
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="3dp">
-
-                    <TextView
-                        android:id="@+id/ed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="اسم العميل :  "
-                        android:textStyle="bold"
-                        android:textColor="@color/add_button"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/custname"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_weight="2"
-                        android:textColor="@color/add_button"
-                        android:textSize="16sp" />
-
-                </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -211,17 +185,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ملاحظة : "
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/note"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </TableRow>
 
@@ -236,18 +210,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="نوع الفاتورة :"
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/vhType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
                         android:text="فاتورة بيع "
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </TableRow>
 
@@ -262,22 +236,74 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="طريقة الدفع :"
-                        android:textStyle="bold"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/paytype"
-                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="نقدا"
                         android:textColor="@color/add_button"
-                        android:textSize="16sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                 </TableRow>
 
             </TableLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="اسم المندوب  :  "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/salesman_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="3dp">
+
+                <TextView
+                    android:id="@+id/ed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="اسم العميل :  "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/custname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
 
             <TextView
                 android:id="@+id/textView26"
@@ -286,19 +312,18 @@
                 android:gravity="center"
                 android:text="       __________________________________________________________"
                 android:textColor="@color/add_button"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/notelast"
-                android:layout_width="wrap_content"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:visibility="invisible"
                 android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة . "
                 android:textColor="@color/add_button"
-                android:textSize="16sp" />
-
-
+                android:textSize="18sp"
+                android:visibility="invisible" />
 
 
         </LinearLayout>

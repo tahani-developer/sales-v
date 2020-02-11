@@ -64,7 +64,7 @@
             android:id="@+id/okButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:background="@color/add_button"
+            android:background="@color/done_button"
             android:text="@string/app_ok"
             android:textColor="@color/layer5"
             android:textStyle="bold" />
@@ -74,7 +74,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
-            android:background="@color/done_button"
+            android:background="@color/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold" />

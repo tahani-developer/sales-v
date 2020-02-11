@@ -19,7 +19,7 @@
     <string name="app_stock_onhand">Stock On Hand Report Report</string>
     <string name="app_cust_log_rep">Customer Log Report</string>
     <string name="app_receipt">Payment</string>
-<!--    <string name="title_activity_main">Blutooth Connection </string>-->
+    <!--    <string name="title_activity_main">Blutooth Connection </string>-->
     <string name="title_activity_main"> </string>
     <string name="app_sign_out">Day End</string>
     <string name="customers_locations">Customers Locations</string>
@@ -124,6 +124,7 @@
     <string name="app_confirm_dialog">Confirm</string>
     <string name="app_confirm_dialog_msg">Are you sure you want to close current activity?</string>
     <string name="app_confirm_dialog_clear">Are you sure you want to clear all ?</string>
+    <string name="app_alert_dialog_maxDiscount">Sorry , total discount is greater than max discount</string>
     <string name="app_confirm_dialog_save">Are you sure you want to save the data ?</string>
     <string name="app_confirm_dialog_clear_item">Do you want to delete this item ?</string>
     <string name="app_disc_type">Discount Type</string>
@@ -205,7 +206,7 @@
     <string name="by_payment_Term">By Payment Method</string>
     <string name="customer_number">Customer Number</string>
     <string name="preview">Preview</string>
-    <string name="item_number">Item Number</string>
+    <string name="item_number">Item No</string>
     <string name="item_name">Item Name</string>
     <string name="unit_qty">Unit Qty</string>
     <string name="total_sold_qty">Total Sold Qty</string>
@@ -266,17 +267,71 @@
     <string name="tack_pic">Take Picture After Performance</string>
 
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="title_activity_splashscreen">Splashscreen</string>
+
+    <string name="bonus_not_allowed">Bonus not allowed</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="date">Date</string>
+    <string name="cash_sale">Cash sales</string>
+    <string name="credit_sales">Credit Sales</string>
+    <string name="total_sales">Total Sales</string>
+    <string name="netpayment">Net</string>
+    <string name="total_cash">Total Cash</string>
+    <string name="sales">Sales</string>
+    <string name="no_offer_for_credit">No Offer For Credit Invoice</string>
+    <string name="max_discount">Max Discount Fpr credit</string>
+    <string name="companiname">Companey name</string>
+    <string name="fill_name">Please fill  the companey name</string>
+    <string name="CustomerAuthorize">Customer Authorized</string>
+    <string name="passowrddata">Password imp/exp Data</string>
+    <string name="arabic_language">Arabic Language</string>
+    <string name="error_companey_info">   please enter company information for print </string>
+    <string name="fill_setting">Please enter setting app</string>
+    <string name="warning_message">Warning Message</string>
+
+    <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
+    <string name="change_qty">Change Qty</string>
+    <string name="failImpo_export_data">Please Export data before import new data</string>
+    <string name="failStockSoft_export_data">Please check Stock software before import new data</string>
+    <string name="kind_item">Kind</string>
+    <string name="all_item">All Item</string>
+    <string name="app_account_report">Account Statment</string>
+    <string name="last_account">Previous balance</string>
+    <string name="transfer_name">Transfer Name</string>
+    <string name="Debtor">Debtor</string>
+    <string name="Creditor">Creditor</string>
+    <string name="Final_customer_balance">Account  balance</string>
+    <string name="max_discount_customer">Max Discount</string>
+    <string name="app_alert">Alert</string>
+    <string name="app_confirm_dialog_exceedDis">Sorrey you are exceed the max Discount value for this customer</string>
+    <string name="hideQty">Hide Qty for salesMan</string>
+    <string name="lockcash">Lock Cash Report</string>
+    <string name="showpass">Show Passowrd</string>
+    <string name="transaction">Transaction</string>
+    <string name="accept">Accept</string>
+    <string name="voucherNo">Voucher No :</string>
+    <string name="toStore">To Store:</string>
+    <string name="loadingItem">Loading Item ....</string>
+    <string name="zero_value_taxAndNetSales">Wrong value  for zero netSales</string>
+    <string name="salesman_name">Sales man name</string>
+    <string name="cusSuspended">Sorry, this customer has been suspended</string>
+    <string name="scanbarcode">Scan BR</string>
+    <string name="hidePrice">Hide Price</string>
+    <string name="return_type">Return</string>
+    <string name="new_type">New</string>
+    <string name="TypeVoucher">Type Voucher :</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
     </string-array>
-
     <string-array name="list_items_dialog">
         <item>Delete</item>
         <item>Update Qty</item>
         <item>Clear All</item>
     </string-array>
-
     <string-array name="banks_list">
         <item>Arab Bank</item>
         <item>Arab Banking Corporation (Jordan)</item>
@@ -304,31 +359,4 @@
         <item>Al-Rajhi Bank</item>
 
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_splashscreen">Splashscreen</string>
-    <string name="bonus_not_allowed">Bonus not allowed</string>
-    <string name="date">Date</string>
-    <string name="cash_sale">Cash sales</string>
-    <string name="credit_sales">Credit Sales</string>
-    <string name="total_sales">Total Sales</string>
-    <string name="netpayment">Net</string>
-    <string name="total_cash">Total Cash</string>
-    <string name="sales">Sales</string>
-    <string name="no_offer_for_credit">No Offer For Credit Invoice</string>
-    <string name="max_discount">Max Discount Fpr credit</string>
-    <string name="companiname">Companey name</string>
-    <string name="fill_name">Please fill  the companey name</string>
-    <string name="CustomerAuthorize">Customer Authorized</string>
-    <string name="passowrddata">Password imp/exp Data</string>
-    <string name="arabic_language">Arabic Language</string>
-
-    <string name="error_companey_info">   please enter company information for print </string>
-    <string name="fill_setting">Please enter setting app</string>
-    <string name="warning_message">Warning Message</string>
-    <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
-    <string name="change_qty">Change Qty</string>
-    <string name="failImpo_export_data">Please Export data before import new data</string>
-    <string name="failStockSoft_export_data">Please check Stock software before import new data</string>
 </resources>

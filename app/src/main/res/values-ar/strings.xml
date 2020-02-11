@@ -122,6 +122,9 @@
     <string name="app_confirm_dialog">تأكيد</string>
     <string name="app_confirm_dialog_msg">هل انت متأكد من اغلاق النافذة ؟</string>
     <string name="app_confirm_dialog_clear">هل تريد مسح كل شيء ؟</string>
+    <string name="app_alert_dialog_maxDiscount">
+         عذرا,اجمال الخصم  تجاوز الحد الأعلى للخصم
+       </string>
     <string name="app_confirm_dialog_save">هل انت متأكد من حفظ البيانات ؟</string>
     <string name="app_confirm_dialog_clear_item">هل تريد حذف هذة المادة ؟</string>
     <string name="app_disc_type">نوع الخصم</string>
@@ -338,4 +341,36 @@
     <string name="failStockSoft_export_data">
          قم بترحيل الفواتير في برنامج المستودعات لاستيراد بيانات جديدة
     </string>
+    <string name="kind_item">النوع</string>
+    <string name="all_item">كل العناصر </string>
+    <string name="app_account_report"> كشف حساب  </string>
+    <string name="last_account">الرصيد السابق</string>
+    <string name="transfer_name">نوع الحركة</string>
+    <string name="Debtor">مدين</string>
+    <string name="Creditor">دائن</string>
+    <string name="Final_customer_balance">الرصيد النهائي </string>
+    <string name="max_discount_customer"> الحد الاعلى للخصم </string>
+    <string name="app_alert">تنبيه !!</string>
+    <string name="app_confirm_dialog_exceedDis">عفوا أنت تجاوزت الحد الأقصى لقيمة الخصم لهذا العميل</string>
+    <string name="hideQty">
+         اخفاء الكميات لمندوب المبيعات
+       </string>
+    <string name="lockcash">قفل تقرير الكاش </string>
+    <string name="showpass">اظهار </string>
+    <string name="transaction">Transaction</string>
+    <string name="accept">موافق</string>
+    <string name="voucherNo">رقم الفاتورة :</string>
+    <string name="toStore">الى المخزن:</string>
+    <string name="loadingItem">جاري التحميل.... </string>
+    <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
+    </string>
+    <string name="salesman_name">اسم المندوب </string>
+    <string name="cusSuspended">
+    عذرا لقد تم ايقاف هذا العميل
+    </string>
+    <string name="scanbarcode">Scan BR</string>
+    <string name="hidePrice">اخفاء السعر</string>
+    <string name="return_type">مرتجعات</string>
+    <string name="new_type">جديد</string>
+    <string name="TypeVoucher">نوع الفاتورة :</string>
 </resources>

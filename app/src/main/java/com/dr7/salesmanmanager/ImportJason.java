@@ -11,10 +11,12 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
+import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
@@ -60,9 +62,12 @@ public class ImportJason extends AppCompatActivity{
     public static List<SalesManAndStoreLink> salesManAndStoreLinksList = new ArrayList<>();
     public static List<SalesMan> salesMenList = new ArrayList<>();
     public static List<CustomerPrice> customerPricesList = new ArrayList<>();
+    public static List<SalesmanStations> salesmanStationsList = new ArrayList<>();
     public static List<Offers> offersList = new ArrayList<>();
     public static List<QtyOffers> qtyOffersList = new ArrayList<>();
-    public static List<SalesmanStations> salesmanStationsList = new ArrayList<>();
+    public  static  List<ItemsQtyOffer> itemsQtyOfferList =new ArrayList<>();
+    public static List<Account_Report> account_reportList = new ArrayList<>();
+
     boolean start =false;
 
     public ImportJason(Context context){
@@ -77,7 +82,8 @@ public class ImportJason extends AppCompatActivity{
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+            new JSONTask().execute(URL_TO_HIT);
+//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
 //            if(start==true) {
 //                new JSONTask().execute(URL_TO_HIT);
 //            }
@@ -150,7 +156,7 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
             }
 
-            return "Finish Store";
+            return "";
         }
 
         @Override
@@ -163,15 +169,15 @@ public class ImportJason extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(start==true)
-            {
-                new JSONTask().execute(URL_TO_HIT);
-            }
-            else{
-                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
-
-            }
-            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+//            if(start==true)
+//            {
+//                new JSONTask().execute(URL_TO_HIT);
+//            }
+//            else{
+//                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
+//
+//            }
+//            Toast.makeText(context, s, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -253,6 +259,8 @@ public class ImportJason extends AppCompatActivity{
 
                 String finalJson = sb.toString();
                 Log.e("finalJson*********" , finalJson);
+                String rate_customer="";
+                String HideVal="";
 
                 JSONObject parentObject = new JSONObject(finalJson);
                 try
@@ -283,6 +291,40 @@ public class ImportJason extends AppCompatActivity{
                     }
                     Customer.setCustLat(finalObject.getString("LATITUDE"));
                     Customer.setCustLong(finalObject.getString("LONGITUDE"));
+
+
+                    try {
+                        rate_customer=finalObject.getString("ACCPRC");
+                        if(!rate_customer.equals("null"))
+                        Customer.setACCPRC(rate_customer);
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
 
                     customerList.add(Customer);
                 }
@@ -327,6 +369,19 @@ public class ImportJason extends AppCompatActivity{
                     item.setPosPrice(finalObject.getDouble("F_D"));
                     item.setIsSuspended(0);
                     item.setItemL(finalObject.getDouble("ItemL"));
+                    try {
+                      if(  finalObject.getString("ITEMK") == "" ||  finalObject.getString("ITEMK") == null || finalObject.getString("ITEMK") == "null")
+                          item.setKind_item("***");
+                      else
+                        item.setKind_item(finalObject.getString("ITEMK")); // here ?
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ErrorImport","Item_Kind_null");
+                        item.setKind_item("***");
+
+                    }
                     itemsMasterList.add(item);
                 }
                 }
@@ -540,13 +595,63 @@ public class ImportJason extends AppCompatActivity{
                         qtyOffers.setPaymentType(finalObject.getInt("PAYMENT_TYPE"));
 
                         qtyOffersList.add(qtyOffers);
-                        Log.e("qtyOffersList", "=" + qtyOffersList.size());
+
                     }
                     Log.e("salesmanStationsList ", "********" + salesmanStationsList.size());
                 }catch (JSONException e)
                 {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+
+                try
+                {
+                    JSONArray parentArrayItemsQtyOffer = parentObject.getJSONArray("ITEMS_QTY_OFFER");
+                    itemsQtyOfferList.clear();
+                    for (int i = 0; i < parentArrayItemsQtyOffer.length(); i++) {
+                        JSONObject finalObject = parentArrayItemsQtyOffer.getJSONObject(i);
+
+                        ItemsQtyOffer qtyOffers = new ItemsQtyOffer();
+                        qtyOffers.setItem_name(finalObject.getString("ITEMNAME"));
+                        qtyOffers.setItem_no(finalObject.getString("ITEMNO"));
+                        qtyOffers.setItemQty(finalObject.getDouble("AMOUNTQTY"));
+                        qtyOffers.setFromDate(finalObject.getString("FROMDATE"));
+                        qtyOffers.setToDate(finalObject.getString("TODATE"));
+                        qtyOffers.setDiscount_value(finalObject.getDouble("DISCOUNT"));
+                        itemsQtyOfferList.add(qtyOffers);
+
+                    }
+                }
+                catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                /*
+                *
+                * [{"ITEMNAME":"جلواز أزرق","ITEMNO":"3258170924337","AMOUNTQTY":"20","DISCOUNT":"0.2","FROMDATE":"03\/10\/2019","TODATE":"30\/10\/2019"}]*/
+                try
+                {
+                    JSONArray parentArrayAccountReport = parentObject.getJSONArray("ACOUNT_REPORT");
+                    account_reportList.clear();
+                    for (int i = 0; i < parentArrayAccountReport.length(); i++) {
+                        JSONObject finalObject = parentArrayAccountReport.getJSONObject(i);
+
+                        Account_Report acountReport = new Account_Report();
+                        acountReport.setDate(finalObject.getString("DATE"));
+                        acountReport.setTransfer_name(finalObject.getString("TRANSFER_NAME"));
+                        acountReport.setDebtor(finalObject.getString("DEBTOR"));
+                        acountReport.setCreditor(finalObject.getString("CREDITOR"));
+                        acountReport.setCust_balance(finalObject.getString("CUS_BALANCE"));
+                        acountReport.setCust_no(finalObject.getString("CUS_NO"));
+
+                        account_reportList.add(acountReport);
+                        Log.e("acountReport", "=" + account_reportList.size());
+                    }
+                }
+                catch (JSONException e)
+                {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
@@ -576,6 +681,7 @@ public class ImportJason extends AppCompatActivity{
         }
 
 
+
         @Override
         protected void onPostExecute(final List<Customer> result) {
             super.onPostExecute(result);
@@ -603,7 +709,7 @@ public class ImportJason extends AppCompatActivity{
             dialog.setCancelable(false);
             dialog.setContentView(R.layout.progress_dialog);
             Window window = dialog.getWindow();
-            window.setLayout(700, 350);
+            window.setLayout(500, 250);
 
             pb = (ProgressBar) dialog.findViewById(R.id.progress);
 
@@ -634,6 +740,8 @@ public class ImportJason extends AppCompatActivity{
             mHandler.deleteAllOffers();
             mHandler.deleteAllSalesmenStations();
             mHandler.deleteAllOffersQty();
+            mHandler.deletItemsOfferQty();
+            mHandler.deletAcountReport();
 
             for (int i = 0; i < customerList.size(); i++) {
                 mHandler.addCustomer(customerList.get(i));
@@ -686,6 +794,13 @@ public class ImportJason extends AppCompatActivity{
                 mHandler.addQtyOffers(qtyOffersList.get(i));
             }
 
+            for (int i = 0; i < itemsQtyOfferList.size(); i++) {
+                mHandler.add_Items_Qty_Offer(itemsQtyOfferList.get(i));
+            }
+            for (int i = 0; i < account_reportList.size(); i++) {
+                mHandler.addAccount_report(account_reportList.get(i));
+                Log.e("acountReport_add",""+account_reportList.size());
+            }
             for (int i = 0; i < salesmanStationsList.size(); i++) {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }

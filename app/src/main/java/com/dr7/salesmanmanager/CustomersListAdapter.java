@@ -1,6 +1,8 @@
 package com.dr7.salesmanmanager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -77,6 +79,9 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(custList.get(i).getIsSuspended()!=1)
+                {
+                    Log.e("cust",""+custList.get(i).getIsSuspended());
                 CustomerListShow.Customer_Name = custList.get(i).getCustName();
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
@@ -84,7 +89,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
-                if(custList.get(i).getCustId()=="1225") {
+                if (custList.get(i).getCustId() == "1225") {
                     Log.e("customerList-no", "" + custList.get(i).getCustId() + "\t cus cash" + custList.get(i).getCashCredit() + "     " + custList.get(i).getCreditLimit());
 
                 }
@@ -99,8 +104,25 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
                     customerCheckInFragment.settext1();
                 }
+                CustomerListShow.CustHideValu=custList.get(i).getHide_val();
 
                 customerListShow.dismiss();
+            }
+                else{
+                    Log.e("cust",""+custList.get(i).getIsSuspended());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage(context.getResources().getString(R.string.cusSuspended));
+                    builder.setTitle(context.getResources().getString(R.string.warning_message));
+                    builder.setPositiveButton(context.getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+
+
+                    });
+                    builder.create().show();
+                }
             }
         });
 
@@ -146,7 +168,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
                         String data = mOriginalValues.get(i).getCustName();
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
+                        if (data.toLowerCase().contains(constraint.toString())) {
                             FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName()));
                             Log.e("here" , "*********2" + constraint + "*" + data);
                         }

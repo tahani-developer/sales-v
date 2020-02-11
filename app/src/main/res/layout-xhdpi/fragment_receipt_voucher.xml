@@ -20,24 +20,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/row1"
-        android:layout_marginBottom="3dp"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/layer2"
         >
         <ImageButton
             android:id="@+id/ClearForm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_marginLeft="20dp"
+            android:layout_height="60dp"
             android:background="@drawable/new_inv"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="40dp"
             />
 
         <ImageButton
             android:id="@+id/SaveData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:background="@drawable/save_btn"
             android:layout_marginRight="20dp"
             />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pic_Re_print"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/images_print"
+            />
+
         <ImageView
             android:id="@+id/pic_receipt"
             android:layout_width="200dp"
@@ -53,15 +63,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_margin="10dp"
+
         android:id="@+id/row2"
         >
 
         <TextView
             android:id="@+id/customer_nameVoucher"
-            android:layout_width="300dp"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+
+            android:gravity="center"
+            android:background="@drawable/back_border_edit"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
             android:textSize="@dimen/content_large" />
@@ -76,10 +93,12 @@
 
         <TextView
             android:id="@+id/voucher_no"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="10dp"
+            android:background="@drawable/back_border_edit"
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
             android:textColor="@color/text_view_color"
@@ -87,11 +106,13 @@
 
         <TextView
             android:id="@+id/payment_term"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="10dp"
             android:gravity="center_vertical"
+            android:background="@drawable/back_border_edit"
             android:text="@string/payment_term"
             android:textColor="@color/text_view_color"
             android:textSize="@dimen/content_large" />
@@ -155,10 +176,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/back_border_edit"
+
             android:text="@string/app_paymentDetails"
             android:layout_gravity="center_horizontal"
-            android:backgroundTint="@color/layer2"
+
             android:textSize="@dimen/content_xlarge"
+            android:textStyle="bold"
             android:gravity="center_horizontal"
             android:textColor="@color/text_view_color"
             />
@@ -193,7 +217,7 @@
             android:id="@+id/addCheck"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:background="@color/colorAccent"
+            android:background="@color/red_background"
             android:textColor="@color/layer5"
             android:padding="5dp"
             android:layout_marginStart="100dp"

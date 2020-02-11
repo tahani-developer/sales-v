@@ -10,9 +10,22 @@ public class ItemsMaster {
     private int isSuspended;
     private double itemL; // for weight
     private double posPrice; // for weight
+    private String kind_item;
 
     public ItemsMaster (){
 
+    }
+
+    public ItemsMaster(int companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended, double itemL, double posPrice, String kind_item) {
+        this.companyNo = companyNo;
+        this.itemNo = itemNo;
+        this.name = name;
+        this.categoryId = categoryId;
+        this.barcode = barcode;
+        this.isSuspended = isSuspended;
+        this.itemL = itemL;
+        this.posPrice = posPrice;
+        this.kind_item = kind_item;
     }
 
     public double getPosPrice() {
@@ -23,14 +36,12 @@ public class ItemsMaster {
         this.posPrice = posPrice;
     }
 
-    public ItemsMaster(int companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended , double itemL) {
-        this.companyNo = companyNo;
-        this.itemNo = itemNo;
-        this.name = name;
-        this.categoryId = categoryId;
-        this.barcode = barcode;
-        this.isSuspended = isSuspended;
-        this.itemL = itemL;
+    public String getKind_item() {
+        return kind_item;
+    }
+
+    public void setKind_item(String kind_item) {
+        this.kind_item = kind_item;
     }
 
     public int getCompanyNo() {

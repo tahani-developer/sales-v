@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+
+  >
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/app_account_report"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="30dp" />
+            <!--        <Spinner-->
+            <!--            android:id="@+id/customer_name"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:padding="5dp"-->
+            <!--            android:layout_margin="3dp"-->
+
+            <!--           android:hint="@string/cust_name"-->
+            <!--            android:layout_width="200dp"/>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/from_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:layout_marginRight="10dp"/>
+
+            <EditText
+                android:id="@+id/fromDate_accountReport"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/back_border_edit"
+                android:textColor="@color/add_button"
+                android:layout_marginBottom="5dp"
+                android:textSize="16sp"/>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/to_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp"
+                android:layout_marginRight="10dp"/>
+
+            <EditText
+                android:id="@+id/toDate_accountReport"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/back_border_edit"
+                android:inputType="date"
+                android:textColor="@color/add_button"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/preview_account_report"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@color/red_background"
+                android:layout_marginLeft="50dp"
+                android:layout_marginStart="50dp"
+                android:text="@string/preview" />
+            <Button
+                android:id="@+id/print_account_report"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:background="@color/colorblue1"
+                android:layout_marginLeft="50dp"
+                android:layout_marginStart="50dp"
+                android:text="@string/print" />
+            <ImageView
+                android:id="@+id/pic_reportCash"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:visibility="invisible"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/last_account"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="15dp" />
+            <TextView
+                android:id="@+id/lastaccount_text"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_marginLeft="25dp"
+                android:text="@string/last_account"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="0"
+            android:background="@color/layer2"
+            android:orientation="horizontal">
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_margin="5dp">
+
+            <!--            <android.support.v7.widget.RecyclerView-->
+            <!--                android:id="@+id/recyclerView_report"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="264dp"-->
+            <!--                android:background="@color/layer3"-->
+            <!--                android:orientation="vertical">-->
+
+            <!--            </android.support.v7.widget.RecyclerView>-->
+            <ScrollView
+                android:id="@+id/scrolview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/layer3"
+                android:layout_margin="10dp"
+                >
+
+                <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/tableAccountReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:background="@color/layer5">
+
+                    <TableRow
+                        android:background="@color/colorblue1"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:id="@+id/textView_date"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:text="@string/date"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/textView_transfer_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+
+                            android:text="@string/transfer_name"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/textView_Debtor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:text="@string/Debtor"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView_Creditor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/Creditor"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textView_balance"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/app_cust_balance"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                    </TableRow>
+
+                </TableLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:background="@color/layer3"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBottom="@id/scrolview"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/Final_customer_balance"
+                    android:background="@color/layer2"
+
+                    android:textColor="@color/colorblue1"/>
+                <TextView
+                    android:id="@+id/account_balance"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@color/colorblue1"
+                    android:text="1000"
+
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

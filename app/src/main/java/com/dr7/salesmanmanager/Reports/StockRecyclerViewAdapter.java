@@ -46,6 +46,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
 
         return new viewHolder(view);
@@ -67,8 +68,8 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
-        holder.price.setVisibility(View.INVISIBLE);
-        holder.pricee.setVisibility(View.INVISIBLE);
+        holder.price.setVisibility(View.GONE);
+        holder.pricee.setVisibility(View.GONE);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

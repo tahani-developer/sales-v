@@ -295,7 +295,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="1dp"
                     android:layout_marginHorizontal="5dp"
-                    android:background="@color/add_button"
+                    android:background="@color/done_button"
                     android:text="@string/save"
                     android:textColor="@color/layer5" />
 
@@ -306,7 +306,7 @@
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="5dp"
                     android:layout_marginTop="1dp"
-                    android:background="@color/done_button"
+                    android:background="@color/cancel_button"
                     android:text="@string/app_cancel"
                     android:textColor="@color/layer5" />
 

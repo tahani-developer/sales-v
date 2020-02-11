@@ -45,6 +45,7 @@ public class CustomerListShow extends DialogFragment {
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
     public static double Max_Discount_value=0;
+    public static int CustHideValu=0;
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;

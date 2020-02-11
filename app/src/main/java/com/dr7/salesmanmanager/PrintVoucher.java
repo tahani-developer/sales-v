@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -73,7 +75,7 @@ public class PrintVoucher extends AppCompatActivity {
     private BluetoothPort bluetoothPort;
     List<Voucher> vouchers;
     public static List<Item> items;
-
+    Voucher voucherPrint;
     List<CompanyInfo> companeyinfo;
     TextView textSubTotal, textTax, textNetSales;
     EditText from_date, to_date;
@@ -105,6 +107,9 @@ public class PrintVoucher extends AppCompatActivity {
     DatabaseHandler obj;
      static double TOTAL=0;
     DecimalFormat decimalFormat;
+    RadioGroup  voucherTypeRadioGroup;
+    int voucherType = 504;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -116,7 +121,7 @@ public class PrintVoucher extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        decimalFormat = new DecimalFormat("##.00");
+        decimalFormat = new DecimalFormat("##.000");
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo = new ArrayList<CompanyInfo>();
@@ -140,6 +145,18 @@ public class PrintVoucher extends AppCompatActivity {
         to_date.setText(today);
 
         myCalendar = Calendar.getInstance();
+        voucherTypeRadioGroup = (RadioGroup) findViewById(R.id.transKindRadioGroup);
+        voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.salesRadioButton: voucherType = 504; break;
+                    case R.id.retSalesRadioButton: voucherType = 506; break;
+                    case R.id.orderRadioButton: voucherType = 508; break;
+                }
+            }
+        });
+
 
         from_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,6 +252,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
 
@@ -259,7 +277,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 1:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 1);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -277,6 +295,8 @@ public class PrintVoucher extends AppCompatActivity {
 //                                                             lk32.setChecked(true);
 
                                                                 vouch1 = vouch;
+                                                                voucherPrint=vouch;
+                                                                convertLayoutToImageW();
                                                                 Intent o = new Intent(PrintVoucher.this, bMITP.class);
                                                                 o.putExtra("printKey", "0");
                                                                 startActivity(o);
@@ -286,7 +306,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 3:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 3);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -301,6 +321,8 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 5:
 
                                                                 vouch1 = vouch;
+                                                                voucherPrint=vouch;
+                                                                convertLayoutToImageW();
                                                                 Intent o1 = new Intent(PrintVoucher.this, bMITP.class);
                                                                 o1.putExtra("printKey", "0");
                                                                 startActivity(o1);
@@ -364,6 +386,10 @@ public class PrintVoucher extends AppCompatActivity {
 
     }
 
+    private void printVoucher() {
+
+    }
+
     public void clear() {
         int childCount = TableTransactionsReport.getChildCount();
         // Remove all rows except the first one
@@ -408,17 +434,19 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     public boolean filters(int n) {
+        Log.e("filtersvoucher",""+voucherType);
 
 
         String fromDate = from_date.getText().toString().trim();
         String toDate = to_date.getText().toString();
 
         String date = vouchers.get(n).getVoucherDate();
+        int  vouchType=vouchers.get(n).getVoucherType();
 
         try {
-            Log.e("tag", "*****" + date + "***" + fromDate);
+            Log.e("tag", "*****" + date + "***" + fromDate+"\t vouchtype"+vouchType);
             if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
-                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
+                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) && (vouchType==voucherType))
                 return true;
 
         } catch (ParseException e) {
@@ -709,7 +737,7 @@ public class PrintVoucher extends AppCompatActivity {
         dialog.show();
     }
 
-    void findBT(int voucherNo) {
+    void findBT(int voucherNo,Voucher voucher) {
 //        try {
 //            /*  very important **********************************************************/
 //            closeBT();
@@ -719,8 +747,8 @@ public class PrintVoucher extends AppCompatActivity {
         itemsString = "";
         itemsString2="";
         for (int j = 0; j < items.size(); j++) {
-
-            if (voucherNo == items.get(j).getVoucherNumber()) {
+//            ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType()))
+            if ((voucherNo == items.get(j).getVoucherNumber())&&(items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                 amount = convertToEnglish(amount);
 
@@ -1047,7 +1075,7 @@ public class PrintVoucher extends AppCompatActivity {
         List<Item> items1=new ArrayList<>();
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+            if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 items1.add(items.get(j));
 
             }
@@ -1114,7 +1142,7 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
 
-    private Bitmap convertLayoutToImage(Voucher voucher) {
+    public Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
 
         final Dialog dialogs = new Dialog(PrintVoucher.this);
@@ -1207,7 +1235,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+           if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 final TableRow row = new TableRow(PrintVoucher.this);
 
 
@@ -1288,6 +1316,195 @@ public class PrintVoucher extends AppCompatActivity {
 //        linearView.setDrawingCacheEnabled(true);
 //        linearView.buildDrawingCache();
 //        Bitmap bit =linearView.getDrawingCache(); 
+
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+
+        return bitmap;// creates bitmap and returns the same
+    }
+
+    public Bitmap convertLayoutToImageW() {
+        LinearLayout linearView = null;
+
+        final Dialog dialogs = new Dialog(PrintVoucher.this);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.setCancelable(true);
+        dialogs.setCanceledOnTouchOutside(true);
+        dialogs.setContentView(R.layout.printdialog);
+//            fill_theVocher( voucherPrint);
+
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
+
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
+        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
+
+        compname = (TextView) dialogs.findViewById(R.id.compname);
+        tel = (TextView) dialogs.findViewById(R.id.tel);
+        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
+        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
+        date = (TextView) dialogs.findViewById(R.id.date);
+        custname = (TextView) dialogs.findViewById(R.id.custname);
+        note = (TextView) dialogs.findViewById(R.id.note);
+        vhType = (TextView) dialogs.findViewById(R.id.vhType);
+        paytype = (TextView) dialogs.findViewById(R.id.paytype);
+        total = (TextView) dialogs.findViewById(R.id.total);
+        discount = (TextView) dialogs.findViewById(R.id.discount);
+        tax = (TextView) dialogs.findViewById(R.id.tax);
+        ammont = (TextView) dialogs.findViewById(R.id.ammont);
+        textW = (TextView) dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
+//
+
+
+        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(isFinishPrint) {
+                    try {
+                        closeBT();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    dialogs.dismiss();
+                }
+            }
+        });
+
+
+        String voucherTyp = "";
+        switch (voucherPrint.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+        img.setImageBitmap(companyInfo.getLogo());
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        vhNo.setText("" + voucherPrint.getVoucherNumber());
+        date.setText(voucherPrint.getVoucherDate());
+        custname.setText(voucherPrint.getCustName());
+        note.setText(voucherPrint.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucherPrint.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+        total.setText("" + voucherPrint.getSubTotal());
+        discount.setText("" + voucherPrint.getVoucherDiscount());///
+        tax.setText("" + voucherPrint.getTax());
+        ammont.setText("" + voucherPrint.getNetSales());
+
+
+        if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        } else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = 0; j < items.size(); j++) {
+
+            if (voucherPrint.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                final TableRow row = new TableRow(PrintVoucher.this);
+
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(PrintVoucher.this);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+
+                    switch (i) {
+                        case 0:
+                            textView.setText(items.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+
+                        case 1:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getUnit());
+                                textView.setLayoutParams(lp2);
+                            } else {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                            }
+                            break;
+
+                        case 2:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            } else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
+                            textView.setText("" + items.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+
+                        case 4:
+                            String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+
+                tabLayout.addView(row);
+            }
+        }
+
+
+        dialogs.show();
+
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
 
         Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -1736,9 +1953,10 @@ public class PrintVoucher extends AppCompatActivity {
                     printCustom("------------------------------------------" + "\n", 1, 0);
 
                     int serial = 1;
-                    DecimalFormat threeDForm = new DecimalFormat("0.000");
+                    DecimalFormat threeDForm = new DecimalFormat("00.000");
                     for (int j = 0; j < items.size(); j++) {
-                        if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                        if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
+
                             String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                             String amountATax = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue());
                             amount = convertToEnglish(amount);
