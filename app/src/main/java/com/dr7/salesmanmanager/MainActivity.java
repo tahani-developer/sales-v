@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     int sum_chech_export_lists=0;
+     public static String languagelocalApp="";
+     DrawerLayout drawer_layout;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +137,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        drawer_layout=findViewById(R.id.drawer_layout);
+        if(languagelocalApp.equals("ar"))
+        {
+            drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        else{
+            if(languagelocalApp.equals("en"))
+            {
+                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+
+        }
         tvresult = (TextView) findViewById(R.id.tvresult);
 
         Button btn = (Button) findViewById(R.id.btn);
@@ -908,6 +923,10 @@ public class MainActivity extends AppCompatActivity
                     passowrdData_checkbox.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     arabicLanguage_checkbox.setChecked(true);
+                    languagelocalApp="ar";
+                }
+                else{
+                    languagelocalApp="en";
                 }
                 if (mDbHandler.getAllSettings().get(0).getHide_qty() == 1) {
                     hideQty_checkbox.setChecked(true);
@@ -931,8 +950,11 @@ public class MainActivity extends AppCompatActivity
                    if( arabicLanguage_checkbox.isChecked())
                    {
                         LocaleAppUtils.setLocale(new Locale("ar"));
+                       languagelocalApp="ar";
                     }
-                   else {    LocaleAppUtils.setLocale(new Locale("en"));}
+                   else {    LocaleAppUtils.setLocale(new Locale("en"));
+                             languagelocalApp="en";
+                   }
 
                 }
             });

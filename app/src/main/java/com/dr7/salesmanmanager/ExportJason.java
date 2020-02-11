@@ -66,6 +66,7 @@ public class ExportJason extends AppCompatActivity {
 
 
     void startExportDatabase() {
+        String s="";
         transactions = mHandler.getAlltransactions();
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)

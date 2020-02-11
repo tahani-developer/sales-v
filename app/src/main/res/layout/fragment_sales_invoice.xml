@@ -6,8 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="20dp"
     android:paddingEnd="20dp"
-    android:layoutDirection="ltr"
-
+    android:id="@+id/mainlyout"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingStart="20dp"

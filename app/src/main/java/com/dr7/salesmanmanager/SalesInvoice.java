@@ -107,6 +107,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera;
 import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
+import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 
 import  com.dr7.salesmanmanager.Activities;
@@ -229,14 +230,28 @@ public class SalesInvoice extends Fragment {
     int voucherNo=0;
     CheckBox check_HidePrice;
      public  static  int valueCheckHidPrice=0;
+     LinearLayout mainlayout;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
+        mainlayout=(LinearLayout)view.findViewById(R.id.mainlyout);
+        Log.e("locallang",""+languagelocalApp);
+        if(languagelocalApp.equals("ar"))
+        {
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        else{
+            if(languagelocalApp.equals("en"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
 
+        }
          currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
          voucherDate = df.format(currentTimeAndDate);
@@ -1104,9 +1119,9 @@ public class SalesInvoice extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10; i++) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

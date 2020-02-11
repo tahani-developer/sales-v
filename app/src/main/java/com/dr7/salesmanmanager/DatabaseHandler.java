@@ -2020,6 +2020,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
                 item.setVoucherType(Integer.parseInt(cursor.getString(1)));
                 item.setItemNo(cursor.getString(2));
+                Log.e("cursorItemNo",""+cursor.getString(2));
                 item.setItemName(cursor.getString(3));
                 item.setUnit(cursor.getString(4));
                 item.setQty(Float.parseFloat(cursor.getString(5)));
