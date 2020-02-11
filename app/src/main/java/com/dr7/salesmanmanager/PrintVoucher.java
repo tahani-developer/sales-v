@@ -1287,7 +1287,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 //        linearView.setDrawingCacheEnabled(true);
 //        linearView.buildDrawingCache();
-//        Bitmap bit =linearView.getDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache(); 
 
         Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
