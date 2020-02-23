@@ -27,6 +27,24 @@ public class Settings {
     private int  hide_qty;
     private int lock_cashreport;
     private String salesMan_name;
+    private int priventOrder;
+    private int requiNote;
+
+    public int getPriventOrder() {
+        return priventOrder;
+    }
+
+    public void setPriventOrder(int priventOrder) {
+        this.priventOrder = priventOrder;
+    }
+
+    public int getRequiNote() {
+        return requiNote;
+    }
+
+    public void setRequiNote(int requiNote) {
+        this.requiNote = requiNote;
+    }
 
     public String getSalesMan_name() {
         return salesMan_name;

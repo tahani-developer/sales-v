@@ -101,6 +101,7 @@ public class ExportJason extends AppCompatActivity {
             if (vouchers.get(i).getIsPosted() == 0)
             {
                 vouchers.get(i).setIsPosted(1);
+//                vouchers.get(i).setRemark("\\%");
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
 

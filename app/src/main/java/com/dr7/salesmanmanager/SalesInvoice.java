@@ -29,6 +29,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -367,7 +368,18 @@ public class SalesInvoice extends Fragment {
 
         salesRadioButton.setOnClickListener(RADIOCLECKED);
         retSalesRadioButton.setOnClickListener(RADIOCLECKED);
-        orderRadioButton.setOnClickListener(RADIOCLECKED);
+        if(mDbHandler.getAllSettings().get(0).getPriventOrder()==1)
+        {
+            orderRadioButton.setEnabled(false);
+            orderRadioButton.setChecked(false);
+
+        }
+        else{
+            orderRadioButton.setEnabled(true);
+            orderRadioButton.setOnClickListener(RADIOCLECKED);
+        }
+
+
 
 
         if (MainActivity.checknum == 1)
@@ -667,6 +679,7 @@ public class SalesInvoice extends Fragment {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+                final String remarkText=remarkEditText.getText().toString().trim();
 
                 itemForPrint.clear();
                 clicked = false;
@@ -685,129 +698,24 @@ public class SalesInvoice extends Fragment {
                             if (listSize == 0)
                                 Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
                             else {
-                                DiscountFragment obj = new DiscountFragment();
-                                double discountValue = obj.getDiscountValue();
-                                double discountPerc = obj.getDiscountPerc();
-
-                                double totalDisc = Double.parseDouble(discTextView.getText().toString());
-                                double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-                                double tax=0, netSales=0;
-                                String netsale_txt="";
-                                netsale_txt=netTotalTextView.getText().toString();
-                                Log.e("textNt",""+netsale_txt);
-
-                                try{
-                                     tax = Double.parseDouble(taxTextView.getText().toString());
-                                     netSales = Double.parseDouble(netTotalTextView.getText().toString());
-                                     Log.e("netSales_isnan",""+Double.isNaN(netSales));
-
-                                }catch (Exception e){
-                                    tax=0;
-                                    Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
+                                if(mDbHandler.getAllSettings().get(0).getRequiNote()==1)
+                                {
+                                    if(TextUtils.isEmpty(remarkText))
+                                    {
+                                        remarkEditText.setError("Required");
+                                        remarkEditText.requestFocus();
+                                    }
+                                    else
+                                    {
+                                        saveData();
+                                    }
 
                                 }
-                                if(netSales!=0 && !Double.isNaN(netSales) ){// test nan
-
-                                    Log.e("not zero ","tax="+tax+"\t"+ netSales);
-                                    //******************************
-
-
-
-
-                                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
-                                    Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
-
-                                } else {
-
-                                    String remark = " " + remarkEditText.getText().toString();
-                                    salesMan = Integer.parseInt(Login.salesMan);
-
-                                    voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                                            salesMan, discountValue, discountPerc, remark, payMethod,
-                                            0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
-                                        if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
-
-                                            if (customer_is_authrized()) {
-
-
-                                                if(virefyMaxDescount()){
-                                                    if(!remarkEditText.getText().toString().equals("")) {
-                                                        AddVoucher();
-                                                        clearLayoutData();
-                                                    }else{
-                                                        Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-
-                                                      else{
-                                                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
-                                                        builder.setTitle(getResources().getString(R.string.app_alert));
-                                                        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                                dialogInterface.dismiss();
-
-                                                            }
-                                                        });
-
-
-                                                        builder.create().show();
-
-
-                                                    }//end else
-
-                                            } else {
-                                                reCheck_customerAuthorize();// test
-                                            }
-                                        } else {// you should not authorize customer account balance
-
-
-                                            if(virefyMaxDescount()){
-//                                                if (!remarkEditText.getText().toString().equals("")){
-                                                AddVoucher();
-                                                clearLayoutData();
-//                                            }else{
-//                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-//                                            }
-                                            }
-
-                                            else{
-                                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
-                                                builder.setTitle(getResources().getString(R.string.app_alert));
-                                                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                                        dialogInterface.dismiss();
-
-                                                    }
-                                                });
-
-
-                                                builder.create().show();
-
-
-                                            }//end else
-                                        }
-                                }
-                                }
-                                else{// if tax ==0 or net sales==0 don't save data
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                    builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
-                                    builder.setTitle(getResources().getString(R.string.warning_message));
-                                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                        }
-
-
-                                    });
-                                    builder.create().show();
+                                else {
+                                    saveData();
 
                                 }
+
 
 //                                clearLayoutData();
                             }
@@ -824,6 +732,134 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void saveData() {
+
+        DiscountFragment obj = new DiscountFragment();
+        double discountValue = obj.getDiscountValue();
+        double discountPerc = obj.getDiscountPerc();
+
+        double totalDisc = Double.parseDouble(discTextView.getText().toString());
+        double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
+        double tax=0, netSales=0;
+        String netsale_txt="";
+        netsale_txt=netTotalTextView.getText().toString();
+        Log.e("textNt",""+netsale_txt);
+
+        try{
+            tax = Double.parseDouble(taxTextView.getText().toString());
+            netSales = Double.parseDouble(netTotalTextView.getText().toString());
+            Log.e("netSales_isnan",""+Double.isNaN(netSales));
+
+        }catch (Exception e){
+            tax=0;
+            Log.e("tax error E",""+tax+"   "+taxTextView.getText().toString());
+
+        }
+        if(netSales!=0 && !Double.isNaN(netSales) ){// test nan
+
+            Log.e("not zero ","tax="+tax+"\t"+ netSales);
+            //******************************
+
+
+
+
+            if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
+                Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                String remark = " " + remarkEditText.getText().toString();
+                salesMan = Integer.parseInt(Login.salesMan);
+
+                voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
+                        salesMan, discountValue, discountPerc, remark, payMethod,
+                        0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+                        CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
+                if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
+
+                    if (customer_is_authrized()) {
+
+
+                        if(virefyMaxDescount()){
+                            if(!remarkEditText.getText().toString().equals("")) {
+                                AddVoucher();
+                                clearLayoutData();
+                            }else{
+                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        else{
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
+                            builder.setTitle(getResources().getString(R.string.app_alert));
+                            builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+
+                                }
+                            });
+
+
+                            builder.create().show();
+
+
+                        }//end else
+
+                    } else {
+                        reCheck_customerAuthorize();// test
+                    }
+                } else {// you should not authorize customer account balance
+
+
+                    if(virefyMaxDescount()){
+//                                                if (!remarkEditText.getText().toString().equals("")){
+                        AddVoucher();
+                        clearLayoutData();
+//                                            }else{
+//                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
+//                                            }
+                    }
+
+                    else{
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
+                        builder.setTitle(getResources().getString(R.string.app_alert));
+                        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+
+                            }
+                        });
+
+
+                        builder.create().show();
+
+
+                    }//end else
+                }
+            }
+        }
+        else{// if tax ==0 or net sales==0 don't save data
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
+            builder.setTitle(getResources().getString(R.string.warning_message));
+            builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+
+
+            });
+            builder.create().show();
+
+        }
     }
 
     private void refrechItemForReprint() {
@@ -847,6 +883,9 @@ public class SalesInvoice extends Fragment {
                 case 504:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.salesRadioButton);
+                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
 
 //                                            salesRadioButton.setSelected(true);
 //                                            retSalesRadioButton.setSelected(false);
@@ -855,6 +894,9 @@ public class SalesInvoice extends Fragment {
                 case 506:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.retSalesRadioButton);
+                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
 
 //                                            salesRadioButton.setSelected(false);
 //                                            retSalesRadioButton.setSelected(true);
@@ -863,6 +905,9 @@ public class SalesInvoice extends Fragment {
                 case 508:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.orderRadioButton);
+                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
 
 //                                            salesRadioButton.setSelected(false);
 //                                            retSalesRadioButton.setSelected(false);
@@ -1119,9 +1164,9 @@ public class SalesInvoice extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100; i++) {
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -1647,8 +1692,13 @@ public class SalesInvoice extends Fragment {
         items.clear();
         itemsList.clear();
 //        calculateTotals();
+        //***********************************************
         voucherType = 504;
         salesRadioButton.setChecked(true);
+        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+        retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+        orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+        //***********************************************
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);

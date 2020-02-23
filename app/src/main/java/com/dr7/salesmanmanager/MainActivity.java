@@ -838,6 +838,7 @@ public class MainActivity extends AppCompatActivity
             final EditText orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
             final EditText paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
             final EditText paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
+            final EditText paymentEditTextCredit = (EditText) dialog.findViewById(R.id.payments_serial_creditCard);
             final EditText salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
             final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
 
@@ -863,6 +864,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
             final CheckBox hideQty_checkbox = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
             final CheckBox lockcash_checkbox = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
+            final CheckBox preventNew_checkbox = (CheckBox) dialog.findViewById(R.id.preventNewOrder_checkbox);
+            final CheckBox note_checkbox = (CheckBox) dialog.findViewById(R.id.note_checkbox);
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
@@ -874,6 +877,15 @@ public class MainActivity extends AppCompatActivity
                 orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
                 paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(1) + 1));//test
                 paymentEditTextCheque.setText("" + (mDbHandler.getMaxSerialNumber(4) + 1));
+                try {
+                    paymentEditTextCredit.setText("" + (mDbHandler.getMaxSerialNumber(2) + 1));
+                }
+                catch (Exception e)
+                {
+                    paymentEditTextCredit.setText("");
+
+                }
+
                 salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
 
                 if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
@@ -934,6 +946,12 @@ public class MainActivity extends AppCompatActivity
                 if (mDbHandler.getAllSettings().get(0).getLock_cashreport() == 1) {
                     lockcash_checkbox.setChecked(true);
                 }
+                if (mDbHandler.getAllSettings().get(0).getPriventOrder() == 1) {
+                    preventNew_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1) {
+                    note_checkbox.setChecked(true);
+                }
 
 
 
@@ -968,26 +986,38 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            okButton.setOnClickListener(new View.OnClickListener() {
+            okButton.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
                 public void onClick(View v) {
                     LocaleAppUtils.setConfigChange(MainActivity.this);
                     finish();
                     startActivity(getIntent());
                     settext2();
+                    int numOfCopys=0,invoice=0,return1=0,order=0,paymentCash=0,paymentCheque=0,paymentCredit=0;
 
                     if (!(linkEditText.getText().toString().equals(""))) {
                         if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
-                                !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals("")) {
+                                !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals("")&& !paymentEditTextCredit.getText().toString().equals("")) {
 
                             if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
                                 String link = linkEditText.getText().toString().trim();
-                                int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                                int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                                int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                                int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                                int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                                int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                                try {
+                                     numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                                    invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                                    return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                                    order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                                    paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                                    paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                                    paymentCredit = Integer.parseInt(paymentEditTextCredit.getText().toString()) - 1;
+                                }
+                                catch (Exception e)
+                                {
+                                    Toast.makeText(MainActivity.this, "Invalid Input Number", Toast.LENGTH_SHORT).show();
+                                    Log.e("SettingException",""+e.getMessage());
+
+                                }
+
 
                                 int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
                                 int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
@@ -1008,15 +1038,18 @@ public class MainActivity extends AppCompatActivity
                                 int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
                                 int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
                                 int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
+                                int preventOrder = preventNew_checkbox.isChecked() ? 1 : 0;
+                                int requiredNote = note_checkbox.isChecked() ? 1 : 0;
                                 String salesmanname=salesmanNmae.getText().toString();
 
                                 mDbHandler.deleteAllSettings();
 
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
+                                /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
+                                /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
+                              /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote);
 
                                 dialog.dismiss();
                             } else
@@ -1025,8 +1058,11 @@ public class MainActivity extends AppCompatActivity
                             Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
                         }
 
-                    } else {
+                    }
+
+                    else {
                         Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+//                        linkEditText.setError("Required");
                     }
 
 

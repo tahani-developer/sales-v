@@ -73,6 +73,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  List<Item> itemsList_forFilter;
     Context context;
 
+
     public static final int REQUEST_Camera = 1;
     private Item item;
     Button addToListButton, doneButton;
@@ -128,6 +129,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
@@ -542,7 +544,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
     private void fillListItemJson() {
         String s = "";
-
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
@@ -598,10 +599,12 @@ public class AddItemsFragment2 extends DialogFragment {
         }
     }
 
+
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
                            String category, String posPrice,CheckBox useWeight, Context context) {
+        boolean itemInlocalList=false;
 
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
@@ -623,7 +626,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
             return false;
         }
-//        else {
+
 
             item = new Item();
             item.setItemNo(itemNumber);

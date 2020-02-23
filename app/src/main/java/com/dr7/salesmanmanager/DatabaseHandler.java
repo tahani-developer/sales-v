@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 74;
+    private static final int DATABASE_VERSION = 76;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -241,6 +241,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String HideQty="HideQty";
     private static final String LockCashReport="LockCashReport";
     private static final String salesManName="salesManName";
+    private static final String PreventOrder="PreventOrder";
+    private static final String RequiredNote="RequiredNote";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -587,7 +589,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + Arabic_Language + " INTEGER,"
                 + HideQty + " INTEGER,"
                 + LockCashReport + " INTEGER,"
-                + salesManName + " TEXT"
+                + salesManName + " TEXT,"
+                + PreventOrder + " INTEGER,"
+                + RequiredNote + " INTEGER"
+
+
 
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
@@ -738,6 +744,19 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -1279,7 +1298,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
-                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name) {
+                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1308,6 +1327,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(HideQty,hideQty);
         values.put(LockCashReport,lock_cashreport);
         values.put(salesManName,salesman_name);
+        values.put(PreventOrder,preventOrder);
+        values.put(RequiredNote,requiNote);
+
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -1600,6 +1622,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 setting.setLock_cashreport(Integer.parseInt(cursor.getString(23)));
                 setting.setSalesMan_name(cursor.getString(24));
+                setting.setPriventOrder(Integer.parseInt(cursor.getString(25)));//for test
+                setting.setRequiNote(Integer.parseInt(cursor.getString(26)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
