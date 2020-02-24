@@ -368,7 +368,7 @@
                     tools:visibility="gone" />
 
                 <TextView
-                    android:id="@+id/textView37"
+                    android:id="@+id/textViewPrice"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -377,7 +377,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/textView38"
+                    android:id="@+id/textViewTotal"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -444,6 +444,7 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/rowTotal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -466,6 +467,7 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/rowDiscount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -488,6 +490,7 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/rowTax"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -510,6 +513,7 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/rowNetTotal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

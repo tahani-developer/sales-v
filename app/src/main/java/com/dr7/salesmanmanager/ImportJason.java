@@ -260,6 +260,7 @@ public class ImportJason extends AppCompatActivity{
                 String finalJson = sb.toString();
                 Log.e("finalJson*********" , finalJson);
                 String rate_customer="";
+                String HideVal="";
 
                 JSONObject parentObject = new JSONObject(finalJson);
                 try
@@ -307,6 +308,23 @@ public class ImportJason extends AppCompatActivity{
                         Customer.setACCPRC("0");
 
                     }
+                    //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
 
                     customerList.add(Customer);
                 }

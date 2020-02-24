@@ -46,6 +46,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
 
         return new viewHolder(view);

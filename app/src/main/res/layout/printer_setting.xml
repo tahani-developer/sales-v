@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Print name shape "
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <RadioGroup
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:checked="true"
             android:text="SEWOOLK-P30"
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/LK31"
@@ -71,7 +71,7 @@
             android:layout_height="50dp"
             android:text="SEWOO LK-P31"
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/LK32"
@@ -79,7 +79,7 @@
             android:layout_height="50dp"
             android:text="SEWOO LK-P32 "
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/QS"
@@ -87,7 +87,7 @@
             android:layout_height="50dp"
             android:text="QS-PRINTER"
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/dotMatrix"
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:text="Dot-Matrix Printer (Tally MDP 480+)"
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/MTP"
@@ -105,7 +105,7 @@
             android:layout_weight="1"
             android:text="PRINTER (MTP-3)"
             android:textColor="@color/add_button"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </RadioGroup>
 
     <Button
@@ -116,5 +116,5 @@
         android:background="@color/done_button"
         android:text="@string/save"
         android:textColor="@color/layer3"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 </LinearLayout>

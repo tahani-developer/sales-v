@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
@@ -69,11 +70,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ReceiptVoucher extends Fragment {
-
+    private CircleImageView rePrintimage;
     private static DatabaseHandler mDbHandler;
     private int voucherNumber;
     PrintPic printPic;
@@ -91,12 +94,12 @@ public class ReceiptVoucher extends Fragment {
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
     private TextView voucherNo, paymentTerm;
-    int   voucherType=1;
+    int voucherType = 1;
 
     private double total = 0.0;
 
     String itemsString = "";
-    boolean isFinishPrint=false;
+    boolean isFinishPrint = false;
 
     private EditText amountEditText, remarkEditText;
     private TableLayout tableCheckData;
@@ -121,6 +124,12 @@ public class ReceiptVoucher extends Fragment {
     int readBufferPosition;
     int counter;
     volatile boolean stopWorker;
+    int voucherNoReprint = 0;
+    public static Payment payment_rePrint;
+
+    public static List<Payment> paymentPrinter;
+    static Payment pay1;
+
 
    /* public static void test3(){
         customername.setText(CustomerListFragment.Customer_Name.toString());
@@ -166,10 +175,34 @@ public class ReceiptVoucher extends Fragment {
         voucherNo = (TextView) view.findViewById(R.id.voucher_no);
         paymentTerm = (TextView) view.findViewById(R.id.payment_term);
         addCheckButton = (Button) view.findViewById(R.id.addCheck);
-        animZoomIn = (Animation) AnimationUtils.loadAnimation(this.getActivity().getBaseContext(),R.anim.zoom_in);
+        animZoomIn = (Animation) AnimationUtils.loadAnimation(this.getActivity().getBaseContext(), R.anim.zoom_in);
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
-        pic=(ImageView)view.findViewById(R.id.pic_receipt);
-        paymentsforPrint=new ArrayList<>();
+        pic = (ImageView) view.findViewById(R.id.pic_receipt);
+        paymentsforPrint = new ArrayList<>();
+        rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
+
+//
+//        vouchers = obj.getAllVouchers();
+
+        rePrintimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    voucherNoReprint = mDbHandler.getLastVoucherNo_payment();
+                    Log.e("voucherNoRe", "" + voucherNoReprint);
+                    if (voucherNoReprint != 0) {
+                        printLastPaymentpaper(voucherNoReprint);
+                    } else {
+                        Toast.makeText(context, "No Payment For This Customer", Toast.LENGTH_SHORT).show();
+                    }
+
+//
+                } catch (Exception e) {
+                    Log.e("ExcepvoucherNoRe", "" + e.getMessage());
+                    voucherNoReprint = 0;
+                }
+            }
+        });
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
@@ -212,13 +245,6 @@ public class ReceiptVoucher extends Fragment {
                 Button okButton = (Button) dialog.findViewById(R.id.button1);
                 Button cancelButton = (Button) dialog.findViewById(R.id.button2);
 
-//                ArrayList<String> kinds = new ArrayList<>();
-//                kinds.add(getResources().getString(R.string.cash));
-//                kinds.add(getResources().getString(R.string.app_cheque));
-//
-//                ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
-//                paymentKindSpinner.setAdapter(paymentKind);
-
                 myCalendar = Calendar.getInstance();
                 chDate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -252,9 +278,9 @@ public class ReceiptVoucher extends Fragment {
                                     check.setAmount(Double.parseDouble(chValue.getText().toString()));
                                     payments.add(check);
                                     paymentsforPrint.add(check);
-                                    Log.e("payments",""+payments.size());
-                                    Log.e("payments tsst",""+payments.size()+" "+chNum.getText().toString()+" \n"+bank.getSelectedItem().toString()
-                                    +"\n"+chDate.getText().toString()+"\n"+chValue.getText().toString());
+                                    Log.e("payments", "" + payments.size());
+                                    Log.e("payments tsst", "" + payments.size() + " " + chNum.getText().toString() + " \n" + bank.getSelectedItem().toString()
+                                            + "\n" + chDate.getText().toString() + "\n" + chValue.getText().toString());
 
                                     row.setTag(position);
                                     for (int i = 0; i < 4; i++) {
@@ -278,7 +304,6 @@ public class ReceiptVoucher extends Fragment {
                                         row.addView(textView);
 
 
-
                                     }
 
                                     row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -291,8 +316,8 @@ public class ReceiptVoucher extends Fragment {
                                             builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    int tag=Integer.parseInt(row.getTag().toString());
-                                                    payments.remove(tag-1);
+                                                    int tag = Integer.parseInt(row.getTag().toString());
+                                                    payments.remove(tag - 1);
                                                     tableCheckData.removeView(row);
                                                     total = total - Double.parseDouble(chValue.getText().toString());
                                                     chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
@@ -320,14 +345,13 @@ public class ReceiptVoucher extends Fragment {
                                 } else {
                                     Toast.makeText(getActivity(), "Cheque Total is greater than Amount value", Toast.LENGTH_SHORT).show();
                                 }
-                            }  else {
+                            } else {
                                 Toast.makeText(getActivity(), "Please Enter Amount greater than  0 ", Toast.LENGTH_SHORT).show();
                             }
 
-                            }
-                            else
-                                Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
-                        }
+                        } else
+                            Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
+                    }
                 });
 
                 cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -352,6 +376,8 @@ public class ReceiptVoucher extends Fragment {
         ArrayList<String> kinds = new ArrayList<>();
         kinds.add(getResources().getString(R.string.cash));
         kinds.add(getResources().getString(R.string.app_cheque));
+        kinds.add(getResources().getString(R.string.app_creditCard));
+
 
         ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
         paymentKindSpinner.setAdapter(paymentKind);
@@ -387,7 +413,7 @@ public class ReceiptVoucher extends Fragment {
                     e.printStackTrace();
                 }
 
-              //  saveData.setAnimation(animZoomIn);
+                //  saveData.setAnimation(animZoomIn);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
@@ -401,127 +427,17 @@ public class ReceiptVoucher extends Fragment {
                         String s = amountEditText.getText().toString();
                         String spinner = paymentKindSpinner.getSelectedItem().toString();
                         if (spinner == getResources().getString(R.string.cash)) {
-                            if (!s.equals("") && Double.parseDouble(s) != 0)
-                            {voucherType=1;
+                            if (!s.equals("") && Double.parseDouble(s) != 0) {
+                                voucherType = 1;
+                                saveAmount(voucherType);
 
-
-                                Toast.makeText(getActivity(), "Amount Saved***", Toast.LENGTH_LONG).show();
-
-                                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String payDate =convertToEnglish( df.format(currentTimeAndDate));
-
-
-                                SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
-                                String paymentYear = df2.format(currentTimeAndDate);
-
-                                String cusNumber = (CustomerListShow.Customer_Account);
-                                String cusName = CustomerListShow.Customer_Name;
-                                String remark = remarkEditText.getText().toString();
-                                // if(!(amountEditText.getText().toString().equals(""))) {
-                                Double amount = Double.parseDouble(amountEditText.getText().toString());
-
-
-                                int salesMan = Integer.parseInt(Login.salesMan);
-
-                                payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 1, Integer.parseInt(paymentYear));
-                                mDbHandler.addPayment(payment);
-
-//                                else{
-//                                    Toast.makeText(getActivity(), "Please enter the amount", Toast.LENGTH_SHORT).show();
-//                                }
-
-                                // for english
-//                                Intent intent = new Intent(getActivity(), BluetoothConnectMenu.class);
-//                                intent.putExtra("flag" , "1");
-//                                startActivity(intent);
-                                CompanyInfo companyInfo=new CompanyInfo();
-                                try {
-                                    int printer = mDbHandler.getPrinterSetting();
-                                    companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
-
-                                        switch (printer) {
-                                            case 0:
-                                                Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
-                                                i.putExtra("printKey", "2");
-                                                startActivity(i);
-
-//                                                             lk30.setChecked(true);
-                                                break;
-                                            case 1:
-
-                                                try {
-                                                    findBT();
-                                                    openBT(1);
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-//                                                             lk31.setChecked(true);
-                                                break;
-                                            case 2:
-
-//                                                try {
-//                                                    findBT();
-//                                                    openBT(2);
-//                                                } catch (IOException e) {
-//                                                    e.printStackTrace();
-//                                                }
-                                                convertLayoutToImage(getActivity());
-                                                Intent O1 = new Intent(getActivity(), bMITP.class);
-                                                O1.putExtra("printKey", "2");
-                                                startActivity(O1);
-//                                                             lk32.setChecked(true);
-                                                break;
-                                            case 3:
-
-                                                try {
-                                                    findBT();
-                                                    openBT(3);
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-//                                                             qs.setChecked(true);
-                                                break;
-                                            case 4:
-                                                printTally();
-                                                break;
-                                            case 5:
-
-                                                convertLayoutToImage(getActivity());
-                                                Intent O = new Intent(getActivity(), bMITP.class);
-                                                O.putExtra("printKey", "2");
-                                                startActivity(O);
-//                                                             MTP.setChecked(true);
-                                                break;
-
-                                        }
-                                    } else {
-                                        Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
-
-                                    }
-                                }
-                                catch(Exception e){
-                                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
-
-                                }
-
-
-
-
-//                                try {
-//                                    findBT();
-//                                    openBT();
-//                                } catch (IOException ex) {
-//                                }
-
-
-
-
-                                mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
-                                clearForm();
-
+                            } else {
+                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                            }
+                        } else if (spinner == getResources().getString(R.string.app_creditCard)) {
+                            if (!s.equals("") && Double.parseDouble(s) != 0) {
+                                voucherType = 2;
+                                saveAmount(voucherType);
 
                             } else {
                                 Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
@@ -530,122 +446,8 @@ public class ReceiptVoucher extends Fragment {
                             if (!checkValue())
                                 Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
                             else {
-                                Toast.makeText(getActivity(), "Amount Saved", Toast.LENGTH_LONG).show();
-                                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                                String payDate = convertToEnglish(df.format(currentTimeAndDate));
 
-                                SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
-                                String paymentYear = df2.format(currentTimeAndDate);
-
-                                String cusNumber = CustomerListShow.Customer_Account;
-                                String cusName = CustomerListShow.Customer_Name;
-                                Double amount = Double.parseDouble(amountEditText.getText().toString());
-                                String remark = remarkEditText.getText().toString();
-
-                                int salesMan = Integer.parseInt(Login.salesMan);
-
-                                payment = new Payment(0, voucherNumber, salesMan, payDate,
-                                        remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
-                                mDbHandler.addPayment(payment);
-
-                                itemsString = "";
-                                for (int i = 0; i < payments.size(); i++) {
-                                    mDbHandler.addPaymentPaper(new Payment(0, voucherNumber, payments.get(i).getCheckNumber(),
-                                            payments.get(i).getBank(), payments.get(i).getDueDate(), payments.get(i).getAmount(),
-                                            0, Integer.parseInt(paymentYear)));
-
-
-                                    String row = ".                                             ";
-                                    row = row.substring(0, 13) + payments.get(i).getCheckNumber() + row.substring(13, row.length());
-                                    row = row.substring(0, 24) + payments.get(i).getDueDate() + row.substring(24, row.length());
-                                    row = row.substring(0, 38) + payments.get(i).getAmount() + row.substring(38, row.length()) + "\n";
-//                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
-                                    row = row.trim();
-                                    row += "\n" + " " + payments.get(i).getBank();//test + =
-
-                                    itemsString = "\n" + itemsString + "\n" + row;
-
-                                    mDbHandler.setMaxSerialNumber(4, voucherNumber);
-                                }
-
-
-
-
-                                int printer = mDbHandler.getPrinterSetting();
-
-                                switch (printer) {
-                                    case 0:
-
-                                        Intent i=new Intent(getActivity(),BluetoothConnectMenu.class);
-                                        i.putExtra("printKey","2");
-                                        startActivity(i);
-
-//                                                             lk30.setChecked(true);
-                                        break;
-                                    case 1:
-
-                                        try {
-                                            findBT();
-                                            openBT(1);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-//                                                             lk31.setChecked(true);
-                                        break;
-                                    case 2:
-
-//                                        try {
-//                                            findBT();
-//                                            openBT(2);
-//                                        } catch (IOException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                                             lk32.setChecked(true);
-
-                                        convertLayoutToImage(getActivity());
-                                        Intent O = new Intent(getActivity(), bMITP.class);
-                                        O.putExtra("printKey", "2");
-                                        startActivity(O);
-
-                                        break;
-                                    case 3:
-
-                                        try {
-                                            findBT();
-                                            openBT(3);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-//                                                             qs.setChecked(true);
-                                        break;
-                                    case 4:
-                                        printTally();
-                                        break;
-
-                                    case 5:
-                                        convertLayoutToImage(getActivity());
-                                        Intent O1 = new Intent(getActivity(), bMITP.class);
-                                        O1.putExtra("printKey", "2");
-                                        startActivity(O1);
-
-                                        break;
-//                                                             MTP.setChecked(true);
-
-                                }
-
-
-//
-//                                try {
-//                                    findBT();
-//                                    openBT();
-//                                } catch (IOException ex) {
-//                                }
-
-
-
-
-                                clearForm();
+                                saveChequ();
                             }
                         }
                     }
@@ -668,25 +470,41 @@ public class ReceiptVoucher extends Fragment {
             }
         };
 
-      // custInfoImgButton.setOnClickListener(onClickListener);
+        // custInfoImgButton.setOnClickListener(onClickListener);
 
         paymentKindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {//cash
+                if (i == 0 || i==2) {//cash
                     chequeLayout.setVisibility(View.INVISIBLE);
                     scrollView.setVisibility(View.INVISIBLE);
                     addCheckButton.setVisibility(View.INVISIBLE);
                     tableCheckData.setVisibility(View.INVISIBLE);
-                    voucherType=1;
-                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
-                } else {
+                    if(i==0)
+                    {
+                        voucherType = 1;//cash
+                    }
+                    else if (i==2)
+                    {
+                        voucherType = 2;//credit
+
+                    }
+
+
+                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                 //for test 1
+                    voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+                }
+
+
+                else {
                     chequeLayout.setVisibility(View.VISIBLE);
                     scrollView.setVisibility(View.VISIBLE);
                     addCheckButton.setVisibility(View.VISIBLE);
                     tableCheckData.setVisibility(View.VISIBLE);
-                    voucherType=4;
+                    voucherType = 4;//chequ
                     voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+                    voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
                 }
             }
 
@@ -699,23 +517,332 @@ public class ReceiptVoucher extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void saveChequ() {
+        Toast.makeText(getActivity(), "Amount Saved", Toast.LENGTH_LONG).show();
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String payDate = convertToEnglish(df.format(currentTimeAndDate));
+
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
+        String paymentYear = df2.format(currentTimeAndDate);
+
+        String cusNumber = CustomerListShow.Customer_Account;
+        String cusName = CustomerListShow.Customer_Name;
+        Double amount = Double.parseDouble(amountEditText.getText().toString());
+        String remark = remarkEditText.getText().toString();
+
+        int salesMan = Integer.parseInt(Login.salesMan);
+
+        payment = new Payment(0, voucherNumber, salesMan, payDate,
+                remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
+        mDbHandler.addPayment(payment);
+
+        itemsString = "";
+        for (int i = 0; i < payments.size(); i++) {
+            mDbHandler.addPaymentPaper(new Payment(0, voucherNumber, payments.get(i).getCheckNumber(),
+                    payments.get(i).getBank(), payments.get(i).getDueDate(), payments.get(i).getAmount(),
+                    0, Integer.parseInt(paymentYear)));
+
+
+            String row = ".                                             ";
+            row = row.substring(0, 13) + payments.get(i).getCheckNumber() + row.substring(13, row.length());
+            row = row.substring(0, 24) + payments.get(i).getDueDate() + row.substring(24, row.length());
+            row = row.substring(0, 38) + payments.get(i).getAmount() + row.substring(38, row.length()) + "\n";
+//                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
+            row = row.trim();
+            row += "\n" + " " + payments.get(i).getBank();//test + =
+
+            itemsString = "\n" + itemsString + "\n" + row;
+
+            mDbHandler.setMaxSerialNumber(4, voucherNumber);
+        }
+
+
+        int printer = mDbHandler.getPrinterSetting();
+
+        switch (printer) {
+            case 0:
+
+                Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                i.putExtra("printKey", "2");
+                startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                break;
+            case 1:
+
+                try {
+                    findBT();
+                    openBT(1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                                                             lk31.setChecked(true);
+                break;
+            case 2:
+
+//                                        try {
+//                                            findBT();
+//                                            openBT(2);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                                             lk32.setChecked(true);
+
+                convertLayoutToImage(getActivity());
+                Intent O = new Intent(getActivity(), bMITP.class);
+                O.putExtra("printKey", "2");
+                startActivity(O);
+
+                break;
+            case 3:
+
+                try {
+                    findBT();
+                    openBT(3);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                                                             qs.setChecked(true);
+                break;
+            case 4:
+                printTally();
+                break;
+
+            case 5:
+                convertLayoutToImage(getActivity());
+                Intent O1 = new Intent(getActivity(), bMITP.class);
+                O1.putExtra("printKey", "2");
+                startActivity(O1);
+
+                break;
+//                                                             MTP.setChecked(true);
+
+        }
+
+
+        clearForm();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void saveAmount(int voucherType) {
+
+
+        Toast.makeText(getActivity(), "Amount Saved***", Toast.LENGTH_LONG).show();
+
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        String payDate = convertToEnglish(df.format(currentTimeAndDate));
+
+
+        SimpleDateFormat df2 = new SimpleDateFormat("yyyy");
+        String paymentYear = df2.format(currentTimeAndDate);
+
+        String cusNumber = (CustomerListShow.Customer_Account);
+        String cusName = CustomerListShow.Customer_Name;
+        String remark = remarkEditText.getText().toString();
+        // if(!(amountEditText.getText().toString().equals(""))) {
+        Double amount = Double.parseDouble(amountEditText.getText().toString());
+
+
+        int salesMan = Integer.parseInt(Login.salesMan);
+
+        payment = new Payment(0, voucherNumber, salesMan, payDate,
+                remark, amount, 0, cusNumber, cusName, voucherType, Integer.parseInt(paymentYear));
+        mDbHandler.addPayment(payment);
+        CompanyInfo companyInfo = new CompanyInfo();
+        try {
+            int printer = mDbHandler.getPrinterSetting();
+            companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+
+                switch (printer) {
+                    case 0:
+                        Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                        i.putExtra("printKey", "2");
+                        startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                        break;
+                    case 1:
+
+                        try {
+                            findBT();
+                            openBT(1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                                                             lk31.setChecked(true);
+                        break;
+                    case 2:
+
+//                                                try {
+//                                                    findBT();
+//                                                    openBT(2);
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+                        convertLayoutToImage(getActivity());
+                        Intent O1 = new Intent(getActivity(), bMITP.class);
+                        O1.putExtra("printKey", "2");
+                        startActivity(O1);
+//                                                             lk32.setChecked(true);
+                        break;
+                    case 3:
+
+                        try {
+                            findBT();
+                            openBT(3);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                                                             qs.setChecked(true);
+                        break;
+                    case 4:
+                        printTally();
+                        break;
+                    case 5:
+
+                        convertLayoutToImage(getActivity());
+                        Intent O = new Intent(getActivity(), bMITP.class);
+                        O.putExtra("printKey", "2");
+                        startActivity(O);
+//                                                             MTP.setChecked(true);
+                        break;
+
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+        }
+
+        mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+        clearForm();
+    }
+
+
+    //    pay = payment.get(n);
+    private void printLastPaymentpaper(int voucherNo) {
+        payment_rePrint = mDbHandler.getPayments_voucherNo(voucherNo);
+        Log.e("payment_rePrint", "" + payment_rePrint.getCustName());
+        if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+//                                                     try {
+//            Log.e("pay", "  " + pay.getVoucherNumber());
+            try {
+
+                int printer = mDbHandler.getPrinterSetting();
+
+
+                switch (printer) {
+                    case 0:
+                        pay1 = payment_rePrint;
+                        paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                        i.putExtra("printKey", "8");
+                        startActivity(i);
+
+//                                                             lk30.setChecked(true);
+                        break;
+                    case 1:
+
+//                        try {
+//                            findBT(voucherNo);
+//                            openBT(payment_rePrint, 1);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+////                                                             lk31.setChecked(true);
+//                        break;
+                    case 2:
+
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+//                                                                    openBT(pay, 2);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
+
+                        paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        pay1 = payment_rePrint;
+//                        convertLayoutToImage(payment_rePrint);
+                        Intent O = new Intent(getActivity(), bMITP.class);
+                        O.putExtra("printKey", "8");
+                        startActivity(O);
+                        Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+
+
+//                                                             lk32.setChecked(true);
+                        break;
+                    case 3:
+
+//                        try {
+//                            findBT(Integer.parseInt(voucherNo);
+//                            openBT(pay, 3);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                                                             qs.setChecked(true);
+                        break;
+
+                    case 4:
+//                        printTally();
+//                        break;
+//
+
+                    case 5:
+
+
+                        paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
+                        pay1 = payment_rePrint;
+//                        convertLayoutToImage(pay);
+                        Intent O1 = new Intent(getActivity(), bMITP.class);
+                        O1.putExtra("printKey", "8");
+                        startActivity(O1);
+                        Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+
+//                                                                MTP.setChecked(true);
+
+                }
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+//
+//                                                         master(vouch);
+//                                                     testB =convertLayoutToImage(v);
+
+
+//                                                     } catch (IOException ex) {
+//                                                     }
+        } else {
+//            hiddenDialog(pay);
+        }
+    }
+
     public void clearForm() {
         tableCheckData.removeAllViews();
         amountEditText.setText("");
         remarkEditText.setText("");
         paymentKindSpinner.setSelection(0);
         chequeTotal.setText("0.00");
-        total=0.0;
+        total = 0.0;
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;//test 0
-       // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+        // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
         payments.clear();
     }
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
-
 
 
     private Boolean checkTotal(String s) {
@@ -729,8 +856,8 @@ public class ReceiptVoucher extends Fragment {
     }
 
     private Boolean checkValue() {
-       String total_convert= convertToEnglish(new DecimalFormat("##.###").format(total));
-       Double total_double=Double.parseDouble(total_convert);
+        String total_convert = convertToEnglish(new DecimalFormat("##.###").format(total));
+        Double total_double = Double.parseDouble(total_convert);
         if (total_double != Double.parseDouble(amountEditText.getText().toString())) {
             return false;
         }
@@ -832,16 +959,17 @@ public class ReceiptVoucher extends Fragment {
             beginListenForData();
 
 
-            switch (casePrinter){
+            switch (casePrinter) {
 
                 case 1:
                     sendData();
                     break;
                 case 2:
                     Settings settings = mDbHandler.getAllSettings().get(0);
-                    for(int i=0;i<settings.getNumOfCopy();i++) {
+                    for (int i = 0; i < settings.getNumOfCopy(); i++) {
                         Thread.sleep(1000);
-                        send_dataSewoo();}
+                        send_dataSewoo();
+                    }
                     break;
                 case 3:
                     sendData2();
@@ -862,16 +990,14 @@ public class ReceiptVoucher extends Fragment {
 
     void send_dataSewoo() throws IOException {
         try {
-            Log.e("send","'yes");
-            testB =convertLayoutToImage(getActivity());
+            Log.e("send", "'yes");
+            testB = convertLayoutToImage(getActivity());
 
             printPic = PrintPic.getInstance();
             printPic.init(testB);
-            printIm= printPic.printDraw();
+            printIm = printPic.printDraw();
             mmOutputStream.write(printIm);
-            isFinishPrint=true;
-
-
+            isFinishPrint = true;
 
 
 //            dialogs.show();
@@ -881,7 +1007,6 @@ public class ReceiptVoucher extends Fragment {
 //            iv.setImageBitmap(testB);
 //                iv.setMaxHeight(100);
 //                iv.setMaxWidth(100);
-
 
 
         } catch (NullPointerException e) {
@@ -931,33 +1056,33 @@ public class ReceiptVoucher extends Fragment {
 
 
     public Bitmap convertLayoutToImage(Context context) {
-        LinearLayout linearView=null;
+        LinearLayout linearView = null;
 
-        final Dialog dialogs=new Dialog(getActivity());
+        final Dialog dialogs = new Dialog(getActivity());
         dialogs.setContentView(R.layout.print_payment_cash);
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 //*******************************************initial ***************************************************************
-        TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
-        LinearLayout cheque_print_linear=(LinearLayout)dialogs.findViewById(R.id.cheque_payment_layout) ;
-        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
-        tel=(TextView)dialogs.findViewById(R.id.telephone);
-        taxNo=(TextView)dialogs.findViewById(R.id.tax_no);
-        cashNo=(TextView)dialogs.findViewById(R.id.textView_cashNo);
-        date=(TextView)dialogs.findViewById(R.id.textVie_date);
-        custname=(TextView)dialogs.findViewById(R.id.textView_customerName);
-        note=(TextView)dialogs.findViewById(R.id.textView_remark);
-        ammont=(TextView)dialogs.findViewById(R.id.textView_amount_ofMoney);
-        paytype=(TextView)dialogs.findViewById(R.id.textView_payMethod);
-        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
-        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+        TextView compname, tel, taxNo, cashNo, date, custname, note, paytype, ammont;
+        LinearLayout cheque_print_linear = (LinearLayout) dialogs.findViewById(R.id.cheque_payment_layout);
+        compname = (TextView) dialogs.findViewById(R.id.textView_companey_Name);
+        tel = (TextView) dialogs.findViewById(R.id.telephone);
+        taxNo = (TextView) dialogs.findViewById(R.id.tax_no);
+        cashNo = (TextView) dialogs.findViewById(R.id.textView_cashNo);
+        date = (TextView) dialogs.findViewById(R.id.textVie_date);
+        custname = (TextView) dialogs.findViewById(R.id.textView_customerName);
+        note = (TextView) dialogs.findViewById(R.id.textView_remark);
+        ammont = (TextView) dialogs.findViewById(R.id.textView_amount_ofMoney);
+        paytype = (TextView) dialogs.findViewById(R.id.textView_payMethod);
+        TableLayout tableCheque = (TableLayout) dialogs.findViewById(R.id.table_bank_info);
+        ImageView companey_logo = (ImageView) dialogs.findViewById(R.id.imageCompaney_logo);
 
 
-        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
         doneinsewooprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(isFinishPrint) {
+                if (isFinishPrint) {
                     try {
                         closeBT();
                     } catch (IOException e) {
@@ -969,106 +1094,104 @@ public class ReceiptVoucher extends Fragment {
         });
 
 //************************************************fill layout *********************************************************************
-        if(companyInfo.getLogo()!=null)
-        {
+        if (companyInfo.getLogo() != null) {
             companey_logo.setImageBitmap(companyInfo.getLogo());
 
         }
-        compname.setText(companyInfo.getCompanyName() );
-        tel.setText(""+companyInfo.getcompanyTel());
-        taxNo.setText(""+companyInfo.getTaxNo() );
-        ammont.setText(payment.getAmount()+"");
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        ammont.setText(payment.getAmount() + "");
         note.setText(payment.getRemark());
-        if(payment.getPayMethod()==1) {
+        if (payment.getPayMethod() == 1) {
             paytype.setText(" نقدا ");
             cheque_print_linear.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             paytype.setText(" ذمم  ");
             cheque_print_linear.setVisibility(View.VISIBLE);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
             lp.setMargins(0, 7, 0, 0);
             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
             lp2.setMargins(0, 7, 0, 0);
 
             for (int n = 0; n < payments.size(); n++) {
 //                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
-                    final TableRow row = new TableRow(this.getActivity());
-                    row.setPadding(0, 10, 0, 10);
-                    Log.e("paymentprint",""+payments.size());
-                    for (int i = 0; i < 4; i++) {
+                final TableRow row = new TableRow(this.getActivity());
+                row.setPadding(0, 10, 0, 10);
+                Log.e("paymentprint", "" + payments.size());
+                for (int i = 0; i < 4; i++) {
 
-                        String[] record = {
-                                payments.get(n).getBank() + "",
-                                payments.get(n).getCheckNumber() + "",
-                                payments.get(n).getDueDate() + "",
-                                payments.get(n).getAmount() + "",
-                        };
+                    String[] record = {
+                            payments.get(n).getBank() + "",
+                            payments.get(n).getCheckNumber() + "",
+                            payments.get(n).getDueDate() + "",
+                            payments.get(n).getAmount() + "",
+                    };
 
-                        row.setLayoutParams(lp);
-                        TextView textView = new TextView(this.getActivity());
-                        textView.setText(record[i]);
-                        textView.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary));
-                        textView.setGravity(Gravity.CENTER);
-                        textView.setTextSize(18);
-                        textView.setLayoutParams(lp2);
-                        row.addView(textView);
+                    row.setLayoutParams(lp);
+                    TextView textView = new TextView(this.getActivity());
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(this.getActivity(), R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
 
-                    }
-
-                    tableCheque.addView(row);
                 }
+
+                tableCheque.addView(row);
+            }
 //            }
         }
 
 
         custname.setText(payment.getCustName());
         date.setText(payment.getPayDate());
-        cashNo.setText(payment.getVoucherNumber()+"");
+        cashNo.setText(payment.getVoucherNumber() + "");
         dialogs.show();
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
-        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_invoice);
+        linearView = (LinearLayout) dialogs.findViewById(R.id.print_invoice);
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
 
-        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
 
         linearView.setDrawingCacheEnabled(true);
         linearView.buildDrawingCache();
-        Bitmap bit =linearView.getDrawingCache();
+        Bitmap bit = linearView.getDrawingCache();
         return bit;// creates bitmap and returns the same
     }
 
     private Bitmap convertLayoutToImageTally() {
-        LinearLayout linearView=null;
+        LinearLayout linearView = null;
 
-        final Dialog dialogs=new Dialog(getActivity());
+        final Dialog dialogs = new Dialog(getActivity());
         dialogs.setContentView(R.layout.print_payment_cash_tally);
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
 //*******************************************initial ***************************************************************
-        TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
-        LinearLayout cheque_print_linear=(LinearLayout)dialogs.findViewById(R.id.cheque_payment_layout) ;
-        compname=(TextView)dialogs.findViewById(R.id.textView_companey_Name);
-        tel=(TextView)dialogs.findViewById(R.id.telephone);
-        taxNo=(TextView)dialogs.findViewById(R.id.tax_no);
-        cashNo=(TextView)dialogs.findViewById(R.id.textView_cashNo);
-        date=(TextView)dialogs.findViewById(R.id.textVie_date);
-        custname=(TextView)dialogs.findViewById(R.id.textView_customerName);
-        note=(TextView)dialogs.findViewById(R.id.textView_remark);
-        ammont=(TextView)dialogs.findViewById(R.id.textView_amount_ofMoney);
-        paytype=(TextView)dialogs.findViewById(R.id.textView_payMethod);
-        TableLayout tableCheque=(TableLayout)dialogs.findViewById(R.id.table_bank_info);
-        ImageView companey_logo=(ImageView)dialogs.findViewById(R.id.imageCompaney_logo);
+        TextView compname, tel, taxNo, cashNo, date, custname, note, paytype, ammont;
+        LinearLayout cheque_print_linear = (LinearLayout) dialogs.findViewById(R.id.cheque_payment_layout);
+        compname = (TextView) dialogs.findViewById(R.id.textView_companey_Name);
+        tel = (TextView) dialogs.findViewById(R.id.telephone);
+        taxNo = (TextView) dialogs.findViewById(R.id.tax_no);
+        cashNo = (TextView) dialogs.findViewById(R.id.textView_cashNo);
+        date = (TextView) dialogs.findViewById(R.id.textVie_date);
+        custname = (TextView) dialogs.findViewById(R.id.textView_customerName);
+        note = (TextView) dialogs.findViewById(R.id.textView_remark);
+        ammont = (TextView) dialogs.findViewById(R.id.textView_amount_ofMoney);
+        paytype = (TextView) dialogs.findViewById(R.id.textView_payMethod);
+        TableLayout tableCheque = (TableLayout) dialogs.findViewById(R.id.table_bank_info);
+        ImageView companey_logo = (ImageView) dialogs.findViewById(R.id.imageCompaney_logo);
 
 
-        TextView doneinsewooprint =(TextView) dialogs.findViewById(R.id.done);
+        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
         doneinsewooprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(isFinishPrint) {
+                if (isFinishPrint) {
                     try {
                         closeBT();
                     } catch (IOException e) {
@@ -1084,24 +1207,22 @@ public class ReceiptVoucher extends Fragment {
         companey_logo.setVisibility(View.INVISIBLE);
         compname.setVisibility(View.INVISIBLE);
 
-        if(!companyInfo.getLogo().equals(null))
-        {
+        if (!companyInfo.getLogo().equals(null)) {
             companey_logo.setImageBitmap(companyInfo.getLogo());
 
         }
-        compname.setText(companyInfo.getCompanyName() );
-        tel.setText(""+companyInfo.getcompanyTel());
-        taxNo.setText(""+companyInfo.getTaxNo() );
-        ammont.setText(payment.getAmount()+"");
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        ammont.setText(payment.getAmount() + "");
         note.setText(payment.getRemark());
-        if(payment.getPayMethod()==1) {
+        if (payment.getPayMethod() == 1) {
             paytype.setText(" نقدا ");
             cheque_print_linear.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             paytype.setText(" ذمم  ");
             cheque_print_linear.setVisibility(View.VISIBLE);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
             lp.setMargins(0, 7, 0, 0);
             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
             lp2.setMargins(0, 7, 0, 0);
@@ -1110,7 +1231,7 @@ public class ReceiptVoucher extends Fragment {
 //                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
                 final TableRow row = new TableRow(this.getActivity());
                 row.setPadding(0, 10, 0, 10);
-                Log.e("paymentprint",""+payments.size());
+                Log.e("paymentprint", "" + payments.size());
                 for (int i = 0; i < 4; i++) {
 
                     String[] record = {
@@ -1139,16 +1260,16 @@ public class ReceiptVoucher extends Fragment {
 
         custname.setText(payment.getCustName());
         date.setText(payment.getPayDate());
-        cashNo.setText(payment.getVoucherNumber()+"");
+        cashNo.setText(payment.getVoucherNumber() + "");
 //        dialogs.show();
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
-        linearView  = (LinearLayout)dialogs.findViewById(R.id.print_invoice);
+        linearView = (LinearLayout) dialogs.findViewById(R.id.print_invoice);
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
 
-        Log.e("size of img ","width="+ linearView.getMeasuredWidth()+"      higth ="+linearView.getHeight());
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
 
 //        linearView.setDrawingCacheEnabled(true);
 //        linearView.buildDrawingCache();
@@ -1166,6 +1287,7 @@ public class ReceiptVoucher extends Fragment {
 
         return bitmap;// creates bitmap and returns the same
     }
+
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.
     void beginListenForData() {
@@ -1240,7 +1362,7 @@ public class ReceiptVoucher extends Fragment {
             Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            String nameCompany=companyInfo.getCompanyName().toString();
+            String nameCompany = companyInfo.getCompanyName().toString();
 
             // the text typed by the user
             String msg;
@@ -1254,14 +1376,14 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
                             "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                            "ملاحظة: "+ payment.getRemark() + "\n" +
+                            "ملاحظة: " + payment.getRemark() + "\n" +
                             payment.getCustName() + "\n" +
-                            "وصلني من السيد/السادة: "  + "\n" +
+                            "وصلني من السيد/السادة: " + "\n" +
                             "       " + "\n" +
-                            "رقم السند: "+ payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
                             " سند قبض " + "\n" +
                             "----------------------------------------------" + "\n" +
-                            "هاتف : " + companyInfo.getcompanyTel() +"    الرقم الضريبي : "  + companyInfo.getTaxNo() + "\n" +
+                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                             companyInfo.getCompanyName() + "\n" +
                             "       " + "\n" +
                             "       ";
@@ -1272,17 +1394,17 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             itemsString + "\n" +
                             "       " + "\n" +
-                             "  البنك     " +"  رقم الشيك  "+ "  التاريخ       " + "  القيمة  " + "\n" +
+                            "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
                             "       " + "\n" +
-                            "طريقة الدفع: " + (payment.getPayMethod() == 1? "نقدا" : "شيك") + "\n" +
+                            "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
                             "المبلغ المقبوض: " + payment.getAmount() + "\n" +
                             "ملاحظة: " + payment.getRemark() + "\n" +
                             payment.getCustName() + "\n" +
                             "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
-                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: "+ payment.getPayDate() + "\n" +
-                            " سند قبض "  + "\n" +
+                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                            " سند قبض " + "\n" +
                             "----------------------------------------------" + "\n" +
-                            "هاتف : "  + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
                             companyInfo.getCompanyName() + "\n" +
                             "       " + "\n" +
                             "       ";
@@ -1417,64 +1539,67 @@ public class ReceiptVoucher extends Fragment {
             e.printStackTrace();
         }
     }
-    public Bitmap StringToBitMap(String encodedString){
-        try{
-            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+
+    public Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.getMessage();
             return null;
         }
     }
-    public static String makeLtr ( String string ) {
+
+    public static String makeLtr(String string) {
         if (checkRtl(string)) {
             /* prepend the string with an LTR control sign (so
                that Android's RTL check returns false) and an RTL
                control sign (so that the string itself is printed in
                RTL) and append an LTR control sign (so that if we
                append another String it is laid out LTR). */
-            Log.e("makeLTR",""+"\u200E" + "\u200F" + string + "\u200E");
+            Log.e("makeLTR", "" + "\u200E" + "\u200F" + string + "\u200E");
             return "\u200E" + "\u200F" + string + "\u200E";
 
         } else {
             return string;
         }
     }
-    public static boolean checkRtl ( String string ) {
+
+    public static boolean checkRtl(String string) {
         if (TextUtils.isEmpty(string)) {
             return false;
         }
         char c = string.charAt(0);
-        Log.e("check"," "+( c >= 0x590 && c <= 0x6ff));
+        Log.e("check", " " + (c >= 0x590 && c <= 0x6ff));
         return c >= 0x590 && c <= 0x6ff;
     }
+
     public String printStringtLtr(String sb) {
         if (sb.length() == 0)
             return "";
         StringBuilder b = new StringBuilder();
 //        for (String c : sb) {
-            for(int i=0;i<sb.length();i++)
-            {
+        for (int i = 0; i < sb.length(); i++) {
             b.append('\u200e').append(sb.charAt(i));
         }
-        return b.substring(0, b.length() - 2) ;
+        return b.substring(0, b.length() - 2);
     }
-   // PrintPic printPic = PrintPic.getInstance();
+
+    // PrintPic printPic = PrintPic.getInstance();
     void sendData2() throws IOException {
         try {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
-            Log.e("nocopy",""+numOfCopy);
+            Log.e("nocopy", "" + numOfCopy);
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if(pic!=null) {
+            if (pic != null) {
 //                pic.setImageBitmap(companyInfo.getLogo());
-                String s="tahani test invoice ";
-                byte [] encodeByte=Base64.decode(s,Base64.DEFAULT);
+                String s = "tahani test invoice ";
+                byte[] encodeByte = Base64.decode(s, Base64.DEFAULT);
 
-                InputStream inputStream  = new ByteArrayInputStream(encodeByte);
-                Bitmap bitmap2  = BitmapFactory.decodeStream(inputStream);
+                InputStream inputStream = new ByteArrayInputStream(encodeByte);
+                Bitmap bitmap2 = BitmapFactory.decodeStream(inputStream);
                 pic.setImageBitmap(bitmap2);
                 pic.setDrawingCacheEnabled(true);
 
@@ -1606,7 +1731,7 @@ public class ReceiptVoucher extends Fragment {
     // Close the connection to bluetooth printer.
     void closeBT() throws IOException {
         try {
-           // pic.setImageBitmap(null);
+            // pic.setImageBitmap(null);
             stopWorker = true;
             mmInputStream.close();
             mmOutputStream.close();

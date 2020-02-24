@@ -364,5 +364,18 @@
     <string name="loadingItem">جاري التحميل.... </string>
     <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
     </string>
-    <string name="salesman_name">Sales man name</string>
+    <string name="salesman_name">اسم المندوب </string>
+    <string name="cusSuspended">
+    عذرا لقد تم ايقاف هذا العميل
+    </string>
+    <string name="scanbarcode">Scan BR</string>
+    <string name="hidePrice">اخفاء السعر</string>
+    <string name="return_type">مرتجعات</string>
+    <string name="new_type">جديد</string>
+    <string name="TypeVoucher">نوع الفاتورة :</string>
+    <string name="preventNew">منع الطلبات الجديدة </string>
+    <string name="requiredNote">الملاحظة اجبارية</string>
+    <string name="itemadedbefor">تم اضافة هذه المادة من قبل</string>
+    <string name="app_creditCard">بطاقة ائتمانية</string>
+
 </resources>

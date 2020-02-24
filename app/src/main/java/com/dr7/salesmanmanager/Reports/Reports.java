@@ -19,9 +19,12 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportJason;
 import com.dr7.salesmanmanager.ImportJason;
 import com.dr7.salesmanmanager.MainActivity;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.R;
 
 import org.json.JSONException;
+
+import java.util.List;
 
 
 public class Reports extends AppCompatActivity {
@@ -34,12 +37,17 @@ public class Reports extends AppCompatActivity {
     Button Inventory_report;
     DatabaseHandler MHandler;
     LinearLayout inventory_layout;
+    List<Settings> settings;
+    /*   List<Settings> settings =  mHandler.getAllSettings();
+        System.setProperty("http.keepAlive", "false");
+        if(settings.size() != 0) {
+        */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reports);
         MHandler = new DatabaseHandler(Reports.this);
-
+        settings =  MHandler.getAllSettings();
         customer_log_report = (Button) findViewById(R.id.customer_log_report);
         transactions_report = (Button) findViewById(R.id.transactions_report);
         return_report = (Button) findViewById(R.id.return_report);
@@ -53,8 +61,10 @@ public class Reports extends AppCompatActivity {
         stock_request_report.setOnClickListener(onClickListener);
         Inventory_report.setOnClickListener(onClickListener);
         inventory_layout=(LinearLayout) findViewById(R.id.inventory_layout);
-        if(MHandler.getAllSettings().get(0).getHide_qty()==1) {
-            inventory_layout.setVisibility(View.GONE);
+        if(settings.size() != 0) {
+            if (MHandler.getAllSettings().get(0).getHide_qty() == 1) {
+                inventory_layout.setVisibility(View.GONE);
+            }
         }
 
 
@@ -88,18 +98,22 @@ public class Reports extends AppCompatActivity {
                     startActivity(intent5);
                     break ;
                 case R.id.cash_report:
-                    if(MHandler.getAllSettings().get(0).getLock_cashreport()==1) {
-                        openPassowrdDialog();
+                    String s="";
+                    if(settings.size()!=0){
+                        if(MHandler.getAllSettings().get(0).getLock_cashreport()==1) {
+                            openPassowrdDialog();
 
+                        }
+                        else{
+                            Intent intent6 = new Intent(Reports.this, CashReport.class);
+                            startActivity(intent6);
+                        }
                     }
+
                     else{
                         Intent intent6 = new Intent(Reports.this, CashReport.class);
                         startActivity(intent6);
                     }
-
-
-
-
                     break ;
             }
 

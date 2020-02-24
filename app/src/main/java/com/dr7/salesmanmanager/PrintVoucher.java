@@ -31,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -106,6 +107,9 @@ public class PrintVoucher extends AppCompatActivity {
     DatabaseHandler obj;
      static double TOTAL=0;
     DecimalFormat decimalFormat;
+    RadioGroup  voucherTypeRadioGroup;
+    int voucherType = 504;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -141,6 +145,18 @@ public class PrintVoucher extends AppCompatActivity {
         to_date.setText(today);
 
         myCalendar = Calendar.getInstance();
+        voucherTypeRadioGroup = (RadioGroup) findViewById(R.id.transKindRadioGroup);
+        voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.salesRadioButton: voucherType = 504; break;
+                    case R.id.retSalesRadioButton: voucherType = 506; break;
+                    case R.id.orderRadioButton: voucherType = 508; break;
+                }
+            }
+        });
+
 
         from_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,6 +252,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
 
@@ -260,7 +277,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 1:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 1);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -289,7 +306,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                             case 3:
 
                                                                 try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
+                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
                                                                     openBT(vouch, 3);
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -369,6 +386,10 @@ public class PrintVoucher extends AppCompatActivity {
 
     }
 
+    private void printVoucher() {
+
+    }
+
     public void clear() {
         int childCount = TableTransactionsReport.getChildCount();
         // Remove all rows except the first one
@@ -413,17 +434,19 @@ public class PrintVoucher extends AppCompatActivity {
     }
 
     public boolean filters(int n) {
+        Log.e("filtersvoucher",""+voucherType);
 
 
         String fromDate = from_date.getText().toString().trim();
         String toDate = to_date.getText().toString();
 
         String date = vouchers.get(n).getVoucherDate();
+        int  vouchType=vouchers.get(n).getVoucherType();
 
         try {
-            Log.e("tag", "*****" + date + "***" + fromDate);
+            Log.e("tag", "*****" + date + "***" + fromDate+"\t vouchtype"+vouchType);
             if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
-                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
+                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) && (vouchType==voucherType))
                 return true;
 
         } catch (ParseException e) {
@@ -714,7 +737,7 @@ public class PrintVoucher extends AppCompatActivity {
         dialog.show();
     }
 
-    void findBT(int voucherNo) {
+    void findBT(int voucherNo,Voucher voucher) {
 //        try {
 //            /*  very important **********************************************************/
 //            closeBT();
@@ -724,8 +747,8 @@ public class PrintVoucher extends AppCompatActivity {
         itemsString = "";
         itemsString2="";
         for (int j = 0; j < items.size(); j++) {
-
-            if (voucherNo == items.get(j).getVoucherNumber()) {
+//            ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType()))
+            if ((voucherNo == items.get(j).getVoucherNumber())&&(items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                 amount = convertToEnglish(amount);
 
@@ -1052,7 +1075,7 @@ public class PrintVoucher extends AppCompatActivity {
         List<Item> items1=new ArrayList<>();
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+            if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 items1.add(items.get(j));
 
             }
@@ -1212,7 +1235,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         for (int j = 0; j < items.size(); j++) {
 
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+           if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
                 final TableRow row = new TableRow(PrintVoucher.this);
 
 
@@ -1932,7 +1955,8 @@ public class PrintVoucher extends AppCompatActivity {
                     int serial = 1;
                     DecimalFormat threeDForm = new DecimalFormat("00.000");
                     for (int j = 0; j < items.size(); j++) {
-                        if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+                        if((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
+
                             String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
                             String amountATax = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc() + items.get(j).getTaxValue());
                             amount = convertToEnglish(amount);

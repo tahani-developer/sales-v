@@ -114,13 +114,15 @@ public class Activities extends AppCompatActivity implements
         }
     }
 
-
+ public  static   double discvalue_static=0;
     @Override
     public void addDiscount(double discount, int iDiscType) {
 
-        salesInvoice.sum_discount=discount;
-//        salesInvoice.sum_discount=0;
+//        salesInvoice.sum_discount+=discount;
 
+//        salesInvoice.sum_discount=0;
+        Log.e("addDiscount","discount"+discount);
+        discvalue_static=discount;
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals();
     }
@@ -195,6 +197,7 @@ public class Activities extends AppCompatActivity implements
                 }
                 publishProgress(i);
             }
+            discvalue_static=0;
             displaySaleInvoice();
             return "items";
         }
@@ -289,61 +292,12 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, stockRequest);
         transaction.addToBackStack(null);
         transaction.commit();
-//        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
         isFragmentBlank = false;
     }
-    class TaskStock extends AsyncTask<String, Integer, String> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            for (int i = 0; i < 100; i++) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                publishProgress(i);
-            }
-            displayStockRequest();
-            return "items";
-        }
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-
-//            pb.setProgress(values[0]);
-//            dialog_progress.setProgress(values);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            super.onPreExecute();
-            dialog_progress = new ProgressDialog(Activities.this);
-            dialog_progress.setCancelable(false);
-            dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
-            dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            dialog_progress.show();
-        }
-        @Override
-        protected void onPostExecute(final String result) {
-            super.onPostExecute(result);
-
-            dialog_progress.dismiss();
-
-            if (result != null) {
-
-            } else {
-                Toast.makeText(Activities.this, "Not able to fetch data ", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     private OnClickListener onClickListener = new OnClickListener() {
         @Override
@@ -366,6 +320,7 @@ public class Activities extends AppCompatActivity implements
                                     receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                                     supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                    new Task().execute();
+                                    discvalue_static=0;
                                     displaySaleInvoice();
                                 }
                             });
@@ -378,6 +333,7 @@ public class Activities extends AppCompatActivity implements
                             receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                             supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                            new Task().execute();
+                            discvalue_static=0;
                             displaySaleInvoice();
                         }//displaySaleInvoice();
 
@@ -426,22 +382,22 @@ public class Activities extends AppCompatActivity implements
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-//                                displayStockRequest();
-                                new TaskStock().execute();
+//                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+                                displayStockRequest();
+//                                new TaskStock().execute();
                             }
                         });
 
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-//                        displayStockRequest();
-                        new TaskStock().execute();
+//                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+                        displayStockRequest();
+
                     }
                     break;
                 case R.id.transaction_ImageView:

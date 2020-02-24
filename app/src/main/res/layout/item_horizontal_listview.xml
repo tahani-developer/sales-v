@@ -48,7 +48,7 @@
                     android:text="Test Item"
                     android:textStyle="bold"
                     android:textColor="@color/layer5"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -65,7 +65,7 @@
 <!--                    android:layout_height="wrap_content"-->
 <!--                    android:text="Test Item"-->
 <!--                    android:textColor="@color/layer5"-->
-<!--                    android:textSize="20sp" />-->
+<!--                    android:textSize="16sp" />-->
 
 <!--            </LinearLayout>-->
 
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/item_number"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewItemNumber"
@@ -93,7 +93,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                 </TableRow>
 
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/item_name"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewTradeMark"
@@ -117,7 +117,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                 </TableRow>
 
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/category"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewCategory"
@@ -140,7 +140,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow
@@ -155,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/unit_qty"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewUnit_qty"
@@ -164,7 +164,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                 </TableRow>
 
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/app_price"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewPrice"
@@ -188,7 +188,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                 </TableRow>
 
@@ -202,7 +202,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/tax"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textViewTax"
@@ -211,7 +211,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
                 </TableRow>
 
                 <TableRow
@@ -224,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/barcode"
                         android:textColor="@color/text_view_color"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="invisible" />
 
                     <TextView
@@ -234,7 +234,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="invisible" />
 
                 </TableRow>
@@ -249,7 +249,7 @@
                         android:layout_height="wrap_content"
                         android:text="Pos_price"
                         android:textColor="@color/text_view_color"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="visible" />
 
                     <TextView
@@ -259,7 +259,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="visible" />
 
                 </TableRow>

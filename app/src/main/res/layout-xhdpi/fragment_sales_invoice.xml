@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingEnd="5dp"
-
+    android:id="@+id/mainlyout"
     android:paddingHorizontal="5dp"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
 
         android:background="@color/layer2"
-        android:padding="10dp"
+
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="horizontal"
@@ -42,7 +42,8 @@
                 android:id="@+id/addItemImgButton2"
                 android:clickable="true"
                 android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/items2"
                 app:civ_border_color="@color/colorPrimaryDark"/>
@@ -55,32 +56,33 @@
                 android:layout_alignParentRight="@+id/addItemImgButton2"
 
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="30dp"
 
                 android:padding="3dp"
                 android:textStyle="bold"
                 android:text="+"
                 android:textColor="@color/second_color"
-                android:textSize="20sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
         <ImageButton
             android:id="@+id/saveInvoiceData"
             android:layout_width="50dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/save_btn" />
 
         <ImageButton
             android:id="@+id/newImgBtn"
             android:layout_width="50dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
 
             android:layout_marginRight="10dp"
             android:background="@drawable/new_inv" />
         <ImageButton
             android:id="@+id/max_disc"
             android:layout_width="50dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
+            android:visibility="gone"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc" />
 
@@ -99,7 +101,7 @@
             android:id="@+id/refresh_data"
             android:clickable="true"
             android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_marginRight="10dp"
             android:visibility="visible"
             android:src="@drawable/reload_arrow"
@@ -125,7 +127,18 @@
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
             android:text="@string/app_disc_l"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/pic_Re_print"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/images_print" />
+<!--        <CheckBox-->
+<!--            android:id="@+id/checkBox_hidePriceVoucher"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:text="@string/hidePrice"-->
+<!--            android:layout_width="wrap_content" />-->
 
             <!--android:visibility="invisible"/>-->
 
@@ -155,7 +168,7 @@
             android:text="@string/voucher_number"
             android:textStyle="bold"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/voucherNumber"
@@ -167,7 +180,7 @@
             android:gravity="center_vertical"
             android:text=""
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_height="wrap_content"
@@ -187,7 +200,7 @@
             android:textStyle="bold"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/invoiceCustomerName"
@@ -199,7 +212,7 @@
             android:text=""
             android:gravity="center_vertical"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
         </LinearLayout>
 
 <!--        <ImageButton-->
@@ -213,6 +226,7 @@
         <ImageView
             android:id="@+id/balanceImgBtn"
             android:layout_width="35dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="2dp"
             android:layout_marginTop="5dp"
@@ -243,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_trans_kind"
                 android:textColor="@color/second_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -285,8 +299,8 @@
             android:layout_marginLeft="20dp"
             android:background="@color/layer4"
             android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="30dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/tv"
@@ -294,7 +308,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/payemtnTerm"
                 android:textColor="@color/second_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -360,7 +374,7 @@
             android:layout_weight="1"
             android:text="@string/app_item_no"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -370,7 +384,7 @@
             android:layout_weight="1"
             android:text="@string/app_desc"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -379,7 +393,7 @@
             android:layout_weight="1"
             android:text="@string/app_qty"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -388,7 +402,7 @@
             android:layout_weight="1"
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -397,7 +411,7 @@
             android:layout_weight="1"
             android:text="@string/app_bonus"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -406,7 +420,7 @@
             android:layout_weight="1"
             android:text="@string/app_line_disc"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
 
@@ -416,7 +430,7 @@
             android:layout_weight="1"
             android:text="@string/app_amount"
             android:textColor="@color/text_view_color"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -464,7 +478,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_sub_total"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -475,7 +489,7 @@
                 android:paddingHorizontal="5dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
 
@@ -494,7 +508,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_disc"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="@string/app_disc" />
 
@@ -506,7 +520,7 @@
                 android:paddingHorizontal="10dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
         </LinearLayout>
@@ -524,7 +538,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_tax"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="@string/app_tax" />
 
@@ -536,7 +550,7 @@
                 android:paddingHorizontal="5dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
 
@@ -554,7 +568,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/app_net_sales"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -564,7 +578,7 @@
                 android:paddingHorizontal="20dp"
                 android:text="@string/app_zero"
                 android:textColor="@color/amountColor"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="0.000" />
         </LinearLayout>

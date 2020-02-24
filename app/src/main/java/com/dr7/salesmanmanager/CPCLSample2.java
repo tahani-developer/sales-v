@@ -965,9 +965,13 @@ Log.e("printMultilingual","ontCash_EJABI");
             payforBank=ReceiptVoucher.payment;
 
         }
-        else {
+        else if(count==4){
             payList=paymentPrinter;
             payforBank=pay1;
+        }
+        else if(count==8){
+            payList=ReceiptVoucher.paymentPrinter;
+            payforBank=ReceiptVoucher.pay1;
         }
 
 
