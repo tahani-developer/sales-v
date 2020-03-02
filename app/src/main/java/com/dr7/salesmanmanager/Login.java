@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +29,8 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
@@ -44,6 +47,12 @@ public class Login extends AppCompatActivity {
     TextView loginText;
 
     DatabaseHandler mDHandler;
+    String shortUserName = "", fullUserName = "";
+    int indexfirst = 0, indexEdit = 0;
+    boolean exist = false;
+    int index = 0;
+    List<SalesMan> salesMenList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +60,11 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
-        loginText=(TextView)findViewById(R.id.logInTextView);
+        loginText = (TextView) findViewById(R.id.logInTextView);
 
 
         try {
-            if(mDHandler.getAllSettings().size()!=0) {
+            if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
                     LocaleAppUtils.setLocale(new Locale("ar"));
                     LocaleAppUtils.setConfigChange(Login.this);
@@ -67,11 +76,10 @@ public class Login extends AppCompatActivity {
                 }
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
-     //   model_key.setKey(123);
+        //   model_key.setKey(123);
 
         Log.e("model", "model_key" + model_key.getKey());
         logo = (ImageView) findViewById(R.id.imageView3);
@@ -96,76 +104,169 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                String user = usernameEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
+                salesMenList = mDHandler.getAllSalesMen();
 
-                if (!passwordEditText.getText().toString().equals("") && !usernameEditText.getText().toString().equals("")) {
-                    List<SalesMan> salesMenList = mDHandler.getAllSalesMen();
-//                    List<SalesMan> salesMenList = Splashscreen.salesMenList;
-                    boolean exist = false;
-                    int index = 0;
+                if (salesMenList.size() == 0)//Empty DB
+                {
+//                    Toast.makeText(Login.this, R.string.failUsers, Toast.LENGTH_LONG).show();
 
-                    if (passwordEditText.getText().toString().equals("f123f")) {
-                        exist = true;
-                        index = 1;
-                        isMasterLogin = true;
-                    } else {
-                        isMasterLogin = false;
-                        for (int i = 0; i < salesMenList.size(); i++) {
-                            Log.e("*****", usernameEditText.getText().toString() + " " + salesMenList.get(i).getUserName());
-                            if (usernameEditText.getText().toString().equals(salesMenList.get(i).getUserName())) {
-                                exist = true;
-                                index = i;
-                                break;
-                            }
+                    if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
+                        if (passwordEditText.getText().toString().equals("f123f")) {
+                            exist = true;
+                            index = 1;
+                            isMasterLogin = true;
                         }
+                        else{
+                            new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("عذرا ...")
+                                    .setContentText(getResources().getString(R.string.failUsers))
+                                    .show();
+                        }
+                        checkExistToLogin();
+                    } else {
+                        new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("عذرا ...")
+                                .setContentText(getResources().getString(R.string.failUsers))
+                                .show();
+                        if (TextUtils.isEmpty(user))
+                            usernameEditText.setError("Required");
+                        if (TextUtils.isEmpty(password)) {
+                            passwordEditText.setError("Required");
+                        }
+
                     }
 
-                    if (exist) {
+                } else {//item in list
+                    if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
-                        if (isMasterLogin) {
-                            key_value_Db = mDHandler.getActiveKeyValue();
-                            if(key_value_Db==0) {//dosent exist value key in DB
 
-                                showDialog_key();
-                            }
-                            else{
-
-                                salesMan = usernameEditText.getText().toString();
-                                salesManNo = passwordEditText.getText().toString();
-
-                                Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(main);
-//                                CustomIntent.customType(getBaseContext(),"left-to-right");
-                            }
+                        if (passwordEditText.getText().toString().equals("f123f")) {
+                            exist = true;
+                            index = 1;
+                            isMasterLogin = true;
                         } else {
+                            exist = false;
+                            isMasterLogin = false;
+                            for (int i = 0; i < salesMenList.size(); i++) {
+                                fullUserName = salesMenList.get(i).getUserName();//  00002
+                                if ((fullUserName.charAt(0) + "").equals("0")) {
+                                    if (checkAllCharacterName(i, fullUserName)) {
+                                        break;
+                                    }
 
-                            if (salesMenList.get(index).getPassword().equals(passwordEditText.getText().toString())) {
-                                key_value_Db = mDHandler.getActiveKeyValue();
-                                if(key_value_Db==0) {//dosent exist value key in DB
-
-                                    showDialog_key();
                                 }
-                                else{
+                                else {
+                                    checkFullName(i, fullUserName);
 
-                                    salesMan = usernameEditText.getText().toString();
-                                    salesManNo = passwordEditText.getText().toString();
-
-                                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(main);
-//                                CustomIntent.customType(getBaseContext(),"left-to-right");
                                 }
 
-                            } else
-                                Toast.makeText(Login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        checkExistToLogin();
+                    } else {
+                        if (TextUtils.isEmpty(user))
+                            usernameEditText.setError("Required");
+                        if (TextUtils.isEmpty(password)) {
+                            passwordEditText.setError("Required");
                         }
 
-                    } else
-                        Toast.makeText(Login.this, "UserName does not exist", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(Login.this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
 
             }
         });
 
+    }
+
+    private void checkExistToLogin() {
+        if (exist) {
+            if (isMasterLogin) {
+                key_value_Db = mDHandler.getActiveKeyValue();
+                if (key_value_Db == 0) {//dosent exist value key in DB
+
+                    showDialog_key();
+                } else {
+
+                    salesMan = usernameEditText.getText().toString();
+                    salesManNo = passwordEditText.getText().toString();
+
+                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(main);
+//                                CustomIntent.customType(getBaseContext(),"left-to-right");
+                }
+            } else {
+
+                if (salesMenList.get(index).getPassword().equals(passwordEditText.getText().toString())) {
+                    key_value_Db = mDHandler.getActiveKeyValue();
+                    if (key_value_Db == 0) {//dosent exist value key in DB
+
+                        showDialog_key();
+                    } else {
+
+                        salesMan = usernameEditText.getText().toString();
+                        salesManNo = passwordEditText.getText().toString();
+
+                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(main);
+//                                CustomIntent.customType(getBaseContext(),"left-to-right");
+                    }
+
+                } else
+                    Toast.makeText(Login.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+            }
+
+        } else
+            Toast.makeText(Login.this, "UserName does not exist", Toast.LENGTH_SHORT).show();
+        exist = false;
+    }
+
+    private void checkFullName(int i, String fullUserName) {
+        if (usernameEditText.getText().toString().equals(fullUserName)) {
+            exist = true;
+            index = i;
+
+        }
+    }
+
+    private boolean checkAllCharacterName(int i, String fullUserName) {
+        for (int j = 0; j < fullUserName.length(); j++) {
+            indexfirst = 0;
+            if ((fullUserName.charAt(j) + "").equals("0")) {
+                continue;
+            } else {
+                indexfirst = j;
+                break;
+            }
+
+        }
+        shortUserName = fullUserName.substring(indexfirst, fullUserName.length());
+
+        //********************************************************************
+        String editUser = usernameEditText.getText().toString();
+        for (int j = 0; j < editUser.length(); j++) {
+            indexEdit = 0;
+            if ((editUser.charAt(j) + "").equals("0")) {
+                continue;
+            } else {
+                indexEdit = j;
+                break;
+
+            }
+        }
+        String shortUserEdit = editUser.substring(indexEdit, editUser.length());
+        Log.e("checkAllCharacterName", "" + shortUserEdit + "\t" + shortUserName);
+        //********************************************************************
+
+        if (shortUserEdit.equals(shortUserName)) {
+            exist = true;
+            index = i;
+            return true;
+        }
+        return false;
     }
 
     public void showDialog_key() {
@@ -203,7 +304,7 @@ public class Login extends AppCompatActivity {
 
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
-                  //  CustomIntent.customType(getBaseContext(),"left-to-right");
+                    //  CustomIntent.customType(getBaseContext(),"left-to-right");
                     dialog.dismiss();
                 } else {
                     Toast.makeText(Login.this, "Please enter valid Active key", Toast.LENGTH_SHORT).show();

@@ -377,12 +377,8 @@ public class ReceiptVoucher extends Fragment {
         kinds.add(getResources().getString(R.string.cash));
         kinds.add(getResources().getString(R.string.app_cheque));
         kinds.add(getResources().getString(R.string.app_creditCard));
-
-
         ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
         paymentKindSpinner.setAdapter(paymentKind);
-
-
         clearImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

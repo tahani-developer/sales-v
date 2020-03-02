@@ -31,7 +31,7 @@
             android:gravity="center_vertical"
             android:text="@string/app_cash_report"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/text_view_color"
             android:textSize="30dp" />
 
        <LinearLayout
@@ -292,6 +292,47 @@
 
             <TextView
                 android:id="@+id/text_net_paymentReport"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="20dp"
+            android:background="@color/colorblue1">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/app_creditCard"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp"
+            android:background="@color/layer3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/creditvalue"
+                android:textColor="@color/text_view_color"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_credit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"

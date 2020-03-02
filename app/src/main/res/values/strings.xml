@@ -327,6 +327,9 @@
     <string name="requiredNote">Required Note</string>
     <string name="itemadedbefor">this Item aded befor</string>
     <string name="app_creditCard">Credit Card</string>
+    <string name="creditvalue">Credit value</string>
+    <string name="preventTotaldisc">Prevent Total discount</string>
+    <string name="failUsers">Empty Database Enter as Master</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

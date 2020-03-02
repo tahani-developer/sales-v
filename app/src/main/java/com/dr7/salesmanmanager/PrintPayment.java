@@ -208,6 +208,9 @@ public class PrintPayment extends AppCompatActivity {
                                     case 1:
                                         record[6] = getResources().getString(R.string.cash);
                                         break;
+                                    case 2:
+                                        record[6] = getResources().getString(R.string.app_creditCard);
+                                        break;
                                 }
 
 
@@ -358,7 +361,12 @@ public class PrintPayment extends AppCompatActivity {
                     }
 
                 } else
+                {
                     Toast.makeText(PrintPayment.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
+                    from_date.setError("Required");
+                    to_date.setError("Required");
+                }
+
             }
         });
 
@@ -402,7 +410,7 @@ public class PrintPayment extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy/MM/dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -419,26 +427,28 @@ public class PrintPayment extends AppCompatActivity {
         return d;
     }
 
-    public boolean filters(int n) {
+public boolean filters(int n) {
+    String beginDate = from_date.getText().toString();
+    String toDate = to_date.getText().toString();
 
+    String date = payment.get(n).getPayDate();
+    Log.e("date",""+date);
 
-        String fromDate = from_date.getText().toString().trim();
-        String toDate = to_date.getText().toString();
-
-        String date = payment.get(n).getPayDate();
-
-        try {
-            Log.e("tag", "*****" + date + "***" + fromDate);
-            if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+    try {
+            if ((formatDate(date).after(formatDate(beginDate)) || formatDate(date).equals(formatDate(beginDate))) &&
                     (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
+            {
                 return true;
+            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        return false;
+//        }
+    } catch (ParseException e) {
+        e.printStackTrace();
     }
+
+    return false;
+}
 
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Payment pay) {

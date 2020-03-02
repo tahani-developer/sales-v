@@ -228,7 +228,7 @@ public class SalesInvoice extends Fragment {
     double limit_offer=0;
     ImageButton maxDiscount;
     int size_firstlist=0;
-    int voucherNo=0;
+    int voucherNo=0,itemCountTable;
     CheckBox check_HidePrice;
      public  static  int valueCheckHidPrice=0;
      LinearLayout mainlayout;
@@ -241,6 +241,7 @@ public class SalesInvoice extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout=(LinearLayout)view.findViewById(R.id.mainlyout);
+
         Log.e("locallang",""+languagelocalApp);
         if(languagelocalApp.equals("ar"))
         {
@@ -262,6 +263,7 @@ public class SalesInvoice extends Fragment {
         voucherYear = convertToEnglish(voucherYear);
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
+        itemCountTable=mDbHandler.getCountItemsMaster();
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2 = new ArrayList<>();
 //        jsonItemsList_intermidiate = new ArrayList<>();
@@ -361,8 +363,6 @@ public class SalesInvoice extends Fragment {
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
         refrechItemForReprint();
 
-        //*****************************fill list items json*******************************************
-//        fillListItemJson();
 
         //*************************************************************************
 
@@ -583,29 +583,46 @@ public class SalesInvoice extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
-        discountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
-                    Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
-                    if (payMethod == 0) {
-                        salesInvoiceInterfaceListener.displayDiscountFragment();
+        if(mDbHandler.getAllSettings().get(0).getPreventTotalDisc()==1)
+        {
+            discountButton.setEnabled(false);
+        }
+        else{
+            discountButton.setEnabled(true);
+            discountButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                        Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                        if (payMethod == 0) {
+                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                        } else {
+                            Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
 
-                    salesInvoiceInterfaceListener.displayDiscountFragment();
+                        salesInvoiceInterfaceListener.displayDiscountFragment();
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
         addItemImgButton2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-//                salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
-                new SalesInvoice.Task().execute();
+                if(itemCountTable>=500)
+                {
+                    new SalesInvoice.Task().execute();
+
+                }
+                else
+                {
+                    salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+
+                }
+
             }
         });
 
@@ -784,12 +801,10 @@ public class SalesInvoice extends Fragment {
 
 
                         if(virefyMaxDescount()){
-                            if(!remarkEditText.getText().toString().equals("")) {
+
                                 AddVoucher();
                                 clearLayoutData();
-                            }else{
-                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-                            }
+
                         }
 
                         else{

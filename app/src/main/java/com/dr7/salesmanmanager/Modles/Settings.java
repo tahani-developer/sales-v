@@ -29,6 +29,15 @@ public class Settings {
     private String salesMan_name;
     private int priventOrder;
     private int requiNote;
+    private int preventTotalDisc;
+
+    public int getPreventTotalDisc() {
+        return preventTotalDisc;
+    }
+
+    public void setPreventTotalDisc(int preventTotalDisc) {
+        this.preventTotalDisc = preventTotalDisc;
+    }
 
     public int getPriventOrder() {
         return priventOrder;

@@ -127,8 +127,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     }
                 }
                 if (itemInlocalList == false) {
-                    localItemNumber.add(items.get(holder.getAdapterPosition()).getItemNo());
-
                     final Dialog dialog = new Dialog(view.getContext());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(true);
@@ -271,6 +269,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                         holder.linearLayout.setBackgroundColor(R.color.done_button);
                                                         isClicked.set(holder.getAdapterPosition(), 1);
+                                                        localItemNumber.add(items.get(holder.getAdapterPosition()).getItemNo());
                                                         itemInlocalList=false;
                                                     }
                                                 } else

@@ -103,6 +103,7 @@ public class ExportJason extends AppCompatActivity {
                 vouchers.get(i).setIsPosted(1);
 //                vouchers.get(i).setRemark("\\%");
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                Log.e("getJSONObject",""+vouchers.get(i).getJSONObject());
             }
 
         items = mHandler.getAllItems();

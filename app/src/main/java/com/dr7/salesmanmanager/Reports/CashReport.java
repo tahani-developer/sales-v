@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -75,10 +76,10 @@ public class CashReport  extends AppCompatActivity {
     boolean isFinishPrint=false;
     byte[] printIm;
     TextView cash_sal, credit_sale, total_sale;
-    TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext;
+    TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext,creditCard;
     List<Voucher> voucher;
      public static double cash = 0, credit = 0, total = 0;
-    public static double cashPayment=0,creditPayment=0,net=0,total_cash=0;
+    public static double cashPayment=0,creditPayment=0,net=0,total_cash=0,creditCardPayment=0;
     int paymethod=0;
     private DecimalFormat decimalFormat;
     BluetoothAdapter mBluetoothAdapter;
@@ -133,6 +134,7 @@ public class CashReport  extends AppCompatActivity {
         cash_paymenttext = (TextView) findViewById(R.id.text_cash_PaymentReport);
         creditPaymenttext = (TextView) findViewById(R.id.text_cheque_paymentReport);
         nettext = (TextView) findViewById(R.id.text_net_paymentReport);
+        creditCard = (TextView) findViewById(R.id.text_credit);
         total_cashtext=(TextView) findViewById(R.id.text_total_cash);
         pic=(ImageView)findViewById(R.id.pic_reportCash);
          companyInfo=new CompanyInfo();
@@ -180,7 +182,7 @@ public class CashReport  extends AppCompatActivity {
                     credit_sale.setText(convertToEnglish(decimalFormat.format(T_credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
                     //  clearPayment();
-                    cashPayment=0;creditPayment=0;net=0;total_cash=0;
+                    cashPayment=0;creditPayment=0;net=0;total_cash=0;creditCardPayment=0;
                     for (int i = 0; i < payments.size(); i++) {
                         if (filters_payment(i)) {
 
@@ -191,6 +193,10 @@ public class CashReport  extends AppCompatActivity {
                                     case 1:
                                         cashPayment+=payments.get(i).getAmount();
                                         break;
+                                    case 2:
+                                        creditCardPayment+=payments.get(i).getAmount();
+                                        break;
+
                                 }
                             }
                         }
@@ -199,6 +205,7 @@ public class CashReport  extends AppCompatActivity {
                     creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
                     total_cash=net+cash-returnCash;
+                    creditCard.setText(convertToEnglish(decimalFormat.format(creditCardPayment))+"");
                     total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
                     }
 
@@ -207,17 +214,6 @@ public class CashReport  extends AppCompatActivity {
             }
         });
 
-//        preview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent event) {
-//                if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-//                }
-//                return false;
-//            }
-//        });
         //******************************date*****************************************
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -710,19 +706,21 @@ public class CashReport  extends AppCompatActivity {
 
                     printCustom(companyInfo.getCompanyName() + "     \n     ", 1, 0);
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
+                    printCustom("  اسم المندوب  : " + obj.getAllSettings().get(0).getSalesMan_name() + "     \n     ", 1, 0);
+                    printCustom(" رقم المستودع  : " + Login.salesManNo + "     \n     ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
-                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash-returnCash) ))+ " : " + " \n ", 1, 0);
-                    printCustom("المبيعات ذمم   " +convertToEnglish(decimalFormat.format( (credit-returnCridet) ))+ " : " + " \n ", 1, 0);
+                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " : " + " \n ", 1, 0);
+                    printCustom("المبيعات ذمم   " + convertToEnglish(decimalFormat.format((credit - returnCridet))) + " : " + " \n ", 1, 0);
                     printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment ))+ " : " + " \n ", 1, 0);
-                    printCustom("الدفع شيك   " +convertToEnglish(decimalFormat.format( creditPayment ))+ " : " + " \n ", 1, 0);
+                    printCustom("الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment)) + " : " + " \n ", 1, 0);
+                    printCustom("الدفع شيك   " + convertToEnglish(decimalFormat.format(creditPayment)) + " : " + " \n ", 1, 0);
                     printCustom("الاجمالي   " + convertToEnglish(decimalFormat.format(net)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash ))+ " : " + " \n ", 1, 0);
+                    printCustom("اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash)) + " : " + " \n ", 1, 0);
 
 
                 }
@@ -843,7 +841,11 @@ public class CashReport  extends AppCompatActivity {
                             "المبيعات نقدا: " +convertToEnglish(decimalFormat.format( (cash-returnCash))) + "\n" +
                             "----------------------------------------------" + "\n" +
                             "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                            "  اسم المندوب  : "+   obj.getAllSettings().get(0).getSalesMan_name()  + "\n           " +
+                            " رقم المستودع  : "+  Login.salesManNo + "\n           " +
+
                             "                          "+   companyInfo.getCompanyName() + "\n           " +
+
                             "       " + "\n" +
                             "       ";
 

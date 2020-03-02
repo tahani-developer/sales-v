@@ -34,6 +34,7 @@ import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.CashReport.cash;
 import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.credit;
+import static com.dr7.salesmanmanager.Reports.CashReport.creditCardPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 import static com.dr7.salesmanmanager.Reports.CashReport.net;
@@ -889,7 +890,7 @@ Log.e("printMultilingual","ontCash_EJABI");
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-        if (payforBank.getPayMethod() == 1) {
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
             dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
                     "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
@@ -901,7 +902,7 @@ Log.e("printMultilingual","ontCash_EJABI");
                     payforBank.getCustName() + "\n" +
                     "ملاحظة: " + payforBank.getRemark() + "\n" +
                     "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
-                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
+                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "بطاقة") + "\n";
 
             dataArabic+="\n\n"+
                     "--------------------------------------------------------------------------------" + "\n" +
@@ -988,7 +989,7 @@ Log.e("printMultilingual","ontCash_EJABI");
             LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
         }
 
-        if (payforBank.getPayMethod() == 1) {
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
 
             dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
@@ -999,9 +1000,12 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "       " + "\n" +
                     "I received from Mr. / Messrs:" + "\t" +
                     firstName + "\n" +LASTnAME+"\n"+
+                    "Store No: " +     Login.salesMan+ "\n" +
+                    "SalesMan Name: " +     obj.getAllSettings().get(0).getSalesMan_name()+ "\n" +
+
                     "Remark :" + payforBank.getRemark() + "\n" +
                     "Amount received:" + payforBank.getAmount() + "\n" +
-                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n";
+                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Credit") + "\n";
 
             dataArabic+="\n\n"+
                     "--------------------------------------------------------------------------------" + "\n" +
@@ -1017,6 +1021,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "       " + "\n" +
                     "I received from Mr. / Messrs: " + "\t" +
                     firstName + "\n" +LASTnAME+"\n"+
+                    "Store No: " +     Login.salesMan+ "\n" +
+                    "SalesMan Name: " +     obj.getAllSettings().get(0).getSalesMan_name()+ "\n" +
                     "Remark: " + payforBank.getRemark() + "\n" +
                     "Amount received: " + payforBank.getAmount() + "\n" +
                     "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n" +
@@ -1140,8 +1146,12 @@ Log.e("printMultilingual","ontCash_EJABI");
             } else {
                 companney_name = companyInfo.getCompanyName();
             }
-            dataArabic_Report += "                                        " + companney_name + "                            \n \n" +
+            dataArabic_Report += "                                      " + companney_name + "                            \n \n" +
                     "  الرقم الضريبي :  " + companyInfo.getTaxNo() + " \n " +
+                    "اسم المندوب  :  " +obj.getAllSettings().get(0).getSalesMan_name() + " \n " +
+                    "رقم المستودع  :  " +Login.salesManNo + " \n " +
+
+
                     "        -----------------------------------------------------------------------  " + " \n " +
                     "التاريخ  :     " + date.getText() + " \n " +
                     "المبيعات نقدا :     " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " \n " +
@@ -1153,6 +1163,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment)) + " \n " +
                     "الاجمالي :     " + convertToEnglish(decimalFormat.format(net)) + " \n " +
                     "\n" +
+                    "اجمالي البطاقة الائتمانية :     " + convertToEnglish(decimalFormat.format(creditCardPayment)) + " \n " +
+
                     "        -----------------------------------------------------------------------  " + " \n "+
 
                     "اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "+

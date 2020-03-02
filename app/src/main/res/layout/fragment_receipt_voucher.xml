@@ -185,14 +185,15 @@
 
         <Spinner
             android:id="@+id/paymentTypeSpinner"
-            android:layout_width="200dp"
-            android:padding="3dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:entries="@array/app_paymentTypeList"
+            android:layout_gravity="center"
             android:background="@color/layer2"
+            android:entries="@array/app_paymentTypeList"
             android:gravity="center"
-            android:layout_marginStart="10dp" />
+            android:padding="3dp" />
 
         <Button
             android:id="@+id/addCheck"

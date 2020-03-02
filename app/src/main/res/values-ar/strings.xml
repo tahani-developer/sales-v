@@ -377,5 +377,8 @@
     <string name="requiredNote">الملاحظة اجبارية</string>
     <string name="itemadedbefor">تم اضافة هذه المادة من قبل</string>
     <string name="app_creditCard">بطاقة ائتمانية</string>
+    <string name="creditvalue">Credit value</string>
+    <string name="preventTotaldisc">منع الخصم الكلي</string>
+    <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
 
 </resources>

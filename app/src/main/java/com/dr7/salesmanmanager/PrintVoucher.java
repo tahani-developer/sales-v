@@ -416,7 +416,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy/MM/dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
