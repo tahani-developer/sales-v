@@ -120,14 +120,14 @@ public class Login extends AppCompatActivity {
                         }
                         else{
                             new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("عذرا ...")
+                                    .setTitleText(getResources().getString(R.string.warning_message))
                                     .setContentText(getResources().getString(R.string.failUsers))
                                     .show();
                         }
                         checkExistToLogin();
                     } else {
                         new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("عذرا ...")
+                                .setTitleText(getResources().getString(R.string.warning_message))
                                 .setContentText(getResources().getString(R.string.failUsers))
                                 .show();
                         if (TextUtils.isEmpty(user))

@@ -30,6 +30,24 @@ public class Settings {
     private int priventOrder;
     private int requiNote;
     private int preventTotalDisc;
+    private int automaticCheque;
+    private int tafqit;
+
+    public int getTafqit() {
+        return tafqit;
+    }
+
+    public void setTafqit(int tafqit) {
+        this.tafqit = tafqit;
+    }
+
+    public int getAutomaticCheque() {
+        return automaticCheque;
+    }
+
+    public void setAutomaticCheque(int automaticCheque) {
+        this.automaticCheque = automaticCheque;
+    }
 
     public int getPreventTotalDisc() {
         return preventTotalDisc;

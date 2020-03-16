@@ -380,5 +380,8 @@
     <string name="creditvalue">Credit value</string>
     <string name="preventTotaldisc">منع الخصم الكلي</string>
     <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
+    <string name="automatic_cheque">Automatic cheque</string>
+    <string name="tafqit">tafqit</string>
+    <string name="app_cheque_count">عدد الشيكات</string>
 
 </resources>

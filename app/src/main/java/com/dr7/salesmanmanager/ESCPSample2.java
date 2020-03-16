@@ -38,6 +38,7 @@ import com.sewoo.jpos.printer.ESCPOSPrinter;
 import com.sewoo.jpos.printer.LKPrint;
 import com.sewoo.jpos.request.RequestQueue;
 
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
@@ -979,6 +980,11 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null,true, "الصافي   : " + voucherforPrint.getNetSales() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,true, "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+            if(obj.getAllSettings().get(0).getTafqit()==1)
+            {
+                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString(voucherforPrint.getSubTotal()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            }
 			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ التوقيع : __________" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
@@ -1248,6 +1254,7 @@ public class ESCPSample2
 				}
 
 			}
+			Log.e("getArabicString",""+getArabicString(voucherforPrint.getSubTotal()+""));
 
 
 
@@ -1261,6 +1268,12 @@ public class ESCPSample2
 			}
 
 			posPtr.printAndroidFont(  null, "I received the goods complete and in good condition and free from any defects and I pledge to pay the value of this invoice." /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			if(obj.getAllSettings().get(0).getTafqit()==1)
+            {
+                posPtr.printAndroidFont(  null, "I received : " +   getArabicString(voucherforPrint.getSubTotal()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            }
 			posPtr.printAndroidFont(  null, "" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,  "Recipient : ____________  Signature : __________" + "\n"  , nLineWidth, 22, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1382,6 +1395,11 @@ public class ESCPSample2
 
 			}
 			posPtr.lineFeed(2);
+            if(obj.getAllSettings().get(0).getTafqit()==1)
+            {
+                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString( payforBank.getAmount() +"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            }
 			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null,true, "   المستلم ---------------                 التوقيع --------------               " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1494,6 +1512,11 @@ public class ESCPSample2
 
 			}
 			posPtr.lineFeed(2);
+            if(obj.getAllSettings().get(0).getTafqit()==1)
+            {
+                posPtr.printAndroidFont(  null, "I receved \t\t" +   getArabicString( payforBank.getAmount() +"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+            }
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null, "          Recipient ---------------            Signature --------------         " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 

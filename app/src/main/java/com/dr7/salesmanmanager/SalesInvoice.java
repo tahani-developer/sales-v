@@ -193,6 +193,7 @@ public class SalesInvoice extends Fragment {
     volatile boolean stopWorker;
     DecimalFormat threeDForm ;
     double maxDiscounr_value;
+    int savedState=0;
 //    static Voucher voucherSale;
 //    static List<Item> itemSale;
    /* public static void test2(){
@@ -691,61 +692,72 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    closeBT();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-                final String remarkText=remarkEditText.getText().toString().trim();
+                SaveData.setEnabled(false);
+                Log.e("savedState",""+savedState);
+//                if(savedState!=1 )// ( 0 || 2 )
+//                {
+                    savedState=1;
+                    final String remarkText=remarkEditText.getText().toString().trim();
 
-                itemForPrint.clear();
-                clicked = false;
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
+                    itemForPrint.clear();
+                    clicked = false;
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+                    builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int l) {
 
-                        if (!clicked) {
+                            if (!clicked) {
 
-                            clicked = true;
-                            int listSize = itemsListView.getCount();
-                            if (listSize == 0)
-                                Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
-                            else {
-                                if(mDbHandler.getAllSettings().get(0).getRequiNote()==1)
+                                clicked = true;
+                                int listSize = itemsListView.getCount();
+                                if (listSize == 0)
                                 {
-                                    if(TextUtils.isEmpty(remarkText))
-                                    {
-                                        remarkEditText.setError("Required");
-                                        remarkEditText.requestFocus();
-                                    }
-                                    else
-                                    {
-                                        saveData();
-                                    }
-
+                                    Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
+                                    SaveData.setEnabled(true);
                                 }
+
                                 else {
-                                    saveData();
+                                    if(mDbHandler.getAllSettings().get(0).getRequiNote()==1)
+                                    {
+                                        if(TextUtils.isEmpty(remarkText))
+                                        {
+                                            remarkEditText.setError("Required");
+                                            remarkEditText.requestFocus();
+                                            SaveData.setEnabled(true);
+                                        }
+                                        else
+                                        {
+                                            saveData();
+                                        }
 
-                                }
+                                    }
+                                    else {
+                                        saveData();
+
+                                    }
 
 
 //                                clearLayoutData();
+                                }
+                                //not empty list
                             }
-                            //not empty list
+                        }//end ok save
+
+                    });
+
+                    builder.setNegativeButton(getResources().getString(R.string.app_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SaveData.setEnabled(true);
                         }
-                    }//end ok save
+                    });
+                    builder.create().
 
-                });
+                            show();
 
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().
-
-                        show();
             }//end save data
         });
         return view;
@@ -785,6 +797,7 @@ public class SalesInvoice extends Fragment {
 
             if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
                 Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
+                SaveData.setEnabled(true);
 
             } else {
 
@@ -808,6 +821,7 @@ public class SalesInvoice extends Fragment {
                         }
 
                         else{
+                            SaveData.setEnabled(true);
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                             builder.setTitle(getResources().getString(R.string.app_alert));
@@ -826,21 +840,20 @@ public class SalesInvoice extends Fragment {
                         }//end else
 
                     } else {
+                        SaveData.setEnabled(true);
                         reCheck_customerAuthorize();// test
                     }
                 } else {// you should not authorize customer account balance
 
 
                     if(virefyMaxDescount()){
-//                                                if (!remarkEditText.getText().toString().equals("")){
                         AddVoucher();
                         clearLayoutData();
-//                                            }else{
-//                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-//                                            }
+
                     }
 
                     else{
+                        SaveData.setEnabled(true);
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                         builder.setTitle(getResources().getString(R.string.app_alert));
@@ -861,6 +874,7 @@ public class SalesInvoice extends Fragment {
             }
         }
         else{// if tax ==0 or net sales==0 don't save data
+            SaveData.setEnabled(true);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
             builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1266,6 +1280,7 @@ public class SalesInvoice extends Fragment {
 
     public  void reCheck_customerAuthorize()
     {
+        SaveData.setEnabled(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getResources().getString(R.string.not_authoriz));
         builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1287,15 +1302,19 @@ public class SalesInvoice extends Fragment {
     }
 
    public void  AddVoucher(){
-          mDbHandler.addVoucher(voucher);
+
+       mDbHandler.addVoucher(voucher);
+       savedState=2;// addesd sucssesfulley
           for (int i = 0; i < items.size(); i++) {
 
               Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                       items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                       items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
-                      items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+                      items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0,items.get(i).getDescription());
+              Log.e("AddVoucher",""+items.get(i).getDescription());
               totalQty_forPrint += items.get(i).getQty();
               itemsList.add(item);
+              Log.e("AddVoucher",""+item.getDescription());
 
               mDbHandler.addItem(item);
               itemForPrint.add(item);
@@ -1373,7 +1392,7 @@ public class SalesInvoice extends Fragment {
 
                           case 5:
 
-//                                                             MTP.setChecked(true);
+//                             MTP.setChecked(true);
                               voucherShow = voucher;
                               convertLayoutToImage(voucher);
                               Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
@@ -1721,6 +1740,7 @@ public class SalesInvoice extends Fragment {
         totalQty_textView.setText("+0");
         discvalue_static=0;
         refrechItemForReprint();
+        SaveData.setEnabled(true);
 
     }
 

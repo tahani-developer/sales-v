@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
@@ -887,6 +888,19 @@ Log.e("printMultilingual","ontCash_EJABI");
 
 
         String dataArabic = "";
+            String footerString="";
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+          footerString = "استلمت : " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
+            "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+
+        }
+        else {
+            footerString= "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+
+        }
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
@@ -904,9 +918,7 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
                     "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "بطاقة") + "\n";
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
 
         } else {
 
@@ -946,9 +958,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                 }
             }
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
+
 
 
         }
@@ -988,6 +999,19 @@ Log.e("printMultilingual","ontCash_EJABI");
             firstName=payforBank.getCustName().substring(0,20);
             LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
         }
+        String footerString="";
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+            footerString = "I receved :\t \t " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+
+        }
+        else {
+            footerString=    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+
+        }
 
         if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
@@ -1007,9 +1031,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "Amount received:" + payforBank.getAmount() + "\n" +
                     "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Credit") + "\n";
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
+
 
         } else {
 
@@ -1072,9 +1095,7 @@ Log.e("printMultilingual","ontCash_EJABI");
                 }
             }
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
 
 
         }

@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 77;
+    private static final int DATABASE_VERSION = 80;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -244,6 +244,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PreventOrder="PreventOrder";
     private static final String RequiredNote="RequiredNote";
     private static final String PreventTotalDiscount="PreventTotalDiscount";
+    private static final String AutomaticCheque="AutomaticCheque";
+    private static final String Tafqit="Tafqit";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -290,6 +292,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String COMPANY_NUMBER2 = "COMPANY_NUMBER";
     private static final String ITEM_YEAR = "ITEM_YEAR";
     private static final String IS_POSTED1 = "IS_POSTED";
+    private static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String PAYMENTS = "PAYMENTS";
@@ -593,7 +596,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + salesManName + " TEXT,"
                 + PreventOrder + " INTEGER,"
                 + RequiredNote + " INTEGER,"
-                + PreventTotalDiscount + " INTEGER"
+                + PreventTotalDiscount + " INTEGER,"
+                + AutomaticCheque + " INTEGER,"
+                + Tafqit + " INTEGER"
 
 
 
@@ -650,7 +655,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + TAX_PERCENT + " INTEGER,"
                 + COMPANY_NUMBER2 + " INTEGER,"
                 + ITEM_YEAR + " TEXT,"
-                + IS_POSTED1 + " INTEGER" + ")";
+                + IS_POSTED1 + " INTEGER,"
+                + ITEM_DESCRIPTION+ " TEXT"
+                + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -747,6 +754,24 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
         try{
             db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
         }catch (Exception e)
@@ -1150,6 +1175,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addItemsMaster(ItemsMaster item) {
         db = this.getReadableDatabase();
+//        db.beginTransaction();
         ContentValues values = new ContentValues();
 
         values.put(ComapnyNo1, item.getCompanyNo());
@@ -1164,6 +1190,9 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         db.insert(Items_Master, null, values);
+
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
         db.close();
     }
     //----------------------------------------------------
@@ -1240,6 +1269,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addSalesMan_Items_Balance(SalesManItemsBalance balance) {
         db = this.getReadableDatabase();
+//        db.beginTransaction();
         ContentValues values = new ContentValues();
 
         values.put(ComapnyNo5, balance.getCompanyNo());
@@ -1248,6 +1278,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Qty5, balance.getQty());
 
         db.insert(SalesMan_Items_Balance, null, values);
+//
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
         db.close();
     }
 
@@ -1276,6 +1309,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public void addCustomerPrice(CustomerPrice price) {
         db = this.getReadableDatabase();
+//        db.beginTransaction();
         ContentValues values = new ContentValues();
 
         values.put(ItemNumber, price.getItemNumber());
@@ -1283,6 +1317,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Price, price.getPrice());
 
         db.insert(CustomerPrices, null, values);
+
+//        db.setTransactionSuccessful();
+//        db.endTransaction();
         db.close();
     }
 
@@ -1307,7 +1344,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
-                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal) {
+                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
+                           int automaticCheque,int tafqit) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1339,6 +1377,10 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PreventOrder,preventOrder);
         values.put(RequiredNote,requiNote);
         values.put(PreventTotalDiscount,preventDiscTotal);
+        values.put(AutomaticCheque,automaticCheque);
+        values.put(Tafqit,tafqit);
+
+
 
 
         db.insert(TABLE_SETTING, null, values);
@@ -1411,6 +1453,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(COMPANY_NUMBER2, item.getCompanyNumber());
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
+        values.put(ITEM_DESCRIPTION, item.getDescription());
+        Log.e("addItem",""+item.getDescription());
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
         db.close();
@@ -1636,6 +1680,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setPriventOrder(Integer.parseInt(cursor.getString(25)));//for test
                 setting.setRequiNote(Integer.parseInt(cursor.getString(26)));
                 setting.setPreventTotalDisc(Integer.parseInt(cursor.getString(27)));
+                setting.setAutomaticCheque(Integer.parseInt(cursor.getString(28)));
+                setting.setTafqit(Integer.parseInt(cursor.getString(29)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -2042,7 +2088,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
                 " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
-                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE " +
+                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION " +
                 "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
                 "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
 
@@ -2079,6 +2125,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setYear(cursor.getString(14));
                 item.setIsPosted(Integer.parseInt(cursor.getString(15)));
                 item.setDate(cursor.getString(16));
+                item.setDescreption(cursor.getString(17));
+                Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list
                 items.add(item);

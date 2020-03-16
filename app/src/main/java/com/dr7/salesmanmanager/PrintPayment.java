@@ -1547,9 +1547,7 @@ public boolean filters(int n) {
                 Bitmap bitmap2  = BitmapFactory.decodeStream(inputStream);
                 pic.setImageBitmap(bitmap2);
                 pic.setDrawingCacheEnabled(true);
-
                 Bitmap bitmap = pic.getDrawingCache();
-
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();

@@ -182,6 +182,7 @@ public class DeExportJason extends AppCompatActivity {
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost ();
+
                 try {
                     request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php"));
                 } catch (URISyntaxException e) {
@@ -196,7 +197,7 @@ public class DeExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
                 HttpResponse response = client.execute(request);
                 BufferedReader in = new BufferedReader(new

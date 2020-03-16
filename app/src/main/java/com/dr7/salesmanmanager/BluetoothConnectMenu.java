@@ -60,6 +60,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.TOTAL;
@@ -966,7 +967,9 @@ public class BluetoothConnectMenu extends Activity {
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
         TextView doneinsewooprint = (TextView) dialog_footer.findViewById(R.id.done);
 
-        TextView total, discount, tax, ammont, Total_qty_total;
+        TextView total, discount, tax, ammont, Total_qty_total,amountText;
+        LinearLayout linearArabicAmount=(LinearLayout) dialog_footer.findViewById(R.id.linearArabicAmount);
+        amountText = (TextView) dialog_footer.findViewById(R.id.amountText);
         total = (TextView) dialog_footer.findViewById(R.id.total);
         discount = (TextView) dialog_footer.findViewById(R.id.discount);
         tax = (TextView) dialog_footer.findViewById(R.id.tax);
@@ -978,6 +981,18 @@ public class BluetoothConnectMenu extends Activity {
         Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
         Total_qty_total.setText(count+"");
         linearView = (LinearLayout) dialog_footer.findViewById(R.id.ll);
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+            linearArabicAmount.setVisibility(View.VISIBLE);
+            amountText.setText( getArabicString(voucher.getSubTotal()+""));
+        }
+        else {
+            linearArabicAmount.setVisibility(View.GONE);
+
+        }
+
+
+
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -1200,7 +1215,8 @@ public class BluetoothConnectMenu extends Activity {
         TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
         TextView compname,store, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,
-                total_qty_text,salesName,textViewPrice,textviewTotal;
+                total_qty_text,salesName,textViewPrice,textviewTotal,amountText;
+        LinearLayout linearArabicAmount=(LinearLayout) dialogs.findViewById(R.id.linearArabicAmount);
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
         TableRow totalrow,discountrow,netrow,taxrow;
         totalrow=(TableRow) dialogs.findViewById(R.id.rowTotal);
@@ -1212,6 +1228,7 @@ public class BluetoothConnectMenu extends Activity {
         textviewTotal = (TextView) dialogs.findViewById(R.id.textViewTotal);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
+        amountText = (TextView) dialogs.findViewById(R.id.amountText);
         tel = (TextView) dialogs.findViewById(R.id.tel);
         taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
         vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
@@ -1368,10 +1385,6 @@ public class BluetoothConnectMenu extends Activity {
 
 
                 }
-//                final TableRow rows = new TableRow(BluetoothConnectMenu.this);
-//                TableRow.LayoutParams lp = new TableRow.LayoutParams(500, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-//                lp.setMargins(0, 10, 0, 0);
-//                rows.setLayoutParams(lp);
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
@@ -1387,7 +1400,16 @@ public class BluetoothConnectMenu extends Activity {
 
 
         total_qty_text.setText(count+"");
-        Log.e("countItem",""+count);
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+            linearArabicAmount.setVisibility(View.VISIBLE);
+            amountText.setText( getArabicString(voucher.getSubTotal()+""));
+        }
+        else {
+            linearArabicAmount.setVisibility(View.GONE);
+
+        }
+        Log.e("getArabicString","\t"+ getArabicString(voucher.getSubTotal()+""));
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);

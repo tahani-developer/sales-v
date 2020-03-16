@@ -513,6 +513,22 @@
                 android:text="@string/preventTotaldisc"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/automatic_cheque_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/automatic_cheque"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/tafqit_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/tafqit"
+                android:textColor="@color/text_view_color"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -330,6 +330,9 @@
     <string name="creditvalue">Credit value</string>
     <string name="preventTotaldisc">Prevent Total discount</string>
     <string name="failUsers">Empty Database Enter as Master</string>
+    <string name="automatic_cheque">Automatic cheque</string>
+    <string name="tafqit">tafqit</string>
+    <string name="app_cheque_count">Cheque count</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

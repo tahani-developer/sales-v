@@ -103,7 +103,6 @@ public class ExportJason extends AppCompatActivity {
                 vouchers.get(i).setIsPosted(1);
 //                vouchers.get(i).setRemark("\\%");
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
-                Log.e("getJSONObject",""+vouchers.get(i).getJSONObject());
             }
 
         items = mHandler.getAllItems();
@@ -111,7 +110,9 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < items.size(); i++)
             if (items.get(i).getIsPosted() == 0) {
                 items.get(i).setIsPosted(1);
+                Log.e("getDescription",""+items.get(i).getDescription());
                 jsonArrayItems.put(items.get(i).getJSONObject());
+                Log.e("getJSONObject",""+items.get(i).getJSONObject());
             }
 
         try {
@@ -187,13 +188,14 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
+                Log.e("jsonArrayItems",""+jsonArrayItems.get(0));
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 HttpResponse response = client.execute(request);
 
