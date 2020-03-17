@@ -192,7 +192,7 @@ public class DeExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
-                Log.e("Sales_Voucher_M",""+jsonArrayVouchers.toString().trim());
+
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));

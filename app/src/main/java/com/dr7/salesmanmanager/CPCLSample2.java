@@ -144,6 +144,17 @@ public class CPCLSample2 {
         this.cpclPrinter.printForm();
     }
 
+    public void imageTestEnglish_ejabi(int count, Bitmap testB) throws IOException {//
+        this.cpclPrinter.setForm(0, 0, 0,testB.getHeight()-50 , count);
+        this.cpclPrinter.setMedia(this.paperType);
+
+        this.cpclPrinter.printBitmap(testB, 10, 10);//x=400
+
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
+        this.cpclPrinter.printForm();
+    }
+
     public void dmStamp(int count, Bitmap bitmap) throws IOException {
         this.cpclPrinter.setForm(0, 200, 200, 406, count);
         this.cpclPrinter.setMedia(this.paperType);
@@ -713,6 +724,15 @@ public class CPCLSample2 {
 Log.e("printMultilingual","ontCash_EJABI");
         int nLineWidth = 1140;
         String Arabicdata = bankEnglish(count);
+//        Bitmap bitmap=null;
+//        try {
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//             bitmap=companyInfo.getLogo();
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//        }
+
         Log.e("printMultilingual",""+Arabicdata);
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
@@ -720,6 +740,8 @@ Log.e("printMultilingual","ontCash_EJABI");
 //            imageTestEnglish(0,);
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
+
+
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 200, 0);
             try {
                 Thread.sleep(1000);

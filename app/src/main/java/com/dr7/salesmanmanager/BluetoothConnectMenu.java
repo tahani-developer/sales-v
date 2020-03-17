@@ -635,13 +635,23 @@ public class BluetoothConnectMenu extends Activity {
 //                        itemForPrint.clear();
 
                         } else {
-                            if (count == 2||count==4 || count==8) {//  (8) for print last payment===> ReciptVoucher
+                            if (count == 2||count==4 || count==8) {
+                                Bitmap bitmap=null;
+                                try {
+                                    companyInfo = obj.getAllCompanyInfo().get(0);
+                                    bitmap=companyInfo.getLogo();
+                                }
+                                catch(Exception e){
+                                   // bitmap=getResources().getDrawable(R.drawable.logo);
+                                    e.printStackTrace();
+                                }//  (8) for print last payment===> ReciptVoucher
                                 if(count==2){
 //                                payList=paymentsforPrint;
 //                                payforBank=ReceiptVoucher.payment;
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(2);
                                     }else {
+                                       // sample.imageTestEnglish_ejabi(1,bitmap);
                                         sample.printMultilingualFontCash_EJABI(2);
 
                                     }
@@ -653,6 +663,8 @@ public class BluetoothConnectMenu extends Activity {
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(count);
                                     }else {
+
+                                       // sample.imageTestEnglish_ejabi(1,bitmap);
                                         sample.printMultilingualFontCash_EJABI(count);
 
                                     }
@@ -984,7 +996,7 @@ public class BluetoothConnectMenu extends Activity {
         if(obj.getAllSettings().get(0).getTafqit()==1)
         {
             linearArabicAmount.setVisibility(View.VISIBLE);
-            amountText.setText( getArabicString(voucher.getSubTotal()+""));
+            amountText.setText( getArabicString(voucher.getNetSales()+""));
         }
         else {
             linearArabicAmount.setVisibility(View.GONE);
@@ -1403,13 +1415,13 @@ public class BluetoothConnectMenu extends Activity {
         if(obj.getAllSettings().get(0).getTafqit()==1)
         {
             linearArabicAmount.setVisibility(View.VISIBLE);
-            amountText.setText( getArabicString(voucher.getSubTotal()+""));
+            amountText.setText( getArabicString(voucher.getNetSales()+""));
         }
         else {
             linearArabicAmount.setVisibility(View.GONE);
 
         }
-        Log.e("getArabicString","\t"+ getArabicString(voucher.getSubTotal()+""));
+       // Log.e("getArabicString","\t"+ getArabicString(voucher.getNetSales()+""));
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);

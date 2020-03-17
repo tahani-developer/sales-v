@@ -754,56 +754,31 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        /* PreventOrder + " I
+ RequiredNote + " I
+ PreventTotalDiscou
+ AutomaticCheque +
+ Tafqit + " INTEGER*/
         try{
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
+            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
         try{
-            db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+            db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
         try{
-            db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
+            db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
 
-        try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
         try{
             db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -816,6 +791,66 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
+
+
+
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
 
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
@@ -831,25 +866,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
 

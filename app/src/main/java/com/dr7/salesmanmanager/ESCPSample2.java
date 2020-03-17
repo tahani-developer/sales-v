@@ -982,7 +982,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null,true, "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
             if(obj.getAllSettings().get(0).getTafqit()==1)
             {
-                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString(voucherforPrint.getSubTotal()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString(voucherforPrint.getNetSales()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
             }
 			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ التوقيع : __________" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1254,7 +1254,7 @@ public class ESCPSample2
 				}
 
 			}
-			Log.e("getArabicString",""+getArabicString(voucherforPrint.getSubTotal()+""));
+			//Log.e("getArabicString",""+getArabicString(voucherforPrint.getSubTotal()+""));
 
 
 
@@ -1271,7 +1271,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			if(obj.getAllSettings().get(0).getTafqit()==1)
             {
-                posPtr.printAndroidFont(  null, "I received : " +   getArabicString(voucherforPrint.getSubTotal()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                posPtr.printAndroidFont(  null, "I received : " +   getArabicString(voucherforPrint.getNetSales()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
             }
 			posPtr.printAndroidFont(  null, "" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);

@@ -115,11 +115,11 @@ public class ExportJason extends AppCompatActivity {
                 Log.e("getJSONObject",""+items.get(i).getJSONObject());
             }
 
-        try {
-            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
@@ -188,7 +188,6 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
-                Log.e("jsonArrayItems",""+jsonArrayItems.get(0));
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
@@ -322,6 +321,7 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+            String impo="";
             if(s != null) {
                 if (s.contains("SUCCESS")) {
                     mHandler.updateVoucher();
@@ -337,7 +337,16 @@ public class ExportJason extends AppCompatActivity {
                     Log.e("tag", "****Failed to export data");
                 }
             } else {
-                Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+                try {
+                    Log.e("onPostExecute",""+s.toString());
+                    Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+                    Log.e("ImpoException",""+e.getMessage().toString());
+
+                }
+
             }
             progressDialog.dismiss();
         }
