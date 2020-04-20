@@ -322,7 +322,7 @@
     <string name="hidePrice">Hide Price</string>
     <string name="return_type">Return</string>
     <string name="new_type">New</string>
-    <string name="TypeVoucher">Type Voucher :</string>
+    <string name="TypeVoucher">Type:</string>
     <string name="preventNew">Prevent New Order</string>
     <string name="requiredNote">Required Note</string>
     <string name="itemadedbefor">this Item aded befor</string>

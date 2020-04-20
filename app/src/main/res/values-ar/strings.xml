@@ -372,7 +372,7 @@
     <string name="hidePrice">اخفاء السعر</string>
     <string name="return_type">مرتجعات</string>
     <string name="new_type">جديد</string>
-    <string name="TypeVoucher">نوع الفاتورة :</string>
+    <string name="TypeVoucher">النوع :</string>
     <string name="preventNew">منع الطلبات الجديدة </string>
     <string name="requiredNote">الملاحظة اجبارية</string>
     <string name="itemadedbefor">تم اضافة هذه المادة من قبل</string>
