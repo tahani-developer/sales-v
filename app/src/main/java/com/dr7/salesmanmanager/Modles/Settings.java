@@ -32,6 +32,15 @@ public class Settings {
     private int preventTotalDisc;
     private int automaticCheque;
     private int tafqit;
+    private int preventChangPayMeth;
+
+    public int getPreventChangPayMeth() {
+        return preventChangPayMeth;
+    }
+
+    public void setPreventChangPayMeth(int preventChangPayMeth) {
+        this.preventChangPayMeth = preventChangPayMeth;
+    }
 
     public int getTafqit() {
         return tafqit;

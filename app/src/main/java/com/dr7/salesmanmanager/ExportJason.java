@@ -110,9 +110,9 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < items.size(); i++)
             if (items.get(i).getIsPosted() == 0) {
                 items.get(i).setIsPosted(1);
-                Log.e("getDescription",""+items.get(i).getDescription());
+               // Log.e("getDescription",""+items.get(i).getDescription());
                 jsonArrayItems.put(items.get(i).getJSONObject());
-                Log.e("getJSONObject",""+items.get(i).getJSONObject());
+                //Log.e("getJSONObject",""+items.get(i).getJSONObject());
             }
 
 //        try {

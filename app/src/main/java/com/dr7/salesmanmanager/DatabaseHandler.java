@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 80;
+    private static final int DATABASE_VERSION = 81;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -246,6 +246,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PreventTotalDiscount="PreventTotalDiscount";
     private static final String AutomaticCheque="AutomaticCheque";
     private static final String Tafqit="Tafqit";
+    private static final String  PreventChangPayMeth="PreventChangPayMeth";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -598,7 +599,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + RequiredNote + " INTEGER,"
                 + PreventTotalDiscount + " INTEGER,"
                 + AutomaticCheque + " INTEGER,"
-                + Tafqit + " INTEGER"
+                + Tafqit + " INTEGER,"
+                + PreventChangPayMeth + " INTEGER"
+
 
 
 
@@ -824,6 +827,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         try{
             db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD PreventChangPayMeth  INTEGER NOT NULL DEFAULT '1'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1362,7 +1372,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1396,6 +1406,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PreventTotalDiscount,preventDiscTotal);
         values.put(AutomaticCheque,automaticCheque);
         values.put(Tafqit,tafqit);
+        values.put(PreventChangPayMeth,preventChangPayMeth);
+
 
 
 
@@ -1699,6 +1711,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setPreventTotalDisc(Integer.parseInt(cursor.getString(27)));
                 setting.setAutomaticCheque(Integer.parseInt(cursor.getString(28)));
                 setting.setTafqit(Integer.parseInt(cursor.getString(29)));
+                setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -2120,7 +2133,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
                 item.setVoucherType(Integer.parseInt(cursor.getString(1)));
                 item.setItemNo(cursor.getString(2));
-                Log.e("cursorItemNo",""+cursor.getString(2));
+               // Log.e("cursorItemNo",""+cursor.getString(2));
                 item.setItemName(cursor.getString(3));
                 item.setUnit(cursor.getString(4));
                 item.setQty(Float.parseFloat(cursor.getString(5)));

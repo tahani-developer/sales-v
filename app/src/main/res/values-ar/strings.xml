@@ -383,5 +383,6 @@
     <string name="automatic_cheque">Automatic cheque</string>
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">عدد الشيكات</string>
+    <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
 
 </resources>

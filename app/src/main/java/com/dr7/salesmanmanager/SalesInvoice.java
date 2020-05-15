@@ -544,42 +544,63 @@ public class SalesInvoice extends Fragment {
 
             }
         });
+        try {
+            if(mDbHandler.getAllSettings().get(0).getPreventChangPayMeth()==1){
+                paymentTermRadioGroup.setEnabled(false);
+                credit.setEnabled(false);
+                cash.setEnabled(false);
+               // Toast.makeText(getActivity(), "false", Toast.LENGTH_SHORT).show();
 
-        paymentTermRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.creditRadioButton:
-                        payMethod = 0;
-
-                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
-                        {
-                            discTextView.setText("0.0");
-                            netTotalTextView.setText("0.0");
-                            netTotal = 0.0;
-                            totalDiscount=0;
-                            sum_discount=0;
-                            clearLayoutData();
-                        }
-                        calculateTotals();
-
-                        break;
-                    case R.id.cashRadioButton:
-                        payMethod = 1;
-
-                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
-                        {
-                            discTextView.setText("0.0");
-                            netTotalTextView.setText("0.0");
-                            netTotal = 0.0;
-                            totalDiscount=0;
-                            sum_discount=0;
-                            clearLayoutData();
-                        }
-                        calculateTotals();
-                        break;
-                }
             }
-        });
+            else {
+                paymentTermRadioGroup.setEnabled(true);
+                credit.setEnabled(true);
+                cash.setEnabled(true);
+              //  Toast.makeText(getActivity(), "true enabled 0 ", Toast.LENGTH_SHORT).show();
+
+                paymentTermRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.creditRadioButton:
+                                payMethod = 0;
+
+                                if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                                {
+                                    discTextView.setText("0.0");
+                                    netTotalTextView.setText("0.0");
+                                    netTotal = 0.0;
+                                    totalDiscount=0;
+                                    sum_discount=0;
+                                    clearLayoutData();
+                                }
+                                calculateTotals();
+
+                                break;
+                            case R.id.cashRadioButton:
+                                payMethod = 1;
+
+                                if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                                {
+                                    discTextView.setText("0.0");
+                                    netTotalTextView.setText("0.0");
+                                    netTotal = 0.0;
+                                    totalDiscount=0;
+                                    sum_discount=0;
+                                    clearLayoutData();
+                                }
+                                calculateTotals();
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("Exception",""+e.getMessage());
+        }
+
+
 
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
