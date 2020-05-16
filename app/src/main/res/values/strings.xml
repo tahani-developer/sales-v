@@ -336,6 +336,7 @@
     <string name="preventPayMethod">Prevent change Pay Method</string>
     <string name="credit_value">credit Value</string>
     <string name="invoice_note">Invoice Note :</string>
+    <string name="saveLocation">Save Location</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

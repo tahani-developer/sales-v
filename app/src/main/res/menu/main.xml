@@ -56,4 +56,9 @@
         android:orderInCategory="100"
         android:title="@string/action_printer_setting"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/saveLocation"
+        android:orderInCategory="100"
+        android:title="@string/saveLocation"
+        app:showAsAction="never" />
 </menu>

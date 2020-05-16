@@ -50,7 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
-import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
@@ -296,10 +296,60 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.printerSetting) {
             openPasswordDialog(4);
         }
+        else if (id == R.id.saveLocation) {
+          saveCurrentLocation();
+        }
 
         return super.
 
                 onOptionsItemSelected(item);
+    }
+
+    private void saveCurrentLocation() {
+//        addCustomerLocation
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                CustomerLocation customerLocation=new CustomerLocation();
+                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
+                customerLocation.setLONG(longitude+"");
+                customerLocation.setLATIT(latitude+"");
+                mDbHandler.addCustomerLocation(customerLocation);
+                Log.e("latitude",""+latitude+longitude);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+
+
+
     }
 
     @Override

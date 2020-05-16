@@ -9,13 +9,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.ArrayMap;
 import android.util.Log;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
@@ -55,6 +55,13 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+
+    private static final String CUSTOMER_LOCATION  = "CUSTOMER_LOCATION";
+
+    private static final String CUS_NO = "CUS_NO";
+    private static final String LONG = "LONG";
+    private static final String LATIT = "LATIT";
     //----------------------------------------------------------------------
 
     private static final String ACCOUNT_REPORT  = "ACCOUNT_REPORT";
@@ -386,6 +393,16 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+
+        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE " + CUSTOMER_LOCATION + "("
+                + CUS_NO + " TEXT,"
+                + LONG + " TEXT,"
+                + LATIT + " TEXT"+
+
+                ")";
+        db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
                 + DATE + " TEXT,"
@@ -1087,6 +1104,18 @@ DatabaseHandler extends SQLiteOpenHelper {
           catch (Exception e) {
                 Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
             }
+        try {
+            String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE " + CUSTOMER_LOCATION + "("
+                    + CUS_NO + " TEXT,"
+                    + LONG + " TEXT,"
+                    + LATIT + " TEXT" +
+
+                    ")";
+            db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+        }
+        catch (Exception e) {
+            Log.e("onUpgrade*****", "CREATE_TABLE_CUSTOMER_LOCATION");
+        }
 
         try{
             db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
@@ -1108,6 +1137,26 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(CUST_BALANCE, account_report.getCust_balance());
             values.put(CUST_NUMBER_REPORT, account_report.getCust_no());
             db.insert(ACCOUNT_REPORT, null, values);
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("DBAccount_Report",""+e.getMessage());
+
+        }
+
+    }
+
+    public void addCustomerLocation(CustomerLocation customerLocation)
+    {
+        try {
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(CUS_NO, customerLocation.getCUS_NO());
+            values.put(LONG,customerLocation.getLONG());
+            values.put(LATIT,customerLocation.getLATIT());
+
+            db.insert(CUSTOMER_LOCATION, null, values);
             db.close();
         }
         catch (Exception e){
