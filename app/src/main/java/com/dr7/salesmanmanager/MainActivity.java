@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,6 +60,13 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 
@@ -103,6 +112,8 @@ public class MainActivity extends AppCompatActivity
     int sum_chech_export_lists=0;
      public static String languagelocalApp="";
      DrawerLayout drawer_layout;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    private FusedLocationProviderClient fusedLocationClient;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -138,6 +149,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer_layout=findViewById(R.id.drawer_layout);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(languagelocalApp.equals("ar"))
         {
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -313,44 +325,87 @@ public class MainActivity extends AppCompatActivity
                 != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                                CustomerLocation customerLocation = new CustomerLocation();
+                                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
+                                customerLocation.setLONG(longitude + "");
+                                customerLocation.setLATIT(latitude + "");
+                                mDbHandler.addCustomerLocation(customerLocation);
+                                Log.e("latitude", "" + latitude + longitude);
+//
+
+                            }
+                            // Logic to handle location object
+
+                        }
+                    });
         }
+//        else {
 
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                CustomerLocation customerLocation=new CustomerLocation();
-                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
-                customerLocation.setLONG(longitude+"");
-                customerLocation.setLATIT(latitude+"");
-                mDbHandler.addCustomerLocation(customerLocation);
-                Log.e("latitude",""+latitude+longitude);
-            }
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
+            /////////////////////////////////////////**********************************
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                                CustomerLocation customerLocation = new CustomerLocation();
+                                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
+                                customerLocation.setLONG(longitude + "");
+                                customerLocation.setLATIT(latitude + "");
+                                mDbHandler.addCustomerLocation(customerLocation);
+                                Log.e("latitude", "" + latitude + longitude);
+//
 
-            }
+                            }
+                            // Logic to handle location object
 
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
+                        }
+                    });
+//        }
 
-            @Override
-            public void onProviderDisabled(String provider) {
 
-            }
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
 
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                   saveCurrentLocation();
+                } else {
+
+//                    ActivityCompat.requestPermissions(this, new String[]
+//                            {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                        ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
+                    Toast.makeText(MainActivity.this, "check permission location ", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+        }
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
