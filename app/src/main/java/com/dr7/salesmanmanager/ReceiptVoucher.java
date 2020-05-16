@@ -1,6 +1,7 @@
 package com.dr7.salesmanmanager;
 
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -21,7 +22,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -47,6 +51,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.Cheque;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -72,6 +77,10 @@ import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.widget.LinearLayout.HORIZONTAL;
+import static android.widget.LinearLayout.VERTICAL;
+import static java.util.Calendar.JANUARY;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -87,14 +96,16 @@ public class ReceiptVoucher extends Fragment {
     public static List<Payment> payments;
     public static List<Payment> paymentsforPrint;
     Animation animZoomIn;
-    private LinearLayout chequeLayout;
+    private LinearLayout chequeLayout,linear_checkNo;
     private ScrollView scrollView;
     private Spinner paymentKindSpinner;
     private ImageView pic;
     private ImageButton custInfoImgButton, clearImgButton, saveData;
     private Button addCheckButton;
     private TextView voucherNo, paymentTerm;
+    EditText chequNo_EditText;
     int voucherType = 1;
+
 
     private double total = 0.0;
 
@@ -103,6 +114,7 @@ public class ReceiptVoucher extends Fragment {
 
     private EditText amountEditText, remarkEditText;
     private TableLayout tableCheckData;
+    TableRow tableHeader;
     Calendar myCalendar;
 
     private TextView chequeTotal;
@@ -129,12 +141,10 @@ public class ReceiptVoucher extends Fragment {
 
     public static List<Payment> paymentPrinter;
     static Payment pay1;
-
-
-   /* public static void test3(){
-        customername.setText(CustomerListFragment.Customer_Name.toString());
-
-    }*/
+    String checkValue="";
+    int  amountValue=0;
+    RecyclerView recycler_check;
+    FloatingActionButton editChech;
 
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
@@ -144,7 +154,7 @@ public class ReceiptVoucher extends Fragment {
 
 
     public ReceiptVoucher() {
-//        this.context=getContext();
+       // this.context=getContext();
         // Required empty public constructor
     }
 
@@ -163,6 +173,7 @@ public class ReceiptVoucher extends Fragment {
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();
         chequeLayout = (LinearLayout) view.findViewById(R.id.cheques_totals);
+        linear_checkNo= (LinearLayout) view.findViewById(R.id.linear_checkNo);
         paymentKindSpinner = (Spinner) view.findViewById(R.id.paymentTypeSpinner);
         custInfoImgButton = (ImageButton) view.findViewById(R.id.custInfoImgBtn);
         saveData = (ImageButton) view.findViewById(R.id.SaveData);
@@ -173,13 +184,17 @@ public class ReceiptVoucher extends Fragment {
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         customername = (TextView) view.findViewById(R.id.customer_nameVoucher);
         voucherNo = (TextView) view.findViewById(R.id.voucher_no);
+        chequNo_EditText= (EditText) view.findViewById(R.id.chequNo_EditText);
         paymentTerm = (TextView) view.findViewById(R.id.payment_term);
         addCheckButton = (Button) view.findViewById(R.id.addCheck);
         animZoomIn = (Animation) AnimationUtils.loadAnimation(this.getActivity().getBaseContext(), R.anim.zoom_in);
         tableCheckData = (TableLayout) view.findViewById(R.id.TableCheckData);
+        tableHeader= (TableRow) view.findViewById(R.id.tableHeader);
         pic = (ImageView) view.findViewById(R.id.pic_receipt);
         paymentsforPrint = new ArrayList<>();
         rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
+        editChech= (FloatingActionButton) view.findViewById(R.id.edit_floating);
+        editChech.setOnClickListener(onClickEditCheck);
 
 //
 //        vouchers = obj.getAllVouchers();
@@ -227,141 +242,64 @@ public class ReceiptVoucher extends Fragment {
         }
 
         addCheckButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
 
 
-                final Dialog dialog = new Dialog(getActivity());
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(false);
-                dialog.setContentView(R.layout.check_info_dialog);
-                Window window = dialog.getWindow();
+                    String chequCounter=chequNo_EditText.getText().toString();
+                    String chequamount=amountEditText.getText().toString();
+                    int counter=0;
+                    float chequamountValue=0;
+                    Log.e("mDbHandler",""+mDbHandler.getAllSettings().get(0).getAutomaticCheque());
 
-                final EditText chNum = (EditText) dialog.findViewById(R.id.editText1);
-                final Spinner bank = (Spinner) dialog.findViewById(R.id.editText2);
-                final EditText chDate = (EditText) dialog.findViewById(R.id.editText3);
-                final EditText chValue = (EditText) dialog.findViewById(R.id.editText4);
+                   if(!TextUtils.isEmpty( chequamount)) {
+                       if (mDbHandler.getAllSettings().get(0).getAutomaticCheque() == 1) {
+                           editChech.setVisibility(View.VISIBLE);
+                          if(! TextUtils.isEmpty(chequCounter)){
+                              try {
 
-                Button okButton = (Button) dialog.findViewById(R.id.button1);
-                Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+                                  counter = Integer.parseInt(chequCounter);
+                                  chequamountValue = Float.parseFloat(chequamount);
 
-                myCalendar = Calendar.getInstance();
-                chDate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        new DatePickerDialog(getActivity(), openDatePickerDialog(chDate), myCalendar
-                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-                    }
-                });
+                              } catch (NumberFormatException e) {
+                                  chequNo_EditText.setError("Error Input");
+                                  Log.e("NumberFormatException", "" + e.getMessage());
+                                  counter = 0;
 
-                okButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                              }
+                              if(counter!=0)
+                              {
+                                  displayAutoCheck(counter,1);// just for ejabi
 
-                        final TableRow row = new TableRow(getActivity());
-                        row.setPadding(5, 5, 5, 5);
+                              }
+                              else {
+                                  chequNo_EditText.setError("Error Zero Value");
 
-                        if (checkDialogFields(chNum.getText().toString(), bank.getSelectedItem().toString(),
-                                chDate.getText().toString(), chValue.getText().toString())) {
-                            if ((Double.parseDouble(chValue.getText().toString()) != 0.0)) {
+                              }
+                          }
+                          else{
+                              chequNo_EditText.requestFocus();
+                              chequNo_EditText.setError("Required");
 
-                                if (checkTotal(chValue.getText().toString())) {
-                                    total = total + Double.parseDouble(chValue.getText().toString());
-
-                                    chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
-                                    Payment check = new Payment();
-                                    check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
-                                    check.setBank(bank.getSelectedItem().toString());
-                                    check.setDueDate(chDate.getText().toString());
-                                    check.setAmount(Double.parseDouble(chValue.getText().toString()));
-                                    payments.add(check);
-                                    paymentsforPrint.add(check);
-                                    Log.e("payments", "" + payments.size());
-                                    Log.e("payments tsst", "" + payments.size() + " " + chNum.getText().toString() + " \n" + bank.getSelectedItem().toString()
-                                            + "\n" + chDate.getText().toString() + "\n" + chValue.getText().toString());
-
-                                    row.setTag(position);
-                                    for (int i = 0; i < 4; i++) {
-
-                                        String[] record = {chNum.getText().toString(), bank.getSelectedItem().toString(),
-                                                chDate.getText().toString(), chValue.getText().toString()};
-
-                                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                                        row.setLayoutParams(lp);
-
-                                        TextView textView = new TextView(getActivity());
-
-                                        textView.setHint(record[i]);
-                                        textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
-                                        textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
-                                        textView.setGravity(Gravity.CENTER);
-
-                                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                        textView.setLayoutParams(lp2);
-
-                                        row.addView(textView);
+                          }
 
 
-                                    }
+                       }
+                       else{
+                           editChech.setVisibility(View.GONE);
+                           displayManulaCheck();
 
-                                    row.setOnLongClickListener(new View.OnLongClickListener() {
-                                        @Override
-                                        public boolean onLongClick(View v) {
+                       }
+                   }
 
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                            builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                                            builder.setCancelable(false);
-                                            builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialogInterface, int i) {
-                                                    int tag = Integer.parseInt(row.getTag().toString());
-                                                    payments.remove(tag - 1);
-                                                    tableCheckData.removeView(row);
-                                                    total = total - Double.parseDouble(chValue.getText().toString());
-                                                    chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
-                                                    position--;
-                                                    for (int k = 0; k < tableCheckData.getChildCount(); k++) {
-                                                        TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
-                                                        tableRow.setTag(k);
-                                                    }
-                                                }
-                                            });
+                       else {
+                           amountEditText.setError("Required");
+                           amountEditText.requestFocus();
+                       }
 
-                                            builder.setNegativeButton(getResources().getString(R.string.app_no), null);
-                                            builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear_item));
-                                            AlertDialog alertDialog = builder.create();
-                                            alertDialog.show();
 
-                                            return true;
-                                        }
-                                    });
-                                    tableCheckData.addView(row);
-                                    position++;
 
-                                    dialog.dismiss();
-
-                                } else {
-                                    Toast.makeText(getActivity(), "Cheque Total is greater than Amount value", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(getActivity(), "Please Enter Amount greater than  0 ", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } else
-                            Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
 
             } // end of button preview
 
@@ -377,12 +315,8 @@ public class ReceiptVoucher extends Fragment {
         kinds.add(getResources().getString(R.string.cash));
         kinds.add(getResources().getString(R.string.app_cheque));
         kinds.add(getResources().getString(R.string.app_creditCard));
-
-
         ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
         paymentKindSpinner.setAdapter(paymentKind);
-
-
         clearImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -412,8 +346,6 @@ public class ReceiptVoucher extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                //  saveData.setAnimation(animZoomIn);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
@@ -477,9 +409,11 @@ public class ReceiptVoucher extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0 || i==2) {//cash
                     chequeLayout.setVisibility(View.INVISIBLE);
+                    linear_checkNo.setVisibility(View.GONE);
                     scrollView.setVisibility(View.INVISIBLE);
                     addCheckButton.setVisibility(View.INVISIBLE);
                     tableCheckData.setVisibility(View.INVISIBLE);
+                    tableHeader.setVisibility(View.INVISIBLE);
                     if(i==0)
                     {
                         voucherType = 1;//cash
@@ -497,14 +431,18 @@ public class ReceiptVoucher extends Fragment {
                 }
 
 
-                else {
-                    chequeLayout.setVisibility(View.VISIBLE);
-                    scrollView.setVisibility(View.VISIBLE);
-                    addCheckButton.setVisibility(View.VISIBLE);
-                    tableCheckData.setVisibility(View.VISIBLE);
-                    voucherType = 4;//chequ
-                    voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-                    voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
+                else {// cheque payment
+                    if(mDbHandler.getAllSettings().get(0).getAutomaticCheque()==1)//for ejabi checque
+                    {  linear_checkNo.setVisibility(View.VISIBLE);
+                        displaychequeTable();
+
+                    }
+                    else{
+                        displaychequeTable();
+                        linear_checkNo.setVisibility(View.GONE);
+
+                    }
+
                 }
             }
 
@@ -515,6 +453,517 @@ public class ReceiptVoucher extends Fragment {
         });
 
         return view;
+    }
+    private View.OnClickListener onClickEditCheck=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(tableCheckData.getChildCount()>0) {
+                List<Cheque> Listitems_adapter = new ArrayList<>();
+                Listitems_adapter = ((CheckAdapter) recycler_check.getAdapter()).list;
+
+
+                displayEditCheck(Listitems_adapter);
+            }
+            else{
+                Toast.makeText(getActivity(), "Must have data", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    };
+
+    @SuppressLint("RestrictedApi")
+    private void displayManulaCheck() {
+        editChech.setVisibility(View.GONE);
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.check_info_dialog);
+        Window window = dialog.getWindow();
+
+        final EditText chNum = (EditText) dialog.findViewById(R.id.editText1);
+        final Spinner bank = (Spinner) dialog.findViewById(R.id.editText2);
+        final EditText chDate = (EditText) dialog.findViewById(R.id.editText3);
+        final EditText chValue = (EditText) dialog.findViewById(R.id.editText4);
+
+        Button okButton = (Button) dialog.findViewById(R.id.button1);
+        Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+
+        myCalendar = Calendar.getInstance();
+        chDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getActivity(), openDatePickerDialog(chDate), myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final TableRow row = new TableRow(getActivity());
+                row.setPadding(5, 5, 5, 5);
+
+                if (checkDialogFields(chNum.getText().toString(), bank.getSelectedItem().toString(),
+                        chDate.getText().toString(), chValue.getText().toString())) {
+                    if ((Double.parseDouble(chValue.getText().toString()) != 0.0)) {
+
+                        if (checkTotal(chValue.getText().toString())) {
+                            total = total + Double.parseDouble(chValue.getText().toString());
+                            chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
+                            Payment check = new Payment();
+                            check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
+                            check.setBank(bank.getSelectedItem().toString());
+                            check.setDueDate(chDate.getText().toString());
+                            check.setAmount(Double.parseDouble(chValue.getText().toString()));
+                            payments.add(check);
+                            paymentsforPrint.add(check);
+                            Log.e("payments", "" + payments.size());
+                            Log.e("payments tsst", "" + payments.size() + " " + chNum.getText().toString() + " \n" + bank.getSelectedItem().toString()
+                                    + "\n" + chDate.getText().toString() + "\n" + chValue.getText().toString());
+
+                            row.setTag(position);
+                            for (int i = 0; i < 4; i++) {
+
+                                String[] record = {chNum.getText().toString(), bank.getSelectedItem().toString(),
+                                        chDate.getText().toString(), chValue.getText().toString()};
+
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                row.setLayoutParams(lp);
+
+                                TextView textView = new TextView(getActivity());
+
+                                textView.setHint(record[i]);
+                                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                textView.setGravity(Gravity.CENTER);
+
+                                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                textView.setLayoutParams(lp2);
+
+                                row.addView(textView);
+
+
+                            }
+
+                            row.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                                    builder.setCancelable(false);
+                                    builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            int tag = Integer.parseInt(row.getTag().toString());
+                                            payments.remove(tag - 1);
+                                            tableCheckData.removeView(row);
+                                            total = total - Double.parseDouble(chValue.getText().toString());
+                                            chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
+                                            position--;
+                                            for (int k = 0; k < tableCheckData.getChildCount(); k++) {
+                                                TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
+                                                tableRow.setTag(k);
+                                            }
+                                        }
+                                    });
+
+                                    builder.setNegativeButton(getResources().getString(R.string.app_no), null);
+                                    builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear_item));
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+
+                                    return true;
+                                }
+                            });
+                            tableCheckData.addView(row);
+                            position++;
+
+                            dialog.dismiss();
+
+                        } else {
+                            Toast.makeText(getActivity(), "Cheque Total is greater than Amount value", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter Amount greater than  0 ", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else
+                    Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void displayAutoCheck(int counter, int flag) {
+        editChech.setVisibility(View.VISIBLE);
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.auto_check_dialog);
+        Window window = dialog.getWindow();
+        final LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        layoutManager.setOrientation(VERTICAL);
+         recycler_check = (RecyclerView)dialog.findViewById(R.id.recycler_check);
+        List<Cheque> chequeListitems= new ArrayList<>();
+
+        chequeListitems = filllistOfCheque(counter);
+        Log.e("chequeListitems",""+chequeListitems.size());
+
+        recycler_check.setLayoutManager(layoutManager);
+        recycler_check.setAdapter(new CheckAdapter(chequeListitems, this.getActivity()));
+        Button okButton = (Button) dialog.findViewById(R.id.button_save);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double totalCheque=0,amountTotal=0;
+                amountTotal=Double.parseDouble(amountEditText.getText().toString());
+
+                List<Cheque> Listitems_adapter= new ArrayList<>();
+                Listitems_adapter =  ((CheckAdapter) recycler_check.getAdapter()).list;
+                for(int h=0;h<Listitems_adapter.size();h++)
+                {
+                    totalCheque+=Listitems_adapter.get(h).getChequeValue();
+
+                }
+                totalCheque=Math.round(totalCheque);
+                if(totalCheque == amountTotal )
+                {
+                    tableCheckData.removeAllViews();
+                    total=0;
+                    payments.clear();
+                    paymentsforPrint.clear();
+                    for(int j=0;j<Listitems_adapter.size();j++)
+                    {
+                        fiiTable(Listitems_adapter,j);
+                    }
+                    chequeTotal.setText(Math.round(total)+"");
+                    dialog.dismiss();
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    builder.setTitle(getResources().getString(R.string.app_alert));
+                                    builder.setCancelable(true);
+                                    builder.setMessage("Cheques amount must be  equal to Total amount \t"+amountTotal);
+                                    builder.show();
+
+                }
+
+
+
+
+
+
+            }
+        });
+        Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+
+    }
+
+    private void fiiTable(final List<Cheque> listitems_adapter, final int j) {
+                        final TableRow row = new TableRow(getActivity());
+                row.setPadding(5, 5, 5, 5);
+
+                if (listitems_adapter.size()!=0) {
+                 {
+                        {
+                            total = total + Double.parseDouble(listitems_adapter.get(j).getChequeValue()+"");
+                            chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
+                            Payment check = new Payment();
+                            check.setCheckNumber(Integer.parseInt(listitems_adapter.get(j).getChequeNo()));
+                            check.setBank(listitems_adapter.get(j).getBankName());
+                            check.setDueDate(listitems_adapter.get(j).getChequeDate());
+                            check.setAmount((listitems_adapter.get(j).getChequeValue()));
+                            payments.add(check);
+                            paymentsforPrint.add(check);
+
+                            row.setTag(position);
+                            for (int i = 0; i < 4; i++) {
+
+                                String[] record = {listitems_adapter.get(j).getChequeNo(),listitems_adapter.get(j).getBankName(),
+                                        listitems_adapter.get(j).getChequeDate(),( listitems_adapter.get(j).getChequeValue()+"")};
+
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                row.setLayoutParams(lp);
+
+                                TextView textView = new TextView(getActivity());
+
+                                textView.setHint(record[i]);
+                                textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                textView.setHintTextColor(ContextCompat.getColor(getActivity(), R.color.text_view_color));
+                                textView.setGravity(Gravity.CENTER);
+
+                                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                textView.setLayoutParams(lp2);
+
+                                row.addView(textView);
+
+
+                            }
+
+                            row.setOnLongClickListener(new View.OnLongClickListener() {
+                                @Override
+                                public boolean onLongClick(View v) {
+                                    if(mDbHandler.getAllSettings().get(0).getAutomaticCheque()==1){
+////                                        displayAutoCheck(counter,2);
+//                                        List<Cheque> Listitems_adapter= new ArrayList<>();
+//                                        Listitems_adapter =  ((CheckAdapter) recycler_check.getAdapter()).list;
+//
+//                                        Log.e("Listitems_adapter",""+Listitems_adapter.size());
+//                                        displayEditCheck(Listitems_adapter);
+                                    }
+                                    else {  AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                                        builder.setCancelable(false);
+                                        builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                int tag = Integer.parseInt(row.getTag().toString());
+                                                Log.e("tagrow",""+tag);
+                                                Log.e("payments",""+payments.size());
+                                                payments.remove(tag - 1);
+                                                tableCheckData.removeView(row);
+                                                total = total - Double.parseDouble(listitems_adapter.get(j).getChequeValue()+"");
+                                                chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
+                                                position--;
+                                                for (int k = 0; k < tableCheckData.getChildCount(); k++) {
+                                                    TableRow tableRow = (TableRow) tableCheckData.getChildAt(k);
+                                                    tableRow.setTag(k);
+                                                }
+                                            }
+                                        });
+
+                                        builder.setNegativeButton(getResources().getString(R.string.app_no), null);
+                                        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear_item));
+                                        AlertDialog alertDialog = builder.create();
+                                        alertDialog.show();}
+
+
+
+                                    return true;
+                                }
+                            });
+                            tableCheckData.addView(row);
+                            position++;
+
+
+
+                        }
+
+//                    } else {
+//                        Toast.makeText(getActivity(), "Please Enter Amount greater than  0 ", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else
+                    Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
+    }
+    private void displayEditCheck( List<Cheque> Listitems) {
+        Log.e("displayEditCheck",""+Listitems.size());
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.auto_check_dialog);
+        Window window = dialog.getWindow();
+        final LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(this.getActivity());
+        layoutManager.setOrientation(VERTICAL);
+        recycler_check = (RecyclerView)dialog.findViewById(R.id.recycler_check);
+        List<Cheque> chequeListitems= new ArrayList<>();
+
+        recycler_check.setLayoutManager(layoutManager);
+
+        recycler_check.setAdapter(new CheckAdapter(Listitems, this.getActivity()));
+        Button okButton = (Button) dialog.findViewById(R.id.button_save);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double totalCheque=0,amountTotal=0;
+                amountTotal=Double.parseDouble(amountEditText.getText().toString());
+
+                List<Cheque> Listitems_adapter= new ArrayList<>();
+                Listitems_adapter =  ((CheckAdapter) recycler_check.getAdapter()).list;
+                for(int h=0;h<Listitems_adapter.size();h++)
+                {
+                    totalCheque+=Listitems_adapter.get(h).getChequeValue();
+
+                }
+                totalCheque=Math.round(totalCheque);
+                if(totalCheque == amountTotal )
+                {
+                    tableCheckData.removeAllViews();
+                    total=0;
+                    payments.clear();
+                    paymentsforPrint.clear();
+                    for(int j=0;j<Listitems_adapter.size();j++)
+                    {
+                        fiiTable(Listitems_adapter,j);
+                    }
+                    chequeTotal.setText(Math.round(total)+"");
+                    dialog.dismiss();
+                }
+                else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.app_alert));
+                    builder.setCancelable(true);
+                    builder.setMessage("Cheques amount must be  equal to Total amount \t"+amountTotal);
+                    builder.show();
+
+                }
+
+
+
+
+
+
+            }
+        });
+        Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+
+    }
+
+    private List<Cheque> filllistOfCheque(int counter) {
+        String today="";
+        List <Cheque> chequeList=new ArrayList<>();
+        String amount= amountEditText.getText().toString();
+        float totalAmount=0;
+        float valueOfOneCheck=0;
+        try {
+
+             totalAmount=Float.parseFloat(amount);
+             valueOfOneCheck=totalAmount/counter;
+        }
+        catch (Exception e)
+        {
+
+        }
+        // create date plus one
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        today = df.format(currentTimeAndDate);
+
+        for(int i=0;i<counter;i++)
+        {
+            Cheque itemCheq=new Cheque();
+            itemCheq.setChequeDate(today);
+            itemCheq.setChequeNo((int)totalAmount+""+(i+1));
+            itemCheq.setChequeSerial(i);
+            valueOfOneCheck=Float.parseFloat(new DecimalFormat("##.###").format(valueOfOneCheck));
+            itemCheq.setChequeValue(valueOfOneCheck);
+            chequeList.add(itemCheq);
+            //////////////////////////////////////////////////////
+             df = new SimpleDateFormat("dd/MM/yyyy");
+            currentTimeAndDate=addOneMonth(currentTimeAndDate);
+            today = df.format(currentTimeAndDate);
+        }
+
+        return  chequeList;
+    }
+    private List<Cheque> getDataFromTableCheque() {
+
+        List <Cheque> chequeList=new ArrayList<>();
+
+        float valueOfOneCheck=0;
+
+
+        for(int i=0;i<tableCheckData.getChildCount();i++)
+        {  Cheque itemCheq = new Cheque();
+            TableRow mRow = (TableRow) tableCheckData.getChildAt(i);
+            TextView mTextView = (TextView) mRow.getChildAt(0);
+            itemCheq.setChequeNo(mTextView.getText().toString());
+                            Log.e("mTextView",""+mTextView.getText().toString());
+
+//            for(int j=0;j<4;j++)
+//            {
+//                TextView mTextView = (TextView) mRow.getChildAt(j);
+//                itemCheq.setChequeNo(mTextView.getText().toString());
+//                Log.e("mTextView",""+mTextView.getText().toString());
+//                itemCheq=new Cheque();
+//                if(j==0)
+//                {
+//                    itemCheq.setChequeNo(mTextView.getText().toString());
+//                }
+//                if(j==1)
+//                {
+//                    itemCheq.setBankName(mTextView.getText().toString());
+//                }
+//                if(j==2)
+//                {
+//                    itemCheq.setChequeDate(mTextView.getText().toString());
+//
+//                }
+//                if(j==3)
+//                {
+//                    //                valueOfOneCheck=Float.parseFloat(new DecimalFormat("##.###").format(mTextView.getText().toString()));
+////                    itemCheq.setChequeValue(Float.parseFloat(mTextView.getText().toString()));
+//
+//                }
+//
+//
+//
+//            }
+
+
+
+            chequeList.add(itemCheq);
+
+        }
+
+        return  chequeList;
+    }
+    public static Date addOneMonth(Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, 1);
+        return cal.getTime();
+    }
+
+    private void displaychequeTable() {
+        chequeLayout.setVisibility(View.VISIBLE);
+        scrollView.setVisibility(View.VISIBLE);
+        addCheckButton.setVisibility(View.VISIBLE);
+        tableCheckData.setVisibility(View.VISIBLE);
+        tableHeader.setVisibility(View.VISIBLE);
+        voucherType = 4;//chequ
+        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+        voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -826,6 +1275,7 @@ public class ReceiptVoucher extends Fragment {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     public void clearForm() {
         tableCheckData.removeAllViews();
         amountEditText.setText("");
@@ -837,6 +1287,8 @@ public class ReceiptVoucher extends Fragment {
         // voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNo.setText(getResources().getString(R.string.voucher_number) + " : " + voucherNumber);
         payments.clear();
+        chequNo_EditText.setText("");
+        editChech.setVisibility(View.GONE);
     }
 
     public String convertToEnglish(String value) {

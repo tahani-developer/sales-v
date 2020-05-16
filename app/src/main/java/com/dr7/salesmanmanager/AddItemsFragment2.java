@@ -603,7 +603,7 @@ public class AddItemsFragment2 extends DialogFragment {
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
-                           String category, String posPrice,CheckBox useWeight, Context context) {
+                           String category, String posPrice,CheckBox useWeight, Context context,String descriptRemark) {
         boolean itemInlocalList=false;
 
         SalesInvoice obj = new SalesInvoice();
@@ -633,6 +633,8 @@ public class AddItemsFragment2 extends DialogFragment {
             item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
             item.setCategory(category);
+            item.setDescreption(descriptRemark);
+            Log.e("descriptRemark","\t"+descriptRemark);
 // test new order
             try {
                 item.setUnit(unit);

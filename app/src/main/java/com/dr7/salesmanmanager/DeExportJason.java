@@ -182,6 +182,7 @@ public class DeExportJason extends AppCompatActivity {
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost ();
+
                 try {
                     request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php"));
                 } catch (URISyntaxException e) {
@@ -191,11 +192,12 @@ public class DeExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
                 HttpResponse response = client.execute(request);
                 BufferedReader in = new BufferedReader(new
@@ -281,20 +283,30 @@ public class DeExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
-            if (s.contains("SUCCESS")) {
+            try {
+                if (s!= null && s.contains("SUCCESS")) {
 //                mHandler.updateVoucher();
 //                mHandler.updateVoucherDetails();
 //                mHandler.updatePayment();
 //                mHandler.updatePaymentPaper();
 //                mHandler.updateAddedCustomers();
-                Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Success");
-            } else {
-                Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Failed to export data");
+                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                    Log.e("tag", "****Success");
+                } else {
+                    Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show();
+                    Log.e("tag", "****Failed to export data");
+                }
+                progressDialog.dismiss();
+
             }
-            progressDialog.dismiss();
+            catch (Exception e)
+            {
+                Toast.makeText(context, "check Enternt connection ", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+
         }
     }
 
@@ -362,10 +374,18 @@ public class DeExportJason extends AppCompatActivity {
     }
 
     public Date formatDate(String date) throws ParseException {
+        Date d = new Date();
+        SimpleDateFormat sdf;
+        String myFormat = "dd/MM/yyyy";
+        try {
+           //In which you need put here
+             sdf = new SimpleDateFormat(myFormat, Locale.US);
+             d = sdf.parse(date);
+        }
+        catch (Exception e)
+        {Log.e("","");}
 
-        String myFormat = "dd/MM/yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        Date d = sdf.parse(date);
+
         return d;
     }
 }

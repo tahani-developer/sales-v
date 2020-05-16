@@ -29,6 +29,42 @@ public class Settings {
     private String salesMan_name;
     private int priventOrder;
     private int requiNote;
+    private int preventTotalDisc;
+    private int automaticCheque;
+    private int tafqit;
+    private int preventChangPayMeth;
+
+    public int getPreventChangPayMeth() {
+        return preventChangPayMeth;
+    }
+
+    public void setPreventChangPayMeth(int preventChangPayMeth) {
+        this.preventChangPayMeth = preventChangPayMeth;
+    }
+
+    public int getTafqit() {
+        return tafqit;
+    }
+
+    public void setTafqit(int tafqit) {
+        this.tafqit = tafqit;
+    }
+
+    public int getAutomaticCheque() {
+        return automaticCheque;
+    }
+
+    public void setAutomaticCheque(int automaticCheque) {
+        this.automaticCheque = automaticCheque;
+    }
+
+    public int getPreventTotalDisc() {
+        return preventTotalDisc;
+    }
+
+    public void setPreventTotalDisc(int preventTotalDisc) {
+        this.preventTotalDisc = preventTotalDisc;
+    }
 
     public int getPriventOrder() {
         return priventOrder;

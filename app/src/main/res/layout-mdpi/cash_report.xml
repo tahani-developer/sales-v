@@ -16,9 +16,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="365dp"
+
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,8 +30,9 @@
             android:gravity="center_vertical"
             android:text="@string/app_cash_report"
             android:layout_marginLeft="20dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:textColor="@color/text_view_color"
             android:textSize="25dp" />
 
         <LinearLayout
@@ -100,7 +101,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row2">
         <TableRow
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@color/colorblue1">
 
             <TextView
@@ -111,7 +112,7 @@
                 android:padding="1dp"
                 android:text="@string/sales"
                 android:textColor="@color/white"
-                android:textSize="15dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
         </TableRow>
@@ -217,12 +218,12 @@
                 android:padding="1dp"
                 android:text="@string/payment"
                 android:textColor="@color/white"
-                android:textSize="15dp"
+                android:textSize="20dp"
                 android:textStyle="bold" />
 
         </TableRow>
         <TableRow
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:background="@color/layer3">
 
             <TextView
@@ -300,6 +301,47 @@
         </TableRow>
         <TableRow
             android:layout_marginTop="20dp"
+            android:background="@color/colorblue1">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/app_creditCard"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp"
+            android:background="@color/layer3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/creditvalue"
+                android:textColor="@color/text_view_color"
+                android:textSize="13dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_credit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="30dp"
             android:background="@color/layer3">
 
             <TextView

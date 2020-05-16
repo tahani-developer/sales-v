@@ -110,14 +110,16 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < items.size(); i++)
             if (items.get(i).getIsPosted() == 0) {
                 items.get(i).setIsPosted(1);
+               // Log.e("getDescription",""+items.get(i).getDescription());
                 jsonArrayItems.put(items.get(i).getJSONObject());
+                //Log.e("getJSONObject",""+items.get(i).getJSONObject());
             }
 
-        try {
-            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
@@ -191,8 +193,8 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 HttpResponse response = client.execute(request);
 
@@ -319,6 +321,7 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+            String impo="";
             if(s != null) {
                 if (s.contains("SUCCESS")) {
                     mHandler.updateVoucher();
@@ -334,7 +337,16 @@ public class ExportJason extends AppCompatActivity {
                     Log.e("tag", "****Failed to export data");
                 }
             } else {
-                Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+                try {
+                    Log.e("onPostExecute",""+s.toString());
+                    Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+                }
+                catch (Exception e)
+                {
+                    Log.e("ImpoException",""+e.getMessage().toString());
+
+                }
+
             }
             progressDialog.dismiss();
         }

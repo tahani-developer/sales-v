@@ -5,6 +5,9 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class Voucher {
 
 
@@ -223,6 +226,7 @@ public class Voucher {
             obj.put("voucherDiscount", voucherDiscount);
             obj.put("voucherDiscountPercent", voucherDiscountPercent);
             obj.put("remark", remark);
+
             obj.put("payMethod", payMethod);
             obj.put("isPosted", isPosted);
             obj.put("totalVoucherDiscount", totalVoucherDiscount);

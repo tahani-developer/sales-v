@@ -49,12 +49,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
-                    android:layout_marginLeft="3dp"
+                    android:layout_marginLeft="5dp"
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:inputType="date"
                     android:textColor="@color/add_button"
-                    android:textSize="@dimen/content_large" />
+                    android:textSize="15sp"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,14 +79,15 @@
                     android:gravity="center_vertical"
                     android:inputType="date"
                     android:textColor="@color/add_button"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    />
 
                 <Button
                     android:id="@+id/preview"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="50dp"
-                    android:background="@color/red_background"
+                    android:background="@color/second_color"
                     android:text="@string/preview"
                     android:textColor="@color/layer5" />
 

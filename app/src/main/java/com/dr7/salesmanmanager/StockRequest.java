@@ -58,6 +58,7 @@ public class StockRequest extends Fragment {
     public static List<Item> listItemStock;
     public static Voucher voucherStock;
     ProgressDialog dialog_progress;
+    int itemCountTable;
 
     public static Voucher voucherStockItem;
 
@@ -82,6 +83,7 @@ public class StockRequest extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_stock_request, container, false);
         mDbHandler = new DatabaseHandler(getActivity());
+        itemCountTable=mDbHandler.getCountItemsMaster();
 //        jsonItemsList = new ArrayList<>();
         String rate_customer = mDbHandler.getRateOfCustomer();
         companyInfo = new CompanyInfo();
@@ -97,7 +99,23 @@ public class StockRequest extends Fragment {
         addItemImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new TaskStock().execute();
+
+                if(itemCountTable>=500)
+                {
+                    new TaskStock().execute();
+
+                }
+                else
+                {
+                    stockInterFace.displayFindItemStockFragment();
+
+
+                }
+
+
+
+
+
                 // here
 
             }

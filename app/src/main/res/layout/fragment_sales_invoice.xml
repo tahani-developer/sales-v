@@ -41,7 +41,6 @@
                 android:clickable="true"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
-
                 android:layout_alignParentTop="true"
                 android:src="@drawable/items2"
                 app:civ_border_color="@color/colorPrimaryDark"/>
@@ -52,8 +51,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/addItemImgButton2"
                 android:layout_marginRight="30dp"
-
-
                 android:layout_marginTop="30dp"
                 android:text="+"
                 android:textColor="@color/colorPrimaryDark"

@@ -90,7 +90,7 @@ public class Item {
     //constructor for sales invoice
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
                 float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
-                float taxPercent,int isPosted) {
+                float taxPercent,int isPosted,String description) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -107,6 +107,7 @@ public class Item {
         this.taxValue = taxValue;
         this.taxPercent = taxPercent;
         this.isPosted = isPosted;
+        this.description=description;
     }
 
     //constructor for stock request
@@ -372,6 +373,8 @@ public class Item {
             obj.put("companyNumber", companyNumber);
             obj.put("isPosted", isPosted);
             obj.put("itemYear", year);
+            obj.put("ITEM_DESCRITION", description);
+
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

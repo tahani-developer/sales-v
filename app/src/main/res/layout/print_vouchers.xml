@@ -30,27 +30,28 @@
                 android:id="@+id/row2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="25dp"
+
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:text="@string/from_date"
                     android:textColor="@color/text_view_color"
                     android:textSize="@dimen/content_large" />
 
                 <EditText
                     android:id="@+id/from_date"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="3dp"
+
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:inputType="date"
@@ -58,19 +59,20 @@
                     android:textSize="@dimen/content_large" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:gravity="center_vertical"
+
+                    android:gravity="center"
                     android:text="@string/to_date"
                     android:textColor="@color/text_view_color"
                     android:textSize="@dimen/content_large" />
 
                 <EditText
                     android:id="@+id/to_date"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
@@ -83,22 +85,29 @@
                 <TextView
                     android:text="@string/TypeVoucher"
                     android:textSize="15sp"
+                    android:textStyle="bold"
                     android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:gravity="right"
+
                     android:padding="3dp"
                     android:textColor="@color/colorPrimaryDark"/>
 <RadioGroup
     android:id="@+id/transKindRadioGroup"
     android:layout_height="wrap_content"
-    android:layout_width="wrap_content"
+    android:layout_width="0dp"
+    android:layout_weight="6"
     android:background="@drawable/back_border_edit"
     android:orientation="horizontal">
 
 
     <RadioButton
         android:id="@+id/salesRadioButton"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:padding="3dp"
@@ -109,7 +118,8 @@
         android:id="@+id/retSalesRadioButton"
         android:textSize="12sp"
         android:padding="3dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/return_type" />
 
@@ -117,13 +127,15 @@
         android:id="@+id/orderRadioButton"
         android:textSize="12sp"
         android:padding="3dp"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="@string/new_type" />
 </RadioGroup>
                 <Button
                     android:id="@+id/preview"
-                    android:layout_width="80dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="50dp"
                     android:background="@color/red_background"

@@ -799,7 +799,6 @@ public class ImportJason extends AppCompatActivity{
             }
             for (int i = 0; i < account_reportList.size(); i++) {
                 mHandler.addAccount_report(account_reportList.get(i));
-                Log.e("acountReport_add",""+account_reportList.size());
             }
             for (int i = 0; i < salesmanStationsList.size(); i++) {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
@@ -824,10 +823,3 @@ public class ImportJason extends AppCompatActivity{
         }
     }
 }
-/*
-* select * from VANTRANSACTN
-where
-nvl(EXPORTED,0) = 0
-*
-*
-* */

@@ -159,8 +159,17 @@ public class CustomerCheckInFragment extends DialogFragment {
 
                                 String currentTime = tf.format(currentTimeAndDate);
                                 String currentDate = df.format(currentTimeAndDate);
+                                int salesMan =1;
+                                try {
+                                    salesMan = Integer.parseInt(Login.salesMan);
+                                }
+                                catch (NumberFormatException e)
+                                {
+                                    Log.e("NumberFormatException",""+e.getMessage());
+                                    salesMan=1;
+                                }
 
-                                int salesMan = Integer.parseInt(Login.salesMan);
+
 
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                         "01/01/19999", "0", 0,0));

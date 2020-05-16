@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
@@ -34,6 +35,7 @@ import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.CashReport.cash;
 import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.credit;
+import static com.dr7.salesmanmanager.Reports.CashReport.creditCardPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.date;
 import static com.dr7.salesmanmanager.Reports.CashReport.net;
@@ -136,6 +138,17 @@ public class CPCLSample2 {
         this.cpclPrinter.setMedia(this.paperType);
 
         this.cpclPrinter.printBitmap(testB, 0, 50);//x=400
+
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
+        this.cpclPrinter.printForm();
+    }
+
+    public void imageTestEnglish_ejabi(int count, Bitmap testB) throws IOException {//
+        this.cpclPrinter.setForm(0, 0, 0,testB.getHeight()-50 , count);
+        this.cpclPrinter.setMedia(this.paperType);
+
+        this.cpclPrinter.printBitmap(testB, 10, 10);//x=400
 
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
@@ -711,6 +724,15 @@ public class CPCLSample2 {
 Log.e("printMultilingual","ontCash_EJABI");
         int nLineWidth = 1140;
         String Arabicdata = bankEnglish(count);
+//        Bitmap bitmap=null;
+//        try {
+//            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//             bitmap=companyInfo.getLogo();
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//        }
+
         Log.e("printMultilingual",""+Arabicdata);
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
@@ -718,6 +740,8 @@ Log.e("printMultilingual","ontCash_EJABI");
 //            imageTestEnglish(0,);
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
+
+
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 200, 0);
             try {
                 Thread.sleep(1000);
@@ -886,10 +910,23 @@ Log.e("printMultilingual","ontCash_EJABI");
 
 
         String dataArabic = "";
+            String footerString="";
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+          footerString = "استلمت : " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
+            "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+
+        }
+        else {
+            footerString= "--------------------------------------------------------------------------------" + "\n" +
+                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+
+        }
 
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 
-        if (payforBank.getPayMethod() == 1) {
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
             dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
                     "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
@@ -901,11 +938,9 @@ Log.e("printMultilingual","ontCash_EJABI");
                     payforBank.getCustName() + "\n" +
                     "ملاحظة: " + payforBank.getRemark() + "\n" +
                     "المبلغ المقبوض: " + payforBank.getAmount() + "\n" +
-                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n";
+                    "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "بطاقة") + "\n";
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
 
         } else {
 
@@ -945,9 +980,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                 }
             }
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "المستلم : -------------------            التوقيع : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
+
 
 
         }
@@ -987,8 +1021,21 @@ Log.e("printMultilingual","ontCash_EJABI");
             firstName=payforBank.getCustName().substring(0,20);
             LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
         }
+        String footerString="";
+        if(obj.getAllSettings().get(0).getTafqit()==1)
+        {
+            footerString = "I receved :\t \t " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
+                    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
 
-        if (payforBank.getPayMethod() == 1) {
+        }
+        else {
+            footerString=    "--------------------------------------------------------------------------------" + "\n" +
+                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+
+        }
+
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
 
             dataArabic = "                                        "+companyInfo.getCompanyName() + "                                        \n" +
@@ -999,13 +1046,15 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "       " + "\n" +
                     "I received from Mr. / Messrs:" + "\t" +
                     firstName + "\n" +LASTnAME+"\n"+
+                    "Store No: " +     Login.salesMan+ "\n" +
+                    "SalesMan Name: " +     obj.getAllSettings().get(0).getSalesMan_name()+ "\n" +
+
                     "Remark :" + payforBank.getRemark() + "\n" +
                     "Amount received:" + payforBank.getAmount() + "\n" +
-                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n";
+                    "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Credit") + "\n";
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
+
 
         } else {
 
@@ -1017,6 +1066,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "       " + "\n" +
                     "I received from Mr. / Messrs: " + "\t" +
                     firstName + "\n" +LASTnAME+"\n"+
+                    "Store No: " +     Login.salesMan+ "\n" +
+                    "SalesMan Name: " +     obj.getAllSettings().get(0).getSalesMan_name()+ "\n" +
                     "Remark: " + payforBank.getRemark() + "\n" +
                     "Amount received: " + payforBank.getAmount() + "\n" +
                     "Payment Method:" + (payforBank.getPayMethod() == 1 ? "Cash" : "Cheque") + "\n" +
@@ -1066,9 +1117,7 @@ Log.e("printMultilingual","ontCash_EJABI");
                 }
             }
 
-            dataArabic+="\n\n"+
-                    "--------------------------------------------------------------------------------" + "\n" +
-                    "Recipient : -------------------            Signature : -----------------------      " + "\n" ;
+            dataArabic+="\n\n"+footerString;
 
 
         }
@@ -1140,8 +1189,12 @@ Log.e("printMultilingual","ontCash_EJABI");
             } else {
                 companney_name = companyInfo.getCompanyName();
             }
-            dataArabic_Report += "                                        " + companney_name + "                            \n \n" +
+            dataArabic_Report += "                                      " + companney_name + "                            \n \n" +
                     "  الرقم الضريبي :  " + companyInfo.getTaxNo() + " \n " +
+                    "اسم المندوب  :  " +obj.getAllSettings().get(0).getSalesMan_name() + " \n " +
+                    "رقم المستودع  :  " +Login.salesManNo + " \n " +
+
+
                     "        -----------------------------------------------------------------------  " + " \n " +
                     "التاريخ  :     " + date.getText() + " \n " +
                     "المبيعات نقدا :     " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " \n " +
@@ -1153,6 +1206,8 @@ Log.e("printMultilingual","ontCash_EJABI");
                     "الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment)) + " \n " +
                     "الاجمالي :     " + convertToEnglish(decimalFormat.format(net)) + " \n " +
                     "\n" +
+                    "اجمالي البطاقة الائتمانية :     " + convertToEnglish(decimalFormat.format(creditCardPayment)) + " \n " +
+
                     "        -----------------------------------------------------------------------  " + " \n "+
 
                     "اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "+

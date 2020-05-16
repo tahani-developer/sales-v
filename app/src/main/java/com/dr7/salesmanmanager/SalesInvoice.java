@@ -193,6 +193,7 @@ public class SalesInvoice extends Fragment {
     volatile boolean stopWorker;
     DecimalFormat threeDForm ;
     double maxDiscounr_value;
+    int savedState=0;
 //    static Voucher voucherSale;
 //    static List<Item> itemSale;
    /* public static void test2(){
@@ -228,7 +229,7 @@ public class SalesInvoice extends Fragment {
     double limit_offer=0;
     ImageButton maxDiscount;
     int size_firstlist=0;
-    int voucherNo=0;
+    int voucherNo=0,itemCountTable;
     CheckBox check_HidePrice;
      public  static  int valueCheckHidPrice=0;
      LinearLayout mainlayout;
@@ -241,6 +242,7 @@ public class SalesInvoice extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout=(LinearLayout)view.findViewById(R.id.mainlyout);
+
         Log.e("locallang",""+languagelocalApp);
         if(languagelocalApp.equals("ar"))
         {
@@ -262,6 +264,7 @@ public class SalesInvoice extends Fragment {
         voucherYear = convertToEnglish(voucherYear);
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
+        itemCountTable=mDbHandler.getCountItemsMaster();
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2 = new ArrayList<>();
 //        jsonItemsList_intermidiate = new ArrayList<>();
@@ -361,8 +364,6 @@ public class SalesInvoice extends Fragment {
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
         refrechItemForReprint();
 
-        //*****************************fill list items json*******************************************
-//        fillListItemJson();
 
         //*************************************************************************
 
@@ -543,69 +544,107 @@ public class SalesInvoice extends Fragment {
 
             }
         });
+        try {
+            if(mDbHandler.getAllSettings().get(0).getPreventChangPayMeth()==1){
+                paymentTermRadioGroup.setEnabled(false);
+                credit.setEnabled(false);
+                cash.setEnabled(false);
+               // Toast.makeText(getActivity(), "false", Toast.LENGTH_SHORT).show();
 
-        paymentTermRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.creditRadioButton:
-                        payMethod = 0;
-
-                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
-                        {
-                            discTextView.setText("0.0");
-                            netTotalTextView.setText("0.0");
-                            netTotal = 0.0;
-                            totalDiscount=0;
-                            sum_discount=0;
-                            clearLayoutData();
-                        }
-                        calculateTotals();
-
-                        break;
-                    case R.id.cashRadioButton:
-                        payMethod = 1;
-
-                        if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
-                        {
-                            discTextView.setText("0.0");
-                            netTotalTextView.setText("0.0");
-                            netTotal = 0.0;
-                            totalDiscount=0;
-                            sum_discount=0;
-                            clearLayoutData();
-                        }
-                        calculateTotals();
-                        break;
-                }
             }
-        });
+            else {
+                paymentTermRadioGroup.setEnabled(true);
+                credit.setEnabled(true);
+                cash.setEnabled(true);
+              //  Toast.makeText(getActivity(), "true enabled 0 ", Toast.LENGTH_SHORT).show();
+
+                paymentTermRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        switch (checkedId) {
+                            case R.id.creditRadioButton:
+                                payMethod = 0;
+
+                                if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                                {
+                                    discTextView.setText("0.0");
+                                    netTotalTextView.setText("0.0");
+                                    netTotal = 0.0;
+                                    totalDiscount=0;
+                                    sum_discount=0;
+                                    clearLayoutData();
+                                }
+                                calculateTotals();
+
+                                break;
+                            case R.id.cashRadioButton:
+                                payMethod = 1;
+
+                                if (mDbHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1)
+                                {
+                                    discTextView.setText("0.0");
+                                    netTotalTextView.setText("0.0");
+                                    netTotal = 0.0;
+                                    totalDiscount=0;
+                                    sum_discount=0;
+                                    clearLayoutData();
+                                }
+                                calculateTotals();
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("Exception",""+e.getMessage());
+        }
+
+
 
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
-        discountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
-                    Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
-                    if (payMethod == 0) {
-                        salesInvoiceInterfaceListener.displayDiscountFragment();
+        if(mDbHandler.getAllSettings().get(0).getPreventTotalDisc()==1)
+        {
+            discountButton.setEnabled(false);
+        }
+        else{
+            discountButton.setEnabled(true);
+            discountButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                        Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                        if (payMethod == 0) {
+                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                        } else {
+                            Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
 
-                    salesInvoiceInterfaceListener.displayDiscountFragment();
+                        salesInvoiceInterfaceListener.displayDiscountFragment();
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
         addItemImgButton2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-//                salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
-                new SalesInvoice.Task().execute();
+                if(itemCountTable>=500)
+                {
+                    new SalesInvoice.Task().execute();
+
+                }
+                else
+                {
+                    salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+
+                }
+
             }
         });
 
@@ -674,61 +713,72 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    closeBT();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-                final String remarkText=remarkEditText.getText().toString().trim();
+                SaveData.setEnabled(false);
+                Log.e("savedState",""+savedState);
+//                if(savedState!=1 )// ( 0 || 2 )
+//                {
+                    savedState=1;
+                    final String remarkText=remarkEditText.getText().toString().trim();
 
-                itemForPrint.clear();
-                clicked = false;
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
+                    itemForPrint.clear();
+                    clicked = false;
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+                    builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int l) {
 
-                        if (!clicked) {
+                            if (!clicked) {
 
-                            clicked = true;
-                            int listSize = itemsListView.getCount();
-                            if (listSize == 0)
-                                Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
-                            else {
-                                if(mDbHandler.getAllSettings().get(0).getRequiNote()==1)
+                                clicked = true;
+                                int listSize = itemsListView.getCount();
+                                if (listSize == 0)
                                 {
-                                    if(TextUtils.isEmpty(remarkText))
-                                    {
-                                        remarkEditText.setError("Required");
-                                        remarkEditText.requestFocus();
-                                    }
-                                    else
-                                    {
-                                        saveData();
-                                    }
-
+                                    Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
+                                    SaveData.setEnabled(true);
                                 }
+
                                 else {
-                                    saveData();
+                                    if(mDbHandler.getAllSettings().get(0).getRequiNote()==1)
+                                    {
+                                        if(TextUtils.isEmpty(remarkText))
+                                        {
+                                            remarkEditText.setError("Required");
+                                            remarkEditText.requestFocus();
+                                            SaveData.setEnabled(true);
+                                        }
+                                        else
+                                        {
+                                            saveData();
+                                        }
 
-                                }
+                                    }
+                                    else {
+                                        saveData();
+
+                                    }
 
 
 //                                clearLayoutData();
+                                }
+                                //not empty list
                             }
-                            //not empty list
+                        }//end ok save
+
+                    });
+
+                    builder.setNegativeButton(getResources().getString(R.string.app_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SaveData.setEnabled(true);
                         }
-                    }//end ok save
+                    });
+                    builder.create().
 
-                });
+                            show();
 
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().
-
-                        show();
             }//end save data
         });
         return view;
@@ -768,6 +818,7 @@ public class SalesInvoice extends Fragment {
 
             if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
                 Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
+                SaveData.setEnabled(true);
 
             } else {
 
@@ -784,15 +835,14 @@ public class SalesInvoice extends Fragment {
 
 
                         if(virefyMaxDescount()){
-                            if(!remarkEditText.getText().toString().equals("")) {
+
                                 AddVoucher();
                                 clearLayoutData();
-                            }else{
-                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-                            }
+
                         }
 
                         else{
+                            SaveData.setEnabled(true);
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                             builder.setTitle(getResources().getString(R.string.app_alert));
@@ -811,21 +861,20 @@ public class SalesInvoice extends Fragment {
                         }//end else
 
                     } else {
+                        SaveData.setEnabled(true);
                         reCheck_customerAuthorize();// test
                     }
                 } else {// you should not authorize customer account balance
 
 
                     if(virefyMaxDescount()){
-//                                                if (!remarkEditText.getText().toString().equals("")){
                         AddVoucher();
                         clearLayoutData();
-//                                            }else{
-//                                                Toast.makeText(getActivity(), "Please Add Remark Filed", Toast.LENGTH_SHORT).show();
-//                                            }
+
                     }
 
                     else{
+                        SaveData.setEnabled(true);
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                         builder.setTitle(getResources().getString(R.string.app_alert));
@@ -846,6 +895,7 @@ public class SalesInvoice extends Fragment {
             }
         }
         else{// if tax ==0 or net sales==0 don't save data
+            SaveData.setEnabled(true);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
             builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1251,6 +1301,7 @@ public class SalesInvoice extends Fragment {
 
     public  void reCheck_customerAuthorize()
     {
+        SaveData.setEnabled(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getResources().getString(R.string.not_authoriz));
         builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1272,15 +1323,19 @@ public class SalesInvoice extends Fragment {
     }
 
    public void  AddVoucher(){
-          mDbHandler.addVoucher(voucher);
+
+       mDbHandler.addVoucher(voucher);
+       savedState=2;// addesd sucssesfulley
           for (int i = 0; i < items.size(); i++) {
 
               Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                       items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                       items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
-                      items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0);
+                      items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0,items.get(i).getDescription());
+              Log.e("AddVoucher",""+items.get(i).getDescription());
               totalQty_forPrint += items.get(i).getQty();
               itemsList.add(item);
+              Log.e("AddVoucher",""+item.getDescription());
 
               mDbHandler.addItem(item);
               itemForPrint.add(item);
@@ -1358,7 +1413,7 @@ public class SalesInvoice extends Fragment {
 
                           case 5:
 
-//                                                             MTP.setChecked(true);
+//                             MTP.setChecked(true);
                               voucherShow = voucher;
                               convertLayoutToImage(voucher);
                               Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
@@ -1706,6 +1761,7 @@ public class SalesInvoice extends Fragment {
         totalQty_textView.setText("+0");
         discvalue_static=0;
         refrechItemForReprint();
+        SaveData.setEnabled(true);
 
     }
 
