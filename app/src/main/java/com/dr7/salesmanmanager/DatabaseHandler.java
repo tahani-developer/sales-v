@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 81;
+    private static final int DATABASE_VERSION = 82;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -254,6 +254,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String COMPANY_TEL = "COMPANY_TEL";
     private static final String TAX_NO = "TAX_NO";
     private static final String LOGO = "LOGO";
+    private static final String NOTE = "NOTE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -615,7 +616,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + COMPANY_NAME + " TEXT,"
                 + COMPANY_TEL + " INTEGER,"
                 + TAX_NO + " INTEGER,"
-                + LOGO + " BLOB" + ")";
+                + LOGO + " BLOB,"
+                + NOTE + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1086,6 +1088,12 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
             }
 
+        try{
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
     public void addAccount_report(Account_Report account_report)
@@ -1416,7 +1424,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo) {
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1431,6 +1439,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(COMPANY_TEL, companyTel);
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
+        values.put(NOTE, note);
+
 
         db.insert(COMPANY_INFO, null, values);
         db.close();
@@ -1735,6 +1745,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                     info.setLogo(null);
                 else
                     info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+
+                info.setNoteForPrint(cursor.getString(4));
 
                 infos.add(info);
             } while (cursor.moveToNext());

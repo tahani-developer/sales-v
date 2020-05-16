@@ -334,6 +334,8 @@
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">Cheque count</string>
     <string name="preventPayMethod">Prevent change Pay Method</string>
+    <string name="credit_value">credit Value</string>
+    <string name="invoice_note">Invoice Note :</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
