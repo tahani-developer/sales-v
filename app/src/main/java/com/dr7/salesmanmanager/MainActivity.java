@@ -1222,6 +1222,7 @@ public class MainActivity extends AppCompatActivity
         final EditText name = (EditText) dialog.findViewById(R.id.com_name);
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
         final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
+        final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
         logo = (ImageView) dialog.findViewById(R.id.logo);
 
         Button okButton = (Button) dialog.findViewById(R.id.okBut);
@@ -1232,6 +1233,7 @@ public class MainActivity extends AppCompatActivity
             tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
             tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
             logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+            noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
         }
 
         logo.setOnClickListener(new View.OnClickListener() {
@@ -1284,9 +1286,10 @@ public class MainActivity extends AppCompatActivity
                     String comName = name.getText().toString().trim();
                     int comTel = Integer.parseInt(tel.getText().toString());
                     int taxNo = Integer.parseInt(tax.getText().toString());
+                    String companyNote = noteInvoice.getText().toString();
 
                     mDbHandler.deleteAllCompanyInfo();
-                    mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic);
+                    mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic,companyNote);
 
                     dialog.dismiss();
                 } else

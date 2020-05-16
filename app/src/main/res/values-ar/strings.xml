@@ -19,6 +19,8 @@
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
     <string name="app_receipt">سند قبض</string>
 <!--    <string name="title_activity_main">الأتصال بالبلوتوث </string>-->
+    <string name="credit_value">credit Value</string>
+    <string name="invoice_note">ملاحظه :</string>
     <string name="title_activity_main"></string>
     <string name="app_sign_out">نهاية اليوم</string>
     <string name="customers_locations">موقع العميل</string>
