@@ -77,17 +77,24 @@ public class CustomerListShow extends DialogFragment {
         customerList = new ArrayList<>();
 
         mHandler = new DatabaseHandler(getActivity());
-
-
         if(mHandler.getAllSettings().size() != 0) {
-            if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
-                customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-            else
-                customerList = mHandler.getAllCustomers();
+            if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+
+                if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                    customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                else
+                    customerList = mHandler.getAllCustomers();
+
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                itemsListView.setAdapter(customersListAdapter);
+
+            } else {
+                customerList = new ArrayList<>();
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                itemsListView.setAdapter(customersListAdapter);
+            }
         }
 
-        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
-        itemsListView.setAdapter(customersListAdapter);
 
         itemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,8 +126,40 @@ public class CustomerListShow extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Call back the Adapter with current character to Filter
-                customersListAdapter.getFilter().filter(s.toString());
+                if(s.length()!=0)
+                {
+                    if(mHandler.getAllSettings().size() != 0)
+                    {
+                        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                        else
+                            customerList = mHandler.getAllCustomers();
+                    }
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    itemsListView.setAdapter(customersListAdapter);
+                    // Call back the Adapter with current character to Filter
+                    customersListAdapter.getFilter().filter(s.toString());
+
+
+                }
+                else {
+                    if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1)
+                    {
+                        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                        else
+                            customerList = mHandler.getAllCustomers();
+                    }
+                    else{
+                        customerList=new ArrayList<>();
+                    }
+
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    itemsListView.setAdapter(customersListAdapter);
+                    customersListAdapter.notifyDataSetChanged();
+
+
+                }
             }
 
             @Override
@@ -216,16 +255,12 @@ public class CustomerListShow extends DialogFragment {
             try {
 
                 URL url = new URL(URL_TO_HIT);
-                Log.e("Customer", "******** URL");
                 connection = url.openConnection();
-                Log.e("Customer", "******** connection");
+
 
                 reader = new BufferedReader(new
                         InputStreamReader(connection.getInputStream()));
-
-
                 StringBuilder buffer = new StringBuilder();
-                Log.e("Customer", "******** StringBuffer");
                 String line = null;
                 // Read Server Response
                 while ((line = reader.readLine()) != null) {
@@ -235,7 +270,6 @@ public class CustomerListShow extends DialogFragment {
 
                 Log.e("Customer", "buffer.toString********" + buffer.toString());
                 String finalJson = buffer.toString();
-
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("CUSTOMERS");
 

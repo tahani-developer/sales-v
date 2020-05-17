@@ -33,6 +33,15 @@ public class Settings {
     private int automaticCheque;
     private int tafqit;
     private int preventChangPayMeth;
+    private int  ShowCustomerList;
+
+    public int getShowCustomerList() {
+        return ShowCustomerList;
+    }
+
+    public void setShowCustomerList(int showCustomerList) {
+        ShowCustomerList = showCustomerList;
+    }
 
     public int getPreventChangPayMeth() {
         return preventChangPayMeth;

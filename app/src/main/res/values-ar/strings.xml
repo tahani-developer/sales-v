@@ -386,6 +386,7 @@
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">عدد الشيكات</string>
     <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
-    <string name="saveLocation">Save Location</string>
+    <string name="saveLocation">حفظ الموقع</string>
+    <string name="ShowCustomerList">اظهار قائمة العملاء</string>
 
 </resources>

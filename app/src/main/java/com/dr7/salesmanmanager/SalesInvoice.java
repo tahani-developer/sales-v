@@ -549,15 +549,11 @@ public class SalesInvoice extends Fragment {
                 paymentTermRadioGroup.setEnabled(false);
                 credit.setEnabled(false);
                 cash.setEnabled(false);
-               // Toast.makeText(getActivity(), "false", Toast.LENGTH_SHORT).show();
-
             }
             else {
                 paymentTermRadioGroup.setEnabled(true);
                 credit.setEnabled(true);
                 cash.setEnabled(true);
-              //  Toast.makeText(getActivity(), "true enabled 0 ", Toast.LENGTH_SHORT).show();
-
                 paymentTermRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
                         switch (checkedId) {
