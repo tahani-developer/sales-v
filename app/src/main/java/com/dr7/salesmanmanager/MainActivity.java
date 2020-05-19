@@ -79,6 +79,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
@@ -318,38 +320,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void saveCurrentLocation() {
-//        addCustomerLocation
+        if(CustomerListShow.Customer_Account.equals(""))
+        {
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getResources().getString(R.string.warning_message))
+                    .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                    .show();
+
+        }
+        else{
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED)
+        {// Not granted permission
 
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                CustomerLocation customerLocation = new CustomerLocation();
-                                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
-                                customerLocation.setLONG(longitude + "");
-                                customerLocation.setLATIT(latitude + "");
-                                mDbHandler.addCustomerLocation(customerLocation);
-                                Log.e("latitude", "" + latitude + longitude);
-//
 
-                            }
-                            // Logic to handle location object
-
-                        }
-                    });
         }
-//        else {
 
 
             /////////////////////////////////////////**********************************
@@ -367,7 +357,9 @@ public class MainActivity extends AppCompatActivity
                                 customerLocation.setLONG(longitude + "");
                                 customerLocation.setLATIT(latitude + "");
                                 mDbHandler.addCustomerLocation(customerLocation);
-                                Log.e("latitude", "" + latitude + longitude);
+                                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+
+                                Log.e("latitude2", "" + latitude + longitude);
 //
 
                             }
@@ -375,14 +367,10 @@ public class MainActivity extends AppCompatActivity
 
                         }
                     });
-//        }
 
+        }
 
-
-
-
-
-    }
+    }//end
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -393,11 +381,6 @@ public class MainActivity extends AppCompatActivity
 
                    saveCurrentLocation();
                 } else {
-
-//                    ActivityCompat.requestPermissions(this, new String[]
-//                            {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-//                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-//                        ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
                     Toast.makeText(MainActivity.this, "check permission location ", Toast.LENGTH_SHORT).show();
 
                 }

@@ -338,6 +338,7 @@
     <string name="invoice_note">Invoice Note :</string>
     <string name="saveLocation">Save Location</string>
     <string name="ShowCustomerList">Show Customer List</string>
+    <string name="pleaseSelectUser">Please Select User</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

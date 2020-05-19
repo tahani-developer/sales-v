@@ -39,6 +39,7 @@ public class CustomerListShow extends DialogFragment {
 
     public ListView itemsListView;
     public List<Customer> customerList;
+    public List<Customer> emptyCustomerList;
     private Button update;
     private EditText customerNameTextView;
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
@@ -75,24 +76,27 @@ public class CustomerListShow extends DialogFragment {
         initialize(view);
 
         customerList = new ArrayList<>();
+        emptyCustomerList=new ArrayList<>();
 
         mHandler = new DatabaseHandler(getActivity());
         if(mHandler.getAllSettings().size() != 0) {
+
+            if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+                customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+            else
+                customerList = mHandler.getAllCustomers();
+
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
-
-                if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
-                    customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-                else
-                    customerList = mHandler.getAllCustomers();
-
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
 
             } else {
-                customerList = new ArrayList<>();
-                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
                 itemsListView.setAdapter(customersListAdapter);
             }
+        }
+        else {
+            Toast.makeText(getActivity(), "Empty Data", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -128,13 +132,6 @@ public class CustomerListShow extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length()!=0)
                 {
-                    if(mHandler.getAllSettings().size() != 0)
-                    {
-                        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
-                            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-                        else
-                            customerList = mHandler.getAllCustomers();
-                    }
                     customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                     itemsListView.setAdapter(customersListAdapter);
                     // Call back the Adapter with current character to Filter
@@ -143,22 +140,23 @@ public class CustomerListShow extends DialogFragment {
 
                 }
                 else {
-                    if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1)
-                    {
-                        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
-                            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-                        else
-                            customerList = mHandler.getAllCustomers();
+                    if (mHandler.getAllSettings().size() != 0) {
+                        if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+//
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                            itemsListView.setAdapter(customersListAdapter);
+                            //customersListAdapter.notifyDataSetChanged();
+                        } else {
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
+                            itemsListView.setAdapter(customersListAdapter);
+                            // customersListAdapter.notifyDataSetChanged();
+                        }
+
+
                     }
                     else{
-                        customerList=new ArrayList<>();
+
                     }
-
-                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
-                    itemsListView.setAdapter(customersListAdapter);
-                    customersListAdapter.notifyDataSetChanged();
-
-
                 }
             }
 
