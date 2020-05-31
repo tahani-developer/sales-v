@@ -66,6 +66,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,7 +93,7 @@ public class ReceiptVoucher extends Fragment {
     Bitmap testB;
     byte[] printIm;
     Context context;
-    int position = 1;
+    int position = 0;
     public static List<Payment> payments;
     public static List<Payment> paymentsforPrint;
     Animation animZoomIn;
@@ -116,6 +117,8 @@ public class ReceiptVoucher extends Fragment {
     private TableLayout tableCheckData;
     TableRow tableHeader;
     Calendar myCalendar;
+    String chequamount="";
+    double totalAmount=0;
 
     private TextView chequeTotal;
 
@@ -145,12 +148,22 @@ public class ReceiptVoucher extends Fragment {
     int  amountValue=0;
     RecyclerView recycler_check;
     FloatingActionButton editChech;
+    int checkNo=0;// to count the cheks for  different data  display
+    int serialNo=0;//it is the serial no entered by the user
+    double curentAmount=0;
+    double valuecheck=0;
+    String previusDate="";
+    Date currentTimeAndDate = Calendar.getInstance().getTime();
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    String today = df.format(currentTimeAndDate);
+    Date dateConverter;
 
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
     }
 
     ReceiptInterFace receiptInterFace;
+
 
 
     public ReceiptVoucher() {
@@ -247,45 +260,55 @@ public class ReceiptVoucher extends Fragment {
             public void onClick(View v) {
 
 
-                    String chequCounter=chequNo_EditText.getText().toString();
-                    String chequamount=amountEditText.getText().toString();
-                    int counter=0;
-                    float chequamountValue=0;
-                    Log.e("mDbHandler",""+mDbHandler.getAllSettings().get(0).getAutomaticCheque());
+                     chequamount=amountEditText.getText().toString();
+
+
 
                    if(!TextUtils.isEmpty( chequamount)) {
-                       if (mDbHandler.getAllSettings().get(0).getAutomaticCheque() == 1) {
-                           editChech.setVisibility(View.VISIBLE);
-                          if(! TextUtils.isEmpty(chequCounter)){
-                              try {
+                       try {
+                           totalAmount=Double.parseDouble(chequamount);
 
-                                  counter = Integer.parseInt(chequCounter);
-                                  chequamountValue = Float.parseFloat(chequamount);
-
-                              } catch (NumberFormatException e) {
-                                  chequNo_EditText.setError("Error Input");
-                                  Log.e("NumberFormatException", "" + e.getMessage());
-                                  counter = 0;
-
-                              }
-                              if(counter!=0)
-                              {
-                                  displayAutoCheck(counter,1);// just for ejabi
-
-                              }
-                              else {
-                                  chequNo_EditText.setError("Error Zero Value");
-
-                              }
-                          }
-                          else{
-                              chequNo_EditText.requestFocus();
-                              chequNo_EditText.setError("Required");
-
-                          }
-
+                       }catch (Exception e)
+                       {
+                           amountEditText.setError("Error");
 
                        }
+
+                       if (mDbHandler.getAllSettings().get(0).getAutomaticCheque() == 1) {
+
+                           editChech.setVisibility(View.GONE);
+                           displayManulaCheck();
+//                           editChech.setVisibility(View.VISIBLE);
+//                          if(! TextUtils.isEmpty(chequCounter)){
+//                              try {
+//
+//                                  counter = Integer.parseInt(chequCounter);
+//                                  chequamountValue = Float.parseFloat(chequamount);
+//
+//                              } catch (NumberFormatException e) {
+//                                  chequNo_EditText.setError("Error Input");
+//                                  Log.e("NumberFormatException", "" + e.getMessage());
+//                                  counter = 0;
+//
+//                              }
+//                              if(counter!=0)
+//                              {
+//                                 // displayAutoCheck(counter,1);// just for ejabi
+//
+//                              }
+//                              else {
+//                                  chequNo_EditText.setError("Error Zero Value");
+//
+//                              }
+//                          }
+//                          else{
+//                              chequNo_EditText.requestFocus();
+//                              chequNo_EditText.setError("Required");
+//
+//                          }
+
+
+                       }// end automatic check
                        else{
                            editChech.setVisibility(View.GONE);
                            displayManulaCheck();
@@ -433,8 +456,11 @@ public class ReceiptVoucher extends Fragment {
 
                 else {// cheque payment
                     if(mDbHandler.getAllSettings().get(0).getAutomaticCheque()==1)//for ejabi checque
-                    {  linear_checkNo.setVisibility(View.VISIBLE);
+                    {
+                                            linear_checkNo.setVisibility(View.VISIBLE);
+//                        displaychequeTable();
                         displaychequeTable();
+                        linear_checkNo.setVisibility(View.GONE);
 
                     }
                     else{
@@ -472,10 +498,10 @@ public class ReceiptVoucher extends Fragment {
         }
     };
 
+
     @SuppressLint("RestrictedApi")
     private void displayManulaCheck() {
         editChech.setVisibility(View.GONE);
-
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -486,6 +512,32 @@ public class ReceiptVoucher extends Fragment {
         final Spinner bank = (Spinner) dialog.findViewById(R.id.editText2);
         final EditText chDate = (EditText) dialog.findViewById(R.id.editText3);
         final EditText chValue = (EditText) dialog.findViewById(R.id.editText4);
+        chNum.requestFocus();
+        chValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chValue.selectAll();
+
+            }
+        });
+        if(checkNo!=0)
+        {
+            chNum.setText((++serialNo)+"");
+            chValue.requestFocus();
+            chValue.setText((totalAmount-curentAmount)+"");
+            Log.e("curentAmount",""+curentAmount);
+            df = new SimpleDateFormat( "dd/MM/yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                 dateConverter = sdf.parse(previusDate);
+                Log.e("dateConverter",""+dateConverter);
+            } catch (ParseException ex) {
+                Log.v("Exception", ex.getLocalizedMessage());
+            }
+            currentTimeAndDate=addOneMonth(dateConverter);
+            today = df.format(currentTimeAndDate);
+            chDate.setText(convertToEnglish(today));
+        }
 
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
@@ -510,16 +562,22 @@ public class ReceiptVoucher extends Fragment {
 
                 if (checkDialogFields(chNum.getText().toString(), bank.getSelectedItem().toString(),
                         chDate.getText().toString(), chValue.getText().toString())) {
-                    if ((Double.parseDouble(chValue.getText().toString()) != 0.0)) {
+                    if ((Double.parseDouble(chValue.getText().toString()) > 0.0)) {
 
                         if (checkTotal(chValue.getText().toString())) {
+                            checkNo++;
                             total = total + Double.parseDouble(chValue.getText().toString());
                             chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                             Payment check = new Payment();
                             check.setCheckNumber(Integer.parseInt(chNum.getText().toString()));
+                            serialNo=(Integer.parseInt(chNum.getText().toString()));
                             check.setBank(bank.getSelectedItem().toString());
                             check.setDueDate(chDate.getText().toString());
+                            previusDate=chDate.getText().toString();
                             check.setAmount(Double.parseDouble(chValue.getText().toString()));
+                            valuecheck=Double.parseDouble(chValue.getText().toString());
+                            curentAmount+=valuecheck;
+                            Log.e("curentAmount1",""+curentAmount);
                             payments.add(check);
                             paymentsforPrint.add(check);
                             Log.e("payments", "" + payments.size());
@@ -561,9 +619,11 @@ public class ReceiptVoucher extends Fragment {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             int tag = Integer.parseInt(row.getTag().toString());
-                                            payments.remove(tag - 1);
+                                            payments.remove(tag);
                                             tableCheckData.removeView(row);
                                             total = total - Double.parseDouble(chValue.getText().toString());
+                                            curentAmount-=Double.parseDouble(chValue.getText().toString());
+                                            Log.e("curentAmount",""+curentAmount);
                                             chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                                             position--;
                                             for (int k = 0; k < tableCheckData.getChildCount(); k++) {
@@ -601,6 +661,7 @@ public class ReceiptVoucher extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkNo--;
                 dialog.dismiss();
             }
         });
@@ -608,6 +669,83 @@ public class ReceiptVoucher extends Fragment {
         dialog.show();
     }
 
+    //@SuppressLint("RestrictedApi")
+//    private void displayAutoCheck(int counter, int flag) {
+//        editChech.setVisibility(View.VISIBLE);
+//        final Dialog dialog = new Dialog(getActivity());
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(false);
+//        dialog.setContentView(R.layout.auto_check_dialog);
+//        Window window = dialog.getWindow();
+//        final LinearLayoutManager layoutManager;
+//        layoutManager = new LinearLayoutManager(this.getActivity());
+//        layoutManager.setOrientation(VERTICAL);
+//         recycler_check = (RecyclerView)dialog.findViewById(R.id.recycler_check);
+//        List<Cheque> chequeListitems= new ArrayList<>();
+//
+//        chequeListitems = filllistOfCheque(counter);
+//        Log.e("chequeListitems",""+chequeListitems.size());
+//
+//        recycler_check.setLayoutManager(layoutManager);
+//        recycler_check.setAdapter(new CheckAdapter(chequeListitems, this.getActivity()));
+//        Button okButton = (Button) dialog.findViewById(R.id.button_save);
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                double totalCheque=0,amountTotal=0;
+//                amountTotal=Double.parseDouble(amountEditText.getText().toString());
+//
+//                List<Cheque> Listitems_adapter= new ArrayList<>();
+//                Listitems_adapter =  ((CheckAdapter) recycler_check.getAdapter()).list;
+//                for(int h=0;h<Listitems_adapter.size();h++)
+//                {
+//                    totalCheque+=Listitems_adapter.get(h).getChequeValue();
+//
+//                }
+//                totalCheque=Math.round(totalCheque);
+//                if(totalCheque == amountTotal )
+//                {
+//                    tableCheckData.removeAllViews();
+//                    total=0;
+//                    payments.clear();
+//                    paymentsforPrint.clear();
+//                    for(int j=0;j<Listitems_adapter.size();j++)
+//                    {
+//                        fiiTable(Listitems_adapter,j);
+//                    }
+//                    chequeTotal.setText(Math.round(total)+"");
+//                    dialog.dismiss();
+//                }
+//                else{
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                                    builder.setTitle(getResources().getString(R.string.app_alert));
+//                                    builder.setCancelable(true);
+//                                    builder.setMessage("Cheques amount must be  equal to Total amount \t"+amountTotal);
+//                                    builder.show();
+//
+//                }
+//
+//
+//
+//
+//
+//
+//            }
+//        });
+//        Button cancelButton = (Button) dialog.findViewById(R.id.button_cancel);
+//
+//
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.show();
+//
+//
+//    }
     @SuppressLint("RestrictedApi")
     private void displayAutoCheck(int counter, int flag) {
         editChech.setVisibility(View.VISIBLE);
@@ -619,10 +757,10 @@ public class ReceiptVoucher extends Fragment {
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(this.getActivity());
         layoutManager.setOrientation(VERTICAL);
-         recycler_check = (RecyclerView)dialog.findViewById(R.id.recycler_check);
+        recycler_check = (RecyclerView)dialog.findViewById(R.id.recycler_check);
         List<Cheque> chequeListitems= new ArrayList<>();
 
-        chequeListitems = filllistOfCheque(counter);
+        chequeListitems = filllistOfCheque(1);
         Log.e("chequeListitems",""+chequeListitems.size());
 
         recycler_check.setLayoutManager(layoutManager);
@@ -657,10 +795,10 @@ public class ReceiptVoucher extends Fragment {
                 }
                 else{
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                    builder.setTitle(getResources().getString(R.string.app_alert));
-                                    builder.setCancelable(true);
-                                    builder.setMessage("Cheques amount must be  equal to Total amount \t"+amountTotal);
-                                    builder.show();
+                    builder.setTitle(getResources().getString(R.string.app_alert));
+                    builder.setCancelable(true);
+                    builder.setMessage("Cheques amount must be  equal to Total amount \t"+amountTotal);
+                    builder.show();
 
                 }
 
@@ -858,7 +996,7 @@ public class ReceiptVoucher extends Fragment {
 
     }
 
-    private List<Cheque> filllistOfCheque(int counter) {
+    private List<Cheque> filllistOfCheque(int flag) {
         String today="";
         List <Cheque> chequeList=new ArrayList<>();
         String amount= amountEditText.getText().toString();
@@ -878,20 +1016,38 @@ public class ReceiptVoucher extends Fragment {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         today = df.format(currentTimeAndDate);
 
-        for(int i=0;i<counter;i++)
+        if(flag==1)
         {
             Cheque itemCheq=new Cheque();
             itemCheq.setChequeDate(today);
-            itemCheq.setChequeNo((int)totalAmount+""+(i+1));
-            itemCheq.setChequeSerial(i);
-            valueOfOneCheck=Float.parseFloat(new DecimalFormat("##.###").format(valueOfOneCheck));
-            itemCheq.setChequeValue(valueOfOneCheck);
+            itemCheq.setChequeNo("");
+            itemCheq.setChequeSerial(1);
+           // String valueOfOneCheck_str = convertToEnglish(new DecimalFormat("##.###").format(valueOfOneCheck));
+           // valueOfOneCheck=Float.parseFloat(valueOfOneCheck_str);
+            //itemCheq.setChequeValue(valueOfOneCheck);
+            itemCheq.setChequeValue(1.0f);
             chequeList.add(itemCheq);
             //////////////////////////////////////////////////////
-             df = new SimpleDateFormat("dd/MM/yyyy");
-            currentTimeAndDate=addOneMonth(currentTimeAndDate);
-            today = df.format(currentTimeAndDate);
+//            df = new SimpleDateFormat("dd/MM/yyyy");
+//            currentTimeAndDate=addOneMonth(currentTimeAndDate);
+//            today = df.format(currentTimeAndDate);
+
         }
+//        for(int i=0;i<counter;i++)
+//        {
+//            Cheque itemCheq=new Cheque();
+//            itemCheq.setChequeDate(today);
+//            itemCheq.setChequeNo((int)totalAmount+""+(i+1));
+//            itemCheq.setChequeSerial(i);
+//            String valueOfOneCheck_str = convertToEnglish(new DecimalFormat("##.###").format(valueOfOneCheck));
+//            valueOfOneCheck=Float.parseFloat(valueOfOneCheck_str);
+//            itemCheq.setChequeValue(valueOfOneCheck);
+//            chequeList.add(itemCheq);
+//            //////////////////////////////////////////////////////
+//             df = new SimpleDateFormat("dd/MM/yyyy");
+//            currentTimeAndDate=addOneMonth(currentTimeAndDate);
+//            today = df.format(currentTimeAndDate);
+//        }
 
         return  chequeList;
     }

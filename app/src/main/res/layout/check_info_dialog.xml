@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="600dp"
     android:layout_height="200dp"
-    android:background="@color/layer1"
+    android:background="@color/layer3"
     android:padding="10dp"
     android:orientation="vertical">
 
@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
             android:layout_margin="5dp"
             android:text="@string/check_number" />
@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
             android:layout_margin="5dp"
             android:text="@string/app_bank_name" />
@@ -40,7 +40,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
             android:layout_margin="5dp"
             android:text="@string/check_date" />
@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
             android:layout_margin="5dp"
             android:text="@string/check_value" />
@@ -70,7 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/layer5"
+            android:background="@color/white"
             android:ems="10"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
@@ -83,7 +83,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:entries="@array/banks_list"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:ems="10" />
@@ -94,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:ems="10"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
@@ -107,7 +107,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:ems="10"
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
