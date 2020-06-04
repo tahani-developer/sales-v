@@ -34,6 +34,15 @@ public class Settings {
     private int tafqit;
     private int preventChangPayMeth;
     private int  ShowCustomerList;
+    private int  noReturnInvoice;
+
+    public int getNoReturnInvoice() {
+        return noReturnInvoice;
+    }
+
+    public void setNoReturnInvoice(int noReturnInvoice) {
+        this.noReturnInvoice = noReturnInvoice;
+    }
 
     public int getShowCustomerList() {
         return ShowCustomerList;

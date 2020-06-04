@@ -228,7 +228,6 @@ public class SalesInvoice extends Fragment {
     CompanyInfo companyInfo;
     double limit_offer=0;
     ImageButton maxDiscount;
-    int size_firstlist=0;
     int voucherNo=0,itemCountTable;
     CheckBox check_HidePrice;
      public  static  int valueCheckHidPrice=0;
@@ -243,7 +242,6 @@ public class SalesInvoice extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout=(LinearLayout)view.findViewById(R.id.mainlyout);
 
-        Log.e("locallang",""+languagelocalApp);
         if(languagelocalApp.equals("ar"))
         {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -255,6 +253,7 @@ public class SalesInvoice extends Fragment {
             }
 
         }
+
          currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
          voucherDate = df.format(currentTimeAndDate);
@@ -274,7 +273,11 @@ public class SalesInvoice extends Fragment {
         itemForPrint=new ArrayList<>();
         threeDForm = new DecimalFormat("00.000");
         valueCheckHidPrice=CustomerListShow.CustHideValu;
-       Log.e("valueCheckHidPrice",""+valueCheckHidPrice);
+        initialView(view);
+        if(mDbHandler.getAllSettings().get(0).getNoReturnInvoice()==1)
+        {
+            retSalesRadioButton.setEnabled(false);
+        }
 
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
         rePrintimage= (CircleImageView) view.findViewById(R.id.pic_Re_print);
@@ -316,36 +319,8 @@ public class SalesInvoice extends Fragment {
 //               startActivity(intent);
             }
         });
-        connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
-        voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
-        Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
-        paymentTermRadioGroup = (RadioGroup) view.findViewById(R.id.paymentTermRadioGroup);
-        voucherTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transKindRadioGroup);
-        cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
-        credit = (RadioButton) view.findViewById(R.id.creditRadioButton);
-        retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
-
-        salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
-        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-        salesRadioButton.setChecked(true);
-
-        orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
-        remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
-        newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
-        SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
-        discountButton = (ImageButton) view.findViewById(R.id.discButton);
-//        discountButton.setVisibility(View.GONE);
-        pic = (ImageView) view.findViewById(R.id.pic_sale);
-        discTextView = (TextView) view.findViewById(R.id.discTextView);
-
-        totalQty_textView = (TextView) view.findViewById(R.id.items_quntity);
 
 
-        subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
-        taxTextView = (TextView) view.findViewById(R.id.taxTextView);
-        netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
-        maxDiscount=(ImageButton) view.findViewById(R.id.max_disc);
-        maxDiscount.setVisibility(View.GONE);
         maxDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -354,7 +329,6 @@ public class SalesInvoice extends Fragment {
         });
 
         itemsList = new ArrayList<>();
-//        voucherType = 504;
         voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         String vn2 = voucherNumber + "";
         voucherNumberTextView.setText(vn2);
@@ -363,8 +337,6 @@ public class SalesInvoice extends Fragment {
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
         limit_offer=mDbHandler.getMinOfferQty(total_items_quantity);
         refrechItemForReprint();
-
-
         //*************************************************************************
 
         salesRadioButton.setOnClickListener(RADIOCLECKED);
@@ -387,19 +359,6 @@ public class SalesInvoice extends Fragment {
             Customer_nameSales.setText(CustomerListShow.Customer_Name.toString());
         else
             Customer_nameSales.setText("Customer Name");
-
-//        if (CustomerListShow.CashCredit == 0) {
-//            credit.setChecked(true);
-//            cash.setChecked(false);
-//               payMethod = 0;
-//
-//        } else {
-//            cash.setChecked(true);
-//            credit.setChecked(false);
-//              payMethod = 1;
-//
-//
-//        }
         if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 0) {
             credit.setChecked(true);
             cash.setChecked(false);
@@ -465,13 +424,8 @@ public class SalesInvoice extends Fragment {
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                String s = "";
-//                                    int  id=voucherTypeRadioGroup.getCheckedRadioButtonId();
-
                                                 refreshRadiogroup(voucherType);
                                                 vocherClick = true;
-
-
                                                 dialog.dismiss();
                                             }
                                         }
@@ -480,7 +434,7 @@ public class SalesInvoice extends Fragment {
                                 .show();
                     }
                     } else {
-                        if(vocherClick) {
+                        if(vocherClick) {//without clear data
                             new android.support.v7.app.AlertDialog.Builder(getActivity())
                                     .setTitle("Confirm Update")
                                     .setCancelable(false)
@@ -778,6 +732,37 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+
+    private void initialView(View view) {
+        connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
+        voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
+        Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
+        paymentTermRadioGroup = (RadioGroup) view.findViewById(R.id.paymentTermRadioGroup);
+        voucherTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transKindRadioGroup);
+        cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
+        credit = (RadioButton) view.findViewById(R.id.creditRadioButton);
+        retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
+
+        salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
+        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+        salesRadioButton.setChecked(true);
+
+        orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
+        remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
+        newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
+        SaveData = (ImageButton) view.findViewById(R.id.saveInvoiceData);
+        discountButton = (ImageButton) view.findViewById(R.id.discButton);
+//        discountButton.setVisibility(View.GONE);
+        pic = (ImageView) view.findViewById(R.id.pic_sale);
+        discTextView = (TextView) view.findViewById(R.id.discTextView);
+
+        totalQty_textView = (TextView) view.findViewById(R.id.items_quntity);
+        subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
+        taxTextView = (TextView) view.findViewById(R.id.taxTextView);
+        netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
+        maxDiscount=(ImageButton) view.findViewById(R.id.max_disc);
+        maxDiscount.setVisibility(View.GONE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

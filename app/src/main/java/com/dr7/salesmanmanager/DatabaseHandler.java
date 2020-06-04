@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 83;
+    private static final int DATABASE_VERSION = 84;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -255,6 +255,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String Tafqit="Tafqit";
     private static final String  PreventChangPayMeth="PreventChangPayMeth";
     private static final String ShowCustomerList="ShowCustomerList";
+    private static final String NoReturnInvoice="NoReturnInvoice";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -621,7 +622,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + AutomaticCheque + " INTEGER,"
                 + Tafqit + " INTEGER,"
                 + PreventChangPayMeth + " INTEGER,"
-                + ShowCustomerList + " INTEGER"
+                + ShowCustomerList + " INTEGER,"
+                + NoReturnInvoice + " INTEGER"
+
+
 
 
 
@@ -868,8 +872,15 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
-
+//**************************************End Table setting *************************************************************
         try{
             db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
         }catch (Exception e)
@@ -1440,7 +1451,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1476,6 +1487,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Tafqit,tafqit);
         values.put(PreventChangPayMeth,preventChangPayMeth);
         values.put(ShowCustomerList,showCustomer);
+        values.put(NoReturnInvoice,noReturnInvoi);
+
+
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -1780,6 +1794,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setTafqit(Integer.parseInt(cursor.getString(29)));
                 setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
                 setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
+                setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

@@ -389,5 +389,6 @@
     <string name="saveLocation">حفظ الموقع</string>
     <string name="ShowCustomerList">اظهار قائمة العملاء</string>
     <string name="pleaseSelectUser">اختر عميل محدد</string>
+    <string name="noReturnInvoice">No Return Invoice</string>
 
 </resources>

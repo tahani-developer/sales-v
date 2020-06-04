@@ -339,6 +339,7 @@
     <string name="saveLocation">Save Location</string>
     <string name="ShowCustomerList">Show Customer List</string>
     <string name="pleaseSelectUser">Please Select User</string>
+    <string name="noReturnInvoice">No Return Invoice</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
