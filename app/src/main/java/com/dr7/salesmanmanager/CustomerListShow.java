@@ -45,6 +45,7 @@ public class CustomerListShow extends DialogFragment {
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
+    public  static  String latitude="",longtude="";
     public static double Max_Discount_value=0;
     public static int CustHideValu=0;
     CustomersListAdapter customersListAdapter;

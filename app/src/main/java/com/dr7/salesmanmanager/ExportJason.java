@@ -338,8 +338,11 @@ public class ExportJason extends AppCompatActivity {
                 }
             } else {
                 try {
-                    Log.e("onPostExecute",""+s.toString());
-                    Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+
+                        Log.e("onPostExecute","");
+                        Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+
+
                 }
                 catch (Exception e)
                 {

@@ -911,7 +911,7 @@ Log.e("printMultilingual","ontCash_EJABI");
 
         String dataArabic = "";
             String footerString="";
-        if(obj.getAllSettings().get(0).getTafqit()==1)
+        if(obj.getAllSettings().get(0).getTafqit()==1&& obj.getAllSettings().get(0).getHide_qty()!=1)
         {
           footerString = "استلمت : " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
             "--------------------------------------------------------------------------------" + "\n" +
@@ -1022,7 +1022,7 @@ Log.e("printMultilingual","ontCash_EJABI");
             LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
         }
         String footerString="";
-        if(obj.getAllSettings().get(0).getTafqit()==1)
+        if(obj.getAllSettings().get(0).getTafqit()==1 && obj.getAllSettings().get(0).getHide_qty()!=1)
         {
             footerString = "I receved :\t \t " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
                     "--------------------------------------------------------------------------------" + "\n" +

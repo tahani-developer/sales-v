@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHandler mDbHandler;
     LocationManager locationManager;
     LocationListener locationListener;
-    double latitude, longitude;
+    public  static  double latitude_main, longitude_main;
     boolean isPosted = true;
 
     public static final int PICK_IMAGE = 1;
@@ -116,6 +116,8 @@ public class MainActivity extends AppCompatActivity
      DrawerLayout drawer_layout;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     private FusedLocationProviderClient fusedLocationClient;
+    public  static CustomerLocation customerLocation_main;
+    public  static Location location_main;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -319,7 +321,7 @@ public class MainActivity extends AppCompatActivity
                 onOptionsItemSelected(item);
     }
 
-    private void saveCurrentLocation() {
+    public void saveCurrentLocation() {
         if(CustomerListShow.Customer_Account.equals(""))
         {
             new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
@@ -350,16 +352,19 @@ public class MainActivity extends AppCompatActivity
                         public void onSuccess(Location location) {
                             // Got last known location. In some rare situations this can be null.
                             if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                                CustomerLocation customerLocation = new CustomerLocation();
-                                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
-                                customerLocation.setLONG(longitude + "");
-                                customerLocation.setLATIT(latitude + "");
-                                mDbHandler.addCustomerLocation(customerLocation);
+                                location_main=new Location(location);
+                                latitude_main = location.getLatitude();
+                                longitude_main = location.getLongitude();
+                                location_main.setLatitude(latitude_main);
+                                location_main.setLongitude(longitude_main);
+                                 customerLocation_main = new CustomerLocation();
+                                customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                customerLocation_main.setLONG(longitude_main + "");
+                                customerLocation_main.setLATIT(latitude_main + "");
+                                mDbHandler.addCustomerLocation(customerLocation_main);
                                 Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
 
-                                Log.e("latitude2", "" + latitude + longitude);
+                                Log.e("latitude2MainActivity", "" + latitude_main + longitude_main);
 //
 
                             }
@@ -614,8 +619,8 @@ public class MainActivity extends AppCompatActivity
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+                latitude_main = location.getLatitude();
+                longitude_main = location.getLongitude();
             }
 
             @Override
@@ -641,7 +646,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude, Login.salesMan, 0, Login.salesManNo));
+                            latitude_main, longitude_main, Login.salesMan, 0, Login.salesManNo));
                     dialog.dismiss();
                 } else
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();

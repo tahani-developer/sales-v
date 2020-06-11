@@ -169,7 +169,8 @@
     <string name="can_change_price">امكانية تغيير السعر</string>
     <string name="get_salesman_customers_only">سحب عملاء المندوب فقط</string>
     <string name="min_sale_price">الحد الادنى لسعر البيع</string>
-    <string name="allow_cust_check_out_range">السماح بدخول العميل من خارج النطاق</string>
+    <string name="allow_cust_check_out_range">التأكد من موقع العميل عند التخزين </string>
+<!--    <string name="allow_cust_check_out_range">السماح بدخول العميل من خارج النطاق</string>-->
     <string name="read_discount_from_offers">الحصول على الخصومات من العروض </string>
     <string name="work_online">العمل اونلاين</string>
     <string name="app_refresh_data">تحديث البيانات </string>
@@ -390,5 +391,6 @@
     <string name="ShowCustomerList">اظهار قائمة العملاء</string>
     <string name="pleaseSelectUser">اختر عميل محدد</string>
     <string name="noReturnInvoice">No Return Invoice</string>
+    <string name="InvalidLocation">Invalid Customer Location</string>
 
 </resources>

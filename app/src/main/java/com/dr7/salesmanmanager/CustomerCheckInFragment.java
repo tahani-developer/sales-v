@@ -147,7 +147,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                         }
 
 //                        if(inRoot) {
-                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0 ||
                                     isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
                                 MainActivity mainActivity = new MainActivity();

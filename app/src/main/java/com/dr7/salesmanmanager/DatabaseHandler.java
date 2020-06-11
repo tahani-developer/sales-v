@@ -1955,6 +1955,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
@@ -2018,6 +2020,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt(cursor.getString(9)));
+
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 try {
@@ -3072,7 +3076,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
                 offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
                 offer.setFromDate(cursor.getString(2));
-                offer.setToDate(cursor.getString(3));
+                offer.setToDate(cursor.getString(3));//*************
                 offer.setItemNo(cursor.getString(4));
                 offer.setItemQty(Double.parseDouble(cursor.getString(5)));
                 offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
