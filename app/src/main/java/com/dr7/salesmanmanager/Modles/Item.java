@@ -35,6 +35,15 @@ public class Item {
     private double posPrice;
     private String salesmanNo;
     private  String Kind_item;
+    private  String cust;
+
+    public String getCust() {
+        return cust;
+    }
+
+    public void setCust(String cust) {
+        this.cust = cust;
+    }
 
     public Item()
     {

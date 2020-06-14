@@ -81,18 +81,16 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             public void onClick(View view) {
                 if(custList.get(i).getIsSuspended()!=1)
                 {
-                    Log.e("cust",""+custList.get(i).getIsSuspended());
                 CustomerListShow.Customer_Name = custList.get(i).getCustName();
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
+                CustomerListShow.latitude=custList.get(i).getCustLat();
+                CustomerListShow.longtude=custList.get(i).getCustLong();
+                Log.e("longtudeListShow","="+  CustomerListShow.longtude+"\t lati"+ CustomerListShow.latitude);
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
-                if (custList.get(i).getCustId() == "1225") {
-                    Log.e("customerList-no", "" + custList.get(i).getCustId() + "\t cus cash" + custList.get(i).getCashCredit() + "     " + custList.get(i).getCreditLimit());
-
-                }
                 if (custList.get(i).getIsSuspended() == 1) {
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 180);

@@ -1,5 +1,7 @@
 <resources>
+
     <string name="app_name">Salesman Manager</string>
+    <string name="version">20</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -168,7 +170,8 @@
     <string name="can_change_price">Can Change Price</string>
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
-    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>
+    <string name="allow_cust_check_out_range">Validate customer location</string>
+<!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
     <string name="read_discount_from_offers">Read Discount From Offers</string>
     <string name="work_online">Work Online</string>
     <string name="paymethod_check">Cash Invoices</string>
@@ -337,6 +340,10 @@
     <string name="credit_value">credit Value</string>
     <string name="invoice_note">Invoice Note :</string>
     <string name="saveLocation">Save Location</string>
+    <string name="ShowCustomerList">Show Customer List</string>
+    <string name="pleaseSelectUser">Please Select User</string>
+    <string name="noReturnInvoice">No Return Invoice</string>
+    <string name="InvalidLocation">Invalid Customer Location</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

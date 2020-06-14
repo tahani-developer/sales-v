@@ -33,6 +33,24 @@ public class Settings {
     private int automaticCheque;
     private int tafqit;
     private int preventChangPayMeth;
+    private int  ShowCustomerList;
+    private int  noReturnInvoice;
+
+    public int getNoReturnInvoice() {
+        return noReturnInvoice;
+    }
+
+    public void setNoReturnInvoice(int noReturnInvoice) {
+        this.noReturnInvoice = noReturnInvoice;
+    }
+
+    public int getShowCustomerList() {
+        return ShowCustomerList;
+    }
+
+    public void setShowCustomerList(int showCustomerList) {
+        ShowCustomerList = showCustomerList;
+    }
 
     public int getPreventChangPayMeth() {
         return preventChangPayMeth;

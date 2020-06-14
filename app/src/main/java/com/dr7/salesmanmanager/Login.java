@@ -96,8 +96,7 @@ public class Login extends AppCompatActivity {
 
         }
 
-        ipAddress = "192.168.1.8";
-        link = "http://" + ipAddress + "/tickets_service/index.php";
+
 
         loginCardView = (CardView) findViewById(R.id.loginCardView);
         loginCardView.setOnClickListener(new OnClickListener() {

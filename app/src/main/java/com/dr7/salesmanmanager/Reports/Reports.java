@@ -148,7 +148,7 @@ public class Reports extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("301190")) {
+                if (password.getText().toString().equals("303090")) {
                     dialog.dismiss();
                     Intent intent6 = new Intent(Reports.this, CashReport.class);
                     startActivity(intent6);

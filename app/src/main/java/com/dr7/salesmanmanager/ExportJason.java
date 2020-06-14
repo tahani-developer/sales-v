@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
@@ -45,7 +46,7 @@ public class ExportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
-            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest;
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -58,6 +59,8 @@ public class ExportJason extends AppCompatActivity {
     public static List<Item> requestItems = new ArrayList<>();
      public  static  List<SalesManItemsBalance> salesManItemsBalanceList=new ArrayList<>();
     public  static  List<Item> stockRequestListList=new ArrayList<>();
+    public  static  List<CustomerLocation> customerLocationList=new ArrayList<>();
+//    getCustomerLocation
 
     public ExportJason(Context context) throws JSONException {
         this.context = context;
@@ -66,14 +69,26 @@ public class ExportJason extends AppCompatActivity {
 
 
     void startExportDatabase() {
-        String s="";
+        customerLocationList = mHandler.getCustomerLocation();
+        jsonArrayLocation = new JSONArray();
+        for (int i = 0; i < customerLocationList.size(); i++)
+        {
+            customerLocationList.get(i).getCUS_NO();
+            customerLocationList.get(i).getLATIT();
+
+            customerLocationList.get(i).getLONG();
+            jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
+        }
+
+        //******************************************
         transactions = mHandler.getAlltransactions();
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)
             if (transactions.get(i).getIsPosted() == 0) {
                 transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
-            }//******************************************
+            }
+        //******************************************
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
 
@@ -193,6 +208,8 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
+
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
 
@@ -338,8 +355,11 @@ public class ExportJason extends AppCompatActivity {
                 }
             } else {
                 try {
-                    Log.e("onPostExecute",""+s.toString());
-                    Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+
+                        Log.e("onPostExecute","");
+                        Toast.makeText(context, "Please check internet connection", Toast.LENGTH_SHORT).show();
+
+
                 }
                 catch (Exception e)
                 {

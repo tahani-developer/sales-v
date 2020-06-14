@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -42,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -69,6 +71,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     String cusName;
     int status;
     String today;
+    Customer custObj = null;
 
     private static DatabaseHandler mDbHandler;
 
@@ -126,7 +129,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                     status = 0;
 
                     List<Customer> customers = mDbHandler.getAllCustomers();
-                    Customer custObj = null;
+
                     for (int i = 0; i < customers.size(); i++) {
                         if (customers.get(i).getCustId().equals(cusCode)) {
                             custObj = customers.get(i);
@@ -145,9 +148,8 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 break;
                             }
                         }
-
 //                        if(inRoot) {
-                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1 ||
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0 ||
                                     isInRange(custObj.getCustLat(), custObj.getCustLong())) {
 
                                 MainActivity mainActivity = new MainActivity();
@@ -303,7 +305,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]
-                    {ACCESS_FINE_LOCATION}, 1);
+                    {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION}, 1);
         }
         locationListener = new LocationListener() {
             @Override
@@ -326,8 +328,14 @@ public class CustomerCheckInFragment extends DialogFragment {
 
             }
         };
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+        catch (Exception e)
+        {
+            Log.e("locationManager",""+e.getMessage());
+        }
 
         Location loc1 = new Location("");
         loc1.setLatitude(Double.parseDouble(cusLat));
@@ -466,4 +474,22 @@ public class CustomerCheckInFragment extends DialogFragment {
         return newValue;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch ( requestCode)
+        {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    isInRange(custObj.getCustLat(), custObj.getCustLong());
+
+                } else {
+                    Toast.makeText(getActivity(), "check permission location ", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+        }
+
+    }
 }

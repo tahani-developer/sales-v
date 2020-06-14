@@ -39,11 +39,13 @@ public class CustomerListShow extends DialogFragment {
 
     public ListView itemsListView;
     public List<Customer> customerList;
+    public List<Customer> emptyCustomerList;
     private Button update;
     private EditText customerNameTextView;
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
+    public  static  String latitude="",longtude="";
     public static double Max_Discount_value=0;
     public static int CustHideValu=0;
     CustomersListAdapter customersListAdapter;
@@ -75,19 +77,29 @@ public class CustomerListShow extends DialogFragment {
         initialize(view);
 
         customerList = new ArrayList<>();
+        emptyCustomerList=new ArrayList<>();
 
         mHandler = new DatabaseHandler(getActivity());
-
-
         if(mHandler.getAllSettings().size() != 0) {
+
             if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
                 customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
             else
                 customerList = mHandler.getAllCustomers();
+
+            if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                itemsListView.setAdapter(customersListAdapter);
+
+            } else {
+                customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
+                itemsListView.setAdapter(customersListAdapter);
+            }
+        }
+        else {
+            Toast.makeText(getActivity(), "Empty Data", Toast.LENGTH_SHORT).show();
         }
 
-        customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
-        itemsListView.setAdapter(customersListAdapter);
 
         itemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -119,8 +131,34 @@ public class CustomerListShow extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Call back the Adapter with current character to Filter
-                customersListAdapter.getFilter().filter(s.toString());
+                if(s.length()!=0)
+                {
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    itemsListView.setAdapter(customersListAdapter);
+                    // Call back the Adapter with current character to Filter
+                    customersListAdapter.getFilter().filter(s.toString());
+
+
+                }
+                else {
+                    if (mHandler.getAllSettings().size() != 0) {
+                        if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+//
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                            itemsListView.setAdapter(customersListAdapter);
+                            //customersListAdapter.notifyDataSetChanged();
+                        } else {
+                            customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
+                            itemsListView.setAdapter(customersListAdapter);
+                            // customersListAdapter.notifyDataSetChanged();
+                        }
+
+
+                    }
+                    else{
+
+                    }
+                }
             }
 
             @Override
@@ -216,16 +254,12 @@ public class CustomerListShow extends DialogFragment {
             try {
 
                 URL url = new URL(URL_TO_HIT);
-                Log.e("Customer", "******** URL");
                 connection = url.openConnection();
-                Log.e("Customer", "******** connection");
+
 
                 reader = new BufferedReader(new
                         InputStreamReader(connection.getInputStream()));
-
-
                 StringBuilder buffer = new StringBuilder();
-                Log.e("Customer", "******** StringBuffer");
                 String line = null;
                 // Read Server Response
                 while ((line = reader.readLine()) != null) {
@@ -235,7 +269,6 @@ public class CustomerListShow extends DialogFragment {
 
                 Log.e("Customer", "buffer.toString********" + buffer.toString());
                 String finalJson = buffer.toString();
-
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("CUSTOMERS");
 

@@ -10,10 +10,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -58,17 +61,35 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -83,7 +104,7 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHandler mDbHandler;
     LocationManager locationManager;
     LocationListener locationListener;
-    double latitude, longitude;
+    public  static  double latitude_main, longitude_main;
     boolean isPosted = true;
 
     public static final int PICK_IMAGE = 1;
@@ -103,6 +124,10 @@ public class MainActivity extends AppCompatActivity
     int sum_chech_export_lists=0;
      public static String languagelocalApp="";
      DrawerLayout drawer_layout;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    private FusedLocationProviderClient fusedLocationClient;
+    public  static CustomerLocation customerLocation_main;
+    public  static Location location_main;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -138,6 +163,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer_layout=findViewById(R.id.drawer_layout);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(languagelocalApp.equals("ar"))
         {
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -305,52 +331,78 @@ public class MainActivity extends AppCompatActivity
                 onOptionsItemSelected(item);
     }
 
-    private void saveCurrentLocation() {
-//        addCustomerLocation
+    public void saveCurrentLocation() {
+        if(CustomerListShow.Customer_Account.equals(""))
+        {
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getResources().getString(R.string.warning_message))
+                    .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                    .show();
+
+        }
+        else{
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED)
+        {// Not granted permission
 
             ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
         }
 
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
-                CustomerLocation customerLocation=new CustomerLocation();
-                customerLocation.setCUS_NO(CustomerListShow.Customer_Account);
-                customerLocation.setLONG(longitude+"");
-                customerLocation.setLATIT(latitude+"");
-                mDbHandler.addCustomerLocation(customerLocation);
-                Log.e("latitude",""+latitude+longitude);
+
+            /////////////////////////////////////////**********************************
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                location_main=new Location(location);
+                                latitude_main = location.getLatitude();
+                                longitude_main = location.getLongitude();
+                                location_main.setLatitude(latitude_main);
+                                location_main.setLongitude(longitude_main);
+                                customerLocation_main = new CustomerLocation();
+                                customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                customerLocation_main.setLONG(longitude_main + "");
+                                customerLocation_main.setLATIT(latitude_main + "");
+                                mDbHandler.addCustomerLocation(customerLocation_main);
+                                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+
+                            }
+                            // Logic to handle location object
+
+                        }
+                    });
+
+        }
+
+    }//end
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                   saveCurrentLocation();
+                } else {
+                    Toast.makeText(MainActivity.this, "check permission location ", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-
-
-
+        }
     }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -576,8 +628,8 @@ public class MainActivity extends AppCompatActivity
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+                latitude_main = location.getLatitude();
+                longitude_main = location.getLongitude();
             }
 
             @Override
@@ -603,7 +655,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude, Login.salesMan, 0, Login.salesManNo));
+                            latitude_main, longitude_main, Login.salesMan, 0, Login.salesManNo));
                     dialog.dismiss();
                 } else
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
@@ -812,7 +864,7 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("301190")) {
+                if (password.getText().toString().equals("303090")) {
                     dialog.dismiss();
 
                     if (flag == 1) {
@@ -918,6 +970,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox automaticCheck_checkbox = (CheckBox) dialog.findViewById(R.id.automatic_cheque_checkbox);
             final CheckBox tafqit_checkbox = (CheckBox) dialog.findViewById(R.id.tafqit_checkbox);
             final CheckBox preventChange_checkbox = (CheckBox) dialog.findViewById(R.id.preventChangePay_checkbox);
+            final CheckBox showCustomerList_checkbox = (CheckBox) dialog.findViewById(R.id.showCustomerList_checkbox);
+            final CheckBox noReturn_checkbox = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
 
 
 
@@ -1019,6 +1073,13 @@ public class MainActivity extends AppCompatActivity
                 if (mDbHandler.getAllSettings().get(0).getPreventChangPayMeth() == 1) {
                     preventChange_checkbox.setChecked(true);
                 }
+                if (mDbHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+                    showCustomerList_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getNoReturnInvoice() == 1) {
+                    noReturn_checkbox.setChecked(true);
+                }
+
 
 
 
@@ -1115,17 +1176,18 @@ public class MainActivity extends AppCompatActivity
                                 int automaticCheque = automaticCheck_checkbox.isChecked() ? 1 : 0;
                                 int tafqitCheckbox = tafqit_checkbox.isChecked() ? 1 : 0;
                                 int preventChangPay = preventChange_checkbox.isChecked() ? 1 : 0;
-
+                                int showCustlist = showCustomerList_checkbox.isChecked() ? 1 : 0;
+                                int noReturnInvoice = noReturn_checkbox.isChecked() ? 1 : 0;
 
 
                                 String salesmanname=salesmanNmae.getText().toString();
                                 mDbHandler.deleteAllSettings();
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
-                                /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
-                                /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
-                               /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay);
+                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
+                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
+                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
+                                /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
+                                /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
+                               /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
 
                                 dialog.dismiss();
                             } else

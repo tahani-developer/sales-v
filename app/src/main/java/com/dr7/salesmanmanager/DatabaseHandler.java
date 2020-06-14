@@ -49,16 +49,19 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 82;
+    private static final int DATABASE_VERSION = 85;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
     //----------------------------------------------------------------------
+    private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
+    private static final String PASS_TYPE = "PASS_TYPE";
+    private static final String PASS_NO = "PASS_NO";
+    //----------------------------------------------------------------------
 
     private static final String CUSTOMER_LOCATION  = "CUSTOMER_LOCATION";
-
     private static final String CUS_NO = "CUS_NO";
     private static final String LONG = "LONG";
     private static final String LATIT = "LATIT";
@@ -254,6 +257,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String AutomaticCheque="AutomaticCheque";
     private static final String Tafqit="Tafqit";
     private static final String  PreventChangPayMeth="PreventChangPayMeth";
+    private static final String ShowCustomerList="ShowCustomerList";
+    private static final String NoReturnInvoice="NoReturnInvoice";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -393,6 +399,12 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE " + PASSWORD_TABLE + "("
+                + PASS_TYPE + " INTEGER,"
+                + PASS_NO + " TEXT"+
+                ")";
+        db.execSQL(CREATE_TABLE_PASSWORD_TABLE);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
         String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE " + CUSTOMER_LOCATION + "("
@@ -618,13 +630,18 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PreventTotalDiscount + " INTEGER,"
                 + AutomaticCheque + " INTEGER,"
                 + Tafqit + " INTEGER,"
-                + PreventChangPayMeth + " INTEGER"
+                + PreventChangPayMeth + " INTEGER,"
+                + ShowCustomerList + " INTEGER,"
+                + NoReturnInvoice + " INTEGER"
 
 
 
 
 
-                + ")";
+
+
+
+        + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -776,11 +793,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /* PreventOrder + " I
- RequiredNote + " I
- PreventTotalDiscou
- AutomaticCheque +
- Tafqit + " INTEGER*/
+
+
         try{
             db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -857,8 +871,22 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD ShowCustomerList  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
-
+//**************************************End Table setting *************************************************************
         try{
             db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
         }catch (Exception e)
@@ -866,20 +894,12 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.e(TAG, e.getMessage().toString());
         }
 
-
-
-
-
-
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
-
-
-
 
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
@@ -1429,7 +1449,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1464,8 +1484,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(AutomaticCheque,automaticCheque);
         values.put(Tafqit,tafqit);
         values.put(PreventChangPayMeth,preventChangPayMeth);
-
-
+        values.put(ShowCustomerList,showCustomer);
+        values.put(NoReturnInvoice,noReturnInvoi);
 
 
 
@@ -1542,7 +1562,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-        Log.e("addItem",""+item.getDescription());
+       // Log.e("addItem",""+item.getDescription());
+        //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
         db.close();
@@ -1771,6 +1792,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setAutomaticCheque(Integer.parseInt(cursor.getString(28)));
                 setting.setTafqit(Integer.parseInt(cursor.getString(29)));
                 setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
+                setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
+                setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1802,6 +1825,43 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         return infos;
     }
+    public List<CustomerLocation> getCustomerLocation() {
+        List<CustomerLocation> infos = new ArrayList<>();
+        String selectQuery = "select  DISTINCT  CUS_NO ,LONG ,LATIT from CUSTOMER_LOCATION";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                CustomerLocation info = new CustomerLocation();
+                info.setCUS_NO(cursor.getString(0));
+                info.setLATIT((cursor.getString(1)));
+                info.setLONG((cursor.getString(2)));
+
+                infos.add(info);
+            } while (cursor.moveToNext());
+        }
+        return infos;
+    }
+//    public void addCustomerLocation(CustomerLocation customerLocation)
+//    {
+//        try {
+//            db = this.getReadableDatabase();
+//            ContentValues values = new ContentValues();
+//
+//            values.put(CUS_NO, customerLocation.getCUS_NO());
+//            values.put(LONG,customerLocation.getLONG());
+//            values.put(LATIT,customerLocation.getLATIT());
+//
+//            db.insert(CUSTOMER_LOCATION, null, values);
+//            db.close();
+//        }
+//        catch (Exception e){
+//            Log.e("DBAccount_Report",""+e.getMessage());
+//
+//        }
+//
+//    }
 
     public int getMaxSerialNumber(int voucherType) {
         String selectQuery = "SELECT  SERIAL_NUMBER FROM " + TABLE_SETTING + " WHERE TRANS_KIND = " + voucherType;
@@ -1931,6 +1991,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
+
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
@@ -1994,6 +2056,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt(cursor.getString(9)));
+
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 try {
@@ -3048,7 +3112,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
                 offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
                 offer.setFromDate(cursor.getString(2));
-                offer.setToDate(cursor.getString(3));
+                offer.setToDate(cursor.getString(3));//*************
                 offer.setItemNo(cursor.getString(4));
                 offer.setItemQty(Double.parseDouble(cursor.getString(5)));
                 offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
