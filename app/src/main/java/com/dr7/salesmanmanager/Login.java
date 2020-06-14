@@ -33,7 +33,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
-
+ 
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
     private ImageView logo;
