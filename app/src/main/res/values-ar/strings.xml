@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">نظام الصقور للمندوبين</string>
+    <string name="version">19</string>
     <string name="app_username">اسم المستخدم</string>
     <string name="app_password">كلمة السر</string>
     <string name="app_dataManagement">ادارة البيانات</string>
@@ -383,14 +384,14 @@
     <string name="creditvalue">Credit value</string>
     <string name="preventTotaldisc">منع الخصم الكلي</string>
     <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
-    <string name="automatic_cheque">Automatic cheque</string>
+    <string name="automatic_cheque">شيكات تسلسلية</string>
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">عدد الشيكات</string>
     <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
     <string name="saveLocation">حفظ الموقع</string>
     <string name="ShowCustomerList">اظهار قائمة العملاء</string>
     <string name="pleaseSelectUser">اختر عميل محدد</string>
-    <string name="noReturnInvoice">No Return Invoice</string>
-    <string name="InvalidLocation">Invalid Customer Location</string>
+    <string name="noReturnInvoice">ايقاف فواتير الارجاع</string>
+    <string name="InvalidLocation">موقع العميل خاطئ</string>
 
 </resources>

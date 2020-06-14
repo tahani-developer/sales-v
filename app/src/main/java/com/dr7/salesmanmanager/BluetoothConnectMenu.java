@@ -993,7 +993,7 @@ public class BluetoothConnectMenu extends Activity {
         Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
         Total_qty_total.setText(count+"");
         linearView = (LinearLayout) dialog_footer.findViewById(R.id.ll);
-        if(obj.getAllSettings().get(0).getTafqit()==1)
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1)
         {
             linearArabicAmount.setVisibility(View.VISIBLE);
             amountText.setText( getArabicString(voucher.getNetSales()+""));
@@ -1412,7 +1412,7 @@ public class BluetoothConnectMenu extends Activity {
 
 
         total_qty_text.setText(count+"");
-        if(obj.getAllSettings().get(0).getTafqit()==1)
+        if(obj.getAllSettings().get(0).getTafqit()==1&& valueCheckHidPrice!=1)
         {
             linearArabicAmount.setVisibility(View.VISIBLE);
             amountText.setText( getArabicString(voucher.getNetSales()+""));

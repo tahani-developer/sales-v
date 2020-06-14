@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -68,10 +69,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -357,15 +367,12 @@ public class MainActivity extends AppCompatActivity
                                 longitude_main = location.getLongitude();
                                 location_main.setLatitude(latitude_main);
                                 location_main.setLongitude(longitude_main);
-                                 customerLocation_main = new CustomerLocation();
+                                customerLocation_main = new CustomerLocation();
                                 customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
                                 customerLocation_main.setLONG(longitude_main + "");
                                 customerLocation_main.setLATIT(latitude_main + "");
                                 mDbHandler.addCustomerLocation(customerLocation_main);
                                 Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-
-                                Log.e("latitude2MainActivity", "" + latitude_main + longitude_main);
-//
 
                             }
                             // Logic to handle location object
@@ -376,6 +383,8 @@ public class MainActivity extends AppCompatActivity
         }
 
     }//end
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -855,7 +864,7 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("301190")) {
+                if (password.getText().toString().equals("303090")) {
                     dialog.dismiss();
 
                     if (flag == 1) {

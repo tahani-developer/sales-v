@@ -49,16 +49,19 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 84;
+    private static final int DATABASE_VERSION = 85;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
     //----------------------------------------------------------------------
+    private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
+    private static final String PASS_TYPE = "PASS_TYPE";
+    private static final String PASS_NO = "PASS_NO";
+    //----------------------------------------------------------------------
 
     private static final String CUSTOMER_LOCATION  = "CUSTOMER_LOCATION";
-
     private static final String CUS_NO = "CUS_NO";
     private static final String LONG = "LONG";
     private static final String LATIT = "LATIT";
@@ -396,6 +399,12 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE " + PASSWORD_TABLE + "("
+                + PASS_TYPE + " INTEGER,"
+                + PASS_NO + " TEXT"+
+                ")";
+        db.execSQL(CREATE_TABLE_PASSWORD_TABLE);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
         String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE " + CUSTOMER_LOCATION + "("
@@ -784,11 +793,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /* PreventOrder + " I
- RequiredNote + " I
- PreventTotalDiscou
- AutomaticCheque +
- Tafqit + " INTEGER*/
+
+
         try{
             db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -888,20 +894,12 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.e(TAG, e.getMessage().toString());
         }
 
-
-
-
-
-
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
-
-
-
 
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD ACCPRC  TEXT NOT NULL DEFAULT '0'");
@@ -1564,7 +1562,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-        Log.e("addItem",""+item.getDescription());
+       // Log.e("addItem",""+item.getDescription());
+        //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
         db.close();
@@ -1826,6 +1825,43 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         return infos;
     }
+    public List<CustomerLocation> getCustomerLocation() {
+        List<CustomerLocation> infos = new ArrayList<>();
+        String selectQuery = "select  DISTINCT  CUS_NO ,LONG ,LATIT from CUSTOMER_LOCATION";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                CustomerLocation info = new CustomerLocation();
+                info.setCUS_NO(cursor.getString(0));
+                info.setLATIT((cursor.getString(1)));
+                info.setLONG((cursor.getString(2)));
+
+                infos.add(info);
+            } while (cursor.moveToNext());
+        }
+        return infos;
+    }
+//    public void addCustomerLocation(CustomerLocation customerLocation)
+//    {
+//        try {
+//            db = this.getReadableDatabase();
+//            ContentValues values = new ContentValues();
+//
+//            values.put(CUS_NO, customerLocation.getCUS_NO());
+//            values.put(LONG,customerLocation.getLONG());
+//            values.put(LATIT,customerLocation.getLATIT());
+//
+//            db.insert(CUSTOMER_LOCATION, null, values);
+//            db.close();
+//        }
+//        catch (Exception e){
+//            Log.e("DBAccount_Report",""+e.getMessage());
+//
+//        }
+//
+//    }
 
     public int getMaxSerialNumber(int voucherType) {
         String selectQuery = "SELECT  SERIAL_NUMBER FROM " + TABLE_SETTING + " WHERE TRANS_KIND = " + voucherType;

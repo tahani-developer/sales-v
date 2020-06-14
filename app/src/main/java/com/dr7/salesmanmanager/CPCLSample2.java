@@ -44,6 +44,7 @@ import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
 import static com.dr7.salesmanmanager.Reports.CashReport.total;
 import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
+import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 
 public class CPCLSample2 {
@@ -911,7 +912,7 @@ Log.e("printMultilingual","ontCash_EJABI");
 
         String dataArabic = "";
             String footerString="";
-        if(obj.getAllSettings().get(0).getTafqit()==1&& obj.getAllSettings().get(0).getHide_qty()!=1)
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1)
         {
           footerString = "استلمت : " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
             "--------------------------------------------------------------------------------" + "\n" +
@@ -1022,7 +1023,7 @@ Log.e("printMultilingual","ontCash_EJABI");
             LASTnAME=payforBank.getCustName().substring(20,payforBank.getCustName().length());;
         }
         String footerString="";
-        if(obj.getAllSettings().get(0).getTafqit()==1 && obj.getAllSettings().get(0).getHide_qty()!=1)
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
         {
             footerString = "I receved :\t \t " +   getArabicString( payforBank.getAmount() +"")+ "\n"+
                     "--------------------------------------------------------------------------------" + "\n" +
