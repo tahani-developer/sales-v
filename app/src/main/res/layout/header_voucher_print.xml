@@ -181,31 +181,6 @@
                     android:layout_margin="3dp">
 
                     <TextView
-                        android:id="@+id/eda"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ملاحظة : "
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/note"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="3dp">
-
-                    <TextView
                         android:id="@+id/textViews1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -252,6 +227,32 @@
                 </TableRow>
 
             </TableLayout>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="3dp">
+
+                <TextView
+                    android:id="@+id/eda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ملاحظة : "
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/note"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

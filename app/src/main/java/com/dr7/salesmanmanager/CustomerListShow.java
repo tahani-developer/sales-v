@@ -83,11 +83,21 @@ public class CustomerListShow extends DialogFragment {
         if(mHandler.getAllSettings().size() != 0) {
 
             if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+            {
                 customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                Log.e("getSalesManCustomers",""+customerList.size());
+            }
+
             else
-                customerList = mHandler.getAllCustomers();
+            {customerList = mHandler.getAllCustomers();
+                Log.e("getAllCustomers",""+customerList.size());
+
+            }
+
 
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+                customerList.get(29).getPayMethod();
+                Log.e("customerListSho",""+customerList.get(29).getPayMethod());
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
 

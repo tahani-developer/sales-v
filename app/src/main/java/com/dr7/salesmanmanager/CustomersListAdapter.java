@@ -35,6 +35,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
+        Log.e("CustomersListAdapter",""+custList.get(29).getPayMethod());
     }
 
     public void setItemsList(List<Customer> custList) {
@@ -86,6 +87,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
+                Log.e("CustomerListShow",""+custList.get(i).getCustName()+"\t"+i);
                 CustomerListShow.latitude=custList.get(i).getCustLat();
                 CustomerListShow.longtude=custList.get(i).getCustLong();
                 Log.e("longtudeListShow","="+  CustomerListShow.longtude+"\t lati"+ CustomerListShow.latitude);
@@ -166,9 +168,12 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
                         String data = mOriginalValues.get(i).getCustName();
+                        int paymetho = mOriginalValues.get(i).getPayMethod();
+
+                        Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
                         if (data.toLowerCase().contains(constraint.toString())) {
-                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName()));
-                            Log.e("here" , "*********2" + constraint + "*" + data);
+                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
+                            Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
                         }
                     }
                     // set the Filtered result to return

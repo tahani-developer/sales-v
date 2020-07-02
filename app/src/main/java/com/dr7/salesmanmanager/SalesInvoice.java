@@ -398,11 +398,13 @@ public class SalesInvoice extends Fragment {
                 cash.setChecked(true);
                 payMethod = 1;
 
+
             } else {
                 credit.setChecked(true);
                 payMethod = 0;
 
             }
+            Log.e("getPaymethodCheck",""+payMethod);
 
         } else {
 
@@ -702,9 +704,14 @@ public class SalesInvoice extends Fragment {
 
                 itemForPrint.clear();
                 clicked = false;
+                int TypeVouch=getVoucherTypeCurrent();
+
+                String voucherType_Word= getVoucherTypeWord(TypeVouch);
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+
+                builder.setTitle( voucherType_Word);
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
@@ -785,6 +792,26 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+
+    private String getVoucherTypeWord(int typeVouch) {
+        String CurentType="";
+        switch (typeVouch)
+        {
+
+            case 504:
+                CurentType=getResources().getString(R.string.app_sales_inv);
+
+                break;
+            case 506:
+                CurentType=getResources().getString(R.string.app_ret_inv);
+                break;
+            case 508:
+                CurentType=getResources().getString(R.string.app_cust_order);
+                break;
+        }
+        Log.e("CurentType",""+CurentType);
+        return CurentType;
     }
 
     private boolean checkCustomerLocation() {
@@ -911,6 +938,9 @@ public class SalesInvoice extends Fragment {
             Log.e("tax error E", "" + tax + "   " + taxTextView.getText().toString());
 
         }
+
+        voucherType=getVoucherTypeCurrent();
+
         if (netSales != 0 && !Double.isNaN(netSales)) {// test nan
 
             Log.e("not zero ", "tax=" + tax + "\t" + netSales);
@@ -1006,6 +1036,25 @@ public class SalesInvoice extends Fragment {
             builder.create().show();
 
         }
+    }
+
+    private int getVoucherTypeCurrent() {
+    int checkedId=voucherTypeRadioGroup.getCheckedRadioButtonId();
+    Log.e("getVoucherTypeCurrent",""+checkedId);
+        switch (checkedId) {
+            case R.id.salesRadioButton:
+                voucherType = 504;
+                break;
+            case R.id.retSalesRadioButton:
+                voucherType = 506;
+                break;
+            case R.id.orderRadioButton:
+                voucherType = 508;
+                break;
+
+        }
+        Log.e("getVoucherTypeCurrent","voucherType\t"+voucherType);
+        return  voucherType;
     }
 
     private void refrechItemForReprint() {

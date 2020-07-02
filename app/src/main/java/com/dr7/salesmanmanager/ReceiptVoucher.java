@@ -76,6 +76,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.LinearLayout.HORIZONTAL;
@@ -157,6 +158,7 @@ public class ReceiptVoucher extends Fragment {
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     String today = df.format(currentTimeAndDate);
     Date dateConverter;
+    int id_Bank;
 
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
@@ -401,8 +403,17 @@ public class ReceiptVoucher extends Fragment {
                             if (!checkValue())
                                 Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
                             else {
+                                if(!Login.salesMan.equals(""))
+                                {
+                                    saveChequ();
+                                }else{
+                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText(getResources().getString(R.string.warning_message))
+                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                            .show();
+                                }
 
-                                saveChequ();
+
                             }
                         }
                     }
@@ -525,12 +536,11 @@ public class ReceiptVoucher extends Fragment {
             chNum.setText((++serialNo)+"");
             chValue.requestFocus();
             chValue.setText((totalAmount-curentAmount)+"");
-            Log.e("curentAmount",""+curentAmount);
+            bank.setSelection( id_Bank);
             df = new SimpleDateFormat( "dd/MM/yyyy");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             try {
                  dateConverter = sdf.parse(previusDate);
-                Log.e("dateConverter",""+dateConverter);
             } catch (ParseException ex) {
                 Log.v("Exception", ex.getLocalizedMessage());
             }
@@ -577,13 +587,10 @@ public class ReceiptVoucher extends Fragment {
                             check.setAmount(Double.parseDouble(chValue.getText().toString()));
                             valuecheck=Double.parseDouble(chValue.getText().toString());
                             curentAmount+=valuecheck;
-                            Log.e("curentAmount1",""+curentAmount);
+                            id_Bank= bank.getSelectedItemPosition();
+
                             payments.add(check);
                             paymentsforPrint.add(check);
-                            Log.e("payments", "" + payments.size());
-                            Log.e("payments tsst", "" + payments.size() + " " + chNum.getText().toString() + " \n" + bank.getSelectedItem().toString()
-                                    + "\n" + chDate.getText().toString() + "\n" + chValue.getText().toString());
-
                             row.setTag(position);
                             for (int i = 0; i < 4; i++) {
 
@@ -619,11 +626,12 @@ public class ReceiptVoucher extends Fragment {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             int tag = Integer.parseInt(row.getTag().toString());
+                                            Log.e("tagDelet",""+tag+"\tpayments"+payments.size());
                                             payments.remove(tag);
+                                            paymentsforPrint.remove(tag);
                                             tableCheckData.removeView(row);
                                             total = total - Double.parseDouble(chValue.getText().toString());
                                             curentAmount-=Double.parseDouble(chValue.getText().toString());
-                                            Log.e("curentAmount",""+curentAmount);
                                             chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                                             position--;
                                             for (int k = 0; k < tableCheckData.getChildCount(); k++) {
@@ -1124,6 +1132,7 @@ public class ReceiptVoucher extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveChequ() {
+        int salesMan=0;
         Toast.makeText(getActivity(), "Amount Saved", Toast.LENGTH_LONG).show();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -1136,8 +1145,15 @@ public class ReceiptVoucher extends Fragment {
         String cusName = CustomerListShow.Customer_Name;
         Double amount = Double.parseDouble(amountEditText.getText().toString());
         String remark = remarkEditText.getText().toString();
+        try {
+             salesMan = Integer.parseInt(Login.salesMan);
+        }
+        catch (Exception e)
+        {
 
-        int salesMan = Integer.parseInt(Login.salesMan);
+        }
+
+
 
         payment = new Payment(0, voucherNumber, salesMan, payDate,
                 remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
@@ -1445,6 +1461,10 @@ public class ReceiptVoucher extends Fragment {
         payments.clear();
         chequNo_EditText.setText("");
         editChech.setVisibility(View.GONE);
+        checkNo=0;
+        serialNo=0;
+        curentAmount=0;
+        valuecheck=0;
     }
 
     public String convertToEnglish(String value) {

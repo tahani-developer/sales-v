@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 85;
+    private static final int DATABASE_VERSION = 86;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -631,7 +631,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + AutomaticCheque + " INTEGER,"
                 + Tafqit + " INTEGER,"
                 + PreventChangPayMeth + " INTEGER,"
-                + ShowCustomerList + " INTEGER,"
+                + ShowCustomerList + " INTEGER DEFAULT 1,"
                 + NoReturnInvoice + " INTEGER"
 
 
@@ -1992,7 +1992,6 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
-
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));

@@ -432,8 +432,16 @@ public class AddItemsFragment2 extends DialogFragment {
         done.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.addItemsToList(List);
-                AddItemsFragment2.this.dismiss();
+                try {
+                    listener.addItemsToList(List);
+                    AddItemsFragment2.this.dismiss();
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(getActivity(), "Re Select Items Please", Toast.LENGTH_SHORT).show();
+                    Log.e("AddItemException",""+e.getMessage());
+                }
+
           }
         });
         return view;

@@ -24,6 +24,12 @@ public class Customer {
     private String ACCPRC;// customer rate for price
     private int Hide_val;
 
+    public Customer(String custId, String custName, int payMethod) {
+        this.custId = custId;
+        this.custName = custName;
+        this.payMethod=payMethod;
+    }
+
     public int getHide_val() {
         return Hide_val;
     }
@@ -109,10 +115,11 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public Customer(String custId, String custName) {
-        this.custId = custId;
-        this.custName = custName;
-    }
+//    public Customer(String custId, String custName) {
+//        this.custId = custId;
+//        this.custName = custName;
+//        this.payMethod=pay;
+//    }
 
     public int getCompanyNumber() {
         return companyNumber;
