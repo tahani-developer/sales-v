@@ -35,7 +35,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
-        Log.e("CustomersListAdapter",""+custList.get(29).getPayMethod());
+
     }
 
     public void setItemsList(List<Customer> custList) {

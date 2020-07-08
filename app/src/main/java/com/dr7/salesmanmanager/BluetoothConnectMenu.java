@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -563,7 +564,7 @@ public class BluetoothConnectMenu extends Activity {
                                     sample.imageTestArabic(1, bit_voucher_Footer);
 
                                 }
-                            } else {
+                            } else {// large name
 
                                 if (TOTAL < 20) {
 //                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
@@ -635,24 +636,31 @@ public class BluetoothConnectMenu extends Activity {
 //                        itemForPrint.clear();
 
                         } else {
-                            if (count == 2||count==4 || count==8) {
-                                Bitmap bitmap=null;
-                                try {
-                                    companyInfo = obj.getAllCompanyInfo().get(0);
-                                    bitmap=companyInfo.getLogo();
-                                }
-                                catch(Exception e){
-                                   // bitmap=getResources().getDrawable(R.drawable.logo);
-                                    e.printStackTrace();
-                                }//  (8) for print last payment===> ReciptVoucher
+                            if (count == 2||count==4 || count==8) {//  (8) for print last payment===> ReciptVoucher
                                 if(count==2){
+                                    payList=paymentsforPrint;
+                                    payforBank=ReceiptVoucher.payment;
+
+                                }
+                                else if(count==4){
+                                    payList=paymentPrinter;
+                                    payforBank=pay1;
+                                }
+                                else if(count==8){
+                                    payList=ReceiptVoucher.paymentPrinter;
+                                    payforBank=ReceiptVoucher.pay1;
+                                }
+                                if(count==2){//2=== from ReceptVoucher
 //                                payList=paymentsforPrint;
 //                                payforBank=ReceiptVoucher.payment;
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(2);
-                                    }else {
+                                    }else {// ejabi Layout
                                        // sample.imageTestEnglish_ejabi(1,bitmap);
-                                        sample.printMultilingualFontCash_EJABI(2);
+                                        Bitmap bit = convertLayoutToImage_Recept();
+//                                        Log.e("getAllCompanyInfo",""+bitmap);
+                                        sample.imageTestEnglish(1, bit);
+//                                        sample.printMultilingualFontCash_EJABI(2);
 
                                     }
                                 paymentsforPrint.clear();
@@ -663,9 +671,11 @@ public class BluetoothConnectMenu extends Activity {
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(count);
                                     }else {
-
+                                        Bitmap bit = convertLayoutToImage_Recept();
+//                                        Log.e("getAllCompanyInfo",""+bitmap);
+                                        sample.imageTestEnglish(1, bit);
                                        // sample.imageTestEnglish_ejabi(1,bitmap);
-                                        sample.printMultilingualFontCash_EJABI(count);
+//                                        sample.printMultilingualFontCash_EJABI(count);
 
                                     }
 //                                    paymentsforPrint.clear();
@@ -913,6 +923,142 @@ public class BluetoothConnectMenu extends Activity {
         store.setText(Login.salesMan);
 //        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
         paytype.setText((voucher.getPayMethod() == 0 ? "Credit" : "Cash"));
+        dialog_Header.show();
+
+        linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(1, 1, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+
+        return bit;// creates bitmap and returns the same
+
+
+    }
+
+
+    private Bitmap convertLayoutToImage_Recept() {
+        LinearLayout linearView = null;
+        final Dialog dialog_Header = new Dialog(BluetoothConnectMenu.this);
+        dialog_Header.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_Header.setCancelable(false);
+        dialog_Header.setContentView(R.layout.recept_voucher_ejabi);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        TextView doneinsewooprint = (TextView) dialog_Header.findViewById(R.id.done);
+
+        TextView compname, store,tel, taxNo, vhNo, date, textView_amount, note, vhType, paytype,salesName ,amount_ofMoney,customerName    ;
+        ImageView img = (ImageView) dialog_Header.findViewById(R.id.img);
+        compname = (TextView) dialog_Header.findViewById(R.id.compname);
+        tel = (TextView) dialog_Header.findViewById(R.id.tel);
+        taxNo = (TextView) dialog_Header.findViewById(R.id.taxNo);
+        amount_ofMoney = (TextView) dialog_Header.findViewById(R.id.textView_amount_ofMoney);
+        vhNo = (TextView) dialog_Header.findViewById(R.id.vhNo);
+        date = (TextView) dialog_Header.findViewById(R.id.date);
+        textView_amount = (TextView) dialog_Header.findViewById(R.id.textView_amount);
+        note = (TextView) dialog_Header.findViewById(R.id.note);
+        paytype = (TextView) dialog_Header.findViewById(R.id.paytype);
+        store= (TextView) dialog_Header.findViewById(R.id.store);
+        salesName = (TextView) dialog_Header.findViewById(R.id.salesman_name);
+        customerName = (TextView) dialog_Header.findViewById(R.id.textView_customerName);
+        TableLayout tabLayout = (TableLayout) dialog_Header.findViewById(R.id.table_bank_info);
+        //************************** Fill Data  *******************************************
+
+        if (companyInfo.getLogo()!=(null))
+        {
+            img.setImageBitmap(companyInfo.getLogo());
+
+        }
+        else{
+            img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+
+            Toast.makeText(context, "Upload Company Logo For Print ", Toast.LENGTH_SHORT).show();
+        }
+        textView_amount.setText( payforBank.getAmount()+"");
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
+        {
+            amount_ofMoney.setText(getArabicString( payforBank.getAmount() +""));
+
+        }
+        else {
+
+        }
+        vhNo.setText("" + payforBank.getVoucherNumber());
+        date.setText(payforBank.getPayDate());
+        customerName.setText(payforBank.getCustName());
+//        custname.setText(voucher.getCustName());
+        note.setText( payforBank.getRemark() );
+//        payforBank.getAmount()
+
+        store.setText(Login.salesMan);
+        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
+        paytype.setText((payforBank.getPayMethod() == 1 ? "Cash" : "Credit") );
+
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
+            tabLayout.setVisibility(View.GONE);
+        }
+        else {
+            tabLayout.setVisibility(View.VISIBLE);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            lp.setMargins(0, 7, 0, 0);
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp2.setMargins(0, 7, 0, 0);
+
+
+            if(count==2){
+                payList=paymentsforPrint;
+                payforBank=ReceiptVoucher.payment;
+
+            }
+            else if(count==4){
+                payList=paymentPrinter;
+                payforBank=pay1;
+            }
+            else if(count==8){
+                payList=ReceiptVoucher.paymentPrinter;
+                payforBank=ReceiptVoucher.pay1;
+            }
+
+//        List<Payment> payments = obj.getRequestedPaymentsPaper(pay.getVoucherNumber());
+            List<Payment> payments =payList;
+            for (int n = 0; n < payments.size(); n++) {
+//                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
+                final TableRow row = new TableRow(BluetoothConnectMenu.this);
+                row.setPadding(0, 10, 0, 10);
+                Log.e("paymentprint",""+payments.size());
+                for (int i = 0; i < 4; i++) {
+
+                    String[] record = {
+                            payments.get(n).getBank() + "",
+                            payments.get(n).getCheckNumber() + "",
+                            payments.get(n).getDueDate() + "",
+                            payments.get(n).getAmount() + "",
+                    };
+
+                    row.setLayoutParams(lp);
+                    TextView textView = new TextView(BluetoothConnectMenu.this);
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(BluetoothConnectMenu.this, R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
+
+                }
+
+                tabLayout.addView(row);
+            }
+        }
+
         dialog_Header.show();
 
         linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);

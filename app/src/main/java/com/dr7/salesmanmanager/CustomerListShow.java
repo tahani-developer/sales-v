@@ -96,8 +96,7 @@ public class CustomerListShow extends DialogFragment {
 
 
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
-                customerList.get(29).getPayMethod();
-                Log.e("customerListSho",""+customerList.get(29).getPayMethod());
+
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
 

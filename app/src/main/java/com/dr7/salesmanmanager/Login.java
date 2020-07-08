@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
 
-                        if (passwordEditText.getText().toString().equals("f123f")) {
+                        if (passwordEditText.getText().toString().equals("2240m")) {
                             exist = true;
                             index = 1;
                             isMasterLogin = true;
