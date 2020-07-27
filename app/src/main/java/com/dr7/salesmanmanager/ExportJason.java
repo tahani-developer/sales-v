@@ -41,6 +41,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ExportJason extends AppCompatActivity {
 
     private Context context;
@@ -350,6 +352,17 @@ public class ExportJason extends AppCompatActivity {
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
+                    if(s.contains("SAVING_ERRORDuplicate"))
+                    {
+
+                    progressDialog.dismiss();
+                    int indexError=s.indexOf("entry");
+
+                    String errorMessage=s.substring(indexError,indexError+42);
+                    showDialogError(errorMessage);
+                    }
+//                    *********************************
+
                     Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Failed to export data");
                 }
@@ -370,5 +383,13 @@ public class ExportJason extends AppCompatActivity {
             }
             progressDialog.dismiss();
         }
+    }
+
+    private void showDialogError(String message) {
+        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(context.getResources().getString(R.string.duplicateddata))
+                .setContentText(message)
+
+                .show();
     }
 }

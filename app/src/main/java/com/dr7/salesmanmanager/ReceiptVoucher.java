@@ -235,6 +235,7 @@ public class ReceiptVoucher extends Fragment {
         });
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
+        Log.e("voucherNumber", "onCreateView" +voucherNumber);
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
 
         String payMethod = "";
@@ -281,7 +282,7 @@ public class ReceiptVoucher extends Fragment {
                            editChech.setVisibility(View.GONE);
                            displayManulaCheck();
 //                           editChech.setVisibility(View.VISIBLE);
-//                          if(! TextUtils.isEmpty(chequCounter)){
+//                          if(! TextUtils.isEmpty( Counter)){
 //                              try {
 //
 //                                  counter = Integer.parseInt(chequCounter);

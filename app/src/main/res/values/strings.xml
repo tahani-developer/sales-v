@@ -344,6 +344,8 @@
     <string name="pleaseSelectUser">Please Select User</string>
     <string name="noReturnInvoice">No Return Invoice</string>
     <string name="InvalidLocation">Invalid Customer Location</string>
+    <string name="duplicateddata">Can\'t Export Data For duplicated data</string>
+    <string name="duplicatedVoucherNo">Duplicated Voucher Number you can\'t complete </string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

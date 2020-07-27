@@ -658,7 +658,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE " + SALES_VOUCHER_MASTER + "("
                 + COMPANY_NUMBER + " INTEGER,"
-                + VOUCHER_NUMBER + " INTEGER,"
+                + VOUCHER_NUMBER + " INTEGER UNIQUE, "
                 + VOUCHER_TYPE + " INTEGER,"
                 + VOUCHER_DATE + " TEXT,"
                 + SALES_MAN_NUMBER + " INTEGER,"
@@ -1870,6 +1870,24 @@ DatabaseHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         int maxVoucher = Integer.parseInt(cursor.getString(0));
+        return maxVoucher;
+
+    }
+    public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
+        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+        String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '"+voucherType+"' ),-1)" ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+
+
+        int maxVoucher = Integer.parseInt(cursor.getString(0));
+        if(maxVoucher==-1)
+        {
+            maxVoucher=getMaxSerialNumber(voucherType);
+            Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
+        }
+        Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
         return maxVoucher;
 
     }
@@ -3762,4 +3780,19 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public int checkVoucherNo(int voucherNumber,int voucherType) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+        int count = 0;
+        String selectQuery = "select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '"+voucherNumber+"' and VOUCHER_TYPE = '"+voucherType+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            count = cursor.getInt(0);
+            Log.e("count=", "checkVoucherNo+\t" + count + "\t");
+
+        }
+        return count;
+    }
 }

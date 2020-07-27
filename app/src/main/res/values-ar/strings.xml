@@ -393,5 +393,7 @@
     <string name="pleaseSelectUser">اختر عميل محدد</string>
     <string name="noReturnInvoice">ايقاف فواتير الارجاع</string>
     <string name="InvalidLocation">موقع العميل خاطئ</string>
+    <string name="duplicateddata">Can\'t Export Data For duplicated data</string>
+    <string name="duplicatedVoucherNo">رقم الفاتورة مكرر لايمكن اكمال العملية </string>
 
 </resources>
