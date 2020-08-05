@@ -984,6 +984,7 @@ public class SalesInvoice extends Fragment {
                 SaveData.setEnabled(true);
 
             } else {
+                voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
 
                 String remark = " " + remarkEditText.getText().toString();
                 salesMan = Integer.parseInt(Login.salesMan);
@@ -1496,7 +1497,7 @@ public class SalesInvoice extends Fragment {
     }
 
     public void AddVoucher() {
-
+        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
         savedState = 2;// addesd sucssesfulley
         for (int i = 0; i < items.size(); i++) {

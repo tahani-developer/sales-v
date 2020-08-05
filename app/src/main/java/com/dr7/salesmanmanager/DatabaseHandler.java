@@ -3795,4 +3795,19 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         return count;
     }
+
+    public void updateCustomerMasterLocation(String customer_account, String LATIT, String LONGT) {
+        Log.e("updateCustomerMaster",""+customer_account+"\t"+LATIT+"\t"+LONGT);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(CUST_LAT, LATIT);
+        values.put(CUST_LONG, LONGT);
+
+
+        // updating row
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + customer_account, null);
+
+    }
+
 }

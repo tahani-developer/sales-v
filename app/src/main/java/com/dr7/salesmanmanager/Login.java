@@ -57,6 +57,7 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleAppUtils.setConfigChange(Login.this);
         setContentView(R.layout.activity_login);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();

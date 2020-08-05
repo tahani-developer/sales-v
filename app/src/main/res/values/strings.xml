@@ -346,6 +346,9 @@
     <string name="InvalidLocation">Invalid Customer Location</string>
     <string name="duplicateddata">Can\'t Export Data For duplicated data</string>
     <string name="duplicatedVoucherNo">Duplicated Voucher Number you can\'t complete </string>
+    <string name="customerHaveLocation">Customer Have Location</string>
+    <string name="succsesful">SUCCESSFUL</string>
+    <string name="LocationSaved">Location Saved</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

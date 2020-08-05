@@ -161,6 +161,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleAppUtils.setConfigChange(MainActivity.this);
+
+//        finish();
+//        startActivity(getIntent());
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -341,14 +346,29 @@ public class MainActivity extends AppCompatActivity
                     .setContentText(getResources().getString(R.string.pleaseSelectUser))
                     .show();
 
-        }
-        else{
+        } else {
+            String latitude = CustomerListShow.latitude;
+            final String longitude = CustomerListShow.longtude;
+            Log.e("saveCurrentLocation", "" + latitude + "\t" + longitude);
+            if(!latitude.equals("")&&!longitude.equals("")){
+
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getResources().getString(R.string.warning_message))
+                        .setContentText(getResources().getString(R.string.customerHaveLocation))
+                        .show();
+            }
+            else {
+
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getResources().getString(R.string.succsesful))
+                        .setContentText(getResources().getString(R.string.LocationSaved))
+                        .show();
 
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-        {// Not granted permission
+
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {// Not granted permission
 
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
@@ -373,16 +393,20 @@ public class MainActivity extends AppCompatActivity
                                 customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
                                 customerLocation_main.setLONG(longitude_main + "");
                                 customerLocation_main.setLATIT(latitude_main + "");
-                                mDbHandler.addCustomerLocation(customerLocation_main);
-                                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
 
+                                mDbHandler.addCustomerLocation(customerLocation_main);
+//                                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                                mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+                                CustomerListShow.latitude=latitude_main+"";
+                                CustomerListShow.longtude=longitude_main+"";
                             }
                             // Logic to handle location object
 
                         }
                     });
+            }
 
-        }
+        }// END ELSE
 
     }//end
 
@@ -1203,10 +1227,12 @@ public class MainActivity extends AppCompatActivity
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                    if( arabicLanguage_checkbox.isChecked())
                    {
+
                         LocaleAppUtils.setLocale(new Locale("ar"));
                        languagelocalApp="ar";
                     }
-                   else {    LocaleAppUtils.setLocale(new Locale("en"));
+                   else {
+                       LocaleAppUtils.setLocale(new Locale("en"));
                              languagelocalApp="en";
                    }
 
@@ -1227,9 +1253,9 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    LocaleAppUtils.setConfigChange(MainActivity.this);
-                    finish();
-                    startActivity(getIntent());
+//                    LocaleAppUtils.setConfigChange(MainActivity.this);
+//                    finish();
+//                    startActivity(getIntent());
                     settext2();
 
 
@@ -1242,8 +1268,8 @@ public class MainActivity extends AppCompatActivity
                                 && !paymentEditTextCheque.getText().toString().equals("")
                                 && !paymentEditTextCredit.getText().toString().equals("")) {
 
-                           if(validSerial&&validOrder&&validReturn)
-                           {
+//                           if(validSerial&&validOrder&&validReturn)
+//                           {
                                if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
                                    String link = linkEditText.getText().toString().trim();
                                    try {
@@ -1301,6 +1327,8 @@ public class MainActivity extends AppCompatActivity
                                    /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
                                    /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice);
 
+                                   finish();
+                                   startActivity(getIntent());
                                    dialog.dismiss();
                                }
                                else
@@ -1308,10 +1336,10 @@ public class MainActivity extends AppCompatActivity
                                    Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
 
                                }
-                           }
-                           else {
-                               Toast.makeText(MainActivity.this, "Invalid Serial Number", Toast.LENGTH_SHORT).show();
-                           }
+//                           }
+//                           else {
+//                               Toast.makeText(MainActivity.this, "Invalid Serial Number", Toast.LENGTH_SHORT).show();
+//                           }
 
 
                         }
