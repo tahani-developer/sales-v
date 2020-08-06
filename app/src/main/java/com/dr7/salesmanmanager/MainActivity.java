@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,10 +16,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -64,6 +68,9 @@ import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -106,6 +113,11 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHandler mDbHandler;
     LocationManager locationManager;
     LocationListener locationListener;
+
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
+
+
     public  static  double latitude_main, longitude_main;
     boolean isPosted = true;
 
@@ -130,6 +142,7 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient fusedLocationClient;
     public  static CustomerLocation customerLocation_main;
     public  static Location location_main;
+    public  int first=0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -170,7 +183,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer_layout=findViewById(R.id.drawer_layout);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        first=1;
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(languagelocalApp.equals("ar"))
         {
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
@@ -185,6 +200,10 @@ public class MainActivity extends AppCompatActivity
         tvresult = (TextView) findViewById(R.id.tvresult);
 
         Button btn = (Button) findViewById(R.id.btn);
+
+//        requestLocationUpdates();
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,7 +302,31 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mFusedLocationClient != null) {
+            requestLocationUpdates();
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+    public void requestLocationUpdates() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(120000); // two minute interval
+        mLocationRequest.setFastestInterval(120000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -330,7 +373,11 @@ public class MainActivity extends AppCompatActivity
             openPasswordDialog(4);
         }
         else if (id == R.id.saveLocation) {
-          saveCurrentLocation();
+            try {
+                saveCurrentLocation();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         return super.
@@ -338,79 +385,240 @@ public class MainActivity extends AppCompatActivity
                 onOptionsItemSelected(item);
     }
 
-    public void saveCurrentLocation() {
-        if(CustomerListShow.Customer_Account.equals(""))
-        {
-            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(getResources().getString(R.string.warning_message))
-                    .setContentText(getResources().getString(R.string.pleaseSelectUser))
-                    .show();
-
-        } else {
-            String latitude = CustomerListShow.latitude;
-            final String longitude = CustomerListShow.longtude;
-            Log.e("saveCurrentLocation", "" + latitude + "\t" + longitude);
-            if(!latitude.equals("")&&!longitude.equals("")){
-
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(getResources().getString(R.string.warning_message))
-                        .setContentText(getResources().getString(R.string.customerHaveLocation))
-                        .show();
-            }
-            else {
-
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                        .setTitleText(getResources().getString(R.string.succsesful))
-                        .setContentText(getResources().getString(R.string.LocationSaved))
-                        .show();
-
-
-
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {// Not granted permission
-
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-
-        }
-
-
-            /////////////////////////////////////////**********************************
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                location_main=new Location(location);
-                                latitude_main = location.getLatitude();
-                                longitude_main = location.getLongitude();
-                                location_main.setLatitude(latitude_main);
-                                location_main.setLongitude(longitude_main);
-                                customerLocation_main = new CustomerLocation();
-                                customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
-                                customerLocation_main.setLONG(longitude_main + "");
-                                customerLocation_main.setLATIT(latitude_main + "");
-
-                                mDbHandler.addCustomerLocation(customerLocation_main);
-//                                Toast.makeText(MainActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-                                mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
-                                CustomerListShow.latitude=latitude_main+"";
-                                CustomerListShow.longtude=longitude_main+"";
-                            }
-                            // Logic to handle location object
-
-                        }
-                    });
-            }
-
-        }// END ELSE
+    public void saveCurrentLocation() throws InterruptedException {
+        first=2;
+        getlocattTest();
+//        if(CustomerListShow.Customer_Account.equals(""))
+//        {
+//            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                    .setTitleText(getResources().getString(R.string.warning_message))
+//                    .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                    .show();
+//
+//        } else {
+//
+//
+//            if(isNetworkAvailable()){
+//                String latitude = CustomerListShow.latitude;
+//                final String longitude = CustomerListShow.longtude;
+//
+//                if(!latitude.equals("")&&!longitude.equals("")){
+//
+//                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                            .setTitleText(getResources().getString(R.string.warning_message))
+//                            .setContentText(getResources().getString(R.string.customerHaveLocation))
+//                            .show();
+//                }
+//                else {
+//                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+//
+//                        ActivityCompat.requestPermissions(this, new String[]
+//                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+//                    }
+//
+//
+//                    locationListener = new LocationListener() {
+//                        @Override
+//                        public void onLocationChanged(Location location) {
+//                            latitude_main = location.getLatitude();
+//                            longitude_main = location.getLongitude();
+//                            customerLocation_main = new CustomerLocation();
+//                                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+//                                        customerLocation_main.setLONG(longitude_main + "");
+//                                        customerLocation_main.setLATIT(latitude_main + "");
+//                                        mDbHandler.addCustomerLocation(customerLocation_main);
+//
+//                            mDbHandler.addCustomerLocation(customerLocation_main);
+//                                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+//                                        CustomerListShow.latitude=latitude_main+"";
+//                                        CustomerListShow.longtude=longitude_main+"";
+//                                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                                .setTitleText(getResources().getString(R.string.succsesful))
+//                                                .setContentText(getResources().getString(R.string.LocationSaved))
+//                                                .show();
+//                            Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+////                            Toast.makeText(MainActivity.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onProviderEnabled(String provider) {
+//                        }
+//
+//                        @Override
+//                        public void onProviderDisabled(String provider) {
+//
+//                        }
+//                    };
+//
+//
+//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//
+//
+//
+//
+//
+//                    //****************************************************************
+////                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//
+//                  locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+//
+//                        ActivityCompat.requestPermissions(this, new String[]
+//                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+//                    }
+////                    Thread.sleep(1000);
+//
+//
+//                    /////////////////////////////////////////**********************************
+////                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+////                    fusedLocationClient.getLastLocation()
+////                            .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+////                                @Override
+////                                public void onSuccess(Location location) {
+////                                    // Got last known location. In some rare situations this can be null.
+////                                    if (location != null) {
+////                                        location_main=new Location(location);
+////                                        latitude_main = location.getLatitude();
+////                                        longitude_main = location.getLongitude();
+////                                        location_main.setLatitude(latitude_main);
+////                                        location_main.setLongitude(longitude_main);
+////                                        customerLocation_main = new CustomerLocation();
+////                                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+////                                        customerLocation_main.setLONG(longitude_main + "");
+////                                        customerLocation_main.setLATIT(latitude_main + "");
+////                                        mDbHandler.addCustomerLocation(customerLocation_main);
+////                                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+////                                        CustomerListShow.latitude=latitude_main+"";
+////                                        CustomerListShow.longtude=longitude_main+"";
+////                                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+////                                                .setTitleText(getResources().getString(R.string.succsesful))
+////                                                .setContentText(getResources().getString(R.string.LocationSaved))
+////                                                .show();
+////                                        Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+////                                        Toast.makeText(MainActivity.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+////                                    }
+////                                    // Logic to handle location object
+////
+////                                }
+////                            });
+//                }
+//            }
+//            else {
+//                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.enternetConnection))
+//                        .show();
+//            }
+//
+//
+//        }// END ELSE
 
     }//end
 
+    private void getlocattTest() {
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
 
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+                    }
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+            requestLocationUpdates();
+        }
+
+    }
+    LocationCallback mLocationCallback = new LocationCallback(){
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+                    if(CustomerListShow.Customer_Account.equals(""))
+        {
+            if(first!=1)
+            {
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getResources().getString(R.string.warning_message))
+                        .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                        .show();
+            }
+
+
+        } else {
+
+
+            if(isNetworkAvailable()){
+                String latitude = CustomerListShow.latitude;
+                final String longitude = CustomerListShow.longtude;
+
+                if(!latitude.equals("")&&!longitude.equals("")){
+
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.customerHaveLocation))
+                            .show();
+                }
+                else {
+                    for (Location location : locationResult.getLocations()) {
+                        Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                        latitude_main = location.getLatitude();
+                        longitude_main = location.getLongitude();
+                        customerLocation_main = new CustomerLocation();
+                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                        customerLocation_main.setLONG(longitude_main + "");
+                        customerLocation_main.setLATIT(latitude_main + "");
+                        mDbHandler.addCustomerLocation(customerLocation_main);
+                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+                        CustomerListShow.latitude=latitude_main+"";
+                        CustomerListShow.longtude=longitude_main+"";
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText(getResources().getString(R.string.succsesful))
+                                .setContentText(getResources().getString(R.string.LocationSaved))
+                                .show();
+                        Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+                    }
+
+
+
+
+
+                }
+            }
+            else {
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getResources().getString(R.string.warning_message))
+                        .setContentText(getResources().getString(R.string.enternetConnection))
+                        .show();
+            }
+
+
+        }// END ELSE
+
+        };
+
+    };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -419,7 +627,11 @@ public class MainActivity extends AppCompatActivity
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
 
-                   saveCurrentLocation();
+                    try {
+                        saveCurrentLocation();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "check permission location ", Toast.LENGTH_SHORT).show();
 
@@ -700,6 +912,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i) {
                 checknum = 0;
                 CustomerListShow.Customer_Name = "No Customer Selected !";
+                CustomerListShow.longtude="";
+                CustomerListShow.latitude="";
                 settext2();
                 menuItemState = 0;
 

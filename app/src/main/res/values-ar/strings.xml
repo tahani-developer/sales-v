@@ -393,10 +393,11 @@
     <string name="pleaseSelectUser">اختر عميل محدد</string>
     <string name="noReturnInvoice">ايقاف فواتير الارجاع</string>
     <string name="InvalidLocation">موقع العميل خاطئ</string>
-    <string name="duplicateddata">Can\'t Export Data For duplicated data</string>
+    <string name="duplicateddata">لايمكن تصدير البيانات يوجد بيانات مكررة</string>
     <string name="duplicatedVoucherNo">رقم الفاتورة مكرر لايمكن اكمال العملية </string>
-    <string name="customerHaveLocation">Customer Have Location</string>
-    <string name="succsesful">SUCCESSFUL</string>
-    <string name="LocationSaved">Location Saved</string>
+    <string name="customerHaveLocation">يوجد موقع للعميل</string>
+    <string name="succsesful">تم بنجاح</string>
+    <string name="LocationSaved">تم حفظ الموقع</string>
+    <string name="enternetConnection">لايوجد اتصال انترنت</string>
 
 </resources>

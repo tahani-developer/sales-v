@@ -349,6 +349,7 @@
     <string name="customerHaveLocation">Customer Have Location</string>
     <string name="succsesful">SUCCESSFUL</string>
     <string name="LocationSaved">Location Saved</string>
+    <string name="enternetConnection">Check Internet Connection</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

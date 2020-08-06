@@ -1827,7 +1827,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
-        String selectQuery = "select  DISTINCT  CUS_NO ,LONG ,LATIT from CUSTOMER_LOCATION";
+        String selectQuery = "select  DISTINCT  CUS_ID ,CUST_LONG ,CUST_LAT from CUSTOMER_MASTER";
+
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
