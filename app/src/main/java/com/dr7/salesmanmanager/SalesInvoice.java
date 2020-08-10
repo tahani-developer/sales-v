@@ -861,7 +861,7 @@ public class SalesInvoice extends Fragment {
           // *****************************************************************************************
 //            Log.e("distanceTo",""+curent_location.distanceTo(custom_location));
 //            Log.e("custom_location",""+custom_location.getLongitude()+"\t"+curent_location.getLongitude());
-            if(distance<10)
+            if(distance<100)
             { return true;}
             else  return   false;
 

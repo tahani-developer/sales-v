@@ -23,6 +23,15 @@ public class Customer {
     private double max_discount;
     private String ACCPRC;// customer rate for price
     private int Hide_val;
+    private int isPost;
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
+    }
 
     public Customer(String custId, String custName, int payMethod) {
         this.custId = custId;

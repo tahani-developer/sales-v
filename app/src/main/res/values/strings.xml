@@ -298,7 +298,7 @@
     <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
     <string name="change_qty">Change Qty</string>
     <string name="failImpo_export_data">Please Export data before import new data</string>
-    <string name="failStockSoft_export_data">Please check Stock software before import new data</string>
+    <string name="failStockSoft_export_data">Please check BackOffice Software There Are Unsaved Location </string>
     <string name="kind_item">Kind</string>
     <string name="all_item">All Item</string>
     <string name="app_account_report">Account Statment</string>
@@ -350,6 +350,7 @@
     <string name="succsesful">SUCCESSFUL</string>
     <string name="LocationSaved">Location Saved</string>
     <string name="enternetConnection">Check Internet Connection</string>
+    <string name="failImpo_export_dataCustomerMaster">Please Export data in Customer master before import new data</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

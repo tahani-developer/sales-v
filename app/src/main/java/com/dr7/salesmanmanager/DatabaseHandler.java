@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 86;
+    private static final int DATABASE_VERSION = 87;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -133,6 +133,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String MAX_DISCOUNT = "MAX_DISCOUNT";
     private static final String ACCPRC = "ACCPRC";
     private static final String HIDE_VAL = "HIDE_VAL";
+    private static final String IS_POST = "IS_POST";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -462,7 +463,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CUST_LONG + " TEXT,"
                 + MAX_DISCOUNT + " REAL,"
                 +ACCPRC+ " TEXT,"
-                +HIDE_VAL+ " INTEGER"
+                +HIDE_VAL+ " INTEGER,"
+                +IS_POST+" INTEGER not null default  0 "
 
 
                 + ")";
@@ -1144,6 +1146,14 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER NOT NULL DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
     }
     public void addAccount_report(Account_Report account_report)
     {
@@ -1261,6 +1271,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(MAX_DISCOUNT, customer.getMax_discount());
         values.put(ACCPRC, customer.getACCPRC());
         values.put(HIDE_VAL, customer.getHide_val());
+        values.put(IS_POST, 0);
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1827,7 +1838,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
-        String selectQuery = "select  DISTINCT  CUS_ID ,CUST_LONG ,CUST_LAT from CUSTOMER_MASTER";
+        String selectQuery = "select  DISTINCT  CUS_ID , CUST_LAT ,CUST_LONG ,IS_POST from CUSTOMER_MASTER";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1838,6 +1849,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 info.setCUS_NO(cursor.getString(0));
                 info.setLATIT((cursor.getString(1)));
                 info.setLONG((cursor.getString(2)));
+                info.setIsPost((cursor.getInt(3)));
 
                 infos.add(info);
             } while (cursor.moveToNext());
@@ -3285,6 +3297,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
     }
+    public void updateCustomersMaster() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POST, 1);
+        db.update(CUSTOMER_MASTER, values, IS_POST + "=" + 0, null);
+    }
 
     public void updateTransactions() {
         db = this.getWritableDatabase();
@@ -3811,4 +3830,20 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public boolean isCustomerMaster_posted() {
+        String selectQuery = "SELECT count() FROM " + CUSTOMER_MASTER + " where  IS_POST = 0 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int x = cursor.getInt(0);
+            Log.e("isCustomerMaster_posted", "" + x);
+            if (x > 0) {
+                return false;
+
+
+            } else
+                return true;
+        }
+        return true;
+    }
 }

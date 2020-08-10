@@ -79,7 +79,15 @@ public class ExportJason extends AppCompatActivity {
             customerLocationList.get(i).getLATIT();
 
             customerLocationList.get(i).getLONG();
+
+            if (customerLocationList.get(i).getIsPost() == 0) {
+                customerLocationList.get(i).setIsPost(1);
+
+            }
             jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
+
+
+
         }
 
         //******************************************
@@ -131,12 +139,6 @@ public class ExportJason extends AppCompatActivity {
                 jsonArrayItems.put(items.get(i).getJSONObject());
                 //Log.e("getJSONObject",""+items.get(i).getJSONObject());
             }
-
-//        try {
-//            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
@@ -241,6 +243,7 @@ public class ExportJason extends AppCompatActivity {
             }catch (Exception e)
             {
                 e.printStackTrace();
+                progressDialog.dismiss();
                 return null;
             }
 
@@ -349,6 +352,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updatePaymentPaper();
                     mHandler.updateAddedCustomers();
                     mHandler.updateTransactions();
+                    mHandler.updateCustomersMaster();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
@@ -376,7 +380,8 @@ public class ExportJason extends AppCompatActivity {
                 }
                 catch (Exception e)
                 {
-                    Log.e("ImpoException",""+e.getMessage().toString());
+                    progressDialog.dismiss();
+                    Log.e("ExportException",""+e.getMessage().toString());
 
                 }
 

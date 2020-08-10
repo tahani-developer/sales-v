@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public  static  double latitude_main, longitude_main;
-    boolean isPosted = true;
+    boolean isPosted = true,isPostedCustomerMaster=true;
 
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient fusedLocationClient;
     public  static CustomerLocation customerLocation_main;
     public  static Location location_main;
-    public  int first=0;
+    public  int first=0,isClickLocation=0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first=1;
+        isClickLocation=1;
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(languagelocalApp.equals("ar"))
         {
@@ -302,20 +303,20 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mFusedLocationClient != null) {
-            requestLocationUpdates();
-        }
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mFusedLocationClient != null) {
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (mFusedLocationClient != null) {
+//            requestLocationUpdates();
+//        }
+//    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (mFusedLocationClient != null) {
+//            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+//        }
+//    }
     public void requestLocationUpdates() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(120000); // two minute interval
@@ -387,6 +388,7 @@ public class MainActivity extends AppCompatActivity
 
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
+        isClickLocation=2;
         getlocattTest();
 //        if(CustomerListShow.Customer_Account.equals(""))
 //        {
@@ -528,6 +530,7 @@ public class MainActivity extends AppCompatActivity
     }//end
 
     private void getlocattTest() {
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
                     if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {// Not granted permission
@@ -563,7 +566,7 @@ public class MainActivity extends AppCompatActivity
                 String latitude = CustomerListShow.latitude;
                 final String longitude = CustomerListShow.longtude;
 
-                if(!latitude.equals("")&&!longitude.equals("")){
+                if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2){
 
                     new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(getResources().getString(R.string.warning_message))
@@ -571,25 +574,29 @@ public class MainActivity extends AppCompatActivity
                             .show();
                 }
                 else {
-                    for (Location location : locationResult.getLocations()) {
-                        Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
-                        latitude_main = location.getLatitude();
-                        longitude_main = location.getLongitude();
-                        customerLocation_main = new CustomerLocation();
-                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
-                        customerLocation_main.setLONG(longitude_main + "");
-                        customerLocation_main.setLATIT(latitude_main + "");
-                        mDbHandler.addCustomerLocation(customerLocation_main);
-                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
-                        CustomerListShow.latitude=latitude_main+"";
-                        CustomerListShow.longtude=longitude_main+"";
-                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText(getResources().getString(R.string.succsesful))
-                                .setContentText(getResources().getString(R.string.LocationSaved))
-                                .show();
-                        Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+                    if(isClickLocation==2)
+                    {
+                        for (Location location : locationResult.getLocations()) {
+                            Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                            latitude_main = location.getLatitude();
+                            longitude_main = location.getLongitude();
+                            customerLocation_main = new CustomerLocation();
+                            customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                            customerLocation_main.setLONG(longitude_main + "");
+                            customerLocation_main.setLATIT(latitude_main + "");
+                            mDbHandler.addCustomerLocation(customerLocation_main);
+                            mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+                            CustomerListShow.latitude=latitude_main+"";
+                            CustomerListShow.longtude=longitude_main+"";
+                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText(getResources().getString(R.string.succsesful))
+                                    .setContentText(getResources().getString(R.string.LocationSaved))
+                                    .show();
+                            Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
 
 
+
+                        }
 
                     }
 
@@ -597,7 +604,9 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
                 }
+
             }
             else {
                 new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
@@ -608,6 +617,7 @@ public class MainActivity extends AppCompatActivity
 
 
         }// END ELSE
+            isClickLocation=1;
 
         };
 
@@ -740,18 +750,32 @@ public class MainActivity extends AppCompatActivity
                                 if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                     openPasswordDialog(5);
                                 } else {
+                                    if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
+                                    {
+                                        isPostedCustomerMaster=mDbHandler.isCustomerMaster_posted();
+                                    }
+                                    else {isPostedCustomerMaster=true;}
+
 
                                     isPosted=mDbHandler.isAllVoucher_posted();
-                                    if(isPosted==true)
+                                    if(isPostedCustomerMaster)
                                     {
-                                        ImportJason obj = new ImportJason(MainActivity.this);
-                                        obj.startParsing();
-                                    }
-                                    else{
-                                        Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+                                        if(isPosted==true)
+                                        {
+                                            ImportJason obj = new ImportJason(MainActivity.this);
+                                            obj.startParsing();
+                                        }
+                                        else{
+                                            Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
 
 
+                                        }
                                     }
+                                    else {
+                                        Toast.makeText(MainActivity.this,R.string.failImpo_export_dataCustomerMaster , Toast.LENGTH_SHORT).show();
+
+                                    }
+
 
 
                                 }
@@ -1120,16 +1144,27 @@ public class MainActivity extends AppCompatActivity
                     }
                     else if (flag == 5) {
 
-                        isPosted=mDbHandler.isAllVoucher_posted();
-                        if(isPosted==true)
+                        if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
                         {
-                            ImportJason obj = new ImportJason(MainActivity.this);
-                            obj.startParsing();
+                            isPostedCustomerMaster=mDbHandler.isCustomerMaster_posted();
                         }
-                        else{
+                        else {isPostedCustomerMaster=true;}
 
-                            Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
 
+                        isPosted=mDbHandler.isAllVoucher_posted();
+                        if(isPostedCustomerMaster)
+                        {
+                            if(isPosted==true)
+                            {
+                                ImportJason obj = new ImportJason(MainActivity.this);
+                                obj.startParsing();
+                            }
+                            else{
+                                Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this,R.string.failImpo_export_dataCustomerMaster , Toast.LENGTH_SHORT).show();
 
                         }
 

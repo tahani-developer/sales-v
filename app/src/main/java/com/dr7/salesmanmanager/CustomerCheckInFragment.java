@@ -1,6 +1,7 @@
 package com.dr7.salesmanmanager;
 
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -23,8 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +51,10 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
+import static com.dr7.salesmanmanager.MainActivity.latitude_main;
+import static com.dr7.salesmanmanager.MainActivity.location_main;
+import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 //import android.support.v4.app.DialogFragment;
 //import android.support.v4.app.Fragment;
@@ -72,6 +81,9 @@ public class CustomerCheckInFragment extends DialogFragment {
     int status;
     String today;
     Customer custObj = null;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    private FusedLocationProviderClient fusedLocationClient;
+    LocationManager locationManager;
 
     private static DatabaseHandler mDbHandler;
 
@@ -104,6 +116,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         //checkButton = (ImageButton) view.findViewById(R.id.check_img_button);
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        getCurrentLocation();
 
         findButton = (ImageButton) view.findViewById(R.id.find_img_button);
         Customer_Name = (TextView) view.findViewById(R.id.checkInCustomerName);
@@ -148,6 +161,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 break;
                             }
                         }
+                        Log.e("getAllowOutOfRange",""+mDbHandler.getAllSettings().get(0).getAllowOutOfRange());
 //                        if(inRoot) {
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0 ||
                                     isInRange(custObj.getCustLat(), custObj.getCustLong())) {
@@ -293,13 +307,14 @@ public class CustomerCheckInFragment extends DialogFragment {
         }
     }
 
+
     boolean isInRange(String cusLat, String cusLong) {
         Log.e("ggg","cusid"+ cusLat.equals(""));
         if(cusLat.equals(""))
             return true;
 
-        LocationManager locationManager;
-        LocationListener locationListener;
+//        LocationManager locationManager;
+//        LocationListener locationListener;
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION)
@@ -307,11 +322,39 @@ public class CustomerCheckInFragment extends DialogFragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]
                     {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION}, 1);
         }
-        locationListener = new LocationListener() {
+//        getCurrentLocation();
+
+
+        Location loc1 = new Location("");
+        loc1.setLatitude(Double.parseDouble(cusLat));
+        loc1.setLongitude(Double.parseDouble(cusLong));
+
+        Location loc2 = new Location("");
+        loc2.setLatitude(currentLat);
+        loc2.setLongitude(currentLon);
+
+        float distance = loc2.distanceTo(loc1);
+
+        Log.e("dist  " , "" + distance);
+
+        return distance <= 200;
+    }
+    private  void getCurrentLocation() {
+        LocationListener locationListener;
+
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+            ActivityCompat.requestPermissions(getActivity(), new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
+        }
+                locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentLat = location.getLatitude();
                 currentLon = location.getLongitude();
+                Log.e("onLocationChanged","lat="+currentLat+"long="+currentLon);
             }
 
             @Override
@@ -328,7 +371,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
             }
         };
-       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
@@ -337,20 +380,31 @@ public class CustomerCheckInFragment extends DialogFragment {
             Log.e("locationManager",""+e.getMessage());
         }
 
-        Location loc1 = new Location("");
-        loc1.setLatitude(Double.parseDouble(cusLat));
-        loc1.setLongitude(Double.parseDouble(cusLong));
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+//        fusedLocationClient.getLastLocation()
+//                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        // Got last known location. In some rare situations this can be null.
+//                        if (location != null) {
+////
+//                            currentLat = location.getLatitude();
+//                            currentLon = location.getLongitude();
+//                            Log.e("fusedLocationClient",""+currentLat+"\t"+currentLon);
+//
+//
+//                        } else {
+//                            Toast.makeText(getActivity(), "Check GPS", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    }
+//                });
 
-        Location loc2 = new Location("");
-        loc2.setLatitude(currentLat);
-        loc2.setLongitude(currentLon);
+//            }
 
-        float distance = loc1.distanceTo(loc2);
 
-        Log.e("dist  " , "" + distance);
 
-        return distance <= 200;
-    }
+    }//end
 
     public void setListener(CustomerCheckInInterface listener) {
         this.customerCheckInListener = listener;

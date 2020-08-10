@@ -399,5 +399,6 @@
     <string name="succsesful">تم بنجاح</string>
     <string name="LocationSaved">تم حفظ الموقع</string>
     <string name="enternetConnection">لايوجد اتصال انترنت</string>
+    <string name="failImpo_export_dataCustomerMaster">قم بتصدير البيانات في جدول الزبائن قبل استيراد بيانات جديدة</string>
 
 </resources>

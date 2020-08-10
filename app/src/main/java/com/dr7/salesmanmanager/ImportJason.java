@@ -82,16 +82,22 @@ public class ImportJason extends AppCompatActivity{
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new JSONTask().execute(URL_TO_HIT);
-//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-//            if(start==true) {
-//                new JSONTask().execute(URL_TO_HIT);
-//            }
-//            else{
-//                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
-//
-//            }
+            if(mHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+            {
+                checkUnpostedCustomer();
+
+
+            }
+            else {
+                new JSONTask().execute(URL_TO_HIT);
+            }
         }
+
+
+    }
+
+    private void checkUnpostedCustomer() {
+        new SQLTask_unpostVoucher().execute(URL_TO_HIT);
     }
 
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
@@ -105,6 +111,15 @@ public class ImportJason extends AppCompatActivity{
         protected String doInBackground(String... strings) {
             URLConnection connection = null;
             BufferedReader reader = null;
+            String ipAddress = "";
+            String finalJson="";
+
+            try {
+                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+
+            } catch (Exception e) {
+                Toast.makeText(ImportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+            }
 
             try {
 
@@ -140,15 +155,9 @@ public class ImportJason extends AppCompatActivity{
                     sb.append(line);
                 }
 
-                String finalJson = sb.toString();
-                Log.e("finalJson'4'", finalJson);
-                if(finalJson.contains("FAIL"))
-                {
-                    start=false;
-                }
-                else
-                    if(finalJson.contains("SUCCESS"))
-                    {start=true;}
+                 finalJson = sb.toString();
+                Log.e("finalJson", "********ex1"+finalJson);
+
             } catch (MalformedURLException e) {
                 Log.e("import_unpostvoucher", "********ex1"+e.getMessage());
                 e.printStackTrace();
@@ -156,7 +165,7 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
             }
 
-            return "";
+            return finalJson;
         }
 
         @Override
@@ -169,6 +178,18 @@ public class ImportJason extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            if(s.contains("FAIL"))
+            {
+                start=false;
+            }
+            else
+            if(s.contains("SUCCESS"))
+            {
+                start=true;
+                new JSONTask().execute(URL_TO_HIT);
+
+            }
 //            if(start==true)
 //            {
 //                new JSONTask().execute(URL_TO_HIT);
@@ -657,7 +678,9 @@ public class ImportJason extends AppCompatActivity{
                 Log.e("Customer", "********ex1");
                 e.printStackTrace();
             } catch (IOException e) {
-                Log.e("Customer", e.getMessage().toString());
+                Log.e("CustomerIOException", e.getMessage().toString());
+                progressDialog.dismiss();
+//                Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
 
             } catch (JSONException e) {
@@ -687,7 +710,7 @@ public class ImportJason extends AppCompatActivity{
             super.onPostExecute(result);
             progressDialog.dismiss();
 
-            if (result != null) {
+            if (result != null && result.size()!=0) {
                 Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
             } else {
