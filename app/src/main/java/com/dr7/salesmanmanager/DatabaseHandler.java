@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 87;
+    private static final int DATABASE_VERSION = 88;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -459,8 +459,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + SALES_MAN_NO + " TEXT,"
                 + CREDIT_LIMIT + " INTEGER,"
                 + PAY_METHOD0 + " INTEGER,"
-                + CUST_LAT + " TEXT,"
-                + CUST_LONG + " TEXT,"
+                + CUST_LAT + " TEXT not null default '',"
+                + CUST_LONG + " TEXT not null default '',"
                 + MAX_DISCOUNT + " REAL,"
                 +ACCPRC+ " TEXT,"
                 +HIDE_VAL+ " INTEGER,"

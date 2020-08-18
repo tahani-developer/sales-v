@@ -151,7 +151,7 @@ public class SalesInvoice extends Fragment {
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
     public static List<Item> itemForPrintLast;
-
+    LocationManager locationManager;
     Bitmap testB;
     byte[] printIm;
     PrintPic printPic;
@@ -229,7 +229,7 @@ public class SalesInvoice extends Fragment {
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     private FusedLocationProviderClient fusedLocationClient;
     public  static  CustomerLocation customerLocation;
-    public  Location curent_location;
+//    public  Location curent_location;
 //    static Voucher voucherSale;
 //    static List<Item> itemSale;
    /* public static void test2(){
@@ -268,7 +268,7 @@ public class SalesInvoice extends Fragment {
     CheckBox check_HidePrice;
     public static int valueCheckHidPrice = 0;
     LinearLayout mainlayout;
-    double latitude, longitude;
+    double curentLatitude, curentLongitude;
     FusedLocationProviderClient mFusedLocationClient;
 
 
@@ -852,7 +852,17 @@ public class SalesInvoice extends Fragment {
         if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)// validate customer location
         {
 
-            custom_location=new Location(curent_location);
+
+            Location curent_location = new Location("");
+            curent_location.setLatitude(curentLatitude);
+            curent_location.setLongitude(curentLongitude);
+
+
+
+
+            //*********************************************************************
+
+            custom_location=new Location("");
             custom_location.setLatitude(Double.parseDouble(CustomerListShow.latitude));
             custom_location.setLongitude(Double.parseDouble(CustomerListShow.longtude));
 
@@ -861,7 +871,7 @@ public class SalesInvoice extends Fragment {
           // *****************************************************************************************
 //            Log.e("distanceTo",""+curent_location.distanceTo(custom_location));
 //            Log.e("custom_location",""+custom_location.getLongitude()+"\t"+curent_location.getLongitude());
-            if(distance<100)
+            if(distance<=50)
             { return true;}
             else  return   false;
 
@@ -873,38 +883,71 @@ public class SalesInvoice extends Fragment {
 
 
     private  void getCurrentLocation() {
+        LocationListener locationListener;
 
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {// Not granted permission
             ActivityCompat.requestPermissions(getActivity(), new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
 
         }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                            curent_location=new Location(location);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                curentLatitude  = location.getLatitude();
+                curentLongitude = location.getLongitude();
 
 
+            }
 
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
 
+            }
 
-                        }
-                        else{
-                            Toast.makeText(getActivity(), "Check GPS", Toast.LENGTH_SHORT).show();
-                        }
-                    Log.e("curent_location", "getCurrentLocation\t" + curent_location.getLatitude() + curent_location.getLongitude());
-                        // Logic to handle location object
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
 
-                    }
-                });
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+        try {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+        catch (Exception e)
+        {
+            Log.e("locationManager",""+e.getMessage());
+        }
+
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+//        fusedLocationClient.getLastLocation()
+//                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        // Got last known location. In some rare situations this can be null.
+//                        if (location != null) {
+//                            latitude = location.getLatitude();
+//                            longitude = location.getLongitude();
+//                            curent_location=new Location(location);
+//
+//
+//
+//
+//
+//                        }
+//                        else{
+//                            Toast.makeText(getActivity(), "Check GPS", Toast.LENGTH_SHORT).show();
+//                        }
+//                    Log.e("curent_location", "getCurrentLocation\t" + curent_location.getLatitude() + curent_location.getLongitude());
+//                        // Logic to handle location object
+//
+//                    }
+//                });
 
 //            }
 

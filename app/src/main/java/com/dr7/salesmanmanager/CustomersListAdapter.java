@@ -87,10 +87,18 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
-                Log.e("CustomerListShow",""+custList.get(i).getCustName()+"\t"+i);
-                CustomerListShow.latitude=custList.get(i).getCustLat();
-                CustomerListShow.longtude=custList.get(i).getCustLong();
-                Log.e("longtudeListShow","="+  CustomerListShow.longtude+"\t lati"+ CustomerListShow.latitude);
+                    if((custList.get(i).getCustLat() == null)||(custList.get(i).getCustLong() == null))
+                    {
+                        CustomerListShow.latitude="";
+                                CustomerListShow.longtude="";
+                    }
+                    else {
+                        CustomerListShow.latitude=custList.get(i).getCustLat();
+                        CustomerListShow.longtude=custList.get(i).getCustLong();
+                    }
+
+
+
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
                 if (custList.get(i).getIsSuspended() == 1) {

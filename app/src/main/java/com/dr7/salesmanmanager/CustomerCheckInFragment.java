@@ -52,9 +52,11 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
+import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
+import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
 
 //import android.support.v4.app.DialogFragment;
 //import android.support.v4.app.Fragment;
@@ -116,7 +118,12 @@ public class CustomerCheckInFragment extends DialogFragment {
         //checkButton = (ImageButton) view.findViewById(R.id.check_img_button);
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
-        getCurrentLocation();
+        mDbHandler = new DatabaseHandler(getActivity());
+        if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+        {
+//            getCurrentLocation();
+        }
+
 
         findButton = (ImageButton) view.findViewById(R.id.find_img_button);
         Customer_Name = (TextView) view.findViewById(R.id.checkInCustomerName);
@@ -129,7 +136,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         today = df.format(currentTimeAndDate);
         today = convertToEnglish(today);
 
-        mDbHandler = new DatabaseHandler(getActivity());
+
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -310,11 +317,10 @@ public class CustomerCheckInFragment extends DialogFragment {
 
     boolean isInRange(String cusLat, String cusLong) {
         Log.e("ggg","cusid"+ cusLat.equals(""));
+        float distance=0;
         if(cusLat.equals(""))
             return true;
 
-//        LocationManager locationManager;
-//        LocationListener locationListener;
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION)
@@ -322,22 +328,33 @@ public class CustomerCheckInFragment extends DialogFragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]
                     {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION}, 1);
         }
-//        getCurrentLocation();
-
 
         Location loc1 = new Location("");
         loc1.setLatitude(Double.parseDouble(cusLat));
         loc1.setLongitude(Double.parseDouble(cusLong));
 
         Location loc2 = new Location("");
-        loc2.setLatitude(currentLat);
-        loc2.setLongitude(currentLon);
+        if(latitudeCheckIn!=0&&longtudeCheckIn!=0)
+        {
 
-        float distance = loc2.distanceTo(loc1);
+            loc2.setLatitude(latitudeCheckIn);
+            loc2.setLongitude(longtudeCheckIn);
 
-        Log.e("dist  " , "" + distance);
+             distance = loc2.distanceTo(loc1);
 
-        return distance <= 200;
+        }
+        else {
+            getCurrentLocation();
+
+            loc2.setLatitude(latitudeCheckIn);
+            loc2.setLongitude(longtudeCheckIn);
+            distance = loc2.distanceTo(loc1);
+            Toast.makeText(getActivity(), "Check Internet Connection"+latitudeCheckIn, Toast.LENGTH_SHORT).show();
+        }
+
+        Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
+
+        return distance <= 50;
     }
     private  void getCurrentLocation() {
         LocationListener locationListener;
@@ -352,9 +369,9 @@ public class CustomerCheckInFragment extends DialogFragment {
                 locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                currentLat = location.getLatitude();
-                currentLon = location.getLongitude();
-                Log.e("onLocationChanged","lat="+currentLat+"long="+currentLon);
+                latitudeCheckIn = location.getLatitude();
+                longtudeCheckIn = location.getLongitude();
+
             }
 
             @Override
@@ -371,8 +388,9 @@ public class CustomerCheckInFragment extends DialogFragment {
 
             }
         };
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
         try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
         catch (Exception e)
@@ -380,27 +398,6 @@ public class CustomerCheckInFragment extends DialogFragment {
             Log.e("locationManager",""+e.getMessage());
         }
 
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-//        fusedLocationClient.getLastLocation()
-//                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-//                    @Override
-//                    public void onSuccess(Location location) {
-//                        // Got last known location. In some rare situations this can be null.
-//                        if (location != null) {
-////
-//                            currentLat = location.getLatitude();
-//                            currentLon = location.getLongitude();
-//                            Log.e("fusedLocationClient",""+currentLat+"\t"+currentLon);
-//
-//
-//                        } else {
-//                            Toast.makeText(getActivity(), "Check GPS", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    }
-//                });
-
-//            }
 
 
 

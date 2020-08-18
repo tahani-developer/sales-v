@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
     private DatabaseHandler mDbHandler;
-    LocationManager locationManager;
+     public   LocationManager locationManager;
     LocationListener locationListener;
 
     FusedLocationProviderClient mFusedLocationClient;
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity
     public  static CustomerLocation customerLocation_main;
     public  static Location location_main;
     public  int first=0,isClickLocation=0;
+    public  static  double latitudeCheckIn=0,longtudeCheckIn=0;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -182,10 +183,30 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mDbHandler = new DatabaseHandler(MainActivity.this);
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first=1;
         isClickLocation=1;
+        try {
+            if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)
+            {
+                if(isNetworkAvailable())
+                {
+                    getlocationForCheckIn();
+                }
+                else {
+                    Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(languagelocalApp.equals("ar"))
         {
@@ -267,7 +288,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mDbHandler = new DatabaseHandler(MainActivity.this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -291,6 +312,55 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
+
+    }
+
+    public  void getlocationForCheckIn() {
+
+
+            LocationListener locationListener;
+
+            locationManager = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+                ActivityCompat.requestPermissions(this, new String[]
+                        {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
+            }
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+
+                    latitudeCheckIn  = location.getLatitude();
+                    longtudeCheckIn = location.getLongitude();
+
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+            catch (Exception e)
+            {
+                Log.e("locationManager",""+e.getMessage());
+            }
+
+
 
     }
 
@@ -563,10 +633,23 @@ public class MainActivity extends AppCompatActivity
 
 
             if(isNetworkAvailable()){
-                String latitude = CustomerListShow.latitude;
-                final String longitude = CustomerListShow.longtude;
+                String latitude="",  longitude="" ;
+                try {
+                     latitude = CustomerListShow.latitude;
+                   longitude = CustomerListShow.longtude;
+                   Log.e("latitude",""+latitude+longitude);
+                }
+                catch (Exception e)
+                {
+                    latitude="";
+                    longitude="";
 
-                if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2){
+                }
+                Log.e("latitude",""+latitude+longitude);
+
+
+                if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
+                {
 
                     new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(getResources().getString(R.string.warning_message))
@@ -574,8 +657,7 @@ public class MainActivity extends AppCompatActivity
                             .show();
                 }
                 else {
-                    if(isClickLocation==2)
-                    {
+                    if (isClickLocation == 2) {
                         for (Location location : locationResult.getLocations()) {
                             Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
                             latitude_main = location.getLatitude();
@@ -584,14 +666,17 @@ public class MainActivity extends AppCompatActivity
                             customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
                             customerLocation_main.setLONG(longitude_main + "");
                             customerLocation_main.setLATIT(latitude_main + "");
+
                             mDbHandler.addCustomerLocation(customerLocation_main);
-                            mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
-                            CustomerListShow.latitude=latitude_main+"";
-                            CustomerListShow.longtude=longitude_main+"";
+                            mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
+                            CustomerListShow.latitude = latitude_main + "";
+                            CustomerListShow.longtude = longitude_main + "";
                             new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                                     .setTitleText(getResources().getString(R.string.succsesful))
                                     .setContentText(getResources().getString(R.string.LocationSaved))
                                     .show();
+
+
                             Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
 
 
@@ -599,11 +684,6 @@ public class MainActivity extends AppCompatActivity
                         }
 
                     }
-
-
-
-
-
 
                 }
 
