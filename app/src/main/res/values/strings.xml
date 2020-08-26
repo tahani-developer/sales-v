@@ -351,6 +351,8 @@
     <string name="LocationSaved">Location Saved</string>
     <string name="enternetConnection">Check Internet Connection</string>
     <string name="failImpo_export_dataCustomerMaster">Please Export data in Customer master before import new data</string>
+    <string name="SerialNo">Serial No</string>
+    <string name="workSerial">Work With Serial</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -120,7 +120,8 @@ import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
 import static android.support.v4.content.ContextCompat.getSystemService;
 import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
-import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera;
+
+import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
@@ -848,7 +849,7 @@ public class SalesInvoice extends Fragment {
     }
 
     private boolean checkCustomerLocation() {
-
+        float distance=0;
         if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)// validate customer location
         {
 
@@ -863,11 +864,30 @@ public class SalesInvoice extends Fragment {
             //*********************************************************************
 
             custom_location=new Location("");
-            custom_location.setLatitude(Double.parseDouble(CustomerListShow.latitude));
-            custom_location.setLongitude(Double.parseDouble(CustomerListShow.longtude));
+            try {
+                custom_location.setLatitude(Double.parseDouble(CustomerListShow.latitude));
+                custom_location.setLongitude(Double.parseDouble(CustomerListShow.longtude));
+            }
+            catch (Exception e)
+            {
+                custom_location.setLatitude(0);
+                custom_location.setLongitude(0);
+                Log.e("Exceptioncusto",""+e.getMessage());
+                return  true;
 
-           float distance= curent_location.distanceTo(custom_location);
-            Toast.makeText(getActivity(), "distance="+distance, Toast.LENGTH_SHORT).show();
+
+            }
+            try {
+                 distance= curent_location.distanceTo(custom_location);
+                 Toast.makeText(getActivity(), "distance="+distance, Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e)
+            {
+                distance=0;
+            }
+
+
+
           // *****************************************************************************************
 //            Log.e("distanceTo",""+curent_location.distanceTo(custom_location));
 //            Log.e("custom_location",""+custom_location.getLongitude()+"\t"+curent_location.getLongitude());
@@ -1465,7 +1485,7 @@ public class SalesInvoice extends Fragment {
             dialog_progress.setMessage(getResources().getString(R.string.loadingItem));
             dialog_progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-            dialog_progress.show();
+            dialog_progress.show();//test
         }
 
         @Override
@@ -1548,8 +1568,8 @@ public class SalesInvoice extends Fragment {
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                     items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
-                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription());
-            Log.e("AddVoucher", "" + items.get(i).getDescription());
+                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(),items.get(i).getSerialCode());
+            Log.e("getSerialCode", "" + items.get(i).getSerialCode());
             totalQty_forPrint += items.get(i).getQty();
             itemsList.add(item);
             Log.e("AddVoucher", "" + item.getDescription());
@@ -4329,7 +4349,7 @@ public class SalesInvoice extends Fragment {
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_Camera: {
+            case REQUEST_Camera_Barcode: {
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent i=new Intent(getActivity(),ScanActivity.class);

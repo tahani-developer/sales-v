@@ -35,6 +35,15 @@ public class Settings {
     private int preventChangPayMeth;
     private int  ShowCustomerList;
     private int  noReturnInvoice;
+    private int  work_serialNo;
+
+    public int getWork_serialNo() {
+        return work_serialNo;
+    }
+
+    public void setWork_serialNo(int work_serialNo) {
+        this.work_serialNo = work_serialNo;
+    }
 
     public int getNoReturnInvoice() {
         return noReturnInvoice;

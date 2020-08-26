@@ -36,6 +36,24 @@ public class Item {
     private String salesmanNo;
     private  String Kind_item;
     private  String cust;
+    private  String serialCode;
+    private  String vouchDate;
+
+    public String getSerialCode() {
+        return serialCode;
+    }
+
+    public void setSerialCode(String serialCode) {
+        this.serialCode = serialCode;
+    }
+
+    public String getVouchDate() {
+        return vouchDate;
+    }
+
+    public void setVouchDate(String vouchDate) {
+        this.vouchDate = vouchDate;
+    }
 
     public String getCust() {
         return cust;
@@ -99,7 +117,7 @@ public class Item {
     //constructor for sales invoice
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
                 float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
-                float taxPercent,int isPosted,String description) {
+                float taxPercent,int isPosted,String description, String serial_code) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -117,6 +135,7 @@ public class Item {
         this.taxPercent = taxPercent;
         this.isPosted = isPosted;
         this.description=description;
+        this.serialCode=serial_code;
     }
 
     //constructor for stock request
@@ -383,6 +402,7 @@ public class Item {
             obj.put("isPosted", isPosted);
             obj.put("itemYear", year);
             obj.put("ITEM_DESCRITION", description);
+            obj.put("SERIAL_CODE", serialCode);
 
 
         } catch (JSONException e) {

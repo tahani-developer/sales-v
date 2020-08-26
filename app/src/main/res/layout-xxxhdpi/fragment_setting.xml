@@ -553,6 +553,14 @@
                 android:text="@string/noReturnInvoice"
                 android:textColor="@color/text_view_color"
                 android:textSize="18sp" />
+            <CheckBox
+                android:id="@+id/workSerial_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="@string/workSerial"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>

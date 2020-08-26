@@ -49,7 +49,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 88;
+    private static final int DATABASE_VERSION = 89;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -260,6 +260,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  PreventChangPayMeth="PreventChangPayMeth";
     private static final String ShowCustomerList="ShowCustomerList";
     private static final String NoReturnInvoice="NoReturnInvoice";
+    private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -309,6 +310,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_YEAR = "ITEM_YEAR";
     private static final String IS_POSTED1 = "IS_POSTED";
     private static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
+    private static final String SERIAL_CODE = "SERIAL_CODE";
+    private static final String VOUCH_DATE = "VOUCH_DATE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String PAYMENTS = "PAYMENTS";
@@ -634,13 +637,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + Tafqit + " INTEGER,"
                 + PreventChangPayMeth + " INTEGER,"
                 + ShowCustomerList + " INTEGER DEFAULT 1,"
-                + NoReturnInvoice + " INTEGER"
-
-
-
-
-
-
+                + NoReturnInvoice + " INTEGER,"
+                + WORK_WITH_SERIAL + " INTEGER"
 
 
         + ")";
@@ -697,8 +695,14 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + COMPANY_NUMBER2 + " INTEGER,"
                 + ITEM_YEAR + " TEXT,"
                 + IS_POSTED1 + " INTEGER,"
-                + ITEM_DESCRIPTION+ " TEXT"
-                + ")";
+                + ITEM_DESCRIPTION+ " TEXT,"
+                + SERIAL_CODE+ " TEXT,"
+
+                + VOUCH_DATE+ " TEXT"
+
+
+
+        + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -883,6 +887,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1147,7 +1158,17 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
         try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER NOT NULL DEFAULT 0 ");
+
+
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER NOT NULL DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  VOUCH_DATE  TEXT NOT NULL DEFAULT '' ");
 
         }catch (Exception e)
         {
@@ -1460,7 +1481,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi, int Work_serialNo) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1497,6 +1518,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PreventChangPayMeth,preventChangPayMeth);
         values.put(ShowCustomerList,showCustomer);
         values.put(NoReturnInvoice,noReturnInvoi);
+        values.put(WORK_WITH_SERIAL,Work_serialNo);
+
 
 
 
@@ -1573,7 +1596,21 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-       // Log.e("addItem",""+item.getDescription());
+        values.put(SERIAL_CODE, item.getSerialCode());
+        try {
+            if(item.getVouchDate()!=null || !item.getVouchDate().equals(""))
+            values.put(VOUCH_DATE, item.getVouchDate());
+            else
+                values.put(VOUCH_DATE,"");
+        }
+        catch ( Exception e)
+        {
+            values.put(VOUCH_DATE,"");
+        }
+
+
+
+        // Log.e("addItem",""+item.getDescription());
         //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
@@ -1805,6 +1842,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
                 setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
                 setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
+                setting.setWork_serialNo(Integer.parseInt(cursor.getString(33)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -2273,7 +2311,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
                 " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
-                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION " +
+                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION ,D.SERIAL_CODE " +
                 "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
                 "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
 
@@ -2311,6 +2349,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setIsPosted(Integer.parseInt(cursor.getString(15)));
                 item.setDate(cursor.getString(16));
                 item.setDescreption(cursor.getString(17));
+                item.setSerialCode(cursor.getString(18));
                 Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list

@@ -281,6 +281,7 @@ public class AddItemsStockFragment extends DialogFragment {
                 }
                 else{
                     Intent i=new Intent(getActivity(),ScanActivity.class);
+                    i.putExtra("key","1");
                     startActivity(i);
                     searchByBarcodeNo(s + "");
 

@@ -7,7 +7,7 @@
     android:minHeight="550dp"
     android:background="@color/layer1"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="7dp">
 
     <TextView
         android:id="@+id/item_number"
@@ -17,7 +17,7 @@
         android:layout_margin="5dp"
         android:text="000"
         android:textColor="@color/radio_group"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/item_name"
@@ -33,7 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:background="@color/text_view_color"
         android:orientation="horizontal"
         android:paddingStart="10dp"
@@ -57,7 +57,7 @@
            
             android:text="@string/app_unit"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/unit"
@@ -82,12 +82,14 @@
 
             android:text="@string/weight"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/unitQty"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:gravity="center"
+
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:layout_marginStart="10dp"
@@ -114,7 +116,7 @@
         
             android:text="@string/unit_qty"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/unitWeight"
@@ -152,7 +154,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-      
+
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="5dp"
@@ -168,7 +170,7 @@
 
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/price"
@@ -179,7 +181,7 @@
                         android:text="0"
             android:inputType="numberDecimal"
             android:textColor="@color/colorAccent"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 <LinearLayout
     android:id="@+id/linear_bonus"
     android:layout_height="wrap_content"
@@ -197,7 +199,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/app_bonus"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/bonus"
@@ -208,7 +210,7 @@
             android:gravity="center"
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 </LinearLayout>
 
     </LinearLayout>
@@ -231,7 +233,7 @@
 
             android:text="@string/app_disc"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/discount"
@@ -241,7 +243,7 @@
 
             android:imeOptions="actionDone"
             android:inputType="numberDecimal"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <RadioGroup
             android:layout_width="0dp"
@@ -260,7 +262,7 @@
                 android:layout_gravity="center_vertical"
                 android:id="@+id/discValueRadioButton"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
 
             <RadioButton
@@ -271,7 +273,7 @@
                 android:id="@+id/discPercRadioButton"
                 android:layout_marginLeft="7dp"
                 android:textColor="@color/text_view_color"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
 
         </RadioGroup>
@@ -292,6 +294,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
@@ -302,7 +305,7 @@
 
             android:text="@string/remark"
             android:textColor="@color/text_view_color"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/item_note"
@@ -311,16 +314,48 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
 
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/serialNo_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
 
+            android:text="@string/SerialNo"
+            android:textColor="@color/text_view_color"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/Serial_No"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+
+            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/serialScan"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:src="@drawable/search_btn"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
     <Button
         android:id="@+id/addToList"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:background="@color/add_button"
         android:text="@string/app_add_to_list"
         android:textColor="@color/layer5"

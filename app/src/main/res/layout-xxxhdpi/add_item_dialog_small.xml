@@ -16,7 +16,7 @@
         android:layout_gravity="right"
         android:layout_margin="5dp"
         android:text="000"
-        android:textColor="@color/radio_group"
+        android:textColor="@color/blue_btn_bg_color"
         android:textSize="25sp" />
 
     <TextView
@@ -88,6 +88,9 @@
             android:id="@+id/unitQty"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:gravity="center"
+
+
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
             android:layout_marginStart="10dp"
@@ -292,6 +295,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:visibility="gone"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
@@ -312,6 +316,38 @@
             android:layout_margin="5dp"
 
             android:textSize="25sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/serialNo_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/SerialNo"
+            android:textColor="@color/text_view_color"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/Serial_No"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+
+            android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/serialScan"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:src="@drawable/search_btn"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
