@@ -24,6 +24,31 @@ public class Customer {
     private String ACCPRC;// customer rate for price
     private int Hide_val;
     private int isPost;
+    private  String customerIdText;
+
+    public String getCustomerIdText() {
+        return customerIdText;
+    }
+
+    public void setCustomerIdText(String customerIdText) {
+        this.customerIdText = customerIdText;
+    }
+
+    public String getCustomerAccount() {
+        return customerAccount;
+    }
+
+    public void setCustomerAccount(String customerAccount) {
+        this.customerAccount = customerAccount;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public int getIsPost() {
         return isPost;

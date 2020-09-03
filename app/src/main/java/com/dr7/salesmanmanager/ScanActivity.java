@@ -9,6 +9,7 @@ import com.google.zxing.Result;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.Serial_No;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 
 public class ScanActivity extends AppCompatActivity
     implements ZXingScannerView.ResultHandler{
@@ -46,6 +47,7 @@ public class ScanActivity extends AppCompatActivity
             if(type.equals("2"))
             {
                 Serial_No.setText(rawResult.getText());
+                item_serial.setText(rawResult.getText());
                 Log.e("RESULT",""+rawResult.getText());
             }
             else {

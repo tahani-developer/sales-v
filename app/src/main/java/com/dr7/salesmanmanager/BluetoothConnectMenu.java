@@ -1247,6 +1247,7 @@ public class BluetoothConnectMenu extends Activity {
 
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp4 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
         lp2.setMargins(0, 7, 0, 0);
         lp3.setMargins(0, 7, 0, 0);
         for (int j = 0; j < items.size(); j++) {
@@ -1270,7 +1271,15 @@ public class BluetoothConnectMenu extends Activity {
                     switch (i) {
                         case 0:
                             textView.setText(items.get(j).getItemName());
-                            textView.setLayoutParams(lp3);
+                            Log.e("textView",""+items.get(j).getItemName().length());
+                            if(items.get(j).getItemName().length()<=11)
+                            {
+                                textView.setLayoutParams(lp3);
+                            }
+                              else {
+                                textView.setLayoutParams(lp4);
+                            }
+
                             break;
 
 
@@ -1356,7 +1365,7 @@ public class BluetoothConnectMenu extends Activity {
 
     private Bitmap convertLayoutToImageEjape(Voucher voucher,List<Item> items) {
         LinearLayout linearView = null;
-        int CusId=Integer.parseInt(voucher.getCustNumber());
+        String CusId=(voucher.getCustNumber());
 
         valueCheckHidPrice=obj.getHideValuForCustomer(CusId);
         Log.e("valueHidPriceBluDBase",""+valueCheckHidPrice);

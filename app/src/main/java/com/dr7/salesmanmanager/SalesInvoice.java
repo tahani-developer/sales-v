@@ -436,7 +436,7 @@ public class SalesInvoice extends Fragment {
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
                                         clearItemsList();
-                                        clearLayoutData();
+                                        clearLayoutData(1);
 
                                         switch (checkedId) {
                                             case R.id.salesRadioButton:
@@ -574,7 +574,7 @@ public class SalesInvoice extends Fragment {
                                     netTotal = 0.0;
                                     totalDiscount = 0;
                                     sum_discount = 0;
-                                    clearLayoutData();
+                                    clearLayoutData(1);
                                 }
                                 calculateTotals();
 
@@ -588,7 +588,7 @@ public class SalesInvoice extends Fragment {
                                     netTotal = 0.0;
                                     totalDiscount = 0;
                                     sum_discount = 0;
-                                    clearLayoutData();
+                                    clearLayoutData(1);
                                 }
                                 calculateTotals();
                                 break;
@@ -698,7 +698,10 @@ public class SalesInvoice extends Fragment {
                 builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        clearLayoutData();
+
+
+
+                        clearLayoutData(1);
                     }
                 });
 
@@ -1064,7 +1067,7 @@ public class SalesInvoice extends Fragment {
                         if (virefyMaxDescount()) {
 
                             AddVoucher();
-                            clearLayoutData();
+                            clearLayoutData(0);
 
                         } else {
                             SaveData.setEnabled(true);
@@ -1094,7 +1097,7 @@ public class SalesInvoice extends Fragment {
 
                     if (virefyMaxDescount()) {
                         AddVoucher();
-                        clearLayoutData();
+                        clearLayoutData(0);
 
                     } else {
                         SaveData.setEnabled(true);
@@ -1576,6 +1579,11 @@ public class SalesInvoice extends Fragment {
 
             mDbHandler.addItem(item);
             itemForPrint.add(item);
+            if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+            {
+                mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber);
+            }
+
 
             if (voucherType == 504)
                 mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
@@ -1771,23 +1779,83 @@ public class SalesInvoice extends Fragment {
                     builder.setTitle(getResources().getString(R.string.app_select_option));
                     builder.setCancelable(true);
                     builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                    builder.setItems(R.array.list_items_dialog, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    String st = "";
-                                    total_items_quantity -= items.get(position).getQty();
-                                    totalQty_textView.setText("+" + total_items_quantity);
-                                    items.remove(position);
+                    if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1){
 
-                                    itemsListView.setAdapter(itemsListAdapter);
-                                    calculateTotals();
+                        builder.setItems(R.array.list_items_dialog_SERIAL, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        String st = "";
+                                        total_items_quantity -= items.get(position).getQty();
+                                        totalQty_textView.setText("+" + total_items_quantity);
+                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                                        {
+
+                                            try {
+                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
+                                            }
+                                            catch (Exception e)
+                                            {}
+
+
+                                        }
+
+                                        items.remove(position);
+
+
+                                        itemsListView.setAdapter(itemsListAdapter);
+                                        calculateTotals();
 
 //                                    clearLayoutData();
 
-                                    break;
-                                case 1:
+                                        break;
+
+                                    case 1:
+
+
+                                        clearItemsList();
+                                        clearLayoutData(1);
+                                        total_items_quantity = 0;
+                                        totalQty_textView.setText("+" + total_items_quantity);
+                                        break;
+                                }
+                            }
+                        });
+                        builder.create().show();
+                        return true;
+                    }
+                    else{
+                        builder.setItems(R.array.list_items_dialog, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        String st = "";
+                                        total_items_quantity -= items.get(position).getQty();
+                                        totalQty_textView.setText("+" + total_items_quantity);
+                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                                        {
+
+                                            try {
+                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
+                                            }
+                                            catch (Exception e)
+                                            {}
+
+
+                                        }
+
+                                        items.remove(position);
+
+
+                                        itemsListView.setAdapter(itemsListAdapter);
+                                        calculateTotals();
+
+//                                    clearLayoutData();
+
+                                        break;
+                                    case 1:
 //                                    salesInvoiceInterfaceListener.displayUpdateItems();
 //                                    rowToBeUpdated[0] = items.get(position).getItemNo();
 //                                    rowToBeUpdated[1] = items.get(position).getItemName();
@@ -1799,89 +1867,91 @@ public class SalesInvoice extends Fragment {
 //                                    rowToBeUpdated[7] = items.get(position).getUnit() + "";
 
 
-                                    final Dialog dialog = new Dialog(getActivity());
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.setCancelable(true);
-                                    dialog.setContentView(R.layout.update_qty_dialog);
+                                        final Dialog dialog = new Dialog(getActivity());
+                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        dialog.setCancelable(true);
+                                        dialog.setContentView(R.layout.update_qty_dialog);
 
-                                    final EditText qty = (EditText) dialog.findViewById(R.id.editText1);
-                                    Button okButton = (Button) dialog.findViewById(R.id.button1);
-                                    Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+                                        final EditText qty = (EditText) dialog.findViewById(R.id.editText1);
+                                        Button okButton = (Button) dialog.findViewById(R.id.button1);
+                                        Button cancelButton = (Button) dialog.findViewById(R.id.button2);
 
-                                    okButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            float availableQty = 0;
-                                            List<Item> jsonItemsList_insal = jsonItemsList;
-                                            Log.e("jsonItemsList", "" + jsonItemsList.size());
-                                            for (int i = 0; i < jsonItemsList.size(); i++) {
-                                                if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
-                                                    availableQty = jsonItemsList.get(i).getQty();
-                                                    Log.e("availableQty", "" + availableQty);
+                                        okButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                float availableQty = 0;
+                                                List<Item> jsonItemsList_insal = jsonItemsList;
+                                                Log.e("jsonItemsList", "" + jsonItemsList.size());
+                                                for (int i = 0; i < jsonItemsList.size(); i++) {
+                                                    if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
+                                                        availableQty = jsonItemsList.get(i).getQty();
+                                                        Log.e("availableQty", "" + availableQty);
 
-                                                    break;
-                                                }
-                                            }
-                                            if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
-                                                    availableQty >= Float.parseFloat(qty.getText().toString()) ||
-                                                    voucherType == 506) {
-                                                total_items_quantity -= items.get(position).getQty();
-                                                Log.e("total_itemsbefore", "" + total_items_quantity);
-                                                items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
-                                                updaQty = Double.parseDouble(qty.getText().toString());
-//                                                currentDisc=items.get(position).getDisc();
-//                                                if(items.get(position).getDisc()!=0) {
-                                                List<Offers> offer = checkOffers(items.get(position).getItemNo());
-                                                if (offer.size() > 0) {
-                                                    appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
-                                                    if (appliedOffer != null) {
-
-                                                        disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
-                                                        items.get(position).setDisc(disount_totalnew);
-
-
+                                                        break;
                                                     }
                                                 }
+                                                if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
+                                                        availableQty >= Float.parseFloat(qty.getText().toString()) ||
+                                                        voucherType == 506) {
+                                                    total_items_quantity -= items.get(position).getQty();
+                                                    Log.e("total_itemsbefore", "" + total_items_quantity);
+                                                    items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
+                                                    updaQty = Double.parseDouble(qty.getText().toString());
+//                                                currentDisc=items.get(position).getDisc();
+//                                                if(items.get(position).getDisc()!=0) {
+                                                    List<Offers> offer = checkOffers(items.get(position).getItemNo());
+                                                    if (offer.size() > 0) {
+                                                        appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
+                                                        if (appliedOffer != null) {
 
-                                                total_items_quantity += items.get(position).getQty();
-                                                Log.e("total_itemsafter", "" + total_items_quantity);
-                                                totalQty_textView.setText("+" + total_items_quantity);
-                                                if (items.get(position).getDiscType() == 0)
-                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
-                                                else
-                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
-                                                calculateTotals();
-                                                itemsListView.setAdapter(itemsListAdapter);
+                                                            disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
+                                                            items.get(position).setDisc(disount_totalnew);
 
-                                                dialog.dismiss();
-                                            } else {
-                                                Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
-                                                Log.e("qty", qty.getText().toString());
+
+                                                        }
+                                                    }
+
+                                                    total_items_quantity += items.get(position).getQty();
+                                                    Log.e("total_itemsafter", "" + total_items_quantity);
+                                                    totalQty_textView.setText("+" + total_items_quantity);
+                                                    if (items.get(position).getDiscType() == 0)
+                                                        items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+                                                    else
+                                                        items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+                                                    calculateTotals();
+                                                    itemsListView.setAdapter(itemsListAdapter);
+
+                                                    dialog.dismiss();
+                                                } else {
+                                                    Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+                                                    Log.e("qty", qty.getText().toString());
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                        });
+
+                                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
                                                 dialog.dismiss();
                                             }
-                                        }
-                                    });
+                                        });
+                                        dialog.show();
 
-                                    cancelButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    dialog.show();
-
-                                    break;
-                                case 2:
-                                    clearItemsList();
-                                    clearLayoutData();
-                                    total_items_quantity = 0;
-                                    totalQty_textView.setText("+" + total_items_quantity);
-                                    break;
+                                        break;
+                                    case 2:
+                                        clearItemsList();
+                                        clearLayoutData(1);
+                                        total_items_quantity = 0;
+                                        totalQty_textView.setText("+" + total_items_quantity);
+                                        break;
+                                }
                             }
-                        }
-                    });
-                    builder.create().show();
-                    return true;
+                        });
+                        builder.create().show();
+                        return true;
+                    }
+
                 }
             };
 
@@ -1956,40 +2026,60 @@ public class SalesInvoice extends Fragment {
         itemsListAdapter.notifyDataSetChanged();
     }
 
-    private void clearLayoutData() {
-//        paymentTermRadioGroup.check(R.id.creditRadioButton);
-        remarkEditText.setText("");
-        clearItemsList();
+    private void clearLayoutData(int flag) {
+        int vouch=0;
+        try {
+
+            vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
+
+
+            if(flag==1)// to clear serial  by voucher number
+            {
+                if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                {
+                    mDbHandler.deletSerialItems_byVoucherNo(vouch);
+                }
+
+            }
+
+        }
+        catch (Exception e)
+        {}
+
+
+            //        paymentTermRadioGroup.check(R.id.creditRadioButton);
+            remarkEditText.setText("");
+            clearItemsList();
 //        calculateTotals();
-        subTotalTextView.setText("0.000");
-        taxTextView.setText("0.000");
-        netTotalTextView.setText("");
-        netTotalTextView.setText("0.000");
-        discTextView.setText("0.000");
-        subTotal = 0.0;
-        totalTaxValue = 0.0;
-        netTotal = 0.0;
-        totalDiscount = 0.0;
-        sum_discount = 0.0;
-        items.clear();
-        itemsList.clear();
+            subTotalTextView.setText("0.000");
+            taxTextView.setText("0.000");
+            netTotalTextView.setText("");
+            netTotalTextView.setText("0.000");
+            discTextView.setText("0.000");
+            subTotal = 0.0;
+            totalTaxValue = 0.0;
+            netTotal = 0.0;
+            totalDiscount = 0.0;
+            sum_discount = 0.0;
+            items.clear();
+            itemsList.clear();
 //        calculateTotals();
-        //***********************************************
-        voucherType = 504;
-        salesRadioButton.setChecked(true);
-        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-        retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-        orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-        //***********************************************
+            //***********************************************
+            voucherType = 504;
+            salesRadioButton.setChecked(true);
+            salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+            retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+            orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+            //***********************************************
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
-        String vn = voucherNumber + "";
-        voucherNumberTextView.setText(vn);
-        total_items_quantity = 0;
-        totalQty_textView.setText("+0");
-        discvalue_static = 0;
-        refrechItemForReprint();
-        SaveData.setEnabled(true);
+            voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+            String vn = voucherNumber + "";
+            voucherNumberTextView.setText(vn);
+            total_items_quantity = 0;
+            totalQty_textView.setText("+0");
+            discvalue_static = 0;
+            refrechItemForReprint();
+            SaveData.setEnabled(true);
 
     }
 

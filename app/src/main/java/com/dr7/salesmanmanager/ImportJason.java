@@ -338,6 +338,7 @@ public class ImportJason extends AppCompatActivity{
                             Customer.setACCPRC("0");
 
                         }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
                     }
                     catch (Exception e)
                     {

@@ -15,6 +15,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -48,7 +49,7 @@ public class ExportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
-            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation;
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -62,6 +63,7 @@ public class ExportJason extends AppCompatActivity {
      public  static  List<SalesManItemsBalance> salesManItemsBalanceList=new ArrayList<>();
     public  static  List<Item> stockRequestListList=new ArrayList<>();
     public  static  List<CustomerLocation> customerLocationList=new ArrayList<>();
+    public  static  List<serialModel> serialModelList=new ArrayList<>();
 //    getCustomerLocation
 
     public ExportJason(Context context) throws JSONException {
@@ -71,6 +73,26 @@ public class ExportJason extends AppCompatActivity {
 
 
     void startExportDatabase() {
+        //
+
+        serialModelList = mHandler.getAllSerialItems();
+        jsonArraySerial = new JSONArray();
+        for (int i = 0; i < serialModelList.size(); i++)
+        {
+
+            jsonArraySerial.put(serialModelList.get(i).getJSONObject());
+
+
+
+
+        }
+        try {
+            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //*************************************************************
         customerLocationList = mHandler.getCustomerLocation();
         jsonArrayLocation = new JSONArray();
         for (int i = 0; i < customerLocationList.size(); i++)
@@ -213,6 +235,8 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
+
+                nameValuePairs.add(new BasicNameValuePair("SERIAL_ITEMS_TABLE", jsonArraySerial.toString().trim()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 

@@ -119,10 +119,10 @@ public class CustomerCheckInFragment extends DialogFragment {
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
         mDbHandler = new DatabaseHandler(getActivity());
-        if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
-        {
-//            getCurrentLocation();
-        }
+//        if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+//        {
+////            getCurrentLocation();
+//        }
 
 
         findButton = (ImageButton) view.findViewById(R.id.find_img_button);
@@ -223,7 +223,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                         mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                 "01/01/19999", "Not Yet", 0,0));
 
-                        saveCustLocation(Integer.parseInt(cusCode));
+                        saveCustLocation(cusCode);
                         new JSONTask().execute();
 
                         MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
@@ -264,7 +264,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         return view;
     }
 
-    void saveCustLocation(int custId) {
+    void saveCustLocation(String custId) {
 
         LocationManager locationManager;
         LocationListener locationListener;
@@ -316,7 +316,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
 
     boolean isInRange(String cusLat, String cusLong) {
-        Log.e("ggg","cusid"+ cusLat.equals(""));
+        Log.e("ggg","cusid"+ cusLat+""+cusLong);
         float distance=0;
         if(cusLat.equals(""))
             return true;

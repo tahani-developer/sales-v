@@ -9,11 +9,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +37,12 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.Modles.Cheque;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Offers;
+import com.dr7.salesmanmanager.Modles.serialModel;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -44,6 +54,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
@@ -51,24 +64,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Item> items;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
-    private Context context;
+    private Context cont;
+private AddItemsFragment2 context;
     boolean added = false;
     DatabaseHandler MHandler;
     DecimalFormat threeDForm ;
     int settingPriceCus=0;
     List<String> localItemNumber;
     boolean itemInlocalList=false;
-    public static EditText Serial_No;
+    public static EditText Serial_No,item_serial;
     public static final int REQUEST_Camera_Serial = 22;
+    public  boolean isFoundSerial=false;
+    public   static  int flag=0,counterSerial=0;
+     RecyclerView serial_No_recyclerView;
+   public static ArrayList<serialModel> serialListitems= new ArrayList<>();
+    public static serialModel serial;
+    public static EditText unitQty;
 
-    public RecyclerViewAdapter(List<Item> items, Context context) {
+    public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
         this.context = context;
         for (int i = 0; i <= items.size(); i++) {
             isClicked.add(0);
         }
-        MHandler = new DatabaseHandler(context);
+         cont=context.getActivity();
+        MHandler = new DatabaseHandler(cont);
         settingPriceCus=MHandler.getAllSettings().get(0).getPriceByCust();
         localItemNumber= new ArrayList<>();
         Log.e("settingPriceCus",""+settingPriceCus);
@@ -128,6 +149,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(final View view) {
                 itemInlocalList=false;
+                serialListitems=new ArrayList<>();
+                counterSerial=0;
                 for (int i = 0; i < localItemNumber.size(); i++) {
                     if (localItemNumber.get(i).equals(items.get(holder.getAdapterPosition()).getItemNo())) {
                         showAlertDialog();
@@ -139,14 +162,78 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     final Dialog dialog = new Dialog(view.getContext());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(true);
-                    dialog.setContentView(R.layout.add_item_dialog_small);
+                    if(MHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                    {
+                        dialog.setContentView(R.layout.add_item_serial_dialog);
+                        serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
+                        item_serial= dialog.findViewById(R.id.item_serial);
+                        item_serial.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                            }
+
+                            @Override
+                            public void afterTextChanged(Editable s) {
+
+                                flag = 1;
+                                isFoundSerial=false;
+
+                                for(int h=0;h<serialListitems.size();h++)
+                                {
+
+                                    if(serialListitems.get(h).getSerialCode().equals(s.toString()))
+                                    {
+                                        isFoundSerial=true;
+                                    }
+                                }
+                                if(!isFoundSerial)
+                                {
+
+                                    counterSerial++;
+                                    unitQty.setText(counterSerial+"");
+                                    final LinearLayoutManager layoutManager;
+                                    layoutManager = new LinearLayoutManager(view.getContext());
+                                    layoutManager.setOrientation(VERTICAL);
+//                            serial_No_recyclerView = (RecyclerView)dialog.findViewById(R.id.recycler_check);
+
+                                    serial= new serialModel();
+                                    serial.setCounterSerial(counterSerial);
+                                    serial.setSerialCode(s.toString()+"");
+                                    serialListitems.add(serial);
+
+                                    serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                    serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext()));
+                                }
+                                else {
+                                    new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText(view.getContext().getString(R.string.warning_message))
+                                            .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                            .show();
+                                }
+
+                            }
+                        });
+                    }
+                    else {
+                        dialog.setContentView(R.layout.add_item_dialog_small);
+                    }
+
+
+//
                     final TextView itemNumber = dialog.findViewById(R.id.item_number);
 //                final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
                     final TextView itemName = dialog.findViewById(R.id.item_name);
                     final EditText price = dialog.findViewById(R.id.price);
                     final Spinner unit = dialog.findViewById(R.id.unit);
                     final TextView textQty = dialog.findViewById(R.id.textQty);
-                    final EditText unitQty = dialog.findViewById(R.id.unitQty);
+                      unitQty = dialog.findViewById(R.id.unitQty);
                     final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
                     final CheckBox useWeight = dialog.findViewById(R.id.use_weight);
                     final EditText bonus = dialog.findViewById(R.id.bonus);
@@ -159,47 +246,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     final LinearLayout serialNo_linear= dialog.findViewById(R.id.serialNo_linear);
                     final EditText item_remark = dialog.findViewById(R.id.item_note);
                     final ImageView serialScan = dialog.findViewById(R.id.serialScan);
-                    if(MHandler.getAllSettings().get(0).getWork_serialNo()==0)
-                    {
-                        serialNo_linear.setVisibility(View.GONE);
-                    }
-                    else {
-                        serialNo_linear.setVisibility(View.VISIBLE);
-                        unitQty.setText("1");
-                        unitQty.setEnabled(false);
 
-                    }
-                    Serial_No = dialog.findViewById(R.id.Serial_No);
-                    Serial_No.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Serial_No.selectAll();
-                        }
-                    });
+
+//                    Serial_No = dialog.findViewById(R.id.Serial_No);
+//                    Serial_No.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Serial_No.selectAll();
+//                        }
+//                    });
                     serialScan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//
-                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                                    ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Serial);
+                            context.readB();
 
-                                    if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-                                    {//just for first time
-
-                                        Intent i=new Intent(context,ScanActivity.class);
-                                        i.putExtra("key","2");
-                                        context.startActivity(i);
-//                                        searchByBarcodeNo(s + "");
-                                    }
-                                } else {
-                                    Intent i=new Intent(context,ScanActivity.class);
-                                    i.putExtra("key","2");
-                                    context.startActivity(i);
-//                                    searchByBarcodeNo(s + "");
-                                }
-
-
-//                            }
                         }
                     });
 
@@ -212,20 +272,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         discribtionItem_linear.setVisibility(View.GONE);
 
                     }
-                    if(MHandler.getAllSettings().get(0).getWork_serialNo()==1)
-                    {
-                        serialNo_linear.setVisibility(View.VISIBLE);
-
-                    }
-                    else{
-                        serialNo_linear.setVisibility(View.GONE);
-
-                    }
 
                     Button addToList = dialog.findViewById(R.id.addToList);
                     itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
                     itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
-                    final DatabaseHandler mHandler = new DatabaseHandler(context);
+                    final DatabaseHandler mHandler = new DatabaseHandler(cont);
                     //*********************************** change Price with customer or not accourding to setting  ************************************
                     if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
                         price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
@@ -237,21 +288,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     }
 
                     if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
-//                    discountLinearLayout.setVisibility(View.INVISIBLE);
+                    discountLinearLayout.setVisibility(View.INVISIBLE);
 
                         if (mHandler.getAllSettings().get(0).getReadDiscountFromOffers() == 1) {
                             discountLinearLayout.setVisibility(View.INVISIBLE);
                         }
                     if (mHandler.getAllSettings().get(0).getBonusNotAlowed() == 0) {//you can  add bonus
                         bonusLinearLayout.setVisibility(View.VISIBLE);
+                        bonusLinearLayout.setVisibility(View.GONE);//test Fro serial
                     } else {
-//                 bonus.setText("0");
-//                 bonusLinearLayout.setVisibility(View.INVISIBLE);
+                 bonus.setText("0");
+                 bonusLinearLayout.setVisibility(View.INVISIBLE);
                         bonus.setEnabled(false);
+
                     }
 
                     if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
-                        unitWeightLinearLayout.setVisibility(View.INVISIBLE);
+                        unitWeightLinearLayout.setVisibility(View.INVISIBLE);// For Serial
                         textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
                         useWeight.setChecked(false);
                     } else
@@ -259,20 +312,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
 
-                    ArrayAdapter<String> unitsList = new ArrayAdapter<String>(context, R.layout.spinner_style, units);
+                    ArrayAdapter<String> unitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, units);
                     unit.setAdapter(unitsList);
 
                     addToList.setOnClickListener(new View.OnClickListener() {
                         @SuppressLint("ResourceAsColor")
                         @Override
                         public void onClick(View v) {
-                            String serial="";
-                            if(mHandler.getAllSettings().get(0).getWork_serialNo()==1)
-                            {    serial=Serial_No.getText().toString();
+                            String qtyText="";
 
-                            }
+                            qtyText=unitQty.getText().toString();
+                            Log.e("serial",""+serial);
 
-                            if(!TextUtils.isEmpty(serial)||mHandler.getAllSettings().get(0).getWork_serialNo()==0)
+                            if(!TextUtils.isEmpty(qtyText)||mHandler.getAllSettings().get(0).getWork_serialNo()==0)
                             {
                                 if (!price.getText().toString().equals("") && !price.getText().toString().equals("0") &&
                                         !(unitQty.getText().toString()).equals("")) {
@@ -309,7 +361,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                         bonus.getText().toString(),
                                                                         discount.getText().toString(),
                                                                         radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight,
-                                                                        view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                        view.getContext(),item_remark.getText().toString(),serialListitems);
 
                                                                 appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
                                                                 if (appliedOffer != null) {
@@ -317,7 +369,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                     Log.e("bonus_calc=", "" + bonus_calc);
                                                                     added = obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
                                                                             "0", "1", "" + bonus_calc, "0",
-                                                                            "0", "0", radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                            "0", "0", radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
                                                                     Log.e("bonus_calc", "" + bonus_calc);
 
                                                                 }
@@ -335,7 +387,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                             holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
                                                                             bonus.getText().toString(), "" + disount_totalnew, radioGroup
-                                                                            , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                            , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
                                                                 }
                                                             }
                                                         } else {
@@ -345,7 +397,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                     holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
                                                                     bonus.getText().toString(), discount.getText().toString(), radioGroup,
-                                                                    items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                    items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
                                                         }
                                                         if (added) {
                                                             if (offer.size() != 0)
@@ -387,7 +439,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                 holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                 bonus.getText().toString(), discount.getText().toString(),
-                                                                                radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                                radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
 
                                                                         appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 0);
                                                                         if (appliedOffer != null)
@@ -395,7 +447,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                     "0", "1", "" + appliedOffer.getBonusQty(), "0",
                                                                                     "0", "0", radioGroup
                                                                                     , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
-                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
 
                                                                     } else {
                                                                         appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
@@ -405,14 +457,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                     holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                     bonus.getText().toString(), "" + (appliedOffer.getBonusQty() * Double.parseDouble(qty)), radioGroup,
                                                                                     items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
-                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
                                                                         }
                                                                     }
                                                                 } else {
                                                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                             holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                             bonus.getText().toString(), discount.getText().toString(),
-                                                                            radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),Serial_No.getText().toString());
+                                                                            radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems);
                                                                 }
                                                                 if (added) {
                                                                     if (offer.size() != 0)
@@ -439,7 +491,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 } else
                                     Toast.makeText(view.getContext(), "Invalid price or Qty", Toast.LENGTH_LONG).show();
                             }else
-                                {Serial_No.setError("*Required");}
+                                {unitQty.setError("*Required");}
 
 
 
@@ -457,7 +509,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(cont);
         builder.setTitle(R.string.app_alert);
         builder.setCancelable(true);
         builder.setMessage(R.string.itemadedbefor);
@@ -536,7 +588,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     void openOfferDialog(Offers offers) {
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(cont);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.offer_dialog);
@@ -651,4 +703,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
         return newValue;
     }
+
 }

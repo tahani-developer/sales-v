@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -22,8 +23,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
@@ -84,13 +87,17 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -191,13 +198,13 @@ public class MainActivity extends AppCompatActivity
         try {
             if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)
             {
-                if(isNetworkAvailable())
-                {
+//                if(isNetworkAvailable())
+//                {
                     getlocationForCheckIn();
-                }
-                else {
-                    Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
-                }
+//                }
+//                else {
+//                    Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+//                }
 
 
             }
@@ -294,7 +301,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                copyFile();
               openAddCustomerDialog();
 
             }
@@ -333,6 +340,7 @@ public class MainActivity extends AppCompatActivity
 
                     latitudeCheckIn  = location.getLatitude();
                     longtudeCheckIn = location.getLongitude();
+                    Log.e("onLocationChanged",""+latitudeCheckIn+""+longtudeCheckIn);
 
 
                 }
@@ -388,6 +396,7 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    }
     public void requestLocationUpdates() {
+        Log.e("requestLocationUpdates","");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(120000); // two minute interval
         mLocationRequest.setFastestInterval(120000);
@@ -459,6 +468,8 @@ public class MainActivity extends AppCompatActivity
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
         isClickLocation=2;
+//        requestSingleUpdate();
+        Log.e("saveCurrentLocation",""+isClickLocation);
         getlocattTest();
 //        if(CustomerListShow.Customer_Account.equals(""))
 //        {
@@ -610,6 +621,7 @@ public class MainActivity extends AppCompatActivity
 //
                     }
         if (mFusedLocationClient != null) {
+            Log.e("mFusedLocationClient","");
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             requestLocationUpdates();
         }
@@ -618,6 +630,7 @@ public class MainActivity extends AppCompatActivity
     LocationCallback mLocationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult) {
+            Log.e("onLocationResult",""+locationResult);
                     if(CustomerListShow.Customer_Account.equals(""))
         {
             if(first!=1)
@@ -1781,14 +1794,26 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals("")) {
                     String comName = name.getText().toString().trim();
-                    int comTel = Integer.parseInt(tel.getText().toString());
-                    int taxNo = Integer.parseInt(tax.getText().toString());
-                    String companyNote = noteInvoice.getText().toString();
+                    int comTel = 0, taxNo = 0;
+                    try {
+                        comTel = Integer.parseInt(tel.getText().toString());
+                        taxNo = Integer.parseInt(tax.getText().toString());
+                        String companyNote = noteInvoice.getText().toString();
 
-                    mDbHandler.deleteAllCompanyInfo();
-                    mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic,companyNote);
+                        mDbHandler.deleteAllCompanyInfo();
+                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote);
 
-                    dialog.dismiss();
+                        dialog.dismiss();
+                    } catch (NumberFormatException e) {
+                        if (comTel == 0) {
+                            tel.setError("Invalid No");
+                        }
+                        if (taxNo == 0) {
+                            tax.setError("Invalid Tax");
+                        }
+                    }
+
+
                 } else
                     Toast.makeText(MainActivity.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
             }
@@ -2118,5 +2143,84 @@ dialog.dismiss();
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+    @TargetApi(16)
+    public void requestSingleUpdate() {
+        // TODO: Comment-out this line.
+        // Looper.prepare();
 
+        Log.e("requestSingleUpdate",""+android.os.Build.VERSION.SDK_INT);
+        // only works with SDK Version 23 or higher
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // permission is not granted
+                Log.e("SiSoLocProvider", "Permission not granted.");
+                return;
+            } else {
+                Log.e("SiSoLocProvider", "Permission granted.");
+            }
+        } else {
+            Log.e("SiSoLocProvider", "SDK < 23, checking permissions should not be necessary");
+        }
+
+        final long startTime = System.currentTimeMillis();
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                // TODO: These lines of code will run on UI thread.
+                if ((locationResult.getLastLocation() != null) && (System.currentTimeMillis() <= startTime + 30 * 1000)) {
+                    Log.e("LOCATION: " , locationResult.getLastLocation().getLatitude() + "|" + locationResult.getLastLocation().getLongitude());
+                    Log.e("ACCURACY: " , ""+locationResult.getLastLocation().getAccuracy());
+                    mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                } else {
+                    Log.e("LastKnownNull? :: " ,""+ (locationResult.getLastLocation() == null));
+                    Log.e("Time over? :: " ,""+ (System.currentTimeMillis() > startTime + 30 * 1000));
+                }
+
+                // TODO: After receiving location result, remove the listener.
+                mFusedLocationClient.removeLocationUpdates(this);
+            }
+        };
+
+        LocationRequest req = new LocationRequest();
+        req.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        req.setFastestInterval(2000);
+        req.setInterval(2000);
+        // Receive location result on UI thread.
+        mFusedLocationClient.requestLocationUpdates(req, mLocationCallback, Looper.getMainLooper());
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void copyFile()
+    {
+        try
+        {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite())
+            {
+                String currentDBPath = "\\data\\com.dr7.salesmanmanager\\databases\\VanSalesDatabase";
+                String backupDBPath = "VanSalesDatabase";
+
+//                File currentDB = new File(data, currentDBPath);
+                File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                }
+//                if(bool == true)
+//                {
+//                    Toast.makeText(MainActivity.this, "Backup Complete", Toast.LENGTH_SHORT).show();
+//                    bool = false;
+//                }
+            }
+        }
+        catch (Exception e) {
+            Log.w("Settings Backup", e);
+        }
+    }
 }

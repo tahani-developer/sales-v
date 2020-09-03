@@ -1116,7 +1116,7 @@ public class ESCPSample2
 
 	public void printMultilingualFontEscEjapy(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
 	try{
-		int CusId=Integer.parseInt(voucherforPrint.getCustNumber());
+		String CusId=(voucherforPrint.getCustNumber());
 
 		valueCheckHidPrice=obj.getHideValuForCustomer(CusId);
 		Log.e("HidPriceBluDBaseESC",""+valueCheckHidPrice);

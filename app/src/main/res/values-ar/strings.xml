@@ -402,5 +402,6 @@
     <string name="failImpo_export_dataCustomerMaster">قم بتصدير البيانات في جدول الزبائن قبل استيراد بيانات جديدة</string>
     <string name="SerialNo">الرقم التسلسلي </string>
     <string name="workSerial">تفعيل الرقم التسلسلي</string>
+    <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
 
 </resources>

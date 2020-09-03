@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,9 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.text.DecimalFormat;
 import java.util.List;
+
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 //import maes.tech.intentanim.CustomIntent;
@@ -518,5 +525,35 @@ public class Activities extends AppCompatActivity implements
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("MainActivity", ""+requestCode);
+//        if (requestCode == 0x0000c0de) {
+        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (Result != null) {
+            if (Result.getContents() == null) {
+                Log.e("MainActivity", "cancelled scan");
+                Toast.makeText(Activities.this, "cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Log.e("MainActivity", "" + Result.getContents());
+//                    Toast.makeText(this, "Scan ___" + Result.getContents(), Toast.LENGTH_SHORT).show();
+//                TostMesage(getResources().getString(R.string.scan)+Result.getContents());
+//                barCodTextTemp.setText(Result.getContents() + "");
+//                openEditerCheck();
+
+                String ST = Result.getContents();
+                item_serial.setText(ST);
+
+
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+//        }
     }
 }

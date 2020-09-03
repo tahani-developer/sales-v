@@ -294,6 +294,7 @@
     <string name="error_companey_info">   please enter company information for print </string>
     <string name="fill_setting">Please enter setting app</string>
     <string name="warning_message">Warning Message</string>
+    <string name="Confirm">Confirm</string>
 
     <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
     <string name="change_qty">Change Qty</string>
@@ -353,6 +354,7 @@
     <string name="failImpo_export_dataCustomerMaster">Please Export data in Customer master before import new data</string>
     <string name="SerialNo">Serial No</string>
     <string name="workSerial">Work With Serial</string>
+    <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -362,6 +364,11 @@
         <item>Update Qty</item>
         <item>Clear All</item>
     </string-array>
+    <string-array name="list_items_dialog_SERIAL">
+        <item>Delete</item>
+              <item>Clear All</item>
+    </string-array>
+
     <string-array name="banks_list">
         <item>Arab Bank</item>
         <item>Arab Banking Corporation (Jordan)</item>
