@@ -12,6 +12,24 @@ public class serialModel {
     private String itemNo;
     private String dateVoucher;
     private String kindVoucher;
+    private String storeNo;
+    private  String isPosted;
+
+    public String getIsPosted() {
+        return isPosted;
+    }
+
+    public void setIsPosted(String isPosted) {
+        this.isPosted = isPosted;
+    }
+
+    public String getStoreNo() {
+        return storeNo;
+    }
+
+    public void setStoreNo(String storeNo) {
+        this.storeNo = storeNo;
+    }
 
     public String getVoucherNo() {
         return voucherNo;
@@ -75,14 +93,14 @@ public class serialModel {
         JSONObject obj = new JSONObject();
         try {
 
-            obj.put("SERIAL_CODE_NO", serialCode);
-            obj.put("COUNTER_SERIAL", counterSerial);
-            obj.put("VOUCHER_NO", voucherNo);
-            obj.put("ITEMNO_SERIAL", itemNo);
-            obj.put("DATE_VOUCHER", dateVoucher);
-            obj.put("KIND_VOUCHER", kindVoucher);
-
-
+            obj.put("SERIAL_CODE", serialCode);
+            obj.put("QTY", "1");
+            obj.put("STORENO", storeNo);// store
+            obj.put("VSERIAL", counterSerial);
+            obj.put("VHFNO", voucherNo);
+            obj.put("ITEMNO", itemNo);
+            obj.put("TRNSDATE", dateVoucher);
+            obj.put("TRANSKIND", kindVoucher);
 
         } catch (JSONException e) {
             Log.e("TagserialModel" , "JSONException"+e.getMessage());

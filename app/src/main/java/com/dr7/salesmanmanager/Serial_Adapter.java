@@ -60,7 +60,7 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
 
         viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
         viewHolder.textView_counterNo.setText(list.get(i).getCounterSerial()+"");
-    viewHolder.deletItem.setOnClickListener(new View.OnClickListener() {
+        viewHolder.deletItem.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
@@ -77,6 +77,13 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
                             list.remove(i);
                             counterSerial--;
                             unitQty.setText(""+counterSerial);
+//                            updatelistOrder(counterSerial);
+//                            Log.e("updatelistOrder",""+counterSerial);
+//                            ViewHolder viewHolder = null;
+//                            for(int i=0;i<counterSerial;i++)
+//                            {
+//                                viewHolder.textView_counterNo.setText(i+"");
+//                            }
                             notifyDataSetChanged();
 
                             sDialog.dismissWithAnimation();
@@ -92,33 +99,6 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         }
     });
 
-//        viewHolder.editText_date.setOnClickListener(new View.OnClickListener(){
-//@Override
-//public void onClick(View v){
-//        myCalendar=Calendar.getInstance();
-//        new DatePickerDialog(context,openDatePickerDialog(viewHolder.editText_date),myCalendar
-//        .get(Calendar.YEAR),myCalendar.get(Calendar.MONTH),
-//        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-//
-//        }
-//        });
-//        viewHolder.editText_amountvalue.setText(list.get(i).getChequeValue()+"");
-//
-//        viewHolder.spinner_bank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-//@Override
-//public void onItemSelected(AdapterView<?> parentView,View selectedItemView,int position,long id){
-////        String selectedItem=parentView.getItemAtPosition(position).toString();
-////        list.get(i).setBankName(selectedItem);
-//
-//        }
-//
-//@Override
-//public void onNothingSelected(AdapterView<?> parentView){
-//        }
-//
-//        });
-//
-//
         }
 
 @Override
@@ -163,24 +143,24 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         deletItem = itemView.findViewById(R.id.deletItem);
 //        spinner_bank = itemView.findViewById(R.id.spinner_bank);
 //
-//        editText_date.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                int position = (int) editText_date.getTag();
-//                updateListCheque(position, s.toString());
-//
-//            }
-//        });
+        editTextSerialCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int position = (int) editTextSerialCode.getTag();
+                updateListCheque(position, s.toString());
+
+            }
+        });
 //        editText_amountvalue.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -217,6 +197,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //        });
 
     }
+
 }
 
 
@@ -245,6 +226,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void updateListCheque(int position, String date) {
-//        list.get(position).setChequeDate(date);
+        list.get(position).setSerialCode(date);
+    }
+    private void updatelistOrder(int counterUpdate) {
+
+    Log.e("updatelistOrder",""+counterUpdate);
+    ViewHolder viewHolder = null;
+    for(int i=0;i<list.size();i++)
+    {
+        viewHolder.textView_counterNo.setText(i+"");
+    }
+
+
     }
 }

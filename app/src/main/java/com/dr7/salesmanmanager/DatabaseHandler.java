@@ -50,7 +50,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 93;
+    private static final int DATABASE_VERSION = 97;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -64,10 +64,11 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL_CODE_NO ="SERIAL_CODE_NO";
     private static final String COUNTER_SERIAL ="COUNTER_SERIAL";
     private static final String  VOUCHER_NO="VOUCHER_NO";
-
     private static final String ITEMNO_SERIAL="ITEMNO_SERIAL";
     private static final String DATE_VOUCHER="DATE_VOUCHER";
     private static final  String KIND_VOUCHER="KIND_VOUCHER";
+    private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
+    private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
     //----------------------------------------------------------------------
     private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
     private static final String PASS_TYPE = "PASS_TYPE";
@@ -426,7 +427,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + ITEMNO_SERIAL + " TEXT,"
                 + KIND_VOUCHER + " TEXT,"
 
-                + DATE_VOUCHER + " TEXT"+
+                + DATE_VOUCHER + " TEXT,"
+                + STORE_NO_SALESMAN + " INTEGER,"
+                + IS_POSTED_SERIAL + " INTEGER"+
+
 
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
@@ -1224,7 +1228,9 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                     + KIND_VOUCHER + " TEXT,"
 
-                    + DATE_VOUCHER + " TEXT" +
+                    + DATE_VOUCHER + " TEXT,"
+                    + STORE_NO_SALESMAN + " INTEGER,"
+                    + IS_POSTED_SERIAL + " INTEGER"+
 
                     ")";
             db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
@@ -1233,6 +1239,30 @@ DatabaseHandler extends SQLiteOpenHelper {
 
             Log.e("SERIAL_ITEMS_TABLE",""+e.getMessage());
             }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
 
     }
     public void addAccount_report(Account_Report account_report)
@@ -1310,8 +1340,8 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(ITEMNO_SERIAL, serialModelItem.getItemNo());
             values.put(DATE_VOUCHER, serialModelItem.getDateVoucher());
             values.put(KIND_VOUCHER, serialModelItem.getKindVoucher());
-
-
+            values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
+            values.put(IS_POSTED_SERIAL, serialModelItem.getIsPosted());
             db.insert(SERIAL_ITEMS_TABLE, null, values);
             Log.e("add_Serial",""+serialModelItem.getSerialCode());
             db.close();
@@ -1962,7 +1992,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     public List<serialModel> getAllSerialItems() {
         List<serialModel> infos = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE";
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE"+ " WHERE IS_POSTED_SERIAL = " + 0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1975,6 +2005,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 info.setItemNo(cursor.getString(4));
                 info.setKindVoucher(cursor.getString(5));
                 info.setDateVoucher(cursor.getString(6));
+                info.setStoreNo(cursor.getString(7));
+                info.setIsPosted(cursor.getString(8));
 
                 infos.add(info);
 
@@ -2169,7 +2201,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Customer customer = new Customer();
 
                 customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
-                customer.setCustId(cursor.getString(16));
+//                customer.setCustId(cursor.getString(16));
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
@@ -2184,7 +2216,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
                 // 15 column isPosted
-                customer.setCustId(cursor.getString(16));
+                customer.setCustId(cursor.getString(16));// for test talley
 
                 // Adding transaction to list
                 customers.add(customer);
@@ -2255,7 +2287,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
-                customer.setCustId(cursor.getString(16));
+                customer.setCustId(cursor.getString(16));// test talley
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -3464,6 +3496,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(IS_POST, 1);
         db.update(CUSTOMER_MASTER, values, IS_POST + "=" + 0, null);
     }
+    public void updateSerialTableIsposted() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED_SERIAL, 1);
+        db.update(SERIAL_ITEMS_TABLE, values, IS_POSTED_SERIAL + "=" + 0, null);
+    }
 
     public void updateTransactions() {
         db = this.getWritableDatabase();
@@ -3727,7 +3766,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     // update SERIAL_ITEMS_TABLE set KIND_VOUCHER=30 where  VOUCHER_NO=4
 
-    public void updatevoucherKindInSerialTable( int kindVoucher,int voucherNo ) {
+    public void updatevoucherKindInSerialTable( int kindVoucher,int voucherNo,int storeNo ) {
         db = this.getWritableDatabase();
         Log.e("updateVOUCHERNO",""+kindVoucher);
         ContentValues values = new ContentValues();
@@ -3735,6 +3774,10 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + "= '" + voucherNo + "'" , null);
+
+
+//        values.put(, serialModelItem.getStoreNo());
+
     }
 
 

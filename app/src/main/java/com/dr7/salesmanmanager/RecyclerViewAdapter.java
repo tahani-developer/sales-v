@@ -166,6 +166,8 @@ private AddItemsFragment2 context;
                     {
                         dialog.setContentView(R.layout.add_item_serial_dialog);
                         serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
+                        final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
+                        unitWeightLinearLayout.setVisibility(View.GONE);
                         item_serial= dialog.findViewById(R.id.item_serial);
                         item_serial.addTextChangedListener(new TextWatcher() {
                             @Override
@@ -304,7 +306,7 @@ private AddItemsFragment2 context;
                     }
 
                     if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
-                        unitWeightLinearLayout.setVisibility(View.INVISIBLE);// For Serial
+                        unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                         textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
                         useWeight.setChecked(false);
                     } else

@@ -403,5 +403,8 @@
     <string name="SerialNo">الرقم التسلسلي </string>
     <string name="workSerial">تفعيل الرقم التسلسلي</string>
     <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
+    <string name="backupData">Backup Data</string>
+    <string name="backup_failed">Backup Failed</string>
+    <string name="Printing">Printing</string>
 
 </resources>

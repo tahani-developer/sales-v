@@ -76,6 +76,7 @@ public class ExportJason extends AppCompatActivity {
         //
 
         serialModelList = mHandler.getAllSerialItems();
+        Log.e("serialModelList",""+serialModelList);
         jsonArraySerial = new JSONArray();
         for (int i = 0; i < serialModelList.size(); i++)
         {
@@ -236,7 +237,7 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
 
-                nameValuePairs.add(new BasicNameValuePair("SERIAL_ITEMS_TABLE", jsonArraySerial.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
@@ -377,6 +378,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updateAddedCustomers();
                     mHandler.updateTransactions();
                     mHandler.updateCustomersMaster();
+                    mHandler.updateSerialTableIsposted();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
@@ -384,10 +386,18 @@ public class ExportJason extends AppCompatActivity {
                     {
 
                     progressDialog.dismiss();
-                    int indexError=s.indexOf("entry");
+                    try {
+                        int indexError=s.indexOf("entry");
 
-                    String errorMessage=s.substring(indexError,indexError+42);
-                    showDialogError(errorMessage);
+                        String errorMessage=s.substring(indexError,indexError+42);
+                        showDialogError(errorMessage);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+
                     }
 //                    *********************************
 

@@ -69,6 +69,7 @@ import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -117,6 +118,11 @@ public class MainActivity extends AppCompatActivity
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     private DatabaseHandler mDbHandler;
      public   LocationManager locationManager;
     LocationListener locationListener;
@@ -301,7 +307,6 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                copyFile();
               openAddCustomerDialog();
 
             }
@@ -910,10 +915,38 @@ public class MainActivity extends AppCompatActivity
             mDbHandler.deleteAllPostedData();
 
         }
+        else if (id == R.id.nav_backup_data) {
+           List <serialModel> serialModelList = mDbHandler.getAllSerialItems();
+            Log.e("serialModelList",""+serialModelList.size());
+
+            try {
+                copyFile();
+            }
+            catch (Exception e)
+            {
+                verifyStoragePermissions(MainActivity.this);
+
+                Toast.makeText(this, ""+getResources().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
+            }
+
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 
     private void openSelectCustDialog() {
@@ -2198,8 +2231,8 @@ dialog.dismiss();
 
             if (sd.canWrite())
             {
-                String currentDBPath = "\\data\\com.dr7.salesmanmanager\\databases\\VanSalesDatabase";
-                String backupDBPath = "VanSalesDatabase";
+//                String currentDBPath = "\\data\\com.dr7.salesmanmanager\\databases\\VanSalesDatabase";
+                String backupDBPath = "VanSalesDatabase_backup";
 
 //                File currentDB = new File(data, currentDBPath);
                 File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
@@ -2211,6 +2244,28 @@ dialog.dismiss();
                     dst.transferFrom(src, 0, src.size());
                     src.close();
                     dst.close();
+                    Toast.makeText(MainActivity.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    // not exist folder documents
+//                    File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+//                    boolean isPresent = true;
+//                    if (!docsFolder.exists()) {
+//                        isPresent = docsFolder.mkdir();
+//                    }
+//                    if (isPresent) {
+//                        File file = new File(docsFolder.getAbsolutePath(),"test.txt");
+//                    } else {
+//                        // Failure
+//                    }
+
+
+
+
+
+
+
+                    Toast.makeText(MainActivity.this, "Backup Failed", Toast.LENGTH_SHORT).show();
                 }
 //                if(bool == true)
 //                {

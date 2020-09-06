@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -129,6 +130,7 @@ import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
+import static com.dr7.salesmanmanager.PrintVoucher.verifyStoragePermissions;
 
 import android.location.LocationManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -218,6 +220,12 @@ public class SalesInvoice extends Fragment {
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    SweetAlertDialog pd;
     double discountValue;
     double discountPerc;
     volatile boolean stopWorker;
@@ -1563,6 +1571,7 @@ public class SalesInvoice extends Fragment {
     }
 
     public void AddVoucher() {
+        int store_No=salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
         savedState = 2;// addesd sucssesfulley
@@ -1581,7 +1590,7 @@ public class SalesInvoice extends Fragment {
             itemForPrint.add(item);
             if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
             {
-                mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber);
+                mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
             }
 
 
@@ -1653,6 +1662,7 @@ public class SalesInvoice extends Fragment {
 //                                                             qs.setChecked(true);
                             break;
                         case 4:
+                            String s="";
                             printTally(voucher);
                             break;
 
@@ -3681,7 +3691,11 @@ public class SalesInvoice extends Fragment {
 
 
     void printTally(Voucher voucher) {
-
+        pd = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pd.setTitleText(getActivity().getResources().getString(R.string.Printing));
+        pd.setCancelable(false);
+        pd.show();
         Bitmap bitmap = null;
         Bitmap bitmap2 = null;
         List<Item> items1 = new ArrayList<>();
@@ -3697,10 +3711,14 @@ public class SalesInvoice extends Fragment {
 
         if (items1.size() <= 17) {
             bitmap = convertLayoutToImageTally(voucher, 1, 0, items1.size(), items1);
+            Log.e("bitmap",""+bitmap);
             try {
                 Settings settings = mDbHandler.getAllSettings().get(0);
                 File file = savebitmap(bitmap, settings.getNumOfCopy(), "org");
+                pd.dismissWithAnimation();
+                Log.e("file",""+file);
             } catch (IOException e) {
+                pd.dismissWithAnimation();
                 e.printStackTrace();
             }
 
@@ -3715,10 +3733,12 @@ public class SalesInvoice extends Fragment {
                 try {
 
                     File file = savebitmap(bitmap, 1, "fir" + "" + i);
+                    pd.dismissWithAnimation();
                     File file2 = savebitmap(bitmap2, 1, "sec" + "" + i);
 
                     Log.e("save image ", "" + file.getAbsolutePath());
                 } catch (IOException e) {
+                    pd.dismissWithAnimation();
                     e.printStackTrace();
                 }
             }
@@ -3806,7 +3826,12 @@ public class SalesInvoice extends Fragment {
                 voucherTyp = "طلب جديد";
                 break;
         }
-        img.setImageBitmap(companyInfo.getLogo());
+        try {
+            img.setImageBitmap(companyInfo.getLogo());
+        }
+        catch (Exception e)
+        {}
+
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
         taxNo.setText("" + companyInfo.getTaxNo());
@@ -3933,7 +3958,7 @@ public class SalesInvoice extends Fragment {
     }
 
 
-    public static File savebitmap(Bitmap bmp, int numCope, String next) throws IOException {
+    public  File savebitmap(Bitmap bmp, int numCope, String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
@@ -3948,14 +3973,35 @@ public class SalesInvoice extends Fragment {
 
 
 //        f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            fo.close();
+            try {
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            }
+            catch (Exception e)
+            {
+                pd.dismissWithAnimation();
+                verifyStoragePermissions(getActivity());
+
+
+            }
         }
         return f;
     }
 
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
     // After opening a connection to bluetooth printer device,
     // we have to listen and check if a data were sent to be printed.
     void beginListenForData() throws IOException {

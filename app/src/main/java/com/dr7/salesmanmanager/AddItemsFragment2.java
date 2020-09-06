@@ -778,14 +778,17 @@ public class AddItemsFragment2 extends DialogFragment {
                 TextView messageTextView = (TextView) group.getChildAt(0);
                 messageTextView.setTextSize(15);
                 toast.show();
+                String storeNo=Login.salesMan;
             if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
             {
+                Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
                 for(int i=0;i<itemSerialList.size();i++)
                 {
-                   itemSerialList.get(i).setItemNo(itemNumber);
+                    itemSerialList.get(i).setItemNo(itemNumber);
                     itemSerialList.get(i).setDateVoucher(voucherDate);
-                    itemSerialList.get(i).setKindVoucher("208");
+                    itemSerialList.get(i).setKindVoucher("");
                     itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
+                    itemSerialList.get(i).setStoreNo(storeNo);
                     Log.e("voucherNumberTextView",""+voucherNumberTextView.getText().toString());
 
                 }
