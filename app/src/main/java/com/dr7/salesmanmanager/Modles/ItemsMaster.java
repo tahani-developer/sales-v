@@ -11,6 +11,15 @@ public class ItemsMaster {
     private double itemL; // for weight
     private double posPrice; // for weight
     private String kind_item;
+    private String itemHasSerial;
+
+    public String getItemHasSerial() {
+        return itemHasSerial;
+    }
+
+    public void setItemHasSerial(String itemHasSerial) {
+        this.itemHasSerial = itemHasSerial;
+    }
 
     public ItemsMaster (){
 

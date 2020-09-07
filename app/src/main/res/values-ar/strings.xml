@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">نظام الصقور للمندوبين</string>
-    <string name="version">19</string>
+
     <string name="app_username">اسم المستخدم</string>
     <string name="app_password">كلمة السر</string>
     <string name="app_dataManagement">ادارة البيانات</string>
@@ -385,7 +385,7 @@
     <string name="preventTotaldisc">منع الخصم الكلي</string>
     <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
     <string name="automatic_cheque">شيكات تسلسلية</string>
-    <string name="tafqit">tafqit</string>
+    <string name="tafqit">تفقيط</string>
     <string name="app_cheque_count">عدد الشيكات</string>
     <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
     <string name="saveLocation">حفظ الموقع</string>
@@ -402,9 +402,9 @@
     <string name="failImpo_export_dataCustomerMaster">قم بتصدير البيانات في جدول الزبائن قبل استيراد بيانات جديدة</string>
     <string name="SerialNo">الرقم التسلسلي </string>
     <string name="workSerial">تفعيل الرقم التسلسلي</string>
-    <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
-    <string name="backupData">Backup Data</string>
-    <string name="backup_failed">Backup Failed</string>
-    <string name="Printing">Printing</string>
+    <string name="AreYouSuretodelete">هل تريد الحذف ?</string>
+    <string name="backupData">نسخ البيانات</string>
+    <string name="backup_failed">تعذر نسخ البيانات</string>
+    <string name="Printing">جاري الطباعة</string>
 
 </resources>

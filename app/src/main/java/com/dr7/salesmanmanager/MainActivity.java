@@ -2228,17 +2228,21 @@ dialog.dismiss();
         {
             File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
             File data = Environment.getDataDirectory();
-
-            if (sd.canWrite())
+            boolean isPresent = true;
+            if (!sd.canWrite())
             {
-//                String currentDBPath = "\\data\\com.dr7.salesmanmanager\\databases\\VanSalesDatabase";
+                isPresent= sd.mkdir();
+
+            }
+
+
+
                 String backupDBPath = "VanSalesDatabase_backup";
 
-//                File currentDB = new File(data, currentDBPath);
                 File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
                 File backupDB = new File(sd, backupDBPath);
 
-                if (currentDB.exists()) {
+                if (currentDB.exists()&&isPresent) {
                     FileChannel src = new FileInputStream(currentDB).getChannel();
                     FileChannel dst = new FileOutputStream(backupDB).getChannel();
                     dst.transferFrom(src, 0, src.size());
@@ -2247,35 +2251,14 @@ dialog.dismiss();
                     Toast.makeText(MainActivity.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
                 }else {
 
-                    // not exist folder documents
-//                    File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
-//                    boolean isPresent = true;
-//                    if (!docsFolder.exists()) {
-//                        isPresent = docsFolder.mkdir();
-//                    }
-//                    if (isPresent) {
-//                        File file = new File(docsFolder.getAbsolutePath(),"test.txt");
-//                    } else {
-//                        // Failure
-//                    }
-
-
-
-
-
-
-
                     Toast.makeText(MainActivity.this, "Backup Failed", Toast.LENGTH_SHORT).show();
                 }
-//                if(bool == true)
-//                {
-//                    Toast.makeText(MainActivity.this, "Backup Complete", Toast.LENGTH_SHORT).show();
-//                    bool = false;
-//                }
-            }
+            isPresent=false;
+
+
         }
         catch (Exception e) {
-            Log.w("Settings Backup", e);
+            Log.e("Settings Backup", e.getMessage());
         }
     }
 }

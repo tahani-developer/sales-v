@@ -38,6 +38,15 @@ public class Item {
     private  String cust;
     private  String serialCode;
     private  String vouchDate;
+    private String itemHasSerial;
+
+    public String getItemHasSerial() {
+        return itemHasSerial;
+    }
+
+    public void setItemHasSerial(String itemHasSerial) {
+        this.itemHasSerial = itemHasSerial;
+    }
 
     public String getSerialCode() {
         return serialCode;
@@ -403,6 +412,8 @@ public class Item {
             obj.put("itemYear", year);
             obj.put("ITEM_DESCRITION", description);
             obj.put("SERIAL_CODE", serialCode);
+//            obj.put("ITEMHASSERIAL", itemHasSerial);
+
 
 
         } catch (JSONException e) {

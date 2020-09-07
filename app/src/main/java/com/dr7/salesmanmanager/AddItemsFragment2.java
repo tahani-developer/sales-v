@@ -577,7 +577,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
-            Log.e("jsonItemsList", "zero"+jsonItemsList.size());
+            Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
         else {
@@ -585,6 +585,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
 
+            Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
 
             size_firstlist = jsonItemsList2.size();
             if (size_firstlist != 0) {

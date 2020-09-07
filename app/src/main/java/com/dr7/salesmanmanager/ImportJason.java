@@ -404,6 +404,12 @@ public class ImportJason extends AppCompatActivity{
                         item.setKind_item("***");
 
                     }
+                    try {
+                        item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
+                        Log.e("setItemHasSerialJSON",""+finalObject.getString("ITEMHASSERIAL"));
+                    }
+                    catch (Exception e)
+                    {}
                     itemsMasterList.add(item);
                 }
                 }

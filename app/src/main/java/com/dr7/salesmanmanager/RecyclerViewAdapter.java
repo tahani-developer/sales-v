@@ -162,7 +162,7 @@ private AddItemsFragment2 context;
                     final Dialog dialog = new Dialog(view.getContext());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(true);
-                    if(MHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                    if((items.get(holder.getAdapterPosition()).getItemHasSerial().equals("1")))
                     {
                         dialog.setContentView(R.layout.add_item_serial_dialog);
                         serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
@@ -230,7 +230,7 @@ private AddItemsFragment2 context;
 
 //
                     final TextView itemNumber = dialog.findViewById(R.id.item_number);
-//                final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
+//                  final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
                     final TextView itemName = dialog.findViewById(R.id.item_name);
                     final EditText price = dialog.findViewById(R.id.price);
                     final Spinner unit = dialog.findViewById(R.id.unit);

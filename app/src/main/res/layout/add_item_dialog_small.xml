@@ -352,6 +352,17 @@
 
     </LinearLayout>
     <Button
+        android:id="@+id/addToListwredgt"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:visibility="invisible"
+        android:background="@color/add_button"
+        android:text="@string/app_add_to_list"
+        android:textColor="@color/layer5"
+        android:textStyle="bold" />
+    <Button
         android:id="@+id/addToList"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

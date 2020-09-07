@@ -50,7 +50,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 97;
+    private static final int DATABASE_VERSION = 98;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -170,6 +170,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_L1 = "ITEM_L";
     private static final String ITEM_F_D = "F_D";
     private static final String KIND_ITEM= "KIND_ITEM";
+    private static final String ITEM_HAS_SERIAL= "ITEM_HAS_SERIAL";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -543,7 +544,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + IsSuspended1 + " INTEGER,"
                 + ITEM_L1 + " INTEGER,"
                 + ITEM_F_D + " REAL,"
-                + KIND_ITEM + " TEXT"
+                + KIND_ITEM + " TEXT,"
+                + ITEM_HAS_SERIAL + " INTEGER"
+
                 + ")";
 
         db.execSQL(CREATE_TABLE_Items_Master);
@@ -1261,6 +1264,14 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //
 
 
 
@@ -1439,6 +1450,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_L1, item.getItemL());
         values.put(ITEM_F_D, item.getPosPrice());
         values.put(KIND_ITEM,item.getKind_item());
+        values.put(ITEM_HAS_SERIAL,item.getItemHasSerial());
+
 
 
         db.insert(Items_Master, null, values);
@@ -2563,7 +2576,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String salesMan = Login.salesMan;
 //        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL  \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
 
@@ -2589,7 +2602,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
-
+                item.setItemHasSerial(cursor.getString(12));
+                Log.e("setItemHasSerial",""+item.getItemHasSerial());
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2607,7 +2621,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC  \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
@@ -2642,6 +2656,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
+//                item.setp(cursor.getString(10));
+                item.setItemHasSerial(cursor.getString(12));
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2918,10 +2934,13 @@ DatabaseHandler extends SQLiteOpenHelper {
                 do {
                     if(cursor.getString(0)== "null")
                     { kind_items.add("**");}
+                    else {
+                        kind_items.add(cursor.getString(0));
 
-                    kind_items.add(cursor.getString(0));
+                        Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
+                    }
 
-                    Log.e("DB_Exception","kind_items"+cursor.getString(0));
+
                 } while (cursor.moveToNext());
             }
         }catch (Exception e)
