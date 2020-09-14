@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:minWidth="1000dp"
     android:minHeight="500dp"
+    android:layoutDirection="locale"
     android:id="@+id/add_item"
     android:background="@color/layer3"
     android:orientation="vertical">

@@ -6,6 +6,8 @@
     android:minWidth="500dp"
     android:minHeight="550dp"
     android:background="@color/layer1"
+    android:id="@+id/mainLinearAddItem"
+    android:layoutDirection="locale"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -323,6 +325,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:visibility="gone"
+
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">

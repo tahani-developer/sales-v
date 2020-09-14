@@ -50,7 +50,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 98;
+    private static final int DATABASE_VERSION = 100;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -147,8 +147,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String MAX_DISCOUNT = "MAX_DISCOUNT";
     private static final String ACCPRC = "ACCPRC";
     private static final String HIDE_VAL = "HIDE_VAL";
+
     private static final String IS_POST = "IS_POST";
     private static final String CUS_ID_Text="CUS_ID_Text";
+
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
@@ -500,8 +502,10 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + MAX_DISCOUNT + " REAL,"
                 +ACCPRC+ " TEXT,"
                 +HIDE_VAL+ " INTEGER,"
-                +IS_POST+" INTEGER not null default  0 ,"
+
+                +IS_POST+" INTEGER not null default  0,"
                 +CUS_ID_Text+ " TEXT"
+
 
 
 
@@ -1211,10 +1215,17 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
         try {
             db.execSQL("alter table CUSTOMER_MASTER ADD COLUMN CUS_ID_Text TEXT NOT NULL DEFAULT '' ");
             db.execSQL("update CUSTOMER_MASTER set CUS_ID_Text = CUS_ID ");
-            db.execSQL("update CUSTOMER_MASTER set CUS_ID = '' ");
+//            db.execSQL("update CUSTOMER_MASTER set CUS_ID = '' ");
             //update CUSTOMER_MASTER set new_CUS_ID = CUS_ID;
             //update CUSTOMER_MASTER set CUS_ID = '';
 
@@ -1249,13 +1260,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
 
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
         try{
             db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
@@ -1420,6 +1425,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(HIDE_VAL, customer.getHide_val());
         values.put(IS_POST, 0);
         values.put(CUS_ID_Text,customer.getCustomerIdText());
+
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1450,6 +1456,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_L1, item.getItemL());
         values.put(ITEM_F_D, item.getPosPrice());
         values.put(KIND_ITEM,item.getKind_item());
+//        if(ITEM_HAS_SERIAL)
         values.put(ITEM_HAS_SERIAL,item.getItemHasSerial());
 
 
@@ -2214,7 +2221,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Customer customer = new Customer();
 
                 customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
-//                customer.setCustId(cursor.getString(16));
+                customer.setCustId(cursor.getString(1));
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
@@ -2228,9 +2235,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
-                // 15 column isPosted
-                customer.setCustId(cursor.getString(16));// for test talley
-
+//                customer.setCustId(cursor.getString(16));// for test talley
+                // 16 column isPosted
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -2280,6 +2286,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Customer customer = new Customer();
 
                 customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                customer.setCustId(cursor.getString(1));// test talley
 
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
@@ -2300,7 +2307,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
-                customer.setCustId(cursor.getString(16));// test talley
+//                customer.setCustId(cursor.getString(16));// test talley
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -2602,8 +2609,24 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
-                item.setItemHasSerial(cursor.getString(12));
-                Log.e("setItemHasSerial",""+item.getItemHasSerial());
+                try {
+
+
+                if(cursor.getString(12)==null)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                }
+                else {
+                    item.setItemHasSerial(cursor.getString(12));
+                }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+                }
+
+
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2657,7 +2680,22 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
 //                item.setp(cursor.getString(10));
-                item.setItemHasSerial(cursor.getString(12));
+                try {
+
+
+                    if(cursor.getString(12)==null)
+                    {
+                        item.setItemHasSerial("0");
+                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                    }
+                    else {
+                        item.setItemHasSerial(cursor.getString(12));
+                    }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+                }
                 // Adding transaction to list
                 items.add(item);
             } while (cursor.moveToNext());

@@ -157,6 +157,11 @@ public class bMITP extends Activity {
         } catch (IOException var4) {
             Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
         }
+        catch (Exception e)
+
+        {
+            Log.e("BluetoothConnectMenu", e.getMessage());
+        }
 
     }
 

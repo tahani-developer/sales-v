@@ -5,8 +5,10 @@
     android:layout_height="500dp"
     android:minWidth="500dp"
     android:minHeight="550dp"
+    android:id="@+id/mainLinearAddItem"
     android:background="@color/layer1"
     android:orientation="vertical"
+    android:layoutDirection="locale"
     android:padding="7dp">
 
     <TextView

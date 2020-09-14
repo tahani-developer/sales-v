@@ -174,7 +174,7 @@
         android:background="@color/layer2"
         android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="250dp"
         android:orientation="horizontal">
 
     </android.support.v7.widget.RecyclerView>

@@ -459,7 +459,15 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.saveLocation) {
             try {
-                saveCurrentLocation();
+                if(isNetworkAvailable())
+                {
+                    saveCurrentLocation();
+                }
+                else {
+                    Log.e("isNetworkAvailable","NOT");
+                    Toast.makeText(this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -629,6 +637,9 @@ public class MainActivity extends AppCompatActivity
             Log.e("mFusedLocationClient","");
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             requestLocationUpdates();
+        }
+        else {
+            Log.e("mFusedLocationClient",""+mFusedLocationClient);
         }
 
     }
@@ -880,6 +891,7 @@ public class MainActivity extends AppCompatActivity
                             }catch (Exception e)
                             {
                                 Toast.makeText(MainActivity.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+                                Log.e("ExceptionMain",""+e.getMessage());
                             }
 
 
@@ -920,11 +932,12 @@ public class MainActivity extends AppCompatActivity
             Log.e("serialModelList",""+serialModelList.size());
 
             try {
+                verifyStoragePermissions(MainActivity.this);
                 copyFile();
             }
             catch (Exception e)
-            {
-                verifyStoragePermissions(MainActivity.this);
+            {verifyStoragePermissions(MainActivity.this);
+
 
                 Toast.makeText(this, ""+getResources().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
             }

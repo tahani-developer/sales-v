@@ -87,11 +87,11 @@ public class ExportJason extends AppCompatActivity {
 
 
         }
-        try {
-            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+////            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         //*************************************************************
         customerLocationList = mHandler.getCustomerLocation();

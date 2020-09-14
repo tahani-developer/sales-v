@@ -45,6 +45,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -64,6 +65,7 @@ import java.util.List;
 
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
+import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -128,6 +130,7 @@ public class AddItemsFragment2 extends DialogFragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +152,16 @@ public class AddItemsFragment2 extends DialogFragment {
         int size_firstlist=0;
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
+
+        LinearLayout add_item = view.findViewById(R.id.add_item);
+        if (languagelocalApp.equals("ar")) {
+            add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+            if (languagelocalApp.equals("en")) {
+                add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+
+        }
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
         fillListItemJson();
@@ -568,7 +581,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //    }
 
-    private void fillListItemJson() {
+    private void fillListItemJson() {// test
         String s = "";
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
@@ -577,7 +590,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
-            Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
+           // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
         else {
@@ -585,7 +598,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
 
-            Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
 
             size_firstlist = jsonItemsList2.size();
             if (size_firstlist != 0) {
@@ -630,7 +642,7 @@ public class AddItemsFragment2 extends DialogFragment {
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
-                           String category, String posPrice, CheckBox useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList) {
+                           String category, String posPrice, CheckBox useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial) {
         boolean itemInlocalList=false;
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
@@ -683,6 +695,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //                }
 
                 item.setQty(Float.parseFloat(qty));
+                item.setItemHasSerial(hasSerial+"");
 
                 item.setPrice(Float.parseFloat(price.trim()));
                 if (bonus == "")
@@ -780,7 +793,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 messageTextView.setTextSize(15);
                 toast.show();
                 String storeNo=Login.salesMan;
-            if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+            if(item.getItemHasSerial().equals("1"))
             {
                 Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
                 for(int i=0;i<itemSerialList.size();i++)

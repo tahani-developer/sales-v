@@ -1770,6 +1770,7 @@ public class SalesInvoice extends Fragment {
             }
         }
         available_balance = max_cridit - cash_cridit - unposted_sales_credit + unposted_payment;
+        Log.e("available_balance",""+available_balance);
         if (available_balance >= voucher.getNetSales())
             return true;
         else

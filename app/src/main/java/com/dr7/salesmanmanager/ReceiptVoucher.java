@@ -81,6 +81,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
+import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
 import static java.util.Calendar.JANUARY;
 
 /**
@@ -98,7 +99,7 @@ public class ReceiptVoucher extends Fragment {
     public static List<Payment> payments;
     public static List<Payment> paymentsforPrint;
     Animation animZoomIn;
-    private LinearLayout chequeLayout,linear_checkNo;
+    private LinearLayout chequeLayout,linear_checkNo,mailLinearRecipt;
     private ScrollView scrollView;
     private Spinner paymentKindSpinner;
     private ImageView pic;
@@ -174,6 +175,7 @@ public class ReceiptVoucher extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -187,6 +189,15 @@ public class ReceiptVoucher extends Fragment {
 
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();
+        mailLinearRecipt = (LinearLayout) view.findViewById(R.id.mailLinearRecipt);
+        if (languagelocalApp.equals("ar")) {
+            mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+            if (languagelocalApp.equals("en")) {
+                mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+
+        }
         chequeLayout = (LinearLayout) view.findViewById(R.id.cheques_totals);
         linear_checkNo= (LinearLayout) view.findViewById(R.id.linear_checkNo);
         paymentKindSpinner = (Spinner) view.findViewById(R.id.paymentTypeSpinner);
