@@ -63,9 +63,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
-import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
+
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -825,6 +826,20 @@ public class AddItemsFragment2 extends DialogFragment {
             toast.show();
             return false;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("onDestroy","================");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
+//        mDbHandler.deletSerialItems_byVoucherNo(vouch);
+        Log.e("onStop","================"+voucherNumberTextView.getText().toString());
     }
 
     public void readB(){

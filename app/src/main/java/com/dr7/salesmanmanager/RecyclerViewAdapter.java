@@ -57,8 +57,11 @@ import java.util.Locale;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
+import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
+
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
 
@@ -80,8 +83,11 @@ private AddItemsFragment2 context;
     public   static  int flag=0,counterSerial=0;
      RecyclerView serial_No_recyclerView;
    public static ArrayList<serialModel> serialListitems= new ArrayList<>();
+    public static ArrayList<serialModel> listSerialAllItems= new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty;
+    public String exist="";
+    public  static  String curentSerial="";
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -153,6 +159,7 @@ private AddItemsFragment2 context;
             public void onClick(final View view) {
                 itemInlocalList=false;
                 serialListitems=new ArrayList<>();
+                listSerialAllItems= new ArrayList<>();
                 counterSerial=0;
                 for (int i = 0; i < localItemNumber.size(); i++) {
                     if (localItemNumber.get(i).equals(items.get(holder.getAdapterPosition()).getItemNo())) {
@@ -165,19 +172,11 @@ private AddItemsFragment2 context;
                     final Dialog dialog = new Dialog(view.getContext());
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(true);
-                    LinearLayout mainLinear=dialog.findViewById(R.id.mainLinearAddItem);
-                    if(languagelocalApp.equals("ar"))
-                    {
-                        mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                    }
-                    else{
-                        if(languagelocalApp.equals("en"))
-                        {
-                            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-                        }
 
-                    }
+
+
                     try{
+
                         if((items.get(holder.getAdapterPosition()).getItemHasSerial().equals("1")))
                         {current_itemHasSerial=1;
                             dialog.setContentView(R.layout.add_item_serial_dialog);
@@ -198,8 +197,8 @@ private AddItemsFragment2 context;
 
                                 @Override
                                 public void afterTextChanged(Editable s) {
-
-                                    flag = 1;
+//
+//                                    flag = 1;
                                     isFoundSerial=false;
 
                                     for(int h=0;h<serialListitems.size();h++)
@@ -210,24 +209,21 @@ private AddItemsFragment2 context;
                                             isFoundSerial=true;
                                         }
                                     }
-                                    if(!isFoundSerial)
+                                    Log.e("isFoundSerial", "" + isFoundSerial + s.toString());
+                                    if(isFoundSerial==false)
                                     {
+                                        List<serialModel> listitems_adapter = new ArrayList<>();
+                                        int id = ((Serial_Adapter)serial_No_recyclerView.getAdapter()).selectedBarcode;
+                                        listitems_adapter = ((Serial_Adapter) serial_No_recyclerView.getAdapter()).list;
 
-                                        counterSerial++;
-                                        unitQty.setText(counterSerial+"");
+                                        Log.e("curentSerial", "" + id + s.toString());
                                         final LinearLayoutManager layoutManager;
                                         layoutManager = new LinearLayoutManager(view.getContext());
                                         layoutManager.setOrientation(VERTICAL);
-//                            serial_No_recyclerView = (RecyclerView)dialog.findViewById(R.id.recycler_check);
-
-                                        serial= new serialModel();
-                                        serial.setCounterSerial(counterSerial);
-                                        serial.setSerialCode(s.toString()+"");
-                                        serialListitems.add(serial);
-
                                         serial_No_recyclerView.setLayoutManager(layoutManager);
+                                        listitems_adapter.get(id).setSerialCode(s.toString());
+                                        serial_No_recyclerView.setAdapter(new Serial_Adapter(listitems_adapter, view.getContext(), context));
 
-                                        serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext()));
                                     }
                                     else {
                                         new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
@@ -235,6 +231,24 @@ private AddItemsFragment2 context;
                                                 .setContentText(view.getContext().getString(R.string.itemadedbefor))
                                                 .show();
                                     }
+//                                    exist=  MHandler.isSerialCodeExist(s.toString());
+//                                    Log.e("exist",""+exist);
+
+//                                    if(!isFoundSerial && (exist.equals("not")))
+//                                    {
+//                                        listitems_adapter.get(id).setSerialCode(s.toString());
+//
+//
+//
+//
+//                                    }
+//                                    else {
+//                                        listitems_adapter.get(id).setSerialCode("");
+//                                        new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+//                                                .setTitleText(view.getContext().getString(R.string.warning_message))
+//                                                .setContentText(view.getContext().getString(R.string.itemadedbefor))
+//                                                .show();
+//                                    }
 
                                 }
                             });
@@ -248,8 +262,18 @@ private AddItemsFragment2 context;
 
                     }
 
+                    LinearLayout mainLinear=dialog.findViewById(R.id.mainLinearAddItem);
+                    if(languagelocalApp.equals("ar"))
+                    {
+                        mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                    }
+                    else{
+                        if(languagelocalApp.equals("en"))
+                        {
+                            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                        }
 
-
+                    }
 //
                     final TextView itemNumber = dialog.findViewById(R.id.item_number);
 //                  final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
@@ -271,18 +295,28 @@ private AddItemsFragment2 context;
                     final EditText item_remark = dialog.findViewById(R.id.item_note);
                     final ImageView serialScan = dialog.findViewById(R.id.serialScan);
 
-
-//                    Serial_No = dialog.findViewById(R.id.Serial_No);
-//                    Serial_No.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            Serial_No.selectAll();
-//                        }
-//                    });
                     serialScan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.readB();
+//                            context.readB();
+
+                            flag = 1;
+                                counterSerial++;
+                                unitQty.setText(counterSerial+"");
+                                final LinearLayoutManager layoutManager;
+                                layoutManager = new LinearLayoutManager(view.getContext());
+                                layoutManager.setOrientation(VERTICAL);
+
+                                serial= new serialModel();
+                                serial.setCounterSerial(counterSerial);
+                                serial.setSerialCode("");
+                                serialListitems.add(serial);
+                                listSerialAllItems.add(serial);
+
+                                serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(),context));
+//
 
                         }
                     });
@@ -343,179 +377,198 @@ private AddItemsFragment2 context;
                         @SuppressLint("ResourceAsColor")
                         @Override
                         public void onClick(View v) {
-                            String qtyText="";
-
-                            qtyText=unitQty.getText().toString();
-                            Log.e("serial",""+serial);
-
-                            if(!TextUtils.isEmpty(qtyText)||mHandler.getAllSettings().get(0).getWork_serialNo()==0)
+                            String qtyText = "";
+                            int countInvalidSerial=0;
+                            if(serialListitems.size()!=0)
                             {
-                                if (!price.getText().toString().equals("") && !price.getText().toString().equals("0") &&
-                                        !(unitQty.getText().toString()).equals("")) {
-                                    if (Double.parseDouble(unitQty.getText().toString()) != 0) {
-
-                                        Boolean check = check_Discount(unitWeight, unitQty, price, bonus, discount, radioGroup);
-                                        if (!check)
-                                            Toast.makeText(view.getContext(), "Invalid Disco" +
-                                                    "unt Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
-                                        else {
-
-                                            String unitValue;
-                                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
-                                                unitValue = unit.getSelectedItem().toString();
-
-                                                if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
-                                                        || mHandler.getAllSettings().get(0).getAllowMinus() == 1
-                                                        || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
-
-                                                    if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                            Double.parseDouble(price.getText().toString()) >= items.get(holder.getAdapterPosition()).getMinSalePrice())) {
+                                 countInvalidSerial =checkSerialDB();
+                            }
 
 
-                                                        AddItemsFragment2 obj = new AddItemsFragment2();
-                                                        List<Offers> offer = checkOffers(itemNumber.getText().toString());
-                                                        Offers appliedOffer = null;
+                            qtyText = unitQty.getText().toString();
+                            Log.e("serial", "" + serial+"errorData\t"+errorData);
 
-                                                        if (offer.size() != 0) {
+                            if (current_itemHasSerial == 0 ||( current_itemHasSerial == 1 && countInvalidSerial==0))
+                            {
 
-                                                            if (offer.get(0).getPromotionType() == 0) {// bonus promotion
+                                if (!TextUtils.isEmpty(qtyText) || mHandler.getAllSettings().get(0).getWork_serialNo() == 0) {
+                                    if (!price.getText().toString().equals("") && !price.getText().toString().equals("0") &&
+                                            !(unitQty.getText().toString()).equals("")) {
+                                        if (Double.parseDouble(unitQty.getText().toString()) != 0) {
 
-                                                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
-                                                                        bonus.getText().toString(),
-                                                                        discount.getText().toString(),
-                                                                        radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight,
-                                                                        view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
+                                            Boolean check = check_Discount(unitWeight, unitQty, price, bonus, discount, radioGroup);
+                                            if (!check)
+                                                Toast.makeText(view.getContext(), "Invalid Disco" +
+                                                        "unt Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
+                                            else {
 
-                                                                appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
-                                                                if (appliedOffer != null) {
-                                                                    double bonus_calc = ((int) (Double.parseDouble(unitQty.getText().toString()) / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
-                                                                    Log.e("bonus_calc=", "" + bonus_calc);
-                                                                    added = obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
-                                                                            "0", "1", "" + bonus_calc, "0",
-                                                                            "0", "0", radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-                                                                    Log.e("bonus_calc", "" + bonus_calc);
+                                                String unitValue;
+                                                if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
+                                                    unitValue = unit.getSelectedItem().toString();
 
-                                                                }
-                                                            } else {
-                                                                //(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString()))   //******calculate discount item before 11/9
-                                                                double disount_totalnew = 0, unitQty_double = 0;
+                                                    if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
+                                                            || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                            || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
 
-                                                                appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 1);
-                                                                if (appliedOffer != null) {
-                                                                    unitQty_double = Double.parseDouble(unitQty.getText().toString());
-                                                                    disount_totalnew = ((int) (unitQty_double / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+                                                        if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                Double.parseDouble(price.getText().toString()) >= items.get(holder.getAdapterPosition()).getMinSalePrice())) {
 
-                                                                    String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+
+                                                            AddItemsFragment2 obj = new AddItemsFragment2();
+                                                            List<Offers> offer = checkOffers(itemNumber.getText().toString());
+                                                            Offers appliedOffer = null;
+//                                                            Log.e("offer",""+offer.size()+"\t"+offer.get(0).getPromotionType());
+
+                                                            if (offer.size() != 0) {
+
+                                                                if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
                                                                     added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                             holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
-                                                                            bonus.getText().toString(), "" + disount_totalnew, radioGroup
-                                                                            , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
+                                                                            bonus.getText().toString(),
+                                                                            discount.getText().toString(),
+                                                                            radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight,
+                                                                            view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+
+                                                                    appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
+                                                                    if (appliedOffer != null) {
+                                                                        double bonus_calc = ((int) (Double.parseDouble(unitQty.getText().toString()) / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+                                                                        Log.e("bonus_calc=", "" + bonus_calc);
+                                                                        added = obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
+                                                                                "0", "1", "" + bonus_calc, "0",
+                                                                                "0", "0", radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+                                                                        Log.e("bonus_calc", "" + bonus_calc);
+
+                                                                    }
+                                                                } else {
+                                                                    //(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString()))   //******calculate discount item before 11/9
+                                                                    double disount_totalnew = 0, unitQty_double = 0;
+
+                                                                    appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 1);
+                                                                    if (appliedOffer != null) {
+                                                                        unitQty_double = Double.parseDouble(unitQty.getText().toString());
+                                                                        disount_totalnew = ((int) (unitQty_double / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+
+                                                                        String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+
+                                                                        added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
+                                                                                bonus.getText().toString(), "" + disount_totalnew, radioGroup
+                                                                                , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+                                                                    }
                                                                 }
+                                                            } else {
+                                                                double totalQty = 0;
+                                                                totalQty = Double.parseDouble(unitQty.getText().toString()) + Double.parseDouble(bonus.getText().toString());
+                                                                Log.e("totalQty+recyclerview", "" + totalQty);
+                                                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
+                                                                        bonus.getText().toString(), discount.getText().toString(), radioGroup,
+                                                                        items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
                                                             }
-                                                        } else {
-                                                            double totalQty = 0;
-                                                            totalQty = Double.parseDouble(unitQty.getText().toString()) + Double.parseDouble(bonus.getText().toString());
-                                                            Log.e("totalQty+recyclerview", "" + totalQty);
-                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                    holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
-                                                                    bonus.getText().toString(), discount.getText().toString(), radioGroup,
-                                                                    items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-                                                        }
-                                                        if (added) {
-                                                            if (offer.size() != 0)
-                                                                openOfferDialog(appliedOffer);
+                                                            if (added) {
+                                                                if (offer.size() != 0)
+                                                                    openOfferDialog(appliedOffer);
 
-                                                            holder.linearLayout.setBackgroundColor(R.color.done_button);
-                                                            isClicked.set(holder.getAdapterPosition(), 1);
-                                                            localItemNumber.add(items.get(holder.getAdapterPosition()).getItemNo());
-                                                            itemInlocalList=false;
-                                                        }
+                                                                holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                                                isClicked.set(holder.getAdapterPosition(), 1);
+                                                                localItemNumber.add(items.get(holder.getAdapterPosition()).getItemNo());
+                                                                itemInlocalList = false;
+                                                            }
+                                                        } else
+                                                            Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(holder.getAdapterPosition()).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                        Log.e("bonus not added ", "" + items.get(holder.getAdapterPosition()).getMinSalePrice());
                                                     } else
-                                                        Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(holder.getAdapterPosition()).getMinSalePrice(), Toast.LENGTH_LONG).show();
-                                                    Log.e("bonus not added ", "" + items.get(holder.getAdapterPosition()).getMinSalePrice());
-                                                } else
-                                                    Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                if (unitWeight.getText().toString().equals(""))
-                                                    Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
-                                                else {
-                                                    unitValue = unitWeight.getText().toString();
+                                                        Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+                                                } else {
+                                                    if (unitWeight.getText().toString().equals(""))
+                                                        Toast.makeText(view.getContext(), "please enter unit weight", Toast.LENGTH_LONG).show();
+                                                    else {
+                                                        unitValue = unitWeight.getText().toString();
 //                                        String qtyValue = "" + (Double.parseDouble(unitWeight.getText().toString()) * Double.parseDouble(unitQty.getText().toString()));
-                                                    String qty = (useWeight.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
+                                                        String qty = (useWeight.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
 
-                                                    Log.e("here**", "" + holder.getAdapterPosition());
-                                                    if (holder.getAdapterPosition() > -1) {
-                                                        if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(qty)
-                                                                || mHandler.getAllSettings().get(0).getAllowMinus() == 1
-                                                                || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
-                                                            if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                                    Double.parseDouble(price.getText().toString()) >= items.get(holder.getAdapterPosition()).getMinSalePrice())) {
+                                                        Log.e("here**", "" + holder.getAdapterPosition());
+                                                        if (holder.getAdapterPosition() > -1) {
+                                                            if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(qty)
+                                                                    || mHandler.getAllSettings().get(0).getAllowMinus() == 1
+                                                                    || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
+                                                                if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
+                                                                        Double.parseDouble(price.getText().toString()) >= items.get(holder.getAdapterPosition()).getMinSalePrice())) {
 
-                                                                AddItemsFragment2 obj = new AddItemsFragment2();
-                                                                List<Offers> offer = checkOffers(itemNumber.getText().toString());
-                                                                Offers appliedOffer = null;
+                                                                    AddItemsFragment2 obj = new AddItemsFragment2();
+                                                                    List<Offers> offer = checkOffers(itemNumber.getText().toString());
+                                                                    Offers appliedOffer = null;
 
-                                                                if (offer.size() != 0) {
-                                                                    if (offer.get(0).getPromotionType() == 0) {
+                                                                    if (offer.size() != 0) {
+                                                                        if (offer.get(0).getPromotionType() == 0) {
 
+                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                    holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                                    bonus.getText().toString(), discount.getText().toString(),
+                                                                                    radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+
+                                                                            appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 0);
+                                                                            if (appliedOffer != null)
+                                                                                added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
+                                                                                        "0", "1", "" + appliedOffer.getBonusQty(), "0",
+                                                                                        "0", "0", radioGroup
+                                                                                        , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
+                                                                                        , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+
+                                                                        } else {
+                                                                            appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
+                                                                            if (appliedOffer != null) {
+                                                                                String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+                                                                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                                                                        holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
+                                                                                        bonus.getText().toString(), "" + (appliedOffer.getBonusQty() * Double.parseDouble(qty)), radioGroup,
+                                                                                        items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
+                                                                                        , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+                                                                            }
+                                                                        }
+                                                                    } else {
                                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                 holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                 bonus.getText().toString(), discount.getText().toString(),
-                                                                                radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-
-                                                                        appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 0);
-                                                                        if (appliedOffer != null)
-                                                                            added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
-                                                                                    "0", "1", "" + appliedOffer.getBonusQty(), "0",
-                                                                                    "0", "0", radioGroup
-                                                                                    , items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
-                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-
-                                                                    } else {
-                                                                        appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
-                                                                        if (appliedOffer != null) {
-                                                                            String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
-                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                                    holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
-                                                                                    bonus.getText().toString(), "" + (appliedOffer.getBonusQty() * Double.parseDouble(qty)), radioGroup,
-                                                                                    items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + ""
-                                                                                    , useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-                                                                        }
+                                                                                radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
                                                                     }
-                                                                } else {
-                                                                    added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                                                            holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
-                                                                            bonus.getText().toString(), discount.getText().toString(),
-                                                                            radioGroup, items.get(holder.getAdapterPosition()).getCategory(), items.get(holder.getAdapterPosition()).getPosPrice() + "", useWeight, view.getContext(),item_remark.getText().toString(),serialListitems,current_itemHasSerial);
-                                                                }
-                                                                if (added) {
-                                                                    if (offer.size() != 0)
-                                                                        openOfferDialog(appliedOffer);
-                                                                    holder.linearLayout.setBackgroundColor(R.color.done_button);
-                                                                    isClicked.set(holder.getAdapterPosition(), 1);
-                                                                }
+                                                                    if (added) {
+                                                                        if (offer.size() != 0)
+                                                                            openOfferDialog(appliedOffer);
+                                                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                                                        isClicked.set(holder.getAdapterPosition(), 1);
+                                                                    }
+                                                                } else
+                                                                    Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(holder.getAdapterPosition()).getMinSalePrice(), Toast.LENGTH_LONG).show();
                                                             } else
-                                                                Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(holder.getAdapterPosition()).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                                Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
                                                         } else
-                                                            Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
-                                                    } else
-                                                        Toast.makeText(view.getContext(), "Please enter the item again", Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(view.getContext(), "Please enter the item again", Toast.LENGTH_LONG).show();
+                                                    }
                                                 }
+
                                             }
 
+                                            dialog.dismiss();
+                                        } else {
+                                            Toast.makeText(view.getContext(), "Invalid  Qty", Toast.LENGTH_LONG).show();
                                         }
 
-                                        dialog.dismiss();
-                                    } else {
-                                        Toast.makeText(view.getContext(), "Invalid  Qty", Toast.LENGTH_LONG).show();
-                                    }
+                                    } else
+                                        Toast.makeText(view.getContext(), "Invalid price or Qty", Toast.LENGTH_LONG).show();
+                                } else {
+                                    unitQty.setError("*Required");
+                                }
+                        }else{// item  serial No is duplcate +++++ dont save
 
-                                } else
-                                    Toast.makeText(view.getContext(), "Invalid price or Qty", Toast.LENGTH_LONG).show();
-                            }else
-                                {unitQty.setError("*Required");}
+
+                                new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                        .setTitleText(view.getContext().getString(R.string.warning_message))
+                                        .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                        .show();
+
+                            }
 
 
 
@@ -529,6 +582,21 @@ private AddItemsFragment2 context;
         }//on click
 
         );
+
+    }
+
+    private int checkSerialDB() {
+        int counter=0;
+        for(int i=0;i<serialListitems.size();i++)
+        {
+            if(!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not"))
+            {
+                counter++;
+
+            }
+        }
+        Log.e("counter",""+counter);
+        return  counter;
 
     }
 
@@ -611,30 +679,43 @@ private AddItemsFragment2 context;
         return d;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     void openOfferDialog(Offers offers) {
         final Dialog dialog = new Dialog(cont);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.offer_dialog);
+        LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
+        if (languagelocalApp.equals("ar")) {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        } else {
+            if (languagelocalApp.equals("en")) {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            }
+        }
 
         final TextView offerType = (TextView) dialog.findViewById(R.id.offerType);
         final TextView bonusItem = (TextView) dialog.findViewById(R.id.bonusItem);
+        final TextView bonusItemName = (TextView) dialog.findViewById(R.id.bonusItemName);
+
         final TextView discount_value = (TextView) dialog.findViewById(R.id.discount_value);
         final TextView from = (TextView) dialog.findViewById(R.id.from);
         final TextView to = (TextView) dialog.findViewById(R.id.to);
         Button ok = (Button) dialog.findViewById(R.id.ok);
 
-        String offType = offers.getPromotionType() == 0 ? context.getResources().getString(R.string.app_bonus) : context.getResources().getString(R.string.app_disc_);
+//        String offType = offers.getPromotionType() == 0 ? context.getResources().getString(R.string.app_bonus) : context.getResources().getString(R.string.app_disc_);
+        String offType =context.getResources().getString(R.string.app_bonus);
         offerType.setText(offerType.getText().toString() + "  :       " + offType);
 
-        String bonusItm = offers.getBonusItemNo().equals("-1") ? "none" : offers.getBonusQty() + " " + context.getResources().getString(R.string.of) + " " + offers.getBonusItemNo();
+        String itemBonusName= MHandler.getItemNameBonus(offers.getBonusItemNo());
+        String bonusItm = offers.getBonusItemNo().equals("-1") ? "none" : offers.getBonusQty()+""  ;
         bonusItem.setText(bonusItem.getText().toString() + " :     " + bonusItm);
-
+        bonusItemName.setText(bonusItemName.getText().toString()+" :  " +itemBonusName);
         String disc = offers.getPromotionType() == 0 ? "0" : "" + offers.getBonusQty();
         discount_value.setText(discount_value.getText().toString() + " : " + disc);
 
-        from.setText(from.getText().toString() + " : " + offers.getFromDate());
-        to.setText(to.getText().toString() + " : " + offers.getToDate());
+        from.setText(from.getText().toString() + " :  " + offers.getFromDate());
+        to.setText(to.getText().toString() + " :  " + offers.getToDate());
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override

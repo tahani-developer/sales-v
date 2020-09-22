@@ -52,6 +52,7 @@ public class Login extends AppCompatActivity {
     boolean exist = false;
     int index = 0;
     List<SalesMan> salesMenList;
+    public static String languagelocalApp="";
 
 
     @Override
@@ -63,6 +64,12 @@ public class Login extends AppCompatActivity {
         model_key = new activeKey();
         loginText = (TextView) findViewById(R.id.logInTextView);
 
+        if(LocaleAppUtils.getLocale()==null)
+        {
+            LocaleAppUtils.setLocale(new Locale("ar"));
+            LocaleAppUtils.setConfigChange(Login.this);
+            Log.e("LocaleAppUtilsEmpty",""+LocaleAppUtils.getLocale());
+        }
 
         try {
             if (mDHandler.getAllSettings().size() != 0) {
@@ -78,6 +85,8 @@ public class Login extends AppCompatActivity {
             }
 
         } catch (Exception e) {
+            LocaleAppUtils.setLocale(new Locale("ar"));
+            LocaleAppUtils.setConfigChange(Login.this);
 
         }
         //   model_key.setKey(123);

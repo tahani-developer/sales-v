@@ -102,7 +102,7 @@
     <string name="weight">الوزن</string>
     <string name="use_weight">استخدام العدد</string>
 
-    <string name="offer_dialog">صندوق العروض</string>
+    <string name="offer_dialog">العروض</string>
     <string name="promo_type">نوع العرض </string>
     <string name="bonus_item">المادة المجانية </string>
     <string name="discount_value">قيمة الخصم </string>
@@ -406,5 +406,8 @@
     <string name="backupData">نسخ البيانات</string>
     <string name="backup_failed">تعذر نسخ البيانات</string>
     <string name="Printing">جاري الطباعة</string>
+    <string name="duplicate">رقم مكرر</string>
+    <string name="bonus_item_name">اسم المادةالمجانية</string>
+    <string name="bonus_item_qty"> كمية المادةالمجانية</string>
 
 </resources>

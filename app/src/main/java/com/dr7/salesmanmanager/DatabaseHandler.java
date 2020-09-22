@@ -1357,7 +1357,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(DATE_VOUCHER, serialModelItem.getDateVoucher());
             values.put(KIND_VOUCHER, serialModelItem.getKindVoucher());
             values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
-            values.put(IS_POSTED_SERIAL, serialModelItem.getIsPosted());
+            values.put(IS_POSTED_SERIAL, "0");
             db.insert(SERIAL_ITEMS_TABLE, null, values);
             Log.e("add_Serial",""+serialModelItem.getSerialCode());
             db.close();
@@ -3399,6 +3399,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offers.add(offer);
             } while (cursor.moveToNext());
         }
+        Log.e("offer",""+offers.size()+"\t"+offers.get(0).getPromotionType());
+        Log.e("offer",""+offers.size()+"\t"+offers.get(3).getItemQty());
 
         return offers;
     }
@@ -4142,5 +4144,36 @@ DatabaseHandler extends SQLiteOpenHelper {
                 return true;
         }
         return true;
+    }
+//    select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
+    public String isSerialCodeExist(String serialCode) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+    String count = "not";
+    String selectQuery = "select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+    db = this.getWritableDatabase();
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+
+        count = cursor.getString(0);
+    }
+        Log.e("isCustomerMaster_posted", "isCustomerMaster_posted+\t" + count + "\t");
+    return count;
+}
+
+    public String getItemNameBonus(String bonusItemNo) {
+        String name = "";
+//        select  Name from  Items_Master where ItemNo= 6934177700484
+        String selectQuery = " select  Name from  Items_Master where ItemNo='"+bonusItemNo+"' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            name = cursor.getString(0);
+
+        }
+        Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
+
+        return name;
     }
 }

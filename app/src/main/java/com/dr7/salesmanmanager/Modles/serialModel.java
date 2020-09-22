@@ -101,6 +101,8 @@ public class serialModel {
             obj.put("ITEMNO", itemNo);
             obj.put("TRNSDATE", dateVoucher);
             obj.put("TRANSKIND", kindVoucher);
+            obj.put("ISPOSTED", "0");
+
 
         } catch (JSONException e) {
             Log.e("TagserialModel" , "JSONException"+e.getMessage());

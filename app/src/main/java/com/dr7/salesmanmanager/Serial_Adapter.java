@@ -3,6 +3,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.media.effect.EffectUpdateListener;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Cheque;
 import com.dr7.salesmanmanager.Modles.serialModel;
@@ -35,16 +37,24 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
 
 public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHolder>{
         Context context;
+        private AddItemsFragment2 contextAddItem;
         List<serialModel> list;
+        DatabaseHandler databaseHandler;
         Calendar myCalendar;
 public static List<Cheque> chequeListall;
+public  static boolean errorData=false,isFoundSerial=false;
+public int selectedBarcode=0;
+public  static String barcodeValue="";
 
-public Serial_Adapter(List<serialModel> chequeList,Context context){
+public Serial_Adapter(List<serialModel> chequeList,Context context,AddItemsFragment2 contextadd){
     Log.e("Serial_Adapter",""+chequeList.size());
         this.context=context;
         this.list=chequeList;
+        databaseHandler=new DatabaseHandler(context);
+        this.contextAddItem=contextadd;
         // chequeListall = new ArrayList<>();
         }
+
 
 @NonNull
 @Override
@@ -55,11 +65,24 @@ public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup,int i){
 
 @Override
 public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
+        errorData=false;
+         Log.e("position", "onBindViewHolder" + i+"errorData\t"+errorData);
         viewHolder.editTextSerialCode.setTag(i);
         viewHolder.textView_counterNo.setTag(i);
 
+
+
         viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
         viewHolder.textView_counterNo.setText(list.get(i).getCounterSerial()+"");
+        viewHolder.scanBarcode.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            selectedBarcode=i;
+            Log.e("selectedBarcode",""+selectedBarcode);
+            contextAddItem.readB();
+
+        }
+    });
         viewHolder.deletItem.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -132,17 +155,17 @@ private void updateLabel(EditText editText){
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     TextView textView_counterNo;
-    EditText editTextSerialCode;
+
+    public   EditText editTextSerialCode;
     Spinner spinner_bank;
-    ImageView deletItem;
+    ImageView deletItem,scanBarcode;
 
     public ViewHolder(View itemView) {
         super(itemView);
         textView_counterNo = itemView.findViewById(R.id.counter_ser);
         editTextSerialCode = itemView.findViewById(R.id.Serial_No);
+        scanBarcode = itemView.findViewById(R.id.scanBarcode);
         deletItem = itemView.findViewById(R.id.deletItem);
-//        spinner_bank = itemView.findViewById(R.id.spinner_bank);
-//
         editTextSerialCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -157,7 +180,67 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void afterTextChanged(Editable s) {
                 int position = (int) editTextSerialCode.getTag();
-                updateListCheque(position, s.toString());
+                boolean isUpdate=true;
+                Log.e("afterTextChanged", "afterTextChanged" +list.get(position).getSerialCode()+"\t"+s.toString());
+                if(s.toString().length()!=0)
+                {
+                    Log.e("afterTextChanged", "afterTextChanged" +s+"\t"+s.toString());
+                        if(!list.get(position).getSerialCode().equals(s.toString()))
+                        {
+                            isUpdate= updateListCheque(position, s.toString());
+                        }
+
+                        if(!isUpdate)
+                        {
+                            editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+                            errorData=true;
+
+                        }else {
+                            editTextSerialCode.setError(null);
+                        }
+
+//                    Log.e("positionnOTeMPTY", "afterTextChanged" +"errorData\t"+errorData);
+//
+//                    isFoundSerial=false;
+//
+//                        for(int h=0;h<list.size();h++)
+//                        {
+//
+//                            if(list.get(h).getSerialCode().equals(s.toString()))
+//                            {
+//                                isFoundSerial=true;
+//                            }
+//                        }
+//
+//
+//                    Log.e("position", "afterTextChanged" + position+"errorData\t"+errorData);
+//                    if((databaseHandler.isSerialCodeExist(s.toString()).equals("not"))&&(isFoundSerial==false))
+//                    {
+//                        errorData=false;
+//                        editTextSerialCode.setError(null);
+//                        updateListCheque(position, s.toString());
+//                        Log.e("positionYES", "afterTextChanged" + position+" s.toString()\t"+ s.toString());
+//                    }
+//                    else {
+//                        Log.e("positionNo", "afterTextChanged" + position+" s.toString()\t"+ s.toString());
+//                        updateListCheque(position, "");
+//                        errorData=true;
+//                        editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+//                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+//                                .setTitleText(context.getString(R.string.warning_message))
+//                                .setContentText(context.getString(R.string.itemadedbefor))
+//                                .show();
+//
+//
+//
+//                    }
+                }
+                else {
+//                    updateListCheque(position, "");
+//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+                }
+
+
 
             }
         });
@@ -197,6 +280,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //        });
 
     }
+    void setEditTextSerialCode(String s)
+    {
+
+        editTextSerialCode.setText(s.toString());
+    }
 
 }
 
@@ -225,8 +313,52 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    private void updateListCheque(int position, String date) {
-        list.get(position).setSerialCode(date);
+    private boolean updateListCheque(int position, String data) {
+    Log.e("updateListCheque",""+position+data);
+        if(data.toString().length()!=0)
+        {
+
+                    Log.e("positionnOTeMPTY", "afterTextChanged" +"errorData\t"+errorData);
+
+                    isFoundSerial=false;
+
+                        for(int h=0;h<list.size();h++)
+                        {
+
+                            if(list.get(h).getSerialCode().equals(data))
+                            {
+                                isFoundSerial=true;
+                            }
+                        }
+
+
+            Log.e("position", "afterTextChanged" + position + "errorData\t" + errorData);
+            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
+                errorData = false;
+                list.get(position).setSerialCode(data);
+
+                Log.e("positionYES", "afterTextChanged" + position + " s.toString()\t" + data);
+                return true;
+            } else {
+                Log.e("positionNo", "afterTextChanged" + position + " s.toString()\t" + data);
+                errorData = true;
+                list.get(position).setSerialCode(data);
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(context.getString(R.string.warning_message))
+                        .setContentText(context.getString(R.string.itemadedbefor))
+                        .show();
+
+                return false;
+
+
+            }
+        }
+        else {
+            return  true;
+//                    updateListCheque(position, "");
+//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+        }
+
     }
     private void updatelistOrder(int counterUpdate) {
 
@@ -238,5 +370,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 
+    }
+
+    public int getSelectedBarcode() {
+        return selectedBarcode;
     }
 }

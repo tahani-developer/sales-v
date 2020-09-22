@@ -126,7 +126,8 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
-import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
@@ -1790,7 +1791,7 @@ public class SalesInvoice extends Fragment {
                     builder.setTitle(getResources().getString(R.string.app_select_option));
                     builder.setCancelable(true);
                     builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                    if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1){
+                    if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1")){
 
                         builder.setItems(R.array.list_items_dialog_SERIAL, new DialogInterface.OnClickListener() {
                             @Override
@@ -1800,7 +1801,7 @@ public class SalesInvoice extends Fragment {
                                         String st = "";
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
-                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
                                         {
 
                                             try {
@@ -1845,7 +1846,7 @@ public class SalesInvoice extends Fragment {
                                         String st = "";
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
-                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
                                         {
 
                                             try {

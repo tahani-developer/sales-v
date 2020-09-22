@@ -1,9 +1,12 @@
 package com.dr7.salesmanmanager;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,6 +26,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,7 +50,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ExportJason extends AppCompatActivity {
 
-    private Context context;
+    public Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
             jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial;
@@ -87,11 +91,11 @@ public class ExportJason extends AppCompatActivity {
 
 
         }
-//        try {
-////            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         //*************************************************************
         customerLocationList = mHandler.getCustomerLocation();
@@ -103,10 +107,10 @@ public class ExportJason extends AppCompatActivity {
 
             customerLocationList.get(i).getLONG();
 
-            if (customerLocationList.get(i).getIsPost() == 0) {
-                customerLocationList.get(i).setIsPost(1);
-
-            }
+//            if (customerLocationList.get(i).getIsPost() == 0) {
+//                customerLocationList.get(i).setIsPost(1);
+//
+//            }
             jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
 
 
@@ -143,47 +147,42 @@ public class ExportJason extends AppCompatActivity {
         }
         //********************************************
 
-        vouchers = mHandler.getAllVouchers();
+        vouchers = mHandler.getAllVouchers();// from voucher master
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
-            if (vouchers.get(i).getIsPosted() == 0)
             {
-                vouchers.get(i).setIsPosted(1);
-//                vouchers.get(i).setRemark("\\%");
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
 
         items = mHandler.getAllItems();
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
-            if (items.get(i).getIsPosted() == 0) {
-                items.get(i).setIsPosted(1);
-               // Log.e("getDescription",""+items.get(i).getDescription());
+           {
                 jsonArrayItems.put(items.get(i).getJSONObject());
-                //Log.e("getJSONObject",""+items.get(i).getJSONObject());
+
             }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
         for (int i = 0; i < payments.size(); i++)
-            if (payments.get(i).getIsPosted() == 0) {
-                payments.get(i).setIsPosted(1);
+     {
+//                payments.get(i).setIsPosted(1);
                 jsonArrayPayments.put(payments.get(i).getJSONObject());
             }
 
         paymentsPaper = mHandler.getAllPaymentsPaper();
         jsonArrayPaymentsPaper = new JSONArray();
         for (int i = 0; i < paymentsPaper.size(); i++)
-            if (paymentsPaper.get(i).getIsPosted() == 0) {
-                paymentsPaper.get(i).setIsPosted(1);
+        {
+//                paymentsPaper.get(i).setIsPosted(1);
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
 
         addedCustomer = mHandler.getAllAddedCustomer();
         jsonArrayAddedCustomer = new JSONArray();
         for (int i = 0; i < addedCustomer.size(); i++)
-            if (addedCustomer.get(i).getIsPosted() == 0) {
-                addedCustomer.get(i).setIsPosted(1);
+        {
+//                addedCustomer.get(i).setIsPosted(1);
                 jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
             }
 
@@ -206,6 +205,7 @@ public class ExportJason extends AppCompatActivity {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
+
         }
 
         @Override
@@ -235,6 +235,7 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
+//                nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", ""));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
 
                 nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
@@ -265,7 +266,24 @@ public class ExportJason extends AppCompatActivity {
                 return JsonResponse;
 
 
-            }catch (Exception e)
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex)
+            {
+                ex.printStackTrace();
+                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
                 progressDialog.dismiss();

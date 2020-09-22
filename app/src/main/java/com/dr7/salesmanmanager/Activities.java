@@ -31,7 +31,10 @@ import com.google.zxing.integration.android.IntentResult;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 //import maes.tech.intentanim.CustomIntent;
@@ -62,6 +65,7 @@ public class Activities extends AppCompatActivity implements
     private boolean isFragmentBlank;
     boolean canClose;
     ProgressDialog dialog_progress;
+    DatabaseHandler databaseHandler;
 
 
     @Override 
@@ -145,6 +149,7 @@ public class Activities extends AppCompatActivity implements
         setSupportActionBar(toolbar);
         animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         activitySelected = -1;
+        databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
         transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
@@ -545,8 +550,21 @@ public class Activities extends AppCompatActivity implements
 //                barCodTextTemp.setText(Result.getContents() + "");
 //                openEditerCheck();
 
-                String ST = Result.getContents();
-                item_serial.setText(ST);
+                String serialBarcode = Result.getContents();
+                Log.e("MainActivity", "" + databaseHandler.isSerialCodeExist(serialBarcode+""));
+                if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not"))){
+                    item_serial.setText(serialBarcode);
+
+                }
+                else {
+                    new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(Activities.this.getString(R.string.warning_message))
+                            .setContentText(Activities.this.getString(R.string.itemadedbefor))
+                            .show();
+                }
+
+
+
 
 
             }

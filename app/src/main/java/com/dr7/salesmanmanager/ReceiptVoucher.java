@@ -81,7 +81,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
-import static com.dr7.salesmanmanager.MainActivity.languagelocalApp;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static java.util.Calendar.JANUARY;
 
 /**
@@ -146,6 +147,7 @@ public class ReceiptVoucher extends Fragment {
 
     public static List<Payment> paymentPrinter;
     static Payment pay1;
+    public  static  boolean isArabicBank=false;
     String checkValue="";
     int  amountValue=0;
     RecyclerView recycler_check;
@@ -1185,6 +1187,8 @@ public class ReceiptVoucher extends Fragment {
 //                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
             row = row.trim();
             row += "\n" + " " + payments.get(i).getBank();//test + =
+            isArabicBank=textContainsArabic(payments.get(0).getBank());
+            Log.e("isArabicBank",""+isArabicBank+""+payments.get(0).getBank());
 
             itemsString = "\n" + itemsString + "\n" + row;
 
@@ -1204,13 +1208,17 @@ public class ReceiptVoucher extends Fragment {
 //                                                             lk30.setChecked(true);
                 break;
             case 1:
+                convertLayoutToImage(getActivity());
+                Intent gg = new Intent(getActivity(), bMITP.class);
+                gg.putExtra("printKey", "2");
+                startActivity(gg);
 
-                try {
-                    findBT();
-                    openBT(1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    findBT();
+//                    openBT(1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 //                                                             lk31.setChecked(true);
                 break;
             case 2:
@@ -1230,13 +1238,16 @@ public class ReceiptVoucher extends Fragment {
 
                 break;
             case 3:
-
-                try {
-                    findBT();
-                    openBT(3);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                convertLayoutToImage(getActivity());
+                Intent ll = new Intent(getActivity(), bMITP.class);
+                ll.putExtra("printKey", "2");
+                startActivity(ll);
+//                try {
+//                    findBT();
+//                    openBT(3);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 //                                                             qs.setChecked(true);
                 break;
             case 4:
@@ -1998,6 +2009,7 @@ public class ReceiptVoucher extends Fragment {
     void sendData() throws IOException {
         try {
 
+//************************************ alban alsaa *************************
 
             Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
@@ -2028,26 +2040,52 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "       ";
                 } else {
-                    msg = "       " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "       " + "\n" +
-                            "       " + "\n" +
-                            itemsString + "\n" +
-                            "       " + "\n" +
-                            "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
-                            "       " + "\n" +
-                            "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
-                            "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                            "ملاحظة: " + payment.getRemark() + "\n" +
-                            payment.getCustName() + "\n" +
-                            "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
-                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
-                            " سند قبض " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
-                            companyInfo.getCompanyName() + "\n" +
-                            "       " + "\n" +
-                            "       ";
+                    Log.e("isArabicBank",""+isArabicBank);
+                    if(isArabicBank){
+                        msg = "       " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "       " + "\n" +
+                                "       " + "\n" +
+                                itemsString + "\n" +
+                                "       " + "\n" +
+                                "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
+                                "       " + "\n" +
+                                "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
+                                "المبلغ المقبوض: " + payment.getAmount() + "\n" +
+                                "ملاحظة: " + payment.getRemark() + "\n" +
+                                payment.getCustName() + "\n" +
+                                "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
+                                "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                                " سند قبض " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                                companyInfo.getCompanyName() + "\n" +
+                                "       " + "\n" +
+                                "       ";
+                    }
+                    else {
+                        msg = "       " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "       " + "\n" +
+                                "       " + "\n" +
+                                itemsString + "\n" +
+                                "       " + "\n" +
+                                "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
+                                "       " + "\n" +
+                                "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
+                                "المبلغ المقبوض: " + payment.getAmount() + "\n" +
+                                "ملاحظة: " + payment.getRemark() + "\n" +
+                                payment.getCustName() + "\n" +
+                                "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
+                                "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                                " سند قبض " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                                companyInfo.getCompanyName() + "\n" +
+                                "       " + "\n" +
+                                "       ";
+                    }
+
                 }
                 printCustom(msg + "\n", 1, 2);
 //**************************************************************************************************************************************************************
@@ -2178,6 +2216,14 @@ public class ReceiptVoucher extends Fragment {
             closeBT();
             e.printStackTrace();
         }
+    }
+    public static boolean textContainsArabic(String text) {
+        for (char charac : text.toCharArray()) {
+            if (Character.UnicodeBlock.of(charac) == Character.UnicodeBlock.ARABIC) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Bitmap StringToBitMap(String encodedString) {

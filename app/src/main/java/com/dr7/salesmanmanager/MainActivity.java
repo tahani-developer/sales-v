@@ -108,6 +108,8 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     int sum_chech_export_lists=0;
-     public static String languagelocalApp="";
+
      DrawerLayout drawer_layout;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     private FusedLocationProviderClient fusedLocationClient;
@@ -181,7 +183,6 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -307,6 +308,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
               openAddCustomerDialog();
 
             }
@@ -385,6 +388,14 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+    public static boolean textContainsArabic(String text) {
+        for (char charac : text.toCharArray()) {
+            if (Character.UnicodeBlock.of(charac) == Character.UnicodeBlock.ARABIC) {
+                return true;
+            }
+        }
+        return false;
     }
 //    @Override
 //    public void onResume() {

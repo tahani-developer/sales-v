@@ -104,7 +104,7 @@
     <string name="weight">Weight</string>
     <string name="use_weight">Use Weight</string>
 
-    <string name="offer_dialog">Offer Dialog</string>
+    <string name="offer_dialog"> New Offer</string>
     <string name="promo_type">Offer Type </string>
     <string name="bonus_item">Bonus Item </string>
     <string name="discount_value">Discount Value </string>
@@ -358,6 +358,9 @@
     <string name="backupData">Backup Data</string>
     <string name="backup_failed">Backup Failed</string>
     <string name="Printing">Printing</string>
+    <string name="duplicate">Duplicated</string>
+    <string name="bonus_item_name">Bonus Item Name</string>
+    <string name="bonus_item_qty">Bonus Item Qty</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
