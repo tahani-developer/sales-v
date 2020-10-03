@@ -7,6 +7,8 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
+    android:layoutDirection="locale"
+    android:id="@+id/mailLinearRecipt"
     android:paddingEnd="10dp"
     android:paddingHorizontal="10dp"
     android:paddingStart="10dp"
@@ -398,7 +400,7 @@
             android:textStyle="bold"
             android:textColor="@color/amountColor"
             />
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_floating"
             android:visibility="gone"
             android:layout_height="wrap_content"

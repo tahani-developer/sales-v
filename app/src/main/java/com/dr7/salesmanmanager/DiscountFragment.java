@@ -1,9 +1,9 @@
 package com.dr7.salesmanmanager;
 
 
-import android.support.v4.app.DialogFragment;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
 
 import java.text.DecimalFormat;
 

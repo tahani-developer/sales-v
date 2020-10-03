@@ -125,7 +125,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/ic_disc" />
+            android:background="@drawable/info_customer" />
 
         <ImageView
             android:id="@+id/balanceImgBtn"

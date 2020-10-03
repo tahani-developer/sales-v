@@ -14,6 +14,15 @@ public class serialModel {
     private String kindVoucher;
     private String storeNo;
     private  String isPosted;
+    private  String isBonus;
+
+    public String getIsBonus() {
+        return isBonus;
+    }
+
+    public void setIsBonus(String isBonus) {
+        this.isBonus = isBonus;
+    }
 
     public String getIsPosted() {
         return isPosted;

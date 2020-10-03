@@ -31,7 +31,6 @@
             android:layout_marginTop="10dp"
             android:layout_height="30dp"
             android:background="@color/totals_color"
-            android:enabled="false"
             android:textColor="@color/text_view_color"
             android:layout_weight="5" />
 

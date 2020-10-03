@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:minWidth="1000dp"
     android:minHeight="500dp"
+    android:id="@+id/add_item"
+    android:layoutDirection="locale"
     android:background="@color/layer3"
     android:orientation="vertical">
     <LinearLayout
@@ -153,7 +155,7 @@
                 android:textSize="18sp"
                 android:text="@string/item_name" />
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/mSearch"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
@@ -168,7 +170,7 @@
 
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_marginHorizontal="20dp"
         android:background="@color/layer2"
@@ -177,7 +179,7 @@
         android:layout_height="250dp"
         android:orientation="horizontal">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
     <LinearLayout

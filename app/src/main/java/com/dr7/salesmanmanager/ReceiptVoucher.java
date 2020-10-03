@@ -21,11 +21,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+//import android.support.annotation.RequiresApi;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.widget.LinearLayoutManager;
+//import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -57,6 +65,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -192,14 +201,19 @@ public class ReceiptVoucher extends Fragment {
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();
         mailLinearRecipt = (LinearLayout) view.findViewById(R.id.mailLinearRecipt);
-        if (languagelocalApp.equals("ar")) {
-            mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        } else {
-            if (languagelocalApp.equals("en")) {
-                mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
+        try {
+            if (languagelocalApp.equals("ar")) {
+                mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
         }
+        catch (Exception e){
+            mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+
         chequeLayout = (LinearLayout) view.findViewById(R.id.cheques_totals);
         linear_checkNo= (LinearLayout) view.findViewById(R.id.linear_checkNo);
         paymentKindSpinner = (Spinner) view.findViewById(R.id.paymentTypeSpinner);
@@ -768,7 +782,7 @@ public class ReceiptVoucher extends Fragment {
 //
 //
 //    }
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void displayAutoCheck(int counter, int flag) {
         editChech.setVisibility(View.VISIBLE);
         final Dialog dialog = new Dialog(getActivity());

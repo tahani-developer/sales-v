@@ -7,6 +7,7 @@
     android:paddingBottom="5dp"
     android:paddingEnd="5dp"
     android:id="@+id/mainlyout"
+    android:layoutDirection="locale"
     android:paddingHorizontal="5dp"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
@@ -55,8 +56,9 @@
                 android:layout_alignTop="@+id/addItemImgButton2"
                 android:layout_alignParentRight="@+id/addItemImgButton2"
 
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginLeft="20dp"
+
+                android:layout_marginTop="40dp"
 
                 android:padding="3dp"
                 android:textStyle="bold"
@@ -82,9 +84,9 @@
             android:id="@+id/max_disc"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:visibility="gone"
+
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/ic_disc" />
+            android:background="@drawable/info_customer" />
 
 
 

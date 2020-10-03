@@ -140,7 +140,7 @@
                 android:textSize="16sp"
                 android:text="@string/item_name" />
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:id="@+id/mSearch"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -196,7 +196,7 @@
 
 <!--    </LinearLayout>-->
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
         android:layout_marginHorizontal="5dp"
         android:background="@color/layer2"
@@ -205,7 +205,7 @@
         android:layout_height="290dp"
         android:orientation="horizontal">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,10 +1,18 @@
 package com.dr7.salesmanmanager;
 
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -22,8 +30,13 @@ public class ScanActivity extends AppCompatActivity
             super.onCreate(state);
             type = getIntent().getStringExtra("key");
             Log.e("typeonCreate",""+type);
-            mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-            setContentView(mScannerView);                // Set the scanner view as the content view
+            mScannerView = new ZXingScannerView(this);
+            List<BarcodeFormat> formats = new ArrayList<>();
+            formats.add(BarcodeFormat.CODE_128);
+//            formats.add(BarcodeFormat.QR_CODE);
+
+            setContentView(mScannerView);// Programmatically initialize the scanner view
+//            setContentView(mScannerView);                // Set the scanner view as the content view
         }
 
         @Override

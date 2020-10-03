@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version">22</string>
+    <string name="version">24</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -171,7 +171,7 @@
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
     <string name="allow_cust_check_out_range">Validate customer location</string>
-<!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
+    <!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
     <string name="read_discount_from_offers">Read Discount From Offers</string>
     <string name="work_online">Work Online</string>
     <string name="paymethod_check">Cash Invoices</string>
@@ -361,6 +361,8 @@
     <string name="duplicate">Duplicated</string>
     <string name="bonus_item_name">Bonus Item Name</string>
     <string name="bonus_item_qty">Bonus Item Qty</string>
+    <string name="reqired_filled">Reqired Filled Empty</string>
+    <string name="cancel">Cancel</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -372,7 +374,7 @@
     </string-array>
     <string-array name="list_items_dialog_SERIAL">
         <item>Delete</item>
-              <item>Clear All</item>
+        <item>Clear All</item>
     </string-array>
 
     <string-array name="banks_list">

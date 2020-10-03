@@ -8,8 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+//import android.support.annotation.RequiresApi;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -50,7 +56,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 100;
+    private static final int DATABASE_VERSION = 102;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -69,6 +75,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final  String KIND_VOUCHER="KIND_VOUCHER";
     private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
     private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
+    private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
     //----------------------------------------------------------------------
     private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
     private static final String PASS_TYPE = "PASS_TYPE";
@@ -432,7 +439,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 + DATE_VOUCHER + " TEXT,"
                 + STORE_NO_SALESMAN + " INTEGER,"
-                + IS_POSTED_SERIAL + " INTEGER"+
+                + IS_POSTED_SERIAL + " INTEGER,"+
+                IS_BONUS_SERIAL+" INTEGER"+
 
 
                 ")";
@@ -1201,7 +1209,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         try{
 
 
-            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER NOT NULL DEFAULT 0 ");
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER  DEFAULT 0 ");
 
         }catch (Exception e)
         {
@@ -1244,7 +1252,8 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                     + DATE_VOUCHER + " TEXT,"
                     + STORE_NO_SALESMAN + " INTEGER,"
-                    + IS_POSTED_SERIAL + " INTEGER"+
+                    + IS_POSTED_SERIAL + " INTEGER,"+
+                    IS_BONUS_SERIAL+" INTEGER"+
 
                     ")";
             db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
@@ -1269,6 +1278,14 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_BONUS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //********************************************* End SERIAL_ITEMS_TABLE ****************************************************
         try{
             db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
 
@@ -1358,6 +1375,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(KIND_VOUCHER, serialModelItem.getKindVoucher());
             values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
             values.put(IS_POSTED_SERIAL, "0");
+            values.put(IS_BONUS_SERIAL, serialModelItem.getIsBonus());
             db.insert(SERIAL_ITEMS_TABLE, null, values);
             Log.e("add_Serial",""+serialModelItem.getSerialCode());
             db.close();
@@ -1732,8 +1750,15 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-        values.put(SERIAL_CODE, item.getSerialCode());
+
         try {
+            if(item.getSerialCode()==null)
+            {
+                values.put(SERIAL_CODE, "0");
+            }
+            else {   values.put(SERIAL_CODE, item.getSerialCode());}
+
+
             if(item.getVouchDate()!=null || !item.getVouchDate().equals(""))
             values.put(VOUCH_DATE, item.getVouchDate());
             else
@@ -2027,6 +2052,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 info.setDateVoucher(cursor.getString(6));
                 info.setStoreNo(cursor.getString(7));
                 info.setIsPosted(cursor.getString(8));
+                info.setIsBonus(cursor.getString(9));
 
                 infos.add(info);
 
@@ -2045,7 +2071,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
-        String selectQuery = "select  DISTINCT  CUS_ID_Text , CUST_LAT ,CUST_LONG ,IS_POST from CUSTOMER_MASTER";
+        String selectQuery = "select  DISTINCT  CUS_ID , CUST_LAT ,CUST_LONG ,IS_POST from CUSTOMER_MASTER";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2249,7 +2275,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<Customer> getCustomer_byNo(String number) {
         List<Customer> customer_balance = new ArrayList<Customer>();
-        String selectQuery = " SELECT  CASH_CREDIT , CREDIT_LIMIT from "+ CUSTOMER_MASTER +" where CUS_ID_Text ='"+ number +"'";
+        String selectQuery = " SELECT  CASH_CREDIT , CREDIT_LIMIT from "+ CUSTOMER_MASTER +" where CUS_ID ='"+ number +"'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2535,7 +2561,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     {
        String rate="";
         String customer_id = CustomerListShow.Customer_Account;
-        String selectQuery = "select DISTINCT  cusMaster.ACCPRC  from CUSTOMER_MASTER cusMaster  where cusMaster.CUS_ID_Text ='"+customer_id+"' ";
+        String selectQuery = "select DISTINCT  cusMaster.ACCPRC  from CUSTOMER_MASTER cusMaster  where cusMaster.CUS_ID ='"+customer_id+"' ";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -3399,8 +3425,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offers.add(offer);
             } while (cursor.moveToNext());
         }
-        Log.e("offer",""+offers.size()+"\t"+offers.get(0).getPromotionType());
-        Log.e("offer",""+offers.size()+"\t"+offers.get(3).getItemQty());
+
 
         return offers;
     }
@@ -3577,7 +3602,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(CUST_LAT, lat);
         values.put(CUST_LONG, lon);
-        db.update(CUSTOMER_MASTER, values, CUS_ID_Text + "= '" + custId + "'", null);
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + custId + "'", null);
     }
 
 
@@ -3819,7 +3844,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CASH_CREDIT, CashCredit);
         values.put(CREDIT_LIMIT, CriditLimit);
 
-        db.update(CUSTOMER_MASTER, values, CUS_ID_Text    + "= '" + custNo + "'" , null);
+        db.update(CUSTOMER_MASTER, values, CUS_ID    + "= '" + custNo + "'" , null);
     }
 
 
@@ -3974,7 +3999,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     public double getMaxDiscValue_ForCustomer(String customerNo) {
         String selectQuery = "SELECT MAX_DISCOUNT FROM " + CUSTOMER_MASTER +
-                " WHERE CUS_ID_Text  =  '"+customerNo+"' ";
+                " WHERE CUS_ID  =  '"+customerNo+"' ";
 
         double max_discount=0;
 
@@ -4124,7 +4149,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         // updating row
-        db.update(CUSTOMER_MASTER, values, CUS_ID_Text + "= '" + customer_account + "'", null);
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + customer_account + "'", null);
 
 
     }

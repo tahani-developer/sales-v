@@ -33,13 +33,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.print.PrintHelper;
-import android.support.v7.widget.RecyclerView;
+//import android.support.annotation.NonNull;
+//import android.support.annotation.RequiresApi;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.app.FragmentManager;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.print.PrintHelper;
+//import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -116,10 +116,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.ProgressDialog.STYLE_SPINNER;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
-import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
-import static android.support.v4.content.ContextCompat.getSystemService;
-import static android.support.v4.content.ContextCompat.getSystemServiceName;
+//import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
+//import static android.support.v4.app.DialogFragment.STYLE_NO_FRAME;
+//import static android.support.v4.content.ContextCompat.getSystemService;
+//import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
 
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
@@ -134,6 +134,12 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 import static com.dr7.salesmanmanager.PrintVoucher.verifyStoragePermissions;
 
 import android.location.LocationManager;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.print.PrintHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -290,14 +296,20 @@ public class SalesInvoice extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
 
-        if (languagelocalApp.equals("ar")) {
-            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        } else {
-            if (languagelocalApp.equals("en")) {
-                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
+        try {
+            if (languagelocalApp.equals("ar")) {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
         }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         currentTimeAndDate = Calendar.getInstance().getTime();
@@ -436,7 +448,7 @@ public class SalesInvoice extends Fragment {
                 if (itemsListView.getCount() > 0) {
                     if (vocherClick) {
 
-                        new android.support.v7.app.AlertDialog.Builder(getActivity())
+                        new AlertDialog.Builder(getActivity())
                                 .setTitle("Confirm Update")
                                 .setCancelable(false)
                                 .setMessage("Are you sure you want clear the list !")
@@ -496,7 +508,7 @@ public class SalesInvoice extends Fragment {
                     }
                 } else {
                     if (vocherClick) {//without clear data
-                        new android.support.v7.app.AlertDialog.Builder(getActivity())
+                        new AlertDialog.Builder(getActivity())
                                 .setTitle("Confirm Update")
                                 .setCancelable(false)
                                 .setMessage("Are you sure you want change  voucher type !")
@@ -1018,7 +1030,7 @@ public class SalesInvoice extends Fragment {
         subTotalTextView = (TextView) view.findViewById(R.id.subTotalTextView);
         taxTextView = (TextView) view.findViewById(R.id.taxTextView);
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
-        maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);
+        maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
     }
 
@@ -1146,7 +1158,7 @@ public class SalesInvoice extends Fragment {
         }
     }
 
-    private int getVoucherTypeCurrent() {
+    public int getVoucherTypeCurrent() {
     int checkedId=voucherTypeRadioGroup.getCheckedRadioButtonId();
     Log.e("getVoucherTypeCurrent",""+checkedId);
         switch (checkedId) {
@@ -1524,12 +1536,19 @@ public class SalesInvoice extends Fragment {
         TextView name = (TextView) dialog.findViewById(R.id.textView_customerName);
         TextView total = (TextView) dialog.findViewById(R.id.textView_total);
         TextView maxDisc = (TextView) dialog.findViewById(R.id.textview_maxDiscount);
-        name.setText(CustomerListShow.Customer_Name);
-        total.setText(convertToEnglish(decimalFormat.format(subTotal) + ""));
-        maxDiscounr_value = mDbHandler.getMaxDiscValue_ForCustomer(CustomerListShow.Customer_Account);
-        discount_voucher = ((maxDiscounr_value * subTotal) / 100);
-        maxDisc.setText(convertToEnglish(decimalFormat.format(discount_voucher) + ""));
-        Log.e("max", "" + maxDiscounr_value + "\t" + discount_voucher);
+        try {
+            name.setText(CustomerListShow.Customer_Name);
+            total.setText(convertToEnglish(decimalFormat.format(subTotal) + ""));
+            maxDiscounr_value = mDbHandler.getMaxDiscValue_ForCustomer(CustomerListShow.Customer_Account);
+
+            discount_voucher = ((maxDiscounr_value * subTotal) / 100);
+            maxDisc.setText(convertToEnglish(decimalFormat.format(discount_voucher) + ""));
+            Log.e("max", "" + maxDiscounr_value + "\t" + discount_voucher);
+        } catch (Exception e)
+        {
+
+        }
+
 
 //        maxDisc.setText("50 "+"JD");
 
@@ -1626,12 +1645,19 @@ public class SalesInvoice extends Fragment {
                             break;
                         case 1:
 
-                            try {
-                                findBT();
-                                openBT(1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                findBT();
+//                                openBT(1);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+                            voucherShow = voucher;
+
+                            convertLayoutToImagew(getActivity());
+                            Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            intent1.putExtra("printKey", "1");
+                            startActivity(intent1);
+
 //                                                             lk31.setChecked(true);
                             break;
                         case 2:
@@ -1654,13 +1680,18 @@ public class SalesInvoice extends Fragment {
                             break;
                         case 3:
 
-                            try {
-                                findBT();
-                                openBT(3);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-//                                                             qs.setChecked(true);
+//                            try {
+//                                findBT();
+//                                openBT(3);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                                                                voucherShow = voucher;
+                            convertLayoutToImage(voucher);
+                            Intent inte3 = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            inte3.putExtra("printKey", "1");
+                            startActivity(inte3);//qs.setChecked(true);
                             break;
                         case 4:
                             String s="";

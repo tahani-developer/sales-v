@@ -4,12 +4,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.design.widget.TabLayout;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -27,6 +29,7 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Reports.SalesMan;
+import com.sewoo.request.android.RequestHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +48,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarException;
 
-public class ImportJason extends AppCompatActivity{
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+public class ImportJason extends AppCompatActivity {
 
     private String URL_TO_HIT ;
     private Context context;
@@ -721,6 +726,7 @@ public class ImportJason extends AppCompatActivity{
                 Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
             } else {
+
                 Toast.makeText(context, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
             }
         }

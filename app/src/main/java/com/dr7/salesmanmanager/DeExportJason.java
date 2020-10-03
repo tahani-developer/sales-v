@@ -3,8 +3,12 @@ package com.dr7.salesmanmanager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -47,6 +51,8 @@ public class DeExportJason extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments, jsonArrayPaymentsPaper, jsonArrayAddedCustomer;
     DatabaseHandler mHandler;
+    String myFormat = "dd/MM/yyyy"; //In which you need put here
+    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
     public static List<Voucher> vouchers = new ArrayList<>();
     public static List<Item> items = new ArrayList<>();
@@ -75,12 +81,10 @@ public class DeExportJason extends AppCompatActivity {
             filterInvoice();
 
             for (int i = 0; i < vouchers.size(); i++) {
-                vouchers.get(i).setIsPosted(1);
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
 
             for (int i = 0; i < items.size(); i++) {
-                items.get(i).setIsPosted(1);
                 jsonArrayItems.put(items.get(i).getJSONObject());
             }
 
@@ -96,12 +100,10 @@ public class DeExportJason extends AppCompatActivity {
             filterPayment();
 
             for (int i = 0; i < payments.size(); i++) {
-                payments.get(i).setIsPosted(1);
                 jsonArrayPayments.put(payments.get(i).getJSONObject());
             }
 
             for (int i = 0; i < paymentsPaper.size(); i++) {
-                paymentsPaper.get(i).setIsPosted(1);
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
 
@@ -114,12 +116,10 @@ public class DeExportJason extends AppCompatActivity {
             filterPayment();
 
             for (int i = 0; i < vouchers.size(); i++) {
-                vouchers.get(i).setIsPosted(1);
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
             }
 
             for (int i = 0; i < items.size(); i++) {
-                items.get(i).setIsPosted(1);
                 jsonArrayItems.put(items.get(i).getJSONObject());
             }
 
@@ -129,21 +129,20 @@ public class DeExportJason extends AppCompatActivity {
             }
 
             for (int i = 0; i < paymentsPaper.size(); i++) {
-                paymentsPaper.get(i).setIsPosted(1);
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
+            addedCustomer = mHandler.getAllAddedCustomer();
+            jsonArrayAddedCustomer = new JSONArray();
+            for (int i = 0; i < addedCustomer.size(); i++)
+                {
+                    jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
+                }
 
         }
 
-        addedCustomer = mHandler.getAllAddedCustomer();
-        jsonArrayAddedCustomer = new JSONArray();
-        for (int i = 0; i < addedCustomer.size(); i++)
-            if (addedCustomer.get(i).getIsPosted() == 0) {
-                addedCustomer.get(i).setIsPosted(1);
-                jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
-            }
 
-        new DeExportJason.JSONTask().execute();
+
+//        new DeExportJason.JSONTask().execute();
 
     }
 
@@ -285,11 +284,22 @@ public class DeExportJason extends AppCompatActivity {
             super.onPostExecute(s);
             try {
                 if (s!= null && s.contains("SUCCESS")) {
-//                mHandler.updateVoucher();
-//                mHandler.updateVoucherDetails();
-//                mHandler.updatePayment();
-//                mHandler.updatePaymentPaper();
-//                mHandler.updateAddedCustomers();
+                    if(flag==0||flag==2)
+                    {
+                        mHandler.updateVoucher();
+                        mHandler.updateVoucherDetails();
+                    }
+                    if(flag==1||flag==2)
+                    {
+                        mHandler.updatePayment();
+                        mHandler.updatePaymentPaper();
+                    }
+                    if(flag==2)
+                    {
+                        mHandler.updateAddedCustomers();
+                    }
+
+
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
@@ -313,10 +323,21 @@ public class DeExportJason extends AppCompatActivity {
 
     public void filterInvoice() {
 
+        Date dateFormat = null;
+        String date="";
+
         for (int i = 0; i < vouchers.size(); i++) {
-            String date = vouchers.get(i).getVoucherDate();
+            String myDate = vouchers.get(i).getVoucherDate();
             try {
-                if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+                dateFormat = sdf.parse(myDate);
+                date=dateFormat.toString();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if ((formatDate(date.toString()).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
                     // do nothing
                 } else
@@ -328,7 +349,14 @@ public class DeExportJason extends AppCompatActivity {
         }
 
         for (int i = 0; i < items.size(); i++) {
-            String date = items.get(i).getDate();
+            String myDate = items.get(i).getDate();
+            try {
+                dateFormat = sdf.parse(myDate);
+                date=dateFormat.toString();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             try {
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
@@ -343,9 +371,17 @@ public class DeExportJason extends AppCompatActivity {
     }
 
     public void filterPayment() {
-
+        Date dateFormat = null;
+        String date="";
         for (int i = 0; i < payments.size(); i++) {
-            String date = payments.get(i).getPayDate();
+            String mydate = payments.get(i).getPayDate();
+            try {
+                dateFormat = sdf.parse(mydate);
+                date=dateFormat.toString();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             try {
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
@@ -359,7 +395,15 @@ public class DeExportJason extends AppCompatActivity {
         }
 
         for (int i = 0; i < paymentsPaper.size(); i++) {
-            String date = paymentsPaper.get(i).getPayDate();
+            String mydate = paymentsPaper.get(i).getPayDate();
+
+            try {
+                dateFormat = sdf.parse(mydate);
+                date=dateFormat.toString();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             try {
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {

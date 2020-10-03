@@ -272,6 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/app_disc_type2"
+                android:checked="true"
                 android:id="@+id/discPercRadioButton"
                 android:layout_marginLeft="7dp"
                 android:textColor="@color/text_view_color"
@@ -364,15 +365,41 @@
         android:text="@string/app_add_to_list"
         android:textColor="@color/layer5"
         android:textStyle="bold" />
-    <Button
-        android:id="@+id/addToList"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:background="@color/add_button"
-        android:text="@string/app_add_to_list"
-        android:textColor="@color/layer5"
-        android:textStyle="bold" />
+        android:gravity="center">
+        <Button
+            android:id="@+id/addToList"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/colorblue1"
+            android:text="@string/app_add_to_list"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/cancel0000"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+
+            android:layout_margin="5dp"
+            android:background="@color/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/cancelAdd"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="5dp"
+            android:background="@color/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </LinearLayout>

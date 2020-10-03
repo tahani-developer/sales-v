@@ -204,11 +204,11 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
             <TextView
                 android:id="@+id/bonuss"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.4"
                 android:layout_height="wrap_content"
 
                 android:layout_marginStart="10dp"
@@ -220,7 +220,7 @@
             <EditText
                 android:id="@+id/bonus"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:gravity="center"
@@ -228,74 +228,77 @@
                 android:inputType="numberDecimal"
                 android:textSize="16sp" />
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/discount_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        android:paddingStart="5dp"
-        android:paddingLeft="5dp">
-
-
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/discount_linear"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="5"
             android:layout_height="wrap_content"
-
-            android:text="@string/app_disc"
-            android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/discount"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:textSize="16sp" />
-
-        <RadioGroup
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal"
-            android:id="@+id/discTypeRadioGroup"
-            android:layout_marginLeft="7dp"
-            >
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp">
 
-            <RadioButton
-                android:layout_width="wrap_content"
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/app_disc_type1"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/discValueRadioButton"
+
+                android:text="@string/app_disc"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/discount"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/app_disc_type2"
-                android:id="@+id/discPercRadioButton"
+
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/discTypeRadioGroup"
                 android:layout_marginLeft="7dp"
-                android:textColor="@color/text_view_color"
-                android:textSize="16sp"
-                />
+                >
 
-        </RadioGroup>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/app_disc_type1"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/discValueRadioButton"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="16sp"
+                    />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/app_disc_type2"
+                    android:id="@+id/discPercRadioButton"
+                    android:layout_marginLeft="7dp"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    />
+
+            </RadioGroup>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -392,10 +395,17 @@
             android:layout_width="0dp"
             android:src="@drawable/ic_playlist_add_black_24dp"
             android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/serialScanBunos"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:src="@drawable/ic_local_offer_black_24dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/serial_No_recyclerView"
 
         android:layout_width="match_parent"
@@ -404,19 +414,42 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:textSize="16sp" />
-
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="center"
+    android:gravity="center">
     <Button
         android:id="@+id/addToList"
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-
-        android:layout_gravity="center"
         android:layout_margin="5dp"
-        android:background="@color/add_button"
+        android:background="@color/colorblue1"
         android:text="@string/app_add_to_list"
         android:textColor="@color/layer5"
         android:textStyle="bold" />
+    <Button
+        android:id="@+id/cancel0000"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
 
+        android:layout_margin="5dp"
+        android:background="@color/cancel_button"
+        android:text="@string/app_cancel"
+        android:textColor="@color/layer5"
+        android:textStyle="bold" />
+    <Button
+        android:id="@+id/cancelAdd"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="5dp"
+        android:background="@color/cancel_button"
+        android:text="@string/app_cancel"
+        android:textColor="@color/layer5"
+        android:textStyle="bold" />
+</LinearLayout>
 </LinearLayout>
 <!--<EditText-->
 <!--android:id="@+id/Serial_No"-->

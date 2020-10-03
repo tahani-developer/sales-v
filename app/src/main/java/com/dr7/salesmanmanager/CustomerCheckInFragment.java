@@ -11,9 +11,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+//import android.support.annotation.NonNull;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +22,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -129,6 +133,13 @@ public class CustomerCheckInFragment extends DialogFragment {
         Customer_Name = (TextView) view.findViewById(R.id.checkInCustomerName);
         Customer_Account = (TextView) view.findViewById(R.id.customerAccountNo);
 
+
+        Customer_Account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customerCheckInListener.displayCustomerListShow();
+            }
+        });
         customernametest = CustomerListShow.Customer_Name.toString();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -248,8 +259,9 @@ public class CustomerCheckInFragment extends DialogFragment {
             }
         };
 
-        findButton.setOnClickListener(onClickListener);
 
+        findButton.setOnClickListener(onClickListener);
+//        Customer_Account.setOnClickListener(onClickListener);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

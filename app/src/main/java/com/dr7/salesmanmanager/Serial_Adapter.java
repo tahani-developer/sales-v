@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.media.effect.EffectUpdateListener;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,6 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dr7.salesmanmanager.Modles.Cheque;
 import com.dr7.salesmanmanager.Modles.serialModel;
 
@@ -31,6 +33,8 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.bonus;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterBonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterSerial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
@@ -69,11 +73,8 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
          Log.e("position", "onBindViewHolder" + i+"errorData\t"+errorData);
         viewHolder.editTextSerialCode.setTag(i);
         viewHolder.textView_counterNo.setTag(i);
+        list.get(i).setCounterSerial(i+1);
 
-
-
-        viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
-        viewHolder.textView_counterNo.setText(list.get(i).getCounterSerial()+"");
         viewHolder.scanBarcode.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -83,6 +84,20 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
 
         }
     });
+        viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
+
+    if(list.get(i).getIsBonus().equals("1"))
+    {
+        viewHolder.textView_counterNo.setTextColor(context.getResources().getColor(R.color.cancel_button));
+        viewHolder.textView_counterNo.setText(context.getResources().getString(R.string.app_bonus));
+
+    }
+    else {
+        viewHolder.textView_counterNo.setText((i+1)+"");
+        viewHolder.textView_counterNo.setTextColor(context.getResources().getColor(R.color.text_view_color));
+
+    }
+
         viewHolder.deletItem.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -96,22 +111,24 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
                         public void onClick(SweetAlertDialog sDialog) {
                             Log.e("onClick",""+i+serialListitems.size()+"\t"+counterSerial);
 
-//                            serialListitems.remove(i-1);
+                            if(list.get(i).getIsBonus().equals("0"))
+                            {
+                                counterSerial--;
+                                unitQty.setText(""+counterSerial);
+                            }
+                            else {
+                                if(list.get(i).getIsBonus().equals("1"))
+                                {
+                                    counterBonus--;
+                                    bonus.setText(""+counterBonus);
+                                }
+                            }
                             list.remove(i);
-                            counterSerial--;
-                            unitQty.setText(""+counterSerial);
-//                            updatelistOrder(counterSerial);
-//                            Log.e("updatelistOrder",""+counterSerial);
-//                            ViewHolder viewHolder = null;
-//                            for(int i=0;i<counterSerial;i++)
-//                            {
-//                                viewHolder.textView_counterNo.setText(i+"");
-//                            }
                             notifyDataSetChanged();
 
                             sDialog.dismissWithAnimation();
                         }
-                    }).setCancelText(context.getResources().getString(R.string.dialog_cancel)).setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    }).setCancelText(context.getResources().getString(R.string.cancel)).setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
 

@@ -20,15 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,6 +43,14 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
@@ -79,7 +79,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public static  List<Item> jsonItemsList;
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
-    private static List<Item> List;
+    public static List<Item> List;
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     Context context;
@@ -155,14 +155,21 @@ public class AddItemsFragment2 extends DialogFragment {
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
         LinearLayout add_item = view.findViewById(R.id.add_item);
-        if (languagelocalApp.equals("ar")) {
-            add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        } else {
-            if (languagelocalApp.equals("en")) {
-                add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
+        try {
+            if (languagelocalApp.equals("ar")) {
+                add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
         }
+        catch (Exception e)
+        {
+            add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
         fillListItemJson();
@@ -587,7 +594,13 @@ public class AddItemsFragment2 extends DialogFragment {
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
-        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+        String rate_customer = mDbHandler.getRateOfCustomer();
+        if(rate_customer.equals(""))
+        {
+            rate_customer="0";
+
+        }
+        Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
@@ -794,6 +807,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 messageTextView.setTextSize(15);
                 toast.show();
                 String storeNo=Login.salesMan;
+                voucherDate=convertToEnglish(voucherDate);
             if(item.getItemHasSerial().equals("1"))
             {
                 Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
@@ -844,17 +858,28 @@ public class AddItemsFragment2 extends DialogFragment {
 
     public void readB(){
         Log.e("barcode_099", "in");
-        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
-        intentIntegrator.setBeepEnabled(false);
-        intentIntegrator.setCameraId(0);
-        intentIntegrator.setPrompt("SCAN");
-        intentIntegrator.setBarcodeImageEnabled(false);
-        intentIntegrator.initiateScan();
+//        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+//        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+//        intentIntegrator.setBeepEnabled(false);
+//        intentIntegrator.setCameraId(0);
+//        intentIntegrator.setPrompt("SCAN");
+//        intentIntegrator.setBarcodeImageEnabled(false);
+//        intentIntegrator.initiateScan();
+
+            IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+
     }
 
 
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
     }
+    }
+
 
 
 

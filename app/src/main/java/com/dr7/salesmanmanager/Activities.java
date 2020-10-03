@@ -9,12 +9,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.RequiresApi;
+//import android.support.v4.app.FragmentManager;
+
+
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +21,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.dr7.salesmanmanager.Modles.Item;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -34,6 +39,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
@@ -66,6 +72,7 @@ public class Activities extends AppCompatActivity implements
     boolean canClose;
     ProgressDialog dialog_progress;
     DatabaseHandler databaseHandler;
+    static String[] araySerial;
 
 
     @Override 
@@ -314,6 +321,8 @@ public class Activities extends AppCompatActivity implements
     private OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
+            Log.e("onClick",""+view.getId());
+//
             switch (view.getId()) {
                 case R.id.saleInvImageView:
                    // saleImageView.startAnimation(animZoomIn);
@@ -351,6 +360,7 @@ public class Activities extends AppCompatActivity implements
 
                     } else
                         Toast.makeText(Activities.this, "Please Select a Customer", Toast.LENGTH_LONG).show();
+
                     break;
 
                 case R.id.paymentImageView:
@@ -368,6 +378,7 @@ public class Activities extends AppCompatActivity implements
 
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    clearSerial();
                                     displayReceipt();
                                 }
                             });
@@ -397,6 +408,7 @@ public class Activities extends AppCompatActivity implements
 //                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+                                clearSerial();
                                 displayStockRequest();
 //                                new TaskStock().execute();
                             }
@@ -438,6 +450,26 @@ public class Activities extends AppCompatActivity implements
             }
         }
     };
+
+    private void clearSerial() {
+        try {
+            String curentVoucherNo=voucherNumberTextView.getText().toString();
+            int curent=Integer.parseInt(curentVoucherNo);
+            int lastNo= databaseHandler.getLastVoucherNo(SalesInvoice.voucherType);
+            Log.e("onBackPressed",""+curentVoucherNo+"\t"+lastNo);
+            if(!curentVoucherNo.equals(lastNo+"") )
+            {
+                databaseHandler.deletSerialItems_byVoucherNo(curent);
+
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e("onBackPressed",""+e.getMessage());
+        }
+    }
+
     @Override
     public void onBackPressed() {
 
@@ -450,11 +482,14 @@ public class Activities extends AppCompatActivity implements
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                clearSerial();
+
                 back();
                 saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 isFragmentBlank = true;
+                activitySelected=-1;
 //                salesInvoice.total_items_quantity=0
 
             }
@@ -551,7 +586,9 @@ public class Activities extends AppCompatActivity implements
 //                openEditerCheck();
 
                 String serialBarcode = Result.getContents();
-                Log.e("MainActivity", "" + databaseHandler.isSerialCodeExist(serialBarcode+""));
+//                araySerial= serialBarcode.split(";");
+
+//                Log.e("MainActivity", "" + databaseHandler.isSerialCodeExist(serialBarcode+"")+araySerial.length);
                 if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not"))){
                     item_serial.setText(serialBarcode);
 

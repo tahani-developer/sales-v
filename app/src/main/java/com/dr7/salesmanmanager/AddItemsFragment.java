@@ -2,8 +2,7 @@ package com.dr7.salesmanmanager;
 
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Item;
 

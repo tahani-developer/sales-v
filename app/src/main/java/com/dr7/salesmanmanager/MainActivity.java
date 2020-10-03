@@ -27,18 +27,18 @@ import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.Nullable;
+//import android.support.annotation.RequiresApi;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.NavigationView;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.view.GravityCompat;
+//import android.support.v4.widget.DrawerLayout;
+//import android.support.v7.app.ActionBarDrawerToggle;
+//import android.support.v7.app.AlertDialog;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -61,6 +61,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -81,6 +92,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -222,17 +235,23 @@ public class MainActivity extends AppCompatActivity
         }
 
 //        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if(languagelocalApp.equals("ar"))
-        {
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e){
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        else{
-            if(languagelocalApp.equals("en"))
-            {
-                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
 
-        }
         tvresult = (TextView) findViewById(R.id.tvresult);
 
         Button btn = (Button) findViewById(R.id.btn);
@@ -472,7 +491,18 @@ public class MainActivity extends AppCompatActivity
             try {
                 if(isNetworkAvailable())
                 {
-                    saveCurrentLocation();
+
+                    if( !CustomerListShow.Customer_Name.equals("No Customer Selected !"))
+                    {
+                        saveCurrentLocation();
+                    }
+                    else {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                .show();
+                    }
+
                 }
                 else {
                     Log.e("isNetworkAvailable","NOT");
@@ -939,8 +969,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.nav_backup_data) {
-           List <serialModel> serialModelList = mDbHandler.getAllSerialItems();
-            Log.e("serialModelList",""+serialModelList.size());
+
 
             try {
                 verifyStoragePermissions(MainActivity.this);
@@ -1088,6 +1117,7 @@ public class MainActivity extends AppCompatActivity
                 CustomerListShow.Customer_Name = "No Customer Selected !";
                 CustomerListShow.longtude="";
                 CustomerListShow.latitude="";
+                CustomerListShow.Customer_Account="0";
                 settext2();
                 menuItemState = 0;
 
@@ -2004,8 +2034,8 @@ dialog.dismiss();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
-        from_date.setText(today);
-        to_date.setText(today);
+        from_date.setText(convertToEnglish(today));
+        to_date.setText(convertToEnglish(today));
 
         myCalendar = Calendar.getInstance();
         from_date.setOnClickListener(new View.OnClickListener() {

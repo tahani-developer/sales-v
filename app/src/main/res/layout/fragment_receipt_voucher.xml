@@ -396,7 +396,7 @@
             android:textStyle="bold"
             android:textColor="@color/amountColor"
             />
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_floating"
             android:visibility="gone"
             android:layout_height="wrap_content"
