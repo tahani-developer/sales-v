@@ -33,13 +33,14 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
  
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
-    private ImageView logo;
+    private CircleImageView logo;
     private CardView loginCardView;
     public static String salesMan = "", salesManNo = "";
     private boolean isMasterLogin;
@@ -95,13 +96,13 @@ public class Login extends AppCompatActivity {
         //   model_key.setKey(123);
 
         Log.e("model", "model_key" + model_key.getKey());
-        logo = (ImageView) findViewById(R.id.imageView3);
+        logo = (CircleImageView) findViewById(R.id.imageView3);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
         try {
             if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
-                logo.setImageDrawable(null);
+                logo.setImageDrawable(getResources().getDrawable(R.drawable.logo_vansales));
             } else {
                 logo.setImageBitmap(mDHandler.getAllCompanyInfo().get(0).getLogo());
             }

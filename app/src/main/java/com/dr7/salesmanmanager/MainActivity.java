@@ -94,6 +94,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,6 +124,7 @@ import java.util.Locale;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -329,6 +332,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
 
 
+
+//                openReadBarcode();
               openAddCustomerDialog();
 
             }
@@ -347,6 +352,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
 
+    }
+
+    private void openReadBarcode() {
+        IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+//        new IntentIntegrator(MainActivity.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
     }
 
     public  void getlocationForCheckIn() {
@@ -2156,6 +2169,28 @@ dialog.dismiss();
             if (extras != null) {
                 visitPic = extras.getParcelable("data");
                 visitPicture.setImageDrawable(new BitmapDrawable(getResources(), visitPic));
+            }
+        }
+
+        //************************************************************
+        Log.e("MainActivity", ""+requestCode);
+//        if (requestCode == 0x0000c0de) {
+        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (Result != null) {
+            if (Result.getContents() == null) {
+                Log.e("MainActivity", "cancelled scan");
+                Toast.makeText(MainActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Log.e("MainActivity", "" + Result.getContents());
+//                    Toast.makeText(this, "Scan ___" + Result.getContents(), Toast.LENGTH_SHORT).show();
+//                TostMesage(getResources().getString(R.string.scan)+Result.getContents());
+//                barCodTextTemp.setText(Result.getContents() + "");
+//                openEditerCheck();
+
+                String serialBarcode = Result.getContents();
+
+
             }
         }
     }

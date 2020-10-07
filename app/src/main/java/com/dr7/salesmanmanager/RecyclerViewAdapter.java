@@ -193,6 +193,7 @@ private AddItemsFragment2 context;
                             final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
                             unitWeightLinearLayout.setVisibility(View.GONE);
                             item_serial= dialog.findViewById(R.id.item_serial);
+                            final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
                             item_serial.addTextChangedListener(new TextWatcher() {
                                 @Override
                                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -295,6 +296,37 @@ private AddItemsFragment2 context;
 
                                 }
                             });
+                            //******************************************************************************************
+                            serialScanBunos.setOnClickListener(new View.OnClickListener() {
+                                @SuppressLint("WrongConstant")
+                                @Override
+                                public void onClick(View v) {
+//                            *********************************
+
+                                    flag = 1;
+                                    counterBonus++;
+                                    bonus.setText(""+counterBonus);
+                                    bonus.setEnabled(false);
+//                            counterSerial++;
+//                            unitQty.setText(counterSerial+"");
+                                    final LinearLayoutManager layoutManager;
+                                    layoutManager = new LinearLayoutManager(view.getContext());
+                                    layoutManager.setOrientation(VERTICAL);
+
+                                    serial= new serialModel();
+                                    serial.setCounterSerial(counterBonus);
+                                    serial.setSerialCode("");
+                                    serial.setIsBonus("1");
+                                    serialListitems.add(serial);
+
+
+                                    serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                    serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(),context));
+//
+
+                                }
+                            });
                         }
                         else {
                             current_itemHasSerial=0;
@@ -341,7 +373,7 @@ private AddItemsFragment2 context;
                     final LinearLayout serialNo_linear= dialog.findViewById(R.id.serialNo_linear);
                     final EditText item_remark = dialog.findViewById(R.id.item_note);
                     final ImageView serialScan = dialog.findViewById(R.id.serialScan);
-                    final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
+
 
                     serialScan.setOnClickListener(new View.OnClickListener() {
                         @SuppressLint("WrongConstant")
@@ -370,37 +402,7 @@ private AddItemsFragment2 context;
 
                         }
                     });
-                    //******************************************************************************************
-                    serialScanBunos.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("WrongConstant")
-                        @Override
-                        public void onClick(View v) {
-//                            *********************************
 
-                            flag = 1;
-                            counterBonus++;
-                            bonus.setText(""+counterBonus);
-                            bonus.setEnabled(false);
-//                            counterSerial++;
-//                            unitQty.setText(counterSerial+"");
-                            final LinearLayoutManager layoutManager;
-                            layoutManager = new LinearLayoutManager(view.getContext());
-                            layoutManager.setOrientation(VERTICAL);
-
-                            serial= new serialModel();
-                            serial.setCounterSerial(counterBonus);
-                            serial.setSerialCode("");
-                            serial.setIsBonus("1");
-                            serialListitems.add(serial);
-
-
-                            serial_No_recyclerView.setLayoutManager(layoutManager);
-
-                            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(),context));
-//
-
-                        }
-                    });
                     //***************************************************************************************
 
                     if(MHandler.getAllSettings().get(0).getRequiNote()==1)

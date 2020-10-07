@@ -431,15 +431,19 @@ public class ReceiptVoucher extends Fragment {
                             if (!checkValue())
                                 Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
                             else {
-                                if(!Login.salesMan.equals(""))
-                                {
-                                    saveChequ();
-                                }else{
-                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                                            .setTitleText(getResources().getString(R.string.warning_message))
-                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
-                                            .show();
-                                }
+
+                                saveChequ();
+
+//                                if(!Login.salesMan.equals(""))
+//                                {
+
+//                                }
+//                                else{
+//                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+//                                            .setTitleText(getResources().getString(R.string.warning_message))
+//                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                                            .show();
+//                                }
 
 
                             }

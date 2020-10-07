@@ -1343,18 +1343,32 @@ public class ESCPSample2
 	dialogs.setCancelable(true);
 	dialogs.setContentView(R.layout.tabres);
 
-	TextView price,total,qty,item;
+	TextView price,total,qty,item,item_largeName;
 
 	price=(TextView)dialogs.findViewById(R.id.price);
 	total=(TextView)dialogs.findViewById(R.id.total);
 	qty=(TextView)dialogs.findViewById(R.id.qty);
 	item=(TextView)dialogs.findViewById(R.id.ittem);
+	item_largeName=(TextView)dialogs.findViewById(R.id.ittem_largeName);
 	LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
 	price.setText(prices);
 	total.setText(totals);
 	qty.setText(qtys);
-	item.setText(items);
+	Log.e("itemPrint",""+items.length());
+	if(items.length()>12)
+	{
+		item_largeName.setVisibility(View.VISIBLE);
+		item_largeName.setText(items);
+		item.setText("item name");
+		item.setVisibility(View.INVISIBLE);
+	}
+	else {
+		item_largeName.setVisibility(View.GONE);
 
+		item.setText(items);
+	}
+
+//		item.setText(items);
 	linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
 			View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 	linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());

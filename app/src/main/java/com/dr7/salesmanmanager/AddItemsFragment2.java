@@ -72,9 +72,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class AddItemsFragment2 extends DialogFragment {
     public static  List<Item> jsonItemsList;
     public static List<Item> jsonItemsList2;
@@ -866,10 +864,17 @@ public class AddItemsFragment2 extends DialogFragment {
 //        intentIntegrator.setBarcodeImageEnabled(false);
 //        intentIntegrator.initiateScan();
 
-            IntentIntegrator integrator = new IntentIntegrator(getActivity());
-            integrator.setOrientationLocked(false);
-            integrator.setCaptureActivity(SmallCaptureActivity.class);
-            integrator.initiateScan();
+//            IntentIntegrator integrator = new IntentIntegrator(getActivity());
+//            integrator.setOrientationLocked(false);
+//            integrator.setCaptureActivity(SmallCaptureActivity.class);
+//            integrator.initiateScan();
+
+
+            //*********************************************************
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+//        public void scanToolbar(View view) {
+//            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
+//        }
 
     }
 

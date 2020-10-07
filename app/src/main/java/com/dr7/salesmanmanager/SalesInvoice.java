@@ -1653,7 +1653,7 @@ public class SalesInvoice extends Fragment {
 //                            }
                             voucherShow = voucher;
 
-                            convertLayoutToImagew(getActivity());
+                            convertLayoutToImage(voucher);
                             Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
                             intent1.putExtra("printKey", "1");
                             startActivity(intent1);
@@ -1671,7 +1671,7 @@ public class SalesInvoice extends Fragment {
 //                                                             lk32.setChecked(true);
                             voucherShow = voucher;
 
-                            convertLayoutToImagew(getActivity());
+                            convertLayoutToImage(voucher);
                             Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O1.putExtra("printKey", "1");
                             startActivity(O1);
