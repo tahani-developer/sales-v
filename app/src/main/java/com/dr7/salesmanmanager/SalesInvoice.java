@@ -1694,7 +1694,6 @@ public class SalesInvoice extends Fragment {
                             startActivity(inte3);//qs.setChecked(true);
                             break;
                         case 4:
-                            String s="";
                             printTally(voucher);
                             break;
 
@@ -1822,7 +1821,7 @@ public class SalesInvoice extends Fragment {
                     builder.setTitle(getResources().getString(R.string.app_select_option));
                     builder.setCancelable(true);
                     builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                    if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1")){
+                    if(items.get(position).getItemHasSerial().equals("1")){
 
                         builder.setItems(R.array.list_items_dialog_SERIAL, new DialogInterface.OnClickListener() {
                             @Override
@@ -1877,7 +1876,7 @@ public class SalesInvoice extends Fragment {
                                         String st = "";
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
-                                        if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
+                                        if(items.get(position).getItemHasSerial().equals("1"))
                                         {
 
                                             try {

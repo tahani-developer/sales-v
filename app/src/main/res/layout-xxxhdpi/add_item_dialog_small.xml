@@ -273,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/app_disc_type2"
-                android:checked="true"
+
                 android:id="@+id/discPercRadioButton"
                 android:layout_marginLeft="7dp"
                 android:textColor="@color/text_view_color"

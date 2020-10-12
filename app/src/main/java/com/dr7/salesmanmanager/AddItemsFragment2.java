@@ -730,9 +730,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-                item.setDiscType(1);
+                item.setDiscType(1);// error for discount promotion // percent discount
             } else {
-                item.setDiscType(0);
+                item.setDiscType(0);// value Discount
             }
 
             try {

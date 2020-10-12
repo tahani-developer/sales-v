@@ -582,10 +582,14 @@ private AddItemsFragment2 context;
 
                                                                     appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 1);
                                                                     if (appliedOffer != null) {
+                                                                        Log.e("appliedOffer","appliedOffer.getItemQty()"+appliedOffer.getItemQty()+appliedOffer.getBonusQty());
                                                                         unitQty_double = Double.parseDouble(unitQty.getText().toString());
+                                                                        // get discount from offers not from text
                                                                         disount_totalnew = ((int) (unitQty_double / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
 
                                                                         String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
+
+                                                                        radioGroup.check(R.id.discValueRadioButton);// just if promotion is discount
 
                                                                         added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                 holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
@@ -853,10 +857,19 @@ private AddItemsFragment2 context;
         final TextView discount_value = (TextView) dialog.findViewById(R.id.discount_value);
         final TextView from = (TextView) dialog.findViewById(R.id.from);
         final TextView to = (TextView) dialog.findViewById(R.id.to);
+        LinearLayout linearBunos= (LinearLayout) dialog.findViewById(R.id.linearBunos);
         Button ok = (Button) dialog.findViewById(R.id.ok);
 
-//        String offType = offers.getPromotionType() == 0 ? context.getResources().getString(R.string.app_bonus) : context.getResources().getString(R.string.app_disc_);
-        String offType =context.getResources().getString(R.string.app_bonus);
+        String offType = offers.getPromotionType() == 0 ? context.getResources().getString(R.string.app_bonus) : context.getResources().getString(R.string.app_disc_);
+
+        if(offers.getPromotionType() == 0)// bunos
+        {
+            discount_value.setVisibility(View.GONE);
+        }
+        else {
+            linearBunos.setVisibility(View.GONE);
+        }
+//        String offType =context.getResources().getString(R.string.app_bonus);
         offerType.setText(offerType.getText().toString() + "  :       " + offType);
 
         String itemBonusName= MHandler.getItemNameBonus(offers.getBonusItemNo());

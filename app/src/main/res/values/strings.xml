@@ -363,6 +363,7 @@
     <string name="bonus_item_qty">Bonus Item Qty</string>
     <string name="reqired_filled">Reqired Filled Empty</string>
     <string name="cancel">Cancel</string>
+    <string name="qty">Qty</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

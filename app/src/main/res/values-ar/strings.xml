@@ -411,5 +411,6 @@
     <string name="bonus_item_qty"> كمية المادةالمجانية</string>
     <string name="reqired_filled">حقل اجباري فارغ </string>
     <string name="cancel">الغاء</string>
+    <string name="qty">الكميات</string>
 
 </resources>

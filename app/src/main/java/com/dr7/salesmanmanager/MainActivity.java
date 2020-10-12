@@ -701,6 +701,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Log.e("onLocationResult",""+locationResult);
+            Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
                     if(CustomerListShow.Customer_Account.equals(""))
         {
             if(first!=1)
@@ -771,12 +772,12 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }
-            else {
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(getResources().getString(R.string.warning_message))
-                        .setContentText(getResources().getString(R.string.enternetConnection))
-                        .show();
-            }
+//            else {
+//                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.enternetConnection))
+//                        .show();
+//            }
 
 
         }// END ELSE

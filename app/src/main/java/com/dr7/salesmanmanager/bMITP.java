@@ -569,6 +569,25 @@ public class bMITP extends Activity {
                           }
 
                           break;
+                          //*****************************************************************************
+                      case 9:// print inventory report
+
+//                          if(printShape==0) {
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+//                                  itemsInventoryPrint
+                                  sample.printMultilingualFontEscInventory();
+                              }
+//                          }
+//                          else {
+//                              for (int i = 0; i < settings; i++) {
+////                              sample.printMultilingualFontEsc(0);
+//                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+//                              }
+//
+//                          }
+
+                          break;
 
                   }
 

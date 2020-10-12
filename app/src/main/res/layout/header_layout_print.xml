@@ -16,6 +16,7 @@
         android:layout_margin="5dp"
         android:background="@color/cancel_button"
         android:gravity="center"
+        android:visibility="gone"
         android:text="@string/app_cancel"
         android:textColor="@color/totals_color"
         android:textSize="16sp" />
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layoutDirection="rtl"
+        android:visibility="visible"
         android:orientation="vertical"
         android:padding="5dp">
 
@@ -66,6 +68,18 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:visibility="visible" />
+            <TextView
+                android:id="@+id/titla"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/inventory_report"
+                android:textColor="@color/add_button"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:visibility="visible" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -90,7 +104,7 @@
 
                     <TextView
                         android:id="@+id/tel"
-                        android:layout_width="70dp"
+                        android:layout_width="110dp"
                         android:layout_height="wrap_content"
 
                         android:textColor="@color/add_button"
@@ -135,23 +149,7 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="3dp">
 
-                    <TextView
-                        android:id="@+id/textVoucherNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="رقم الفاتورة :"
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/vhNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/add_button"
-
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/date2"
@@ -173,58 +171,6 @@
 
                 </TableRow>
 
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="3dp">
-
-                    <TextView
-                        android:id="@+id/textViews1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="نوع الفاتورة :"
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/vhType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="فاتورة بيع "
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_margin="3dp">
-
-                    <TextView
-                        android:id="@+id/textViews1t"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="طريقة الدفع :"
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/paytype"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="نقدا"
-                        android:textColor="@color/add_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                </TableRow>
 
             </TableLayout>
 
@@ -286,26 +232,24 @@
                 android:layout_marginBottom="3dp">
 
                 <TextView
-                    android:id="@+id/ed"
+                    android:id="@+id/qtyType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="اسم العميل :  "
+                    android:text="الكميات : "
                     android:textColor="@color/add_button"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/custname"
+                    android:id="@+id/qtyTypeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-
                     android:textColor="@color/add_button"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
             </TableRow>
-
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="wrap_content"
@@ -316,18 +260,156 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/notelast"
-                android:layout_width="500dp"
+            <LinearLayout
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="استلمت البضاعة كاملة و بحالة جيدة وخالية من اية عيوب واتعهد بدفع قيمة هذه الفاتورة . "
+                android:layoutDirection="rtl"
+                android:layout_width="match_parent">
+                <TextView
+                    android:id="@+id/textView_itemName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/item_name"
+                    />
+
+
+                <TextView
+                    android:id="@+id/textView_itemNumber"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="@string/item_number"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/textView_itemQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/add_button"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="@string/unit_qty"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/textView264"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="       __________________________________________________________"
                 android:textColor="@color/add_button"
-                android:textSize="18sp"
-                android:visibility="invisible" />
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView26431"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="invisible"
+                android:layout_gravity="center"
+                android:text="       __________________________________________________________"
+                android:textColor="@color/add_button"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/printFooter"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layoutDirection="rtl"
+        android:visibility="visible"
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/textView264321"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:text="       __________________________________________________________"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" اجمالي الكمية  :   "
+                android:textColor="@color/add_button"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/totalQty_Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColor="@color/add_button"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TextView
+            android:id="@+id/textView2643"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:text="       __________________________________________________________"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView226413"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:text="       __________________________________________________________"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView2264123"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            android:text="       __________________________________________________________"
+            android:textColor="@color/add_button"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </LinearLayout>

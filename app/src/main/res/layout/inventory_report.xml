@@ -3,18 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="locale"
     android:background="@color/layer1"
     android:orientation="vertical"
     android:padding="20dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+
+        >
 
     <TextView
+        android:id="@+id/print"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/inventory_report"
-        android:textColor="@color/text_view_color"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_weight="13"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/ic_print_black_24dp"
+     />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="@string/inventory_report"
+            android:textColor="@color/text_view_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/row2"
@@ -24,21 +44,17 @@
         android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:weightSum="5">
+      >
 
 
         <TextView
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
 
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginStart="3dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginHorizontal="3dp"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="@string/item_number"
             android:textColor="@color/text_view_color"
             android:textSize="17sp" />
@@ -46,11 +62,11 @@
 
         <EditText
             android:id="@+id/item_number_inventory"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="3dp"
             android:layout_weight="1"
             android:background="@color/layer5"
             android:gravity="center_vertical"
@@ -61,20 +77,35 @@
 
         <Button
             android:id="@+id/preview_button_inventory"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:background="@color/red_background"
 
             android:text="@string/preview"
             android:textColor="@color/text_view_color" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
 
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/item_name"
+            android:textColor="@color/text_view_color"
+            android:textSize="17sp" />
         <androidx.appcompat.widget.SearchView
             android:id="@+id/mSearch2"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+
             android:layout_weight="1"
 
             android:background="@color/layer4"
@@ -83,13 +114,48 @@
 
         </androidx.appcompat.widget.SearchView>
 
-
-        <Spinner
-            android:id="@+id/cat"
-            android:layout_width="150dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
+
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/category"
+            android:textColor="@color/text_view_color"
+            android:textSize="16sp" />
+        <Spinner
+            android:id="@+id/cat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
+            android:layout_weight="1"
+            android:background="@color/layer3"
+            android:gravity="center"
+            android:padding="3dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/qty"
+            android:textColor="@color/text_view_color"
+            android:textSize="17sp" />
+        <Spinner
+            android:id="@+id/quantityFilter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
             android:layout_weight="1"
             android:background="@color/layer3"
             android:gravity="center"
