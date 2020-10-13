@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity
             {
 //                if(isNetworkAvailable())
 //                {
-                    getlocationForCheckIn();
+//                    getlocationForCheckIn();
 //                }
 //                else {
 //                    Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
@@ -364,6 +364,7 @@ public class MainActivity extends AppCompatActivity
 
     public  void getlocationForCheckIn() {
 
+        latitudeCheckIn=0;longtudeCheckIn=0;
 
             LocationListener locationListener;
 
@@ -387,15 +388,18 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
+                    Log.e("onStatusChanged",""+provider.toString()+status+"\t extras"+extras.toString());
 
                 }
 
                 @Override
                 public void onProviderEnabled(String provider) {
+                    Log.e("onProviderEnabled",""+provider.toString());
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
+                    Log.e("onProviderDisabled",""+provider.toString());
 
                 }
             };
@@ -787,7 +791,7 @@ public class MainActivity extends AppCompatActivity
 
     };
 
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
@@ -1017,7 +1021,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void openSelectCustDialog() {
-        CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
+        CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment(MainActivity.this);
         customerCheckInFragment.setCancelable(false);
         customerCheckInFragment.setListener(this);
         customerCheckInFragment.show(getFragmentManager(), "");

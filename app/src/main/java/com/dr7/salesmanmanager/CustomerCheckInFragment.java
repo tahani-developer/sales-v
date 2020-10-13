@@ -2,13 +2,17 @@ package com.dr7.salesmanmanager;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
@@ -54,6 +58,7 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
@@ -93,6 +98,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
     private static DatabaseHandler mDbHandler;
 
+    public Context context;
 
     public interface CustomerCheckInInterface {
         public void showCustomersList();
@@ -103,6 +109,11 @@ public class CustomerCheckInFragment extends DialogFragment {
     CustomerCheckInInterface customerCheckInListener;
 
     public CustomerCheckInFragment() {
+        // Required empty public constructor
+    }
+    @SuppressLint("ValidFragment")
+    public CustomerCheckInFragment(Context cont) {
+        this.context=cont;
         // Required empty public constructor
     }
 
@@ -330,6 +341,10 @@ public class CustomerCheckInFragment extends DialogFragment {
     boolean isInRange(String cusLat, String cusLong) {
         Log.e("ggg","cusid"+ cusLat+""+cusLong);
         float distance=0;
+        if( !isNetworkAvailable())
+        {
+            return  false;
+        }
         if(cusLat.equals(""))
             return true;
 
@@ -346,6 +361,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         loc1.setLongitude(Double.parseDouble(cusLong));
 
         Location loc2 = new Location("");
+        Log.e("ggg2","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
         if(latitudeCheckIn!=0&&longtudeCheckIn!=0)
         {
 
@@ -357,6 +373,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         }
         else {
             getCurrentLocation();
+            Log.e("ggg3","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
 
             loc2.setLatitude(latitudeCheckIn);
             loc2.setLongitude(longtudeCheckIn);
@@ -368,7 +385,14 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         return distance <= 50;
     }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     private  void getCurrentLocation() {
+        latitudeCheckIn=0;longtudeCheckIn=0;
         LocationListener locationListener;
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);

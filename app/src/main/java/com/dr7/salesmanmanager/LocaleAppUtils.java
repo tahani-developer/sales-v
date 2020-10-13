@@ -2,9 +2,15 @@ package com.dr7.salesmanmanager;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Locale;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class LocaleAppUtils {
     private static Locale locale;

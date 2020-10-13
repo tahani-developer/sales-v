@@ -370,7 +370,7 @@ public class InventoryReport extends AppCompatActivity {
 //                                        e.printStackTrace();
 //                                    }
 //                                                             lk31.setChecked(true);
-                                    break;
+
                                 case 2:
 
 //                                        try {
@@ -387,7 +387,7 @@ public class InventoryReport extends AppCompatActivity {
 //                                    O1.putExtra("printKey", "9");
 //                                    startActivity(O1);
 
-                                    break;
+
                                 case 3:
 
 //                                    try {
@@ -397,10 +397,10 @@ public class InventoryReport extends AppCompatActivity {
 //                                        e.printStackTrace();
 //                                    }
 //                                                             qs.setChecked(true);
-                                    break;
+
                                 case 4:
 //                                    printTally();
-                                    break;
+
                                 case 5:
 //                                    convertLayoutToImage();
                                     Intent O= new Intent(InventoryReport.this, bMITP.class);
