@@ -57,15 +57,23 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 104;
+    private static final int DATABASE_VERSION = 105;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
     //----------------------------------------------------------------------
+    private static final String  SALESMAN_LOGIN_TABLE  = "SALESMAN_LOGIN_TABLE";
+    private static final String  KEY_LOGIN="KEY_LOGIN";
+    private static final String  DATE_LOGIN = "DATE_LOGIN";
+    private static final String  TIME_LOGIN = "TIME_LOGIN";
+    private static final String  TIME_LOGOUT= "TIME_LOGOUT";
+    private static final String  LONGTUDE2  = "LONGTUDE2";
+    private static final String  LATITUDE2  = "LATITUDE2";
+    private static final String  SALESMAN_NO= "SALESMAN_NO";
+    private static final String  IS_POSTED_LOGIN= "IS_POSTED_LOGIN";
     //----------------------------------------------------------------------
-//
     private static final String SERIAL_ITEMS_TABLE  = "SERIAL_ITEMS_TABLE";
     private static final String  KEY_SERIAL="KEY_SERIAL";
     private static final String SERIAL_CODE_NO ="SERIAL_CODE_NO";
@@ -301,6 +309,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String LOGO = "LOGO";
     private static final String NOTE = "NOTE";
 
+    private static final String  LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
+    private static final String  LATITUDE_COMPANY  = "LATITUDE_COMPANY";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
 
@@ -433,6 +444,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
+                + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER"+
+
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //-------------------------------------------------------------------------
+
 
         String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE " + SERIAL_ITEMS_TABLE + "("
                 + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -706,7 +732,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + COMPANY_TEL + " INTEGER,"
                 + TAX_NO + " INTEGER,"
                 + LOGO + " BLOB,"
-                + NOTE + " TEXT" + ")";
+                + NOTE + " TEXT,"
+                + LONGTUDE_COMPANY +" REAL,"
+                + LATITUDE_COMPANY +" REAL "
+                + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1315,8 +1344,29 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
         //
+//*********************************** TABLE LOGIN *************************************
+        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
+                + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER"+
 
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //****************************************************************************
+        try{
 
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LONGTUDE_COMPANY  REAL  DEFAULT 0.0 ");
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LATITUDE_COMPANY  REAL  DEFAULT 0.0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
     public void addAccount_report(Account_Report account_report)
@@ -1653,6 +1703,23 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.insert(TABLE_TRANSACTIONS, null, values);
         db.close();
     }
+    public void addlogin(Transaction transaction) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DATE_LOGIN, transaction.getCheckInDate());
+        values.put(TIME_LOGIN, transaction.getCheckInTime());
+        values.put(LONGTUDE2, transaction.getLongtude());
+        values.put(LATITUDE2, transaction.getLatitud());
+
+        values.put(SALESMAN_NO, transaction.getSalesManId());
+
+
+        values.put(IS_POSTED_LOGIN, 0);
+
+        db.insert(SALESMAN_LOGIN_TABLE, null, values);
+        db.close();
+    }
+
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
@@ -2232,6 +2299,49 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         return transactionList;
     }
+    //*******************************************************************
+    public List<Transaction> getLoginSalesman() {
+        List<Transaction> transactionList = new ArrayList<Transaction>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + SALESMAN_LOGIN_TABLE;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Transaction transaction = new Transaction();
+
+                transaction.setCheckInDate(cursor.getString(1));
+                transaction.setCheckInTime(cursor.getString(2));
+                // checkout time
+                transaction.setLongtude(cursor.getDouble(4));
+                transaction.setLatitud(cursor.getDouble(5));
+                transaction.setSalesManId(Integer.parseInt(cursor.getString(6)));
+                transaction.setIsPosted(Integer.parseInt(cursor.getString(7)));
+
+
+                // Adding transaction to list
+                transactionList.add(transaction);
+            } while (cursor.moveToNext());
+        }
+
+        return transactionList;
+    }
+    //*******************************************************************
+    /*//    String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
+//            + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+//            + DATE_LOGIN + " TEXT,"
+//            + TIME_LOGIN + " TEXT,"
+//            + TIME_LOGOUT + " TEXT,"
+//            + LONGTUDE2 + " REAL,"
+//            + LATITUDE2 + " REAL,"
+//            + SALESMAN_NO + " TEXT,"
+//            + IS_POSTED_LOGIN + " INTEGER"+
+//
+//            ")";
+//        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);*/
 
     public List<SalesMan> getAllSalesMen() {
         List<SalesMan> salesMen = new ArrayList<>();
