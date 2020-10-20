@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,7 @@ import com.dr7.salesmanmanager.Modles.Cheque;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -74,11 +78,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Item> filterList;
     private Context cont;
     int current_itemHasSerial=0;
-private AddItemsFragment2 context;
+    private AddItemsFragment2 context;
     boolean added = false;
     DatabaseHandler MHandler;
     DecimalFormat threeDForm ;
-    int settingPriceCus=0;
+    int settingPriceCus=0,showItemImageSetting=0;
     List<String> localItemNumber;
     boolean itemInlocalList=false;
     public static EditText Serial_No,item_serial;
@@ -93,6 +97,9 @@ private AddItemsFragment2 context;
     public String exist="";
     public  static  String curentSerial="";
     public  static   String araySerial[];
+    Bitmap  itemBitmap;
+    public PhotoView photoView, photoDetail;
+    ArrayList<Bitmap> listBitmap;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -104,13 +111,17 @@ private AddItemsFragment2 context;
          cont=context.getActivity();
         MHandler = new DatabaseHandler(cont);
         settingPriceCus=MHandler.getAllSettings().get(0).getPriceByCust();
+        showItemImageSetting=MHandler.getAllSettings().get(0).getShowItemImage();
         localItemNumber= new ArrayList<>();
+//        this.listBitmap=listItemImage;
+
         Log.e("settingPriceCus",""+settingPriceCus);
     }
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
+
         return new viewHolder(view);
     }
 
@@ -137,18 +148,46 @@ private AddItemsFragment2 context;
         else{
             holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getQty());
         }
-        if(settingPriceCus==1)
+//        if(settingPriceCus==1)
+//        {
+//            if(checkTypePriceTable(items.get(holder.getAdapterPosition()).getItemNo())){
+//                holder.imagespecial.setVisibility(View.VISIBLE);
+//            }
+//            else{
+//                holder.imagespecial.setVisibility(View.GONE);
+//            }
+//        }
+//        else{
+//            holder.imagespecial.setVisibility(View.GONE);
+//        }
+        // second solution is you can set the path inside decodeFile function
+
+        holder.imagespecial.setVisibility(View.VISIBLE);
+        if(showItemImageSetting==1)
         {
-            if(checkTypePriceTable(items.get(holder.getAdapterPosition()).getItemNo())){
-                holder.imagespecial.setVisibility(View.VISIBLE);
+            if(items.get(position).getItemPhoto()!= null) {
+//            itemBitmap = StringToBitMap(items.get(position).getItemPhoto());
+                holder.imagespecial.setImageBitmap(items.get(position).getItemPhoto());
             }
-            else{
-                holder.imagespecial.setVisibility(View.GONE);
+            else {
+                holder.imagespecial.setImageDrawable(this.context.getResources().getDrawable(R.drawable.specialred));
             }
+
+//
+            holder.imagespecial.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
+                    showImageOfCheck(items.get(position).getItemPhoto());
+                }
+            });
         }
-        else{
+        else {
             holder.imagespecial.setVisibility(View.GONE);
         }
+
+
 
 
         holder.price.setText(convertToEnglish( threeDForm.format(items.get(holder.getAdapterPosition()).getPrice())));
@@ -755,6 +794,16 @@ private AddItemsFragment2 context;
         return  counter;
 
     }
+    public void showImageOfCheck(Bitmap bitmap) {
+        final Dialog dialog = new Dialog(context.getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.show_image);
+        photoDetail = (PhotoView) dialog.findViewById(R.id.image_check);
+          final ImageView imageView = (ImageView) dialog.findViewById(R.id.image_check);
+        photoDetail.setImageBitmap(bitmap);
+        dialog.show();
+    }
 
     private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(cont);
@@ -924,6 +973,19 @@ private AddItemsFragment2 context;
             threeDForm = new DecimalFormat("00.000");
         }
     }
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }
+        catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
+
 
     private Boolean check_Discount(EditText unitEditText, EditText qtyEditText, TextView priceEditText,
                                    EditText bonusEditText, EditText discEditText, RadioGroup discTypeRadioGroup) {

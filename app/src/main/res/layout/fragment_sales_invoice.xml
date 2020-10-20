@@ -90,7 +90,7 @@
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
             android:text="@string/app_disc_l"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/addItemImgButton2"-->
@@ -153,6 +153,18 @@
         android:gravity="center"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/readNewDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:checked="true"
+            android:visibility="gone"
+            android:text="@string/read_new_offer"
+            android:textColor="@color/cancel_button"
+            android:textSize="18sp"
+            />
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -160,6 +172,7 @@
             android:layout_margin="5dp"
             android:elevation="3dp"
             android:background="@drawable/back_border_edit">
+
 
             <TextView
                 android:layout_width="wrap_content"

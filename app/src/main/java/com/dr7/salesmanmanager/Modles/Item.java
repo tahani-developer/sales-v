@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -39,6 +40,24 @@ public class Item {
     private  String serialCode;
     private  String vouchDate;
     private String itemHasSerial;
+
+    public Bitmap getItemPhoto() {
+        return itemPhoto;
+    }
+
+    public void setItemPhoto(Bitmap itemPhoto) {
+        this.itemPhoto = itemPhoto;
+    }
+
+    private Bitmap itemPhoto;
+
+//    public String getItemPhoto() {
+//        return itemPhoto;
+//    }
+//
+//    public void setItemPhoto(String itemPhoto) {
+//        this.itemPhoto = itemPhoto;
+//    }
 
     public String getItemHasSerial() {
         return itemHasSerial;

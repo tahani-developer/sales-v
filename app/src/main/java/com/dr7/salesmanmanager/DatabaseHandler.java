@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 //import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -56,7 +57,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 102;
+    private static final int DATABASE_VERSION = 104;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -180,6 +181,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_F_D = "F_D";
     private static final String KIND_ITEM= "KIND_ITEM";
     private static final String ITEM_HAS_SERIAL= "ITEM_HAS_SERIAL";
+    private static final String ITEM_PHOTO= "ITEM_PHOTO";
+    /*byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length); */
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -286,6 +290,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ShowCustomerList="ShowCustomerList";
     private static final String NoReturnInvoice="NoReturnInvoice";
     private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
+    private static final String SHOW_IMAGE_ITEM="SHOW_IMAGE_ITEM";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -493,7 +498,6 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
         String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE " + CUSTOMER_MASTER + "("
                 + COMPANY_NUMBER0 + " INTEGER,"
                 + CUS_ID + " TEXT,"
@@ -557,7 +561,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + ITEM_L1 + " INTEGER,"
                 + ITEM_F_D + " REAL,"
                 + KIND_ITEM + " TEXT,"
-                + ITEM_HAS_SERIAL + " INTEGER"
+                + ITEM_HAS_SERIAL + " INTEGER,"
+                 +ITEM_PHOTO + " TEXT"
 
                 + ")";
 
@@ -687,7 +692,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + PreventChangPayMeth + " INTEGER,"
                 + ShowCustomerList + " INTEGER DEFAULT 1,"
                 + NoReturnInvoice + " INTEGER,"
-                + WORK_WITH_SERIAL + " INTEGER"
+                + WORK_WITH_SERIAL + " INTEGER,"
+                + SHOW_IMAGE_ITEM + " INTEGER"
 
 
         + ")";
@@ -943,6 +949,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1293,6 +1306,14 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
         //
 
 
@@ -1474,8 +1495,10 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_L1, item.getItemL());
         values.put(ITEM_F_D, item.getPosPrice());
         values.put(KIND_ITEM,item.getKind_item());
+
 //        if(ITEM_HAS_SERIAL)
         values.put(ITEM_HAS_SERIAL,item.getItemHasSerial());
+        values.put(ITEM_PHOTO,item.getPhotoItem());
 
 
 
@@ -1635,7 +1658,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi, int Work_serialNo) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi, int Work_serialNo,int itemPhoto) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1673,6 +1696,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ShowCustomerList,showCustomer);
         values.put(NoReturnInvoice,noReturnInvoi);
         values.put(WORK_WITH_SERIAL,Work_serialNo);
+        values.put(SHOW_IMAGE_ITEM,itemPhoto);
 
 
 
@@ -2004,6 +2028,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
                 setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
                 setting.setWork_serialNo(Integer.parseInt(cursor.getString(33)));
+                setting.setShowItemImage((cursor.getInt(34)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -2609,7 +2634,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String salesMan = Login.salesMan;
 //        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL  \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
 
@@ -2622,6 +2647,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
@@ -2650,7 +2676,21 @@ DatabaseHandler extends SQLiteOpenHelper {
                 {
                     item.setItemHasSerial("0");
                     Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
                 }
+
+
+                if(!cursor.getString(13).equals("")) {
+
+                    itemBitmap = StringToBitMap(cursor.getString(13));
+                    item.setItemPhoto(itemBitmap);
+                }
+                else {
+                    item.setItemPhoto(null);
+                }
+
+
+//                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
 
 
                 // Adding transaction to list
@@ -2660,7 +2700,17 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
-
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }
+        catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
     public List<Item> getAllJsonItems2(String rate)
     {
 
@@ -2670,7 +2720,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
@@ -2685,6 +2735,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 String itno=cursor.getString(0);
@@ -2720,9 +2771,21 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }catch (Exception e)
                 {
                     item.setItemHasSerial("0");
+
                     Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
                 }
+//                item.setItemPhoto(cursor.getString(13));
                 // Adding transaction to list
+                if(!cursor.getString(13).equals("")) {
+
+                    itemBitmap = StringToBitMap(cursor.getString(13));
+                    item.setItemPhoto(itemBitmap);
+                }
+                else {
+                    item.setItemPhoto(null);
+                }
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -3379,7 +3442,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<AddedCustomer> getAllAddedCustomer() {
         List<AddedCustomer> customers = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER;
+        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER+ " where IS_POSTED = '" + 0  + "'";;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4200,5 +4263,41 @@ DatabaseHandler extends SQLiteOpenHelper {
         Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
 
         return name;
+    }
+
+    public ArrayList<Bitmap> getItemsImage() {
+        ArrayList<Bitmap> listPhoto = new ArrayList<Bitmap>();
+
+        String selectQuery = "select ITEM_PHOTO   from  Items_Master";
+
+        Log.e("***" , selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            do {
+
+                Bitmap  itemBitmap=null;
+
+                if(!cursor.getString(0).equals("")) {
+
+                    itemBitmap = StringToBitMap(cursor.getString(0));
+
+                    listPhoto.add(itemBitmap);
+                }
+                else {
+                    listPhoto.add(null);
+                }
+
+
+                Log.e("listPhoto",""+listPhoto.size());
+
+            } while (cursor.moveToNext());
+        }
+
+        return listPhoto;
+
     }
 }

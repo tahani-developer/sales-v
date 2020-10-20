@@ -412,5 +412,8 @@
     <string name="reqired_filled">حقل اجباري فارغ </string>
     <string name="cancel">الغاء</string>
     <string name="qty">الكميات</string>
+    <string name="read_new_offer">Read New Offer</string>
+    <string name="address">العنوان</string>
+    <string name="ShowItemImage">إظهار صور العناصر</string>
 
 </resources>

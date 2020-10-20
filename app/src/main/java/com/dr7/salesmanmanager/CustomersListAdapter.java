@@ -101,14 +101,16 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
-                if (custList.get(i).getIsSuspended() == 1) {
+                if (custList.get(i).getIsSuspended() == 1)
+                {
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 180);
                     ViewGroup group = (ViewGroup) toast.getView();
                     TextView messageTextView = (TextView) group.getChildAt(0);
                     messageTextView.setTextSize(25);
                     toast.show();
-                } else {
+                } else
+                    {
                     CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
                     customerCheckInFragment.settext1();
                 }

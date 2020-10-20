@@ -364,6 +364,9 @@
     <string name="reqired_filled">Reqired Filled Empty</string>
     <string name="cancel">Cancel</string>
     <string name="qty">Qty</string>
+    <string name="read_new_offer">Read New Offer</string>
+    <string name="address">Address</string>
+    <string name="ShowItemImage">Show Item Image</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

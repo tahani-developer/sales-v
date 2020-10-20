@@ -36,6 +36,15 @@ public class Settings {
     private int  ShowCustomerList;
     private int  noReturnInvoice;
     private int  work_serialNo;
+    private int  showItemImage;
+
+    public int getShowItemImage() {
+        return showItemImage;
+    }
+
+    public void setShowItemImage(int showItemImage) {
+        this.showItemImage = showItemImage;
+    }
 
     public int getWork_serialNo() {
         return work_serialNo;

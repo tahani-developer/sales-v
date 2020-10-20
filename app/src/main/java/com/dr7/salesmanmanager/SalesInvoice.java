@@ -186,6 +186,7 @@ public class SalesInvoice extends Fragment {
     public double totalDiscount = 0, discount_oofers_total_cash = 0, discount_oofers_total_credit = 0, sum_discount = 0, disc_items_value = 0, disc_items_total = 0;
     private TextView taxTextView, subTotalTextView, netTotalTextView;
     public static TextView totalQty_textView;
+    public  CheckBox readNewDiscount;
     public TextView discTextView;
     public ImageButton discountButton;
     private DecimalFormat decimalFormat;
@@ -233,7 +234,7 @@ public class SalesInvoice extends Fragment {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     SweetAlertDialog pd;
-    double discountValue;
+    double discountValue=0;
     double discountPerc;
     volatile boolean stopWorker;
     DecimalFormat threeDForm;
@@ -245,6 +246,7 @@ public class SalesInvoice extends Fragment {
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     private FusedLocationProviderClient fusedLocationClient;
     public  static  CustomerLocation customerLocation;
+   public static ArrayList<Bitmap> listItemImage;
 //    public  Location curent_location;
 //    static Voucher voucherSale;
 //    static List<Item> itemSale;
@@ -286,6 +288,7 @@ public class SalesInvoice extends Fragment {
     LinearLayout mainlayout;
     double curentLatitude, curentLongitude;
     FusedLocationProviderClient mFusedLocationClient;
+    boolean validDiscount=false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -297,9 +300,12 @@ public class SalesInvoice extends Fragment {
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
 
         try {
-            if (languagelocalApp.equals("ar")) {
+            if (languagelocalApp.equals("ar"))
+            {
                 mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            } else {
+            }
+            else
+                {
                 if (languagelocalApp.equals("en")) {
                     mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
@@ -322,6 +328,9 @@ public class SalesInvoice extends Fragment {
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
         itemCountTable = mDbHandler.getCountItemsMaster();
+        listItemImage=new ArrayList<>();
+//        listItemImage=mDbHandler.getItemsImage();
+//        Log.e("listItemImage",""+listItemImage.get(0).toString());
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2 = new ArrayList<>();
 //        jsonItemsList_intermidiate = new ArrayList<>();
@@ -1032,13 +1041,18 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
         maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
+        readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveData() {
+        validDiscount=false;
+
+        double discountValue=0;
+        double discountPerc=0;
         DiscountFragment obj = new DiscountFragment();
-        double discountValue = obj.getDiscountValue();
-        double discountPerc = obj.getDiscountPerc();
+         discountValue = obj.getDiscountValue();
+         discountPerc = obj.getDiscountPerc();
 
         double totalDisc = Double.parseDouble(discTextView.getText().toString());
         double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
@@ -1156,6 +1170,53 @@ public class SalesInvoice extends Fragment {
             builder.create().show();
 
         }
+    }
+
+    private double calcTotalDiscountOffer() {
+        discountValue=0;
+        double discount=0;
+        int foundOne=0;
+        Log.e("foundOne",""+foundOne);
+
+        for(int i=0;i<items.size();i++)
+        {
+            if(items.get(i).getItemNo().equals("7614900002274"))
+            {
+                if(items.get(i).getQty()>11)
+                {
+                    foundOne++;
+                }
+            }
+            else {
+                if(items.get(i).getItemNo().equals("7614900008818")) //جولد كوست أبيض
+                {
+                    if(items.get(i).getQty()>6)
+                    {
+                        foundOne++;
+                    }
+                }
+                else {
+                    if(items.get(i).getItemNo().equals("4033100039492"))// ld light
+                    {
+                        if(items.get(i).getQty()>5)
+                        {
+                            foundOne++;
+                        }
+                    }
+                }
+
+            }
+        }
+        Log.e("foundOne",""+foundOne);
+        if(foundOne==3)
+        {
+            return discount=4.8;
+        }
+        else {
+            discount=0;
+        }
+
+        return  discount;
     }
 
     public int getVoucherTypeCurrent() {
@@ -3714,9 +3775,11 @@ public class SalesInvoice extends Fragment {
 
 
             }
-        } catch (NullPointerException e) {
+        } catch (NullPointerException e)
+        {
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             e.printStackTrace();
         }
     }

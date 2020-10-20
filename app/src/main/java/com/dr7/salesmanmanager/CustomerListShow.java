@@ -288,8 +288,9 @@ public class CustomerListShow extends DialogFragment {
                 for (int i = 0; i < parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
 
+                    String rate_customer="";
+                    String HideVal="";
                     Customer Customer = new Customer();
-
                     Customer.setCompanyNumber(finalObject.getInt("ComapnyNo"));
                     Customer.setCustId(finalObject.getString("CustID"));
                     Customer.setCustName(finalObject.getString("CustName"));
@@ -302,7 +303,49 @@ public class CustomerListShow extends DialogFragment {
                     Customer.setCashCredit(finalObject.getInt("CashCredit"));
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
-                    Customer.setMax_discount(finalObject.getDouble("MAXDISC"));
+                    try {
+                        Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                    }catch (Exception e){
+                        Customer.setPayMethod(-1);
+
+                    }
+                    Customer.setCustLat(finalObject.getString("LATITUDE"));
+                    Customer.setCustLong(finalObject.getString("LONGITUDE"));
+
+
+                    try {
+                        rate_customer=finalObject.getString("ACCPRC");
+                        if(!rate_customer.equals("null"))
+                            Customer.setACCPRC(rate_customer);
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
 
                     customerList.add(Customer);
                 }

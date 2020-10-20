@@ -382,7 +382,9 @@ public class ImportJason extends AppCompatActivity {
             }
                 try
                 {
+//                    `ITEMPICSPATH`
                 JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
+//                Log.e("parentArrayItems_Master",""+parentArrayItems_Master.getString(""));
                 itemsMasterList.clear();
                 for (int i = 0; i < parentArrayItems_Master.length(); i++) {
                     JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);
@@ -415,6 +417,13 @@ public class ImportJason extends AppCompatActivity {
                     }
                     catch (Exception e)
                     {}
+                    try {
+                       item.setPhotoItem( finalObject.getString("ITEMPICSPATH"));
+                        Log.e("ITEMPICSPATH",""+finalObject.getString("ITEMPICSPATH"));
+                    }
+                    catch (Exception e)
+                    {}
+//                    ITEMPICSPATH
                     itemsMasterList.add(item);
                 }
                 }

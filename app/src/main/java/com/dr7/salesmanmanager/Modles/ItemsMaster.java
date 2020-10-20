@@ -12,6 +12,15 @@ public class ItemsMaster {
     private double posPrice; // for weight
     private String kind_item;
     private String itemHasSerial;
+    private  String photoItem;
+
+    public String getPhotoItem() {
+        return photoItem;
+    }
+
+    public void setPhotoItem(String photoItem) {
+        this.photoItem = photoItem;
+    }
 
     public String getItemHasSerial() {
         return itemHasSerial;

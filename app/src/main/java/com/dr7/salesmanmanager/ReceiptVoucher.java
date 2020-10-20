@@ -210,7 +210,7 @@ public class ReceiptVoucher extends Fragment {
                 }
 
             }
-        }
+}
         catch (Exception e){
             mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
 

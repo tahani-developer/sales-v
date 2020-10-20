@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -73,6 +74,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -110,8 +112,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
@@ -251,7 +256,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
-        catch ( Exception e){
+        catch ( Exception e)
+        {
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
@@ -1062,6 +1068,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openAddCustomerDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1074,7 +1081,23 @@ public class MainActivity extends AppCompatActivity
 
         final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
         final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
+        final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
         Button done = (Button) dialog.findViewById(R.id.doneButton);
+         RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
+         LinearLayout   linear = dialog.findViewById(R.id.linear);
+        try {
+            if (languagelocalApp.equals("ar")) {
+                linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -1113,16 +1136,145 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
+                    int payMethod=0;
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
                             latitude_main, longitude_main, Login.salesMan, 0, Login.salesManNo));
-                    dialog.dismiss();
+                  dialog.dismiss();
+//                    String customerId=getCustomerId();
+//                    if(!customerId.equals(""))
+//                    {
+//                       int idRadioGroup= paymentTermRadioGroup.getCheckedRadioButtonId();
+//                       if(idRadioGroup==R.id.cashRadioButton)
+//                       {
+//                           payMethod=1;
+//                       }
+//                       else {    payMethod=0;
+//                       }
+//                        mDbHandler.addCustomer(new Customer(123,customerId,addCus.getText().toString(),address.getText().toString(),0,"0",0,"1",0,payMethod,latitude_main+"",longitude_main+"",0.0,"0",0,0,customerId+""));
+//                        dialog.dismiss();
+//                    }
+
                 } else
+                {
+                    addCus.setError(getResources().getString(R.string.reqired_filled));
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         });
 
         dialog.show();
     }
+
+    private String getCustomerId() {
+        String custId="120120120";
+        new JSONTask_getCustomerId().execute();
+
+        return  custId;
+    }
+    private class JSONTask_getCustomerId extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+
+                String link = "";
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('3'), "UTF-8");
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+                reader = new BufferedReader(new
+                        InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // Read Server Response
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                String finalJson = sb.toString();
+                Log.e("finalJson*********", finalJson);
+
+                JSONObject parentObject = new JSONObject(finalJson);
+//                try {
+//
+//                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS_BALANCE");
+//                    customerList.clear();
+//                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
+//                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+//                        Customer Customer = new Customer();
+//                        Customer.setCustId(finalObject.getString("CUSTID"));
+//                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+//                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+//                        customerList.add(Customer);
+//                    }
+//                } catch (Exception e) {
+//                    Log.e("Refresh_data", "" + e.getMessage().toString());
+//                }
+
+
+
+            } catch (MalformedURLException e) {
+                Log.e("Refresh_data", "********ex1");
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e("Refresh_data", e.getMessage().toString());
+                e.printStackTrace();
+
+            } catch (JSONException e) {
+                Log.e("Refresh_data", "********ex3  " + e.toString());
+                e.printStackTrace();
+            } finally {
+                Log.e("Refresh_data", "********finally");
+                if (connection != null) {
+                    Log.e("Refresh_data", "********ex4");
+                    // connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "";
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+//            progressDialog.dismiss();
+
+            if (result != null) {
+//                storeInDatabase();
+            } else {
+                Toast.makeText(MainActivity.this, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     public void openCustCheckOut() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
@@ -1447,6 +1599,8 @@ public class MainActivity extends AppCompatActivity
             final CheckBox showCustomerList_checkbox = (CheckBox) dialog.findViewById(R.id.showCustomerList_checkbox);
             final CheckBox noReturn_checkbox = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
             final CheckBox workSerial_checkbox = (CheckBox) dialog.findViewById(R.id.workSerial_checkbox);
+            final CheckBox showItemImage_checkbox = (CheckBox) dialog.findViewById(R.id.showItemImage_checkbox);
+
 
 
 
@@ -1660,6 +1814,14 @@ public class MainActivity extends AppCompatActivity
                     workSerial_checkbox.setChecked(true);
                 }
 
+                if (mDbHandler.getAllSettings().get(0).getShowItemImage() == 1) {
+                    showItemImage_checkbox.setChecked(true);
+                }
+                else {
+                    showItemImage_checkbox.setChecked(false);
+                }
+
+
 
 
 
@@ -1770,16 +1932,17 @@ public class MainActivity extends AppCompatActivity
                                    int noReturnInvoice = noReturn_checkbox.isChecked() ? 1 : 0;
 
                                    int workSerial = workSerial_checkbox.isChecked() ? 1 : 0;
+                                   int showImage=showItemImage_checkbox.isChecked()?1:0;
 
 
                                    String salesmanname=salesmanNmae.getText().toString();
                                    mDbHandler.deleteAllSettings();
-                                   mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
-                                   mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
-                                   mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
-                                   /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
-                                   /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
-                                   /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial);
+                                   mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                                   mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                                   mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                                   /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                                   /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                                   /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
 
                                    finish();
                                    startActivity(getIntent());

@@ -74,7 +74,7 @@ public class Customer {
 
     public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit, int payMethod, String custLat, String custLong,
-                    double max_discount, String ACCPRC, int hide_val, String customerAccount, String customerName) {
+                    double max_discount, String ACCPRC, int hide_val, int isPost, String customerIdText) {
         this.companyNumber = companyNumber;
         this.custId = custId;
         this.custName = custName;
@@ -90,8 +90,8 @@ public class Customer {
         this.max_discount = max_discount;
         this.ACCPRC = ACCPRC;
         Hide_val = hide_val;
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
+        this.isPost = isPost;
+        this.customerIdText = customerIdText;
     }
 
     private String customerAccount, customerName;
