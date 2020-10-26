@@ -158,7 +158,8 @@ public class AddItemsFragment2 extends DialogFragment {
             if (languagelocalApp.equals("ar")) {
                 add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             } else {
-                if (languagelocalApp.equals("en")) {
+                if (languagelocalApp.equals("en"))
+                {
                     add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
 
@@ -707,7 +708,16 @@ public class AddItemsFragment2 extends DialogFragment {
 //                    item.setQty(Float.parseFloat(qty));
 //                }
 
-                item.setQty(Float.parseFloat(qty));
+                Log.e("unit",""+unit);
+                int unitInt=0;
+                try{
+                     unitInt=Integer.parseInt(unit);
+                }
+                catch (Exception e)
+                {
+                    unitInt=1;
+                }
+                item.setQty(Float.parseFloat(qty)*unitInt);
                 item.setItemHasSerial(hasSerial+"");
 
                 item.setPrice(Float.parseFloat(price.trim()));

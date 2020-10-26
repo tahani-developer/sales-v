@@ -1,9 +1,13 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
@@ -21,19 +25,37 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Reports.SalesMan;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
+import static com.dr7.salesmanmanager.MainActivity.latitude_main;
+import static com.dr7.salesmanmanager.MainActivity.location_main;
+import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
@@ -57,6 +79,14 @@ public class Login extends AppCompatActivity {
     int index = 0;
     List<SalesMan> salesMenList;
     public static String languagelocalApp="";
+    FusedLocationProviderClient fusedLocationClient;
+    LocationRequest mLocationRequest;
+    public   LocationManager locationManager;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    Date currentTimeAndDate;
+    SimpleDateFormat df, df2;
+    String curentDate, curentTime;
+    public  static Location location_main;
 
 
     @Override
@@ -64,9 +94,22 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LocaleAppUtils.setConfigChange(Login.this);
         setContentView(R.layout.activity_login);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
         loginText = (TextView) findViewById(R.id.logInTextView);
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        Log.e("currentTimeAndDate",""+currentTimeAndDate);
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        curentDate = df.format(currentTimeAndDate);
+        curentDate = convertToEnglish(curentDate);
+        Log.e("curentDate",""+curentDate);
+
+        df2 = new SimpleDateFormat("hh:mm:ss");
+        curentTime=df2.format(currentTimeAndDate);
+        curentTime=convertToEnglish(curentTime);
+        Log.e("curentTime",""+curentTime);
+        validLocation();
         try {
         if(LocaleAppUtils.getLocale()==null)
         {
@@ -117,6 +160,8 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
+                CompanyInfo companyLocation=mDHandler.getCompanyLocation();
+                Log.e("companyLocation",""+companyLocation.getLongtudeCompany());
                 String user = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
                 salesMenList = mDHandler.getAllSalesMen();
@@ -151,7 +196,8 @@ public class Login extends AppCompatActivity {
 
                     }
 
-                } else {//item in list
+                }
+                else {//item in list
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
 
@@ -194,7 +240,10 @@ public class Login extends AppCompatActivity {
         });
 
     }
-
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
     private void checkExistToLogin() {
         if (exist) {
             if (isMasterLogin) {
@@ -206,7 +255,21 @@ public class Login extends AppCompatActivity {
 
                     salesMan = usernameEditText.getText().toString();
                     salesManNo = passwordEditText.getText().toString();
+                    try {
+                        Transaction transaction=new Transaction();
+                        transaction.setCheckInDate(curentDate);
+                        transaction.setCheckInTime(curentTime);
+                        transaction.setLongtude(location_main.getLongitude());
+                        transaction.setLatitud(location_main.getLatitude());
+                        transaction.setSalesManId(Integer.parseInt(salesMan));
+                        mDHandler.addlogin(transaction);
+                    }
+                    catch (Exception e){
 
+                    }
+
+
+//                    if(validLocation()){}
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
@@ -236,6 +299,187 @@ public class Login extends AppCompatActivity {
             Toast.makeText(Login.this, "UserName does not exist", Toast.LENGTH_SHORT).show();
         exist = false;
     }
+
+    private boolean validLocation() {
+//        getCompanyLocation();
+//        getCurentLocation();
+//        compareLocation();
+        return true;
+    }
+//    LocationCallback mLocationCallback = new LocationCallback(){
+//        @Override
+//        public void onLocationResult(LocationResult locationResult) {
+//            Log.e("onLocationResult",""+locationResult);
+//            Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
+//            if(getLocationComp)
+//            {
+//                for (Location location : locationResult.getLocations()) {
+//                    Log.e("MainActivity", "getLocationComp: " + location.getLatitude() + " " + location.getLongitude());
+//                    if (mDbHandler.getAllCompanyInfo().size() != 0) {
+//                        if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
+//                            latitude_main = location.getLatitude();
+//                            longitude_main = location.getLongitude();
+//                            Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+//                            mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
+//                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                    .setTitleText(getResources().getString(R.string.succsesful))
+//                                    .setContentText(getResources().getString(R.string.LocationSaved))
+//                                    .show();
+//
+//
+//                        }
+//                    }
+//                    else{
+//
+//                    }
+//
+//
+//
+//
+//                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+//
+//
+//
+//                }
+//                getLocationComp=false;
+//            }
+//            else {
+//                if(CustomerListShow.Customer_Account.equals("")&& isClickLocation == 2)
+//                {
+//                    if(first!=1)
+//                    {
+//                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                                .setTitleText(getResources().getString(R.string.warning_message))
+//                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                                .show();
+//                    }
+//
+//
+//                } else {
+//
+//
+//                    if(isNetworkAvailable()){
+//                        String latitude="",  longitude="" ;
+//                        try {
+//                            latitude = CustomerListShow.latitude;
+//                            longitude = CustomerListShow.longtude;
+//                            Log.e("latitude",""+latitude+longitude);
+//                        }
+//                        catch (Exception e)
+//                        {
+//                            latitude="";
+//                            longitude="";
+//
+//                        }
+//                        Log.e("latitude",""+latitude+longitude);
+//
+//
+//                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
+//                        {
+//
+//                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                                    .setTitleText(getResources().getString(R.string.warning_message))
+//                                    .setContentText(getResources().getString(R.string.customerHaveLocation))
+//                                    .show();
+//                        }
+//                        else {
+//                            if (isClickLocation == 2) {
+//                                for (Location location : locationResult.getLocations()) {
+//                                    Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+//                                    latitude_main = location.getLatitude();
+//                                    longitude_main = location.getLongitude();
+//                                    customerLocation_main = new CustomerLocation();
+//                                    customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+//                                    customerLocation_main.setLONG(longitude_main + "");
+//                                    customerLocation_main.setLATIT(latitude_main + "");
+//
+//                                    mDbHandler.addCustomerLocation(customerLocation_main);
+//                                    mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
+//                                    CustomerListShow.latitude = latitude_main + "";
+//                                    CustomerListShow.longtude = longitude_main + "";
+//                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                            .setTitleText(getResources().getString(R.string.succsesful))
+//                                            .setContentText(getResources().getString(R.string.LocationSaved))
+//                                            .show();
+//
+//
+//                                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+//
+//
+//
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//                    }
+////            else {
+////                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+////                        .setTitleText(getResources().getString(R.string.warning_message))
+////                        .setContentText(getResources().getString(R.string.enternetConnection))
+////                        .show();
+////            }
+//
+//
+//                }// END ELSE
+//                isClickLocation=1;
+//            }
+//
+//
+//        };
+//
+//    };
+
+    private void getCurentLocation() {
+                            //****************************************************************
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+                  locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+
+                        ActivityCompat.requestPermissions(this, new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
+                    }
+//                    Thread.sleep(1000);
+
+
+                    /////////////////////////////////////////**********************************
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(Login.this);
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(Login.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        location_main=new Location(location);
+
+                                        location_main.setLatitude(latitude_main);
+                                        location_main.setLongitude(longitude_main);
+                                        Log.e("saveCurrentLocation", "" + location_main.getLatitude() + "\t" + location_main.getLongitude());
+
+                                        new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText(getResources().getString(R.string.succsesful))
+                                                .setContentText(getResources().getString(R.string.LocationSaved))
+                                                .show();
+                                        Toast.makeText(Login.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        new SweetAlertDialog(Login.this,SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText(getResources().getString(R.string.warning_message))
+                                                .setContentText(getResources().getString(R.string.enternetConnection))
+                                                .show();
+                                    }
+                                    // Logic to handle location object
+
+                                }
+                            });
+
+
+}
 
     private void checkFullName(int i, String fullUserName) {
         if (usernameEditText.getText().toString().equals(fullUserName)) {

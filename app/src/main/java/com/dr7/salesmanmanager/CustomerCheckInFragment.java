@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
 //import android.support.v4.app.ActivityCompat;
@@ -24,10 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -60,6 +63,7 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
@@ -99,6 +103,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     private static DatabaseHandler mDbHandler;
 
     public Context context;
+    LinearLayout discLayout;
 
     public interface CustomerCheckInInterface {
         public void showCustomersList();
@@ -122,6 +127,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         Customer_Account.setText(CustomerListShow.Customer_Account.toString());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -131,6 +137,24 @@ public class CustomerCheckInFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_customer_check_in, container, false);
         //selectButton = (ImageButton) view.findViewById(R.id.check_img_button);
         //checkButton = (ImageButton) view.findViewById(R.id.check_img_button);
+        discLayout = (LinearLayout) view.findViewById(R.id.discLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
         mDbHandler = new DatabaseHandler(getActivity());

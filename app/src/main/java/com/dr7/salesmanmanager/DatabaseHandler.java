@@ -57,15 +57,15 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 105;
+    private static final int DATABASE_VERSION = 110;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
     //----------------------------------------------------------------------
-    private static final String  SALESMAN_LOGIN_TABLE  = "SALESMAN_LOGIN_TABLE";
-    private static final String  KEY_LOGIN="KEY_LOGIN";
+    private static final String  SALESMAN_LOGIN_LOGHistory  = "SALESMAN_LOGIN_LOGHistory";
+
     private static final String  DATE_LOGIN = "DATE_LOGIN";
     private static final String  TIME_LOGIN = "TIME_LOGIN";
     private static final String  TIME_LOGOUT= "TIME_LOGOUT";
@@ -309,8 +309,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String LOGO = "LOGO";
     private static final String NOTE = "NOTE";
 
-    private static final String  LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
-    private static final String  LATITUDE_COMPANY  = "LATITUDE_COMPANY";
+    private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
+    private static final String LATITUDE_COMPANY  = "LATITUDE_COMPANY";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -445,22 +445,22 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
-                + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
                 + DATE_LOGIN + " TEXT,"
                 + TIME_LOGIN + " TEXT,"
                 + TIME_LOGOUT + " TEXT,"
                 + LONGTUDE2 + " REAL,"
                 + LATITUDE2 + " REAL,"
                 + SALESMAN_NO + " TEXT,"
-                + IS_POSTED_LOGIN + " INTEGER"+
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY (DATE_LOGIN)"+
 
                 ")";
         db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
         //-------------------------------------------------------------------------
 
 
-        String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE " + SERIAL_ITEMS_TABLE + "("
+        String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
                 + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SERIAL_CODE_NO + " TEXT,"
                 + COUNTER_SERIAL + " INTEGER,"
@@ -477,7 +477,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
         //-------------------------------------------------------------------------
-        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE " + PASSWORD_TABLE + "("
+        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
                 + PASS_TYPE + " INTEGER,"
                 + PASS_NO + " TEXT"+
                 ")";
@@ -485,7 +485,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE " + CUSTOMER_LOCATION + "("
+        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE IF NOT EXISTS " + CUSTOMER_LOCATION + "("
                 + CUS_NO + " TEXT,"
                 + LONG + " TEXT,"
                 + LATIT + " TEXT"+
@@ -494,7 +494,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
                 + DATE + " TEXT,"
                 + TRANSFER_NAME + " TEXT,"
                 + DEBTOR + " TEXT,"
@@ -507,7 +507,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                 + ITEMNAME + " TEXT,"
                 + ITEMNO + " INTEGER,"
                 + AMOUNT_QTY + " INTEGER,"
@@ -517,14 +517,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
 
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE " + CUSTOMER_MASTER + "("
+        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_MASTER + "("
                 + COMPANY_NUMBER0 + " INTEGER,"
                 + CUS_ID + " TEXT,"
                 + CUS_NAME0 + " TEXT,"
@@ -553,7 +553,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE " + Item_Unit_Details + "("
+        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE IF NOT EXISTS " + Item_Unit_Details + "("
                 + ComapnyNo + " INTEGER,"
                 + ItemNo + " TEXT,"
                 + UnitID + " TEXT,"
@@ -561,7 +561,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
+        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
                 + VISIT_PERPOS + " INTEGER,"
                 + CUSTOMER_REGARDS + " INTEGER,"
                 + CHECK_STORE + " INTEGER,"
@@ -577,7 +577,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Items_Master = "CREATE TABLE " + Items_Master + "("
+        String CREATE_TABLE_Items_Master = "CREATE TABLE IF NOT EXISTS " + Items_Master + "("
                 + ComapnyNo1 + " INTEGER,"
                 + ItemNo1 + " TEXT,"
                 + Name1 + " TEXT,"
@@ -595,19 +595,19 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+        String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                 + KEY_VALUE + " INTEGER"+ ")";
         db.execSQL(CREATE_ACTIVE_KEY);
         //-----------------------------------------------------
 
-        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
                 + PRINTER_SETTING +" INTEGER ,"
                 + PRINTER_SHAPE + " INTEGER"+ ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_D = "CREATE TABLE " + Price_List_D + "("
+        String CREATE_TABLE_Price_List_D = "CREATE TABLE IF NOT EXISTS " + Price_List_D + "("
                 + ComapnyNo2 + " INTEGER,"
                 + PrNo2 + " INTEGER,"
                 + ItemNo2 + " TEXT,"
@@ -619,7 +619,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_M = "CREATE TABLE " + Price_List_M + "("
+        String CREATE_TABLE_Price_List_M = "CREATE TABLE IF NOT EXISTS " + Price_List_M + "("
                 + ComapnyNo3 + " INTEGER,"
                 + PrNo3 + " INTEGER,"
                 + Description3 + " TEXT,"
@@ -628,7 +628,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Sales_Team = "CREATE TABLE " + Sales_Team + "("
+        String CREATE_TABLE_Sales_Team = "CREATE TABLE IF NOT EXISTS " + Sales_Team + "("
                 + ComapnyNo4 + " INTEGER,"
                 + SalesManNo4 + " INTEGER,"
                 + SalesManName4 + " TEXT,"
@@ -637,7 +637,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE " + SalesMan_Items_Balance + "("
+        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE IF NOT EXISTS " + SalesMan_Items_Balance + "("
                 + ComapnyNo5 + " INTEGER,"
                 + SalesManNo5 + " INTEGER,"
                 + ItemNo5 + " TEXT,"
@@ -646,7 +646,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE " + SalesmanAndStoreLink + "("
+        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE IF NOT EXISTS " + SalesmanAndStoreLink + "("
                 + ComapnyNo6 + " INTEGER,"
                 + SalesManNo6 + " INTEGER,"
                 + StoreNo6 + " INTEGER" + ")";
@@ -654,14 +654,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Salesmen = "CREATE TABLE " + SalesMen + "("
+        String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
                 + UserName + " TEXT,"
                 + Password + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_Salesmen);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CustomerPrices = "CREATE TABLE " + CustomerPrices + "("
+        String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
                 + ItemNumber + " INTEGER,"
                 + CustomerNumber + " INTEGER,"
                 + Price + " INTEGER" + ")";
@@ -670,7 +670,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CONTACTS = "CREATE TABLE " + TABLE_TRANSACTIONS + "("
+        String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
                 + SALES_MAN_ID + " INTEGER,"
                 + CUS_CODE + " INTEGER,"
                 + CUS_NAME + " TEXT,"
@@ -684,7 +684,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SETTING = "CREATE TABLE " + TABLE_SETTING + "("
+        String CREATE_TABLE_SETTING = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + "("
                 + TRANS_KIND + " INTEGER,"
                 + SERIAL_NUMBER + " INTEGER,"
                 + IP_ADDRESS + " TEXT,"
@@ -727,7 +727,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE " + COMPANY_INFO + "("
+        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE IF NOT EXISTS " + COMPANY_INFO + "("
                 + COMPANY_NAME + " TEXT,"
                 + COMPANY_TEL + " INTEGER,"
                 + TAX_NO + " INTEGER,"
@@ -740,7 +740,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE " + SALES_VOUCHER_MASTER + "("
+        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
                 + COMPANY_NUMBER + " INTEGER,"
                 + VOUCHER_NUMBER + " INTEGER UNIQUE, "
                 + VOUCHER_TYPE + " INTEGER,"
@@ -762,7 +762,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE " + SALES_VOUCHER_DETAILS + "("
+        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE IF NOT EXISTS " + SALES_VOUCHER_DETAILS + "("
                 + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
                 + ITEM_NUMBER + " TEXT,"
@@ -791,7 +791,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS = "CREATE TABLE " + PAYMENTS + "("
+        String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + PAYMENTS + "("
                 + COMPANY_NUMBER3 + " INTEGER,"
                 + VOUCHER_NUMBER3 + " INTEGER,"
                 + PAY_DATE + " INTEGER,"
@@ -807,7 +807,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE " + PAYMENTS_PAPER + "("
+        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE IF NOT EXISTS " + PAYMENTS_PAPER + "("
                 + COMPANY_NUMBER4 + " INTEGER,"
                 + VOUCHER_NUMBER4 + " INTEGER,"
                 + CHECK_NUMBER + " INTEGER,"
@@ -820,7 +820,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE " + REQUEST_MASTER + "("
+        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE IF NOT EXISTS " + REQUEST_MASTER + "("
                 + COMPANY_NUMBER5 + " INTEGER,"
                 + VOUCHER_NUMBER5 + " INTEGER,"
                 + VOUCHER_DATE5 + " TEXT,"
@@ -832,7 +832,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE " + REQUEST_DETAILS + "("
+        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE IF NOT EXISTS " + REQUEST_DETAILS + "("
                 + COMPANY_NUMBER6 + " INTEGER,"
                 + VOUCHER_NUMBER6 + " INTEGER,"
                 + ITEM_NUMBER6 + " TEXT,"
@@ -843,7 +843,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE " + ADDED_CUSTOMER + "("
+        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE IF NOT EXISTS " + ADDED_CUSTOMER + "("
                 + CUST_NAME7 + " TEXT,"
                 + REMARK7 + " TEXT,"
                 + LATITUDE7 + " INTEGER,"
@@ -855,7 +855,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
+        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE IF NOT EXISTS " + VS_PROMOTION + "("
                 + PROMOTION_ID + " INTEGER,"
                 + PROMOTION_TYPE + " INTEGER,"
                 + FROM_DATE + " TEXT,"
@@ -868,7 +868,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE IF NOT EXISTS " + SALESMEN_STATIONS + "("
                 + SALESMEN_NO + " TEXT,"
                 + DATE_ + " TEXT,"
                 + LATITUDE + " TEXT,"
@@ -883,7 +883,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS SALESMAN_LOGIN_TABLE ");
+        onCreate(db);
 
         try{
             db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
@@ -1147,7 +1148,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
         try{
-            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
                     + DATE + " TEXT,"
                     + TRANSFER_NAME + " TEXT,"
                     + DEBTOR + " TEXT,"
@@ -1163,7 +1164,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         try{
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE  IF NOT EXISTS " + SALESMEN_STATIONS + "("
                     + SALESMEN_NO + " TEXT,"
                     + DATE_ + " TEXT,"
                     + LATITUDE + " TEXT,"
@@ -1181,7 +1182,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
 
 
-            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+            String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                     + KEY_VALUE + " INTEGER"+ ")";
             db.execSQL(CREATE_ACTIVE_KEY);
@@ -1193,7 +1194,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         try {
-            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS  " + PRINTER_SETTING_TABLE + "("
 
                     + PRINTER_SETTING + " INTEGER"+ ")";
             db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -1204,7 +1205,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
         }
         try {
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
@@ -1216,7 +1217,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         try {
-            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                     + ITEMNAME + " TEXT,"
                     + ITEMNO + " INTEGER,"
                     + AMOUNT_QTY + " INTEGER,"
@@ -1283,7 +1284,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         }
         try {
-            String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE " + SERIAL_ITEMS_TABLE + "("
+            String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
                     + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + SERIAL_CODE_NO + " TEXT,"
                     + COUNTER_SERIAL + " INTEGER,"
@@ -1345,15 +1346,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         //
 //*********************************** TABLE LOGIN *************************************
-        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
-                + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+        //+ KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT
+        String CREATE_SALESMAN_LOGIN_TABLE= " CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
                 + DATE_LOGIN + " TEXT,"
                 + TIME_LOGIN + " TEXT,"
                 + TIME_LOGOUT + " TEXT,"
                 + LONGTUDE2 + " REAL,"
                 + LATITUDE2 + " REAL,"
                 + SALESMAN_NO + " TEXT,"
-                + IS_POSTED_LOGIN + " INTEGER"+
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY ( DATE_LOGIN)"+
 
                 ")";
         db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
@@ -1708,15 +1710,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         ContentValues values = new ContentValues();
         values.put(DATE_LOGIN, transaction.getCheckInDate());
         values.put(TIME_LOGIN, transaction.getCheckInTime());
-        values.put(LONGTUDE2, transaction.getLongtude());
-        values.put(LATITUDE2, transaction.getLatitud());
+        values.put(LONGTUDE2,  transaction.getLongtude());
+        values.put(LATITUDE2,  transaction.getLatitud());
 
         values.put(SALESMAN_NO, transaction.getSalesManId());
 
 
         values.put(IS_POSTED_LOGIN, 0);
 
-        db.insert(SALESMAN_LOGIN_TABLE, null, values);
+        db.insert(SALESMAN_LOGIN_LOGHistory, null, values);
         db.close();
     }
 
@@ -1772,7 +1774,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.close();
     }
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note) {
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1788,6 +1790,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
         values.put(NOTE, note);
+        values.put(LONGTUDE_COMPANY,longtude);
+        values.put(LATITUDE_COMPANY,latitude);
 
 
         db.insert(COMPANY_INFO, null, values);
@@ -2121,7 +2125,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
                 info.setNoteForPrint(cursor.getString(4));
-
+                info.setLongtudeCompany(cursor.getDouble(5));
+                info.setLatitudeCompany(cursor.getDouble(6));
                 infos.add(info);
             } while (cursor.moveToNext());
         }
@@ -2153,13 +2158,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return infos;
     }
-
-
-
-
-
-
-
 
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
@@ -2303,7 +2301,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<Transaction> getLoginSalesman() {
         List<Transaction> transactionList = new ArrayList<Transaction>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + SALESMAN_LOGIN_TABLE;
+        String selectQuery = "SELECT  * FROM " + SALESMAN_LOGIN_LOGHistory;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2313,13 +2311,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             do {
                 Transaction transaction = new Transaction();
 
-                transaction.setCheckInDate(cursor.getString(1));
-                transaction.setCheckInTime(cursor.getString(2));
+                transaction.setCheckInDate(cursor.getString(0));
+                transaction.setCheckInTime(cursor.getString(1));
                 // checkout time
-                transaction.setLongtude(cursor.getDouble(4));
-                transaction.setLatitud(cursor.getDouble(5));
-                transaction.setSalesManId(Integer.parseInt(cursor.getString(6)));
-                transaction.setIsPosted(Integer.parseInt(cursor.getString(7)));
+                transaction.setLongtude(cursor.getDouble(3));
+                transaction.setLatitud(cursor.getDouble(4));
+                transaction.setSalesManId(Integer.parseInt(cursor.getString(5)));
+                transaction.setIsPosted(Integer.parseInt(cursor.getString(6)));
 
 
                 // Adding transaction to list
@@ -2790,15 +2788,22 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 }
 
 
-                if(!cursor.getString(13).equals("")) {
+                try {
 
+
+                if(cursor.getString(13)==null) {
+                    item.setItemPhoto(null);
+
+                }
+                else {
                     itemBitmap = StringToBitMap(cursor.getString(13));
                     item.setItemPhoto(itemBitmap);
                 }
-                else {
+                }
+                catch (Exception e)
+                {
                     item.setItemPhoto(null);
                 }
-
 
 //                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
 
@@ -3393,7 +3398,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<Payment> getAllPaymentsPaper() {
 
         List<Payment> paymentsList = new ArrayList<Payment>();
-        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER;
+        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3552,7 +3557,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<AddedCustomer> getAllAddedCustomer() {
         List<AddedCustomer> customers = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER+ " where IS_POSTED = '" + 0  + "'";;
+        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER+ " where IS_POSTED = '" + 0  + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4375,6 +4380,25 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return name;
     }
 
+    public CompanyInfo getCompanyLocation() {
+       CompanyInfo infoLocation=new CompanyInfo();
+
+//        LATITUDE_COMPANY LONGTUDE_COMPANY COMPANY_INFO
+        String selectQuery = " select  LONGTUDE_COMPANY , LATITUDE_COMPANY from  COMPANY_INFO ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            infoLocation.setLongtudeCompany( cursor.getDouble(0));
+            infoLocation.setLatitudeCompany( cursor.getDouble(1));
+            Log.e("setLongtudeCompany", "getItemNameBonus+\t" + infoLocation.getLatitudeCompany() + "\t");
+
+        }
+
+
+        return infoLocation;
+    }
+
     public ArrayList<Bitmap> getItemsImage() {
         ArrayList<Bitmap> listPhoto = new ArrayList<Bitmap>();
 
@@ -4410,4 +4434,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return listPhoto;
 
     }
+
+    public void updatecompanyInfo(double latitudeCheckIn, double longtudeCheckIn) {
+
+        Log.e("updatecompanyInfo",""+latitudeCheckIn+"\t"+LATIT+"\t"+longtudeCheckIn);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(LATITUDE_COMPANY, latitudeCheckIn);
+
+        values.put(LONGTUDE_COMPANY, longtudeCheckIn);
+
+
+        // updating row
+        db.update(COMPANY_INFO, values, null, null);
+
+    }
 }
+

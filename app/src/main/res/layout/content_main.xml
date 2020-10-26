@@ -1,111 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.dr7.salesmanmanager.MainActivity"
-    tools:showIn="@layout/app_bar_main">
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn"
-        android:text="Scan Barcode or QR code" />
-    <TextView
+    tools:showIn="@layout/app_bar_main"
+    android:orientation="vertical">
+    <LinearLayout android:orientation="horizontal"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvresult"
-        android:textColor="#000"
-        android:layout_marginTop="10dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Result will be here"/>
+        android:layout_weight="7">
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/mainTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/text_view_color"
-        android:text="@string/app_no_cust"
-        android:textSize="22sp"
-        android:textStyle="bold|italic" />
+
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="10dp">
 
 
         <LinearLayout
             android:id="@+id/checkOutLinearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:padding="5dp"
             android:gravity="center"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="2">
+                <TextView
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
 
-            <ImageView
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:layout_width="match_parent">
+                   <ImageView
                 android:id="@+id/checkOutImageView"
-                android:layout_width="190dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/cus_check_out_black"
-                android:scaleType="fitCenter" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="20dp"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="15dp"
-                android:text="@string/app_sign_out_visit"
-                android:textColor="@color/text_view_color"
-                android:textSize="27sp" />
+                android:background="@drawable/cus_check_out_black"
+                />
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+
+                        android:text="@string/app_sign_out_visit"
+                        android:textColor="@color/text_view_color"
+
+                        android:textSize="25sp"
+                        app:autoSizeMaxTextSize="25sp"
+                        app:autoSizeMinTextSize="15sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform"
+
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_weight="8"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+            </LinearLayout>
+
+
         </LinearLayout>
 
 
         <LinearLayout
             android:id="@+id/checkInLinearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="2">
+                <TextView
+                    android:layout_weight="8"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:layout_width="match_parent">
+                <ImageView
+                    android:id="@+id/checkInImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/cus_check_in"
+                    android:scaleType="fitCenter" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="9"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="15dp"
+                        android:text="@string/app_sign_in_visit"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="25sp"
+                        app:autoSizeMaxTextSize="25sp"
+                        app:autoSizeMinTextSize="15sp"
+                        app:autoSizeStepGranularity="2sp"
+                        app:autoSizeTextType="uniform"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_weight="5"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+            </LinearLayout>
 
-            <ImageView
-                android:id="@+id/checkInImageView"
-                android:layout_width="190dp"
-                android:layout_height="200dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/cus_check_in"
-                android:scaleType="fitCenter" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="20dp"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="15dp"
-                android:text="@string/app_sign_in_visit"
-                android:textColor="@color/text_view_color"
-                android:textSize="27sp" />
+
         </LinearLayout>
 
 
     </LinearLayout>
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/mainTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/text_view_color"
+        android:text="@string/app_no_cust"
+
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        android:textStyle="bold|italic" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn"
+            android:text="Scan Barcode or QR code" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvresult"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Result will be here"/>
+    </LinearLayout>
+</LinearLayout>
+

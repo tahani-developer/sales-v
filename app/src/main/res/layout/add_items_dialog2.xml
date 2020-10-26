@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/barcode"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp" />
 
         <EditText

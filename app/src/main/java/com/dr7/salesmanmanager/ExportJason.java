@@ -78,7 +78,7 @@ public class ExportJason extends AppCompatActivity {
     }
 
 
-    void startExportDatabase() {
+    void startExportDatabase() throws JSONException {
         //
 
         serialModelList = mHandler.getAllSerialItems();
@@ -86,12 +86,9 @@ public class ExportJason extends AppCompatActivity {
         jsonArraySerial = new JSONArray();
         for (int i = 0; i < serialModelList.size(); i++)
         {
-
+          if(serialModelList.get(i).getIsPosted().equals("0")){
             jsonArraySerial.put(serialModelList.get(i).getJSONObject());
-
-
-
-
+          }
         }
         try {
             Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
@@ -109,12 +106,12 @@ public class ExportJason extends AppCompatActivity {
 
             customerLocationList.get(i).getLONG();
 
-//            if (customerLocationList.get(i).getIsPost() == 0) {
+            if (customerLocationList.get(i).getIsPost() == 0) {
 //                customerLocationList.get(i).setIsPost(1);
 //
-//            }
-            jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
 
+                jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
+            }
 
 
         }
@@ -131,13 +128,14 @@ public class ExportJason extends AppCompatActivity {
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
 
-        for (int i = 0; i < salesManItemsBalanceList.size(); i++)
-        {
-            salesManItemsBalanceList.get(i).getSalesManNo();
-            salesManItemsBalanceList.get(i).getItemNo();
-            salesManItemsBalanceList.get(i).getQty();
-            jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
-        }
+        for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
+
+                salesManItemsBalanceList.get(i).getSalesManNo();
+                salesManItemsBalanceList.get(i).getItemNo();
+                salesManItemsBalanceList.get(i).getQty();
+                jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
+            }
+
         //******************************************
         stockRequestListList=mHandler.getAllStockRequestItems();
         jsonArrayStockRequest=new JSONArray();
@@ -153,14 +151,18 @@ public class ExportJason extends AppCompatActivity {
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
             {
-                jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                if (vouchers.get(i).getIsPosted() == 0) {
+                    jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                }
             }
 
         items = mHandler.getAllItems();
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
            {
-                jsonArrayItems.put(items.get(i).getJSONObject());
+               if (items.get(i).getIsPosted() == 0) {
+                   jsonArrayItems.put(items.get(i).getJSONObject());
+               }
 
             }
 
@@ -168,16 +170,20 @@ public class ExportJason extends AppCompatActivity {
         jsonArrayPayments = new JSONArray();
         for (int i = 0; i < payments.size(); i++)
      {
+         if (payments.get(i).getIsPosted() == 0) {
 //                payments.get(i).setIsPosted(1);
-                jsonArrayPayments.put(payments.get(i).getJSONObject());
+             jsonArrayPayments.put(payments.get(i).getJSONObject());
+         }
             }
 
         paymentsPaper = mHandler.getAllPaymentsPaper();
         jsonArrayPaymentsPaper = new JSONArray();
         for (int i = 0; i < paymentsPaper.size(); i++)
         {
+            if (paymentsPaper.get(i).getIsPosted() == 0) {
 //                paymentsPaper.get(i).setIsPosted(1);
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
+            }
             }
 
         addedCustomer = mHandler.getAllAddedCustomer();

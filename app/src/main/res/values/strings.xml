@@ -1,15 +1,15 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 25</string>
+    <string name="version"> V 26</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
     <string name="app_activities">Activities</string>
     <string name="app_reports">Reports</string>
-    <string name="app_sales_inv">Sales Invoice</string>
-    <string name="app_ret_inv">Return Invoice</string>
-    <string name="app_cust_order">New Order</string>
+    <string name="app_sales_inv">Sales</string>
+    <string name="app_ret_inv">Return</string>
+    <string name="app_cust_order">Order</string>
     <string name="app_request">Stock request</string>
     <string name="app_imp_data">Import Data</string>
     <string name="app_refresh_data">Refresh Data</string>
@@ -367,6 +367,7 @@
     <string name="read_new_offer">Read New Offer</string>
     <string name="address">Address</string>
     <string name="ShowItemImage">Show Item Image</string>
+    <string name="SearchByCustomerName">Search By Customer Name</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

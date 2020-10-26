@@ -38,6 +38,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
@@ -59,7 +60,7 @@ public class Activities extends AppCompatActivity implements
 
     private int activitySelected;
 
-    private LinearLayout salesInvoiceLayout;
+    private LinearLayout salesInvoiceLayout,mainlayout;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
@@ -146,6 +147,7 @@ public class Activities extends AppCompatActivity implements
     }
 
     Animation animZoomIn ;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +160,24 @@ public class Activities extends AppCompatActivity implements
         activitySelected = -1;
         databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
+        mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
         transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
         transaction_imageview.setOnClickListener(onClickListener);

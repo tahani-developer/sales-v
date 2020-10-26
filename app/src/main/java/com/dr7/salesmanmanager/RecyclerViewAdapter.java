@@ -580,6 +580,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                 String unitValue;
                                                 if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                     unitValue = unit.getSelectedItem().toString();
+                                                    Log.e("unitValue",""+unitValue);
 
                                                     if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
                                                             || mHandler.getAllSettings().get(0).getAllowMinus() == 1

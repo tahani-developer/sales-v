@@ -29,23 +29,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
+                android:layout_gravity="center"
                 android:orientation="horizontal"
                 android:padding="3dp">
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/imagespecial"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50sp"-->
-<!--                    android:text="Test Item"-->
-<!--                    android:layout_gravity="left"-->
-<!--                    android:visibility="visible"-->
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/imagespecial"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    android:layout_height="50sp"-->
+                <!--                    android:text="Test Item"-->
+                <!--                    android:layout_gravity="left"-->
+                <!--                    android:visibility="visible"-->
 
-<!--                    android:src="@drawable/specialred"-->
-<!--                 />-->
+                <!--                    android:src="@drawable/specialred"-->
+                <!--                 />-->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imagespecial"
-                    android:layout_width="75dp"
-                    android:layout_height="100sp"
+                    android:layout_width="45dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
                     android:src="@drawable/specialred"
@@ -62,12 +63,12 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="4dp"
                     android:gravity="center"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="3dp"
 
                     android:text="Test Item"
                     android:textStyle="bold"
                     android:textColor="@color/cancel_button"
-                    android:textSize="16sp"
+                  android:textSize="12sp"
 
                     app:autoSizeMaxTextSize="16sp"
                     app:autoSizeMinTextSize="12sp"
@@ -91,22 +92,22 @@
                 android:background="@color/layer5"
                 />
 
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="3dp">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="center"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:padding="3dp">-->
 
-<!--                <TextView-->
-<!--                    android:id="@+id/textViewItemName"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Test Item"-->
-<!--                    android:textColor="@color/layer5"-->
-<!--                    android:textSize="16sp" />-->
+            <!--                <TextView-->
+            <!--                    android:id="@+id/textViewItemName"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="Test Item"-->
+            <!--                    android:textColor="@color/layer5"-->
+            <!--                  android:textSize="12sp" />-->
 
-<!--            </LinearLayout>-->
+            <!--            </LinearLayout>-->
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -116,14 +117,14 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/item_number"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -140,7 +141,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -154,14 +155,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/item_name"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp" />
+                      android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/textViewTradeMark"
@@ -170,21 +171,21 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp" />
+                      android:textSize="12sp" />
 
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/category"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -199,7 +200,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -215,14 +216,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/unit_qty"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -237,7 +238,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -250,7 +251,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:id="@+id/textViewPricee"
@@ -258,7 +259,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/app_price"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -273,7 +274,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -286,14 +287,14 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tax"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                        android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -308,7 +309,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/layer5"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
 
 
                         app:autoSizeMaxTextSize="16sp"
@@ -327,7 +328,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/barcode"
                         android:textColor="@color/text_view_color"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
                         android:visibility="invisible"
                         />
 
@@ -338,7 +339,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
                         android:visibility="invisible" />
 
                 </TableRow>
@@ -346,14 +347,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:visibility="gone"
-                    android:layout_margin="3dp">
+                    android:layout_margin="1dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pos_price"
                         android:textColor="@color/text_view_color"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
                         android:visibility="visible" />
 
                     <TextView
@@ -363,7 +364,7 @@
                         android:layout_marginLeft="15dp"
                         android:layout_marginStart="15dp"
                         android:textColor="@color/second_color"
-                        android:textSize="16sp"
+                      android:textSize="12sp"
                         android:visibility="visible" />
 
                 </TableRow>

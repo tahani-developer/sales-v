@@ -8,9 +8,10 @@ android:layout_width="650dp"
 android:layout_height="400dp"
 android:minWidth="700dp"
 android:minHeight="450dp"
+    android:layoutDirection="locale"
 android:background="@color/layer3"
 android:orientation="vertical"
-android:padding="20dp"
+android:padding="15dp"
 >
 
 
@@ -22,17 +23,23 @@ android:padding="20dp"
 
         <EditText
             android:id="@+id/customerNameTextView"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:hint="@string/SearchByCustomerName"
+            android:background="@drawable/back_border_edit"
+            android:layout_margin="5dp"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/update"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:background="@color/red_background"
-            android:text="@string/update"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/ic_refresh_black_24dp"
+
             android:textColor="@color/layer5" />
 
     </LinearLayout>
@@ -43,13 +50,10 @@ android:padding="20dp"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.6"
         android:background="@color/layer4"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingTop="1dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="1dp">
+        >
 
         <TextView
 

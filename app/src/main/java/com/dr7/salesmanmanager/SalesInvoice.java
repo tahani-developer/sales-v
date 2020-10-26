@@ -93,6 +93,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -150,6 +151,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
     RecyclerView recyclerView;
@@ -289,6 +296,8 @@ public class SalesInvoice extends Fragment {
     double curentLatitude, curentLongitude;
     FusedLocationProviderClient mFusedLocationClient;
     boolean validDiscount=false;
+    int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
+            R.drawable.ic_save_black_24dp,R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -316,7 +325,62 @@ public class SalesInvoice extends Fragment {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_4);
+
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+//            bmb.addBuilder(new SimpleCircleButton.Builder()
+//                    .normalImageRes(listImageIcone[i]));
+            SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(listImageIcone[i])
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    clearAllData();
+                                    break;
+                                case 1:
+                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+                                    obj.startParsing();
+                                    break;
+                                case 2:
+                                    saveVoucherData();
+                                    break;
+                                case 3:
+                                    break;
+                                case 4:
+                                    try {
+                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                                        if (voucherNo != 0 && voucherNo != -1) {
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
+                                            printLastVoucher(voucherNo, voucherForPrint);
+                                        } else {
+                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e("ExceptionReprint", "" + e.getMessage());
+                                        voucherNo = 0;
+                                    }
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+
+
+        }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
@@ -399,7 +463,7 @@ public class SalesInvoice extends Fragment {
 
         String vn2 = voucherNumber + "";
         voucherNumberTextView.setText(vn2);
-        connect.setVisibility(View.INVISIBLE);
+        connect.setVisibility(View.GONE);
         companyInfo = new CompanyInfo();
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
         limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
@@ -722,21 +786,8 @@ public class SalesInvoice extends Fragment {
         newImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                clearAllData();
 
-
-
-                        clearLayoutData(1);
-                    }
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
             }
         });
 
@@ -750,115 +801,138 @@ public class SalesInvoice extends Fragment {
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveData.setEnabled(false);
-                savedState = 1;
-                final String remarkText = remarkEditText.getText().toString().trim();
+                saveVoucherData();
 
-                itemForPrint.clear();
-                clicked = false;
-                int TypeVouch=getVoucherTypeCurrent();
-
-                String voucherType_Word= getVoucherTypeWord(TypeVouch);
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-//                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
-                builder.setTitle( voucherType_Word);
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
-
-                        if (!clicked) {
-
-                            clicked = true;
-                            int listSize = itemsListView.getCount();
-                            int validateVoucherNo = mDbHandler.checkVoucherNo(voucherNumber,voucherType);
-
-
-                            if (validateVoucherNo == 0) {// not exist voucher no
-                                if (listSize == 0) {
-                                    Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
-                                    SaveData.setEnabled(true);
-                                } else {//list is contain data
-                                    if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1) {// validate customer location
-                                        if( checkCustomerLocation())
-                                        {
-                                            if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1)
-                                            {
-                                                if (TextUtils.isEmpty(remarkText)) {
-                                                    remarkEditText.setError("Required");
-                                                    remarkEditText.requestFocus();
-                                                    SaveData.setEnabled(true);
-                                                } else {
-                                                    saveData();
-                                                }
-
-                                            } else {
-                                                saveData();
-
-                                            }
-
-                                        }
-                                        else{
-                                            SaveData.setEnabled(true);
-                                            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                                                    .setTitleText(getResources().getString(R.string.warning_message))
-                                                    .setContentText(getResources().getString(R.string.InvalidLocation))
-                                                    .show();
-                                        }
-                                        Log.e("printLocation1111", "===" + checkCustomerLocation());
-                                    } else {
-                                        if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1)
-                                        {
-                                            if (TextUtils.isEmpty(remarkText)) {
-                                                remarkEditText.setError("Required");
-                                                remarkEditText.requestFocus();
-                                                SaveData.setEnabled(true);
-                                            } else {
-                                                saveData();
-                                            }
-
-                                        } else {
-                                            saveData();
-
-                                        }
-                                    }
-
-
-
-//                                clearLayoutData();
-                                }
-                                //not empty list
-
-                            } else {// dublicate voucher no ==>> alert dialog
-                                SaveData.setEnabled(true);
-                                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText(getResources().getString(R.string.warning_message))
-                                        .setContentText(getResources().getString(R.string.duplicatedVoucherNo))
-                                        .show();
-
-                            }
-
-
-                        }
-                    }//end ok save
-
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SaveData.setEnabled(true);
-                    }
-                });
-                builder.create().
-
-                        show();
 
             }//end save data
         });
         return view;
+    }
+
+    private void saveVoucherData() {
+        SaveData.setEnabled(false);
+        savedState = 1;
+        final String remarkText = remarkEditText.getText().toString().trim();
+
+        itemForPrint.clear();
+        clicked = false;
+        int TypeVouch=getVoucherTypeCurrent();
+
+        String voucherType_Word= getVoucherTypeWord(TypeVouch);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+//                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+
+        builder.setTitle( voucherType_Word);
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(DialogInterface dialogInterface, int l) {
+
+                if (!clicked) {
+
+                    clicked = true;
+                    int listSize = itemsListView.getCount();
+                    int validateVoucherNo = mDbHandler.checkVoucherNo(voucherNumber,voucherType);
+
+
+                    if (validateVoucherNo == 0) {// not exist voucher no
+                        if (listSize == 0) {
+                            Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
+                            SaveData.setEnabled(true);
+                        } else {//list is contain data
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1) {// validate customer location
+                                if( checkCustomerLocation())
+                                {
+                                    if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1)
+                                    {
+                                        if (TextUtils.isEmpty(remarkText)) {
+                                            remarkEditText.setError("Required");
+                                            remarkEditText.requestFocus();
+                                            SaveData.setEnabled(true);
+                                        } else {
+                                            saveData();
+                                        }
+
+                                    } else {
+                                        saveData();
+
+                                    }
+
+                                }
+                                else{
+                                    SaveData.setEnabled(true);
+                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText(getResources().getString(R.string.warning_message))
+                                            .setContentText(getResources().getString(R.string.InvalidLocation))
+                                            .show();
+                                }
+                                Log.e("printLocation1111", "===" + checkCustomerLocation());
+                            } else {
+                                if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1)
+                                {
+                                    if (TextUtils.isEmpty(remarkText)) {
+                                        remarkEditText.setError("Required");
+                                        remarkEditText.requestFocus();
+                                        SaveData.setEnabled(true);
+                                    } else {
+                                        saveData();
+                                    }
+
+                                } else {
+                                    saveData();
+
+                                }
+                            }
+
+
+
+//                                clearLayoutData();
+                        }
+                        //not empty list
+
+                    } else {// dublicate voucher no ==>> alert dialog
+                        SaveData.setEnabled(true);
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.duplicatedVoucherNo))
+                                .show();
+
+                    }
+
+
+                }
+            }//end ok save
+
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SaveData.setEnabled(true);
+            }
+        });
+        builder.create().
+
+                show();
+    }
+
+    private void clearAllData() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                clearLayoutData(1);
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+        builder.create().show();
     }
 
     private String getVoucherTypeWord(int typeVouch) {
@@ -1023,7 +1097,7 @@ public class SalesInvoice extends Fragment {
         retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
 
         salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
-        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+        salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
         salesRadioButton.setChecked(true);
 
         orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
@@ -2170,9 +2244,9 @@ public class SalesInvoice extends Fragment {
             //***********************************************
             voucherType = 504;
             salesRadioButton.setChecked(true);
-            salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-            retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-            orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+            salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+//            retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+//            orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
             //***********************************************
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
             voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;

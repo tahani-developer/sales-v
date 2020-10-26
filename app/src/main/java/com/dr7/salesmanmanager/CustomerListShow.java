@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -16,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -35,6 +38,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class CustomerListShow extends DialogFragment {
     private final String URL_TO_HIT = "http://10.0.0.115/VANSALES_WEB_SERVICE/index.php";
@@ -53,6 +58,7 @@ public class CustomerListShow extends DialogFragment {
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
+    LinearLayout mainlayout;
 
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
@@ -70,12 +76,31 @@ public class CustomerListShow extends DialogFragment {
         // Required empty public constructor
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         getDialog().setTitle(getResources().getString(R.string.app_select_customer));
         final View view = inflater.inflate(R.layout.customers_list, container, false);
+        mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         initialize(view);
 
         customerList = new ArrayList<>();

@@ -8,7 +8,7 @@
     <string name="app_reports">التقارير</string>
     <string name="app_sales_inv">فاتورة البيع</string>
     <string name="app_ret_inv">فاتورة المرتجعات</string>
-    <string name="app_cust_order">طلب جديد</string>
+    <string name="app_cust_order">طلب </string>
     <string name="app_request">طلب المخزون</string>
     <string name="app_imp_data">استيراد البيانات</string>
     <string name="app_exp_data">تصدير البيانات</string>
@@ -225,7 +225,7 @@
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
     <string name="box_packing">صندوق التعبئة</string>
-    <string name="update">التحديث</string>
+    <string name="update">تحديث</string>
 
     <string name="company_name">اسم الشركة: </string>
     <string name="company_tel">هاتف الشركة</string>
@@ -415,5 +415,6 @@
     <string name="read_new_offer">Read New Offer</string>
     <string name="address">العنوان</string>
     <string name="ShowItemImage">إظهار صور العناصر</string>
+    <string name="SearchByCustomerName">بحث بإسم العميل</string>
 
 </resources>

@@ -3,11 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
     android:layoutDirection="locale"
     android:id="@+id/mailLinearRecipt"
-    android:paddingEnd="5dp"
-    android:paddingHorizontal="5dp"
-    android:paddingStart="5dp"
+    android:paddingEnd="10dp"
+    android:paddingHorizontal="10dp"
+    android:paddingStart="10dp"
     android:paddingVertical="5dp"
     android:orientation="vertical"
     android:background="@color/layer3"
@@ -19,10 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:id="@+id/row1"
-        android:padding="5dp"
-        android:layout_marginBottom="5dp"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/layer2"
         >
         <ImageButton
@@ -65,6 +68,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_margin="10dp"
 
         android:id="@+id/row2"
         >
@@ -75,19 +79,21 @@
             android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textStyle="bold"
+
             android:gravity="center"
             android:background="@drawable/back_border_edit"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_large" />
+            android:textSize="@dimen/content_xlarge" />
 
         <!--<ImageButton-->
-            <!--android:id="@+id/custInfoImgBtn"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:visibility="invisible"-->
-            <!--android:background="@drawable/cust_info" />-->
+        <!--android:id="@+id/custInfoImgBtn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:visibility="invisible"-->
+        <!--android:background="@drawable/cust_info" />-->
 
         <TextView
             android:id="@+id/voucher_no"
@@ -100,7 +106,7 @@
             android:gravity="center_vertical"
             android:text="@string/voucher_number"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_large"  />
+            android:textSize="@dimen/content_xlarge"  />
 
         <TextView
             android:id="@+id/payment_term"
@@ -113,7 +119,7 @@
             android:background="@drawable/back_border_edit"
             android:text="@string/payment_term"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_large" />
+            android:textSize="@dimen/content_xlarge" />
 
     </LinearLayout>
 
@@ -140,7 +146,7 @@
             android:imeOptions="flagNavigateNext"
             android:inputType="numberDecimal"
             android:layout_weight="1.5"
-            android:textSize="@dimen/content_large"
+            android:textSize="@dimen/content_xlarge"
             android:textColor="@color/amountColor"
             />
 
@@ -167,19 +173,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
 
         >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_border_shape"
+            android:background="@drawable/back_border_edit"
 
             android:text="@string/app_paymentDetails"
-            android:textSize="@dimen/content_large"
-           android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+
+            android:textSize="@dimen/content_xlarge"
             android:textStyle="bold"
+            android:gravity="center_horizontal"
             android:textColor="@color/text_view_color"
             />
     </LinearLayout>
@@ -197,15 +205,15 @@
             android:background="@drawable/back_border_edit"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2">
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:layout_gravity="center"
@@ -217,8 +225,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:textSize="14sp"
                 android:layout_gravity="center"
                 android:entries="@array/app_paymentTypeList"
@@ -253,8 +261,9 @@
                 android:layout_weight="1"
 
                 android:imeOptions="flagNavigateNext"
+                android:inputType="number"
                 android:textColor="@color/amountColor"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -263,6 +272,8 @@
             android:layout_width="0dp"
             android:layout_weight="0.7"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
             android:textSize="14sp"
             android:background="@color/red_background"
             android:padding="5dp"

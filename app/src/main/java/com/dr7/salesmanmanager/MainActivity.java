@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity
 
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
+    boolean getLocationComp=false;
     ImageView logo;
     Calendar myCalendar;
     Bitmap visitPic = null;
@@ -370,7 +371,7 @@ public class MainActivity extends AppCompatActivity
 
     public  void getlocationForCheckIn() {
 
-        latitudeCheckIn=0;longtudeCheckIn=0;
+
 
             LocationListener locationListener;
 
@@ -384,7 +385,7 @@ public class MainActivity extends AppCompatActivity
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-
+                    latitudeCheckIn=0;longtudeCheckIn=0;
                     latitudeCheckIn  = location.getLatitude();
                     longtudeCheckIn = location.getLongitude();
                     Log.e("onLocationChanged",""+latitudeCheckIn+""+longtudeCheckIn);
@@ -712,76 +713,109 @@ public class MainActivity extends AppCompatActivity
         public void onLocationResult(LocationResult locationResult) {
             Log.e("onLocationResult",""+locationResult);
             Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
-                    if(CustomerListShow.Customer_Account.equals(""))
-        {
-            if(first!=1)
+            if(getLocationComp)
             {
-                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(getResources().getString(R.string.warning_message))
-                        .setContentText(getResources().getString(R.string.pleaseSelectUser))
-                        .show();
-            }
-
-
-        } else {
-
-
-            if(isNetworkAvailable()){
-                String latitude="",  longitude="" ;
-                try {
-                     latitude = CustomerListShow.latitude;
-                   longitude = CustomerListShow.longtude;
-                   Log.e("latitude",""+latitude+longitude);
-                }
-                catch (Exception e)
-                {
-                    latitude="";
-                    longitude="";
-
-                }
-                Log.e("latitude",""+latitude+longitude);
-
-
-                if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
-                {
-
-                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(getResources().getString(R.string.warning_message))
-                            .setContentText(getResources().getString(R.string.customerHaveLocation))
-                            .show();
-                }
-                else {
-                    if (isClickLocation == 2) {
-                        for (Location location : locationResult.getLocations()) {
-                            Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                for (Location location : locationResult.getLocations()) {
+                    Log.e("MainActivity", "getLocationComp: " + location.getLatitude() + " " + location.getLongitude());
+                    if (mDbHandler.getAllCompanyInfo().size() != 0) {
+                        if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
                             latitude_main = location.getLatitude();
                             longitude_main = location.getLongitude();
-                            customerLocation_main = new CustomerLocation();
-                            customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
-                            customerLocation_main.setLONG(longitude_main + "");
-                            customerLocation_main.setLATIT(latitude_main + "");
-
-                            mDbHandler.addCustomerLocation(customerLocation_main);
-                            mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
-                            CustomerListShow.latitude = latitude_main + "";
-                            CustomerListShow.longtude = longitude_main + "";
+                            Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+                            mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
                             new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
                                     .setTitleText(getResources().getString(R.string.succsesful))
                                     .setContentText(getResources().getString(R.string.LocationSaved))
                                     .show();
 
 
-                            Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+                        }
+                    }
+                    else{
+
+                    }
 
 
+
+
+                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+                }
+                getLocationComp=false;
+            }
+            else {
+                if(CustomerListShow.Customer_Account.equals("")&& isClickLocation == 2)
+                {
+                    if(first!=1)
+                    {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                .show();
+                    }
+
+
+                } else {
+
+
+                    if(isNetworkAvailable()){
+                        String latitude="",  longitude="" ;
+                        try {
+                            latitude = CustomerListShow.latitude;
+                            longitude = CustomerListShow.longtude;
+                            Log.e("latitude",""+latitude+longitude);
+                        }
+                        catch (Exception e)
+                        {
+                            latitude="";
+                            longitude="";
+
+                        }
+                        Log.e("latitude",""+latitude+longitude);
+
+
+                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
+                        {
+
+                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(getResources().getString(R.string.warning_message))
+                                    .setContentText(getResources().getString(R.string.customerHaveLocation))
+                                    .show();
+                        }
+                        else {
+                            if (isClickLocation == 2) {
+                                for (Location location : locationResult.getLocations()) {
+                                    Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                                    latitude_main = location.getLatitude();
+                                    longitude_main = location.getLongitude();
+                                    customerLocation_main = new CustomerLocation();
+                                    customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                    customerLocation_main.setLONG(longitude_main + "");
+                                    customerLocation_main.setLATIT(latitude_main + "");
+
+                                    mDbHandler.addCustomerLocation(customerLocation_main);
+                                    mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
+                                    CustomerListShow.latitude = latitude_main + "";
+                                    CustomerListShow.longtude = longitude_main + "";
+                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                            .setTitleText(getResources().getString(R.string.succsesful))
+                                            .setContentText(getResources().getString(R.string.LocationSaved))
+                                            .show();
+
+
+                                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+                                }
+
+                            }
 
                         }
 
                     }
-
-                }
-
-            }
 //            else {
 //                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
 //                        .setTitleText(getResources().getString(R.string.warning_message))
@@ -790,8 +824,10 @@ public class MainActivity extends AppCompatActivity
 //            }
 
 
-        }// END ELSE
-            isClickLocation=1;
+                }// END ELSE
+                isClickLocation=1;
+            }
+
 
         };
 
@@ -879,7 +915,11 @@ public class MainActivity extends AppCompatActivity
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            obj.startExportDatabase();
+                                try {
+                                    obj.startExportDatabase();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                             }
 
@@ -1997,15 +2037,35 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.company_info_dialog);
 
+        getLocationComp=false;
         final EditText name = (EditText) dialog.findViewById(R.id.com_name);
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
         final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
         final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
+        final  TextView savecompanyLocation=(TextView) dialog.findViewById(R.id.savecompanyLocation);
+        savecompanyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(isNetworkAvailable())
+                    {
+                        getLocationComp=true;
+                        saveCurrentLocation();
+                    }
+                    else {
+                        Log.e("isNetworkAvailable","NOT");
+                        Toast.makeText(MainActivity.this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         logo = (ImageView) dialog.findViewById(R.id.logo);
 
         Button okButton = (Button) dialog.findViewById(R.id.okBut);
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
-
         if (mDbHandler.getAllCompanyInfo().size() != 0) {
             name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
             tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
@@ -2013,6 +2073,7 @@ public class MainActivity extends AppCompatActivity
             logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
             noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
         }
+
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2060,7 +2121,8 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals("")) {
+                if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals(""))
+                {
                     String comName = name.getText().toString().trim();
                     int comTel = 0, taxNo = 0;
                     try {
@@ -2069,8 +2131,23 @@ public class MainActivity extends AppCompatActivity
                         String companyNote = noteInvoice.getText().toString();
 
                         mDbHandler.deleteAllCompanyInfo();
-                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote);
 
+                        Log.e("getlocationForCheckIn",""+longitude_main+latitudeCheckIn);
+                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0);
+                        try {
+                            if(isNetworkAvailable())
+                            {
+                                getLocationComp=true;
+                                saveCurrentLocation();
+                            }
+                            else {
+                                Log.e("isNetworkAvailable","NOT");
+                                Toast.makeText(MainActivity.this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         dialog.dismiss();
                     } catch (NumberFormatException e) {
                         if (comTel == 0) {
@@ -2094,6 +2171,25 @@ public class MainActivity extends AppCompatActivity
             }
         });
         dialog.show();
+
+    }
+
+    private void saveCurentLocation() throws InterruptedException {
+        Log.e("updatecompanyInfo_1",""+latitudeCheckIn+longtudeCheckIn);
+        getlocationForCheckIn();
+        Thread.sleep(2000);
+        Log.e("updatecompanyInfo_2",""+latitudeCheckIn+longtudeCheckIn);
+        if(latitudeCheckIn!=0 &&longtudeCheckIn!=0)
+        {
+            if(mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany()== 0.0)
+            {
+                Log.e("updatecompanyInfo",""+mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+                mDbHandler.updatecompanyInfo(latitudeCheckIn,longtudeCheckIn );
+
+            }
+        }
+
+
 
     }
 

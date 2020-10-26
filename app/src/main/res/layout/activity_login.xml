@@ -14,8 +14,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView3"
-        android:layout_width="120dp"
-        android:layout_height="130dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
 
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -31,7 +31,7 @@
 
     <EditText
         android:id="@+id/usernameEditText"
-        android:layout_width="275dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
 
         android:layout_alignStart="@+id/imageView3"
@@ -51,7 +51,7 @@
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="275dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layoutDirection="locale"
         android:layout_below="@+id/usernameEditText"
@@ -74,8 +74,8 @@
     <androidx.cardview.widget.CardView
 
         android:id="@+id/loginCardView"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
         android:layout_below="@+id/passwordEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp"
