@@ -12,6 +12,6 @@
     <dimen name="title_large">20dp</dimen>
     <dimen name="title_xlarge">30dp</dimen>
     <dimen name="content">12dp</dimen>
-    <dimen name="content_large">15sp</dimen>
+    <dimen name="content_large">14sp</dimen>
     <dimen name="content_xlarge">18dp</dimen>
 </resources>

@@ -37,6 +37,7 @@ import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Reports.AccountReport;
@@ -888,7 +889,22 @@ public class ESCPSample2
 
 
 	}
+	int  printerType=5;
 	public void printMultilingualFontEsc3(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
+
+		try {
+			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
+
+			if (printerSettings.size() != 0) {
+				printerType = printerSettings.get(0).getPrinterName();
+				Log.e("printerType",""+printerType);
+			}
+		}catch (Exception e)
+		{
+			printerType=5;
+		}
+
+
 
 //		if (count == 0) {
 //			voucherforPrint = vouch1;
@@ -897,9 +913,25 @@ public class ESCPSample2
 //			voucherforPrint = voucher;
 //			itemforPrint = itemForPrint;
 //		}
+		int nLineWidth = 550;// 550
+		int alignment=0;
+		String line="";
+		String headerVoucher="";
+		if(printerType==6){
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			nLineWidth=370;
+			headerVoucher="السلعة   | " + "  العدد | " + "\t" + " السعر | " + "\t" + " المجموع" + "\n" ;
+			line="-------------------------------------------------------";
+		}
+		else {
+			nLineWidth=550;
+			headerVoucher=" السلعة               " + "العدد " + "\t\t\t" + "سعر الوحدة " + "\t\t\t" + "المجموع" + "\n" ;
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			line="--------------------------------------------------------------------------------";
+		}
 
 
-		int nLineWidth = 550;
+
 		double total_Qty=0;
 
 		try {
@@ -932,23 +964,36 @@ public class ESCPSample2
 				Log.e("12222print","pyyy");
 			}
 			posPtr.printAndroidFont(null,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+"    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			if(printerType==6)
+			{
+				posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true," الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true,line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+			}
+			else {
+				posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+"    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true,line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+			}
+
 			posPtr.printAndroidFont(null,true,"اسم  المندوب    : " +obj.getAllSettings().get(0).getSalesMan_name() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null,true,"اسم العميل   : " + voucherforPrint.getCustName() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null,true,"ملاحظة        : " + voucherforPrint.getRemark() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null,true,"نوع الفاتورة : " +voucherTyp+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null,true,"طريقة الدفع  : " +  (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا")+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(null,true,"ملاحظه  : " +  companyInfo.getNoteForPrint()+ "\n"  , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null,true,"ملاحظه  : " +  companyInfo.getNoteForPrint()+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
-			posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(null,true,line+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
 				total_Qty=0;
 				posPtr.printAndroidFont(null,true," السلعة   " + "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" +  "سعر الوحدة" + "\t\t\t" +"المجموع" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
-				posPtr.printAndroidFont(null,true,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null,true,line + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			//*********************************************************************************************************************
 				for (int i = 0; i < itemforPrint.size(); i++) {
 					if ((voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber())&& (itemforPrint.get(i).getVoucherType()== voucherforPrint.getVoucherType())) {
@@ -1014,35 +1059,38 @@ public class ESCPSample2
 //				}
 			} else {
 				total_Qty=0;
-				posPtr.printAndroidFont(  null,true," السلعة              " + "العدد" + "\t\t\t" + "سعر الوحدة" + "\t\t\t" + "المجموع" + "\n" , nLineWidth, 27, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(  null,true,"--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+				posPtr.printAndroidFont(  null,true,headerVoucher, nLineWidth, 25, alignment);
+				posPtr.printAndroidFont(  null,true,line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
 					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
 						total_Qty+=itemforPrint.get(i).getQty();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-		             	posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
+		             	posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,nLineWidth);
 
 					}
 				}
 
 			}
 
-			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(  null,true, "اجمالي الكمية  : " + convertToEnglish(decimalFormat.format(total_Qty)) + "\n" , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "المجموع  : " + voucherforPrint.getSubTotal() + "\n" , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "الضريبة  : " + voucherforPrint.getTax() + "\n"  , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "الصافي   : " + voucherforPrint.getNetSales() + "\n"  , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "استلمت البضاعة كاملة و بحالة جيدة و خالية من " + "\n"  , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
-			posPtr.printAndroidFont(  null,true, "اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+			posPtr.printAndroidFont(  null,true, line + "\n" , nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, "اجمالي الكمية  : " + convertToEnglish(decimalFormat.format(total_Qty)) + "\n" , nLineWidth, 26,alignment);
+			posPtr.printAndroidFont(  null,true, "المجموع  : " + voucherforPrint.getSubTotal() + "\n" , nLineWidth, 26, alignment);
+			posPtr.printAndroidFont(  null,true, "الخصم    : " + voucherforPrint.getTotalVoucherDiscount() + "\n" , nLineWidth, 26, alignment);
+			posPtr.printAndroidFont(  null,true, "الضريبة  : " + voucherforPrint.getTax() + "\n"  , nLineWidth, 26, alignment);
+			posPtr.printAndroidFont(  null,true, "الصافي   : " + voucherforPrint.getNetSales() + "\n"  , nLineWidth, 26, alignment);
+			posPtr.printAndroidFont(  null,true, "استلمت البضاعة كاملة و بحالة جيدة " + "\n"  , nLineWidth, 26, alignment);
+			posPtr.printAndroidFont(  null,true, " و خالية من اية  عيوب و اتعهد بدفع قيمة هذه الفاتورة." + "\n"   , nLineWidth, 26,alignment);
             if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
             {
-                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString(voucherforPrint.getNetSales()+"")/* + "\n" */ , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                posPtr.printAndroidFont(  null,true, "استلمت : " +   getArabicString(voucherforPrint.getNetSales()+"")/* + "\n" */ , nLineWidth, 26, alignment);
 
             }
-			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ التوقيع : __________" + "\n"  , nLineWidth, 28, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true,  "المستلم : ________________ " + "\n"  , nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true,  "التوقيع : __________" + "\n"  , nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, line + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -1456,6 +1504,11 @@ public class ESCPSample2
 	dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
 	dialogs.setCancelable(true);
 	dialogs.setContentView(R.layout.tabres);
+	int textSize=16;
+	if(printerType==6)
+	{
+		textSize=25;
+	}
 
 	TextView price,total,qty,item,item_largeName;
 
@@ -1465,21 +1518,27 @@ public class ESCPSample2
 	item=(TextView)dialogs.findViewById(R.id.ittem);
 	item_largeName=(TextView)dialogs.findViewById(R.id.ittem_largeName);
 	LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
+
 	price.setText(prices);
+	price.setTextSize(textSize);
 	total.setText(totals);
+	total.setTextSize(textSize);
 	qty.setText(qtys);
+	qty.setTextSize(textSize);
 	Log.e("itemPrint",""+items.length());
 	if(items.length()>19)
 	{
 		item_largeName.setVisibility(View.VISIBLE);
 		item_largeName.setText(items);
+		item_largeName.setTextSize(textSize);
 		item.setText("item name");
 		item.setVisibility(View.INVISIBLE);
+		Log.e("itemPrint",""+items.length()+items);
 	}
 	else {
 		item_largeName.setVisibility(View.GONE);
-
 		item.setText(items);
+		item.setTextSize(textSize);
 	}
 
 //		item.setText(items);
@@ -1569,6 +1628,46 @@ public class ESCPSample2
 
 
 	public void printMultilingualFontPayCash(int count) throws UnsupportedEncodingException {
+		try {
+			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
+
+			if (printerSettings.size() != 0) {
+				printerType = printerSettings.get(0).getPrinterName();
+				Log.e("printerType",""+printerType);
+			}
+		}catch (Exception e)
+		{
+			printerType=5;
+		}
+
+
+
+//		if (count == 0) {
+//			voucherforPrint = vouch1;
+//			itemforPrint = items;
+//		} else {
+//			voucherforPrint = voucher;
+//			itemforPrint = itemForPrint;
+//		}
+		int nLineWidth = 550;// 550
+		int alignment=0;
+		String line="";
+		String headerVoucher="";
+		if(printerType==6){
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			nLineWidth=370;
+			headerVoucher=" القيمة  | " + "  التاريخ | " + " رقم الشيك | " + "   البنك  ";
+
+			line="-------------------------------------------------------";
+		}
+		else {
+			nLineWidth=550;
+			headerVoucher="      القيمة    " + "   التاريخ      " + "     رقم الشيك          " + "   البنك    ";
+
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			line="--------------------------------------------------------------------------------";
+
+		}
 
 		if(count==0)
 		{
@@ -1582,7 +1681,7 @@ public class ESCPSample2
 			Log.e("payforBank 0000 ==>",""+payforBank.getPayMethod());
 		}
 
-		int nLineWidth = 550;
+
 		try {
 
 			posPtr.setAsync(false);
@@ -1592,10 +1691,22 @@ public class ESCPSample2
 			}
 			if (payforBank.getPayMethod() == 1||payforBank.getPayMethod() == 2) {
 				posPtr.printAndroidFont(  null,true, companyInfo.getCompanyName() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"    "+ "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"        " + "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				if(printerType==6){
+					posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true,  "الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+				}
+				else {
+					posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"    "+ "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"        " + "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				}
+
 				posPtr.printAndroidFont(  null,true, "وصلني من السيد/السادة: " +payforBank.getCustName() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true, "ملاحظة: " + payforBank.getRemark() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true, "المبلغ المقبوض: " + payforBank.getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
@@ -1603,46 +1714,83 @@ public class ESCPSample2
 
 			} else {
 				posPtr.printAndroidFont(  null,true, companyInfo.getCompanyName() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"    "+ "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-				posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"        " + "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				if(printerType==6){
+					posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true,  "الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					posPtr.printAndroidFont(  null,true, "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+				}
+				else {
+					posPtr.printAndroidFont(  null,true, "هاتف : " + companyInfo.getcompanyTel() +"    "+ "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, " سند قبض "+ "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(  null,true, "رقم السند: " + payforBank.getVoucherNumber()+"        " + "التاريخ: " + payforBank.getPayDate() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				}
 				posPtr.printAndroidFont(  null,true, "وصلني من السيد/السادة: " +payforBank.getCustName() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true, "ملاحظة: " + payforBank.getRemark() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true, "المبلغ المقبوض: " + payforBank.getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true, "طريقة الدفع: " + (payforBank.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null,true, line + "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				if( textContainsArabic(payList.get(0).getBank())){
 					Log.e("textContainsArabic",""+ textContainsArabic(payList.get(0).getBank()));
 					posPtr.printAndroidFont(  null,true, "      البنك        " + "      رقم الشيك     " + "   التاريخ          " + "   القيمة  " +  "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				}else {
 					Log.e("textContainsArabic","Else"+ textContainsArabic(payList.get(0).getBank()));
-					posPtr.printAndroidFont(  null,true, "      القيمة    " + "   التاريخ      " + "     رقم الشيك          " + "   البنك    " + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+					posPtr.printAndroidFont(  null,true, headerVoucher+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				}
-				posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null,true, line + "\n\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 
 				for (int i = 0; i < payList.size(); i++) {
+					if(printerType==6)
+					{
+//						if (payList.get(i).getBank().length() <= 12) {
+							String space = payList.get(i).getBank();
+//							for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
+//								space += "\t";
+//							}//"\t\t\t\t" +
+							posPtr.printAndroidFont(  null,true, payList.get(i).getBank()+  "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
-					if (payList.get(i).getBank().length() <= 12) {
-						String space = payList.get(i).getBank();
-						for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
-							space += "\t";
-						}//"\t\t\t\t" +
-						posPtr.printAndroidFont(  null,true, "\t"+space+"\t\t"+  payList.get(i).getCheckNumber()+"\t\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							posPtr.printAndroidFont(  null,true,  "\t"+payList.get(i).getCheckNumber()+"\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 //                    dataArabic += "\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space + "\n";
-					} else {
-						String space = payList.get(i).getBank().substring(0, 10);
+//						} else {
+//							String space = payList.get(i).getBank().substring(0, 10);
+////                    for (int g = 0; g <  payList.get(i).getBank().length()-12; g++) {
+////                        space+= "\t" ;
+////                    }
+//							String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
+//							posPtr.printAndroidFont(  null,true, "\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+////                    dataArabic +=   "\n\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+//						}
+					}
+					else {
+						if (payList.get(i).getBank().length() <= 12) {
+							String space = payList.get(i).getBank();
+							for (int g = 0; g < 12 - payList.get(i).getBank().length(); g++) {
+								space += "\t";
+							}//"\t\t\t\t" +
+							posPtr.printAndroidFont(  null,true, "\t"+space+"\t\t"+  payList.get(i).getCheckNumber()+"\t\t\t\t"+ payList.get(i).getDueDate()+"\t\t\t" + payList.get(i).getAmount() + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+//                    dataArabic += "\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space + "\n";
+						} else {
+							String space = payList.get(i).getBank().substring(0, 10);
 //                    for (int g = 0; g <  payList.get(i).getBank().length()-12; g++) {
 //                        space+= "\t" ;
 //                    }
-						String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
-						posPtr.printAndroidFont(  null,true, "\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							String fullString = payList.get(i).getBank().substring(10, payList.get(i).getBank().length() - 1);
+							posPtr.printAndroidFont(  null,true, "\t"+space +"\t\t\t"+ payList.get(i).getCheckNumber() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t" + payList.get(i).getAmount() + "\n" + fullString + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 //                    dataArabic +=   "\n\t\t\t\t" + payList.get(i).getAmount() + "\t\t\t\t" + payList.get(i).getDueDate() + "\t\t\t\t" + payList.get(i).getCheckNumber() + "\t\t" + space +fullString + "\n";
+						}
 					}
+
+
 				}
 
 
@@ -1650,11 +1798,11 @@ public class ESCPSample2
 			posPtr.lineFeed(2);
             if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
             {
-                posPtr.printAndroidFont(  null, "استلمت : " +   getArabicString( payforBank.getAmount() +"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+                posPtr.printAndroidFont(  null, true,"استلمت : " +   getArabicString( payforBank.getAmount() +"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
             }
-			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(  null,true, "   المستلم ---------------                 التوقيع --------------               " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, line + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(  null,true, "   المستلم ---------------           "  +"\n"+" التوقيع --------------               " + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
@@ -1884,8 +2032,37 @@ public class ESCPSample2
 	}
 
 	public void printMultilingualFontCashReport() throws UnsupportedEncodingException {
+		try {
+			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
 
-		int nLineWidth = 550;
+			if (printerSettings.size() != 0) {
+				printerType = printerSettings.get(0).getPrinterName();
+				Log.e("printerType",""+printerType);
+			}
+		}catch (Exception e)
+		{
+			printerType=5;
+		}
+
+		int nLineWidth = 550;// 550
+		int alignment=0;
+		String line="";
+		String headerVoucher="";
+		if(printerType==6){
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			nLineWidth=370;
+			headerVoucher=" القيمة  | " + "  التاريخ | " + " رقم الشيك | " + "   البنك  ";
+
+			line="-------------------------------------------------------";
+		}
+		else {
+			nLineWidth=550;
+			headerVoucher="      القيمة    " + "   التاريخ      " + "     رقم الشيك          " + "   البنك    ";
+
+			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
+			line="--------------------------------------------------------------------------------";
+
+		}
 		try {
 
 			posPtr.setAsync(false);
@@ -1919,25 +2096,25 @@ public class ESCPSample2
 				posPtr.printAndroidFont(  null,true,  "  الرقم الضريبي :  " + companyInfo.getTaxNo() + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				posPtr.printAndroidFont(  null,true,"التاريخ  : " + date.getText() + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(  null,true,"        -----------------------------------------------------------------------  " + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null,true,line + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(  null,true,"المبيعات نقدا :     " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true,"المبيعات ذمم :     " + convertToEnglish(decimalFormat.format((credit - returnCridet))) + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true,"إجمالي المبيعات :     " + convertToEnglish(decimalFormat.format(total)) + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
-				posPtr.printAndroidFont(  null,true,"        -----------------------------------------------------------------------  " + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null,true,line + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(  null,true,"الدفع نقدا :     " + convertToEnglish(decimalFormat.format(cashPayment)) + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true,"الدفع شيك :     " + convertToEnglish(decimalFormat.format(creditPayment)) + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 				posPtr.printAndroidFont(  null,true,"الاجمالي :     " + convertToEnglish(decimalFormat.format(net)) + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				posPtr.printAndroidFont(  null,true,"اجمالي البطاقة الائتمانية :     " + convertToEnglish(decimalFormat.format(creditCardPayment)) + " \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 //				"اجمالي البطاقة الائتمانية :     " + convertToEnglish(decimalFormat.format(creditCardPayment)) + " \n " +
-				posPtr.printAndroidFont(  null,true,"        -----------------------------------------------------------------------  " + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(  null,true,line + " \n "   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(  null,true,"اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 			}catch (Exception e){
 //				Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 			}
 
-			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+			posPtr.printAndroidFont(  null,true, line+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
 			e.printStackTrace();

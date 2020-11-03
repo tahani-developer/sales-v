@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -60,7 +61,7 @@ public class Activities extends AppCompatActivity implements
 
     private int activitySelected;
 
-    private LinearLayout salesInvoiceLayout,mainlayout;
+    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
@@ -74,6 +75,7 @@ public class Activities extends AppCompatActivity implements
     ProgressDialog dialog_progress;
     DatabaseHandler databaseHandler;
     static String[] araySerial;
+    TextView switchLayout;
 
 
     @Override 
@@ -161,6 +163,7 @@ public class Activities extends AppCompatActivity implements
         databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
+        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
 
         try {
             if (languagelocalApp.equals("ar"))
@@ -185,7 +188,14 @@ public class Activities extends AppCompatActivity implements
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
         supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
-
+        switchLayout=findViewById(R.id.switchLayout);
+        switchLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                linearMainActivities.setVisibility(View.VISIBLE);
+                switchLayout.setVisibility(View.GONE);
+            }
+        });
         receiptImageView = (ImageView) findViewById(R.id.paymentImageView);
         stockImageView = (ImageView) findViewById(R.id.stockRequestImageView);
 
@@ -205,7 +215,8 @@ public class Activities extends AppCompatActivity implements
 
         //   if (activitySelected == 0)
         //      return;
-
+        linearMainActivities.setVisibility(View.GONE);
+        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 0;
         FragmentManager fragmentManager = getSupportFragmentManager();
         salesInvoice = new SalesInvoice();
@@ -296,7 +307,8 @@ public class Activities extends AppCompatActivity implements
     }
 
     private void displayReceipt() {
-
+        linearMainActivities.setVisibility(View.GONE);
+        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 1;
         FragmentManager fragmentManager = getSupportFragmentManager();
         ReceiptVoucher receiptVoucher = new ReceiptVoucher();
@@ -317,7 +329,8 @@ public class Activities extends AppCompatActivity implements
     }
 
     private void displayStockRequest() {
-
+        linearMainActivities.setVisibility(View.GONE);
+        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 2;
         FragmentManager fragmentManager = getSupportFragmentManager();
         stockRequest = new StockRequest();
@@ -510,6 +523,8 @@ public class Activities extends AppCompatActivity implements
                 supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 isFragmentBlank = true;
                 activitySelected=-1;
+                linearMainActivities.setVisibility(View.VISIBLE);
+                switchLayout.setVisibility(View.GONE);
 //                salesInvoice.total_items_quantity=0
 
             }

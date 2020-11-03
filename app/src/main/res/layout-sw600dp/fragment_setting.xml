@@ -2,8 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="800dp"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/layer3"
     android:orientation="vertical"
+    android:layoutDirection="locale"
+    android:id="@+id/linearSetting"
     android:padding="15dp"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
@@ -12,6 +15,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/okBut_floatingAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:backgroundTint="@color/white"
+            android:src="@drawable/ic_done_black_24dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            app:fabSize="mini" />
 
 
         <!--    <ScrollView-->

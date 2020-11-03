@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer1"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
 
     <TextView
@@ -16,19 +18,20 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/row2"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
+        android:layoutDirection="locale"
+
         android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="@string/from_date"
             android:textColor="@color/text_view_color"
             android:textSize="14sp" />
@@ -37,11 +40,10 @@
             android:id="@+id/from_date"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:focusable="false"
-            android:gravity="center_vertical"
             android:inputType="date"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -49,10 +51,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:gravity="center_vertical"
             android:text="@string/to_date"
             android:textColor="@color/text_view_color"
             android:textSize="15sp" />
@@ -61,11 +62,11 @@
             android:id="@+id/to_date"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:focusable="false"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:inputType="date"
             android:textColor="@color/add_button"
             android:textSize="15sp" />
@@ -73,12 +74,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginStart="30dp"
             android:layout_marginLeft="30dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:text="@string/item_number"
             android:textColor="@color/text_view_color"
             android:textSize="15sp" />
@@ -87,10 +87,10 @@
             android:id="@+id/item_number"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+
             android:layout_margin="5dp"
             android:background="@color/layer5"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:padding="5dp"
             android:textColor="@color/done_button"
             android:textSize="15sp" />
@@ -119,8 +119,7 @@
                 android:id="@+id/tvTrKind"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-
+                android:gravity="center"
                 android:text="@string/by_voucher_kind"
                 android:textColor="@color/second_color"
                 android:textSize="14dp"

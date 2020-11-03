@@ -36,10 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,6 +50,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -87,15 +92,15 @@ public class ImportJason extends AppCompatActivity {
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            if(mHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
-            {
-                checkUnpostedCustomer();
-
-
-            }
-            else {
+//            if(mHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+//            {
+//                checkUnpostedCustomer();
+//
+//
+//            }
+//            else {
                 new JSONTask().execute(URL_TO_HIT);
-            }
+//            }
         }
 
 
@@ -256,23 +261,26 @@ public class ImportJason extends AppCompatActivity {
 //                }
 
                 String link= URL_TO_HIT;
-
-
-                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
-                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
-
                 URL url = new URL(link);
 
-                URLConnection conn = url.openConnection();
-
-
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(data);
-                wr.flush();
-
+                //*************************************
+                HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+                httpsURLConnection.setRequestMethod("POST");
+                httpsURLConnection.setDoOutput(true);
+                httpsURLConnection.setDoInput(true);
+                OutputStream outputStream= httpsURLConnection.getOutputStream();
+//                test= " still good";
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+//                String post_data= URLEncoder.encode("username ", "UTF-8")+"="+URLEncoder.encode(username , "UTF-8")+"&"
+////                        +URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password , "UTF-8");
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
                 reader = new BufferedReader(new
-                        InputStreamReader(conn.getInputStream()));
+                        InputStreamReader(httpsURLConnection.getInputStream()));
 
 
                 StringBuilder sb = new StringBuilder();
@@ -282,9 +290,35 @@ public class ImportJason extends AppCompatActivity {
                 while((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
+                //*************************************
+//                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+//                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+//
+//                URL url = new URL(link);
+//
+//                URLConnection conn = url.openConnection();
+//
+//
+//                conn.setDoOutput(true);
+//                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+//                wr.write(data);
+//                wr.flush();
+//
+//
+//                reader = new BufferedReader(new
+//                        InputStreamReader(conn.getInputStream()));
+//
+//
+//                StringBuilder sb = new StringBuilder();
+//                String line = null;
+//
+//                // Read Server Response
+//                while((line = reader.readLine()) != null) {
+//                    sb.append(line);
+//                }
 
                 String finalJson = sb.toString();
-                Log.e("finalJson*********" , finalJson);
+                Log.e("finalJson***Import" , finalJson);
                 String rate_customer="";
                 String HideVal="";
 
@@ -709,10 +743,10 @@ public class ImportJason extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                if (connection != null) {
-                    Log.e("Customer", "********ex4");
-                    // connection.disconnect();
-                }
+//                if (connection != null) {
+//                    Log.e("Customer", "********ex4");
+//                    // connection.disconnect();
+//                }
                 try {
                     if (reader != null) {
                         reader.close();
@@ -736,7 +770,7 @@ public class ImportJason extends AppCompatActivity {
                 storeInDatabase();
             } else {
 
-                Toast.makeText(context, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -16,12 +16,20 @@
     >
 
     <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4.5"
+        android:layout_weight="4.2"
         android:background="@color/white"
 
         android:orientation="horizontal">
@@ -29,7 +37,8 @@
 
         <RelativeLayout
 
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="8"
 
             android:layout_gravity="center"
             android:gravity="center"
@@ -53,9 +62,9 @@
                 android:layout_alignTop="@+id/addItemImgButton2"
                 android:layout_alignParentRight="@+id/addItemImgButton2"
 
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
 
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="45dp"
 
                 android:padding="3dp"
                 android:text="+"
@@ -74,6 +83,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
 
             android:orientation="vertical"
 
@@ -83,6 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/back_border_edit"
                 android:orientation="horizontal"
 
@@ -113,10 +124,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginLeft="2dp"
+                       android:layout_margin="5dp"
+                        android:text="@string/saveLocation"
                         android:gravity="center_vertical"
-                        android:text="112233"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -156,12 +166,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
+                        android:layout_margin="5dp"
                         android:gravity="center_vertical"
-                        android:text="iugujhilhuihkkkjmuhbjpp"
+
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="10sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
 
@@ -171,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginBottom="3dp"
                 android:background="@drawable/back_border_edit"
                 android:orientation="horizontal">
 
@@ -302,7 +312,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="3dp"
                     android:textColor="@color/text_view_color"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    />
 
             </LinearLayout>
 
@@ -488,7 +499,7 @@
         android:id="@+id/row6"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6"
+        android:layout_weight="5.8"
         android:background="@color/layer3"
         android:orientation="horizontal"
         android:layout_marginTop="2dp"
@@ -733,14 +744,20 @@
                     tools:text="0.000" />
             </LinearLayout>
         </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:bmb_normalColor="@color/colorblue1"
-            android:layout_alignBottom="@id/totals"
-            android:layout_alignRight="@id/totals"/>
+        android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:bmb_draggable="true"
+            />
     </RelativeLayout>
-
-
 </LinearLayout>

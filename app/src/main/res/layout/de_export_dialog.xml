@@ -5,6 +5,8 @@
     android:background="@color/layer3"
     android:orientation="vertical"
     android:padding="30px"
+    android:layoutDirection="locale"
+    android:id="@+id/mainLinear"
     tools:context="com.dr7.salesmanmanager.DiscountFragment">
 
 

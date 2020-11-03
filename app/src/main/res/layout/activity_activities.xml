@@ -10,6 +10,12 @@
     android:id="@+id/mainlyout"
     android:background="@color/layer1"
     >
+    <RelativeLayout android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
 
     <LinearLayout
@@ -17,6 +23,8 @@
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:layout_margin="3dp"
+        android:id="@+id/linearMainActivities"
+        android:visibility="visible"
         android:gravity="center"
         android:orientation="vertical">
         <androidx.cardview.widget.CardView
@@ -312,5 +320,20 @@
         android:orientation="horizontal">
 
     </LinearLayout>
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/switchLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+
+            android:visibility="gone"
+            android:textColor="@color/text_view_color"
+            android:drawableLeft="@drawable/ic_keyboard_arrow_blue_black_24dp" />
+    </RelativeLayout>
 
 </LinearLayout>

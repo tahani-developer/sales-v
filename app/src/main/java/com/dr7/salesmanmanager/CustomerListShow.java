@@ -116,7 +116,8 @@ public class CustomerListShow extends DialogFragment {
             }
 
             else
-            {customerList = mHandler.getAllCustomers();
+            {
+                customerList = mHandler.getAllCustomers();
                 Log.e("getAllCustomers",""+customerList.size());
 
             }

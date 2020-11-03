@@ -15,7 +15,8 @@
         android:layout_weight="5"
         android:background="@color/layer2"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="5dp"
+        >
 
         <TextView
             android:layout_width="0dp"
@@ -106,7 +107,7 @@
                 android:id="@+id/cat"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-
+                android:textSize="12sp"
                 android:layout_gravity="center"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"

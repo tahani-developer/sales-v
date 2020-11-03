@@ -195,7 +195,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@color/second_color"
+            android:background="@color/done_button"
             android:gravity="center"
             android:text="@string/app_done"
             android:textColor="@color/white" />

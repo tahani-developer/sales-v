@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 26</string>
+    <string name="version"> V 27</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -61,7 +61,7 @@
     <string name="app_cash">Cash   </string>
     <string name="cash">Cash</string>
     <string name="app_credit">Credit</string>
-    <string name="app_remark">Remark : </string>
+    <string name="app_remark">Remark  </string>
     <string name="app_sub_total">Sub Total : </string>
     <string name="app_disc">Discount : </string>
     <string name="app_tax">Tax : </string>
@@ -180,7 +180,7 @@
     <string name="invoice_serial_from">invoice</string>
     <string name="return_serial_from">return</string>
     <string name="order_serial_from">order</string>
-    <string name="payments_serial_from">Payments Serial From</string>
+    <string name="payments_serial_from">Payments Serial</string>
     <string name="save">Save</string>
     <string name="company_number">Company Number</string>
     <string name="voucher_number">Voucher Number</string>
@@ -301,7 +301,7 @@
     <string name="failImpo_export_data">Please Export data before import new data</string>
     <string name="failStockSoft_export_data">Please check BackOffice Software There Are Unsaved Location </string>
     <string name="kind_item">Kind</string>
-    <string name="all_item">All Item</string>
+    <string name="all_item">All</string>
     <string name="app_account_report">Account Statment</string>
     <string name="last_account">Previous balance</string>
     <string name="transfer_name">Transfer Name</string>
@@ -338,7 +338,7 @@
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">Cheque count</string>
     <string name="preventPayMethod">Prevent change Pay Method</string>
-    <string name="credit_value">credit Value</string>
+    <string name="credit_value">Credit Value</string>
     <string name="invoice_note">Invoice Note :</string>
     <string name="saveLocation">Save Location</string>
     <string name="ShowCustomerList">Show Customer List</string>
@@ -368,6 +368,9 @@
     <string name="address">Address</string>
     <string name="ShowItemImage">Show Item Image</string>
     <string name="SearchByCustomerName">Search By Customer Name</string>
+    <string name="delet">delete</string>
+    <string name="refresh">refresh</string>
+    <string name="info">info</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

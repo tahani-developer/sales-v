@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layoutDirection="locale"
     android:background="@color/layer1"
+    android:id="@+id/mainlayout"
     tools:context="com.dr7.salesmanmanager.Login">
 
 <!--    <ImageView-->

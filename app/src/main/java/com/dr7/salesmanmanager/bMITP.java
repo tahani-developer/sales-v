@@ -435,8 +435,8 @@ public class bMITP extends Activity {
                     this.dialog.dismiss();
                 }
 
-                Toast toast = Toast.makeText(bMITP.this.context, "Now Printing ", Toast.LENGTH_SHORT);
-                toast.show();
+//                Toast toast = Toast.makeText(bMITP.this.context, "Now Printing ", Toast.LENGTH_SHORT);
+//                toast.show();
 
 
                 int count =Integer.parseInt(getData);

@@ -14,11 +14,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -68,6 +70,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class PrintPayment extends AppCompatActivity {
     Bitmap testB;
     PrintPic printPic;
@@ -112,7 +116,9 @@ public class PrintPayment extends AppCompatActivity {
     String itemsString2 = "";
     DatabaseHandler obj;
     static double TOTAL=0;
+    LinearLayout linearMain;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +128,24 @@ public class PrintPayment extends AppCompatActivity {
             closeBT();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         payment = new ArrayList<>();
 //        vouchers = new ArrayList<Voucher>();

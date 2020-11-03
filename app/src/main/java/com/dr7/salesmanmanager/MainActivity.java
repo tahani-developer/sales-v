@@ -1493,12 +1493,30 @@ public class MainActivity extends AppCompatActivity
         dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openPasswordDialog(final int flag) {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.password_dialog);
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         final EditText password = (EditText) dialog.findViewById(R.id.editText1);
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
@@ -1565,8 +1583,7 @@ public class MainActivity extends AppCompatActivity
                             obj = new ExportJason(MainActivity.this);
 
                             obj.startExportDatabase();
-                        }
-                        catch (JSONException e) {
+                        } catch (JSONException e) {
                             Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                             e.printStackTrace();
 
@@ -1588,61 +1605,91 @@ public class MainActivity extends AppCompatActivity
     }
 
     public class openSetting {
-        boolean validSerial=false,validReturn=false,validOrder=false;
+        boolean validSerial = false, validReturn = false, validOrder = false;
+        EditText linkEditText, numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit, salesmanNmae;
+        RadioGroup taxCalc, printMethod;
+        CheckBox checkBox, checkBox2;
+        RadioButton bluetooth, wifi, exclude, include;
+        CheckBox allowMinus, salesManCustomersOnly, minSalePrice, allowOutOfRange;
+        CheckBox checkBox_canChangePrice, readDiscount, workOnline, paymetod_check, bonusNotAlowed, noOfferForCredit, customerAuthor,
+                passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
+                showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox, showItemImage_checkbox;
+        Dialog dialog;
+        LinearLayout linearSetting;
+
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
         @SuppressLint("SetTextI18n")
         public void showDialog(Activity activity, String msg) {
-            final Dialog dialog = new Dialog(activity);
+            dialog = new Dialog(activity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.fragment_setting);
 
+            linearSetting = (LinearLayout) dialog.findViewById(R.id.linearSetting);
+            try {
+                if (languagelocalApp.equals("ar")) {
+                    linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                } else {
+                    if (languagelocalApp.equals("en")) {
+                        linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                    }
 
-            final EditText linkEditText = (EditText) dialog.findViewById(R.id.link);
-            final EditText numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
-            final EditText invoicEditText = (EditText) dialog.findViewById(R.id.invoice_serial);
-            final EditText returnEditText = (EditText) dialog.findViewById(R.id.return_serial);
-            final EditText orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
-            final EditText paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
-            final EditText paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
-            final EditText paymentEditTextCredit = (EditText) dialog.findViewById(R.id.payments_serial_creditCard);
-            final EditText salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
-            final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
-
-            final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
-            final CheckBox checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
-            final RadioGroup printMethod = (RadioGroup) dialog.findViewById(R.id.printMethod);
-            final RadioButton bluetooth = (RadioButton) dialog.findViewById(R.id.bluetoothRadioButton);
-            final RadioButton wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
-            final CheckBox allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
-            final CheckBox salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
-            final CheckBox minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
-            final CheckBox allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
-            final RadioButton exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
-            final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
-            final CheckBox checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
-            final CheckBox readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
-            final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
-            final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
-            final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
-            final CheckBox noOfferForCredit = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
-            final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
-            final CheckBox passowrdData_checkbox = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
-            final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
-            final CheckBox hideQty_checkbox = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
-            final CheckBox lockcash_checkbox = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
-            final CheckBox preventNew_checkbox = (CheckBox) dialog.findViewById(R.id.preventNewOrder_checkbox);
-            final CheckBox note_checkbox = (CheckBox) dialog.findViewById(R.id.note_checkbox);
-            final CheckBox ttotalDisc_checkbox = (CheckBox) dialog.findViewById(R.id.preventtotalDisc_checkbox);
-            final CheckBox automaticCheck_checkbox = (CheckBox) dialog.findViewById(R.id.automatic_cheque_checkbox);
-            final CheckBox tafqit_checkbox = (CheckBox) dialog.findViewById(R.id.tafqit_checkbox);
-            final CheckBox preventChange_checkbox = (CheckBox) dialog.findViewById(R.id.preventChangePay_checkbox);
-            final CheckBox showCustomerList_checkbox = (CheckBox) dialog.findViewById(R.id.showCustomerList_checkbox);
-            final CheckBox noReturn_checkbox = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
-            final CheckBox workSerial_checkbox = (CheckBox) dialog.findViewById(R.id.workSerial_checkbox);
-            final CheckBox showItemImage_checkbox = (CheckBox) dialog.findViewById(R.id.showItemImage_checkbox);
+                }
+            }
+            catch (Exception e){
+                linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
 
 
+            linkEditText = (EditText) dialog.findViewById(R.id.link);
+            numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
+            invoicEditText = (EditText) dialog.findViewById(R.id.invoice_serial);
+            returnEditText = (EditText) dialog.findViewById(R.id.return_serial);
+            orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
+            paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
+            paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
+            paymentEditTextCredit = (EditText) dialog.findViewById(R.id.payments_serial_creditCard);
+            salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
+            taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
 
+            checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
+            checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
+            printMethod = (RadioGroup) dialog.findViewById(R.id.printMethod);
+            bluetooth = (RadioButton) dialog.findViewById(R.id.bluetoothRadioButton);
+            wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
+            allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
+            salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
+            minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
+            allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
+            exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
+            include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
+            checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
+            readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
+            workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
+             paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
+             bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
+             noOfferForCredit        = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
+             customerAuthor          = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
+             passowrdData_checkbox   = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
+             arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
+             hideQty_checkbox     = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
+             lockcash_checkbox    = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
+             preventNew_checkbox   = (CheckBox) dialog.findViewById(R.id.preventNewOrder_checkbox);
+             note_checkbox         = (CheckBox) dialog.findViewById(R.id.note_checkbox);
+             ttotalDisc_checkbox   = (CheckBox) dialog.findViewById(R.id.preventtotalDisc_checkbox);
+             automaticCheck_checkbox   = (CheckBox) dialog.findViewById(R.id.automatic_cheque_checkbox);
+             tafqit_checkbox            = (CheckBox) dialog.findViewById(R.id.tafqit_checkbox);
+             preventChange_checkbox     = (CheckBox) dialog.findViewById(R.id.preventChangePay_checkbox);
+             showCustomerList_checkbox = (CheckBox) dialog.findViewById(R.id.showCustomerList_checkbox);
+             noReturn_checkbox            = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
+             workSerial_checkbox         = (CheckBox) dialog.findViewById(R.id.workSerial_checkbox);
+             showItemImage_checkbox        = (CheckBox) dialog.findViewById(R.id.showItemImage_checkbox);
+            FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
+            okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveSetting();
+                }
+            });
 
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
@@ -1910,106 +1957,7 @@ public class MainActivity extends AppCompatActivity
 //                    LocaleAppUtils.setConfigChange(MainActivity.this);
 //                    finish();
 //                    startActivity(getIntent());
-                    settext2();
-
-
-
-                    int numOfCopys=0,invoice=0,return1=0,order=0,paymentCash=0,paymentCheque=0,paymentCredit=0;
-
-                    if (!(linkEditText.getText().toString().equals(""))) {
-                        if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
-                                !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("")
-                                && !paymentEditTextCheque.getText().toString().equals("")
-                                && !paymentEditTextCredit.getText().toString().equals("")) {
-
-//                           if(validSerial&&validOrder&&validReturn)
-//                           {
-                               if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
-                                   String link = linkEditText.getText().toString().trim();
-                                   try {
-                                       numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                                       invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                                       return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                                       order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                                       paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                                       paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
-                                       paymentCredit = Integer.parseInt(paymentEditTextCredit.getText().toString()) - 1;
-                                   }
-                                   catch (Exception e)
-                                   {
-                                       Toast.makeText(MainActivity.this, "Invalid Input Number", Toast.LENGTH_SHORT).show();
-                                       Log.e("SettingException",""+e.getMessage());
-
-                                   }
-
-
-                                   int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
-                                   int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
-                                   int priceByCust = checkBox.isChecked() ? 1 : 0;
-                                   int useWeightCase = checkBox2.isChecked() ? 1 : 0;
-                                   int alowMinus = allowMinus.isChecked() ? 1 : 0;
-                                   int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
-                                   int minSalePric = minSalePrice.isChecked() ? 1 : 0;
-                                   int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
-                                   int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
-                                   int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
-                                   int workOnlin = workOnline.isChecked() ? 1 : 0;
-                                   int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
-                                   int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
-                                   int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
-                                   int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
-                                   int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
-                                   int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
-                                   int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
-                                   int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
-                                   int preventOrder = preventNew_checkbox.isChecked() ? 1 : 0;
-                                   int requiredNote = note_checkbox.isChecked() ? 1 : 0;
-                                   int totalDiscPrevent = ttotalDisc_checkbox.isChecked() ? 1 : 0;
-                                   int automaticCheque = automaticCheck_checkbox.isChecked() ? 1 : 0;
-                                   int tafqitCheckbox = tafqit_checkbox.isChecked() ? 1 : 0;
-                                   int preventChangPay = preventChange_checkbox.isChecked() ? 1 : 0;
-                                   int showCustlist = showCustomerList_checkbox.isChecked() ? 1 : 0;
-                                   int noReturnInvoice = noReturn_checkbox.isChecked() ? 1 : 0;
-
-                                   int workSerial = workSerial_checkbox.isChecked() ? 1 : 0;
-                                   int showImage=showItemImage_checkbox.isChecked()?1:0;
-
-
-                                   String salesmanname=salesmanNmae.getText().toString();
-                                   mDbHandler.deleteAllSettings();
-                                   mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                                   mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                                   mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                                   /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                                   /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                                   /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-
-                                   finish();
-                                   startActivity(getIntent());
-                                   dialog.dismiss();
-                               }
-                               else
-                               {
-                                   Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
-
-                               }
-//                           }
-//                           else {
-//                               Toast.makeText(MainActivity.this, "Invalid Serial Number", Toast.LENGTH_SHORT).show();
-//                           }
-
-
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-
-                    else {
-                        Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
-//                        linkEditText.setError("Required");
-                    }
+     saveSetting();
 
 
                 }
@@ -2027,16 +1975,135 @@ public class MainActivity extends AppCompatActivity
             //                             }
 
         }
+        private void saveSetting() {
+            settext2();
+            int numOfCopys=0,invoice=0,return1=0,order=0,paymentCash=0,paymentCheque=0,paymentCredit=0;
+
+            if (!(linkEditText.getText().toString().equals(""))) {
+                if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
+                        !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("")
+                        && !paymentEditTextCheque.getText().toString().equals("")
+                        && !paymentEditTextCredit.getText().toString().equals("")) {
+
+//                           if(validSerial&&validOrder&&validReturn)
+//                           {
+                    if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
+                        String link = linkEditText.getText().toString().trim();
+                        try {
+                            numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                            invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                            return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                            order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                            paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                            paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                            paymentCredit = Integer.parseInt(paymentEditTextCredit.getText().toString()) - 1;
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(MainActivity.this, "Invalid Input Number", Toast.LENGTH_SHORT).show();
+                            Log.e("SettingException",""+e.getMessage());
+
+                        }
+
+
+                        int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
+                        int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
+                        int priceByCust = checkBox.isChecked() ? 1 : 0;
+                        int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                        int alowMinus = allowMinus.isChecked() ? 1 : 0;
+                        int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
+                        int minSalePric = minSalePrice.isChecked() ? 1 : 0;
+                        int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
+                        int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
+                        int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
+                        int workOnlin = workOnline.isChecked() ? 1 : 0;
+                        int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
+                        int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
+                        int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
+                        int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
+                        int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
+                        int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
+                        int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
+                        int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
+                        int preventOrder = preventNew_checkbox.isChecked() ? 1 : 0;
+                        int requiredNote = note_checkbox.isChecked() ? 1 : 0;
+                        int totalDiscPrevent = ttotalDisc_checkbox.isChecked() ? 1 : 0;
+                        int automaticCheque = automaticCheck_checkbox.isChecked() ? 1 : 0;
+                        int tafqitCheckbox = tafqit_checkbox.isChecked() ? 1 : 0;
+                        int preventChangPay = preventChange_checkbox.isChecked() ? 1 : 0;
+                        int showCustlist = showCustomerList_checkbox.isChecked() ? 1 : 0;
+                        int noReturnInvoice = noReturn_checkbox.isChecked() ? 1 : 0;
+
+                        int workSerial = workSerial_checkbox.isChecked() ? 1 : 0;
+                        int showImage=showItemImage_checkbox.isChecked()?1:0;
+
+
+                        String salesmanname=salesmanNmae.getText().toString();
+                        mDbHandler.deleteAllSettings();
+                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+
+                        finish();
+                        startActivity(getIntent());
+                        dialog.dismiss();
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
+
+                    }
+//                           }
+//                           else {
+//                               Toast.makeText(MainActivity.this, "Invalid Serial Number", Toast.LENGTH_SHORT).show();
+//                           }
+
+
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            else {
+                Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+//                        linkEditText.setError("Required");
+            }
+        }
 
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("SetTextI18n")
     public void openCompanyInfoDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.company_info_dialog);
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearCompany);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         getLocationComp=false;
         final EditText name = (EditText) dialog.findViewById(R.id.com_name);
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
@@ -2070,7 +2137,8 @@ public class MainActivity extends AppCompatActivity
             name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
             tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
             tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
-            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+//            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+            logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
             noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
         }
 
@@ -2193,19 +2261,38 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openPrintSetting() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
+        LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
-        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name;
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
         lk32 = (RadioButton) dialog.findViewById(R.id.LK32);
         qs = (RadioButton) dialog.findViewById(R.id.QS);
-
+        innerPrinter= (RadioButton) dialog.findViewById(R.id.innerPrinter);
         dotMatrix=(RadioButton) dialog.findViewById(R.id.dotMatrix);
         MTPPrinter=(RadioButton) dialog.findViewById(R.id.MTP);
         Button save = (Button) dialog.findViewById(R.id.save);
@@ -2233,6 +2320,10 @@ if(printer.size()!=0) {
         case 5:
             MTPPrinter.setChecked(true);
             break;
+        case 6:
+            innerPrinter.setChecked(true);
+            break;
+
 
     }
 
@@ -2286,6 +2377,11 @@ if(printer.size()!=0) {
                 mDbHandler.addPrinterSeting(printerSetting);
                 Log.e("click ", "mtp");
             }
+                else if (innerPrinter.isChecked()) {
+                    printerSetting.setPrinterName(6);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "mtp");
+                }
 dialog.dismiss();
             }
 
@@ -2298,11 +2394,30 @@ dialog.dismiss();
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openDeExportDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.de_export_dialog);
+        LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
 
         final EditText from_date = (EditText) dialog.findViewById(R.id.from_date);
         final EditText to_date = (EditText) dialog.findViewById(R.id.to_date);

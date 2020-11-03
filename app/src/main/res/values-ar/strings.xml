@@ -20,7 +20,7 @@
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
     <string name="app_receipt">سند قبض</string>
 <!--    <string name="title_activity_main">الأتصال بالبلوتوث </string>-->
-    <string name="credit_value">credit Value</string>
+    <string name="credit_value">بطاقة ائتمانية</string>
     <string name="invoice_note">ملاحظه :</string>
     <string name="title_activity_main"></string>
     <string name="app_sign_out">نهاية اليوم</string>
@@ -181,7 +181,7 @@
     <string name="invoice_serial_from">الفاتورة</string>
     <string name="return_serial_from">المرتجع</string>
     <string name="order_serial_from">الطلب</string>
-    <string name="payments_serial_from">تسلسل المبيعات من</string>
+    <string name="payments_serial_from">تسلسل المبيعات </string>
     <string name="save">حفظ</string>
     <string name="company_number">اسم الشركة</string>
     <string name="voucher_number">رقم الفاتورة</string>
@@ -346,7 +346,7 @@
          قم بترحيل الفواتير في برنامج المستودعات لاستيراد بيانات جديدة
     </string>
     <string name="kind_item">النوع</string>
-    <string name="all_item">كل العناصر </string>
+    <string name="all_item">الكل </string>
     <string name="app_account_report"> كشف حساب  </string>
     <string name="last_account">الرصيد السابق</string>
     <string name="transfer_name">نوع الحركة</string>
@@ -416,5 +416,8 @@
     <string name="address">العنوان</string>
     <string name="ShowItemImage">إظهار صور العناصر</string>
     <string name="SearchByCustomerName">بحث بإسم العميل</string>
+    <string name="delet">حذف</string>
+    <string name="refresh">تحديث</string>
+    <string name="info">info</string>
 
 </resources>

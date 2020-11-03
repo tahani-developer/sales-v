@@ -1,9 +1,11 @@
 package com.dr7.salesmanmanager.Reports;
 
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -33,6 +36,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class PaymentDetailsReport extends AppCompatActivity {
 
     List<Payment> payments;
@@ -43,10 +48,29 @@ public class PaymentDetailsReport extends AppCompatActivity {
     Calendar myCalendar;
     int payMethod;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payment_details_report);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
 
         payments = new ArrayList<Payment>();
         DatabaseHandler obj = new DatabaseHandler(PaymentDetailsReport.this);

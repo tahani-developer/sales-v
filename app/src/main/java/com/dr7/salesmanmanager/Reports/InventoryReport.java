@@ -3,12 +3,14 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.LinearLayoutManager;
 //import android.support.v7.widget.RecyclerView;
 //import android.support.v7.widget.SearchView;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -46,6 +49,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Reports.ListInventoryAdapter.totalQty_inventory;
 
 public class InventoryReport extends AppCompatActivity {
@@ -63,12 +67,31 @@ public class InventoryReport extends AppCompatActivity {
      CompanyInfo companyInfo;
      public  static  String typeQty="";
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventory_report);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         itemsReportinventory = new ArrayList<inventoryReportItem>();
         itemsInventoryPrint=new ArrayList<inventoryReportItem>();
         itemsInventoryPrint.clear();

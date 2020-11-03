@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 
 
@@ -154,6 +155,7 @@ import com.google.android.gms.tasks.Task;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
@@ -262,6 +264,24 @@ public class SalesInvoice extends Fragment {
         Customer_nameSales.setText(CustomerListFragment.Customer_Name.toString());
     }*/
 
+    SalesInvoiceInterface salesInvoiceInterfaceListener;
+    Date currentTimeAndDate;
+    SimpleDateFormat df, df2;
+    String voucherDate, voucherYear;
+    CompanyInfo companyInfo;
+    double limit_offer = 0;
+    ImageButton maxDiscount;
+    int voucherNo = 0, itemCountTable;
+    CheckBox check_HidePrice;
+    public static int valueCheckHidPrice = 0;
+    LinearLayout mainlayout;
+    double curentLatitude, curentLongitude;
+    FusedLocationProviderClient mFusedLocationClient;
+    boolean validDiscount=false;
+    int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
+            R.drawable.ic_save_black_24dp,R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
+    String[] textListButtons=new String[]{};
+
     public SalesInvoice() {
         // Required empty public constructor
     }
@@ -281,23 +301,6 @@ public class SalesInvoice extends Fragment {
 
         public void displayFindItemFragment2();
     }
-
-    SalesInvoiceInterface salesInvoiceInterfaceListener;
-    Date currentTimeAndDate;
-    SimpleDateFormat df, df2;
-    String voucherDate, voucherYear;
-    CompanyInfo companyInfo;
-    double limit_offer = 0;
-    ImageButton maxDiscount;
-    int voucherNo = 0, itemCountTable;
-    CheckBox check_HidePrice;
-    public static int valueCheckHidPrice = 0;
-    LinearLayout mainlayout;
-    double curentLatitude, curentLongitude;
-    FusedLocationProviderClient mFusedLocationClient;
-    boolean validDiscount=false;
-    int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
-            R.drawable.ic_save_black_24dp,R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -324,10 +327,12 @@ public class SalesInvoice extends Fragment {
         catch (Exception e){
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.save),getResources().getString(R.string.info),getResources().getString(R.string.print)};
+
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
-        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
         bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
         bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_4);
 
@@ -336,7 +341,11 @@ public class SalesInvoice extends Fragment {
         for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
 //            bmb.addBuilder(new SimpleCircleButton.Builder()
 //                    .normalImageRes(listImageIcone[i]));
-            SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(listImageIcone[i])
+            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+                    .textSize(10)
+                    .normalText(textListButtons[i])
+                    .textPadding(new Rect(5, 16, 5, 0))
                     .listener(new OnBMClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
@@ -1097,7 +1106,7 @@ public class SalesInvoice extends Fragment {
         retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
 
         salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
-        salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
         salesRadioButton.setChecked(true);
 
         orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
@@ -1438,6 +1447,18 @@ public class SalesInvoice extends Fragment {
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O.putExtra("printKey", "7");
                             startActivity(O);
+
+
+                            break;
+                        case 6:// inner prenter
+
+//                                                             MTP.setChecked(true);
+                            vouchLast = vouchPrint;
+                            convertLayoutToImage(vouchPrint);
+
+                            Intent ineer = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            ineer.putExtra("printKey", "7");
+                            startActivity(ineer);
 
 
                             break;
@@ -1836,6 +1857,11 @@ public class SalesInvoice extends Fragment {
                         case 5:
 
 //                             MTP.setChecked(true);
+
+
+                        case 6:
+
+//                             InnerPrenter.setChecked(true);
                             voucherShow = voucher;
                             convertLayoutToImage(voucher);
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);

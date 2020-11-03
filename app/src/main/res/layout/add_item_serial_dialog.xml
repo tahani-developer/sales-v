@@ -2,43 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="500dp"
-    android:layout_height="500dp"
+    android:layout_height="320dp"
     android:minWidth="500dp"
-    android:minHeight="550dp"
+    android:minHeight="320dp"
     android:id="@+id/mainLinearAddItem"
-    android:background="@color/layer1"
+    android:background="@color/layer3"
     android:orientation="vertical"
-    android:padding="7dp">
-    <EditText
-        android:id="@+id/item_serial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_margin="5dp"
-        android:visibility="gone"
-        android:text="000"
-        android:textColor="@color/radio_group"
-        android:textSize="16sp" />
-    <TextView
-        android:id="@+id/item_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_margin="5dp"
-        android:text="000"
-        android:textColor="@color/radio_group"
-        android:textSize="16sp" />
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="test"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/add_button"
-        android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5.7"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/item_serial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_margin="5dp"
+            android:text="000"
+            android:textColor="@color/radio_group"
+           android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/item_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:gravity="center"
+            android:layout_weight="1"
+            android:text="000"
+            android:textColor="@color/colorPrimaryDark"
+           android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+
+            android:background="@color/colorblue1"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="test"
+            android:textColor="@color/add_button"
+           android:textSize="12sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,88 +68,108 @@
         android:background="@color/text_view_color"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingLeft="10dp">
+        android:paddingLeft="10dp"
+        >
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="5dp"
+        android:layout_weight="5.3"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
-        android:paddingLeft="5dp">
+        android:paddingLeft="5dp"
+        >
 
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:visibility="gone"
             android:layout_height="wrap_content"
-
+            android:layout_weight="1"
             android:text="@string/app_unit"
+
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+           android:textSize="12sp"
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/unit"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:padding="3dp"
             android:layout_height="match_parent"
             android:layout_marginVertical="9dp"
+            android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_weight="1"
             android:background="@color/layer2"
             android:gravity="center"
-            android:layout_marginStart="5dp" />
+            android:padding="3dp"
+            android:visibility="gone" />
 
 
         <TextView
             android:id="@+id/textQty"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
 
             android:text="@string/weight"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
         <EditText
             android:id="@+id/unitQty"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
             android:enabled="false"
-
-            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:gravity="center"
             android:imeOptions="actionNext"
 
             android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/un2012542"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.2"
+            android:enabled="false"
+
+            android:gravity="center"
+            android:visibility="invisible"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal" />
+
         <TextView
             android:id="@+id/pricee"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
 
+            android:textStyle="bold"
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
         <EditText
             android:id="@+id/price"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-
-            android:text="0"
+            android:textStyle="bold"
             android:inputType="numberDecimal"
+            android:text="0"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -137,7 +178,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="2dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
@@ -151,7 +192,7 @@
 
             android:text="@string/unit_qty"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
         <EditText
             android:id="@+id/unitWeight"
@@ -190,9 +231,10 @@
     <LinearLayout
         android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5.3"
         android:gravity="center"
-        android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
@@ -200,97 +242,102 @@
 
         <LinearLayout
             android:id="@+id/linear_bonus"
-            android:layout_height="wrap_content"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="horizontal"
             android:visibility="visible">
+
             <TextView
                 android:id="@+id/bonuss"
                 android:layout_width="0dp"
-                android:layout_weight="1.4"
-                android:layout_height="wrap_content"
-
+                android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
+                android:layout_weight="2"
+                android:textStyle="bold"
                 android:text="@string/app_bonus"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp" />
+               android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/bonus"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+
                 android:layout_weight="2"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:gravity="center"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:textSize="16sp" />
+               android:textSize="12sp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/discount_linear"
             android:layout_width="0dp"
-            android:layout_weight="5"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
+            android:layout_weight="5"
             android:orientation="horizontal"
-            android:paddingStart="5dp"
-            android:paddingLeft="5dp">
-
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:visibility="visible">
 
 
             <TextView
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-
+                android:textStyle="bold"
                 android:text="@string/app_disc"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp" />
+               android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/discount"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-
+                android:gravity="center"
                 android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
-                android:textSize="16sp" />
+               android:textSize="12sp" />
 
             <RadioGroup
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:id="@+id/discTypeRadioGroup"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
-                >
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/discValueRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:checked="true"
                     android:text="@string/app_disc_type1"
-                    android:layout_gravity="center_vertical"
-                    android:id="@+id/discValueRadioButton"
                     android:textColor="@color/text_view_color"
-                    android:textSize="16sp"
-                    />
+                   android:textSize="10sp" />
 
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/app_disc_type2"
                     android:id="@+id/discPercRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="7dp"
-                    android:textColor="@color/text_view_color"
-                    android:textSize="16sp"
+                    android:layout_weight="1"
                     android:checked="true"
-                    />
+                    android:gravity="center"
+                    android:text="@string/app_disc_type2"
+                    android:textColor="@color/text_view_color"
+                   android:textSize="10sp" />
 
             </RadioGroup>
 
@@ -302,17 +349,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/layer3"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingLeft="10dp">
-    </LinearLayout>
+        android:paddingLeft="10dp"></LinearLayout>
     <LinearLayout
         android:id="@+id/discribtionItem_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
         android:gravity="center"
         android:visibility="gone"
         android:orientation="horizontal"
@@ -325,7 +372,7 @@
 
             android:text="@string/remark"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
         <EditText
             android:id="@+id/item_note"
@@ -334,7 +381,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
 
-            android:textSize="16sp" />
+           android:textSize="12sp" />
 
     </LinearLayout>
 <!--    <LinearLayout-->
@@ -353,7 +400,7 @@
 
 <!--            android:text="@string/SerialNo"-->
 <!--            android:textColor="@color/text_view_color"-->
-<!--            android:textSize="16sp" />-->
+<!--           android:textSize="12sp" />-->
 
 <!--        <EditText-->
 <!--            android:id="@+id/Serial_No"-->
@@ -362,7 +409,7 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_margin="5dp"-->
 
-<!--            android:textSize="16sp" />-->
+<!--           android:textSize="12sp" />-->
 <!--        <ImageView-->
 <!--            android:id="@+id/serialScan"-->
 <!--            android:layout_height="40dp"-->
@@ -374,33 +421,40 @@
     <LinearLayout
         android:id="@+id/serialNo_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="5.5"
         android:gravity="center"
-        android:visibility="visible"
         android:orientation="horizontal"
         android:paddingStart="5dp"
-        android:paddingLeft="5dp">
+        android:paddingLeft="5dp"
+        android:visibility="visible">
+
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-
+            android:layout_height="match_parent"
+            android:layout_weight="5.2"
             android:text="@string/SerialNo"
+            android:textStyle="bold"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/serialScan"
-            android:layout_height="40dp"
             android:layout_width="0dp"
-            android:src="@drawable/ic_playlist_add_black_24dp"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_playlist_add_black_24dp" />
+
         <ImageView
             android:id="@+id/serialScanBunos"
-            android:layout_height="40dp"
             android:layout_width="0dp"
-            android:src="@drawable/ic_local_offer_black_24dp"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_local_offer_black_24dp" />
 
     </LinearLayout>
 
@@ -409,47 +463,58 @@
         android:id="@+id/serial_No_recyclerView"
 
         android:layout_width="match_parent"
-        android:layout_weight="3"
+        android:layout_height="match_parent"
+        android:layout_weight="3.9"
         android:background="@color/white"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textSize="16sp" />
-<LinearLayout android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_gravity="center"
-    android:gravity="center">
-    <Button
-        android:id="@+id/addToList"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@color/colorblue1"
-        android:text="@string/app_add_to_list"
-        android:textColor="@color/layer5"
-        android:textStyle="bold" />
-    <Button
-        android:id="@+id/cancel0000"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
+       android:textSize="10sp" />
 
-        android:layout_margin="5dp"
-        android:background="@color/cancel_button"
-        android:text="@string/app_cancel"
-        android:textColor="@color/layer5"
-        android:textStyle="bold" />
-    <Button
-        android:id="@+id/cancelAdd"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="4.8"
+        android:padding="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        android:layout_margin="5dp"
-        android:background="@color/cancel_button"
-        android:text="@string/app_cancel"
-        android:textColor="@color/layer5"
-        android:textStyle="bold" />
-</LinearLayout>
+        <Button
+            android:id="@+id/addToList"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorblue1"
+            android:text="@string/app_add_to_list"
+            android:textColor="@color/layer5"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancel0000"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+
+            android:background="@color/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/cancelAdd"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>
 <!--<EditText-->
 <!--android:id="@+id/Serial_No"-->
@@ -457,4 +522,4 @@
 <!--android:layout_weight="3"-->
 <!--android:layout_height="wrap_content"-->
 <!--android:layout_margin="5dp"-->
-<!--android:textSize="16sp" />-->
+<!--android:textSize="14sp" />-->

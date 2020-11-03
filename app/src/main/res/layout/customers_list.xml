@@ -11,7 +11,7 @@ android:minHeight="450dp"
     android:layoutDirection="locale"
 android:background="@color/layer3"
 android:orientation="vertical"
-android:padding="15dp"
+android:padding="10dp"
 >
 
 
@@ -27,7 +27,7 @@ android:padding="15dp"
             android:layout_weight="1"
             android:hint="@string/SearchByCustomerName"
             android:background="@drawable/back_border_edit"
-            android:layout_margin="5dp"
+
             android:layout_height="wrap_content" />
 
         <Button

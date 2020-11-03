@@ -18,6 +18,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -41,6 +42,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -75,6 +77,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class PrintVoucher extends AppCompatActivity {
     Bitmap testB;
@@ -127,7 +131,9 @@ public class PrintVoucher extends AppCompatActivity {
     RadioGroup  voucherTypeRadioGroup;
     int voucherType = 504;
 
+    LinearLayout linearMain;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +143,24 @@ public class PrintVoucher extends AppCompatActivity {
             closeBT();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         decimalFormat = new DecimalFormat("##.000");
         vouchers = new ArrayList<Voucher>();

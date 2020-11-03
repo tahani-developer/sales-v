@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -66,6 +67,13 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -92,6 +100,7 @@ import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherForPrint;
 import static java.util.Calendar.JANUARY;
 
 /**
@@ -171,7 +180,9 @@ public class ReceiptVoucher extends Fragment {
     String today = df.format(currentTimeAndDate);
     Date dateConverter;
     int id_Bank;
+    int[] listImageIcone=new int[]{ R.drawable.ic_save_black_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_delete_forever_black_24dp };
 
+    String[] textListButtons=new String[]{};
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
     }
@@ -237,7 +248,63 @@ public class ReceiptVoucher extends Fragment {
         rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
         editChech= (FloatingActionButton) view.findViewById(R.id.edit_floating);
         editChech.setOnClickListener(onClickEditCheck);
+        textListButtons=new String[]{getResources().getString(R.string.save),getResources().getString(R.string.print),getResources().getString(R.string.delet)};
 
+        //*************************** BoomMenu*******************************
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_2);
+
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+//            bmb.addBuilder(new SimpleCircleButton.Builder()
+//                    .normalImageRes(listImageIcone[i]));
+            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+                    .textSize(10)
+                    .normalText(textListButtons[i])
+                    .textPadding(new Rect(5, 16, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    saveChecks();
+                                    break;
+                                case 1:
+                                    try {
+                                        voucherNoReprint = mDbHandler.getLastVoucherNo_payment();
+                                        Log.e("voucherNoRe", "" + voucherNoReprint);
+                                        if (voucherNoReprint != 0) {
+                                            printLastPaymentpaper(voucherNoReprint);
+                                        } else {
+                                            Toast.makeText(context, "No Payment For This Customer", Toast.LENGTH_SHORT).show();
+                                        }
+
+//
+                                    } catch (Exception e) {
+                                        Log.e("ExcepvoucherNoRe", "" + e.getMessage());
+                                        voucherNoReprint = 0;
+                                    }
+                                    break;
+                                case 2:
+                                    clearDialog();
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+
+
+        }
+        //**********************************************************
 //
 //        vouchers = obj.getAllVouchers();
 
@@ -374,18 +441,8 @@ public class ReceiptVoucher extends Fragment {
             @Override
             public void onClick(View v) {
                 clearImgButton.setAnimation(animZoomIn);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        clearForm();
-                    }
-                });
+                clearDialog();
 
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
             }
         });
 
@@ -399,60 +456,7 @@ public class ReceiptVoucher extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
-
-                        String s = amountEditText.getText().toString();
-                        String spinner = paymentKindSpinner.getSelectedItem().toString();
-                        if (spinner == getResources().getString(R.string.cash)) {
-                            if (!s.equals("") && Double.parseDouble(s) != 0) {
-                                voucherType = 1;
-                                saveAmount(voucherType);
-
-                            } else {
-                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                            }
-                        } else if (spinner == getResources().getString(R.string.app_creditCard)) {
-                            if (!s.equals("") && Double.parseDouble(s) != 0) {
-                                voucherType = 2;
-                                saveAmount(voucherType);
-
-                            } else {
-                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            if (!checkValue())
-                                Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
-                            else {
-
-                                saveChequ();
-
-//                                if(!Login.salesMan.equals(""))
-//                                {
-
-//                                }
-//                                else{
-//                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-//                                            .setTitleText(getResources().getString(R.string.warning_message))
-//                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
-//                                            .show();
-//                                }
-
-
-                            }
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
+                saveChecks();
             }
         });
 
@@ -523,6 +527,84 @@ public class ReceiptVoucher extends Fragment {
 
         return view;
     }
+
+    private void clearDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                clearForm();
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+        builder.create().show();
+    }
+
+    private void saveChecks() {
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(DialogInterface dialogInterface, int l) {
+
+                String s = amountEditText.getText().toString();
+                String spinner = paymentKindSpinner.getSelectedItem().toString();
+                if (spinner == getResources().getString(R.string.cash)) {
+                    if (!s.equals("") && Double.parseDouble(s) != 0) {
+                        voucherType = 1;
+                        saveAmount(voucherType);
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                    }
+                } else if (spinner == getResources().getString(R.string.app_creditCard)) {
+                    if (!s.equals("") && Double.parseDouble(s) != 0) {
+                        voucherType = 2;
+                        saveAmount(voucherType);
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    if (!checkValue())
+                        Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
+                    else {
+
+                        saveChequ();
+
+//                                if(!Login.salesMan.equals(""))
+//                                {
+
+//                                }
+//                                else{
+//                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+//                                            .setTitleText(getResources().getString(R.string.warning_message))
+//                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                                            .show();
+//                                }
+
+
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+        builder.create().show();
+
+    }
+
     private View.OnClickListener onClickEditCheck=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -576,9 +658,16 @@ public class ReceiptVoucher extends Fragment {
             } catch (ParseException ex) {
                 Log.v("Exception", ex.getLocalizedMessage());
             }
-            currentTimeAndDate=addOneMonth(dateConverter);
-            today = df.format(currentTimeAndDate);
-            chDate.setText(convertToEnglish(today));
+            try {
+                currentTimeAndDate=addOneMonth(dateConverter);
+                today = df.format(currentTimeAndDate);
+                chDate.setText(convertToEnglish(today));
+            }
+            catch ( Exception e)
+            {
+
+            }
+
         }
 
         Button okButton = (Button) dialog.findViewById(R.id.button1);
@@ -961,7 +1050,8 @@ public class ReceiptVoucher extends Fragment {
                 } else
                     Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
     }
-    private void displayEditCheck( List<Cheque> Listitems) {
+    @SuppressLint("WrongConstant")
+    private void displayEditCheck(List<Cheque> Listitems) {
         Log.e("displayEditCheck",""+Listitems.size());
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1272,14 +1362,14 @@ public class ReceiptVoucher extends Fragment {
                 printTally();
                 break;
 
-            case 5:
-                convertLayoutToImage(getActivity());
-                Intent O1 = new Intent(getActivity(), bMITP.class);
-                O1.putExtra("printKey", "2");
-                startActivity(O1);
+            case 5://                                                             MTP.setChecked(true);
 
+            case 6:// inner printer
+                convertLayoutToImage(getActivity());
+                Intent inte = new Intent(getActivity(), bMITP.class);
+                inte.putExtra("printKey", "2");
+                startActivity(inte);
                 break;
-//                                                             MTP.setChecked(true);
 
         }
 
@@ -1366,11 +1456,14 @@ public class ReceiptVoucher extends Fragment {
                         break;
                     case 5:
 
+
+//                                                             MTP.setChecked(true);
+
+                    case 6:// inner printer
                         convertLayoutToImage(getActivity());
                         Intent O = new Intent(getActivity(), bMITP.class);
                         O.putExtra("printKey", "2");
                         startActivity(O);
-//                                                             MTP.setChecked(true);
                         break;
 
                 }

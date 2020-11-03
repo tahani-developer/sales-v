@@ -22,6 +22,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
@@ -68,6 +69,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.ReceiptVoucher.savebitmap;
 
 //import com.dr7.salesmanmanager.Pos;
@@ -106,12 +108,32 @@ public class CashReport  extends AppCompatActivity {
     List<Item> vouchersales;
 
 
+    ConstraintLayout mailLayout;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cash_report);
+        mailLayout = (ConstraintLayout)findViewById(R.id.mailLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         try {
             closeBT();
         } catch (IOException e) {
@@ -298,6 +320,7 @@ public class CashReport  extends AppCompatActivity {
                                         printTally();
                                         break;
                                     case 5:
+                                    case 6:
                                         convertLayoutToImage();
                                         Intent O= new Intent(CashReport.this, bMITP.class);
                                         O.putExtra("printKey", "3");

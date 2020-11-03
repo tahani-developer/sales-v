@@ -1,8 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/layer3"
     android:orientation="vertical"
     android:paddingBottom="20dp"
@@ -19,7 +19,16 @@
     >
 
     <!-- TODO: Update blank fragment layout -->
-
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:bmb_normalColor="@color/colorblue1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:bmb_draggable="true"
+        />
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"

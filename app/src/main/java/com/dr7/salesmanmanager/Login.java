@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.CardView;
@@ -20,9 +21,12 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -87,8 +91,10 @@ public class Login extends AppCompatActivity {
     SimpleDateFormat df, df2;
     String curentDate, curentTime;
     public  static Location location_main;
+    RelativeLayout mainlayout;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,30 +117,64 @@ public class Login extends AppCompatActivity {
         Log.e("curentTime",""+curentTime);
         validLocation();
         try {
-        if(LocaleAppUtils.getLocale()==null)
-        {
-            LocaleAppUtils.setLocale(new Locale("ar"));
-            LocaleAppUtils.setConfigChange(Login.this);
-            Log.e("LocaleAppUtilsEmpty",""+LocaleAppUtils.getLocale());
-        }
+            Log.e("languagelocalApp",""+languagelocalApp);
+//            Log.e("LocaleAppUtilsFirst",""+LocaleAppUtils.getLocale());
+//        if(LocaleAppUtils.getLocale()==null)
+//        {
+//            languagelocalApp="ar";
+//            LocaleAppUtils.setLocale(new Locale("ar"));
+//            LocaleAppUtils.setConfigChange(Login.this);
+//            Log.e("LocaleAppUtilsEmpty",""+LocaleAppUtils.getLocale());
+//        }
+//        else {
 
 
             if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
+                    languagelocalApp="ar";
                     LocaleAppUtils.setLocale(new Locale("ar"));
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 } else {
+                    languagelocalApp="en";
                     LocaleAppUtils.setLocale(new Locale("en"));
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 }
             }
+            else {
+                languagelocalApp="ar";
+                LocaleAppUtils.setLocale(new Locale("ar"));
+                LocaleAppUtils.setConfigChange(Login.this);
+
+            }
+
+
+            Log.e("languagelocalApp2",""+languagelocalApp);
 
         } catch (Exception e) {
+            languagelocalApp="ar";
             LocaleAppUtils.setLocale(new Locale("ar"));
             LocaleAppUtils.setConfigChange(Login.this);
 
+        }
+        mainlayout = (RelativeLayout) findViewById(R.id.mainlayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         //   model_key.setKey(123);
 

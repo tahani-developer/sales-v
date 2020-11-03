@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/layer3"
+    android:layoutDirection="locale"
+    android:id="@+id/mainLinear"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -28,28 +30,34 @@
         android:id="@+id/textView25"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="3dp"
+        android:autoSizeTextType="uniform"
         android:layout_weight="0.3"
         android:text="Print name shape "
-        android:textSize="16sp" />
+       />
 
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:layout_margin="5dp"
+        android:background="@drawable/back_border_edit"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/radioButton_normalnam"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:layout_weight="1"
             android:text="Normal" />
 
         <RadioButton
             android:id="@+id/radioButton_large_name"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:layout_weight="1"
             android:text="Large Name" />
     </RadioGroup>
@@ -66,53 +74,68 @@
         <RadioButton
             android:id="@+id/LK30"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:checked="true"
             android:text="SEWOOLK-P30"
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+            />
 
         <RadioButton
             android:id="@+id/LK31"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:text="SEWOO LK-P31"
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+           />
 
         <RadioButton
             android:id="@+id/LK32"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:text="SEWOO LK-P32 "
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+             />
 
         <RadioButton
             android:id="@+id/QS"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:text="QS-PRINTER"
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+           />
 
         <RadioButton
             android:id="@+id/dotMatrix"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:layout_weight="1"
             android:text="Dot-Matrix Printer (Tally MDP 480+)"
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+            />
 
         <RadioButton
             android:id="@+id/MTP"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
             android:layout_weight="1"
             android:text="PRINTER (MTP-3)"
             android:textColor="@color/add_button"
-            android:textSize="16sp" />
+             />
+        <RadioButton
+            android:id="@+id/innerPrinter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autoSizeTextType="uniform"
+            android:layout_weight="1"
+            android:text="Inner PRINTER(SUNMI)"
+            android:textColor="@color/add_button"
+            />
     </RadioGroup>
    </ScrollView>
 
@@ -125,5 +148,5 @@
         android:background="@color/done_button"
         android:text="@string/save"
         android:textColor="@color/layer3"
-        android:textSize="16sp" />
+        android:autoSizeTextType="uniform" />
 </LinearLayout>

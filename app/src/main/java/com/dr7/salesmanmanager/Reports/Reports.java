@@ -100,7 +100,6 @@ public class Reports extends AppCompatActivity {
                     startActivity(intent5);
                     break ;
                 case R.id.cash_report:
-                    String s="";
                     if(settings.size()!=0){
                         if(MHandler.getAllSettings().get(0).getLock_cashreport()==1) {
                             openPassowrdDialog();
