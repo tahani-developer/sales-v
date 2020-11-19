@@ -138,7 +138,6 @@
 
                                     android:layout_weight="1"
                                     android:background="@drawable/back_border_edit"
-                                    android:hint="@string/num_of_copy"
                                     android:inputType="number"
                                     android:padding="1dp"
                                     android:textColor="@color/text_view_color" />
@@ -279,7 +278,7 @@
                                 android:orientation="horizontal">
 
                                 <TextView
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="179dp"
                                     android:layout_height="wrap_content"
                                     android:text="@string/payments_serial_from"
                                     android:textColor="@color/text_view_color"
@@ -707,7 +706,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="2dp"
-                    android:background="@color/done_button"
+                    android:background="@drawable/done_button"
                     android:text="@string/save"
 
                     android:textColor="@color/layer5"
@@ -719,7 +718,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="2dp"
-                    android:background="@color/cancel_button"
+                    android:background="@drawable/cancel_button"
                     android:text="@string/app_cancel"
                     android:textColor="@color/layer5"
                     android:textStyle="bold" />

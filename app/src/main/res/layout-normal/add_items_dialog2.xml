@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="450dp"
+    android:minWidth="400dp"
+    android:minHeight="450dp"
+    android:id="@+id/add_item"
+    android:padding="10dp"
+    android:layoutDirection="locale"
+    android:background="@color/layer3"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/barcodeLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@color/layer2"
+
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/barcode"
+            android:textColor="@color/done_button"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/barcode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+
+            android:layout_weight="4"
+            android:inputType="text"
+            android:lines="1"
+            android:background="@drawable/back_border_edit"
+            android:drawableRight="@drawable/ic_clear_black_24dp"
+            android:hint="Type  barcode" />
+
+        <ImageView
+            android:id="@+id/searchBarcode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:padding="5dp"
+            android:src="@drawable/ic_search_black_24dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/scanbarcode"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/kindLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_weight="5"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+
+        android:paddingVertical="6dp"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+
+            android:background="@drawable/back_border_edit"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+
+                android:text="@string/kind_item"
+
+                android:textColor="@color/colorblue1"
+                android:textSize="12sp" />
+
+            <Spinner
+                android:id="@+id/spinner_kind_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_weight="1"
+
+                />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/mSearch55055"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.9"
+                android:visibility="invisible"
+                app:defaultQueryHint="Search.." />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/categoryLinear"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:padding="5dp"
+        android:background="@drawable/back_border_edit"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="@string/category"
+            android:textColor="@color/colorblue1"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/cat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="12sp" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/mSearch5555"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:visibility="invisible"
+
+            app:defaultQueryHint="Search.." />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/textViewItemName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="@string/app_add_items"
+        android:textColor="@color/text_view_color"
+        android:textSize="25sp"
+        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/searchLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:paddingVertical="6dp"
+        android:orientation="vertical"
+       >
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="5dp"
+            android:background="@drawable/back_border_edit"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+
+                android:text="@string/item_name"
+                android:textColor="@color/colorblue1"
+                android:textSize="12sp" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/mSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                app:defaultQueryHint="Search.." />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/back_border_edit"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+
+            android:text="@string/item_name"
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/mSearch6841"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            app:defaultQueryHint="Search.." />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="10dp"
+        android:layout_weight="4"
+        android:background="@color/layer2"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@drawable/back_border_edit"
+        android:orientation="horizontal"
+        android:visibility="gone">
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/done_button"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:text="@string/app_done"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1.3"
+            android:background="@color/cancel_button"
+            android:gravity="center"
+            android:text="@string/app_cancel"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:background="@drawable/cancel_button"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/app_cancel"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>

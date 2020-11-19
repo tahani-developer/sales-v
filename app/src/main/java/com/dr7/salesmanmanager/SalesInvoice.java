@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -327,6 +328,17 @@ public class SalesInvoice extends Fragment {
         catch (Exception e){
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+
+
+
+
+        //**********************************************************
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // landscape
+        } else {
+            // portrait
+        }
+        //**********************************************************
         textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.save),getResources().getString(R.string.info),getResources().getString(R.string.print)};
 
 
@@ -343,9 +355,9 @@ public class SalesInvoice extends Fragment {
 //                    .normalImageRes(listImageIcone[i]));
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
                     .normalImageRes(listImageIcone[i])
-                    .textSize(10)
+                    .textSize(12)
                     .normalText(textListButtons[i])
-                    .textPadding(new Rect(5, 16, 5, 0))
+                    .textPadding(new Rect(5, 10, 5, 0))
                     .listener(new OnBMClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
@@ -785,7 +797,15 @@ public class SalesInvoice extends Fragment {
         itemsListView = (ListView) view.findViewById(R.id.itemsListView);
         items = new ArrayList<>();
 
-        itemsListAdapter = new ItemsListAdapter(getActivity(), items);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // landscape
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,0);// if screen is landscape =====> 0
+
+        } else {
+            // portrait
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
+
+        }
         itemsListView.setAdapter(itemsListAdapter);
 //        totalQty_textView.setText(items.size()+"");
 

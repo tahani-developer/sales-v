@@ -269,7 +269,7 @@ public class ExportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "" + JsonResponse);
+                Log.e("tag", "JsonResponse\t" + JsonResponse);
 
                 return JsonResponse;
 

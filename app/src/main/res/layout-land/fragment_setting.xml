@@ -868,7 +868,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/done_button"
+                    android:background="@drawable/done_button"
                     android:text="@string/save"
                     android:visibility="gone"
                     android:autoSizeTextType="uniform"

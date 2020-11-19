@@ -396,7 +396,7 @@
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:text="@string/app_desc"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"

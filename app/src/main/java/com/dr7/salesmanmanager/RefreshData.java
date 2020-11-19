@@ -52,8 +52,8 @@ public class RefreshData {
         if (settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-
+//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+            new JSONTask().execute(URL_TO_HIT);
 
 
 

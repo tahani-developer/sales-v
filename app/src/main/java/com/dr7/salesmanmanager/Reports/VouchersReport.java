@@ -169,7 +169,7 @@ public class VouchersReport extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(VouchersReport.this);
-                            row.setPadding(5, 10, 5, 10);
+                            row.setPadding(5, 3, 5, 1);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer4));
@@ -378,15 +378,15 @@ public class VouchersReport extends AppCompatActivity {
         String fromDate = from_date.getText().toString().trim();
         String toDate = to_date.getText().toString();
 
-        int companyNumber = vouchers.get(n).getCompanyNumber() ;
+        String customerNumber = vouchers.get(n).getCustNumber() ;
         String date = vouchers.get(n).getVoucherDate() ;
         int vType = vouchers.get(n).getVoucherType() ;
         int pMethod = vouchers.get(n).getPayMethod() ;
 
         try {
             if (!cust_number.getText().toString().equals("")) {
-                int textCompanyNumber = Integer.parseInt(cust_number.getText().toString());
-                if ((companyNumber == textCompanyNumber) &&
+                String textCompanyNumber =cust_number.getText().toString();
+                if ((customerNumber.contains(textCompanyNumber) )&&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
                         vType == voucherType && pMethod == payMethod)

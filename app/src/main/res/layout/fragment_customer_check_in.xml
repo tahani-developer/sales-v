@@ -103,16 +103,12 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:text="@string/app_ok"
-            android:textSize="18sp"
+            android:textSize="16sp"
 
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="14sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-            android:layout_marginHorizontal="35dp"
-            android:textColor="@color/layer5"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <Button
@@ -121,15 +117,11 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:text="@string/app_cancel"
-            android:textSize="18sp"
+            android:textSize="16sp"
 
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="14sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-            android:textColor="@color/layer5"
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

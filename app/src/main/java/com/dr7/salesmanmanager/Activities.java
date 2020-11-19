@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,7 +62,7 @@ public class Activities extends AppCompatActivity implements
 
     private int activitySelected;
 
-    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities;
+    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,linearInvoice,linearPayment,linearStock;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
@@ -164,7 +165,25 @@ public class Activities extends AppCompatActivity implements
         isFragmentBlank = true;
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
-
+        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
+        linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
+                linearPayment= (LinearLayout)findViewById(R.id.linearPayment);
+                linearStock= (LinearLayout)findViewById(R.id.linearStock);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mainLinearHolder.setOrientation(LinearLayout.HORIZONTAL);
+            linearMainActivities.setOrientation(LinearLayout.VERTICAL);
+            linearStock.setOrientation(LinearLayout.VERTICAL);
+            linearPayment.setOrientation(LinearLayout.VERTICAL);
+            linearInvoice.setOrientation(LinearLayout.VERTICAL);
+            //Do some stuff
+        }
+        else {
+            mainLinearHolder.setOrientation(LinearLayout.VERTICAL);
+            linearMainActivities.setOrientation(LinearLayout.HORIZONTAL);
+            linearStock.setOrientation(LinearLayout.HORIZONTAL);
+            linearPayment.setOrientation(LinearLayout.HORIZONTAL);
+            linearInvoice.setOrientation(LinearLayout.HORIZONTAL);
+        }
         try {
             if (languagelocalApp.equals("ar"))
             {
@@ -189,11 +208,12 @@ public class Activities extends AppCompatActivity implements
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
         supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
         switchLayout=findViewById(R.id.switchLayout);
+        switchLayout.setVisibility(View.GONE);
         switchLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                linearMainActivities.setVisibility(View.VISIBLE);
-                switchLayout.setVisibility(View.GONE);
+//                linearMainActivities.setVisibility(View.VISIBLE);
+//                switchLayout.setVisibility(View.GONE);
             }
         });
         receiptImageView = (ImageView) findViewById(R.id.paymentImageView);
@@ -215,8 +235,8 @@ public class Activities extends AppCompatActivity implements
 
         //   if (activitySelected == 0)
         //      return;
-        linearMainActivities.setVisibility(View.GONE);
-        switchLayout.setVisibility(View.VISIBLE);
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 0;
         FragmentManager fragmentManager = getSupportFragmentManager();
         salesInvoice = new SalesInvoice();
@@ -307,8 +327,8 @@ public class Activities extends AppCompatActivity implements
     }
 
     private void displayReceipt() {
-        linearMainActivities.setVisibility(View.GONE);
-        switchLayout.setVisibility(View.VISIBLE);
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 1;
         FragmentManager fragmentManager = getSupportFragmentManager();
         ReceiptVoucher receiptVoucher = new ReceiptVoucher();
@@ -329,8 +349,8 @@ public class Activities extends AppCompatActivity implements
     }
 
     private void displayStockRequest() {
-        linearMainActivities.setVisibility(View.GONE);
-        switchLayout.setVisibility(View.VISIBLE);
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 2;
         FragmentManager fragmentManager = getSupportFragmentManager();
         stockRequest = new StockRequest();

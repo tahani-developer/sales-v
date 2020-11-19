@@ -419,5 +419,7 @@
     <string name="delet">حذف</string>
     <string name="refresh">تحديث</string>
     <string name="info">info</string>
+    <string name="No">No</string>
+    <string name="name">Name</string>
 
 </resources>

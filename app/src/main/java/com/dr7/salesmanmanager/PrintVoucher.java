@@ -235,7 +235,7 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                            row.setPadding(2, 10, 2, 10);
+                            row.setPadding(5, 1, 10, 0);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -243,7 +243,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
 
                             for (int i = 0; i < 9; i++) {
-                                String[] record = {vouchers.get(n).getCustName() + "",
+                                String[] record = {vouchers.get(n).getCustName() + "\t\t\t\t\t\t",
                                         vouchers.get(n).getVoucherNumber() + "",
                                         vouchers.get(n).getVoucherDate() + "",
                                         vouchers.get(n).getPayMethod() + "",
@@ -265,12 +265,13 @@ public class PrintVoucher extends AppCompatActivity {
                                 }
 
 
-                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                                 row.setLayoutParams(lp);
 
                                 if (i != 8) {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(record[i]);
+                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 

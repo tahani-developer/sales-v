@@ -53,7 +53,7 @@
             android:layout_weight="1"
             android:layout_margin="20dp"
             android:imeOptions="actionDone"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:textColor="@color/layer5"
             android:text="@string/app_done"
             android:textStyle="bold"
@@ -65,7 +65,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:layout_margin="20dp"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:textColor="@color/layer5"
             android:text="@string/app_cancel"
             android:textStyle="bold"/>

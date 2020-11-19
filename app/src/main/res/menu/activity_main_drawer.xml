@@ -42,7 +42,7 @@
                 android:title="@string/app_imp_data" />
             <item
                 android:id="@+id/nav_refreshdata"
-                android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
+                android:icon="@drawable/ic_refresh_white_24dp"
                 android:title="@string/app_refresh_data" />
             <item
                 android:id="@+id/nav_exp_data"

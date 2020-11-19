@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="1000dp"
-    android:minHeight="500dp"
+    android:layout_width="900dp"
+    android:layout_height="400dp"
+    android:minWidth="900dp"
+    android:minHeight="400dp"
     android:background="@color/layer3"
     android:orientation="vertical">
     <LinearLayout
@@ -97,7 +97,7 @@
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:text="@string/category" />
 
             <Spinner
@@ -126,7 +126,7 @@
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:text="@string/kind_item" />
 
             <Spinner
@@ -154,7 +154,7 @@
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:text="@string/item_name" />
 
             <androidx.appcompat.widget.SearchView

@@ -32,11 +32,8 @@ import java.util.List;
 public class Reports extends AppCompatActivity {
 
 
-    Button customer_log_report,transactions_report,return_report;
+    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,return_report;
 
-
-    Button stock_request_report,cash_reoprt;
-    Button Inventory_report;
     DatabaseHandler MHandler;
     LinearLayout inventory_layout;
     List<Settings> settings;
@@ -50,12 +47,12 @@ public class Reports extends AppCompatActivity {
         setContentView(R.layout.activity_reports);
         MHandler = new DatabaseHandler(Reports.this);
         settings =  MHandler.getAllSettings();
-        customer_log_report = (Button) findViewById(R.id.customer_log_report);
-        transactions_report = (Button) findViewById(R.id.transactions_report);
-        return_report = (Button) findViewById(R.id.return_report);
-        Inventory_report = (Button) findViewById(R.id.inventory_report);
-        stock_request_report = (Button) findViewById(R.id.stock_request_report);
-        cash_reoprt = (Button) findViewById(R.id.cash_report);
+        customer_log_report = (LinearLayout) findViewById(R.id.customer_log_report);
+        transactions_report = (LinearLayout) findViewById(R.id.transactions_report);
+        return_report = (LinearLayout) findViewById(R.id.return_report);
+        Inventory_report = (LinearLayout) findViewById(R.id.inventory_report);
+        stock_request_report = (LinearLayout) findViewById(R.id.stock_request_report);
+        cash_reoprt = (LinearLayout) findViewById(R.id.cash_report);
         customer_log_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
         transactions_report.setOnClickListener(onClickListener);

@@ -2681,7 +2681,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setDate(cursor.getString(16));
                 item.setDescreption(cursor.getString(17));
                 item.setSerialCode(cursor.getString(18));
-                Log.e("setDescreption",""+cursor.getString(17));
+//                Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list
                 items.add(item);
@@ -2892,14 +2892,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 }
 //                item.setItemPhoto(cursor.getString(13));
                 // Adding transaction to list
-                if(!cursor.getString(13).equals("")) {
+                try {
+                    if(!cursor.getString(13).equals("")) {
 
-                    itemBitmap = StringToBitMap(cursor.getString(13));
-                    item.setItemPhoto(itemBitmap);
+                        itemBitmap = StringToBitMap(cursor.getString(13));
+                        item.setItemPhoto(itemBitmap);
+                    }
+                    else {
+                        item.setItemPhoto(null);
+                    }
                 }
-                else {
+                catch (Exception e)
+                {
                     item.setItemPhoto(null);
                 }
+
 
                 items.add(item);
             } while (cursor.moveToNext());

@@ -452,11 +452,21 @@ public class ImportJason extends AppCompatActivity {
                     catch (Exception e)
                     {}
                     try {
-                       item.setPhotoItem( finalObject.getString("ITEMPICSPATH"));
+                        if(  finalObject.getString("ITEMPICSPATH") == "" ||  finalObject.getString("ITEMPICSPATH") == null || finalObject.getString("ITEMPICSPATH") == "null")
+                        {
+                            item.setPhotoItem("");
+                        }
+                        else {
+                            item.setPhotoItem( finalObject.getString("ITEMPICSPATH"));
+                        }
+
+
+
                         Log.e("ITEMPICSPATH",""+finalObject.getString("ITEMPICSPATH"));
                     }
                     catch (Exception e)
-                    {}
+                    {                            item.setPhotoItem( "");
+                    }
 //                    ITEMPICSPATH
                     itemsMasterList.add(item);
                 }

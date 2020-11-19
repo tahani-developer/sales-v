@@ -252,7 +252,7 @@
             android:id="@+id/addToListButton"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:background="@color/add_button"
+            android:background="@drawable/done_button"
             android:text="@string/app_add_to_list"
             android:textColor="@color/text_view_color"
             android:textStyle="bold" />
@@ -262,7 +262,7 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="35dp"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:text="@string/app_done"
             android:textColor="@color/text_view_color"
             android:textStyle="bold" />

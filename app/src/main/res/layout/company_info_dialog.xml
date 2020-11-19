@@ -198,7 +198,7 @@
 
 
             android:layout_weight="1"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
             android:textStyle="bold" />
@@ -221,7 +221,7 @@
             android:layout_height="wrap_content"
 
             android:layout_weight="1"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold" />

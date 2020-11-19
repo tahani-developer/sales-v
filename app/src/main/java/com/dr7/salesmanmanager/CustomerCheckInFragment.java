@@ -243,8 +243,8 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                         "01/01/19999", "0", 0,0));
 
-                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+//                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+//                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                                 dismiss();
                             } else {
                                 Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
@@ -272,8 +272,8 @@ public class CustomerCheckInFragment extends DialogFragment {
                         saveCustLocation(cusCode);
                         new JSONTask().execute();
 
-                        MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                        MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+//                        MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+//                        MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                         dismiss();
                     }
                 } else {

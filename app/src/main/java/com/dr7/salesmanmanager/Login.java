@@ -181,8 +181,10 @@ public class Login extends AppCompatActivity {
         Log.e("model", "model_key" + model_key.getKey());
         logo = (CircleImageView) findViewById(R.id.imageView3);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
-        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
 
+        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+        passwordEditText.setText("2240m");
+        usernameEditText.setText("1");
         try {
             if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
                 logo.setImageDrawable(getResources().getDrawable(R.drawable.logo_vansales));

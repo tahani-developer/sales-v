@@ -7,14 +7,30 @@
     android:id="@+id/linear"
     android:layoutDirection="locale"
     android:padding="40dp">
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_height="wrap_content"
-        android:text="@string/add_cust"
-        android:layout_gravity="center"
-        android:textColor="@color/text_view_color"
-        android:textSize="25sp" />
+        android:layout_marginBottom="30dp"
+        android:layout_width="match_parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/activitys_ImageView"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center|top"
+            android:clickable="true"
+            android:src="@drawable/addcustomer"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="1dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_cust"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colorblue1"
+            android:textSize="27sp" />
+    </LinearLayout>
 
     <GridLayout
         android:layout_width="match_parent"
@@ -37,6 +53,7 @@
             android:layout_marginRight="@dimen/edit_text_margin"
             android:imeOptions="actionNext"
             android:inputType="text"
+            android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
 
         <TextView
@@ -56,6 +73,7 @@
             android:layout_marginTop="10dp"
             android:imeOptions="actionNext"
             android:inputType="text"
+            android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
 
         <TextView
@@ -137,10 +155,10 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:gravity="center"
             android:text="@string/app_done"
-            android:textColor="@color/layer5"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
     </LinearLayout>

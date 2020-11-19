@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
@@ -181,6 +182,7 @@ public class MainActivity extends AppCompatActivity
     public  static Location location_main;
     public  int first=0,isClickLocation=0;
     public  static  double latitudeCheckIn=0,longtudeCheckIn=0;
+    LinearLayout checkInCheckOutLinear;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -217,6 +219,15 @@ public class MainActivity extends AppCompatActivity
 //        startActivity(getIntent());
 
         setContentView(R.layout.activity_main);
+        checkInCheckOutLinear=findViewById(R.id.checkInCheckOutLinear);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            checkInCheckOutLinear.setVisibility(View.GONE);
+            //Do some stuff
+        }
+        else {
+            checkInCheckOutLinear.setVisibility(View.VISIBLE);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDbHandler = new DatabaseHandler(MainActivity.this);
@@ -285,29 +296,29 @@ public class MainActivity extends AppCompatActivity
         settext2();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
-        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
-        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
-        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
-        {
-            checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
-            checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
-        }
+//        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
+//        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
+//        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
+//        {
+//            checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+//            checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+//        }
 
         checkInLinearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
+//                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
                     if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
                         checknum = 1;
                         menuItemState = 1;
                         openSelectCustDialog();
                     } else {
                         Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
-                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+//                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
+//                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
                 }
                 return true;
             }
@@ -317,15 +328,15 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+//                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
                     if (!CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
                         openCustCheckOut();
                     } else {
                         Toast.makeText(MainActivity.this, "No Customer Selected !", Toast.LENGTH_SHORT).show();
-                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+//                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out_hover));
+//                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out_hover));
                 }
                 return true;
             }
@@ -1015,8 +1026,15 @@ public class MainActivity extends AppCompatActivity
 //                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 //                        public void onClick(DialogInterface dialog, int whichButton) {
 
-            RefreshData obj = new RefreshData(MainActivity.this);
-            obj.startParsing();
+            try {
+                RefreshData obj = new RefreshData(MainActivity.this);
+                obj.startParsing();
+            }
+            catch (Exception e)
+            {
+                Log.e("RefreshData",""+e.getMessage());
+            }
+
             //obj.storeInDatabase();
 
 //                        }
@@ -1331,8 +1349,8 @@ public class MainActivity extends AppCompatActivity
                 settext2();
                 menuItemState = 0;
 
-                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
-                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+//                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
+//                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
 
                 CustomerCheckInFragment obj = new CustomerCheckInFragment();
                 obj.editCheckOutTimeAndDate();
@@ -1637,7 +1655,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
             catch (Exception e){
-                linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+                linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
 
 
             linkEditText = (EditText) dialog.findViewById(R.id.link);
@@ -1812,8 +1831,15 @@ public class MainActivity extends AppCompatActivity
                     paymentEditTextCredit.setText("");
 
                 }
+                try {
+                    salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
+                }
+                catch (Exception e)
+                {
 
-                salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
+                }
+
+
 
                 if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
                     bluetooth.setChecked(true);
@@ -2141,6 +2167,7 @@ public class MainActivity extends AppCompatActivity
             logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
             noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
         }
+
 
 
         logo.setOnClickListener(new View.OnClickListener() {

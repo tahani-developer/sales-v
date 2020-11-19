@@ -3,100 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="20dp"
     android:layoutDirection="locale"
     android:id="@+id/mailLinearRecipt"
-    android:layout_weight="1"
-    android:padding="5dp"
+    android:paddingHorizontal="20dp"
+    android:paddingStart="20dp"
+    android:paddingVertical="10dp"
     android:orientation="vertical"
     android:background="@color/layer3"
     tools:context="com.dr7.salesmanmanager.ReceiptVoucher">
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:bmb_draggable="true"
+
+        android:visibility="gone"
+        app:bmb_normalColor="@color/colorblue1"
+
+        />
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-       >
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:id="@+id/row1"
-        android:padding="5dp"
         android:layout_marginBottom="5dp"
         android:background="@color/layer2"
         >
         <ImageButton
             android:id="@+id/ClearForm"
-            android:layout_width="60dp"
-            android:layout_marginLeft="20dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/new_inv"
-            android:layout_marginRight="40dp"
+            android:layout_marginRight="20dp"
             />
 
         <ImageButton
             android:id="@+id/SaveData"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/save_btn"
             android:layout_marginRight="20dp"
             />
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/pic_Re_print"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="20dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/images_print"
             />
 
         <ImageView
             android:id="@+id/pic_receipt"
             android:layout_width="200dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:visibility="invisible"/>
-
 
 
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/row2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="9"
-        android:layout_marginBottom="3dp"
-
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center"
+        android:layout_margin="5dp"
 
-        android:orientation="horizontal">
+        android:id="@+id/row2"
+        >
 
         <TextView
             android:id="@+id/customer_nameVoucher"
             android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="2"
+            android:textStyle="bold"
+
             android:gravity="center"
-
+            android:background="@drawable/back_border_edit"
             android:text="@string/cust_name"
-            android:textColor="@color/text_view_color"
-            android:textSize="12sp" />
-        <LinearLayout
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-
-            android:background="@color/colorblue1"
-            android:orientation="vertical" />
+            android:textColor="@color/colorblue1"
+            android:textSize="@dimen/content_large" />
 
         <!--<ImageButton-->
         <!--android:id="@+id/custInfoImgBtn"-->
@@ -109,384 +105,332 @@
         <TextView
             android:id="@+id/voucher_no"
             android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="2"
-
-            android:gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center_vertical"
             android:text="@string/voucher_number"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp" />
-        <LinearLayout
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-
-            android:background="@color/colorblue1"
-            android:orientation="vertical" />
+            android:textSize="@dimen/content_large"  />
 
         <TextView
             android:id="@+id/payment_term"
             android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="2"
-            android:gravity="center"
-
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/back_border_edit"
             android:text="@string/payment_term"
             android:textColor="@color/text_view_color"
-            android:textSize="12sp" />
+            android:textSize="@dimen/content_large" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/row3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="8.3"
-        android:background="@drawable/back_border_edit"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:id="@+id/row3"
+        android:orientation="horizontal"
+        >
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_view_color"
             android:text="@string/app_amount"
-            android:textSize="12sp"
-            android:textColor="@color/text_view_color" />
+            android:layout_weight="1"
+            />
 
         <EditText
             android:id="@+id/amountEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="3dp"
-            android:layout_weight="1"
-            android:text=""
-            android:gravity="center"
-            android:inputType="numberDecimal"
-            android:textColor="@color/amountColor"
-            android:textSize="12sp" />
-        <LinearLayout
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-
-            android:background="@color/colorblue1"
-            android:orientation="vertical" />
+            android:imeOptions="flagNavigateNext"
+            android:inputType="numberDecimal"
+            android:layout_weight="1.5"
+            android:textSize="18sp"
+            android:textColor="@color/amountColor"
+            />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_view_color"
             android:text="@string/app_remark"
-            android:textSize="12sp"
-            android:textColor="@color/text_view_color" />
+            android:layout_weight="1"
+            />
 
         <EditText
             android:id="@+id/remarkEditText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:textColor="@color/text_view_color" />
+            android:imeActionLabel="@string/app_done"
+            android:textColor="@color/text_view_color"
+            android:layout_weight="8"
+            />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="9"
-        android:layout_height="match_parent"
-        android:layout_marginTop="2dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@color/layer2"
+        android:layout_marginTop="5dp"
 
         >
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="@drawable/back_border_shape"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/app_paymentDetails"
-            android:textSize="@dimen/content_large"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
 
-            android:layout_marginTop="3dp"
-            android:textStyle="bold"
-            android:textColor="@color/text_view_color"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:visibility="invisible"
-            android:background="@drawable/back_border_shape"
-
-            android:text="@string/app_paymentDetails"
-            android:textSize="@dimen/content_large"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:textStyle="bold"
+            android:gravity="center_horizontal"
             android:textColor="@color/text_view_color"
             />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/row5"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="2dp"
-        android:layout_weight="9"
+        android:layout_height="wrap_content"
+        android:id="@+id/row5"
+        android:padding="2dp"
         android:orientation="horizontal"
-        android:padding="2dp">
-
+        android:layout_marginTop="5dp"
+        >
         <LinearLayout
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginRight="5dp"
-            android:layout_weight="2"
             android:background="@drawable/back_border_edit"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
                 android:layout_gravity="center"
-                android:layout_weight="2"
-                android:layout_marginStart="5dp"
-                android:text="@string/app_paymentType"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
-                android:layout_marginLeft="5dp" />
+                android:text="@string/app_paymentType" />
 
             <Spinner
                 android:id="@+id/paymentTypeSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-
+                android:layout_width="0dp"
                 android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp"
+                android:layout_gravity="center"
                 android:entries="@array/app_paymentTypeList"
-
-
-                android:textSize="12sp" />
+                android:gravity="center"
+                android:padding="3dp" />
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/linear_checkNo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-
-            android:layout_weight="4"
+            android:visibility="visible"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:background="@drawable/back_border_edit"
-            android:visibility="visible">
 
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="2">
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/app_cheque_count"
+                android:layout_height="wrap_content"
                 android:textColor="@color/text_view_color"
-                android:textSize="12sp"
+                android:text="@string/app_cheque_count"
+                android:textSize="14sp"
 
                 />
 
             <EditText
                 android:id="@+id/chequNo_EditText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
 
                 android:imeOptions="flagNavigateNext"
+                android:inputType="number"
                 android:textColor="@color/amountColor"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
 
         <Button
             android:id="@+id/addCheck"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="14sp"
             android:background="@color/red_background"
-            android:padding="3dp"
+            android:padding="5dp"
             android:text="@string/add_check"
-            android:textColor="@color/layer5"
-            android:textSize="12sp"/>
+            android:textColor="@color/layer5" />
 
     </LinearLayout>
 
     <TableRow
         android:id="@+id/tableHeader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_weight="9"
         android:background="@color/layer2"
-        android:backgroundTint="@color/layer2">
+        android:backgroundTint="@color/layer2"
+        >
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
-            android:textSize="12sp"
             android:text="@string/check_number"
             android:textColor="@color/text_view_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="12sp"
-            android:padding="5dp"
             android:text="@string/app_bank_name"
             android:textColor="@color/text_view_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="12sp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
             android:text="@string/check_date"
             android:textColor="@color/text_view_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:padding="5dp"/>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="12sp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:padding="5dp"
             android:text="@string/check_value"
             android:textColor="@color/text_view_color"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:padding="5dp"/>
 
     </TableRow>
-
-    <RelativeLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:layout_weight="7">
-<!--    <com.nightonke.boommenu.BoomMenuButton-->
-<!--        android:id="@+id/bmb"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignBottom="@+id/chequesScroll"-->
-<!--        android:layout_alignRight="@+id/chequesScroll"-->
-<!--        app:bmb_normalColor="@color/colorblue1"-->
-<!--        app:bmb_draggable="true"-->
-
-<!--        />-->
     <ScrollView
+        android:layout_width="800dp"
+        android:layout_height="140dp"
+        android:background="@color/white"
         android:id="@+id/chequesScroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_weight="7">
+        >
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
             android:id="@+id/TableCheckData"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:background="@color/layer2">
+            android:layout_height="wrap_content"
+
+            android:background="@color/white">
+
 
 
         </TableLayout>
     </ScrollView>
-    </RelativeLayout>
+
 
     <LinearLayout
-        android:id="@+id/cheques_totals"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="9.5">
+        android:layout_height="wrap_content"
+        android:id="@+id/cheques_totals"
+        >
 
         <EditText
             android:id="@+id/space_1"
-            android:layout_width="10dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:ems="5"
-            android:hint="@string/app_cheque_no"
+            android:ems="10"
             android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheque_no"
             android:inputType="number"
-            android:textSize="@dimen/content"
-            android:visibility="invisible" />
+            android:textSize="14sp"
+            android:visibility="invisible"
+            />
 
 
         <TextView
             android:id="@+id/Space_3"
-            android:layout_width="10dp"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/app_cheque_date"
             android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheque_date"
             android:inputType="date"
+            android:textSize="14sp"
+            android:visibility="visible"
             android:text="@string/app_total"
-            android:textColor="@color/text_view_color"
-            android:textSize="13sp"
             android:textStyle="bold"
-            android:visibility="visible" />
+            android:textColor="@color/text_view_color"
+            />
 
         <TextView
             android:id="@+id/chequesTotalsEditText"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/app_cheq_val"
             android:imeOptions="flagNavigateNext"
+            android:hint="@string/app_cheq_val"
             android:inputType="none"
+            android:textSize="16sp"
             android:text="@string/app_zero"
+            android:textStyle="bold"
             android:textColor="@color/amountColor"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
+            />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_floating"
-            android:layout_width="wrap_content"
+            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/ic_edit_black_24dp"
+            android:layout_width="wrap_content"
+            app:fabSize="normal"
             android:backgroundTint="@color/white"
             android:src="@drawable/ic_edit_black_24dp"
-            android:visibility="gone"
-            app:fabSize="normal" />
-
+            android:background="@drawable/ic_edit_black_24dp"
+            android:layout_gravity="right"/>
 
 
     </LinearLayout>
 
-    </LinearLayout>
-        <com.nightonke.boommenu.BoomMenuButton
-            android:id="@+id/bmb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:bmb_draggable="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            app:bmb_normalColor="@color/colorblue1"
+    <!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--        android:id="@+id/add_qty"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="right"-->
+    <!--        android:layout_margin="@dimen/fab_margin"-->
+    <!--        android:background="@drawable/ic_edit_black_24dp"-->
+    <!--        app:fabSize="normal"-->
+    <!--        app:srcCompat="@drawable/ic_edit_black_24dp"-->
+    <!--        tools:ignore="VectorDrawableCompat" />-->
 
-            />
-    </RelativeLayout>
+
 </LinearLayout>

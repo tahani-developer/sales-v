@@ -25,24 +25,30 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.Settings;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class CustomerListShow extends DialogFragment {
-    private final String URL_TO_HIT = "http://10.0.0.115/VANSALES_WEB_SERVICE/index.php";
+    private String URL_TO_HIT = "";
 
     public ListView itemsListView;
     public List<Customer> customerList;
@@ -101,12 +107,13 @@ public class CustomerListShow extends DialogFragment {
         catch (Exception e){
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        initialize(view);
+
 
         customerList = new ArrayList<>();
         emptyCustomerList=new ArrayList<>();
 
         mHandler = new DatabaseHandler(getActivity());
+        initialize(view);
         if(mHandler.getAllSettings().size() != 0) {
 
             if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
@@ -235,16 +242,31 @@ public class CustomerListShow extends DialogFragment {
         update = (Button) view.findViewById(R.id.update);
         customerNameTextView = (EditText) view.findViewById(R.id.customerNameTextView);
         itemsListView = (ListView) view.findViewById(R.id.customersList);
-
+        List<Settings> settings =  mHandler.getAllSettings();
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (isInternetAccessed()) {
-                    new JSONTask().execute(URL_TO_HIT);
-                } else {
-                    Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                if(settings.size() != 0) {
+                    String ipAddress = settings.get(0).getIpAddress();
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+                    if (isInternetAccessed()) {
+                        try {
+                            new JSONTask().execute(URL_TO_HIT);
+                        }
+                        catch (Exception e)
+                        {Log.e("updateCustomer",""+e.getMessage());}
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
+
+
+
+
+
             }
         });
 
@@ -297,6 +319,26 @@ public class CustomerListShow extends DialogFragment {
                 reader = new BufferedReader(new
                         InputStreamReader(connection.getInputStream()));
                 StringBuilder buffer = new StringBuilder();
+                HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+                httpsURLConnection.setRequestMethod("POST");
+                httpsURLConnection.setDoOutput(true);
+                httpsURLConnection.setDoInput(true);
+                OutputStream outputStream= httpsURLConnection.getOutputStream();
+//                test= " still good";
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+//                String post_data= URLEncoder.encode("username ", "UTF-8")+"="+URLEncoder.encode(username , "UTF-8")+"&"
+////                        +URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password , "UTF-8");
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                reader = new BufferedReader(new
+                        InputStreamReader(httpsURLConnection.getInputStream()));
+
+
+                StringBuilder sb = new StringBuilder();
                 String line = null;
                 // Read Server Response
                 while ((line = reader.readLine()) != null) {
@@ -372,9 +414,27 @@ public class CustomerListShow extends DialogFragment {
 
                     }
                     //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
 
                     customerList.add(Customer);
                 }
+                Log.e("customerListRefresh",""+customerList.size());
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
@@ -388,10 +448,10 @@ public class CustomerListShow extends DialogFragment {
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                if (connection != null) {
-                    Log.e("Customer", "********ex4");
-                    // connection.disconnect();
-                }
+//                if (connection != null) {
+//                    Log.e("Customer", "********ex4");
+//                    // connection.disconnect();
+//                }
                 try {
                     if (reader != null) {
                         reader.close();

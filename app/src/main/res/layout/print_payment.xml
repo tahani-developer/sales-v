@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:background="@color/layer3"
     android:layoutDirection="locale"
     android:id="@+id/linearMain"
     android:orientation="vertical">
@@ -99,7 +99,7 @@
                     android:layout_gravity="end"
 
 
-                    android:background="@color/second_color"
+                    android:background="@color/colorblue1"
                     android:text="@string/preview"
                     android:textColor="@color/layer5" />
 
@@ -125,17 +125,18 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@color/layer2">
+    android:background="@drawable/back_border_edit"
+        >
 
-        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
             android:id="@+id/TableTransactionsReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@color/layer5">
+            android:background="@drawable/back_border_edit"
+       >
 
             <TableRow
-                android:background="@color/layer3"
+
                 >
 
                 <TextView
@@ -145,8 +146,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/voucher_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -155,9 +163,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/pay_date"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
 
+                    />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -165,8 +179,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/cust_name"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -175,8 +196,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/app_amount"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -185,8 +213,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/remark"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -195,8 +230,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/sale_man_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -205,8 +247,15 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/pay_method"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer2"
+                    android:layout_margin="2dp"
+
+                    />
 
                 <TextView
                     android:layout_width="0dp"
@@ -215,7 +264,7 @@
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/print"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/colorblue1"
                     android:textStyle="bold" />
 
             </TableRow>

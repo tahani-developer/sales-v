@@ -52,7 +52,6 @@
         <activity android:name=".bluetoothprinter" />
         <activity
             android:name=".Login"
-            android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,78 +62,75 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PrintVoucher"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.Reports"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.CustomerLogReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.VouchersReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.PaymentDetailsReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.ItemsReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.TransactionsReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.StockRequestVouchersReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.StockRequestItemsReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.StockRequestReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.InventoryReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.CashReport"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BluetoothConnectMenu"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@android:style/Theme.Dialog" /> <!-- <activity -->
         <!-- android:name=".CPCL2Menu" -->
         <!-- android:label="@string/title_activity_main" -->
@@ -143,23 +139,23 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SalesmanMap"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".PrintPayment"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".bMITP"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
-            android:screenOrientation="landscape"
+
             android:theme="@android:style/Theme.Dialog" />
 
         <meta-data
