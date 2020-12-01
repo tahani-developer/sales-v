@@ -43,6 +43,7 @@ import android.os.Message;
 //import android.support.v4.print.PrintHelper;
 //import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -153,6 +154,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -278,9 +280,11 @@ public class SalesInvoice extends Fragment {
     LinearLayout mainlayout;
     double curentLatitude, curentLongitude;
     FusedLocationProviderClient mFusedLocationClient;
+    FloatingActionButton save_floatingAction;
     boolean validDiscount=false;
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
-            R.drawable.ic_save_black_24dp,R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
+           R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
+//    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
 
     public SalesInvoice() {
@@ -338,15 +342,22 @@ public class SalesInvoice extends Fragment {
         } else {
             // portrait
         }
+        save_floatingAction=view.findViewById(R.id.save_floatingAction);
+        save_floatingAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveVoucherData();
+            }
+        });
         //**********************************************************
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.save),getResources().getString(R.string.info),getResources().getString(R.string.print)};
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.info),getResources().getString(R.string.print)};
 
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_4);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_4_2);
 
 
 
@@ -355,9 +366,9 @@ public class SalesInvoice extends Fragment {
 //                    .normalImageRes(listImageIcone[i]));
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
                     .normalImageRes(listImageIcone[i])
-                    .textSize(12)
+                    .textSize(10)
                     .normalText(textListButtons[i])
-                    .textPadding(new Rect(5, 10, 5, 0))
+                    .textPadding(new Rect(5, 12, 5, 0))
                     .listener(new OnBMClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
@@ -373,11 +384,28 @@ public class SalesInvoice extends Fragment {
                                     obj.startParsing();
                                     break;
                                 case 2:
-                                    saveVoucherData();
+//                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 1) {
+//                                        discountButton.setEnabled(false);
+//                                    } else {
+//                                        discountButton.setEnabled(true);
+
+                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                                            if (payMethod == 0) {
+                                                salesInvoiceInterfaceListener.displayDiscountFragment();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+
+                                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                                        }
+//                                    }
+
                                     break;
                                 case 3:
-                                    break;
-                                case 4:
+
+
                                     try {
                                         voucherNo = mDbHandler.getLastVoucherNo(voucherType);
                                         if (voucherNo != 0 && voucherNo != -1) {
@@ -431,6 +459,7 @@ public class SalesInvoice extends Fragment {
         }
 
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
+
         rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
         rePrintimage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -560,9 +589,9 @@ public class SalesInvoice extends Fragment {
                                                 voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                 String vn1 = voucherNumber + "";
                                                 voucherNumberTextView.setText(vn1);
-                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                   orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                 break;
                                             case R.id.retSalesRadioButton:
                                                 voucherType = 506;
@@ -570,9 +599,9 @@ public class SalesInvoice extends Fragment {
                                                 voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                 String vn2 = voucherNumber + "";
                                                 voucherNumberTextView.setText(vn2);
-                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                retSalesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                 break;
                                             case R.id.orderRadioButton:
                                                 voucherType = 508;
@@ -581,9 +610,9 @@ public class SalesInvoice extends Fragment {
                                                 String vn3 = voucherNumber + "";
                                                 voucherNumberTextView.setText(vn3);
                                                 paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                                                orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                orderRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                   salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                 break;
 
                                         }
@@ -616,9 +645,9 @@ public class SalesInvoice extends Fragment {
                                                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                         String vn1 = voucherNumber + "";
                                                         voucherNumberTextView.setText(vn1);
-                                                        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                        retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                        orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                        salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                        retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                           orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
 
                                                         break;
                                                     case R.id.retSalesRadioButton:
@@ -627,9 +656,9 @@ public class SalesInvoice extends Fragment {
                                                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
                                                         String vn2 = voucherNumber + "";
                                                         voucherNumberTextView.setText(vn2);
-                                                        retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                        orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                        retSalesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                        salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                        orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                         break;
                                                     case R.id.orderRadioButton:
                                                         voucherType = 508;
@@ -638,9 +667,9 @@ public class SalesInvoice extends Fragment {
                                                         String vn3 = voucherNumber + "";
                                                         voucherNumberTextView.setText(vn3);
                                                         paymentTermRadioGroup.setVisibility(View.INVISIBLE);
-                                                        orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                                                        retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                                                        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                                                        orderRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                                                        retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                                                           salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
                                                         break;
                                                 }
                                             }
@@ -840,6 +869,7 @@ public class SalesInvoice extends Fragment {
 
     private void saveVoucherData() {
         SaveData.setEnabled(false);
+        save_floatingAction.setEnabled(false);
         savedState = 1;
         final String remarkText = remarkEditText.getText().toString().trim();
 
@@ -853,6 +883,7 @@ public class SalesInvoice extends Fragment {
 //                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
 
         builder.setTitle( voucherType_Word);
+        builder.setCancelable(false);
         builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -865,10 +896,11 @@ public class SalesInvoice extends Fragment {
                     int validateVoucherNo = mDbHandler.checkVoucherNo(voucherNumber,voucherType);
 
 
-                    if (validateVoucherNo == 0) {// not exist voucher no
+                    if (validateVoucherNo == 0) {// not exist voucher no in the same number
                         if (listSize == 0) {
                             Toast.makeText(getActivity(), "Fill Your List Please", Toast.LENGTH_LONG).show();
                             SaveData.setEnabled(true);
+                            save_floatingAction.setEnabled(true);
                         } else {//list is contain data
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1) {// validate customer location
                                 if( checkCustomerLocation())
@@ -879,6 +911,7 @@ public class SalesInvoice extends Fragment {
                                             remarkEditText.setError("Required");
                                             remarkEditText.requestFocus();
                                             SaveData.setEnabled(true);
+                                            save_floatingAction.setEnabled(true);
                                         } else {
                                             saveData();
                                         }
@@ -891,6 +924,7 @@ public class SalesInvoice extends Fragment {
                                 }
                                 else{
                                     SaveData.setEnabled(true);
+                                    save_floatingAction.setEnabled(true);
                                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                                             .setTitleText(getResources().getString(R.string.warning_message))
                                             .setContentText(getResources().getString(R.string.InvalidLocation))
@@ -904,6 +938,7 @@ public class SalesInvoice extends Fragment {
                                         remarkEditText.setError("Required");
                                         remarkEditText.requestFocus();
                                         SaveData.setEnabled(true);
+                                        save_floatingAction.setEnabled(true);
                                     } else {
                                         saveData();
                                     }
@@ -922,6 +957,7 @@ public class SalesInvoice extends Fragment {
 
                     } else {// dublicate voucher no ==>> alert dialog
                         SaveData.setEnabled(true);
+                        save_floatingAction.setEnabled(true);
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                                 .setTitleText(getResources().getString(R.string.warning_message))
                                 .setContentText(getResources().getString(R.string.duplicatedVoucherNo))
@@ -939,6 +975,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SaveData.setEnabled(true);
+                save_floatingAction.setEnabled(true);
             }
         });
         builder.create().
@@ -1119,6 +1156,7 @@ public class SalesInvoice extends Fragment {
         connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
         Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
+        Customer_nameSales.setMovementMethod(new ScrollingMovementMethod());
         paymentTermRadioGroup = (RadioGroup) view.findViewById(R.id.paymentTermRadioGroup);
         voucherTypeRadioGroup = (RadioGroup) view.findViewById(R.id.transKindRadioGroup);
         cash = (RadioButton) view.findViewById(R.id.cashRadioButton);
@@ -1126,7 +1164,7 @@ public class SalesInvoice extends Fragment {
         retSalesRadioButton = (RadioButton) view.findViewById(R.id.retSalesRadioButton);
 
         salesRadioButton = (RadioButton) view.findViewById(R.id.salesRadioButton);
-        salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
+        salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
         salesRadioButton.setChecked(true);
 
         orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
@@ -1186,6 +1224,7 @@ public class SalesInvoice extends Fragment {
             if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
                 Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
                 SaveData.setEnabled(true);
+                save_floatingAction.setEnabled(true);
 
             } else {
                 voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
@@ -1209,6 +1248,7 @@ public class SalesInvoice extends Fragment {
 
                         } else {
                             SaveData.setEnabled(true);
+                            save_floatingAction.setEnabled(true);
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                             builder.setTitle(getResources().getString(R.string.app_alert));
@@ -1228,6 +1268,7 @@ public class SalesInvoice extends Fragment {
 
                     } else {
                         SaveData.setEnabled(true);
+                        save_floatingAction.setEnabled(true);
                         reCheck_customerAuthorize();// test
                     }
                 } else {// you should not authorize customer account balance
@@ -1239,6 +1280,7 @@ public class SalesInvoice extends Fragment {
 
                     } else {
                         SaveData.setEnabled(true);
+                        save_floatingAction.setEnabled(true);
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
                         builder.setTitle(getResources().getString(R.string.app_alert));
@@ -1259,6 +1301,7 @@ public class SalesInvoice extends Fragment {
             }
         } else {// if tax ==0 or net sales==0 don't save data
             SaveData.setEnabled(true);
+            save_floatingAction.setEnabled(true);
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
             builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1362,9 +1405,9 @@ public class SalesInvoice extends Fragment {
                 case 504:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.salesRadioButton);
-                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                    retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                    orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
 
 //                                            salesRadioButton.setSelected(true);
 //                                            retSalesRadioButton.setSelected(false);
@@ -1373,9 +1416,9 @@ public class SalesInvoice extends Fragment {
                 case 506:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.retSalesRadioButton);
-                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    retSalesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                    salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                    orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
 
 //                                            salesRadioButton.setSelected(false);
 //                                            retSalesRadioButton.setSelected(true);
@@ -1384,9 +1427,9 @@ public class SalesInvoice extends Fragment {
                 case 508:
                     vocherClick = false;
                     voucherTypeRadioGroup.check(R.id.orderRadioButton);
-                    orderRadioButton.setBackgroundColor(getResources().getColor(R.color.cancel_button));
-                    retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-                    salesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+                    orderRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+                    retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                       salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
 
 //                                            salesRadioButton.setSelected(false);
 //                                            retSalesRadioButton.setSelected(false);
@@ -1462,7 +1505,7 @@ public class SalesInvoice extends Fragment {
 
 //                                                             MTP.setChecked(true);
                             vouchLast = vouchPrint;
-                            convertLayoutToImage(vouchPrint);
+//                            convertLayoutToImage(vouchPrint);
 
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O.putExtra("printKey", "7");
@@ -1474,7 +1517,7 @@ public class SalesInvoice extends Fragment {
 
 //                                                             MTP.setChecked(true);
                             vouchLast = vouchPrint;
-                            convertLayoutToImage(vouchPrint);
+//                            convertLayoutToImage(vouchPrint);
 
                             Intent ineer = new Intent(getActivity().getBaseContext(), bMITP.class);
                             ineer.putExtra("printKey", "7");
@@ -1746,6 +1789,7 @@ public class SalesInvoice extends Fragment {
 
     public void reCheck_customerAuthorize() {
         SaveData.setEnabled(true);
+        save_floatingAction.setEnabled(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getResources().getString(R.string.not_authoriz));
         builder.setTitle(getResources().getString(R.string.warning_message));
@@ -1784,10 +1828,10 @@ public class SalesInvoice extends Fragment {
 
             mDbHandler.addItem(item);
             itemForPrint.add(item);
-            if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
-            {
+//            if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
+//            {
                 mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
-            }
+//            }
 
 
             if (voucherType == 504)
@@ -1883,7 +1927,7 @@ public class SalesInvoice extends Fragment {
 
 //                             InnerPrenter.setChecked(true);
                             voucherShow = voucher;
-                            convertLayoutToImage(voucher);
+//                            convertLayoutToImage(voucher);
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O.putExtra("printKey", "1");
                             startActivity(O);
@@ -2291,8 +2335,8 @@ public class SalesInvoice extends Fragment {
             voucherType = 504;
             salesRadioButton.setChecked(true);
             salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
-//            retSalesRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
-//            orderRadioButton.setBackgroundColor(getResources().getColor(R.color.layer1));
+            retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+               orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
             //***********************************************
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
             voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
@@ -2303,6 +2347,7 @@ public class SalesInvoice extends Fragment {
             discvalue_static = 0;
             refrechItemForReprint();
             SaveData.setEnabled(true);
+        save_floatingAction.setEnabled(true);
 
     }
 

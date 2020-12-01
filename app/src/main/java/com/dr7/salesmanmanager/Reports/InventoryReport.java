@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
@@ -73,6 +74,7 @@ public class InventoryReport extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(InventoryReport.this);
         setContentView(R.layout.inventory_report);
         LinearLayout linearMain=findViewById(R.id.linearMain);
         try{

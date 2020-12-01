@@ -206,16 +206,19 @@
 
     <string name="from_date">من تاريخ</string>
     <string name="to_date">الى تاريخ</string>
-    <string name="by_voucher_kind">حسب نوع الفاتورة</string>
-    <string name="by_payment_Term">حسب طريقة الدفع</string>
+    <string name="by_voucher_kind"> نوع الفاتورة</string>
+    <string name="by_payment_Term"> طريقة الدفع</string>
     <string name="customer_number">رقم العميل</string>
     <string name="preview">اظهار</string>
     <string name="item_number">رقم المادة</string>
     <string name="item_name">اسم المادة</string>
     <string name="unit_qty">العدد</string>
     <string name="total_sold_qty">مجموع الكمية المباعة</string>
+    <string name="total_sold_qty2">الكمية المباعة</string>
     <string name="total_bonus_qty">مجموع الكمية المجانية</string>
+    <string name="total_bonus_qty2">الكمية المجانية</string>
     <string name="total_sales_noTax">مجموع المبيعات(بدون ضريبة)</string>
+    <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
     <string name="items">المواد</string>
     <string name="print">طباعة</string>
     <string name="show">اظهار</string>
@@ -418,8 +421,15 @@
     <string name="SearchByCustomerName">بحث بإسم العميل</string>
     <string name="delet">حذف</string>
     <string name="refresh">تحديث</string>
-    <string name="info">info</string>
-    <string name="No">No</string>
-    <string name="name">Name</string>
+    <string name="info">معلومات</string>
+    <string name="No">الرقم</string>
+    <string name="name">الإسم</string>
+    <string name="shortInvoice">Short Invoice (Phone system)</string>
+    <string name="app_sales_inv2">بيع</string>
+    <string name="app_ret_inv2">مرتجع</string>
+    <string name="app_cust_order2">طلب</string>
+    <string name="reExportData">إعادة تصدير البيانات</string>
+    <string name="tele">Phone</string>
+    <string name="contactPerson">Contact Person</string>
 
 </resources>

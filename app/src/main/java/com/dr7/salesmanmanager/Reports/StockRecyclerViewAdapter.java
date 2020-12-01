@@ -50,7 +50,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview_stock, parent, false);
 
         return new viewHolder(view);
     }
@@ -59,10 +59,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
     @Override
     public void onBindViewHolder(final viewHolder holder, int position) {
 
-        if (isClicked.get(position) == 0)
-            holder.linearLayout.setBackgroundColor(Color.parseColor("#455A64"));
-        else
-            holder.linearLayout.setBackgroundColor(R.color.done_button);
+//        if (isClicked.get(position) == 0)
+//            holder.cardView.setCardBackgroundColor(R.color.layer7);
+//        else
+//            holder.cardView.setCardBackgroundColor(R.color.layer5);
 
         holder.itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
@@ -142,7 +142,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                                     bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
 
                             if (added) {
-                                holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
                                 isClicked.set(holder.getAdapterPosition() , 1);
                             }
                         }

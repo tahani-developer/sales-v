@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:background="@color/white"
     android:layoutDirection="locale"
     android:id="@+id/linearMain"
     android:orientation="vertical">
@@ -13,7 +13,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/items_report"
-        android:textColor="@color/text_view_color"
+        android:textColor="@color/colorblue_dark"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -89,7 +89,7 @@
             android:layout_height="match_parent"
 
             android:layout_margin="5dp"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:gravity="center"
             android:padding="5dp"
             android:textColor="@color/done_button"
@@ -110,7 +110,7 @@
             android:id="@+id/transKindRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/layer1"
+
             android:orientation="horizontal"
 
             android:paddingRight="10dp">
@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/by_voucher_kind"
-                android:textColor="@color/second_color"
+                android:textColor="@color/colorblue1"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 
@@ -164,7 +164,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="70dp"
             android:layout_marginLeft="70dp"
-            android:background="@color/red_background"
+            android:background="@drawable/done_button"
             android:text="@string/preview"
             android:textColor="@color/text_view_color" />
 
@@ -178,7 +178,7 @@
         android:id="@+id/scrol"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:background="@color/layer2"
+        android:background="@color/layer6"
         android:layout_margin="5dp"
         >
 
@@ -283,7 +283,7 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -295,7 +295,7 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -307,7 +307,7 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="14sp"
             android:textStyle="bold" />
 

@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.R;
 
 public class StockRequestReport extends AppCompatActivity {
@@ -28,6 +29,7 @@ public class StockRequestReport extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(StockRequestReport.this);
         setContentView(R.layout.stock_request_report);
 
         vouchersReportCardView = (CardView) findViewById(R.id.voucherReportCardView);

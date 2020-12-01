@@ -26,6 +26,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Reports.Reports;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,7 +87,7 @@ public class CustomerListShow extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+//        new LocaleAppUtils().changeLayot(getContext());
         getDialog().setTitle(getResources().getString(R.string.app_select_customer));
         final View view = inflater.inflate(R.layout.customers_list, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);

@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,6 +39,7 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -133,6 +135,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
+        new LocaleAppUtils().changeLayot(context);
 
         View view = inflater.inflate(R.layout.fragment_customer_check_in, container, false);
         //selectButton = (ImageButton) view.findViewById(R.id.check_img_button);
@@ -246,6 +249,9 @@ public class CustomerCheckInFragment extends DialogFragment {
 //                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
 //                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                                 dismiss();
+                                Intent intent = new Intent(context, Activities.class);
+                                context.startActivity(intent);
+
                             } else {
                                 Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
                             }

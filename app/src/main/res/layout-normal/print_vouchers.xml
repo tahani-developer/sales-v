@@ -57,7 +57,7 @@
                         android:layout_marginRight="2dp"
                         android:layout_weight="2"
                         android:text="@string/from_date"
-                        android:textColor="@color/colorblue_dark"
+                        android:textColor="@color/text_view_color"
                         android:textSize="13sp" />
 
                     <EditText
@@ -81,7 +81,7 @@
                         android:textSize="13sp"
                         android:gravity="center"
                         android:text="@string/to_date"
-                        android:textColor="@color/colorblue_dark"
+                        android:textColor="@color/text_view_color"
                      />
 
                     <EditText
@@ -115,7 +115,7 @@
                         android:autoSizeTextType="uniform"
                         android:padding="3dp"
                         android:text="@string/TypeVoucher"
-                        android:textColor="@color/colorblue_dark"
+                        android:textColor="@color/text_view_color"
 
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -192,7 +192,9 @@
         android:background="@drawable/done_button"
         android:text="@string/preview"
         android:textColor="@color/white"
-        android:textSize="@dimen/content_large" />
+        android:textSize="@dimen/content_large"
+
+        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -204,7 +206,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:layout_weight="2.7"
-        android:background="@color/layer2">
+        android:background="@color/layer7">
 
         <HorizontalScrollView
             android:id="@+id/HorizontalScrollView01"
@@ -218,7 +220,10 @@
                 android:layout_margin="5dp"
                 android:background="@color/layer5">
 
-                <TableRow android:background="@color/layer3"
+                <TableRow
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:background="@color/layer3"
                >
 
                     <TextView

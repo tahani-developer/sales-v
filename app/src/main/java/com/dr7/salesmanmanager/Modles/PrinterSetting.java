@@ -5,6 +5,15 @@ public class PrinterSetting {
 
     private int printerName;
     private int printerShape;
+    private int shortInvoice;
+
+    public int getShortInvoice() {
+        return shortInvoice;
+    }
+
+    public void setShortInvoice(int shortInvoice) {
+        this.shortInvoice = shortInvoice;
+    }
 
     public int getPrinterShape() {
         return printerShape;

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="locale"
-    android:background="@color/layer1"
+    android:background="@color/white"
     android:id="@+id/linearMain"
     android:orientation="vertical"
     android:padding="2dp">
@@ -31,11 +31,11 @@
             android:gravity="center"
             android:layout_weight="1"
             android:text="@string/inventory_report"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorblue_dark"
             android:autoSizeTextType="uniform"
             android:textSize="16sp"
             android:autoSizeStepGranularity="2sp"
-            android:autoSizeMaxTextSize="16sp"
+            android:autoSizeMaxTextSize="20sp"
             android:autoSizeMinTextSize="12sp"
             android:textStyle="bold" />
 
@@ -106,6 +106,7 @@
             android:text="@string/item_name"
             android:textColor="@color/text_view_color"
             android:textSize="14sp" />
+
         <androidx.appcompat.widget.SearchView
             android:id="@+id/mSearch2"
             android:layout_width="match_parent"
@@ -113,7 +114,6 @@
 
             android:layout_weight="1"
 
-            android:background="@color/layer4"
             app:defaultQueryHint="Search.."
             app:queryHint="Item name">
 
@@ -221,16 +221,15 @@
         android:layout_width="match_parent"
         android:layout_margin="5dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_report"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:background="@color/layer2"
-        android:orientation="vertical"
-     >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:background="@color/layer6"
+            android:orientation="vertical">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_height="wrap_content"

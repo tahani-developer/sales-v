@@ -1,22 +1,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="600dp"
-    android:layout_height="400dp"
-    android:background="@color/layer2"
+    android:layout_width="320dp"
+    android:layout_height="450dp"
+    android:background="@color/layer7"
     android:layoutDirection="locale"
     android:id="@+id/linearCompany"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:orientation="vertical"
-
     android:padding="5dp"
-  >
+    >
 
+    <LinearLayout
+        android:id="@+id/row11"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/action_company_info"
+            android:textStyle="bold"
+            android:textColor="@color/colorblue_dark"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        android:layout_margin="5dp"
+        android:layout_weight="0.9"
         android:padding="5dp"
 
 
@@ -27,7 +46,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
 
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            >
 
             <TextView
                 android:layout_width="match_parent"
@@ -35,23 +57,29 @@
                 android:layout_weight="1"
                 android:text="@string/company_name"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp"
 
-                app:autoSizeMaxTextSize="16sp"
+
+
+                app:autoSizeMaxTextSize="14sp"
                 app:autoSizeMinTextSize="12sp"
                 app:autoSizeStepGranularity="1sp"
                 app:autoSizeTextType="uniform"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
 
             <EditText
                 android:id="@+id/com_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
-            android:text=""
-                android:textColor="@color/text_view_color" />
+                android:layout_weight="2"
+                android:gravity="center"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/back_border_edit"
+                android:layout_marginRight="5dp"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
 
         </TableRow>
 
@@ -59,27 +87,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginTop="5dp">
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="@string/company_tel"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/com_tel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/back_border_edit"
                 android:inputType="number"
 
-                android:textColor="@color/text_view_color" />
+                android:textColor="@color/text_view_color"
+                android:layout_marginRight="5dp" />
 
         </TableRow>
 
@@ -87,24 +122,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginTop="5dp">
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
+
                 android:text="@string/tax_no"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/tax_no"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
+                android:layout_weight="2"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/back_border_edit"
                 android:inputType="number"
 
                 android:textColor="@color/text_view_color" />
@@ -115,24 +157,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_marginTop="5dp">
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center_vertical"
+
                 android:text="@string/invoice_note"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="15dp"
-                android:layout_marginStart="15dp"
+                android:layout_weight="2"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:background="@drawable/back_border_edit"
                 android:padding="5dp"
                 android:textColor="@color/text_view_color" />
 
@@ -148,25 +197,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        android:layout_marginTop="10dp">
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/logo"
+            android:gravity="center_vertical"
+
             android:textColor="@color/text_view_color"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
-            android:background="@color/layer5" />
+            android:layout_gravity="center"
+
+
+            android:background="@drawable/ic_cloud_upload_black_24dp"
+
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/logo"
+            android:visibility="invisible"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/savecompanyLocation"
             android:layout_width="match_parent"
@@ -187,10 +254,20 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:layout_columnSpan="2"
-       android:layout_margin="3dp"
+        android:layout_margin="7dp"
+        android:padding="3dp"
 
         android:orientation="horizontal">
-
+        <Button
+            android:id="@+id/ca01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_weight="1.5"
+            android:background="@color/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer5"
+            android:textStyle="bold" />
         <Button
             android:id="@+id/okBut"
             android:layout_width="match_parent"
@@ -200,7 +277,7 @@
             android:layout_weight="1"
             android:background="@drawable/done_button"
             android:text="@string/save"
-            android:textColor="@color/layer5"
+            android:textColor="@color/layer7"
             android:textStyle="bold" />
         <Button
             android:id="@+id/o"
@@ -210,7 +287,7 @@
 
             android:layout_weight="1"
             android:visibility="invisible"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:text="@string/save"
             android:textColor="@color/layer5"
             android:textStyle="bold" />
@@ -222,6 +299,16 @@
 
             android:layout_weight="1"
             android:background="@drawable/cancel_button"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer7"
+            android:textStyle="bold" />
+        <Button
+            android:id="@+id/ca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_weight="1.5"
+            android:background="@color/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold" />

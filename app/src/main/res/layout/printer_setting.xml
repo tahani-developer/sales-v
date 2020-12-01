@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/layer3"
+    android:background="@color/white"
     android:layoutDirection="locale"
     android:id="@+id/mainLinear"
     android:orientation="vertical"
@@ -24,7 +24,7 @@
         android:id="@+id/textView11"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/add_button" />
+        android:background="@color/colorblue1" />
 
     <TextView
         android:id="@+id/textView25"
@@ -49,7 +49,7 @@
             android:id="@+id/radioButton_normalnam"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+         android:textSize="14sp"
             android:layout_weight="1"
             android:text="Normal" />
 
@@ -57,10 +57,31 @@
             android:id="@+id/radioButton_large_name"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:text="Large Name" />
     </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:visibility="gone"
+        android:background="@drawable/back_border_edit"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/shortInvoice"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:text="@string/shortInvoice"
+            android:textColor="@color/text_view_color"
+            />
+
+
+    </LinearLayout>
    <ScrollView
        android:layout_height="0dp"
        android:layout_weight="3"
@@ -75,7 +96,7 @@
             android:id="@+id/LK30"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:checked="true"
             android:text="SEWOOLK-P30"
             android:textColor="@color/add_button"
@@ -85,7 +106,7 @@
             android:id="@+id/LK31"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:text="SEWOO LK-P31"
             android:textColor="@color/add_button"
            />
@@ -94,7 +115,7 @@
             android:id="@+id/LK32"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:text="SEWOO LK-P32 "
             android:textColor="@color/add_button"
              />
@@ -103,7 +124,7 @@
             android:id="@+id/QS"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:text="QS-PRINTER"
             android:textColor="@color/add_button"
            />
@@ -112,7 +133,7 @@
             android:id="@+id/dotMatrix"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:text="Dot-Matrix Printer (Tally MDP 480+)"
             android:textColor="@color/add_button"
@@ -122,7 +143,7 @@
             android:id="@+id/MTP"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:text="PRINTER (MTP-3)"
             android:textColor="@color/add_button"
@@ -131,7 +152,7 @@
             android:id="@+id/innerPrinter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:text="Inner PRINTER(SUNMI)"
             android:textColor="@color/add_button"
@@ -144,9 +165,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         android:background="@drawable/done_button"
         android:text="@string/save"
-        android:textColor="@color/layer3"
-        android:autoSizeTextType="uniform" />
+        android:textSize="16sp"
+        android:textColor="@color/white" />
 </LinearLayout>

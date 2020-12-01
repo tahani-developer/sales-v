@@ -12,6 +12,10 @@
             android:id="@+id/nav_reports"
             android:icon="@drawable/ic_date_range_black_24dp"
             android:title="@string/app_reports" />
+        <item
+            android:id="@+id/nav_stock"
+            android:icon="@drawable/ic_store_black_24dp"
+            android:title="@string/app_request" />
 <!--        <item-->
 <!--            android:id="@+id/nav_Arabiclanguage"-->
 <!--            android:icon="@drawable/ic_date_range_black_24dp"-->

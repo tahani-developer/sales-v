@@ -4,12 +4,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/discLayout"
-android:layout_width="650dp"
+android:layout_width="450dp"
 android:layout_height="400dp"
-android:minWidth="700dp"
-android:minHeight="450dp"
+android:minWidth="450dp"
+android:minHeight="400dp"
     android:layoutDirection="locale"
-android:background="@color/layer3"
+android:background="@color/white"
 android:orientation="vertical"
 android:padding="10dp"
 >
@@ -36,9 +36,10 @@ android:padding="10dp"
             android:layout_weight="9"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:padding="3dp"
+            android:padding="7dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="1dp"
             android:background="@drawable/ic_refresh_black_24dp"
 
             android:textColor="@color/layer5" />
@@ -51,8 +52,8 @@ android:padding="10dp"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
-        android:background="@color/layer4"
+        android:layout_weight="0.4"
+        android:background="@color/colorblue_dark"
         android:orientation="horizontal"
         >
 
@@ -86,7 +87,7 @@ android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:background="@color/layer3" />
+        android:background="@color/layer7" />
 
 
 </LinearLayout>

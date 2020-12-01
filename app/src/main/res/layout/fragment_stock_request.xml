@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer3"
+    android:background="@color/layer7"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
     android:paddingVertical="10dp"

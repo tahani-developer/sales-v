@@ -57,7 +57,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 110;
+    private static final int DATABASE_VERSION = 114;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -130,6 +130,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SETTING_TABLE="PRINTER_SETTING_TABLE";
     private static final String PRINTER_SETTING ="PRINTER_SETTING";
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
+    private static final String SHORT_INVOICE ="SHORT_INVOICE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -413,6 +414,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SALESMAN7 = "SALESMAN";
     private static final String SALESMAN_NO7 = "SALESMAN_NO";
     private static final String IS_POSTED7 = "IS_POSTED";
+    private static final String ADRESS_CUSTOMER  = "ADRESS_CUSTOMER";
+    private static final String TELEPHONE        = "TELEPHONE";
+    private static final String CONTACT_PERSON   = "CONTACT_PERSON";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VS_PROMOTION = "VS_PROMOTION";
@@ -603,7 +607,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
                 + PRINTER_SETTING +" INTEGER ,"
-                + PRINTER_SHAPE + " INTEGER"+ ")";
+                + PRINTER_SHAPE + " INTEGER,"
+                + SHORT_INVOICE + " INTEGER"
+                + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -739,10 +745,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        try {
+
+
 
         String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
                 + COMPANY_NUMBER + " INTEGER,"
-                + VOUCHER_NUMBER + " INTEGER UNIQUE, "
+                + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
                 + VOUCHER_DATE + " TEXT,"
                 + SALES_MAN_NUMBER + " INTEGER,"
@@ -759,6 +768,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CUST_NUMBER + " TEXT,"
                 + VOUCHER_YEAR + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
+        }
+        catch (Exception e)
+        {
+            Log.e("databaseHandler","CREATE_TABLE_SALES_VOUCHER_MASTER");
+        }
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
@@ -850,7 +864,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + LONGITUDE7 + " INTEGER,"
                 + SALESMAN7 + " TEXT,"
                 + IS_POSTED7 + " INTEGER,"
-                + SALESMAN_NO7 + " TEXT" + ")";
+                + SALESMAN_NO7 + " TEXT,"
+                + ADRESS_CUSTOMER + " TEXT,"
+
+                + TELEPHONE + " TEXT,"
+
+                + CONTACT_PERSON + " TEXT"
+
+
+
+                + ")";
         db.execSQL(CREATE_TABLE_ADDED_CUSTOMER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1140,12 +1163,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
         try{
             String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
@@ -1204,6 +1221,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
         }
+
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD SHORT_INVOICE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString()+"SHORT_INVOICE");
+        }
+
         try {
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
@@ -1339,6 +1370,19 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try{
 
             db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //******************************** Added Customer ****************************************
+        try{
+
+
+
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  ADRESS_CUSTOMER  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  TELEPHONE  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  CONTACT_PERSON  TEXT  DEFAULT '' ");
 
         }catch (Exception e)
         {
@@ -1490,6 +1534,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         ContentValues values = new ContentValues();
         values.put(PRINTER_SETTING,printer.getPrinterName());
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
+        values.put(SHORT_INVOICE,printer.getShortInvoice());
+        Log.e("addPrinterSeting",""+printer.getShortInvoice());
+
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -1952,6 +1999,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SALESMAN7, customer.getSalesMan());
         values.put(SALESMAN_NO7, customer.getSalesmanNo());
         values.put(IS_POSTED7, customer.getIsPosted());
+        values.put(ADRESS_CUSTOMER, customer.getADRESS_CUSTOMER());
+        values.put(TELEPHONE, customer.getTELEPHONE());
+        values.put(CONTACT_PERSON, customer.getCONTACT_PERSON());
+
+
+
+
 
         db.insert(ADDED_CUSTOMER, null, values);
         db.close();
@@ -3308,6 +3362,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 PrinterSetting printerSetting=new PrinterSetting();
                 printerSetting.setPrinterName(cursor.getInt(0));
                 printerSetting.setPrinterShape(cursor.getInt(1));
+                printerSetting.setShortInvoice(cursor.getInt(2));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -3581,6 +3636,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 customer.setSalesMan(cursor.getString(4));
                 customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
                 customer.setSalesmanNo(cursor.getString(6));
+                customer.setADRESS_CUSTOMER(cursor.getString(7));
+                customer.setTELEPHONE(cursor.getString(8));
+                customer.setCONTACT_PERSON(cursor.getString(9));
+
+
 
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -4042,7 +4102,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(KIND_VOUCHER, kindVoucher);
 
 
-        db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + "= '" + voucherNo + "'" , null);
+        db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + " = '" + voucherNo + "'" , null);
 
 
 //        values.put(, serialModelItem.getStoreNo());

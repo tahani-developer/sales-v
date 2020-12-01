@@ -7,14 +7,14 @@
     android:minHeight="400dp"
     android:layoutDirection="locale"
     android:id="@+id/add_item"
-    android:background="@color/layer3"
+    android:background="@color/layer7"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@color/layer2"
+        android:background="@color/layer6"
 
         android:orientation="horizontal"
         android:padding="5dp">
@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/barcode"
-            android:textColor="@color/done_button"
+            android:textColor="@color/colorblue_dark"
             android:textSize="18sp" />
 
         <EditText
@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/scanbarcode"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorblue_dark"
             android:textSize="18sp" />
         <ImageView
             android:id="@+id/searchBarcode"
@@ -90,14 +90,14 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimary"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:text="@string/category" />
+                android:text="@string/category"
+                android:textColor="@color/colorblue_dark"
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/cat"
@@ -123,7 +123,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorblue_dark"
                 android:gravity="center"
                 android:textSize="18sp"
                 android:text="@string/kind_item" />
@@ -151,7 +151,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorblue_dark"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:text="@string/item_name" />
@@ -175,8 +175,8 @@
         android:id="@+id/recyclerView"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="20dp"
-        android:background="@color/white"
-        android:padding="10dp"
+        android:background="@drawable/background_container"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -193,7 +193,7 @@
         <Button
             android:id="@+id/done"
             android:layout_width="200dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@drawable/done_button"
@@ -204,10 +204,10 @@
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="200dp"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:gravity="center"
             android:text="@string/app_cancel"
             android:textColor="@color/white" />

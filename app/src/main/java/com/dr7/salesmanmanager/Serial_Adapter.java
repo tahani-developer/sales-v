@@ -74,6 +74,10 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         viewHolder.editTextSerialCode.setTag(i);
         viewHolder.textView_counterNo.setTag(i);
         list.get(i).setCounterSerial(i+1);
+        if(i==0)
+        {
+            viewHolder.editTextSerialCode.requestFocus();
+        }
 
         viewHolder.scanBarcode.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -183,6 +187,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         editTextSerialCode = itemView.findViewById(R.id.Serial_No);
         scanBarcode = itemView.findViewById(R.id.scanBarcode);
         deletItem = itemView.findViewById(R.id.deletItem);
+//        editTextSerialCode.requestFocus();
         editTextSerialCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -205,6 +210,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                         if(!list.get(position).getSerialCode().equals(s.toString()))
                         {
                             isUpdate= updateListCheque(position, s.toString());
+
                         }
 
                         if(!isUpdate)
@@ -307,29 +313,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
 
-    private void updateListAmount(int position, Float amount) {
-//        list.get(position).setChequeValue(amount);
-//        Float amountValue = 0f;
-//        try {
-//
-//            amountValue = Float.parseFloat(amount);
-//        } catch (Exception e) {
-//            amountValue = 0f;
-//
-//        }
-//        if (amountValue != 0) {
-//
-//
-//            Log.e("before2222", "" + list.get(position).getChequeValue());
-//        }
-//        else {
-//
-//        }
-
-
-
-    }
-
     private boolean updateListCheque(int position, String data) {
     Log.e("updateListCheque",""+position+data);
         if(data.toString().length()!=0)
@@ -349,15 +332,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                         }
 
 
-            Log.e("position", "afterTextChanged" + position + "errorData\t" + errorData);
+//            Log.e("position", "afterTextChanged" + position + "errorData\t" + errorData);
             if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
                 errorData = false;
                 list.get(position).setSerialCode(data);
 
-                Log.e("positionYES", "afterTextChanged" + position + " s.toString()\t" + data);
+
+
+//                Log.e("positionYES", "afterTextChanged" + position + " s.toString()\t" + data);
                 return true;
             } else {
-                Log.e("positionNo", "afterTextChanged" + position + " s.toString()\t" + data);
+//                Log.e("positionNo", "afterTextChanged" + position + " s.toString()\t" + data);
                 errorData = true;
                 list.get(position).setSerialCode(data);
                 new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)

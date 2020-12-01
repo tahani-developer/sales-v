@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -45,11 +46,13 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -126,6 +129,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     public static int menuItemState;
-    static public TextView mainTextView;
+    static public TextView mainTextView,timeTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
@@ -174,6 +179,9 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     int sum_chech_export_lists=0;
+    static public Date currentTimeAndDate;
+    static public SimpleDateFormat df, df2;
+    static public String curentDate, curentTime;
 
      DrawerLayout drawer_layout;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
@@ -183,10 +191,25 @@ public class MainActivity extends AppCompatActivity
     public  int first=0,isClickLocation=0;
     public  static  double latitudeCheckIn=0,longtudeCheckIn=0;
     LinearLayout checkInCheckOutLinear;
+    public  static int time=30;
+    Timer timer;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
+        if(!CustomerListShow.Customer_Name.contains("No Customer"))
+        {
+            setTimeText();
+        }
+
     }
+
+    private static void setTimeText() {
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        df2 = new SimpleDateFormat("hh:mm:ss");
+        curentTime=df2.format(currentTimeAndDate);
+        timeTextView.setText(curentTime);
+    }
+
 
     @Override
     public void showCustomersList() {
@@ -213,14 +236,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocaleAppUtils.setConfigChange(MainActivity.this);
+        new LocaleAppUtils().changeLayot(MainActivity.this);
 
 //        finish();
 //        startActivity(getIntent());
 
         setContentView(R.layout.activity_main);
         checkInCheckOutLinear=findViewById(R.id.checkInCheckOutLinear);
-
+        timeTextView=findViewById(R.id.timeTextView);
+        Log.e("curentTimeMain",""+curentTime);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             checkInCheckOutLinear.setVisibility(View.GONE);
             //Do some stuff
@@ -234,6 +258,9 @@ public class MainActivity extends AppCompatActivity
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first=1;
+
+        TextView textTimer = (TextView)findViewById(R.id.timerTextView);
+
         isClickLocation=1;
         try {
             if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)
@@ -1050,6 +1077,7 @@ public class MainActivity extends AppCompatActivity
             mDbHandler.deleteAllPostedData();
 
         }
+
         else if (id == R.id.nav_backup_data) {
 
 
@@ -1066,6 +1094,12 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        else if (id == R.id.nav_stock) {
+
+           Intent i=new Intent(MainActivity.this,Stock_Activity.class);
+           startActivity(i);
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -1133,6 +1167,12 @@ public class MainActivity extends AppCompatActivity
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.add_customer_dialog);
         dialog.setCanceledOnTouchOutside(true);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
 
         Window window = dialog.getWindow();
 
@@ -1140,6 +1180,9 @@ public class MainActivity extends AppCompatActivity
         final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
         final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
         final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
+        final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
+        final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
+
         Button done = (Button) dialog.findViewById(R.id.doneButton);
          RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
          LinearLayout   linear = dialog.findViewById(R.id.linear);
@@ -1196,7 +1239,7 @@ public class MainActivity extends AppCompatActivity
                 if (!addCus.getText().toString().equals("")) {
                     int payMethod=0;
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude_main, longitude_main, Login.salesMan, 0, Login.salesManNo));
+                            latitude_main, longitude_main, Login.salesMan, Login.salesManNo,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
                   dialog.dismiss();
 //                    String customerId=getCustomerId();
 //                    if(!customerId.equals(""))
@@ -1348,6 +1391,7 @@ public class MainActivity extends AppCompatActivity
                 CustomerListShow.Customer_Account="0";
                 settext2();
                 menuItemState = 0;
+                setTimeText();
 
 //                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
 //                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
@@ -1517,6 +1561,12 @@ public class MainActivity extends AppCompatActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.password_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
         LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
         try{
             if(languagelocalApp.equals("ar"))
@@ -1642,7 +1692,12 @@ public class MainActivity extends AppCompatActivity
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.fragment_setting);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
 
+            lp.gravity = Gravity.CENTER;
+            lp.windowAnimations = R.style.DialogAnimation;
+            dialog.getWindow().setAttributes(lp);
             linearSetting = (LinearLayout) dialog.findViewById(R.id.linearSetting);
             try {
                 if (languagelocalApp.equals("ar")) {
@@ -2112,6 +2167,12 @@ public class MainActivity extends AppCompatActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.company_info_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
         LinearLayout mainLinear=dialog.findViewById(R.id.linearCompany);
         try{
             if(languagelocalApp.equals("ar"))
@@ -2294,6 +2355,12 @@ public class MainActivity extends AppCompatActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
         LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
         try{
             if(languagelocalApp.equals("ar"))
@@ -2314,6 +2381,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
+        CheckBox short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
@@ -2362,9 +2430,16 @@ if(printer.size()!=0) {
             large_name.setChecked(true);
             break;
     }
+    Log.e("addPrinterSeting",""+printer.get(0).getShortInvoice());
+    if(printer.get(0).getShortInvoice()==0)
+    {
+        short_Invoice.setChecked(false);
+    }
+    else { short_Invoice.setChecked(true);}
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
+    short_Invoice.setChecked(false);
 }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -2409,6 +2484,16 @@ if(printer.size()!=0) {
                     mDbHandler.addPrinterSeting(printerSetting);
                     Log.e("click ", "mtp");
                 }
+                if(short_Invoice.isChecked())
+                {
+                    printerSetting.setShortInvoice(1);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                }
+                else {
+                    printerSetting.setShortInvoice(0);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                }
+                Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
 dialog.dismiss();
             }
 
@@ -2427,6 +2512,12 @@ dialog.dismiss();
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.de_export_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
         LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
         try{
             if(languagelocalApp.equals("ar"))

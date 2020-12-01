@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.dr7.salesmanmanager.Reports.Reports;
+
 import java.text.DecimalFormat;
 
 /**
@@ -59,6 +61,7 @@ public class DiscountFragment extends DialogFragment {
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragmen
+//        new LocaleAppUtils().changeLayot(Disc);
                 View view = inflater.inflate(R.layout.fragment_discount, container, false);
                 okButton = (Button) view.findViewById(R.id.okButton);
                 cancelButton = (Button) view.findViewById(R.id.cancelButton);

@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.R;
 
 public class TransactionsReport extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class TransactionsReport extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(TransactionsReport.this);
         setContentView(R.layout.transactions_report);
         animationenter = AnimationUtils.loadAnimation(getBaseContext(), R.anim.enter);
         animat_exit = AnimationUtils.loadAnimation(getBaseContext(), R.anim.exit);

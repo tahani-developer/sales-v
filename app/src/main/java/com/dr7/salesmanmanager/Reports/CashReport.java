@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -115,6 +116,7 @@ public class CashReport  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(CashReport.this);
         setContentView(R.layout.cash_report);
         mailLayout = (ConstraintLayout)findViewById(R.id.mailLayout);
 

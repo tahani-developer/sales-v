@@ -1,0 +1,12 @@
+// to hide keybord in fragment
+getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+**************************************************************************************************
+// to one line in text view and scrolling
+                 1:   android:lines="1"
+                    android:maxLines="1"
+
+                    android:gravity="center"
+                    android:scrollbars = "vertical"
+                 2:
+                   holder.itemName.setMovementMethod(new ScrollingMovementMethod());
+*********************************************************************************

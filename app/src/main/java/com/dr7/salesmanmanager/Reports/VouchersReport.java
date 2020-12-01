@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -65,6 +66,7 @@ public class VouchersReport extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(VouchersReport.this);
         setContentView(R.layout.vouchers_report);
        LinearLayout linearMain=findViewById(R.id.linearMain);
         try{

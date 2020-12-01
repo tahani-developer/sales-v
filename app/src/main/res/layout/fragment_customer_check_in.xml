@@ -8,7 +8,7 @@
     android:minWidth="500dp"
     android:minHeight="300dp"
     android:layoutDirection="locale"
-    android:background="@color/layer3"
+    android:background="@color/layer7"
     android:orientation="vertical"
     android:padding="15dp"
 

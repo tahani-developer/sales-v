@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 27</string>
+    <string name="version"> V 30</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -9,8 +9,10 @@
     <string name="app_reports">Reports</string>
     <string name="app_sales_inv">Sales</string>
     <string name="app_ret_inv">Return</string>
+    <string name="app_ret_inv2">Return</string>
     <string name="app_cust_order">Order</string>
-    <string name="app_request">Stock </string>
+    <string name="app_cust_order2">Order</string>
+    <string name="app_request">Stock Request</string>
     <string name="app_imp_data">Import Data</string>
     <string name="app_refresh_data">Refresh Data</string>
     <string name="app_exp_data">Export Data</string>
@@ -213,8 +215,11 @@
     <string name="item_name">Item Name</string>
     <string name="unit_qty">Unit Qty</string>
     <string name="total_sold_qty">Total Sold Qty</string>
+    <string name="total_sold_qty2">Sold Qty</string>
     <string name="total_bonus_qty">Total Bonus Qty</string>
+    <string name="total_bonus_qty2">Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
+    <string name="total_sales_noTax2">Sales (No Tax)</string>
     <string name="items">Items</string>
     <string name="print">Print</string>
     <string name="show">Show</string>
@@ -373,6 +378,11 @@
     <string name="info">info</string>
     <string name="No">No</string>
     <string name="name">Name</string>
+    <string name="shortInvoice">Short Invoice (Phone system)</string>
+    <string name="app_sales_inv2">Sales</string>
+    <string name="reExportData">Re Export Data</string>
+    <string name="tele">Phone</string>
+    <string name="contactPerson">Contact Person</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

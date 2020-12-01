@@ -7,7 +7,7 @@
     android:minHeight="550dp"
     android:layoutDirection="locale"
     android:id="@+id/mainLinearAddItem"
-    android:background="@color/layer2"
+    android:background="@color/layer6"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -68,7 +68,6 @@
             android:layout_height="match_parent"
             android:layout_marginVertical="9dp"
             android:layout_marginLeft="5dp"
-            android:background="@color/layer2"
             android:gravity="center"
             android:layout_marginStart="5dp" />
 
@@ -366,7 +365,7 @@
             android:layout_margin="7dp"
             android:layout_weight="1"
             android:textSize="14sp"
-            android:background="@color/colorblue1"
+            android:background="@drawable/done_button"
             android:text="@string/app_add_to_list"
             android:textColor="@color/layer5"
             android:textStyle="bold" />
@@ -389,7 +388,7 @@
             android:layout_weight="1"
             android:textSize="14sp"
             android:layout_margin="7dp"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold" />

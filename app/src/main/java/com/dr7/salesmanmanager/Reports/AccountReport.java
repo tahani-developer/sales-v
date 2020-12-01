@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.PrintPic;
@@ -87,6 +88,7 @@ public class AccountReport extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(AccountReport.this);
         setContentView(R.layout.activity_account_report);
         mDbHandler = new DatabaseHandler(AccountReport.this);
         currentTimeAndDate = Calendar.getInstance().getTime();

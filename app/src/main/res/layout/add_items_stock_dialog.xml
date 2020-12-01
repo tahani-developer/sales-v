@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minWidth="1000dp"
-    android:minHeight="500dp"
-    android:background="@color/layer3"
+    android:layout_width="800dp"
+    android:layout_height="450dp"
+    android:minWidth="800dp"
+    android:minHeight="450dp"
+    android:background="@color/layer7"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:background="@color/layer2"
+        android:background="@color/layer6"
+
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -23,7 +24,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/barcode"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorblue_dark"
             android:textSize="18sp" />
 
         <EditText
@@ -32,12 +33,23 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="40dp"
             android:drawableRight="@drawable/ic_clear_black_24dp"
-            android:hint="Type  barcode"
+            android:layout_marginRight="40dp"
             android:layout_weight="3"
             android:background="@drawable/back_border_edit"
-            />
+            android:gravity="center"
+
+            android:padding="3dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/scanbarcode"
+            android:textColor="@color/colorblue_dark"
+            android:textSize="18sp" />
         <ImageView
             android:id="@+id/searchBarcode"
             android:layout_height="40dp"
@@ -74,14 +86,14 @@
 
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimary"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:text="@string/category" />
+                android:text="@string/category"
+                android:textColor="@color/colorblue_dark"
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/cat"
@@ -107,7 +119,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorblue_dark"
                 android:gravity="center"
                 android:textSize="18sp"
                 android:text="@string/kind_item" />
@@ -135,7 +147,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorblue_dark"
                 android:gravity="center"
                 android:textSize="16sp"
                 android:text="@string/item_name" />
@@ -199,11 +211,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView2"
-        android:layout_marginHorizontal="25dp"
-        android:background="@color/layer2"
+        android:layout_marginHorizontal="2dp"
+        android:background="@color/white"
         android:padding="7dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
+        android:layout_weight="1.5"
         android:orientation="horizontal">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -212,27 +225,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="5"
         android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/done2"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@color/second_color"
+            android:background="@drawable/done_button"
+            android:gravity="center"
+            android:text="@string/app_done"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/done20202"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:visibility="invisible"
+            android:background="@drawable/done_button"
             android:gravity="center"
             android:text="@string/app_done"
             android:textColor="@color/white" />
 
         <Button
             android:id="@+id/cancel_btn"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@color/cancel_button"
+            android:background="@drawable/cancel_button"
             android:gravity="center"
             android:text="@string/app_cancel"
             android:textColor="@color/white" />

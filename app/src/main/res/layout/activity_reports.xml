@@ -2,9 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer2"
-    android:orientation="horizontal">
+    android:layoutDirection="locale"
+    android:id="@+id/mainLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/layer7"
+    android:orientation="vertical">
 
+<!--    <include-->
+<!--        layout="@layout/app_bar_layout"/>-->
+<!--    <LinearLayout-->
+<!--        android:layout_height="35dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_gravity="right"-->
+<!--        android:gravity="right|center"-->
+<!--        android:background="@color/colorblue_dark">-->
+<!--        <TextView android:layout_height="match_parent"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_margin="3dp"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:gravity="right|center"-->
+<!--            android:background="@drawable/ic_arrow_forward_white_24dp"/>-->
+<!--    </LinearLayout>-->
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:theme="@style/AppTheme.AppBarOverlay">-->
+
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:background="@color/colorblue_dark"-->
+<!--            app:popupTheme="@style/AppTheme.PopupOverlay" />-->
+
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,11 +46,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:background="@color/layer3"
+            android:background="@color/layer7"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="20dp">
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="30dp">
 
 
 
@@ -65,7 +96,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/app_cust_log_rep"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -131,7 +162,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/transactions_report"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -196,7 +227,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/payments_details_report"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -261,7 +292,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/stock_request_report"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -327,7 +358,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/inventory_report"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -392,7 +423,7 @@
                             android:gravity="center_horizontal"
                             android:text="@string/app_cash_report"
                             android:textSize="18sp"
-                            android:textColor="@color/text_view_color"
+                            android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>
 

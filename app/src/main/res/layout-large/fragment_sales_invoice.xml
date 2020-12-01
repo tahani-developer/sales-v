@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
-
     android:id="@+id/mainlyout"
     android:layoutDirection="locale"
 android:padding="5dp"
@@ -30,27 +29,36 @@ android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="4.6"
-                android:background="@color/white"
+                android:background="@color/layer7"
 
                 android:orientation="horizontal">
 
-
+                <LinearLayout
+                    android:layout_weight="6"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@color/layer7"
+                    android:orientation="vertical">
                 <RelativeLayout
 
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
 
                     android:layout_gravity="center"
                     android:layout_marginRight="3dp"
-                    android:layout_weight="7.5"
-                    android:gravity="center">
+                    android:layout_weight="7"
+                    android:gravity="center"
+
+                    >
 
                     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/addItemImgButton2"
-                        android:layout_width="85dp"
-                        android:layout_height="85dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="2dp"
+                        android:layout_margin="10dp"
                         android:clickable="true"
                         android:src="@drawable/items2"
                         app:civ_border_color="@color/colorPrimaryDark" />
@@ -60,17 +68,52 @@ android:padding="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/addItemImgButton2"
-                        android:layout_alignParentRight="@+id/addItemImgButton2"
+                        android:layout_alignLeft="@+id/addItemImgButton2"
+                        android:layout_alignRight="@+id/addItemImgButton2"
 
-                        android:layout_marginLeft="1dp"
 
-
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="10dp"
                         android:padding="3dp"
                         android:text="+"
                         android:textColor="@color/cancel_button"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/save_floatingAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        app:borderWidth="0dp"
+                        android:tooltipText="@string/save"
+
+
+                        android:background="@color/white"
+                        app:backgroundTint="@color/white"
+                        android:outlineSpotShadowColor="@color/colorblue1"
+                        android:outlineAmbientShadowColor="@color/colorblue1"
+
+                        android:backgroundTint="@color/white"
+                        android:src="@drawable/ic_done_black_24dp"
+
+                        android:visibility="visible"
+                        app:fabSize="auto" />
+                    <TextView
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+                        android:layout_weight="9"
+                        android:text="@string/save"
+                        android:gravity="top|center"
+                        android:textColor="@color/colorblue1"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="2dp"
@@ -127,7 +170,7 @@ android:padding="5dp"
                                 android:layout_gravity="center"
                                 android:layout_margin="5dp"
                                 android:gravity="center_vertical"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="@color/colorblue_dark"
                                 android:textSize="14sp" />
                         </LinearLayout>
 
@@ -168,7 +211,7 @@ android:padding="5dp"
                                 android:layout_margin="2dp"
                                 android:gravity="center"
 
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="@color/colorblue_dark"
                                 android:textSize="14sp" />
                         </LinearLayout>
 
@@ -323,6 +366,7 @@ android:padding="5dp"
                             android:id="@+id/remarkEditText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:focusable="false"
                             android:layout_marginLeft="3dp"
                             android:textColor="@color/text_view_color"
                             android:textSize="14sp" />
@@ -515,7 +559,7 @@ android:padding="5dp"
                 android:layout_weight="6.4"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:background="@color/colorblue1"
+                android:background="@color/colorblue_dark"
                 android:orientation="horizontal"
 
        >

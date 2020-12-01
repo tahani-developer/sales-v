@@ -61,6 +61,28 @@
             android:layout_weight="1"
             android:text="Large Name" />
     </RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:visibility="gone"
+        android:background="@drawable/back_border_edit"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/shortInvoice"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="@string/shortInvoice"
+            android:textColor="@color/text_view_color"
+            />
+
+
+    </LinearLayout>
     <ScrollView
         android:layout_height="0dp"
         android:layout_weight="3"

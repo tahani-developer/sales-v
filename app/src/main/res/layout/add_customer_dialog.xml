@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="800dp"
+    android:layout_width="400dp"
     android:layout_height="400dp"
-    android:background="@color/layer3"
-    android:orientation="vertical"
-    android:id="@+id/linear"
+    android:background="@color/white"
     android:layoutDirection="locale"
-    android:padding="40dp">
+    android:id="@+id/linear"
+    android:orientation="vertical"
+    android:padding="10dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
@@ -29,134 +29,199 @@
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textColor="@color/colorblue1"
-            android:textSize="27sp" />
+            android:textSize="22sp" />
     </LinearLayout>
-
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:columnCount="2">
+        android:layout_height="2dp"
+        android:layout_marginTop="5dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+
+        android:background="@color/colorblue1"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:text="@string/cust_name"
             android:textColor="@color/text_view_color"
-            android:textSize="20sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"/>
 
         <EditText
             android:id="@+id/custEditText"
-            android:layout_width="500dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/edit_text_margin"
-            android:layout_marginRight="@dimen/edit_text_margin"
-            android:imeOptions="actionNext"
-            android:inputType="text"
-            android:background="@drawable/back_border_edit"
-            android:textColor="@color/add_button" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/remark"
-            android:textColor="@color/text_view_color"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/remarkEditText"
-            android:layout_width="500dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/edit_text_margin"
             android:layout_marginRight="@dimen/edit_text_margin"
             android:layout_marginTop="10dp"
             android:imeOptions="actionNext"
+            android:textSize="14sp"
             android:inputType="text"
             android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:text="@string/address"
-            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
             android:textColor="@color/text_view_color"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/addressEditText"
-            android:layout_width="500dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/edit_text_margin"
             android:layout_marginRight="@dimen/edit_text_margin"
             android:layout_marginTop="10dp"
+            android:textSize="14sp"
             android:imeOptions="actionNext"
-            android:visibility="gone"
-
             android:inputType="text"
+            android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="@string/pay_method"
-            android:textColor="@color/text_view_color"
-            android:textSize="20sp" />
-
-        <RadioGroup
-            android:id="@+id/paymentTermRadioGroup"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:text="@string/tele"
+            android:inputType="number"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
 
-            android:orientation="horizontal"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:background="@drawable/back_border_edit"
+            android:textColor="@color/add_button" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent">
 
-            >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="@string/contactPerson"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
 
-            <RadioButton
-                android:id="@+id/creditRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/app_credit"
-                android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+        <EditText
+            android:id="@+id/person_contactEditText"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:background="@drawable/back_border_edit"
+            android:textColor="@color/add_button" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent">
 
-            <RadioButton
-                android:id="@+id/cashRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:checked="true"
-                android:text="@string/app_cash"
-                android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
-        </RadioGroup>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:text="@string/remark"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
 
-    </GridLayout>
+        <EditText
+            android:id="@+id/remarkEditText"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/edit_text_margin"
+            android:layout_marginRight="@dimen/edit_text_margin"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:background="@drawable/back_border_edit"
+            android:textColor="@color/add_button" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/doneButton"
-            android:layout_width="200dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/done_button"
             android:gravity="center"
+            android:textSize="16sp"
             android:text="@string/app_done"
             android:textColor="@color/white"
             android:textStyle="bold" />

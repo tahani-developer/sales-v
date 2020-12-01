@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:layoutDirection="locale"
     android:id="@+id/mainlyout"
-    android:background="@color/layer3"
+    android:background="@color/layer7"
     >
     <RelativeLayout android:layout_height="match_parent"
         android:layout_width="match_parent">
@@ -28,7 +28,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="2dp"
-                android:background="@color/layer3"
+                android:background="@color/layer7"
                 android:orientation="horizontal">
 
 
@@ -36,10 +36,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="9"
+                android:layout_weight="10"
                 android:layout_margin="3dp"
                 android:id="@+id/linearMainActivities"
                 android:visibility="visible"
+                android:background="@color/layer7"
                 android:gravity="center"
                 android:orientation="horizontal">
                 <androidx.cardview.widget.CardView
@@ -102,6 +103,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
+                        android:layout_margin="1.5dp"
                         android:gravity="center"
                         android:background="@color/layer3"
                         android:orientation="horizontal">
@@ -192,7 +194,7 @@
                         android:layout_height="match_parent"
                         android:background="@color/layer3"
                         android:gravity="center"
-
+                        android:layout_margin="1.5dp"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -233,6 +235,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_margin="4dp"
+                    android:visibility="gone"
                     android:background="@color/layer2"
                     card_view:cardCornerRadius="5dp"
                     android:id="@+id/supplimentCardView"
@@ -243,7 +246,7 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
+                        android:layout_margin="1.5dp"
                         android:gravity="center"
                         android:background="@color/layer3"
                         android:orientation="horizontal">

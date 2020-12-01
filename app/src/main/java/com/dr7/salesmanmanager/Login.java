@@ -35,6 +35,7 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -99,6 +100,7 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleAppUtils.setConfigChange(Login.this);
+        new LocaleAppUtils().changeLayot(Login.this);
         setContentView(R.layout.activity_login);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDHandler = new DatabaseHandler(Login.this);
@@ -118,16 +120,6 @@ public class Login extends AppCompatActivity {
         validLocation();
         try {
             Log.e("languagelocalApp",""+languagelocalApp);
-//            Log.e("LocaleAppUtilsFirst",""+LocaleAppUtils.getLocale());
-//        if(LocaleAppUtils.getLocale()==null)
-//        {
-//            languagelocalApp="ar";
-//            LocaleAppUtils.setLocale(new Locale("ar"));
-//            LocaleAppUtils.setConfigChange(Login.this);
-//            Log.e("LocaleAppUtilsEmpty",""+LocaleAppUtils.getLocale());
-//        }
-//        else {
-
 
             if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {

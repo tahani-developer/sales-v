@@ -47,6 +47,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.ganesh.intermecarabic.Arabic864;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -123,6 +124,7 @@ public class PrintPayment extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PrintPayment.this);
         setContentView(R.layout.print_payment);
         try {
             closeBT();
@@ -210,7 +212,7 @@ public class PrintPayment extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintPayment.this);
-                            row.setPadding(2, 10, 2, 10);
+                            row.setPadding(2, 5, 2, 5);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -339,16 +341,17 @@ public class PrintPayment extends AppCompatActivity {
 
 
                                                             case 5:
+                                                            case 6:
 
 
                                                                 paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
                                                                 pay1 = pay;
-                                                                convertLayoutToImage(pay);
+//                                                                convertLayoutToImage(pay);
                                                                 Intent O1 = new Intent(PrintPayment.this, bMITP.class);
                                                                 O1.putExtra("printKey", "4");
                                                                 startActivity(O1);
-                                                                Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
-
+                                                                Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+                                                                break;
 //                                                                MTP.setChecked(true);
 
                                                         }
@@ -398,17 +401,17 @@ public class PrintPayment extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
 

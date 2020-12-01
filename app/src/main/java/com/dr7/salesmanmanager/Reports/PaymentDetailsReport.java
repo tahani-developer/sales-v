@@ -25,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.R;
 
@@ -52,6 +53,7 @@ public class PaymentDetailsReport extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PaymentDetailsReport.this);
         setContentView(R.layout.payment_details_report);
         LinearLayout linearMain=findViewById(R.id.linearMain);
         try{

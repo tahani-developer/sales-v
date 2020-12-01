@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -113,10 +114,13 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     {
                     CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
                     customerCheckInFragment.settext1();
-                }
-                CustomerListShow.CustHideValu=custList.get(i).getHide_val();
 
-                customerListShow.dismiss();
+                }
+
+                    CustomerListShow.CustHideValu=custList.get(i).getHide_val();
+                    customerListShow.dismiss();
+
+
             }
                 else{
                     Log.e("cust",""+custList.get(i).getIsSuspended());

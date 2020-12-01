@@ -127,18 +127,34 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:enabled="false"
+            android:enabled="true"
             android:textStyle="bold"
             android:textSize="12sp"
             android:gravity="center"
             android:imeOptions="actionNext"
 
             android:inputType="numberDecimal" />
+        <TextView
+            android:id="@+id/generateSerial"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+
+            android:textStyle="bold"
+            android:drawablePadding="5dp"
+            android:layout_gravity="center_vertical"
+            android:drawableStart="@drawable/ic_add_circle_outline_blue_24dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal"
+            android:drawableLeft="@drawable/ic_arrow_right_24dp" />
         <EditText
             android:id="@+id/un2012542"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3.2"
+            android:layout_weight="2"
             android:enabled="false"
 
             android:gravity="center"
