@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/stock_request_items_report"
         android:textColor="@color/colorblue_dark"
@@ -21,13 +21,13 @@
         android:id="@+id/row2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
+        android:layout_marginLeft="5dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -37,7 +37,8 @@
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -49,7 +50,8 @@
             android:focusable="false"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="30dp"
@@ -61,7 +63,8 @@
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -74,7 +77,8 @@
 
         <Button
             android:id="@+id/preview"
-            android:layout_width="130dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textColor="@color/layer5"
             android:background="@drawable/done_button"
@@ -89,7 +93,7 @@
         android:layout_height="match_parent"
         android:background="@color/layer6"
         android:layout_weight="1"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         >
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -100,7 +104,7 @@
             android:background="@color/layer5">
 
             <TableRow
-                android:background="@color/layer3"
+                android:background="@color/colorblue_dark"
                 android:padding="10dp">
 
                 <TextView
@@ -109,7 +113,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -118,7 +122,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_name"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -127,7 +131,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/unit_qty"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
 

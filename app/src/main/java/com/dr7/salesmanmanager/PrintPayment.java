@@ -212,7 +212,7 @@ public class PrintPayment extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintPayment.this);
-                            row.setPadding(2, 5, 2, 5);
+                            row.setPadding(5, 10, 5, 5);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -244,16 +244,17 @@ public class PrintPayment extends AppCompatActivity {
                                 }
 
 
-                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                                 row.setLayoutParams(lp);
 
                                 if (i != 7) {
                                     TextView textView = new TextView(PrintPayment.this);
                                     textView.setText(record[i]);
+//                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintPayment.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
 
 
@@ -262,7 +263,9 @@ public class PrintPayment extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(PrintPayment.this);
                                     textView.setText(getResources().getString(R.string.print));
-                                    textView.setTextSize(12);
+//                                    textView.setTextSize(12);
+//                                    TableRow.LayoutParams lp22 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//                                    textView.setLayoutParams(lp22);
 
                                     textView.setTextColor(ContextCompat.getColor(PrintPayment.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintPayment.this, R.color.colorAccent));
@@ -379,10 +382,8 @@ public class PrintPayment extends AppCompatActivity {
                                     });
 
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
-
-
-                                    textView.setLayoutParams(lp2);
+                                    TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                    textView.setLayoutParams(lp25);
                                     row.addView(textView);
                                 }
                             }

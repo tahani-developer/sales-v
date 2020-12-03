@@ -68,7 +68,7 @@
     <string name="app_disc">Discount  </string>
     <string name="app_tax">Tax : </string>
     <string name="app_net_sales">Net Sales : </string>
-    <string name="total_qty">Total Qty : </string>
+    <string name="total_qty">Total Qty </string>
     <string name="total_qty_inventory">Total Qty  </string>
 
 

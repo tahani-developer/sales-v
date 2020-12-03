@@ -37,7 +37,7 @@
                 android:layout_marginTop="5dp"
 
                 android:layout_marginBottom="5dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
 
                 android:orientation="vertical">
 
@@ -56,7 +56,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="2dp"
                         android:layout_marginRight="2dp"
-                        android:layout_weight="2"
+                        android:layout_weight="4"
                         android:text="@string/from_date"
                         android:textColor="@color/text_view_color"
                         android:textSize="13sp" />
@@ -66,13 +66,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:padding="2dp"
+                        android:layout_weight="4"
                         android:background="@drawable/back_border_edit"
-
                         android:focusable="false"
+
                         android:gravity="center_vertical"
                         android:inputType="date"
+                        android:padding="2dp"
                         android:textColor="@color/colorblue_dark"
                         android:textSize="13sp" />
 
@@ -80,91 +80,108 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
-                        android:textSize="13sp"
+                        android:layout_weight="4"
                         android:gravity="center"
                         android:text="@string/to_date"
                         android:textColor="@color/text_view_color"
-                     />
+                        android:textSize="13sp" />
 
                     <EditText
                         android:id="@+id/to_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="2"
+                        android:layout_weight="4"
                         android:autoSizeTextType="uniform"
-                        android:padding="2dp"
                         android:background="@drawable/back_border_edit"
                         android:focusable="false"
                         android:gravity="center_vertical"
                         android:inputType="date"
+                        android:padding="2dp"
                         android:textColor="@color/colorblue_dark"
                         android:textSize="13sp" />
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_weight="6"
-                        android:autoSizeTextType="uniform"
-
-                        android:text="@string/TypeVoucher"
-                        android:textColor="@color/text_view_color"
-
-                        android:textSize="15sp"
-                        />
-
-                    <RadioGroup
-                        android:id="@+id/transKindRadioGroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/back_border_edit"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="2"
                         android:orientation="horizontal">
 
-
-                        <RadioButton
-                            android:id="@+id/salesRadioButton"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:checked="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"
+                            android:layout_weight="6"
+                            android:autoSizeTextType="uniform"
 
+                            android:text="@string/TypeVoucher"
+                            android:textColor="@color/text_view_color"
 
-                            android:text="@string/sales"
-                            android:textSize="@dimen/content" />
+                            android:textSize="15sp" />
 
-                        <RadioButton
-                            android:id="@+id/retSalesRadioButton"
-                            android:layout_width="0dp"
+                        <RadioGroup
+                            android:id="@+id/transKindRadioGroup"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="1"
-                            android:text="@string/return_type"
-                            android:textSize="@dimen/content" />
-
-                        <RadioButton
-                            android:id="@+id/orderRadioButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/new_type"
-                            android:textSize="@dimen/content" />
-                    </RadioGroup>
+                            android:background="@drawable/back_border_edit"
+                            android:orientation="horizontal">
 
 
+                            <RadioButton
+                                android:id="@+id/salesRadioButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+
+
+                                android:text="@string/sales"
+                                android:textSize="@dimen/content" />
+
+                            <RadioButton
+                                android:id="@+id/retSalesRadioButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/return_type"
+                                android:textSize="@dimen/content" />
+
+                            <RadioButton
+                                android:id="@+id/orderRadioButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/new_type"
+                                android:textSize="@dimen/content" />
+                        </RadioGroup>
+
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="2dp"
+                        android:layout_weight="4"
+                        android:background="@drawable/done_button"
+                        android:text="@string/preview"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/content_large"
+
+                        />
                 </LinearLayout>
+
+        
 
 
             </LinearLayout>
@@ -188,19 +205,7 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/preview"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_margin="2dp"
-        android:layout_weight="8.5"
-        android:layout_gravity="center"
-        android:background="@drawable/done_button"
-        android:text="@string/preview"
-        android:textColor="@color/white"
-        android:textSize="@dimen/content_large"
 
-        />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -214,7 +219,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <TableLayout
                 android:id="@+id/TableTransactionsReport"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -225,30 +230,27 @@
                     android:layout_margin="2dp"
                     android:layout_width="match_parent"
                     android:background="@color/colorblue_dark"
-               >
+                    >
 
                     <TextView
-                        android:text="@string/app_cust_name"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
 
                         android:layout_marginRight="1dp"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
 
-
+                        android:text="@string/app_cust_name"
                         android:textColor="@color/white"
-                        android:textStyle="bold"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
                         />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
-
-<!--                        />-->
 
                     <TextView
                         android:layout_width="match_parent"
@@ -260,16 +262,16 @@
                         android:autoSizeTextType="uniform"
                         android:gravity="center"
                         android:text="@string/voucher_number"
-                        android:textSize="12sp"
                         android:textColor="@color/white"
+                        android:textSize="14sp"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -277,19 +279,19 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:gravity="center"
 
                         android:text="@string/date"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -298,17 +300,17 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:text="@string/pay_method"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -317,17 +319,17 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:text="@string/app_disc"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -335,18 +337,18 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:gravity="center"
                         android:text="@string/sub_total"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -354,18 +356,18 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:gravity="center"
                         android:text="@string/tax"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -373,18 +375,18 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:gravity="center"
                         android:text="@string/net_sales"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-<!--                    <TextView-->
-<!--                        android:layout_width="1.5dp"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:background="@color/layer2"-->
-<!--                        android:layout_margin="3dp"-->
+                    <TextView
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/layer2"
+                        android:layout_margin="3dp"
 
-<!--                        />-->
+                        />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -392,7 +394,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:text="@string/print"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
@@ -403,9 +405,9 @@
 
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="12sp"
+                  android:textSize="14sp"
                         android:text="  "
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_view_color"
                         android:textStyle="bold" />
 
                 </TableRow>

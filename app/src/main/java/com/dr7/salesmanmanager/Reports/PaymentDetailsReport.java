@@ -150,9 +150,9 @@ public class PaymentDetailsReport extends AppCompatActivity {
                         row.setPadding(5, 10, 5, 10);
 
                         if (n % 2 == 0)
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer7));
                         else
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer5));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
 
                         for (int i = 0; i < 7; i++) {
 
@@ -185,6 +185,8 @@ public class PaymentDetailsReport extends AppCompatActivity {
                             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                             textView.setLayoutParams(lp2);
 
+//                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 40, 1f);
+//                            textView.setLayoutParams(lp2);
                             row.addView(textView);
                         }
                         TablePaymentsDetailsReport.addView(row);

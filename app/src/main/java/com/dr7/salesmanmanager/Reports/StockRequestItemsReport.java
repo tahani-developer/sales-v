@@ -125,7 +125,7 @@ public class StockRequestItemsReport extends AppCompatActivity {
                             row.setPadding(5, 10, 5, 10);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(StockRequestItemsReport.this, R.color.layer4));
+                                row.setBackgroundColor(ContextCompat.getColor(StockRequestItemsReport.this, R.color.layer7));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(StockRequestItemsReport.this, R.color.layer5));
 

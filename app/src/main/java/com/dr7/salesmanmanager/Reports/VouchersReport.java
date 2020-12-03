@@ -171,10 +171,10 @@ public class VouchersReport extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(VouchersReport.this);
-                            row.setPadding(5, 3, 5, 1);
+                            row.setPadding(5, 5, 5, 5);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer4));
+                                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
 
@@ -213,9 +213,11 @@ public class VouchersReport extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(VouchersReport.this);
                                     textView.setText(getResources().getString(R.string.show));
-                                    textView.setTextSize(12);
-                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
-                                    textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.colorAccent));
+
+                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorblue_dark));
+                                    textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.white));
+                                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                    textView.setLayoutParams(lp3);
                                     textView.setGravity(Gravity.CENTER);
 
                                     textView.setOnClickListener(new View.OnClickListener() {
@@ -225,9 +227,6 @@ public class VouchersReport extends AppCompatActivity {
                                             voucherInfoDialog(Integer.parseInt(textView.getText().toString()) , voucherType);
                                         }
                                     });
-
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(40, 30, 0.2f);
-                                    textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
                             }
@@ -250,17 +249,17 @@ public class VouchersReport extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
     public String convertToEnglish(String value) {
@@ -275,7 +274,7 @@ public class VouchersReport extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog2);
         Window window = dialog.getWindow();
-        window.setLayout(800, 400);
+//        window.setLayout(800, 400);
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 
@@ -286,7 +285,7 @@ public class VouchersReport extends AppCompatActivity {
                 row.setPadding(5, 10, 5, 10);
 
                 if (k % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer4));
+                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
                 else
                     row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
 
@@ -309,7 +308,7 @@ public class VouchersReport extends AppCompatActivity {
                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(200, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                     textView.setLayoutParams(lp2);
                     row.addView(textView);
                 }

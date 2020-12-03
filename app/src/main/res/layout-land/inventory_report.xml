@@ -15,20 +15,21 @@
 
         >
 
+    <TextView
+        android:id="@+id/print"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_weight="13"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/ic_print_black_24dp"
+     />
         <TextView
-            android:id="@+id/print"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="9"
-            android:background="@drawable/ic_print_black_24dp"
             android:gravity="center"
-            android:padding="2dp" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:text="@string/inventory_report"
             android:textColor="@color/colorblue_dark"
             android:autoSizeTextType="uniform"
@@ -48,7 +49,7 @@
         android:layout_marginTop="3dp"
         android:orientation="horizontal"
         android:padding="2dp"
-        >
+      >
 
 
         <TextView
@@ -57,11 +58,11 @@
             android:layout_gravity="center"
 
             android:layout_marginHorizontal="3dp"
-            android:layout_weight="2.5"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_number"
             android:textColor="@color/text_view_color"
-              android:textSize="12sp" />
+            android:textSize="14sp" />
 
 
         <EditText
@@ -71,15 +72,25 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="3dp"
             android:layout_marginLeft="3dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:background="@drawable/back_border_edit"
             android:gravity="center_vertical"
             android:inputType="number"
             android:padding="0dp"
             android:textColor="@color/done_button"
-              android:textSize="12sp" />
+            android:textSize="14sp" />
 
+        <Button
+            android:id="@+id/preview_button_inventory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:background="@color/red_background"
 
+            android:text="@string/preview"
+            android:textColor="@color/text_view_color" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,36 +101,24 @@
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="2.5"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_name"
             android:textColor="@color/text_view_color"
-              android:textSize="12sp" />
+            android:textSize="14sp" />
+
         <androidx.appcompat.widget.SearchView
             android:id="@+id/mSearch2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:layout_weight="2"
+            android:layout_weight="1"
+
             app:defaultQueryHint="Search.."
             app:queryHint="Item name">
 
         </androidx.appcompat.widget.SearchView>
 
-      
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/row221"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="3dp"
-        android:orientation="horizontal"
-        android:padding="2dp"
-        >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -130,18 +129,18 @@
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="2.5"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/category"
             android:textColor="@color/text_view_color"
-              android:textSize="12sp" />
+            android:textSize="14sp" />
         <Spinner
             android:id="@+id/cat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
 
-            android:layout_weight="2"
+            android:layout_weight="1"
 
             android:gravity="center"
             android:padding="3dp" />
@@ -151,43 +150,25 @@
             android:layout_gravity="center"
 
             android:layout_marginHorizontal="5dp"
-            android:layout_weight="2.5"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="@string/qty"
             android:textColor="@color/text_view_color"
-              android:textSize="12sp" />
+            android:textSize="14sp" />
         <Spinner
             android:id="@+id/quantityFilter"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
 
-            android:layout_weight="2"
+            android:layout_weight="1"
 
             android:gravity="center"
             android:padding="3dp" />
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/mS"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
 
-            android:layout_weight="3"
-            android:visibility="invisible"
-            app:defaultQueryHint="Search.."
 
-            app:queryHint="Item name"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/preview_button_inventory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:visibility="gone"
-        android:background="@color/red_background"
 
-        android:text="@string/preview"
-        android:textColor="@color/text_view_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -197,7 +178,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="1dp"
         android:layout_weight="0"
-        android:background="@color/colorblue_dark"
+        android:background="@color/layer3"
         android:orientation="horizontal">
 
         <TextView
@@ -207,7 +188,6 @@
             android:layout_margin="2dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/white"
             android:text="@string/item_name"
             android:textStyle="bold" />
 
@@ -217,7 +197,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:textColor="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_number"
@@ -229,7 +208,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:textColor="@color/white"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/unit_qty"
@@ -249,35 +227,34 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:background="@color/layer6"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/layer3"
+        android:layout_alignBottom="@id/recyclerView_report"
+        android:orientation="horizontal">
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="@string/total_qty_inventory"
+
+        android:textColor="@color/done_button"/>
+        <TextView
+            android:id="@+id/total_qty_text"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:background="@color/layer3"
-            android:layout_alignBottom="@id/recyclerView_report"
-            android:orientation="horizontal">
-            <TextView android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:text="@string/total_qty_inventory"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center"
 
-                android:textColor="@color/done_button"/>
-            <TextView
-                android:id="@+id/total_qty_text"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:gravity="center"
-
-                android:textColor="@color/add_button"/>
-        </LinearLayout>
+            android:textColor="@color/add_button"/>
+    </LinearLayout>
     </RelativeLayout>
 
     <!--</ScrollView>-->

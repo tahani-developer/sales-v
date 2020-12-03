@@ -139,8 +139,8 @@ public class AddItemsFragment2 extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        new LocaleAppUtils().changeLayot(context);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        new LocaleAppUtils().changeLayot(context);
+//        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDbHandler = new DatabaseHandler(getActivity());
 
 //        jsonItemsList = new ArrayList<>();
@@ -155,6 +155,8 @@ public class AddItemsFragment2 extends DialogFragment {
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
 
+//        getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        getDialog().getWindow().clearFlags(WindowManager.LayoutParams. SOFT_INPUT_ADJUST_PAN);
 
         int size_firstlist=0;
 
@@ -312,6 +314,7 @@ public class AddItemsFragment2 extends DialogFragment {
             public boolean onQueryTextChange(String query) {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
+
 
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");

@@ -76,8 +76,10 @@
             android:name=".Activities"
             android:label="@string/title_activity_main"
             android:configChanges="locale"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+          />
+<!--        android:windowSoftInputMode="stateHidden"-->
         <activity
             android:name=".PrintVoucher"
             android:label="@string/title_activity_main"
@@ -105,6 +107,8 @@
         <activity
             android:name=".Reports.ItemsReport"
             android:label="@string/title_activity_main"
+            android:configChanges="orientation"
+
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
         <activity

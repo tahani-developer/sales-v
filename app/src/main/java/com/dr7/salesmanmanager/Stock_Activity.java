@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -63,5 +64,12 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
         } catch (Exception e) {
             String x = e.getMessage();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i= new Intent( Stock_Activity.this,MainActivity.class);
+        startActivity(i);
     }
 }

@@ -2,10 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layoutDirection="locale"
     android:id="@+id/linearMain"
-    android:orientation="vertical">
+    tools:context=".Reports.ItemsReport"
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
 
     <TextView
         android:layout_width="match_parent"
@@ -33,7 +36,7 @@
             android:gravity="center_vertical"
             android:text="@string/from_date"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_xlarge" />
+            android:textSize="@dimen/content_large" />
 
         <EditText
             android:id="@+id/from_date"
@@ -52,12 +55,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
             android:text="@string/to_date"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_xlarge"/>
+            android:textSize="@dimen/content_large"/>
 
         <EditText
             android:id="@+id/to_date"
@@ -76,14 +79,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:gravity="center_vertical"
             android:text="@string/item_number"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/content_xlarge" />
+            android:textSize="@dimen/content_large" />
 
         <EditText
             android:id="@+id/item_number"
@@ -91,7 +94,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
-         android:background="@drawable/back_border_edit"
+            android:background="@drawable/back_border_edit"
             android:gravity="center_vertical"
             android:padding="5dp"
             android:textColor="@color/done_button"
@@ -124,9 +127,9 @@
                 android:layout_gravity="center_vertical"
 
                 android:text="@string/by_voucher_kind"
-                android:textColor="@color/colorblue1"
-                android:textSize="@dimen/content_xlarge"
-                android:textStyle="bold" />
+                android:textColor="@color/text_view_color"
+                android:textSize="@dimen/content_large"
+               />
 
             <RadioButton
                 android:id="@+id/salesRadioButton"
@@ -136,7 +139,7 @@
                 android:checked="true"
                 android:text="@string/app_sales_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="@dimen/content_xlarge" />
+                android:textSize="@dimen/content_large" />
 
             <RadioButton
                 android:id="@+id/retSalesRadioButton"
@@ -146,7 +149,7 @@
                 android:checked="false"
                 android:text="@string/app_ret_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="@dimen/content_xlarge" />
+                android:textSize="@dimen/content_large" />
 
             <RadioButton
                 android:id="@+id/orderRadioButton"
@@ -156,7 +159,7 @@
                 android:checked="false"
                 android:text="@string/app_cust_order"
                 android:textColor="@color/text_view_color"
-                android:textSize="@dimen/content_xlarge"
+                android:textSize="@dimen/content_large"
                 android:layout_marginStart="20dp" />
 
         </RadioGroup>
@@ -169,7 +172,7 @@
             android:layout_marginLeft="70dp"
             android:background="@drawable/done_button"
             android:text="@string/preview"
-            android:textColor="@color/text_view_color" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
@@ -185,10 +188,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@color/layer3">
+            android:background="@color/colorblue_dark">
 
             <TableRow
-                android:background="@color/layer3"
+                android:background="@color/colorblue_dark"
                 android:padding="5dp">
 
                 <TextView
@@ -197,7 +200,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -206,7 +209,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_name"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -215,7 +218,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/total_sold_qty"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -224,7 +227,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/total_bonus_qty"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -233,7 +236,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/total_sales_noTax"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
 

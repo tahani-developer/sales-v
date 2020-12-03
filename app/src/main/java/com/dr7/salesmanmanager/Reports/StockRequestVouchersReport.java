@@ -135,7 +135,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                             row.setPadding(5, 10, 5, 10);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer4));
+                                row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer7));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer5));
 
@@ -176,7 +176,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                                         }
                                     });
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(40, 30, 0.2f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
@@ -192,17 +192,17 @@ public class StockRequestVouchersReport extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -210,10 +210,10 @@ public class StockRequestVouchersReport extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(StockRequestVouchersReport.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog);
         Window window = dialog.getWindow();
-        window.setLayout(700, 400);
+        window.setLayout(350, 400);
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 
@@ -224,7 +224,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                 row.setPadding(5, 10, 5, 10);
 
                 if (k % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer4));
+                    row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer7));
                 else
                     row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer5));
 
@@ -242,7 +242,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                     textView.setTextColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
                     textView.setLayoutParams(lp2);
                     row.addView(textView);
                 }

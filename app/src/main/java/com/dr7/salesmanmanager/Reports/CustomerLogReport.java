@@ -11,6 +11,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -23,10 +25,12 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CustomerLogReport extends AppCompatActivity {
     private static final String TAG = "CustomerLogReport";
 
     List<Transaction> transactionList ;
+    ImageView expotTpExcel;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -38,6 +42,14 @@ public class CustomerLogReport extends AppCompatActivity {
         transactionList = new ArrayList<Transaction>();
         DatabaseHandler obj = new DatabaseHandler(CustomerLogReport.this);
         transactionList = obj.getAlltransactions();
+        expotTpExcel=findViewById(R.id.expotTpExcel);
+        expotTpExcel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportToEx();
+
+            }
+        });
 
 
         TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
@@ -79,6 +91,15 @@ public class CustomerLogReport extends AppCompatActivity {
         }
 
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
+
+    }
+//    public static ExportToExcel getInstance() {
+//        if (instance == null)
+//            instance = new ExportToExcel();
+//
+//        return instance;
+//    }
+    private void exportToEx() {
 
     }
 

@@ -81,7 +81,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final Dialog dialog = new Dialog(view.getContext());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
-                dialog.setContentView(R.layout.add_item_dialog_small);
+                dialog.setContentView(R.layout.add_item_dialog_small_stock);
                 Window window = dialog.getWindow();
 
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
@@ -100,6 +100,16 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
                 final EditText discount = (EditText) dialog.findViewById(R.id.discount);
+                LinearLayout linearPrice,discount_linear,discribtionItem_linear,serialNo_linear;
+                linearPrice= dialog.findViewById(R.id.linearPrice);
+                linearPrice.setVisibility(View.GONE);
+                discount_linear= dialog.findViewById(R.id.discount_linear);
+                discount_linear.setVisibility(View.GONE);
+                discribtionItem_linear= dialog.findViewById(R.id.discribtionItem_linear);
+                discribtionItem_linear.setVisibility(View.GONE);
+                serialNo_linear= dialog.findViewById(R.id.serialNo_linear);
+                serialNo_linear.setVisibility(View.GONE);
+
                 final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.discTypeRadioGroup);
                 Button addToList = (Button) dialog.findViewById(R.id.addToList);
 

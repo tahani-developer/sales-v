@@ -273,11 +273,11 @@ public class PrintVoucher extends AppCompatActivity {
                                 if (i != 8) {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(record[i]);
-                                    textView.setTextSize(12);
+//                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
 
 
@@ -286,7 +286,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(getResources().getString(R.string.print));
-                                    textView.setTextSize(12);
+
 
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
@@ -415,11 +415,9 @@ public class PrintVoucher extends AppCompatActivity {
                                         }
                                     });
 
+                                    TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                    textView.setLayoutParams(lp25);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
-
-
-                                    textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
                             }

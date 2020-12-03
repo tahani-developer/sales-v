@@ -45,17 +45,17 @@ public class StockRequestReport extends AppCompatActivity {
             }
         });
 
-        vouchersReportCardView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    voucherReportLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer3));
-                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    voucherReportLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        vouchersReportCardView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    voucherReportLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer3));
+//                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    voucherReportLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
 
         itemsReportsCardView.setOnClickListener(new View.OnClickListener(){
@@ -66,16 +66,16 @@ public class StockRequestReport extends AppCompatActivity {
             }
         });
 
-        itemsReportsCardView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    itemsReportsLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer3));
-                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    itemsReportsLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        itemsReportsCardView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    itemsReportsLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer3));
+//                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    itemsReportsLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
     }
 }

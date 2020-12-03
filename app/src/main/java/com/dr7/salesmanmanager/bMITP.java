@@ -537,9 +537,12 @@ public class bMITP extends Activity {
 
                           break;
                       case 6:
-                          if(printShape==0)
-                          {}
-                          else{
+//                          if(printShape==0)
+//                          {
+//
+//
+//                          }
+//                          else{
 
                               for(int i=0;i<settings;i++) {
                                   sample.printMultilingualFontStock_EJABI(0);
@@ -547,7 +550,7 @@ public class bMITP extends Activity {
 
 
 
-                          }
+//                          }
 
 
                           break;

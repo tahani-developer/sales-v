@@ -65,7 +65,7 @@
     <string name="app_disc">الخصم : </string>
     <string name="app_tax">الضريبة : </string>
     <string name="app_net_sales">الصافي : </string>
-    <string name="total_qty">الكمية كاملة : </string>
+    <string name="total_qty">الكمية كاملة</string>
     <string name="total_qty_inventory">اجمالي الكمية   </string>
 
     <string name="app_item_no">رقم المادة</string>
@@ -74,7 +74,7 @@
     <string name="app_price">السعر</string>
     <string name="app_line_disc">الخصم</string>
     <string name="app_tax_perc">نسبة الضريبة</string>
-    <string name="app_amount">المجموع</string>
+    <string name="app_amount">المبلغ </string>
     <string name="app_zero">0.000</string>
     <string name="app_conf_invKindT">تغيير نوع الفاتورة</string>
     <string name="app_conf_invKindM">هل انت متأكد من تغيير اسم الفاتورة ؟</string>
@@ -429,7 +429,7 @@
     <string name="app_ret_inv2">مرتجع</string>
     <string name="app_cust_order2">طلب</string>
     <string name="reExportData">إعادة تصدير البيانات</string>
-    <string name="tele">Phone</string>
-    <string name="contactPerson">Contact Person</string>
+    <string name="tele">الهاتف</string>
+    <string name="contactPerson">التواصل </string>
 
 </resources>

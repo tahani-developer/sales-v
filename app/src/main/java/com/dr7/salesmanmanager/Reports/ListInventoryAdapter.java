@@ -53,7 +53,7 @@ public class ListInventoryAdapter extends RecyclerView.Adapter<ListInventoryAdap
         return new ViewHolder(view);
 
     }
-    public String[] mColors = {"#BCC6CC","#CFD8DC"};
+    public String[] mColors = {"#F3F8F8F7","#CFD8DC"};
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {

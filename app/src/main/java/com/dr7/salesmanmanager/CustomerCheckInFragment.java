@@ -135,7 +135,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        new LocaleAppUtils().changeLayot(context);
+//        new LocaleAppUtils().changeLayot(context);
 
         View view = inflater.inflate(R.layout.fragment_customer_check_in, container, false);
         //selectButton = (ImageButton) view.findViewById(R.id.check_img_button);

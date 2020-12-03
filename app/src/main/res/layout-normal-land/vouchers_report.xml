@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/vouchers_report"
         android:textColor="@color/colorblue_dark"
@@ -30,7 +30,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -41,7 +41,7 @@
         <EditText
             android:id="@+id/from_date"
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -55,7 +55,7 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
@@ -68,7 +68,7 @@
         <EditText
             android:id="@+id/to_date"
             android:layout_width="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -79,64 +79,70 @@
             android:textSize="14sp"
             android:inputType="date"
             android:focusable="false"/>
-
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/row20"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="6"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
-        <TextView
+        <LinearLayout
+            android:id="@+id/row20"
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:text="@string/customer_number"
-            android:textColor="@color/text_view_color"
-            android:textSize="14sp"/>
-
-        <EditText
-            android:id="@+id/customer_number"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="2dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/back_border_edit"
-            android:textColor="@color/done_button"
-            android:textSize="14sp"
-            android:inputType="number"/>
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+
+
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+
+                android:gravity="center_horizontal"
+                android:text="@string/customer_number"
+                android:textColor="@color/text_view_color"
+                android:textSize="14sp"/>
+
+            <EditText
+                android:id="@+id/customer_number"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+
+                android:gravity="center_vertical"
+                android:background="@drawable/back_border_edit"
+                android:textColor="@color/done_button"
+                android:textSize="14sp"
+                android:inputType="number"/>
+        </LinearLayout>
+
+
+
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/row3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="6"
-        android:layout_marginTop="2dp"
+        android:layout_weight="5.8"
+
         android:orientation="horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp">
 
         <RadioGroup
             android:id="@+id/transKindRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal"
+
 
             >
 
@@ -148,8 +154,8 @@
 
                 android:textColor="@color/text_view_color"
 
-                android:textSize="14dp"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+              />
 
             <RadioButton
                 android:id="@+id/salesRadioButton"
@@ -159,7 +165,7 @@
                 android:checked="true"
                 android:text="@string/app_sales_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/retSalesRadioButton"
@@ -169,7 +175,7 @@
                 android:checked="false"
                 android:text="@string/app_ret_inv"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/orderRadioButton"
@@ -179,72 +185,75 @@
                 android:checked="false"
                 android:text="@string/app_cust_order"
                 android:textColor="@color/text_view_color"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_marginStart="20dp" />
 
         </RadioGroup>
 
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/row302"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="6"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp">
-        <RadioGroup
-            android:id="@+id/paymentTermRadioGroup"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+        <LinearLayout
+            android:id="@+id/row302"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:orientation="horizontal"
+            android:layout_marginStart="5dp"
             >
-
-            <TextView
-                android:id="@+id/tv"
+            <RadioGroup
+                android:id="@+id/paymentTermRadioGroup"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/by_payment_Term"
-                android:textSize="14sp"
-                android:textColor="@color/text_view_color"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/creditRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_credit"
-                android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
-
-            <RadioButton
-                android:id="@+id/cashRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:layout_marginLeft="5dp"
-                android:checked="true"
-                android:text="@string/app_cash"
-                android:textColor="@color/text_view_color"
-                android:textSize="14sp" />
-        </RadioGroup>
+                android:orientation="horizontal"
+                >
 
-        <Button
-            android:id="@+id/preview"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="2"
-            android:background="@drawable/done_button"
-            android:text="@string/preview"
-            android:textColor="@color/layer5" />
+                <TextView
+                    android:id="@+id/tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/by_payment_Term"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_view_color"
+                 />
+
+                <RadioButton
+                    android:id="@+id/creditRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_credit"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/cashRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:checked="true"
+                    android:text="@string/app_cash"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="12sp" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/preview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/done_button"
+                android:text="@string/preview"
+                android:textColor="@color/layer7" />
+        </LinearLayout>
+
     </LinearLayout>
+
     <HorizontalScrollView
         android:id="@+id/HorizontalScrollView01"
         android:layout_width="match_parent"
@@ -274,7 +283,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="1dp"
+                        android:padding="5dp"
                         android:text="@string/cust_name"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
@@ -312,7 +321,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/items"

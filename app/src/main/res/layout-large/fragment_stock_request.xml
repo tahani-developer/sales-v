@@ -24,9 +24,9 @@
                 android:id="@+id/row3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2.5"
+                android:layout_weight="3"
                 android:layout_marginBottom="5dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
                 <LinearLayout
                     android:id="@+id/row35"
                     android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/voucher_number"
                         android:textColor="@color/colorblue_dark"
-                        android:textSize="@dimen/content" />
+                        android:textSize="@dimen/content_large" />
 
                     <TextView
                         android:id="@+id/voucherNumberTextView"
@@ -54,7 +54,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_gravity="center_vertical"
                         android:textColor="@color/text_view_color"
-                        android:textSize="@dimen/content"
+                        android:textSize="@dimen/content_large"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"/>
                 </LinearLayout>
@@ -74,7 +74,7 @@
                         android:text="@string/remark"
                         android:layout_margin="2dp"
                         android:textColor="@color/colorblue_dark"
-                        android:textSize="@dimen/content" />
+                        android:textSize="@dimen/content_large" />
 
                     <EditText
                         android:id="@+id/remarkEditText"
@@ -84,7 +84,7 @@
                         android:layout_gravity="center_vertical"
                         android:imeOptions="flagNavigateNext"
                         android:textColor="@color/text_view_color"
-                        android:textSize="@dimen/content" />
+                        android:textSize="@dimen/content_large" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -92,12 +92,12 @@
                 android:id="@+id/row1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2.9"
+                android:layout_weight="3.1"
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:orientation="horizontal"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
 
                 <ImageButton
                     android:id="@+id/newImgBtn"
@@ -117,8 +117,8 @@
 
                 <ImageButton
                     android:id="@+id/addItemImgButton"
-                    android:layout_width="40dp"
-                    android:layout_height="30dp"
+                    android:layout_width="50dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="left"
                     android:background="@drawable/ic_playlist_add_black_24dp" />
 
@@ -127,7 +127,7 @@
                 android:id="@+id/row6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2.9"
+                android:layout_weight="3"
 
                 android:background="@color/colorblue_dark"
                 android:orientation="horizontal"
@@ -146,7 +146,7 @@
                     android:gravity="center"
                     android:text="@string/app_item_no"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -157,7 +157,7 @@
                     android:gravity="center"
                     android:text="@string/app_desc"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -167,7 +167,7 @@
                     android:gravity="left"
                     android:text="@string/app_qty"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
 
@@ -195,7 +195,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:layout_weight="2.7"
+                android:layout_weight="3"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp"
