@@ -85,11 +85,11 @@ android:padding="5dp"
                         android:id="@+id/save_floatingAction"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="6.5"
                         android:layout_gravity="center"
+
                         android:layout_margin="2dp"
                         app:borderWidth="0dp"
-                        android:tooltipText="@string/save"
 
 
                         android:background="@color/white"
@@ -105,9 +105,10 @@ android:padding="5dp"
                     <TextView
 
                         android:layout_width="match_parent"
+                        android:visibility="gone"
 
                         android:layout_height="match_parent"
-                        android:layout_weight="9"
+                        android:layout_weight="8"
                         android:text="@string/save"
                         android:gravity="top|center"
                         android:textColor="@color/colorblue1"
@@ -313,7 +314,7 @@ android:padding="5dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="1dp"
                                     android:checked="true"
-                                    android:text="@string/app_sales_inv"
+                                    android:text="@string/app_sales_inv2"
                                     android:textColor="@color/text_view_color"
                                     android:textSize="14sp" />
 
@@ -323,7 +324,7 @@ android:padding="5dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="1dp"
                                     android:checked="false"
-                                    android:text="@string/app_ret_inv"
+                                    android:text="@string/app_ret_inv2"
                                     android:textColor="@color/text_view_color"
                                     android:textSize="14sp" />
 

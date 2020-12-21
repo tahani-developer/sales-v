@@ -11,6 +11,7 @@ import android.os.Build;
 //import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,7 +58,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 114;
+    private static final int DATABASE_VERSION = 116;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -300,7 +301,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String NoReturnInvoice="NoReturnInvoice";
     private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
     private static final String SHOW_IMAGE_ITEM="SHOW_IMAGE_ITEM";
-
+    private static final String APPROVE_ADMIN="APPROVE_ADMIN";
+    private static final String SAVE_ONLY="SAVE_ONLY";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -712,7 +714,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
                 + Customer_Authorized + " INTEGER,"
                 + Password_Data + " INTEGER,"
-                + Arabic_Language + " INTEGER,"
+                + Arabic_Language + " INTEGER DEFAULT '1' ,"
                 + HideQty + " INTEGER,"
                 + LockCashReport + " INTEGER,"
                 + salesManName + " TEXT,"
@@ -722,10 +724,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + AutomaticCheque + " INTEGER,"
                 + Tafqit + " INTEGER,"
                 + PreventChangPayMeth + " INTEGER,"
-                + ShowCustomerList + " INTEGER DEFAULT 1,"
+                + ShowCustomerList + " INTEGER DEFAULT 1 ,"
                 + NoReturnInvoice + " INTEGER,"
                 + WORK_WITH_SERIAL + " INTEGER,"
-                + SHOW_IMAGE_ITEM + " INTEGER"
+                + SHOW_IMAGE_ITEM + " INTEGER,"
+
+                + APPROVE_ADMIN + " INTEGER,"
+                + SAVE_ONLY +" INTEGER"
 
 
         + ")";
@@ -1009,6 +1014,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1774,7 +1793,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi, int Work_serialNo,int itemPhoto) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1813,7 +1833,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(NoReturnInvoice,noReturnInvoi);
         values.put(WORK_WITH_SERIAL,Work_serialNo);
         values.put(SHOW_IMAGE_ITEM,itemPhoto);
-
+        values.put(APPROVE_ADMIN,approveAddmin);
+        values.put(SAVE_ONLY,saveOnly);
 
 
 
@@ -1846,6 +1867,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void addVoucher(Voucher voucher) {
+
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1866,9 +1888,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CUST_NAME, voucher.getCustName());
         values.put(CUST_NUMBER, voucher.getCustNumber());
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
+        try {
 
-        db.insert(SALES_VOUCHER_MASTER, null, values);
-        db.close();
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+        }
+        catch ( Exception e)
+        {
+            int vouch=voucher.getVoucherNumber();
+            values.put(VOUCHER_NUMBER, (vouch++));
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+            Log.e("DBException","addVoucher");
+        }
+
     }
 
     public void addItem(Item item) {
@@ -2154,6 +2187,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
                 setting.setWork_serialNo(Integer.parseInt(cursor.getString(33)));
                 setting.setShowItemImage((cursor.getInt(34)));
+                setting.setApproveAdmin((cursor.getInt(35)));
+                setting.setSaveOnly((cursor.getInt(36)));
+
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

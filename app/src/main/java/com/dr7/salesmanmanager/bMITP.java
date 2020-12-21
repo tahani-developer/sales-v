@@ -55,6 +55,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
@@ -178,6 +180,7 @@ public class bMITP extends Activity {
                 this.remoteDevices.add(pairedDevice);
                 this.adapter.add(pairedDevice.getName() + "\n[" + pairedDevice.getAddress() + "] [Paired]");
             }
+        Log.e("remoteDevices",""+remoteDevices.size());
 //        }
 
     }
@@ -242,20 +245,57 @@ public class bMITP extends Activity {
 
         this.list.setAdapter(this.adapter);
         this.addPairedDevices();
+        if(remoteDevices.size()!=0)
+        {
+            BluetoothDevice btDev = null;
+            try {
+                btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
+            }
+            catch (Exception e)
+            {       }
+
+            try {
+                if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
+                    bMITP.this.mBluetoothAdapter.cancelDiscovery();
+                }
+
+                bMITP.this.btAddrBox.setText(btDev.getAddress());
+                bMITP.this.btConn(btDev);
+            } catch (IOException var8) {
+                AlertView.showAlert(var8.getMessage(), bMITP.this.context);
+            }
+
+        }
+        else {
+            new SweetAlertDialog(bMITP.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(getResources().getString(R.string.warning_message))
+                    .setContentText(getResources().getString(R.string.checkBlutoothPrinterPaired))
+                    .setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            finish();
+                        }
+                    })
+                    .show();
+
+        }
+
+
         this.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(arg2);
-
-                try {
-                    if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
-                        bMITP.this.mBluetoothAdapter.cancelDiscovery();
-                    }
-
-                    bMITP.this.btAddrBox.setText(btDev.getAddress());
-                    bMITP.this.btConn(btDev);
-                } catch (IOException var8) {
-                    AlertView.showAlert(var8.getMessage(), bMITP.this.context);
-                }
+//                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
+////                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(arg2);
+//
+//                try {
+//                    if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
+//                        bMITP.this.mBluetoothAdapter.cancelDiscovery();
+//                    }
+//
+//                    bMITP.this.btAddrBox.setText(btDev.getAddress());
+//                    bMITP.this.btConn(btDev);
+//                } catch (IOException var8) {
+//                    AlertView.showAlert(var8.getMessage(), bMITP.this.context);
+//                }
             }
         });
         this.discoveryResult = new BroadcastReceiver() {
@@ -367,6 +407,7 @@ public class bMITP extends Activity {
     }
 
     private void btConn(BluetoothDevice btDev) throws IOException {
+        if(remoteDevices.size()!=0)
         (new bMITP.connTask()).execute(new BluetoothDevice[]{btDev});
     }
 

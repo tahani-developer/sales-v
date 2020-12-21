@@ -1405,29 +1405,30 @@ public class ReceiptVoucher extends Fragment {
         mDbHandler.addPayment(payment);
         CompanyInfo companyInfo = new CompanyInfo();
         try {
-            int printer = mDbHandler.getPrinterSetting();
-            companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+            if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 0) {// save and print
+                int printer = mDbHandler.getPrinterSetting();
+                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
 
-                switch (printer) {
-                    case 0:
-                        Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
-                        i.putExtra("printKey", "2");
-                        startActivity(i);
+                    switch (printer) {
+                        case 0:
+                            Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                            i.putExtra("printKey", "2");
+                            startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                        break;
-                    case 1:
+                            break;
+                        case 1:
 
-                        try {
-                            findBT();
-                            openBT(1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                findBT();
+                                openBT(1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 //                                                             lk31.setChecked(true);
-                        break;
-                    case 2:
+                            break;
+                        case 2:
 
 //                                                try {
 //                                                    findBT();
@@ -1435,42 +1436,49 @@ public class ReceiptVoucher extends Fragment {
 //                                                } catch (IOException e) {
 //                                                    e.printStackTrace();
 //                                                }
-                        convertLayoutToImage(getActivity());
-                        Intent O1 = new Intent(getActivity(), bMITP.class);
-                        O1.putExtra("printKey", "2");
-                        startActivity(O1);
+//                            convertLayoutToImage(getActivity());
+                            Intent O1 = new Intent(getActivity(), bMITP.class);
+                            O1.putExtra("printKey", "2");
+                            startActivity(O1);
 //                                                             lk32.setChecked(true);
-                        break;
-                    case 3:
+                            break;
+                        case 3:
 
-                        try {
-                            findBT();
-                            openBT(3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                findBT();
+                                openBT(3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 //                                                             qs.setChecked(true);
-                        break;
-                    case 4:
-                        printTally();
-                        break;
-                    case 5:
+                            break;
+                        case 4:
+                            printTally();
+                            break;
+                        case 5:
 
 
 //                                                             MTP.setChecked(true);
 
-                    case 6:// inner printer
-                        convertLayoutToImage(getActivity());
-                        Intent O = new Intent(getActivity(), bMITP.class);
-                        O.putExtra("printKey", "2");
-                        startActivity(O);
-                        break;
+                        case 6:// inner printer
+//                            convertLayoutToImage(getActivity());
+                            Intent O = new Intent(getActivity(), bMITP.class);
+                            O.putExtra("printKey", "2");
+                            startActivity(O);
+                            break;
+
+                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
 
                 }
-            } else {
-                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
-
             }
+            else {
+                new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getContext().getString(R.string.succsesful))
+                        .show();
+            }
+
         } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 

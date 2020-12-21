@@ -1,23 +1,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/discLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layer3"
+    android:layout_width="350dp"
+    android:layout_height="450dp"
+
+    android:minHeight="450dp"
+    android:minWidth="350dp"
+    android:layoutDirection="locale"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:paddingBottom="20dp"
-    android:paddingEnd="20dp"
-    android:paddingHorizontal="20dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingStart="20dp"
-    android:paddingTop="10dp"
-    android:paddingVertical="10dp"
-    tools:context="com.dr7.salesmanmanager.DiscountFragment">
+
+    android:padding="5dp"
+   >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/AddTotalDiscount"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorblue_dark"
+            android:textSize="@dimen/title_large"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="6"
+            android:background="@drawable/ic_cancel_black_24dp"
+            android:text="@string/app_cancel"
+            android:textColor="@color/layer7"
+            />
+
+
+
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_weight="3"
         android:orientation="horizontal">
 
         <RadioGroup
@@ -28,19 +58,21 @@
 
             <TextView
                 android:id="@+id/tv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="@string/app_disc_type"
                 android:textColor="@color/text_view_color"
 
-                android:textSize="@dimen/title_large"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RadioButton
                 android:id="@+id/valueRadioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
+                android:layout_margin="3dp"
                 android:checked="true"
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
@@ -48,66 +80,204 @@
 
             <RadioButton
                 android:id="@+id/percentRadioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_margin="3dp"
                 android:text="@string/app_disc_type2"
                 android:textColor="@color/text_view_color"
-                android:textSize="@dimen/content_large"  />
+                android:textSize="@dimen/content_large" />
         </RadioGroup>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_weight="3">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/app_disc_value"
+            android:layout_weight="3"
+            android:text="@string/app_disc_value2"
             android:textColor="@color/text_view_color"
-            android:textSize="@dimen/title_large"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/discEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_height="40dp"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
             android:inputType="numberDecimal"
-            android:textColor="@color/text_view_color"
-            />
+            android:textColor="@color/text_view_color" />
 
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="3">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="@string/note"
+            android:textColor="@color/text_view_color"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/noteEditText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:lines="2"
+            android:textColor="@color/text_view_color" />
+
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_height="2dp"
+        android:layout_width="match_parent"
+        android:background="@color/colorblue1">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/mainRequestLinear"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:layout_weight="2.5">
+        <LinearLayout
+            android:id="@+id/requestLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/text120"
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:text="@string/requestForAdmin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+    <ImageView
+        android:id="@+id/requestDiscount"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:src="@drawable/refresh2"
+
+        android:drawableLeft="@drawable/ic_done_black_24dp"
+        />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/resultLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_weight="1">
+        <TextView
+            android:id="@+id/checkStateResult"
+            android:visibility="visible"
+            android:layout_weight="1"
+            android:text="@string/request_state"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+            <ImageView
+                android:id="@+id/acceptDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_done_blue_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+            <ImageView
+                android:id="@+id/rejectDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_block_red_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+            <ImageView
+                android:id="@+id/defaultDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:src="@drawable/ic_info_black_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_columnSpan="2"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="3"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="3dp">
 
         <Button
             android:id="@+id/okButton"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:layout_margin="7dp"
             android:background="@drawable/done_button"
             android:text="@string/app_ok"
-            android:textColor="@color/layer5"
+            android:textColor="@color/layer7"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/checkState"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:text="@string/request_state"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:background="@drawable/cancel_button"
-            android:text="@string/app_cancel"
-            android:textColor="@color/layer5"
-            android:textStyle="bold" />
+
 
 
     </LinearLayout>

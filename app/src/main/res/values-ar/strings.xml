@@ -62,7 +62,7 @@
     <string name="app_credit">ذمم</string>
     <string name="app_remark">ملاحظة</string>
     <string name="app_sub_total">المجموع</string>
-    <string name="app_disc">الخصم : </string>
+    <string name="app_disc">الخصم </string>
     <string name="app_tax">الضريبة : </string>
     <string name="app_net_sales">الصافي : </string>
     <string name="total_qty">الكمية كاملة</string>
@@ -431,5 +431,19 @@
     <string name="reExportData">إعادة تصدير البيانات</string>
     <string name="tele">الهاتف</string>
     <string name="contactPerson">التواصل </string>
+    <string name="AddTotalDiscount">اضافة خصم كلي</string>
+    <string name="app_disc_value2">القيمة</string>
+    <string name="note">ملاحظة</string>
+    <string name="request_state">حالة الطلب</string>
+    <string name="requestForAdmin">تقديم طلب للمسؤول</string>
+    <string name="acceptedRequest">تم قبول طلبك</string>
+    <string name="rejectedRequest">تم رفض الطلب</string>
+    <string name="acceptYourRequest">acceptYourRequest</string>
+    <string name="sorry">عذرا</string>
+    <string name="ApproveAdmin">طلب موافقة الادمن</string>
+    <string name="youHaveRequestToAdmin">يجب موافقة الادمن</string>
+    <string name="saveOnly">حفظ الفاتورة فقط </string>
+    <string name="saveSuccessfuly">Save Successfuly</string>
+    <string name="checkBlutoothPrinterPaired"> تحقق من اتصال البلوتوث للطابعة</string>
 
 </resources>

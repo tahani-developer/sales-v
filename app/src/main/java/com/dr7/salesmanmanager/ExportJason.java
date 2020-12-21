@@ -80,17 +80,18 @@ public class ExportJason extends AppCompatActivity {
 
     void startExportDatabase() throws JSONException {
         //
+//
 
-        serialModelList = mHandler.getAllSerialItems();
-        Log.e("serialModelList",""+serialModelList);
-        jsonArraySerial = new JSONArray();
-        for (int i = 0; i < serialModelList.size(); i++)
-        {
-          if(serialModelList.get(i).getIsPosted().equals("0")){
-            jsonArraySerial.put(serialModelList.get(i).getJSONObject());
-          }
-        }
         try {
+            serialModelList = mHandler.getAllSerialItems();
+            Log.e("serialModelList",""+serialModelList);
+            jsonArraySerial = new JSONArray();
+            for (int i = 0; i < serialModelList.size(); i++)
+            {
+                if(serialModelList.get(i).getIsPosted().equals("0")){
+                    jsonArraySerial.put(serialModelList.get(i).getJSONObject());
+                }
+            }
             Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -161,7 +162,9 @@ public class ExportJason extends AppCompatActivity {
         for (int i = 0; i < items.size(); i++)
            {
                if (items.get(i).getIsPosted() == 0) {
+
                    jsonArrayItems.put(items.get(i).getJSONObject());
+
                }
 
             }
@@ -237,7 +240,9 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));

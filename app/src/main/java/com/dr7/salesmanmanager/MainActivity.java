@@ -1681,7 +1681,8 @@ public class MainActivity extends AppCompatActivity
         CheckBox allowMinus, salesManCustomersOnly, minSalePrice, allowOutOfRange;
         CheckBox checkBox_canChangePrice, readDiscount, workOnline, paymetod_check, bonusNotAlowed, noOfferForCredit, customerAuthor,
                 passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
-                showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox, showItemImage_checkbox;
+                showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
+                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox;
         Dialog dialog;
         LinearLayout linearSetting;
 
@@ -1757,6 +1758,8 @@ public class MainActivity extends AppCompatActivity
              noReturn_checkbox            = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
              workSerial_checkbox         = (CheckBox) dialog.findViewById(R.id.workSerial_checkbox);
              showItemImage_checkbox        = (CheckBox) dialog.findViewById(R.id.showItemImage_checkbox);
+            approveAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.approveAdmin_checkbox);
+            asaveOnly_checkbox= (CheckBox) dialog.findViewById(R.id.asaveOnly_checkbox);
             FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
             okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1941,13 +1944,24 @@ public class MainActivity extends AppCompatActivity
                     customerAuthor.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1)
                     passowrdData_checkbox.setChecked(true);
-                if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
+                if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1)
+                {
                     arabicLanguage_checkbox.setChecked(true);
-                    languagelocalApp="ar";
+                    languagelocalApp= "ar";
+                    LocaleAppUtils.setLocale(new Locale("ar"));
+                    LocaleAppUtils.setConfigChange(MainActivity.this);
                 }
                 else{
-                    languagelocalApp="en";
+                    if(mDbHandler.getAllSettings().get(0).getArabic_language() == 0)
+                    {
+                        languagelocalApp= "en";
+                        arabicLanguage_checkbox.setChecked(false);
+                        LocaleAppUtils.setLocale(new Locale("en"));
+                        LocaleAppUtils.setConfigChange(MainActivity.this);
+                    }
+
                 }
+
                 if (mDbHandler.getAllSettings().get(0).getHide_qty() == 1) {
                     hideQty_checkbox.setChecked(true);
                 }
@@ -1988,6 +2002,21 @@ public class MainActivity extends AppCompatActivity
                 else {
                     showItemImage_checkbox.setChecked(false);
                 }
+                if (mDbHandler.getAllSettings().get(0).getApproveAdmin() == 1) {
+                    approveAdmin_checkbox.setChecked(true);
+                }
+                else {
+                    approveAdmin_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 1) {
+                    asaveOnly_checkbox.setChecked(true);
+                }
+                else {
+                    asaveOnly_checkbox.setChecked(false);
+                }
+
+
+
 
 
 
@@ -2003,6 +2032,11 @@ public class MainActivity extends AppCompatActivity
 //                    noOfferForCredit.setChecked(true);
 
 
+            }else {
+                arabicLanguage_checkbox.setChecked(true);
+                LocaleAppUtils.setLocale(new Locale("ar"));
+                languagelocalApp="ar";
+                showCustomerList_checkbox.setChecked(true);
             }
             arabicLanguage_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -2117,16 +2151,20 @@ public class MainActivity extends AppCompatActivity
 
                         int workSerial = workSerial_checkbox.isChecked() ? 1 : 0;
                         int showImage=showItemImage_checkbox.isChecked()?1:0;
+                        int approveAdm=approveAdmin_checkbox.isChecked()?1:0;
+                        int saveOnly=asaveOnly_checkbox.isChecked()?1:0;
+
+
 
 
                         String salesmanname=salesmanNmae.getText().toString();
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                        /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
-                        /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage);
+                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
+                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
+                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
+                        /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
+                        /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
 
                         finish();
                         startActivity(getIntent());

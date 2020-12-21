@@ -32,7 +32,7 @@
         android:layout_weight="2"
         android:text="@string/customer_log_report"
         android:textColor="@color/colorblue_dark3"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
  />
     </LinearLayout>

@@ -6,6 +6,7 @@
     android:minWidth="320dp"
     android:minHeight="450dp"
     android:id="@+id/mainLinearAddItem"
+    android:layoutDirection="locale"
     android:background="@color/layer7"
     android:orientation="vertical"
     android:padding="5dp">
@@ -269,7 +270,62 @@ android:layout_margin="5dp"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
 
+        <LinearLayout
+            android:id="@+id/_linear_switch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
 
+            android:layout_weight="5.3"
+            android:background="@drawable/back_border_shape"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/checkState"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:text="@string/request_state"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+
+            <TextView
+                android:id="@+id/discount_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/back_border_dark"
+                android:gravity="center"
+
+
+                android:text="@string/app_disc"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/bonext"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/layer7"
+
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/bonuss_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/back_border_shape"
+                android:text="@string/app_bonus"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/linear_bonus"
             android:layout_width="0dp"
@@ -450,6 +506,100 @@ android:layout_margin="5dp"
     <!--            android:layout_weight="1"/>-->
 
     <!--    </LinearLayout>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/mainRequestLinear"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="5">
+        <LinearLayout
+            android:id="@+id/requestLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginTop="2dp"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/text120"
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:text="@string/requestForAdmin"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+            <ImageView
+                android:id="@+id/requestDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:src="@drawable/refresh2"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/resultLinear"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/checkStateResult"
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:text="@string/request_state"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+            <ImageView
+                android:id="@+id/acceptDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_done_blue_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+            <ImageView
+                android:id="@+id/rejectDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_block_red_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+            <ImageView
+                android:id="@+id/defaultDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:src="@drawable/ic_info_black_24dp"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/serialNo_linear"
         android:layout_width="match_parent"

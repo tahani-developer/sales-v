@@ -37,6 +37,24 @@ public class Settings {
     private int  noReturnInvoice;
     private int  work_serialNo;
     private int  showItemImage;
+    private int  approveAdmin;
+    private  int saveOnly;
+
+    public int getSaveOnly() {
+        return saveOnly;
+    }
+
+    public void setSaveOnly(int saveOnly) {
+        this.saveOnly = saveOnly;
+    }
+
+    public int getApproveAdmin() {
+        return approveAdmin;
+    }
+
+    public void setApproveAdmin(int approveAdmin) {
+        this.approveAdmin = approveAdmin;
+    }
 
     public int getShowItemImage() {
         return showItemImage;

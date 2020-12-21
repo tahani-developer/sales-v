@@ -842,7 +842,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 voucherDate=convertToEnglish(voucherDate);
             if(item.getItemHasSerial().equals("1"))
             {
-                Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
+//                Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
                 for(int i=0;i<itemSerialList.size();i++)
                 {
                     itemSerialList.get(i).setItemNo(itemNumber);

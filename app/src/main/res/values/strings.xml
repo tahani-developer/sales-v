@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 30</string>
+    <string name="version"> V 31</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -135,6 +135,7 @@
     <string name="app_disc_type1">Value</string>
     <string name="app_disc_type2">Percent</string>
     <string name="app_disc_value">Discount Value</string>
+    <string name="app_disc_value2">Value</string>
     <string name="app_disc_l">Discount</string>
     <string name="app_total">Total</string>
     <string name="app_disc_">Discount</string>
@@ -383,6 +384,19 @@
     <string name="reExportData">Re Export Data</string>
     <string name="tele">Phone</string>
     <string name="contactPerson">Contact Person</string>
+    <string name="AddTotalDiscount">Add Total Discount</string>
+    <string name="note">Note</string>
+    <string name="request_state">Request State</string>
+    <string name="requestForAdmin">Request For Admin</string>
+    <string name="acceptedRequest">Accepted Request</string>
+    <string name="rejectedRequest">Rejected Request</string>
+    <string name="acceptYourRequest">acceptYourRequest</string>
+    <string name="sorry">Sorry</string>
+    <string name="ApproveAdmin">Approve Admin</string>
+    <string name="youHaveRequestToAdmin">You Have Request To Admin</string>
+    <string name="saveOnly">Save Only</string>
+    <string name="saveSuccessfuly">Save Successfuly</string>
+    <string name="checkBlutoothPrinterPaired">Check Blutooth Printer Paired</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

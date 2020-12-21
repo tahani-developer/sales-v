@@ -50,7 +50,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="0.6"
                     android:orientation="horizontal">
 
@@ -60,7 +60,8 @@
                         android:layout_weight="6"
                         android:text="@string/server_ip"
                         android:textColor="@color/text_view_color"
-                        android:autoSizeTextType="uniform"
+                       android:textSize="16sp"
+                        android:layout_gravity="center_vertical"
                         android:textStyle="bold" />
 
                     <EditText
@@ -129,7 +130,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
-                                    android:autoSizeTextType="uniform"
+                                    android:textSize="16sp"
                                     android:layout_gravity="center"
                                     android:gravity="center"
                                     android:textStyle="bold"
@@ -165,7 +166,7 @@
                                     android:layout_height="match_parent"
 
                                     android:layout_weight="0.8"
-                                    android:autoSizeTextType="uniform"
+                                    android:textSize="16sp"
                                     android:layout_gravity="center"
                                     android:gravity="center"
                                     android:text="@string/salesman_name"
@@ -213,7 +214,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
                                     android:layout_height="match_parent"
-                                    android:autoSizeTextType="uniform"
+                                     android:textSize="16sp"
                                     android:layout_gravity="center"
                                     android:gravity="center"
                                     android:text="@string/vouchers_serial"
@@ -227,6 +228,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginLeft="10dp"
+                                    android:textSize="14sp"
                                     android:hint="@string/invoice_serial_from"
                                     android:inputType="number"
                                     android:padding="2dp"
@@ -245,6 +247,7 @@
                                     android:id="@+id/return_serial"
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
+                                    android:textSize="14sp"
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="15dp"
                                     android:layout_marginLeft="15dp"
@@ -269,6 +272,7 @@
                                     android:layout_weight="1"
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="15dp"
+                                    android:textSize="14sp"
                                     android:layout_marginLeft="15dp"
 
                                     android:hint="@string/order_serial_from"
@@ -343,7 +347,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
                                     android:layout_height="match_parent"
-                                    android:autoSizeTextType="uniform"
+                                     android:textSize="16sp"
                                     android:layout_gravity="center"
                                     android:gravity="center"
                                     android:text="@string/payments_serial_from"
@@ -354,6 +358,7 @@
                                     android:id="@+id/payments_serial_cash"
                                     android:layout_width="match_parent"
                                     android:layout_weight="1"
+                                    android:textSize="14sp"
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginLeft="10dp"
@@ -378,6 +383,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="15dp"
                                     android:layout_marginLeft="10dp"
+                                    android:textSize="14sp"
 
                                     android:hint="@string/app_cheque"
                                     android:inputType="number"
@@ -399,6 +405,7 @@
                                     android:layout_weight="1"
                                     android:layout_height="match_parent"
                                     android:layout_marginStart="15dp"
+                                    android:textSize="14sp"
                                     android:layout_marginLeft="15dp"
 
                                     android:hint="@string/app_creditCard"
@@ -479,7 +486,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.9"
-                                android:autoSizeTextType="uniform"
+                                 android:textSize="16sp"
                                 android:layout_gravity="center"
                                 android:gravity="center"
                                 android:text="@string/print_method"
@@ -491,7 +498,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:autoSizeTextType="uniform"
+                                 android:textSize="16sp"
                                 android:checked="true"
                                 android:text="@string/bluetooth"
                                 android:layout_gravity="center"
@@ -506,7 +513,7 @@
                                 android:text="@string/wifi"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:autoSizeTextType="uniform"
+                                 android:textSize="16sp"
                                 android:textColor="@color/text_view_color" />
 
                         </RadioGroup>
@@ -524,7 +531,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.9"
-                                android:autoSizeTextType="uniform"
+                                 android:textSize="16sp"
                                 android:text="@string/tax_calc_kind"
                                 android:layout_gravity="center"
                                 android:gravity="center"
@@ -551,7 +558,7 @@
                                 android:text="@string/include"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:autoSizeTextType="uniform"
+                                 android:textSize="16sp"
                                 android:textColor="@color/text_view_color"
                                  />
 
@@ -709,6 +716,14 @@
                                 android:text="@string/passowrddata"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp" />
+                            <CheckBox
+                                android:id="@+id/asaveOnly_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="@string/saveOnly"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -838,6 +853,15 @@
                                 android:text="@string/ShowItemImage"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp" />
+                            <CheckBox
+                                android:id="@+id/approveAdmin_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="@string/ApproveAdmin"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="14sp" />
+
 
 
                         </LinearLayout>
@@ -871,7 +895,7 @@
                     android:background="@drawable/done_button"
                     android:text="@string/save"
                     android:visibility="gone"
-                    android:autoSizeTextType="uniform"
+                     android:textSize="16sp"
 
                     android:textColor="@color/layer5"
                     android:textStyle="bold" />

@@ -118,7 +118,7 @@ public class Activities extends AppCompatActivity implements
 
     @Override
     public void displayDiscountFragment() {
-        DiscountFragment discountFragment = new DiscountFragment();
+        DiscountFragment discountFragment = new DiscountFragment(Activities.this);
         discountFragment.invoiceTotal = salesInvoice.getItemsTotal();
         discountFragment.setCancelable(true);
         discountFragment.setListener(this);

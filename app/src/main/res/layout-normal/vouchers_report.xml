@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:checked="true"
-                android:text="@string/app_sales_inv"
+                android:text="@string/app_sales_inv2"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
 
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:checked="false"
-                android:text="@string/app_ret_inv"
+                android:text="@string/app_ret_inv2"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp" />
 
@@ -177,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:checked="false"
-                android:text="@string/app_cust_order"
+                android:text="@string/app_cust_order2"
                 android:textColor="@color/text_view_color"
                 android:textSize="14sp"
                 android:layout_marginStart="20dp" />
