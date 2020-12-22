@@ -5,8 +5,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+//import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,26 +17,39 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
+
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Reports.Reports;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class CustomerListShow extends DialogFragment {
-    private final String URL_TO_HIT = "http://10.0.0.115/VANSALES_WEB_SERVICE/index.php";
+    private String URL_TO_HIT = "";
 
     public ListView itemsListView;
     public List<Customer> customerList;
@@ -51,6 +65,7 @@ public class CustomerListShow extends DialogFragment {
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
+    LinearLayout mainlayout;
 
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
@@ -68,26 +83,56 @@ public class CustomerListShow extends DialogFragment {
         // Required empty public constructor
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+//        new LocaleAppUtils().changeLayot(getContext());
         getDialog().setTitle(getResources().getString(R.string.app_select_customer));
         final View view = inflater.inflate(R.layout.customers_list, container, false);
-        initialize(view);
+        mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
 
         customerList = new ArrayList<>();
         emptyCustomerList=new ArrayList<>();
 
         mHandler = new DatabaseHandler(getActivity());
+        initialize(view);
         if(mHandler.getAllSettings().size() != 0) {
 
             if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
+            {
                 customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                Log.e("getSalesManCustomers",""+customerList.size());
+            }
+
             else
+            {
                 customerList = mHandler.getAllCustomers();
+                Log.e("getAllCustomers",""+customerList.size());
+
+            }
+
 
             if (mHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
 
@@ -198,16 +243,31 @@ public class CustomerListShow extends DialogFragment {
         update = (Button) view.findViewById(R.id.update);
         customerNameTextView = (EditText) view.findViewById(R.id.customerNameTextView);
         itemsListView = (ListView) view.findViewById(R.id.customersList);
-
+        List<Settings> settings =  mHandler.getAllSettings();
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (isInternetAccessed()) {
-                    new JSONTask().execute(URL_TO_HIT);
-                } else {
-                    Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                if(settings.size() != 0) {
+                    String ipAddress = settings.get(0).getIpAddress();
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+                    if (isInternetAccessed()) {
+                        try {
+                            new JSONTask().execute(URL_TO_HIT);
+                        }
+                        catch (Exception e)
+                        {Log.e("updateCustomer",""+e.getMessage());}
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
+
+
+
+
+
             }
         });
 
@@ -260,6 +320,26 @@ public class CustomerListShow extends DialogFragment {
                 reader = new BufferedReader(new
                         InputStreamReader(connection.getInputStream()));
                 StringBuilder buffer = new StringBuilder();
+                HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+                httpsURLConnection.setRequestMethod("POST");
+                httpsURLConnection.setDoOutput(true);
+                httpsURLConnection.setDoInput(true);
+                OutputStream outputStream= httpsURLConnection.getOutputStream();
+//                test= " still good";
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+//                String post_data= URLEncoder.encode("username ", "UTF-8")+"="+URLEncoder.encode(username , "UTF-8")+"&"
+////                        +URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password , "UTF-8");
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+                reader = new BufferedReader(new
+                        InputStreamReader(httpsURLConnection.getInputStream()));
+
+
+                StringBuilder sb = new StringBuilder();
                 String line = null;
                 // Read Server Response
                 while ((line = reader.readLine()) != null) {
@@ -277,8 +357,9 @@ public class CustomerListShow extends DialogFragment {
                 for (int i = 0; i < parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
 
+                    String rate_customer="";
+                    String HideVal="";
                     Customer Customer = new Customer();
-
                     Customer.setCompanyNumber(finalObject.getInt("ComapnyNo"));
                     Customer.setCustId(finalObject.getString("CustID"));
                     Customer.setCustName(finalObject.getString("CustName"));
@@ -291,10 +372,70 @@ public class CustomerListShow extends DialogFragment {
                     Customer.setCashCredit(finalObject.getInt("CashCredit"));
                     Customer.setSalesManNumber(finalObject.getString("SalesManNo"));
                     Customer.setCreditLimit(finalObject.getDouble("CreditLimit"));
-                    Customer.setMax_discount(finalObject.getDouble("MAXDISC"));
+                    try {
+                        Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                    }catch (Exception e){
+                        Customer.setPayMethod(-1);
+
+                    }
+                    Customer.setCustLat(finalObject.getString("LATITUDE"));
+                    Customer.setCustLong(finalObject.getString("LONGITUDE"));
+
+
+                    try {
+                        rate_customer=finalObject.getString("ACCPRC");
+                        if(!rate_customer.equals("null"))
+                            Customer.setACCPRC(rate_customer);
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
+                    try {
+                        HideVal=finalObject.getString("HIDE_VAL");
+                        if(!HideVal.equals("null") && !HideVal.equals("") && ! HideVal.equals("NULL"))
+                            Customer.setHide_val(Integer.parseInt(HideVal));
+                        else{
+                            Customer.setACCPRC("0");
+
+                        }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("ImportError","Null_ACCPRC"+e.getMessage());
+                        Customer.setACCPRC("0");
+
+                    }
+                    //*******************************
 
                     customerList.add(Customer);
                 }
+                Log.e("customerListRefresh",""+customerList.size());
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
@@ -308,10 +449,10 @@ public class CustomerListShow extends DialogFragment {
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                if (connection != null) {
-                    Log.e("Customer", "********ex4");
-                    // connection.disconnect();
-                }
+//                if (connection != null) {
+//                    Log.e("Customer", "********ex4");
+//                    // connection.disconnect();
+//                }
                 try {
                     if (reader != null) {
                         reader.close();

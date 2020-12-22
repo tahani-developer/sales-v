@@ -1,16 +1,18 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version">20</string>
+    <string name="version"> V 31</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
     <string name="app_activities">Activities</string>
     <string name="app_reports">Reports</string>
-    <string name="app_sales_inv">Sales Invoice</string>
-    <string name="app_ret_inv">Return Invoice</string>
-    <string name="app_cust_order">New Order</string>
-    <string name="app_request">Stock request</string>
+    <string name="app_sales_inv">Sales</string>
+    <string name="app_ret_inv">Return</string>
+    <string name="app_ret_inv2">Return</string>
+    <string name="app_cust_order">Order</string>
+    <string name="app_cust_order2">Order</string>
+    <string name="app_request">Stock Request</string>
     <string name="app_imp_data">Import Data</string>
     <string name="app_refresh_data">Refresh Data</string>
     <string name="app_exp_data">Export Data</string>
@@ -56,17 +58,17 @@
 
     <string name="add_cust">Add Customer</string>
     <string name="cust_name">Customer Name</string>
-    <string name="app_trans_kind">Voucher Kind :</string>
-    <string name="payemtnTerm">Payment Term :</string>
+    <string name="app_trans_kind">Voucher Kind</string>
+    <string name="payemtnTerm">Payment Term</string>
     <string name="app_cash">Cash   </string>
     <string name="cash">Cash</string>
     <string name="app_credit">Credit</string>
-    <string name="app_remark">Remark : </string>
-    <string name="app_sub_total">Sub Total : </string>
-    <string name="app_disc">Discount : </string>
+    <string name="app_remark">Remark  </string>
+    <string name="app_sub_total">Total : </string>
+    <string name="app_disc">Discount  </string>
     <string name="app_tax">Tax : </string>
     <string name="app_net_sales">Net Sales : </string>
-    <string name="total_qty">Total Qty : </string>
+    <string name="total_qty">Total Qty </string>
     <string name="total_qty_inventory">Total Qty  </string>
 
 
@@ -104,7 +106,7 @@
     <string name="weight">Weight</string>
     <string name="use_weight">Use Weight</string>
 
-    <string name="offer_dialog">Offer Dialog</string>
+    <string name="offer_dialog"> New Offer</string>
     <string name="promo_type">Offer Type </string>
     <string name="bonus_item">Bonus Item </string>
     <string name="discount_value">Discount Value </string>
@@ -133,6 +135,7 @@
     <string name="app_disc_type1">Value</string>
     <string name="app_disc_type2">Percent</string>
     <string name="app_disc_value">Discount Value</string>
+    <string name="app_disc_value2">Value</string>
     <string name="app_disc_l">Discount</string>
     <string name="app_total">Total</string>
     <string name="app_disc_">Discount</string>
@@ -171,7 +174,7 @@
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
     <string name="allow_cust_check_out_range">Validate customer location</string>
-<!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
+    <!--    <string name="allow_cust_check_out_range">Allow Customer Check Out Of Range</string>-->
     <string name="read_discount_from_offers">Read Discount From Offers</string>
     <string name="work_online">Work Online</string>
     <string name="paymethod_check">Cash Invoices</string>
@@ -180,7 +183,7 @@
     <string name="invoice_serial_from">invoice</string>
     <string name="return_serial_from">return</string>
     <string name="order_serial_from">order</string>
-    <string name="payments_serial_from">Payments Serial From</string>
+    <string name="payments_serial_from">Payments Serial</string>
     <string name="save">Save</string>
     <string name="company_number">Company Number</string>
     <string name="voucher_number">Voucher Number</string>
@@ -205,16 +208,19 @@
 
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
-    <string name="by_voucher_kind">By Voucher Kind</string>
-    <string name="by_payment_Term">By Payment Method</string>
+    <string name="by_voucher_kind">Voucher Kind</string>
+    <string name="by_payment_Term">Payment Method</string>
     <string name="customer_number">Customer Number</string>
     <string name="preview">Preview</string>
     <string name="item_number">Item No</string>
     <string name="item_name">Item Name</string>
     <string name="unit_qty">Unit Qty</string>
     <string name="total_sold_qty">Total Sold Qty</string>
+    <string name="total_sold_qty2">Sold Qty</string>
     <string name="total_bonus_qty">Total Bonus Qty</string>
+    <string name="total_bonus_qty2">Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
+    <string name="total_sales_noTax2">Sales (No Tax)</string>
     <string name="items">Items</string>
     <string name="print">Print</string>
     <string name="show">Show</string>
@@ -294,13 +300,14 @@
     <string name="error_companey_info">   please enter company information for print </string>
     <string name="fill_setting">Please enter setting app</string>
     <string name="warning_message">Warning Message</string>
+    <string name="Confirm">Confirm</string>
 
     <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
     <string name="change_qty">Change Qty</string>
     <string name="failImpo_export_data">Please Export data before import new data</string>
-    <string name="failStockSoft_export_data">Please check Stock software before import new data</string>
+    <string name="failStockSoft_export_data">Please check BackOffice Software There Are Unsaved Location </string>
     <string name="kind_item">Kind</string>
-    <string name="all_item">All Item</string>
+    <string name="all_item">All</string>
     <string name="app_account_report">Account Statment</string>
     <string name="last_account">Previous balance</string>
     <string name="transfer_name">Transfer Name</string>
@@ -337,13 +344,59 @@
     <string name="tafqit">tafqit</string>
     <string name="app_cheque_count">Cheque count</string>
     <string name="preventPayMethod">Prevent change Pay Method</string>
-    <string name="credit_value">credit Value</string>
+    <string name="credit_value">Credit Value</string>
     <string name="invoice_note">Invoice Note :</string>
     <string name="saveLocation">Save Location</string>
     <string name="ShowCustomerList">Show Customer List</string>
     <string name="pleaseSelectUser">Please Select User</string>
     <string name="noReturnInvoice">No Return Invoice</string>
     <string name="InvalidLocation">Invalid Customer Location</string>
+    <string name="duplicateddata">Can\'t Export Data For duplicated data</string>
+    <string name="duplicatedVoucherNo">Duplicated Voucher Number you can\'t complete </string>
+    <string name="customerHaveLocation">Customer Have Location</string>
+    <string name="succsesful">SUCCESSFUL</string>
+    <string name="LocationSaved">Location Saved</string>
+    <string name="enternetConnection">Check Internet Connection</string>
+    <string name="failImpo_export_dataCustomerMaster">Please Export data in Customer master before import new data</string>
+    <string name="SerialNo">Serial No</string>
+    <string name="workSerial">Work With Serial</string>
+    <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
+    <string name="backupData">Backup Data</string>
+    <string name="backup_failed">Backup Failed</string>
+    <string name="Printing">Printing</string>
+    <string name="duplicate">Duplicated</string>
+    <string name="bonus_item_name">Bonus Item Name</string>
+    <string name="bonus_item_qty">Bonus Item Qty</string>
+    <string name="reqired_filled">Reqired Filled Empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="qty">Qty</string>
+    <string name="read_new_offer">Read New Offer</string>
+    <string name="address">Address</string>
+    <string name="ShowItemImage">Show Item Image</string>
+    <string name="SearchByCustomerName">Search By Customer Name</string>
+    <string name="delet">delete</string>
+    <string name="refresh">refresh</string>
+    <string name="info">info</string>
+    <string name="No">No</string>
+    <string name="name">Name</string>
+    <string name="shortInvoice">Short Invoice (Phone system)</string>
+    <string name="app_sales_inv2">Sales</string>
+    <string name="reExportData">Re Export Data</string>
+    <string name="tele">Phone</string>
+    <string name="contactPerson">Contact Person</string>
+    <string name="AddTotalDiscount">Add Total Discount</string>
+    <string name="note">Note</string>
+    <string name="request_state">Request State</string>
+    <string name="requestForAdmin">Request For Admin</string>
+    <string name="acceptedRequest">Accepted Request</string>
+    <string name="rejectedRequest">Rejected Request</string>
+    <string name="acceptYourRequest">acceptYourRequest</string>
+    <string name="sorry">Sorry</string>
+    <string name="ApproveAdmin">Approve Admin</string>
+    <string name="youHaveRequestToAdmin">You Have Request To Admin</string>
+    <string name="saveOnly">Save Only</string>
+    <string name="saveSuccessfuly">Save Successfuly</string>
+    <string name="checkBlutoothPrinterPaired">Check Blutooth Printer Paired</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -353,6 +406,11 @@
         <item>Update Qty</item>
         <item>Clear All</item>
     </string-array>
+    <string-array name="list_items_dialog_SERIAL">
+        <item>Delete</item>
+        <item>Clear All</item>
+    </string-array>
+
     <string-array name="banks_list">
         <item>Arab Bank</item>
         <item>Arab Banking Corporation (Jordan)</item>

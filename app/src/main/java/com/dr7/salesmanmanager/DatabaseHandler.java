@@ -8,8 +8,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+//import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -37,6 +45,7 @@ import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
@@ -49,12 +58,34 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 85;
+    private static final int DATABASE_VERSION = 116;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  SALESMAN_LOGIN_LOGHistory  = "SALESMAN_LOGIN_LOGHistory";
+
+    private static final String  DATE_LOGIN = "DATE_LOGIN";
+    private static final String  TIME_LOGIN = "TIME_LOGIN";
+    private static final String  TIME_LOGOUT= "TIME_LOGOUT";
+    private static final String  LONGTUDE2  = "LONGTUDE2";
+    private static final String  LATITUDE2  = "LATITUDE2";
+    private static final String  SALESMAN_NO= "SALESMAN_NO";
+    private static final String  IS_POSTED_LOGIN= "IS_POSTED_LOGIN";
+    //----------------------------------------------------------------------
+    private static final String SERIAL_ITEMS_TABLE  = "SERIAL_ITEMS_TABLE";
+    private static final String  KEY_SERIAL="KEY_SERIAL";
+    private static final String SERIAL_CODE_NO ="SERIAL_CODE_NO";
+    private static final String COUNTER_SERIAL ="COUNTER_SERIAL";
+    private static final String  VOUCHER_NO="VOUCHER_NO";
+    private static final String ITEMNO_SERIAL="ITEMNO_SERIAL";
+    private static final String DATE_VOUCHER="DATE_VOUCHER";
+    private static final  String KIND_VOUCHER="KIND_VOUCHER";
+    private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
+    private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
+    private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
     //----------------------------------------------------------------------
     private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
     private static final String PASS_TYPE = "PASS_TYPE";
@@ -100,6 +131,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SETTING_TABLE="PRINTER_SETTING_TABLE";
     private static final String PRINTER_SETTING ="PRINTER_SETTING";
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
+    private static final String SHORT_INVOICE ="SHORT_INVOICE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -134,6 +166,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ACCPRC = "ACCPRC";
     private static final String HIDE_VAL = "HIDE_VAL";
 
+    private static final String IS_POST = "IS_POST";
+    private static final String CUS_ID_Text="CUS_ID_Text";
+
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
 
@@ -154,6 +190,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_L1 = "ITEM_L";
     private static final String ITEM_F_D = "F_D";
     private static final String KIND_ITEM= "KIND_ITEM";
+    private static final String ITEM_HAS_SERIAL= "ITEM_HAS_SERIAL";
+    private static final String ITEM_PHOTO= "ITEM_PHOTO";
+    /*byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length); */
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -259,7 +299,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  PreventChangPayMeth="PreventChangPayMeth";
     private static final String ShowCustomerList="ShowCustomerList";
     private static final String NoReturnInvoice="NoReturnInvoice";
-
+    private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
+    private static final String SHOW_IMAGE_ITEM="SHOW_IMAGE_ITEM";
+    private static final String APPROVE_ADMIN="APPROVE_ADMIN";
+    private static final String SAVE_ONLY="SAVE_ONLY";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -268,6 +311,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String TAX_NO = "TAX_NO";
     private static final String LOGO = "LOGO";
     private static final String NOTE = "NOTE";
+
+    private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
+    private static final String LATITUDE_COMPANY  = "LATITUDE_COMPANY";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -308,6 +354,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_YEAR = "ITEM_YEAR";
     private static final String IS_POSTED1 = "IS_POSTED";
     private static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
+    private static final String SERIAL_CODE = "SERIAL_CODE";
+    private static final String VOUCH_DATE = "VOUCH_DATE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String PAYMENTS = "PAYMENTS";
@@ -368,6 +416,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SALESMAN7 = "SALESMAN";
     private static final String SALESMAN_NO7 = "SALESMAN_NO";
     private static final String IS_POSTED7 = "IS_POSTED";
+    private static final String ADRESS_CUSTOMER  = "ADRESS_CUSTOMER";
+    private static final String TELEPHONE        = "TELEPHONE";
+    private static final String CONTACT_PERSON   = "CONTACT_PERSON";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VS_PROMOTION = "VS_PROMOTION";
@@ -399,7 +450,40 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE " + PASSWORD_TABLE + "("
+
+        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY (DATE_LOGIN)"+
+
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //-------------------------------------------------------------------------
+
+
+        String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+                + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO + " TEXT,"
+                + COUNTER_SERIAL + " INTEGER,"
+                + VOUCHER_NO + " INTEGER,"
+                + ITEMNO_SERIAL + " TEXT,"
+                + KIND_VOUCHER + " TEXT,"
+
+                + DATE_VOUCHER + " TEXT,"
+                + STORE_NO_SALESMAN + " INTEGER,"
+                + IS_POSTED_SERIAL + " INTEGER,"+
+                IS_BONUS_SERIAL+" INTEGER"+
+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+        //-------------------------------------------------------------------------
+        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
                 + PASS_TYPE + " INTEGER,"
                 + PASS_NO + " TEXT"+
                 ")";
@@ -407,7 +491,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE " + CUSTOMER_LOCATION + "("
+        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE IF NOT EXISTS " + CUSTOMER_LOCATION + "("
                 + CUS_NO + " TEXT,"
                 + LONG + " TEXT,"
                 + LATIT + " TEXT"+
@@ -416,7 +500,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
                 + DATE + " TEXT,"
                 + TRANSFER_NAME + " TEXT,"
                 + DEBTOR + " TEXT,"
@@ -429,7 +513,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                 + ITEMNAME + " TEXT,"
                 + ITEMNO + " INTEGER,"
                 + AMOUNT_QTY + " INTEGER,"
@@ -439,17 +523,16 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
 
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE " + CUSTOMER_MASTER + "("
+        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_MASTER + "("
                 + COMPANY_NUMBER0 + " INTEGER,"
-                + CUS_ID + " INTEGER,"
+                + CUS_ID + " TEXT,"
                 + CUS_NAME0 + " TEXT,"
                 + ADDRESS + " TEXT,"
                 + IS_SUSPENDED + " INTEGER,"
@@ -458,11 +541,16 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + SALES_MAN_NO + " TEXT,"
                 + CREDIT_LIMIT + " INTEGER,"
                 + PAY_METHOD0 + " INTEGER,"
-                + CUST_LAT + " TEXT,"
-                + CUST_LONG + " TEXT,"
+                + CUST_LAT + " TEXT not null default '',"
+                + CUST_LONG + " TEXT not null default '',"
                 + MAX_DISCOUNT + " REAL,"
                 +ACCPRC+ " TEXT,"
-                +HIDE_VAL+ " INTEGER"
+                +HIDE_VAL+ " INTEGER,"
+
+                +IS_POST+" INTEGER not null default  0,"
+                +CUS_ID_Text+ " TEXT"
+
+
 
 
                 + ")";
@@ -471,7 +559,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE " + Item_Unit_Details + "("
+        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE IF NOT EXISTS " + Item_Unit_Details + "("
                 + ComapnyNo + " INTEGER,"
                 + ItemNo + " TEXT,"
                 + UnitID + " TEXT,"
@@ -479,7 +567,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
+        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
                 + VISIT_PERPOS + " INTEGER,"
                 + CUSTOMER_REGARDS + " INTEGER,"
                 + CHECK_STORE + " INTEGER,"
@@ -495,7 +583,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Items_Master = "CREATE TABLE " + Items_Master + "("
+        String CREATE_TABLE_Items_Master = "CREATE TABLE IF NOT EXISTS " + Items_Master + "("
                 + ComapnyNo1 + " INTEGER,"
                 + ItemNo1 + " TEXT,"
                 + Name1 + " TEXT,"
@@ -504,25 +592,30 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + IsSuspended1 + " INTEGER,"
                 + ITEM_L1 + " INTEGER,"
                 + ITEM_F_D + " REAL,"
-                + KIND_ITEM + " TEXT"
+                + KIND_ITEM + " TEXT,"
+                + ITEM_HAS_SERIAL + " INTEGER,"
+                 +ITEM_PHOTO + " TEXT"
+
                 + ")";
 
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+        String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                 + KEY_VALUE + " INTEGER"+ ")";
         db.execSQL(CREATE_ACTIVE_KEY);
         //-----------------------------------------------------
 
-        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
                 + PRINTER_SETTING +" INTEGER ,"
-                + PRINTER_SHAPE + " INTEGER"+ ")";
+                + PRINTER_SHAPE + " INTEGER,"
+                + SHORT_INVOICE + " INTEGER"
+                + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_D = "CREATE TABLE " + Price_List_D + "("
+        String CREATE_TABLE_Price_List_D = "CREATE TABLE IF NOT EXISTS " + Price_List_D + "("
                 + ComapnyNo2 + " INTEGER,"
                 + PrNo2 + " INTEGER,"
                 + ItemNo2 + " TEXT,"
@@ -534,7 +627,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_M = "CREATE TABLE " + Price_List_M + "("
+        String CREATE_TABLE_Price_List_M = "CREATE TABLE IF NOT EXISTS " + Price_List_M + "("
                 + ComapnyNo3 + " INTEGER,"
                 + PrNo3 + " INTEGER,"
                 + Description3 + " TEXT,"
@@ -543,7 +636,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Sales_Team = "CREATE TABLE " + Sales_Team + "("
+        String CREATE_TABLE_Sales_Team = "CREATE TABLE IF NOT EXISTS " + Sales_Team + "("
                 + ComapnyNo4 + " INTEGER,"
                 + SalesManNo4 + " INTEGER,"
                 + SalesManName4 + " TEXT,"
@@ -552,7 +645,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE " + SalesMan_Items_Balance + "("
+        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE IF NOT EXISTS " + SalesMan_Items_Balance + "("
                 + ComapnyNo5 + " INTEGER,"
                 + SalesManNo5 + " INTEGER,"
                 + ItemNo5 + " TEXT,"
@@ -561,7 +654,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE " + SalesmanAndStoreLink + "("
+        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE IF NOT EXISTS " + SalesmanAndStoreLink + "("
                 + ComapnyNo6 + " INTEGER,"
                 + SalesManNo6 + " INTEGER,"
                 + StoreNo6 + " INTEGER" + ")";
@@ -569,14 +662,14 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Salesmen = "CREATE TABLE " + SalesMen + "("
+        String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
                 + UserName + " TEXT,"
                 + Password + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_Salesmen);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CustomerPrices = "CREATE TABLE " + CustomerPrices + "("
+        String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
                 + ItemNumber + " INTEGER,"
                 + CustomerNumber + " INTEGER,"
                 + Price + " INTEGER" + ")";
@@ -585,7 +678,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CONTACTS = "CREATE TABLE " + TABLE_TRANSACTIONS + "("
+        String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
                 + SALES_MAN_ID + " INTEGER,"
                 + CUS_CODE + " INTEGER,"
                 + CUS_NAME + " TEXT,"
@@ -599,7 +692,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SETTING = "CREATE TABLE " + TABLE_SETTING + "("
+        String CREATE_TABLE_SETTING = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + "("
                 + TRANS_KIND + " INTEGER,"
                 + SERIAL_NUMBER + " INTEGER,"
                 + IP_ADDRESS + " TEXT,"
@@ -621,7 +714,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
                 + Customer_Authorized + " INTEGER,"
                 + Password_Data + " INTEGER,"
-                + Arabic_Language + " INTEGER,"
+                + Arabic_Language + " INTEGER DEFAULT '1' ,"
                 + HideQty + " INTEGER,"
                 + LockCashReport + " INTEGER,"
                 + salesManName + " TEXT,"
@@ -631,14 +724,13 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + AutomaticCheque + " INTEGER,"
                 + Tafqit + " INTEGER,"
                 + PreventChangPayMeth + " INTEGER,"
-                + ShowCustomerList + " INTEGER,"
-                + NoReturnInvoice + " INTEGER"
+                + ShowCustomerList + " INTEGER DEFAULT 1 ,"
+                + NoReturnInvoice + " INTEGER,"
+                + WORK_WITH_SERIAL + " INTEGER,"
+                + SHOW_IMAGE_ITEM + " INTEGER,"
 
-
-
-
-
-
+                + APPROVE_ADMIN + " INTEGER,"
+                + SAVE_ONLY +" INTEGER"
 
 
         + ")";
@@ -646,17 +738,23 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE " + COMPANY_INFO + "("
+        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE IF NOT EXISTS " + COMPANY_INFO + "("
                 + COMPANY_NAME + " TEXT,"
                 + COMPANY_TEL + " INTEGER,"
                 + TAX_NO + " INTEGER,"
                 + LOGO + " BLOB,"
-                + NOTE + " TEXT" + ")";
+                + NOTE + " TEXT,"
+                + LONGTUDE_COMPANY +" REAL,"
+                + LATITUDE_COMPANY +" REAL "
+                + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        try {
 
-        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE " + SALES_VOUCHER_MASTER + "("
+
+
+        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
                 + COMPANY_NUMBER + " INTEGER,"
                 + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
@@ -675,10 +773,15 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CUST_NUMBER + " TEXT,"
                 + VOUCHER_YEAR + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
+        }
+        catch (Exception e)
+        {
+            Log.e("databaseHandler","CREATE_TABLE_SALES_VOUCHER_MASTER");
+        }
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE " + SALES_VOUCHER_DETAILS + "("
+        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE IF NOT EXISTS " + SALES_VOUCHER_DETAILS + "("
                 + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
                 + ITEM_NUMBER + " TEXT,"
@@ -695,13 +798,19 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + COMPANY_NUMBER2 + " INTEGER,"
                 + ITEM_YEAR + " TEXT,"
                 + IS_POSTED1 + " INTEGER,"
-                + ITEM_DESCRIPTION+ " TEXT"
-                + ")";
+                + ITEM_DESCRIPTION+ " TEXT,"
+                + SERIAL_CODE+ " TEXT,"
+
+                + VOUCH_DATE+ " TEXT"
+
+
+
+        + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS = "CREATE TABLE " + PAYMENTS + "("
+        String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + PAYMENTS + "("
                 + COMPANY_NUMBER3 + " INTEGER,"
                 + VOUCHER_NUMBER3 + " INTEGER,"
                 + PAY_DATE + " INTEGER,"
@@ -717,7 +826,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE " + PAYMENTS_PAPER + "("
+        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE IF NOT EXISTS " + PAYMENTS_PAPER + "("
                 + COMPANY_NUMBER4 + " INTEGER,"
                 + VOUCHER_NUMBER4 + " INTEGER,"
                 + CHECK_NUMBER + " INTEGER,"
@@ -730,7 +839,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE " + REQUEST_MASTER + "("
+        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE IF NOT EXISTS " + REQUEST_MASTER + "("
                 + COMPANY_NUMBER5 + " INTEGER,"
                 + VOUCHER_NUMBER5 + " INTEGER,"
                 + VOUCHER_DATE5 + " TEXT,"
@@ -742,7 +851,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE " + REQUEST_DETAILS + "("
+        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE IF NOT EXISTS " + REQUEST_DETAILS + "("
                 + COMPANY_NUMBER6 + " INTEGER,"
                 + VOUCHER_NUMBER6 + " INTEGER,"
                 + ITEM_NUMBER6 + " TEXT,"
@@ -753,19 +862,28 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE " + ADDED_CUSTOMER + "("
+        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE IF NOT EXISTS " + ADDED_CUSTOMER + "("
                 + CUST_NAME7 + " TEXT,"
                 + REMARK7 + " TEXT,"
                 + LATITUDE7 + " INTEGER,"
                 + LONGITUDE7 + " INTEGER,"
                 + SALESMAN7 + " TEXT,"
                 + IS_POSTED7 + " INTEGER,"
-                + SALESMAN_NO7 + " TEXT" + ")";
+                + SALESMAN_NO7 + " TEXT,"
+                + ADRESS_CUSTOMER + " TEXT,"
+
+                + TELEPHONE + " TEXT,"
+
+                + CONTACT_PERSON + " TEXT"
+
+
+
+                + ")";
         db.execSQL(CREATE_TABLE_ADDED_CUSTOMER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
+        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE IF NOT EXISTS " + VS_PROMOTION + "("
                 + PROMOTION_ID + " INTEGER,"
                 + PROMOTION_TYPE + " INTEGER,"
                 + FROM_DATE + " TEXT,"
@@ -778,7 +896,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE IF NOT EXISTS " + SALESMEN_STATIONS + "("
                 + SALESMEN_NO + " TEXT,"
                 + DATE_ + " TEXT,"
                 + LATITUDE + " TEXT,"
@@ -793,7 +911,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL("DROP TABLE IF EXISTS SALESMAN_LOGIN_TABLE ");
+        onCreate(db);
 
         try{
             db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
@@ -881,6 +1000,34 @@ DatabaseHandler extends SQLiteOpenHelper {
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1035,15 +1182,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
         try{
-            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
                     + DATE + " TEXT,"
                     + TRANSFER_NAME + " TEXT,"
                     + DEBTOR + " TEXT,"
@@ -1059,7 +1200,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         try{
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE  IF NOT EXISTS " + SALESMEN_STATIONS + "("
                     + SALESMEN_NO + " TEXT,"
                     + DATE_ + " TEXT,"
                     + LATITUDE + " TEXT,"
@@ -1077,7 +1218,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         try {
 
 
-            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+            String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                     + KEY_VALUE + " INTEGER"+ ")";
             db.execSQL(CREATE_ACTIVE_KEY);
@@ -1089,7 +1230,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         try {
-            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS  " + PRINTER_SETTING_TABLE + "("
 
                     + PRINTER_SETTING + " INTEGER"+ ")";
             db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -1099,8 +1240,22 @@ DatabaseHandler extends SQLiteOpenHelper {
         catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
         }
+
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD SHORT_INVOICE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString()+"SHORT_INVOICE");
+        }
+
         try {
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
@@ -1112,7 +1267,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         try {
-            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                     + ITEMNAME + " TEXT,"
                     + ITEMNO + " INTEGER,"
                     + AMOUNT_QTY + " INTEGER,"
@@ -1139,6 +1294,140 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         try{
             db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+
+
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  VOUCH_DATE  TEXT NOT NULL DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+            db.execSQL("alter table CUSTOMER_MASTER ADD COLUMN CUS_ID_Text TEXT NOT NULL DEFAULT '' ");
+            db.execSQL("update CUSTOMER_MASTER set CUS_ID_Text = CUS_ID ");
+//            db.execSQL("update CUSTOMER_MASTER set CUS_ID = '' ");
+            //update CUSTOMER_MASTER set new_CUS_ID = CUS_ID;
+            //update CUSTOMER_MASTER set CUS_ID = '';
+
+        } catch (Exception e) {
+
+        }
+        try {
+            String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+                    + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + SERIAL_CODE_NO + " TEXT,"
+                    + COUNTER_SERIAL + " INTEGER,"
+                    + VOUCHER_NO + " INTEGER,"
+                    + ITEMNO_SERIAL + " TEXT,"
+
+                    + KIND_VOUCHER + " TEXT,"
+
+                    + DATE_VOUCHER + " TEXT,"
+                    + STORE_NO_SALESMAN + " INTEGER,"
+                    + IS_POSTED_SERIAL + " INTEGER,"+
+                    IS_BONUS_SERIAL+" INTEGER"+
+
+                    ")";
+            db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+        }
+        catch (Exception e) {
+
+            Log.e("SERIAL_ITEMS_TABLE",""+e.getMessage());
+            }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_BONUS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //********************************************* End SERIAL_ITEMS_TABLE ****************************************************
+        try{
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //******************************** Added Customer ****************************************
+        try{
+
+
+
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  ADRESS_CUSTOMER  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  TELEPHONE  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  CONTACT_PERSON  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //
+//*********************************** TABLE LOGIN *************************************
+        //+ KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT
+        String CREATE_SALESMAN_LOGIN_TABLE= " CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY ( DATE_LOGIN)"+
+
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //****************************************************************************
+        try{
+
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LONGTUDE_COMPANY  REAL  DEFAULT 0.0 ");
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LATITUDE_COMPANY  REAL  DEFAULT 0.0 ");
+
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1206,6 +1495,33 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
     }
+    public void add_Serial(serialModel serialModelItem)
+    {
+        try {
+
+
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(SERIAL_CODE_NO, serialModelItem.getSerialCode());
+            values.put(COUNTER_SERIAL, serialModelItem.getCounterSerial());
+            values.put(VOUCHER_NO, serialModelItem.getVoucherNo());
+            values.put(ITEMNO_SERIAL, serialModelItem.getItemNo());
+            values.put(DATE_VOUCHER, serialModelItem.getDateVoucher());
+            values.put(KIND_VOUCHER, serialModelItem.getKindVoucher());
+            values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
+            values.put(IS_POSTED_SERIAL, "0");
+            values.put(IS_BONUS_SERIAL, serialModelItem.getIsBonus());
+            db.insert(SERIAL_ITEMS_TABLE, null, values);
+            Log.e("add_Serial",""+serialModelItem.getSerialCode());
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
 
 
 
@@ -1237,6 +1553,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PRINTER_SETTING,printer.getPrinterName());
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
+        values.put(SHORT_INVOICE,printer.getShortInvoice());
+        Log.e("addPrinterSeting",""+printer.getShortInvoice());
+
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -1261,6 +1580,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(MAX_DISCOUNT, customer.getMax_discount());
         values.put(ACCPRC, customer.getACCPRC());
         values.put(HIDE_VAL, customer.getHide_val());
+        values.put(IS_POST, 0);
+        values.put(CUS_ID_Text,customer.getCustomerIdText());
+
         db.insert(CUSTOMER_MASTER, null, values);
         db.close();
     }
@@ -1291,6 +1613,11 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_L1, item.getItemL());
         values.put(ITEM_F_D, item.getPosPrice());
         values.put(KIND_ITEM,item.getKind_item());
+
+//        if(ITEM_HAS_SERIAL)
+        values.put(ITEM_HAS_SERIAL,item.getItemHasSerial());
+        values.put(ITEM_PHOTO,item.getPhotoItem());
+
 
 
         db.insert(Items_Master, null, values);
@@ -1444,12 +1771,30 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_TRANSACTIONS, null, values);
         db.close();
     }
+    public void addlogin(Transaction transaction) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DATE_LOGIN, transaction.getCheckInDate());
+        values.put(TIME_LOGIN, transaction.getCheckInTime());
+        values.put(LONGTUDE2,  transaction.getLongtude());
+        values.put(LATITUDE2,  transaction.getLatitud());
+
+        values.put(SALESMAN_NO, transaction.getSalesManId());
+
+
+        values.put(IS_POSTED_LOGIN, 0);
+
+        db.insert(SALESMAN_LOGIN_LOGHistory, null, values);
+        db.close();
+    }
+
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
-                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi) {
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1486,6 +1831,10 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PreventChangPayMeth,preventChangPayMeth);
         values.put(ShowCustomerList,showCustomer);
         values.put(NoReturnInvoice,noReturnInvoi);
+        values.put(WORK_WITH_SERIAL,Work_serialNo);
+        values.put(SHOW_IMAGE_ITEM,itemPhoto);
+        values.put(APPROVE_ADMIN,approveAddmin);
+        values.put(SAVE_ONLY,saveOnly);
 
 
 
@@ -1493,7 +1842,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note) {
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1509,6 +1858,8 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
         values.put(NOTE, note);
+        values.put(LONGTUDE_COMPANY,longtude);
+        values.put(LATITUDE_COMPANY,latitude);
 
 
         db.insert(COMPANY_INFO, null, values);
@@ -1516,6 +1867,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addVoucher(Voucher voucher) {
+
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1536,9 +1888,20 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CUST_NAME, voucher.getCustName());
         values.put(CUST_NUMBER, voucher.getCustNumber());
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
+        try {
 
-        db.insert(SALES_VOUCHER_MASTER, null, values);
-        db.close();
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+        }
+        catch ( Exception e)
+        {
+            int vouch=voucher.getVoucherNumber();
+            values.put(VOUCHER_NUMBER, (vouch++));
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+            Log.e("DBException","addVoucher");
+        }
+
     }
 
     public void addItem(Item item) {
@@ -1562,7 +1925,28 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-       // Log.e("addItem",""+item.getDescription());
+
+        try {
+            if(item.getSerialCode()==null)
+            {
+                values.put(SERIAL_CODE, "0");
+            }
+            else {   values.put(SERIAL_CODE, item.getSerialCode());}
+
+
+            if(item.getVouchDate()!=null || !item.getVouchDate().equals(""))
+            values.put(VOUCH_DATE, item.getVouchDate());
+            else
+                values.put(VOUCH_DATE,"");
+        }
+        catch ( Exception e)
+        {
+            values.put(VOUCH_DATE,"");
+        }
+
+
+
+        // Log.e("addItem",""+item.getDescription());
         //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
@@ -1648,6 +2032,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SALESMAN7, customer.getSalesMan());
         values.put(SALESMAN_NO7, customer.getSalesmanNo());
         values.put(IS_POSTED7, customer.getIsPosted());
+        values.put(ADRESS_CUSTOMER, customer.getADRESS_CUSTOMER());
+        values.put(TELEPHONE, customer.getTELEPHONE());
+        values.put(CONTACT_PERSON, customer.getCONTACT_PERSON());
+
+
+
+
 
         db.insert(ADDED_CUSTOMER, null, values);
         db.close();
@@ -1794,6 +2185,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                 setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
                 setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
                 setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
+                setting.setWork_serialNo(Integer.parseInt(cursor.getString(33)));
+                setting.setShowItemImage((cursor.getInt(34)));
+                setting.setApproveAdmin((cursor.getInt(35)));
+                setting.setSaveOnly((cursor.getInt(36)));
+
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1819,15 +2215,44 @@ DatabaseHandler extends SQLiteOpenHelper {
                     info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
                 info.setNoteForPrint(cursor.getString(4));
-
+                info.setLongtudeCompany(cursor.getDouble(5));
+                info.setLatitudeCompany(cursor.getDouble(6));
                 infos.add(info);
             } while (cursor.moveToNext());
         }
         return infos;
     }
+    public List<serialModel> getAllSerialItems() {
+        List<serialModel> infos = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE"+ " WHERE IS_POSTED_SERIAL = " + 0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                serialModel info = new serialModel();
+                info.setSerialCode(cursor.getString(1));
+                info.setCounterSerial(Integer.parseInt(cursor.getString(2)));
+                info.setVoucherNo((cursor.getString(3)));
+                info.setItemNo(cursor.getString(4));
+                info.setKindVoucher(cursor.getString(5));
+                info.setDateVoucher(cursor.getString(6));
+                info.setStoreNo(cursor.getString(7));
+                info.setIsPosted(cursor.getString(8));
+                info.setIsBonus(cursor.getString(9));
+
+                infos.add(info);
+
+            } while (cursor.moveToNext());
+            Log.e("getAllSerialItems",""+infos.size());
+        }
+        return infos;
+    }
+
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
-        String selectQuery = "select  DISTINCT  CUS_NO ,LONG ,LATIT from CUSTOMER_LOCATION";
+        String selectQuery = "select  DISTINCT  CUS_ID , CUST_LAT ,CUST_LONG ,IS_POST from CUSTOMER_MASTER";
+
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1837,6 +2262,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 info.setCUS_NO(cursor.getString(0));
                 info.setLATIT((cursor.getString(1)));
                 info.setLONG((cursor.getString(2)));
+                info.setIsPost((cursor.getInt(3)));
 
                 infos.add(info);
             } while (cursor.moveToNext());
@@ -1870,6 +2296,24 @@ DatabaseHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         int maxVoucher = Integer.parseInt(cursor.getString(0));
+        return maxVoucher;
+
+    }
+    public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
+        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+        String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '"+voucherType+"' ),-1)" ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+
+
+        int maxVoucher = Integer.parseInt(cursor.getString(0));
+        if(maxVoucher==-1)
+        {
+            maxVoucher=getMaxSerialNumber(voucherType);
+            Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
+        }
+        Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
         return maxVoucher;
 
     }
@@ -1943,6 +2387,49 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return transactionList;
     }
+    //*******************************************************************
+    public List<Transaction> getLoginSalesman() {
+        List<Transaction> transactionList = new ArrayList<Transaction>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + SALESMAN_LOGIN_LOGHistory;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Transaction transaction = new Transaction();
+
+                transaction.setCheckInDate(cursor.getString(0));
+                transaction.setCheckInTime(cursor.getString(1));
+                // checkout time
+                transaction.setLongtude(cursor.getDouble(3));
+                transaction.setLatitud(cursor.getDouble(4));
+                transaction.setSalesManId(Integer.parseInt(cursor.getString(5)));
+                transaction.setIsPosted(Integer.parseInt(cursor.getString(6)));
+
+
+                // Adding transaction to list
+                transactionList.add(transaction);
+            } while (cursor.moveToNext());
+        }
+
+        return transactionList;
+    }
+    //*******************************************************************
+    /*//    String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
+//            + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+//            + DATE_LOGIN + " TEXT,"
+//            + TIME_LOGIN + " TEXT,"
+//            + TIME_LOGOUT + " TEXT,"
+//            + LONGTUDE2 + " REAL,"
+//            + LATITUDE2 + " REAL,"
+//            + SALESMAN_NO + " TEXT,"
+//            + IS_POSTED_LOGIN + " INTEGER"+
+//
+//            ")";
+//        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);*/
 
     public List<SalesMan> getAllSalesMen() {
         List<SalesMan> salesMen = new ArrayList<>();
@@ -1992,13 +2479,13 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
                 customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
-
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
-
+//                customer.setCustId(cursor.getString(16));// for test talley
+                // 16 column isPosted
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -2048,7 +2535,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 Customer customer = new Customer();
 
                 customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
-                customer.setCustId(cursor.getString(1));
+                customer.setCustId(cursor.getString(1));// test talley
+
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
@@ -2068,6 +2556,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
+//                customer.setCustId(cursor.getString(16));// test talley
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -2243,7 +2732,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
                 " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
-                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION " +
+                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION ,D.SERIAL_CODE " +
                 "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
                 "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
 
@@ -2281,7 +2770,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setIsPosted(Integer.parseInt(cursor.getString(15)));
                 item.setDate(cursor.getString(16));
                 item.setDescreption(cursor.getString(17));
-                Log.e("setDescreption",""+cursor.getString(17));
+                item.setSerialCode(cursor.getString(18));
+//                Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list
                 items.add(item);
@@ -2342,7 +2832,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String salesMan = Login.salesMan;
 //        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
                 "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
 
@@ -2355,6 +2845,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
@@ -2368,6 +2859,44 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
+                try {
+
+
+                if(cursor.getString(12)==null)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                }
+                else {
+                    item.setItemHasSerial(cursor.getString(12));
+                }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
+                }
+
+
+                try {
+
+
+                if(cursor.getString(13)==null) {
+                    item.setItemPhoto(null);
+
+                }
+                else {
+                    itemBitmap = StringToBitMap(cursor.getString(13));
+                    item.setItemPhoto(itemBitmap);
+                }
+                }
+                catch (Exception e)
+                {
+                    item.setItemPhoto(null);
+                }
+
+//                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
 
                 // Adding transaction to list
                 items.add(item);
@@ -2376,7 +2905,17 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
-
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }
+        catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
     public List<Item> getAllJsonItems2(String rate)
     {
 
@@ -2386,7 +2925,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC  \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
                 "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
@@ -2401,6 +2940,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 String itno=cursor.getString(0);
@@ -2421,7 +2961,43 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
+//                item.setp(cursor.getString(10));
+                try {
+
+
+                    if(cursor.getString(12)==null)
+                    {
+                        item.setItemHasSerial("0");
+                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                    }
+                    else {
+                        item.setItemHasSerial(cursor.getString(12));
+                    }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
+                }
+//                item.setItemPhoto(cursor.getString(13));
                 // Adding transaction to list
+                try {
+                    if(!cursor.getString(13).equals("")) {
+
+                        itemBitmap = StringToBitMap(cursor.getString(13));
+                        item.setItemPhoto(itemBitmap);
+                    }
+                    else {
+                        item.setItemPhoto(null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    item.setItemPhoto(null);
+                }
+
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2697,10 +3273,13 @@ DatabaseHandler extends SQLiteOpenHelper {
                 do {
                     if(cursor.getString(0)== "null")
                     { kind_items.add("**");}
+                    else {
+                        kind_items.add(cursor.getString(0));
 
-                    kind_items.add(cursor.getString(0));
+                        Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
+                    }
 
-                    Log.e("DB_Exception","kind_items"+cursor.getString(0));
+
                 } while (cursor.moveToNext());
             }
         }catch (Exception e)
@@ -2819,6 +3398,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 PrinterSetting printerSetting=new PrinterSetting();
                 printerSetting.setPrinterName(cursor.getInt(0));
                 printerSetting.setPrinterShape(cursor.getInt(1));
+                printerSetting.setShortInvoice(cursor.getInt(2));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -2916,7 +3496,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<Payment> getAllPaymentsPaper() {
 
         List<Payment> paymentsList = new ArrayList<Payment>();
-        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER;
+        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3075,7 +3655,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<AddedCustomer> getAllAddedCustomer() {
         List<AddedCustomer> customers = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER;
+        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER+ " where IS_POSTED = '" + 0  + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3092,6 +3672,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setSalesMan(cursor.getString(4));
                 customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
                 customer.setSalesmanNo(cursor.getString(6));
+                customer.setADRESS_CUSTOMER(cursor.getString(7));
+                customer.setTELEPHONE(cursor.getString(8));
+                customer.setCONTACT_PERSON(cursor.getString(9));
+
+
 
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -3121,6 +3706,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offers.add(offer);
             } while (cursor.moveToNext());
         }
+
 
         return offers;
     }
@@ -3209,6 +3795,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(STATUS, 1);
 
         // updating row
+
         db.update(TABLE_TRANSACTIONS, values, CUS_CODE + "=" + cusCode + " AND " + STATUS + "=" + 0, null);
     }
 
@@ -3267,6 +3854,20 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
     }
+    public void updateCustomersMaster() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POST, 1);
+        db.update(CUSTOMER_MASTER, values, IS_POST + "=" + 0, null);
+    }
+    public void updateSerialTableIsposted() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED_SERIAL, 1);
+        db.update(SERIAL_ITEMS_TABLE, values, IS_POSTED_SERIAL + "=" + 0, null);
+    }
 
     public void updateTransactions() {
         db = this.getWritableDatabase();
@@ -3276,13 +3877,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.update(TABLE_TRANSACTIONS, values, IS_POSTED + "=" + 0, null);
     }
 
-    public void updateCustomersMaster(String lat , String lon , int custId) {
+    public void updateCustomersMaster(String lat , String lon , String custId) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(CUST_LAT, lat);
         values.put(CUST_LONG, lon);
-        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custId, null);
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + custId + "'", null);
     }
 
 
@@ -3328,6 +3929,26 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Qty5, existQty);
         db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
     }
+    public void deletSerialItems() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE);
+        db.close();
+    }
+    public void deletSerialItems_byVoucherNo(int vouch_no ) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where VOUCHER_NO =" +vouch_no);
+        db.close();
+    }
+    public void deletSerialItems_byItemNo(String item_no ) {
+        //delete from SERIAL_ITEMS_TABLE where ITEMNO_SERIAL=1003
+        //+ "= '" + custNo + "'"
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where ITEMNO_SERIAL =" +item_no);
+        db.close();
+    }
+
+
+
     public void deletAcountReport() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + ACCOUNT_REPORT);
@@ -3503,8 +4124,28 @@ DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CASH_CREDIT, CashCredit);
         values.put(CREDIT_LIMIT, CriditLimit);
-        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custNo, null);
+
+        db.update(CUSTOMER_MASTER, values, CUS_ID    + "= '" + custNo + "'" , null);
     }
+
+
+    // update SERIAL_ITEMS_TABLE set KIND_VOUCHER=30 where  VOUCHER_NO=4
+
+    public void updatevoucherKindInSerialTable( int kindVoucher,int voucherNo,int storeNo ) {
+        db = this.getWritableDatabase();
+        Log.e("updateVOUCHERNO",""+kindVoucher);
+        ContentValues values = new ContentValues();
+        values.put(KIND_VOUCHER, kindVoucher);
+
+
+        db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + " = '" + voucherNo + "'" , null);
+
+
+//        values.put(, serialModelItem.getStoreNo());
+
+    }
+
+
 
     List<Item> vouchersales;
     public void updateSalesManItemBalance(String salesmanNo,String itemNo,double qty) {
@@ -3669,7 +4310,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 "WHERE\n" +
                 "S.SalesManNo =  CAST(ifnull(C.SALES_MAN_NO,0) as INTEGER)\n" +
                 "AND\n" +
-                "CUS_ID = '"+custId+"'";
+                "CUS_ID_Text = '"+custId+"'";
         String customr_Name="";
 
         db = this.getWritableDatabase();
@@ -3726,11 +4367,11 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public int getHideValuForCustomer(int customerId) {
+    public int getHideValuForCustomer(String customerId) {
         int HideVal = 0;
         String selectQuery = "select HIDE_VAL\n" +
                 "        from CUSTOMER_MASTER\n" +
-                "        where CUSTOMER_MASTER.CUS_ID = '" + customerId + "'";
+                "        where CUSTOMER_MASTER.CUS_ID_Text = '" + customerId + "'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3763,4 +4404,154 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public int checkVoucherNo(int voucherNumber,int voucherType) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+        int count = 0;
+        String selectQuery = "select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '"+voucherNumber+"' and VOUCHER_TYPE = '"+voucherType+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            count = cursor.getInt(0);
+            Log.e("count=", "checkVoucherNo+\t" + count + "\t");
+
+        }
+        return count;
+    }
+
+    public void updateCustomerMasterLocation(String customer_account, String LATIT, String LONGT) {
+        Log.e("updateCustomerMaster",""+customer_account+"\t"+LATIT+"\t"+LONGT);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(CUST_LAT, LATIT);
+        values.put(CUST_LONG, LONGT);
+
+
+        // updating row
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + customer_account + "'", null);
+
+
+    }
+
+    public boolean isCustomerMaster_posted() {
+        String selectQuery = "SELECT count() FROM " + CUSTOMER_MASTER + " where  IS_POST = 0 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int x = cursor.getInt(0);
+            Log.e("isCustomerMaster_posted", "" + x);
+            if (x > 0) {
+                return false;
+
+
+            } else
+                return true;
+        }
+        return true;
+    }
+//    select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
+    public String isSerialCodeExist(String serialCode) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+    String count = "not";
+    String selectQuery = "select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+    db = this.getWritableDatabase();
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+
+        count = cursor.getString(0);
+    }
+        Log.e("isCustomerMaster_posted", "isCustomerMaster_posted+\t" + count + "\t");
+    return count;
 }
+
+    public String getItemNameBonus(String bonusItemNo) {
+        String name = "";
+//        select  Name from  Items_Master where ItemNo= 6934177700484
+        String selectQuery = " select  Name from  Items_Master where ItemNo='"+bonusItemNo+"' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            name = cursor.getString(0);
+
+        }
+        Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
+
+        return name;
+    }
+
+    public CompanyInfo getCompanyLocation() {
+       CompanyInfo infoLocation=new CompanyInfo();
+
+//        LATITUDE_COMPANY LONGTUDE_COMPANY COMPANY_INFO
+        String selectQuery = " select  LONGTUDE_COMPANY , LATITUDE_COMPANY from  COMPANY_INFO ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            infoLocation.setLongtudeCompany( cursor.getDouble(0));
+            infoLocation.setLatitudeCompany( cursor.getDouble(1));
+            Log.e("setLongtudeCompany", "getItemNameBonus+\t" + infoLocation.getLatitudeCompany() + "\t");
+
+        }
+
+
+        return infoLocation;
+    }
+
+    public ArrayList<Bitmap> getItemsImage() {
+        ArrayList<Bitmap> listPhoto = new ArrayList<Bitmap>();
+
+        String selectQuery = "select ITEM_PHOTO   from  Items_Master";
+
+        Log.e("***" , selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            do {
+
+                Bitmap  itemBitmap=null;
+
+                if(!cursor.getString(0).equals("")) {
+
+                    itemBitmap = StringToBitMap(cursor.getString(0));
+
+                    listPhoto.add(itemBitmap);
+                }
+                else {
+                    listPhoto.add(null);
+                }
+
+
+                Log.e("listPhoto",""+listPhoto.size());
+
+            } while (cursor.moveToNext());
+        }
+
+        return listPhoto;
+
+    }
+
+    public void updatecompanyInfo(double latitudeCheckIn, double longtudeCheckIn) {
+
+        Log.e("updatecompanyInfo",""+latitudeCheckIn+"\t"+LATIT+"\t"+longtudeCheckIn);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(LATITUDE_COMPANY, latitudeCheckIn);
+
+        values.put(LONGTUDE_COMPANY, longtudeCheckIn);
+
+
+        // updating row
+        db.update(COMPANY_INFO, values, null, null);
+
+    }
+}
+

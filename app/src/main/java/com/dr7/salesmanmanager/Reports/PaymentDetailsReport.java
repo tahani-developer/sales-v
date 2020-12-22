@@ -1,9 +1,15 @@
 package com.dr7.salesmanmanager.Reports;
 
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -12,12 +18,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.R;
 
@@ -29,6 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class PaymentDetailsReport extends AppCompatActivity {
 
     List<Payment> payments;
@@ -39,10 +49,30 @@ public class PaymentDetailsReport extends AppCompatActivity {
     Calendar myCalendar;
     int payMethod;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PaymentDetailsReport.this);
         setContentView(R.layout.payment_details_report);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
 
         payments = new ArrayList<Payment>();
         DatabaseHandler obj = new DatabaseHandler(PaymentDetailsReport.this);
@@ -120,9 +150,9 @@ public class PaymentDetailsReport extends AppCompatActivity {
                         row.setPadding(5, 10, 5, 10);
 
                         if (n % 2 == 0)
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer7));
                         else
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer5));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
 
                         for (int i = 0; i < 7; i++) {
 
@@ -155,6 +185,8 @@ public class PaymentDetailsReport extends AppCompatActivity {
                             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                             textView.setLayoutParams(lp2);
 
+//                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 40, 1f);
+//                            textView.setLayoutParams(lp2);
                             row.addView(textView);
                         }
                         TablePaymentsDetailsReport.addView(row);

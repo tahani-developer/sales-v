@@ -127,7 +127,7 @@ public class CPCLSample2 {
         this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+30 , count);
         this.cpclPrinter.setMedia(this.paperType);
 
-        this.cpclPrinter.printBitmap(testB, 450, 50);//x=400
+        this.cpclPrinter.printBitmap(testB, 400, 50);//x=400
 
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
@@ -144,7 +144,16 @@ public class CPCLSample2 {
 //        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
         this.cpclPrinter.printForm();
     }
+    public void imageTestEnglishVoucher(int count, Bitmap testB) throws IOException {//
+        this.cpclPrinter.setForm(0, 200, 200,testB.getHeight()+10, count);
+        this.cpclPrinter.setMedia(this.paperType);
 
+        this.cpclPrinter.printBitmap(testB, 200, 50);//x=400
+
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_3.jpg", 100, 200);
+//        this.cpclPrinter.printBitmap("//sdcard//temp//test//sample_4.jpg", 120, 245);
+        this.cpclPrinter.printForm();
+    }
     public void imageTestEnglish_ejabi(int count, Bitmap testB) throws IOException {//
         this.cpclPrinter.setForm(0, 0, 0,testB.getHeight()-50 , count);
         this.cpclPrinter.setMedia(this.paperType);
@@ -722,7 +731,7 @@ public class CPCLSample2 {
 
     }
     public void printMultilingualFontCash_EJABI(int count) throws UnsupportedEncodingException {
-Log.e("printMultilingual","ontCash_EJABI");
+         Log.e("printMultilingual","ontCash_EJABI");
         int nLineWidth = 1140;
         String Arabicdata = bankEnglish(count);
 //        Bitmap bitmap=null;
@@ -741,8 +750,6 @@ Log.e("printMultilingual","ontCash_EJABI");
 //            imageTestEnglish(0,);
             this.cpclPrinter.setForm(0, 200, 200, 1100, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
-
-
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 26, 200, 0);
             try {
                 Thread.sleep(1000);
@@ -1036,6 +1043,7 @@ Log.e("printMultilingual","ontCash_EJABI");
 
         }
 
+
         if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
 
 
@@ -1134,6 +1142,15 @@ Log.e("printMultilingual","ontCash_EJABI");
         int nLineWidth = 1140;
         String Arabicdata = CashReport_kArabic();
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
+        Bitmap bitmap=null;
+        try {
+            CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+            bitmap=companyInfo.getLogo();
+            convertToImage();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
 
         try {
             this.cpclPrinter.setForm(0, 200, 200, 920, numOfCopy);
@@ -1151,6 +1168,10 @@ Log.e("printMultilingual","ontCash_EJABI");
 
 
     }
+
+    private void convertToImage() {
+    }
+
     public void printMultilingualFont_AccountReport()  throws UnsupportedEncodingException {
 
         int nLineWidth = 1140;
@@ -1158,8 +1179,10 @@ Log.e("printMultilingual","ontCash_EJABI");
         int numOfCopy = obj.getAllSettings().get(0).getNumOfCopy();
 
         try {
+
             this.cpclPrinter.setForm(0, 200, 200, 920, numOfCopy);
             this.cpclPrinter.setMedia(this.paperType);
+
             this.cpclPrinter.printAndroidFont(Arabicdata, nLineWidth, 24, 360, 0);
             try {
                 Thread.sleep(1000);

@@ -35,6 +35,42 @@ public class Settings {
     private int preventChangPayMeth;
     private int  ShowCustomerList;
     private int  noReturnInvoice;
+    private int  work_serialNo;
+    private int  showItemImage;
+    private int  approveAdmin;
+    private  int saveOnly;
+
+    public int getSaveOnly() {
+        return saveOnly;
+    }
+
+    public void setSaveOnly(int saveOnly) {
+        this.saveOnly = saveOnly;
+    }
+
+    public int getApproveAdmin() {
+        return approveAdmin;
+    }
+
+    public void setApproveAdmin(int approveAdmin) {
+        this.approveAdmin = approveAdmin;
+    }
+
+    public int getShowItemImage() {
+        return showItemImage;
+    }
+
+    public void setShowItemImage(int showItemImage) {
+        this.showItemImage = showItemImage;
+    }
+
+    public int getWork_serialNo() {
+        return work_serialNo;
+    }
+
+    public void setWork_serialNo(int work_serialNo) {
+        this.work_serialNo = work_serialNo;
+    }
 
     public int getNoReturnInvoice() {
         return noReturnInvoice;

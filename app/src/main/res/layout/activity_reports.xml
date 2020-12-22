@@ -2,9 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer2"
-    android:orientation="horizontal">
+    android:layoutDirection="locale"
+    android:id="@+id/mainLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/layer7"
+    android:orientation="vertical">
 
+<!--    <include-->
+<!--        layout="@layout/app_bar_layout"/>-->
+<!--    <LinearLayout-->
+<!--        android:layout_height="35dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_gravity="right"-->
+<!--        android:gravity="right|center"-->
+<!--        android:background="@color/colorblue_dark">-->
+<!--        <TextView android:layout_height="match_parent"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_margin="3dp"-->
+<!--            android:layout_gravity="right"-->
+<!--            android:gravity="right|center"-->
+<!--            android:background="@drawable/ic_arrow_forward_white_24dp"/>-->
+<!--    </LinearLayout>-->
+<!--    <com.google.android.material.appbar.AppBarLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:theme="@style/AppTheme.AppBarOverlay">-->
+
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:background="@color/colorblue_dark"-->
+<!--            app:popupTheme="@style/AppTheme.PopupOverlay" />-->
+
+<!--    </com.google.android.material.appbar.AppBarLayout>-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,120 +46,398 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:background="@color/layer3"
+            android:background="@color/layer7"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingHorizontal="100dp"
-            android:paddingVertical="10dp">
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="30dp">
+
+
+
+                <androidx.cardview.widget.CardView
+
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="20dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/CustomerCardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/customer_log_report"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/customer_imageview"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/customer3" />
+
+                        <TextView
+                            android:id="@+id/textView_cus"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                           android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/app_cust_log_rep"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/customer_log_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/customer_log_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18dp" />-->
+
 
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:background="@drawable/report_back"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
+                <androidx.cardview.widget.CardView
 
-                <Button
-                    android:id="@+id/customer_log_report"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/customer_log_report"
-                    android:textAllCaps="false"
-                    android:textSize="18dp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/transaction_CardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/transactions_report"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/transImageView"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/transactionicone"
+                            />
+
+                        <TextView
+                            android:id="@+id/textView_trans"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/transactions_report"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/transactions_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/transactions_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18dp" />-->
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:background="@drawable/report_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
+                <androidx.cardview.widget.CardView
 
-                <Button
-                    android:id="@+id/transactions_report"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/transactions_report"
-                    android:textAllCaps="false"
-                    android:textSize="18dp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/return_CardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/return_report"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/money"
+                            />
+
+                        <TextView
+                            android:id="@+id/textView_tr"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/payments_details_report"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/return_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/payments_details_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18dp" />-->
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:background="@drawable/report_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
+                <androidx.cardview.widget.CardView
 
-                <Button
-                    android:id="@+id/return_report"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/payments_details_report"
-                    android:textAllCaps="false"
-                    android:textSize="18dp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/stock_CardView"
+                    card_view:cardCornerRadius="15dp">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/stock_request_report"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:background="@drawable/report_back"
-                android:orientation="vertical">
+                        <ImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/stock"
+                            />
 
-                <Button
-                    android:id="@+id/stock_request_report"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/stock_request_report"
-                    android:textAllCaps="false"
-                    android:textSize="18dp" />
+                        <TextView
+                            android:id="@+id/textView_tr23"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/stock_request_report"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/stock_request_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/stock_request_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18dp" />-->
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/inventory_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:background="@drawable/report_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="vertical">
+                <androidx.cardview.widget.CardView
 
-                <Button
-                    android:id="@+id/inventory_report"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/inventory_report"
-                    android:textAllCaps="false"
-                    android:textSize="18dp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/inventory_CardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/inventory_report"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/inventory3"
+                            />
+
+                        <TextView
+                            android:id="@+id/textView_inventory"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/inventory_report"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/inventory_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/inventory_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18dp" />-->
 
             </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="85dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/report_back"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
 
-                <Button
-                    android:id="@+id/cash_report"
+                android:orientation="vertical">
+                <androidx.cardview.widget.CardView
+
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/slid"
-                    android:text="@string/app_cash_report"
-                    android:textAllCaps="false"
-                    android:textSize="18sp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="10dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    android:id="@+id/cash_CardView"
+                    card_view:cardCornerRadius="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/cash_report"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:clickable="true"
+                            android:layout_width="match_parent"
+                            android:layout_weight="5"
+                            android:layout_height="60dp"
+                            android:src="@drawable/images_money"
+                            />
+
+                        <TextView
+                            android:id="@+id/textView_cash"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="10dp"
+                            android:gravity="center_horizontal"
+                            android:text="@string/app_cash_report"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+<!--                <Button-->
+<!--                    android:id="@+id/cash_report"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="25dp"-->
+<!--                    android:background="@drawable/slid"-->
+<!--                    android:text="@string/app_cash_report"-->
+<!--                    android:textAllCaps="false"-->
+<!--                    android:textSize="18sp" />-->
 
             </LinearLayout>
 

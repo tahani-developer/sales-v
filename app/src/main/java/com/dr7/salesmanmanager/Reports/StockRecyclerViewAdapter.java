@@ -1,11 +1,11 @@
 package com.dr7.salesmanmanager.Reports;
 
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dr7.salesmanmanager.AddItemsStockFragment;
 import com.dr7.salesmanmanager.DatabaseHandler;
@@ -47,7 +50,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview_stock, parent, false);
 
         return new viewHolder(view);
     }
@@ -56,10 +59,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
     @Override
     public void onBindViewHolder(final viewHolder holder, int position) {
 
-        if (isClicked.get(position) == 0)
-            holder.linearLayout.setBackgroundColor(Color.parseColor("#455A64"));
-        else
-            holder.linearLayout.setBackgroundColor(R.color.done_button);
+//        if (isClicked.get(position) == 0)
+//            holder.cardView.setCardBackgroundColor(R.color.layer7);
+//        else
+//            holder.cardView.setCardBackgroundColor(R.color.layer5);
 
         holder.itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
@@ -78,7 +81,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final Dialog dialog = new Dialog(view.getContext());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
-                dialog.setContentView(R.layout.add_item_dialog_small);
+                dialog.setContentView(R.layout.add_item_dialog_small_stock);
                 Window window = dialog.getWindow();
 
                 final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
@@ -97,6 +100,16 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 final EditText unitQty = (EditText) dialog.findViewById(R.id.unitQty);
                 final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
                 final EditText discount = (EditText) dialog.findViewById(R.id.discount);
+                LinearLayout linearPrice,discount_linear,discribtionItem_linear,serialNo_linear;
+                linearPrice= dialog.findViewById(R.id.linearPrice);
+                linearPrice.setVisibility(View.GONE);
+                discount_linear= dialog.findViewById(R.id.discount_linear);
+                discount_linear.setVisibility(View.GONE);
+                discribtionItem_linear= dialog.findViewById(R.id.discribtionItem_linear);
+                discribtionItem_linear.setVisibility(View.GONE);
+                serialNo_linear= dialog.findViewById(R.id.serialNo_linear);
+                serialNo_linear.setVisibility(View.GONE);
+
                 final RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.discTypeRadioGroup);
                 Button addToList = (Button) dialog.findViewById(R.id.addToList);
 
@@ -139,7 +152,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                                     bonus.getText().toString(), discount.getText().toString(), radioGroup, view.getContext());
 
                             if (added) {
-                                holder.linearLayout.setBackgroundColor(R.color.done_button);
+                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
                                 isClicked.set(holder.getAdapterPosition() , 1);
                             }
                         }

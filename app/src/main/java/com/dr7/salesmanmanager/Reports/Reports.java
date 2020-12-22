@@ -1,10 +1,13 @@
 package com.dr7.salesmanmanager.Reports;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -15,9 +18,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportJason;
 import com.dr7.salesmanmanager.ImportJason;
+import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.R;
@@ -25,35 +34,61 @@ import com.dr7.salesmanmanager.R;
 import org.json.JSONException;
 
 import java.util.List;
+import java.util.Locale;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 
 public class Reports extends AppCompatActivity {
 
 
-    Button customer_log_report,transactions_report,return_report;
+    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,return_report;
 
-
-    Button stock_request_report,cash_reoprt;
-    Button Inventory_report;
     DatabaseHandler MHandler;
-    LinearLayout inventory_layout;
+    LinearLayout inventory_layout,mainLayout;
     List<Settings> settings;
+//    private Toolbar toolbar;
     /*   List<Settings> settings =  mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
         if(settings.size() != 0) {
         */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reports);
+
+
         MHandler = new DatabaseHandler(Reports.this);
         settings =  MHandler.getAllSettings();
-        customer_log_report = (Button) findViewById(R.id.customer_log_report);
-        transactions_report = (Button) findViewById(R.id.transactions_report);
-        return_report = (Button) findViewById(R.id.return_report);
-        Inventory_report = (Button) findViewById(R.id.inventory_report);
-        stock_request_report = (Button) findViewById(R.id.stock_request_report);
-        cash_reoprt = (Button) findViewById(R.id.cash_report);
+        new LocaleAppUtils().changeLayot(Reports.this);
+
+        setContentView(R.layout.activity_reports);
+        mainLayout=findViewById(R.id.mainLayout);
+
+        Log.e("languagelocalApp2",""+languagelocalApp);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        customer_log_report = (LinearLayout) findViewById(R.id.customer_log_report);
+        transactions_report = (LinearLayout) findViewById(R.id.transactions_report);
+        return_report = (LinearLayout) findViewById(R.id.return_report);
+        Inventory_report = (LinearLayout) findViewById(R.id.inventory_report);
+        stock_request_report = (LinearLayout) findViewById(R.id.stock_request_report);
+        cash_reoprt = (LinearLayout) findViewById(R.id.cash_report);
         customer_log_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
         transactions_report.setOnClickListener(onClickListener);
@@ -98,7 +133,6 @@ public class Reports extends AppCompatActivity {
                     startActivity(intent5);
                     break ;
                 case R.id.cash_report:
-                    String s="";
                     if(settings.size()!=0){
                         if(MHandler.getAllSettings().get(0).getLock_cashreport()==1) {
                             openPassowrdDialog();

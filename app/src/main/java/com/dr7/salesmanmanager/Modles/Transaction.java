@@ -18,6 +18,24 @@ public class Transaction {
     String checkOutTime;
     int status;
     int isPosted;
+    double latitud;
+    double longtude;
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongtude() {
+        return longtude;
+    }
+
+    public void setLongtude(double longtude) {
+        this.longtude = longtude;
+    }
 
     // Empty constructor
     public Transaction() { }

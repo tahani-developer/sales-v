@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">نظام الصقور للمندوبين</string>
-    <string name="version">19</string>
+
     <string name="app_username">اسم المستخدم</string>
     <string name="app_password">كلمة السر</string>
     <string name="app_dataManagement">ادارة البيانات</string>
@@ -8,7 +8,7 @@
     <string name="app_reports">التقارير</string>
     <string name="app_sales_inv">فاتورة البيع</string>
     <string name="app_ret_inv">فاتورة المرتجعات</string>
-    <string name="app_cust_order">طلب جديد</string>
+    <string name="app_cust_order">طلب </string>
     <string name="app_request">طلب المخزون</string>
     <string name="app_imp_data">استيراد البيانات</string>
     <string name="app_exp_data">تصدير البيانات</string>
@@ -20,7 +20,7 @@
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
     <string name="app_receipt">سند قبض</string>
 <!--    <string name="title_activity_main">الأتصال بالبلوتوث </string>-->
-    <string name="credit_value">credit Value</string>
+    <string name="credit_value">بطاقة ائتمانية</string>
     <string name="invoice_note">ملاحظه :</string>
     <string name="title_activity_main"></string>
     <string name="app_sign_out">نهاية اليوم</string>
@@ -62,10 +62,10 @@
     <string name="app_credit">ذمم</string>
     <string name="app_remark">ملاحظة</string>
     <string name="app_sub_total">المجموع</string>
-    <string name="app_disc">الخصم : </string>
+    <string name="app_disc">الخصم </string>
     <string name="app_tax">الضريبة : </string>
     <string name="app_net_sales">الصافي : </string>
-    <string name="total_qty">الكمية كاملة : </string>
+    <string name="total_qty">الكمية كاملة</string>
     <string name="total_qty_inventory">اجمالي الكمية   </string>
 
     <string name="app_item_no">رقم المادة</string>
@@ -74,7 +74,7 @@
     <string name="app_price">السعر</string>
     <string name="app_line_disc">الخصم</string>
     <string name="app_tax_perc">نسبة الضريبة</string>
-    <string name="app_amount">المجموع</string>
+    <string name="app_amount">المبلغ </string>
     <string name="app_zero">0.000</string>
     <string name="app_conf_invKindT">تغيير نوع الفاتورة</string>
     <string name="app_conf_invKindM">هل انت متأكد من تغيير اسم الفاتورة ؟</string>
@@ -96,13 +96,13 @@
     <string name="app_unit">الوحدة</string>
     <string name="app_qty_on_hand">الكمية المتوفرة</string>
     <string name="net_qty">صافي الكمية</string>
-    <string name="app_bonus">المجاني</string>
+    <string name="app_bonus">مجاني</string>
     <string name="app_add_to_list">اضافة الى القائمة</string>
     <string name="app_done">تم</string>
     <string name="weight">الوزن</string>
     <string name="use_weight">استخدام العدد</string>
 
-    <string name="offer_dialog">صندوق العروض</string>
+    <string name="offer_dialog">العروض</string>
     <string name="promo_type">نوع العرض </string>
     <string name="bonus_item">المادة المجانية </string>
     <string name="discount_value">قيمة الخصم </string>
@@ -181,7 +181,7 @@
     <string name="invoice_serial_from">الفاتورة</string>
     <string name="return_serial_from">المرتجع</string>
     <string name="order_serial_from">الطلب</string>
-    <string name="payments_serial_from">تسلسل المبيعات من</string>
+    <string name="payments_serial_from">تسلسل المبيعات </string>
     <string name="save">حفظ</string>
     <string name="company_number">اسم الشركة</string>
     <string name="voucher_number">رقم الفاتورة</string>
@@ -206,16 +206,19 @@
 
     <string name="from_date">من تاريخ</string>
     <string name="to_date">الى تاريخ</string>
-    <string name="by_voucher_kind">حسب نوع الفاتورة</string>
-    <string name="by_payment_Term">حسب طريقة الدفع</string>
+    <string name="by_voucher_kind"> نوع الفاتورة</string>
+    <string name="by_payment_Term"> طريقة الدفع</string>
     <string name="customer_number">رقم العميل</string>
     <string name="preview">اظهار</string>
     <string name="item_number">رقم المادة</string>
     <string name="item_name">اسم المادة</string>
     <string name="unit_qty">العدد</string>
     <string name="total_sold_qty">مجموع الكمية المباعة</string>
+    <string name="total_sold_qty2">الكمية المباعة</string>
     <string name="total_bonus_qty">مجموع الكمية المجانية</string>
+    <string name="total_bonus_qty2">الكمية المجانية</string>
     <string name="total_sales_noTax">مجموع المبيعات(بدون ضريبة)</string>
+    <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
     <string name="items">المواد</string>
     <string name="print">طباعة</string>
     <string name="show">اظهار</string>
@@ -225,7 +228,7 @@
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
     <string name="box_packing">صندوق التعبئة</string>
-    <string name="update">التحديث</string>
+    <string name="update">تحديث</string>
 
     <string name="company_name">اسم الشركة: </string>
     <string name="company_tel">هاتف الشركة</string>
@@ -346,7 +349,7 @@
          قم بترحيل الفواتير في برنامج المستودعات لاستيراد بيانات جديدة
     </string>
     <string name="kind_item">النوع</string>
-    <string name="all_item">كل العناصر </string>
+    <string name="all_item">الكل </string>
     <string name="app_account_report"> كشف حساب  </string>
     <string name="last_account">الرصيد السابق</string>
     <string name="transfer_name">نوع الحركة</string>
@@ -385,7 +388,7 @@
     <string name="preventTotaldisc">منع الخصم الكلي</string>
     <string name="failUsers">  لا يوجد بيانات  الرجاءالدخول ك ادمن</string>
     <string name="automatic_cheque">شيكات تسلسلية</string>
-    <string name="tafqit">tafqit</string>
+    <string name="tafqit">تفقيط</string>
     <string name="app_cheque_count">عدد الشيكات</string>
     <string name="preventPayMethod">عدم تغير طريقة الدفع</string>
     <string name="saveLocation">حفظ الموقع</string>
@@ -393,5 +396,54 @@
     <string name="pleaseSelectUser">اختر عميل محدد</string>
     <string name="noReturnInvoice">ايقاف فواتير الارجاع</string>
     <string name="InvalidLocation">موقع العميل خاطئ</string>
+    <string name="duplicateddata">لايمكن تصدير البيانات يوجد بيانات مكررة</string>
+    <string name="duplicatedVoucherNo">رقم الفاتورة مكرر لايمكن اكمال العملية </string>
+    <string name="customerHaveLocation">يوجد موقع للعميل</string>
+    <string name="succsesful">تم بنجاح</string>
+    <string name="LocationSaved">تم حفظ الموقع</string>
+    <string name="enternetConnection">لايوجد اتصال انترنت</string>
+    <string name="failImpo_export_dataCustomerMaster">قم بتصدير البيانات في جدول الزبائن قبل استيراد بيانات جديدة</string>
+    <string name="SerialNo">الرقم التسلسلي </string>
+    <string name="workSerial">تفعيل الرقم التسلسلي</string>
+    <string name="AreYouSuretodelete">هل تريد الحذف ?</string>
+    <string name="backupData">نسخ البيانات</string>
+    <string name="backup_failed">تعذر نسخ البيانات</string>
+    <string name="Printing">جاري الطباعة</string>
+    <string name="duplicate">رقم مكرر</string>
+    <string name="bonus_item_name">اسم المادةالمجانية</string>
+    <string name="bonus_item_qty"> كمية المادةالمجانية</string>
+    <string name="reqired_filled">حقل اجباري فارغ </string>
+    <string name="cancel">الغاء</string>
+    <string name="qty">الكميات</string>
+    <string name="read_new_offer">Read New Offer</string>
+    <string name="address">العنوان</string>
+    <string name="ShowItemImage">إظهار صور العناصر</string>
+    <string name="SearchByCustomerName">بحث بإسم العميل</string>
+    <string name="delet">حذف</string>
+    <string name="refresh">تحديث</string>
+    <string name="info">معلومات</string>
+    <string name="No">الرقم</string>
+    <string name="name">الإسم</string>
+    <string name="shortInvoice">Short Invoice (Phone system)</string>
+    <string name="app_sales_inv2">بيع</string>
+    <string name="app_ret_inv2">مرتجع</string>
+    <string name="app_cust_order2">طلب</string>
+    <string name="reExportData">إعادة تصدير البيانات</string>
+    <string name="tele">الهاتف</string>
+    <string name="contactPerson">التواصل </string>
+    <string name="AddTotalDiscount">اضافة خصم كلي</string>
+    <string name="app_disc_value2">القيمة</string>
+    <string name="note">ملاحظة</string>
+    <string name="request_state">حالة الطلب</string>
+    <string name="requestForAdmin">تقديم طلب للمسؤول</string>
+    <string name="acceptedRequest">تم قبول طلبك</string>
+    <string name="rejectedRequest">تم رفض الطلب</string>
+    <string name="acceptYourRequest">acceptYourRequest</string>
+    <string name="sorry">عذرا</string>
+    <string name="ApproveAdmin">طلب موافقة الادمن</string>
+    <string name="youHaveRequestToAdmin">يجب موافقة الادمن</string>
+    <string name="saveOnly">حفظ الفاتورة فقط </string>
+    <string name="saveSuccessfuly">Save Successfuly</string>
+    <string name="checkBlutoothPrinterPaired"> تحقق من اتصال البلوتوث للطابعة</string>
 
 </resources>

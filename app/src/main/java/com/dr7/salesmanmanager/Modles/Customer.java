@@ -23,6 +23,46 @@ public class Customer {
     private double max_discount;
     private String ACCPRC;// customer rate for price
     private int Hide_val;
+    private int isPost;
+    private  String customerIdText;
+
+    public String getCustomerIdText() {
+        return customerIdText;
+    }
+
+    public void setCustomerIdText(String customerIdText) {
+        this.customerIdText = customerIdText;
+    }
+
+    public String getCustomerAccount() {
+        return customerAccount;
+    }
+
+    public void setCustomerAccount(String customerAccount) {
+        this.customerAccount = customerAccount;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
+    }
+
+    public Customer(String custId, String custName, int payMethod) {
+        this.custId = custId;
+        this.custName = custName;
+        this.payMethod=payMethod;
+    }
 
     public int getHide_val() {
         return Hide_val;
@@ -34,7 +74,7 @@ public class Customer {
 
     public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit, int payMethod, String custLat, String custLong,
-                    double max_discount, String ACCPRC, int hide_val, String customerAccount, String customerName) {
+                    double max_discount, String ACCPRC, int hide_val, int isPost, String customerIdText) {
         this.companyNumber = companyNumber;
         this.custId = custId;
         this.custName = custName;
@@ -50,8 +90,8 @@ public class Customer {
         this.max_discount = max_discount;
         this.ACCPRC = ACCPRC;
         Hide_val = hide_val;
-        this.customerAccount = customerAccount;
-        this.customerName = customerName;
+        this.isPost = isPost;
+        this.customerIdText = customerIdText;
     }
 
     private String customerAccount, customerName;
@@ -109,10 +149,11 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public Customer(String custId, String custName) {
-        this.custId = custId;
-        this.custName = custName;
-    }
+//    public Customer(String custId, String custName) {
+//        this.custId = custId;
+//        this.custName = custName;
+//        this.payMethod=pay;
+//    }
 
     public int getCompanyNumber() {
         return companyNumber;

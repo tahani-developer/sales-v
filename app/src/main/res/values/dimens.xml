@@ -7,11 +7,12 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="card_view_width">120dp</dimen>
     <dimen name="card_view_height">100dp</dimen>
-    <dimen name="items_list_font_size">12sp</dimen>
+    <dimen name="items_list_font_size">10sp</dimen>
     <dimen name="edit_text_margin">10dp</dimen>
-    <dimen name="title_large">20dp</dimen>
-    <dimen name="title_xlarge">30dp</dimen>
-    <dimen name="content">12dp</dimen>
-    <dimen name="content_large">15sp</dimen>
-    <dimen name="content_xlarge">18dp</dimen>
+    <dimen name="title_large">18sp</dimen>
+    <dimen name="title_xlarge">22sp</dimen>
+    <dimen name="content">12sp</dimen>
+    <dimen name="content_large">14sp</dimen>
+
+    <dimen name="content_xlarge">18sp</dimen>
 </resources>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer2"
+    android:textDirection="locale"
+    android:id="@+id/mailLayout"
+    android:background="@color/white"
   >
 
     <LinearLayout
@@ -60,8 +62,8 @@
                android:id="@+id/preview_cash_report"
                android:layout_width="100dp"
                android:layout_height="match_parent"
-               android:textColor="@color/text_view_color"
-               android:background="@color/red_background"
+               android:textColor="@color/white"
+          android:background="@drawable/done_button"
                android:layout_marginLeft="100dp"
                android:layout_marginStart="150dp"
                android:text="@string/preview" />
@@ -368,4 +370,4 @@
         </TableRow>
     </TableLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

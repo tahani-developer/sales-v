@@ -1,30 +1,48 @@
 package com.dr7.salesmanmanager;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+//import android.support.annotation.NonNull;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Reports.Reports;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +63,15 @@ import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
+import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
+import static com.dr7.salesmanmanager.MainActivity.latitude_main;
+import static com.dr7.salesmanmanager.MainActivity.location_main;
+import static com.dr7.salesmanmanager.MainActivity.longitude_main;
+import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
 
 //import android.support.v4.app.DialogFragment;
 //import android.support.v4.app.Fragment;
@@ -72,9 +98,14 @@ public class CustomerCheckInFragment extends DialogFragment {
     int status;
     String today;
     Customer custObj = null;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    private FusedLocationProviderClient fusedLocationClient;
+    LocationManager locationManager;
 
     private static DatabaseHandler mDbHandler;
 
+    public Context context;
+    LinearLayout discLayout;
 
     public interface CustomerCheckInInterface {
         public void showCustomersList();
@@ -87,28 +118,66 @@ public class CustomerCheckInFragment extends DialogFragment {
     public CustomerCheckInFragment() {
         // Required empty public constructor
     }
+    @SuppressLint("ValidFragment")
+    public CustomerCheckInFragment(Context cont) {
+        this.context=cont;
+        // Required empty public constructor
+    }
 
     public static void settext1() {
         Customer_Name.setText(CustomerListShow.Customer_Name.toString());
         Customer_Account.setText(CustomerListShow.Customer_Account.toString());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
+//        new LocaleAppUtils().changeLayot(context);
 
         View view = inflater.inflate(R.layout.fragment_customer_check_in, container, false);
         //selectButton = (ImageButton) view.findViewById(R.id.check_img_button);
         //checkButton = (ImageButton) view.findViewById(R.id.check_img_button);
+        discLayout = (LinearLayout) view.findViewById(R.id.discLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            discLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (Button) view.findViewById(R.id.cancelButton);
+        mDbHandler = new DatabaseHandler(getActivity());
+//        if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+//        {
+////            getCurrentLocation();
+//        }
+
 
         findButton = (ImageButton) view.findViewById(R.id.find_img_button);
         Customer_Name = (TextView) view.findViewById(R.id.checkInCustomerName);
         Customer_Account = (TextView) view.findViewById(R.id.customerAccountNo);
 
+
+        Customer_Account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customerCheckInListener.displayCustomerListShow();
+            }
+        });
         customernametest = CustomerListShow.Customer_Name.toString();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -116,7 +185,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         today = df.format(currentTimeAndDate);
         today = convertToEnglish(today);
 
-        mDbHandler = new DatabaseHandler(getActivity());
+
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +217,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 break;
                             }
                         }
+                        Log.e("getAllowOutOfRange",""+mDbHandler.getAllSettings().get(0).getAllowOutOfRange());
 //                        if(inRoot) {
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 0 ||
                                     isInRange(custObj.getCustLat(), custObj.getCustLong())) {
@@ -176,9 +246,12 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                         "01/01/19999", "0", 0,0));
 
-                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+//                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+//                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                                 dismiss();
+                                Intent intent = new Intent(context, Activities.class);
+                                context.startActivity(intent);
+
                             } else {
                                 Toast.makeText(getActivity(), "Not in range", Toast.LENGTH_SHORT).show();
                             }
@@ -202,11 +275,11 @@ public class CustomerCheckInFragment extends DialogFragment {
                         mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                 "01/01/19999", "Not Yet", 0,0));
 
-                        saveCustLocation(Integer.parseInt(cusCode));
+                        saveCustLocation(cusCode);
                         new JSONTask().execute();
 
-                        MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
-                        MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
+//                        MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
+//                        MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                         dismiss();
                     }
                 } else {
@@ -227,8 +300,9 @@ public class CustomerCheckInFragment extends DialogFragment {
             }
         };
 
-        findButton.setOnClickListener(onClickListener);
 
+        findButton.setOnClickListener(onClickListener);
+//        Customer_Account.setOnClickListener(onClickListener);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,7 +317,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         return view;
     }
 
-    void saveCustLocation(int custId) {
+    void saveCustLocation(String custId) {
 
         LocationManager locationManager;
         LocationListener locationListener;
@@ -293,13 +367,17 @@ public class CustomerCheckInFragment extends DialogFragment {
         }
     }
 
+
     boolean isInRange(String cusLat, String cusLong) {
-        Log.e("ggg","cusid"+ cusLat.equals(""));
+        Log.e("ggg","cusid"+ cusLat+""+cusLong);
+        float distance=0;
+        if( !isNetworkAvailable())
+        {
+            return  false;
+        }
         if(cusLat.equals(""))
             return true;
 
-        LocationManager locationManager;
-        LocationListener locationListener;
 
         locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION)
@@ -307,11 +385,59 @@ public class CustomerCheckInFragment extends DialogFragment {
             ActivityCompat.requestPermissions(getActivity(), new String[]
                     {ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION}, 1);
         }
-        locationListener = new LocationListener() {
+
+        Location loc1 = new Location("");
+        loc1.setLatitude(Double.parseDouble(cusLat));
+        loc1.setLongitude(Double.parseDouble(cusLong));
+
+        Location loc2 = new Location("");
+        Log.e("ggg2","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
+        if(latitudeCheckIn!=0&&longtudeCheckIn!=0)
+        {
+
+            loc2.setLatitude(latitudeCheckIn);
+            loc2.setLongitude(longtudeCheckIn);
+
+             distance = loc2.distanceTo(loc1);
+
+        }
+        else {
+            getCurrentLocation();
+            Log.e("ggg3","cusid"+ latitudeCheckIn+""+longtudeCheckIn);
+
+            loc2.setLatitude(latitudeCheckIn);
+            loc2.setLongitude(longtudeCheckIn);
+            distance = loc2.distanceTo(loc1);
+            Toast.makeText(getActivity(), "Check Internet Connection"+latitudeCheckIn, Toast.LENGTH_SHORT).show();
+        }
+
+        Toast.makeText(getActivity(), "distance"+distance, Toast.LENGTH_SHORT).show();
+
+        return distance <= 50;
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    private  void getCurrentLocation() {
+        latitudeCheckIn=0;longtudeCheckIn=0;
+        LocationListener locationListener;
+
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+            ActivityCompat.requestPermissions(getActivity(), new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
+        }
+                locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                currentLat = location.getLatitude();
-                currentLon = location.getLongitude();
+                latitudeCheckIn = location.getLatitude();
+                longtudeCheckIn = location.getLongitude();
+
             }
 
             @Override
@@ -328,8 +454,9 @@ public class CustomerCheckInFragment extends DialogFragment {
 
             }
         };
-       // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
         try {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
         catch (Exception e)
@@ -337,20 +464,10 @@ public class CustomerCheckInFragment extends DialogFragment {
             Log.e("locationManager",""+e.getMessage());
         }
 
-        Location loc1 = new Location("");
-        loc1.setLatitude(Double.parseDouble(cusLat));
-        loc1.setLongitude(Double.parseDouble(cusLong));
 
-        Location loc2 = new Location("");
-        loc2.setLatitude(currentLat);
-        loc2.setLongitude(currentLon);
 
-        float distance = loc1.distanceTo(loc2);
 
-        Log.e("dist  " , "" + distance);
-
-        return distance <= 200;
-    }
+    }//end
 
     public void setListener(CustomerCheckInInterface listener) {
         this.customerCheckInListener = listener;

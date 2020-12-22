@@ -1,85 +1,127 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/discLayout"
     android:layout_width="650dp"
     android:layout_height="400dp"
-    android:minWidth="700dp"
-    android:minHeight="450dp"
-    android:background="@color/layer3"
+    android:minWidth="500dp"
+    android:minHeight="300dp"
+    android:layoutDirection="locale"
+    android:background="@color/layer7"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context="com.dr7.salesmanmanager.DiscountFragment">
+    android:padding="15dp"
+
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
         android:text="@string/app_enter_cust_code"
         android:textColor="@color/text_view_color"
-        android:textSize="20sp"
+        android:textSize="18sp"
+
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         />
 
     <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
         android:orientation="horizontal"
         >
 
         <TextView
             android:id="@+id/customerAccountNo"
-            android:layout_width="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="30dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
             android:background="@color/totals_color"
-            android:enabled="false"
             android:textColor="@color/text_view_color"
-            android:layout_weight="5" />
+           />
 
         <ImageButton
             android:id="@+id/find_img_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/search_btn" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:background="@drawable/ic_search_black_24dp" />
 
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/checkInCustomerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
         android:text="@string/app_cust_name"
         android:textColor="@color/text_view_color"
-        android:textSize="20sp"
+        android:textSize="18sp"
+
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        />
+    <TextView
+        android:id="@+id/che"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:textColor="@color/text_view_color"
+        android:textSize="18sp"
+
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeMinTextSize="14sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
         android:layout_columnSpan="2"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/okButton"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:text="@string/app_ok"
-            android:layout_marginHorizontal="35dp"
-            android:textColor="@color/layer5"
+            android:textSize="16sp"
+
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/cancelButton"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="35dp"
-            android:background="@color/cancel_button"
+            android:layout_marginHorizontal="25dp"
+            android:background="@drawable/cancel_button"
             android:text="@string/app_cancel"
-            android:textColor="@color/layer5"
+            android:textSize="16sp"
+
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

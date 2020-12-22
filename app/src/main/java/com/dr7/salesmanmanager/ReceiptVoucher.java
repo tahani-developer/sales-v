@@ -16,16 +16,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+//import android.support.annotation.RequiresApi;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.widget.LinearLayoutManager;
+//import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -57,6 +66,14 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.ganesh.intermecarabic.Arabic864;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -76,10 +93,14 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherForPrint;
 import static java.util.Calendar.JANUARY;
 
 /**
@@ -97,7 +118,7 @@ public class ReceiptVoucher extends Fragment {
     public static List<Payment> payments;
     public static List<Payment> paymentsforPrint;
     Animation animZoomIn;
-    private LinearLayout chequeLayout,linear_checkNo;
+    private LinearLayout chequeLayout,linear_checkNo,mailLinearRecipt;
     private ScrollView scrollView;
     private Spinner paymentKindSpinner;
     private ImageView pic;
@@ -144,6 +165,7 @@ public class ReceiptVoucher extends Fragment {
 
     public static List<Payment> paymentPrinter;
     static Payment pay1;
+    public  static  boolean isArabicBank=false;
     String checkValue="";
     int  amountValue=0;
     RecyclerView recycler_check;
@@ -157,7 +179,10 @@ public class ReceiptVoucher extends Fragment {
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     String today = df.format(currentTimeAndDate);
     Date dateConverter;
+    int id_Bank;
+    int[] listImageIcone=new int[]{ R.drawable.ic_save_black_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_delete_forever_black_24dp };
 
+    String[] textListButtons=new String[]{};
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
     }
@@ -172,6 +197,7 @@ public class ReceiptVoucher extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -185,6 +211,20 @@ public class ReceiptVoucher extends Fragment {
 
         mDbHandler = new DatabaseHandler(getActivity());
         payments = new ArrayList<Payment>();
+        mailLinearRecipt = (LinearLayout) view.findViewById(R.id.mailLinearRecipt);
+        try {
+            if (languagelocalApp.equals("ar")) {
+                mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+}
+        catch (Exception e){
+            mailLinearRecipt.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+
         chequeLayout = (LinearLayout) view.findViewById(R.id.cheques_totals);
         linear_checkNo= (LinearLayout) view.findViewById(R.id.linear_checkNo);
         paymentKindSpinner = (Spinner) view.findViewById(R.id.paymentTypeSpinner);
@@ -208,7 +248,63 @@ public class ReceiptVoucher extends Fragment {
         rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
         editChech= (FloatingActionButton) view.findViewById(R.id.edit_floating);
         editChech.setOnClickListener(onClickEditCheck);
+        textListButtons=new String[]{getResources().getString(R.string.save),getResources().getString(R.string.print),getResources().getString(R.string.delet)};
 
+        //*************************** BoomMenu*******************************
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_2);
+
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+//            bmb.addBuilder(new SimpleCircleButton.Builder()
+//                    .normalImageRes(listImageIcone[i]));
+            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+                    .textSize(10)
+                    .normalText(textListButtons[i])
+                    .textPadding(new Rect(5, 16, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    saveChecks();
+                                    break;
+                                case 1:
+                                    try {
+                                        voucherNoReprint = mDbHandler.getLastVoucherNo_payment();
+                                        Log.e("voucherNoRe", "" + voucherNoReprint);
+                                        if (voucherNoReprint != 0) {
+                                            printLastPaymentpaper(voucherNoReprint);
+                                        } else {
+                                            Toast.makeText(context, "No Payment For This Customer", Toast.LENGTH_SHORT).show();
+                                        }
+
+//
+                                    } catch (Exception e) {
+                                        Log.e("ExcepvoucherNoRe", "" + e.getMessage());
+                                        voucherNoReprint = 0;
+                                    }
+                                    break;
+                                case 2:
+                                    clearDialog();
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+
+
+        }
+        //**********************************************************
 //
 //        vouchers = obj.getAllVouchers();
 
@@ -233,6 +329,7 @@ public class ReceiptVoucher extends Fragment {
         });
 
         voucherNumber = mDbHandler.getMaxSerialNumber(1) + 1;//for test 1
+        Log.e("voucherNumber", "onCreateView" +voucherNumber);
         voucherNo.setText(getResources().getString(R.string.payment_number) + " : " + voucherNumber);
 
         String payMethod = "";
@@ -279,7 +376,7 @@ public class ReceiptVoucher extends Fragment {
                            editChech.setVisibility(View.GONE);
                            displayManulaCheck();
 //                           editChech.setVisibility(View.VISIBLE);
-//                          if(! TextUtils.isEmpty(chequCounter)){
+//                          if(! TextUtils.isEmpty( Counter)){
 //                              try {
 //
 //                                  counter = Integer.parseInt(chequCounter);
@@ -344,18 +441,8 @@ public class ReceiptVoucher extends Fragment {
             @Override
             public void onClick(View v) {
                 clearImgButton.setAnimation(animZoomIn);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        clearForm();
-                    }
-                });
+                clearDialog();
 
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
             }
         });
 
@@ -369,47 +456,7 @@ public class ReceiptVoucher extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
-
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int l) {
-
-                        String s = amountEditText.getText().toString();
-                        String spinner = paymentKindSpinner.getSelectedItem().toString();
-                        if (spinner == getResources().getString(R.string.cash)) {
-                            if (!s.equals("") && Double.parseDouble(s) != 0) {
-                                voucherType = 1;
-                                saveAmount(voucherType);
-
-                            } else {
-                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                            }
-                        } else if (spinner == getResources().getString(R.string.app_creditCard)) {
-                            if (!s.equals("") && Double.parseDouble(s) != 0) {
-                                voucherType = 2;
-                                saveAmount(voucherType);
-
-                            } else {
-                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            if (!checkValue())
-                                Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
-                            else {
-
-                                saveChequ();
-                            }
-                        }
-                    }
-                });
-
-                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-                builder.create().show();
+                saveChecks();
             }
         });
 
@@ -480,6 +527,84 @@ public class ReceiptVoucher extends Fragment {
 
         return view;
     }
+
+    private void clearDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                clearForm();
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+        builder.create().show();
+    }
+
+    private void saveChecks() {
+        try {
+            closeBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+
+        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(DialogInterface dialogInterface, int l) {
+
+                String s = amountEditText.getText().toString();
+                String spinner = paymentKindSpinner.getSelectedItem().toString();
+                if (spinner == getResources().getString(R.string.cash)) {
+                    if (!s.equals("") && Double.parseDouble(s) != 0) {
+                        voucherType = 1;
+                        saveAmount(voucherType);
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                    }
+                } else if (spinner == getResources().getString(R.string.app_creditCard)) {
+                    if (!s.equals("") && Double.parseDouble(s) != 0) {
+                        voucherType = 2;
+                        saveAmount(voucherType);
+
+                    } else {
+                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    if (!checkValue())
+                        Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
+                    else {
+
+                        saveChequ();
+
+//                                if(!Login.salesMan.equals(""))
+//                                {
+
+//                                }
+//                                else{
+//                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+//                                            .setTitleText(getResources().getString(R.string.warning_message))
+//                                            .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                                            .show();
+//                                }
+
+
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+        builder.create().show();
+
+    }
+
     private View.OnClickListener onClickEditCheck=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -525,18 +650,24 @@ public class ReceiptVoucher extends Fragment {
             chNum.setText((++serialNo)+"");
             chValue.requestFocus();
             chValue.setText((totalAmount-curentAmount)+"");
-            Log.e("curentAmount",""+curentAmount);
+            bank.setSelection( id_Bank);
             df = new SimpleDateFormat( "dd/MM/yyyy");
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             try {
                  dateConverter = sdf.parse(previusDate);
-                Log.e("dateConverter",""+dateConverter);
             } catch (ParseException ex) {
                 Log.v("Exception", ex.getLocalizedMessage());
             }
-            currentTimeAndDate=addOneMonth(dateConverter);
-            today = df.format(currentTimeAndDate);
-            chDate.setText(convertToEnglish(today));
+            try {
+                currentTimeAndDate=addOneMonth(dateConverter);
+                today = df.format(currentTimeAndDate);
+                chDate.setText(convertToEnglish(today));
+            }
+            catch ( Exception e)
+            {
+
+            }
+
         }
 
         Button okButton = (Button) dialog.findViewById(R.id.button1);
@@ -577,13 +708,10 @@ public class ReceiptVoucher extends Fragment {
                             check.setAmount(Double.parseDouble(chValue.getText().toString()));
                             valuecheck=Double.parseDouble(chValue.getText().toString());
                             curentAmount+=valuecheck;
-                            Log.e("curentAmount1",""+curentAmount);
+                            id_Bank= bank.getSelectedItemPosition();
+
                             payments.add(check);
                             paymentsforPrint.add(check);
-                            Log.e("payments", "" + payments.size());
-                            Log.e("payments tsst", "" + payments.size() + " " + chNum.getText().toString() + " \n" + bank.getSelectedItem().toString()
-                                    + "\n" + chDate.getText().toString() + "\n" + chValue.getText().toString());
-
                             row.setTag(position);
                             for (int i = 0; i < 4; i++) {
 
@@ -619,11 +747,12 @@ public class ReceiptVoucher extends Fragment {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             int tag = Integer.parseInt(row.getTag().toString());
+                                            Log.e("tagDelet",""+tag+"\tpayments"+payments.size());
                                             payments.remove(tag);
+                                            paymentsforPrint.remove(tag);
                                             tableCheckData.removeView(row);
                                             total = total - Double.parseDouble(chValue.getText().toString());
                                             curentAmount-=Double.parseDouble(chValue.getText().toString());
-                                            Log.e("curentAmount",""+curentAmount);
                                             chequeTotal.setText(convertToEnglish(new DecimalFormat("##.###").format(total)) + "");
                                             position--;
                                             for (int k = 0; k < tableCheckData.getChildCount(); k++) {
@@ -746,7 +875,7 @@ public class ReceiptVoucher extends Fragment {
 //
 //
 //    }
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void displayAutoCheck(int counter, int flag) {
         editChech.setVisibility(View.VISIBLE);
         final Dialog dialog = new Dialog(getActivity());
@@ -921,7 +1050,8 @@ public class ReceiptVoucher extends Fragment {
                 } else
                     Toast.makeText(getActivity(), "Please Enter all values", Toast.LENGTH_SHORT).show();
     }
-    private void displayEditCheck( List<Cheque> Listitems) {
+    @SuppressLint("WrongConstant")
+    private void displayEditCheck(List<Cheque> Listitems) {
         Log.e("displayEditCheck",""+Listitems.size());
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1124,6 +1254,7 @@ public class ReceiptVoucher extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveChequ() {
+        int salesMan=0;
         Toast.makeText(getActivity(), "Amount Saved", Toast.LENGTH_LONG).show();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -1136,8 +1267,15 @@ public class ReceiptVoucher extends Fragment {
         String cusName = CustomerListShow.Customer_Name;
         Double amount = Double.parseDouble(amountEditText.getText().toString());
         String remark = remarkEditText.getText().toString();
+        try {
+             salesMan = Integer.parseInt(Login.salesMan);
+        }
+        catch (Exception e)
+        {
 
-        int salesMan = Integer.parseInt(Login.salesMan);
+        }
+
+
 
         payment = new Payment(0, voucherNumber, salesMan, payDate,
                 remark, amount, 0, cusNumber, cusName, 0, Integer.parseInt(paymentYear));
@@ -1157,6 +1295,8 @@ public class ReceiptVoucher extends Fragment {
 //                                    row = row.substring(0, 42) + payments.get(i).getAmount() + row.substring(42, row.length());
             row = row.trim();
             row += "\n" + " " + payments.get(i).getBank();//test + =
+            isArabicBank=textContainsArabic(payments.get(0).getBank());
+            Log.e("isArabicBank",""+isArabicBank+""+payments.get(0).getBank());
 
             itemsString = "\n" + itemsString + "\n" + row;
 
@@ -1176,13 +1316,17 @@ public class ReceiptVoucher extends Fragment {
 //                                                             lk30.setChecked(true);
                 break;
             case 1:
+                convertLayoutToImage(getActivity());
+                Intent gg = new Intent(getActivity(), bMITP.class);
+                gg.putExtra("printKey", "2");
+                startActivity(gg);
 
-                try {
-                    findBT();
-                    openBT(1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    findBT();
+//                    openBT(1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 //                                                             lk31.setChecked(true);
                 break;
             case 2:
@@ -1202,27 +1346,30 @@ public class ReceiptVoucher extends Fragment {
 
                 break;
             case 3:
-
-                try {
-                    findBT();
-                    openBT(3);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                convertLayoutToImage(getActivity());
+                Intent ll = new Intent(getActivity(), bMITP.class);
+                ll.putExtra("printKey", "2");
+                startActivity(ll);
+//                try {
+//                    findBT();
+//                    openBT(3);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 //                                                             qs.setChecked(true);
                 break;
             case 4:
                 printTally();
                 break;
 
-            case 5:
-                convertLayoutToImage(getActivity());
-                Intent O1 = new Intent(getActivity(), bMITP.class);
-                O1.putExtra("printKey", "2");
-                startActivity(O1);
+            case 5://                                                             MTP.setChecked(true);
 
+            case 6:// inner printer
+                convertLayoutToImage(getActivity());
+                Intent inte = new Intent(getActivity(), bMITP.class);
+                inte.putExtra("printKey", "2");
+                startActivity(inte);
                 break;
-//                                                             MTP.setChecked(true);
 
         }
 
@@ -1258,29 +1405,30 @@ public class ReceiptVoucher extends Fragment {
         mDbHandler.addPayment(payment);
         CompanyInfo companyInfo = new CompanyInfo();
         try {
-            int printer = mDbHandler.getPrinterSetting();
-            companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+            if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 0) {// save and print
+                int printer = mDbHandler.getPrinterSetting();
+                companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
 
-                switch (printer) {
-                    case 0:
-                        Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
-                        i.putExtra("printKey", "2");
-                        startActivity(i);
+                    switch (printer) {
+                        case 0:
+                            Intent i = new Intent(getActivity(), BluetoothConnectMenu.class);
+                            i.putExtra("printKey", "2");
+                            startActivity(i);
 
 //                                                             lk30.setChecked(true);
-                        break;
-                    case 1:
+                            break;
+                        case 1:
 
-                        try {
-                            findBT();
-                            openBT(1);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                findBT();
+                                openBT(1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 //                                                             lk31.setChecked(true);
-                        break;
-                    case 2:
+                            break;
+                        case 2:
 
 //                                                try {
 //                                                    findBT();
@@ -1288,39 +1436,49 @@ public class ReceiptVoucher extends Fragment {
 //                                                } catch (IOException e) {
 //                                                    e.printStackTrace();
 //                                                }
-                        convertLayoutToImage(getActivity());
-                        Intent O1 = new Intent(getActivity(), bMITP.class);
-                        O1.putExtra("printKey", "2");
-                        startActivity(O1);
+//                            convertLayoutToImage(getActivity());
+                            Intent O1 = new Intent(getActivity(), bMITP.class);
+                            O1.putExtra("printKey", "2");
+                            startActivity(O1);
 //                                                             lk32.setChecked(true);
-                        break;
-                    case 3:
+                            break;
+                        case 3:
 
-                        try {
-                            findBT();
-                            openBT(3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            try {
+                                findBT();
+                                openBT(3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 //                                                             qs.setChecked(true);
-                        break;
-                    case 4:
-                        printTally();
-                        break;
-                    case 5:
+                            break;
+                        case 4:
+                            printTally();
+                            break;
+                        case 5:
 
-                        convertLayoutToImage(getActivity());
-                        Intent O = new Intent(getActivity(), bMITP.class);
-                        O.putExtra("printKey", "2");
-                        startActivity(O);
+
 //                                                             MTP.setChecked(true);
-                        break;
+
+                        case 6:// inner printer
+//                            convertLayoutToImage(getActivity());
+                            Intent O = new Intent(getActivity(), bMITP.class);
+                            O.putExtra("printKey", "2");
+                            startActivity(O);
+                            break;
+
+                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
 
                 }
-            } else {
-                Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_LONG).show();
-
             }
+            else {
+                new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText(getContext().getString(R.string.succsesful))
+                        .show();
+            }
+
         } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
@@ -1445,6 +1603,10 @@ public class ReceiptVoucher extends Fragment {
         payments.clear();
         chequNo_EditText.setText("");
         editChech.setVisibility(View.GONE);
+        checkNo=0;
+        serialNo=0;
+        curentAmount=0;
+        valuecheck=0;
     }
 
     public String convertToEnglish(String value) {
@@ -1966,6 +2128,7 @@ public class ReceiptVoucher extends Fragment {
     void sendData() throws IOException {
         try {
 
+//************************************ alban alsaa *************************
 
             Log.e("******", "here");
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
@@ -1996,26 +2159,52 @@ public class ReceiptVoucher extends Fragment {
                             "       " + "\n" +
                             "       ";
                 } else {
-                    msg = "       " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "       " + "\n" +
-                            "       " + "\n" +
-                            itemsString + "\n" +
-                            "       " + "\n" +
-                            "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
-                            "       " + "\n" +
-                            "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
-                            "المبلغ المقبوض: " + payment.getAmount() + "\n" +
-                            "ملاحظة: " + payment.getRemark() + "\n" +
-                            payment.getCustName() + "\n" +
-                            "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
-                            "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
-                            " سند قبض " + "\n" +
-                            "----------------------------------------------" + "\n" +
-                            "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
-                            companyInfo.getCompanyName() + "\n" +
-                            "       " + "\n" +
-                            "       ";
+                    Log.e("isArabicBank",""+isArabicBank);
+                    if(isArabicBank){
+                        msg = "       " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "       " + "\n" +
+                                "       " + "\n" +
+                                itemsString + "\n" +
+                                "       " + "\n" +
+                                "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
+                                "       " + "\n" +
+                                "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
+                                "المبلغ المقبوض: " + payment.getAmount() + "\n" +
+                                "ملاحظة: " + payment.getRemark() + "\n" +
+                                payment.getCustName() + "\n" +
+                                "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
+                                "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                                " سند قبض " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                                companyInfo.getCompanyName() + "\n" +
+                                "       " + "\n" +
+                                "       ";
+                    }
+                    else {
+                        msg = "       " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "       " + "\n" +
+                                "       " + "\n" +
+                                itemsString + "\n" +
+                                "       " + "\n" +
+                                "  البنك     " + "  رقم الشيك  " + "  التاريخ       " + "  القيمة  " + "\n" +
+                                "       " + "\n" +
+                                "طريقة الدفع: " + (payment.getPayMethod() == 1 ? "نقدا" : "شيك") + "\n" +
+                                "المبلغ المقبوض: " + payment.getAmount() + "\n" +
+                                "ملاحظة: " + payment.getRemark() + "\n" +
+                                payment.getCustName() + "\n" +
+                                "وصلني من السيد/السادة: " + "\n" + "       " + "\n" +
+                                "رقم السند: " + payment.getVoucherNumber() + "         التاريخ: " + payment.getPayDate() + "\n" +
+                                " سند قبض " + "\n" +
+                                "----------------------------------------------" + "\n" +
+                                "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                                companyInfo.getCompanyName() + "\n" +
+                                "       " + "\n" +
+                                "       ";
+                    }
+
                 }
                 printCustom(msg + "\n", 1, 2);
 //**************************************************************************************************************************************************************
@@ -2146,6 +2335,14 @@ public class ReceiptVoucher extends Fragment {
             closeBT();
             e.printStackTrace();
         }
+    }
+    public static boolean textContainsArabic(String text) {
+        for (char charac : text.toCharArray()) {
+            if (Character.UnicodeBlock.of(charac) == Character.UnicodeBlock.ARABIC) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Bitmap StringToBitMap(String encodedString) {

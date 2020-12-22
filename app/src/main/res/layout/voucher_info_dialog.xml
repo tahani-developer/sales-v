@@ -3,23 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:background="@color/white"
     android:padding="10dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:padding="5dp"
+        android:layout_margin="3dp"
         android:orientation="horizontal"
-        android:background="@color/layer3"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp">
+        android:background="@color/colorblue_dark"
+      >
 
         <TextView
             android:layout_width="match_parent"
@@ -27,7 +22,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_number"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -36,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_name"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -45,18 +40,15 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/unit_qty"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:background="@color/layer2"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_height="150dp"
+        android:background="@color/layer7"
+     android:layout_margin="3dp"
         >
 
         <TableLayout
@@ -79,10 +71,10 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="20dp"
+            android:layout_margin="5dp"
             android:imeOptions="actionDone"
-            android:background="@color/done_button"
-            android:textColor="@color/layer5"
+            android:background="@drawable/done_button"
+            android:textColor="@color/layer7"
             android:text="@string/app_done"
             android:textStyle="bold"
             tools:ignore="TextViewEdits" />

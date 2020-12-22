@@ -4,12 +4,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.design.widget.TabLayout;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Customer;
@@ -27,16 +29,20 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Reports.SalesMan;
+import com.sewoo.request.android.RequestHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -45,7 +51,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarException;
 
-public class ImportJason extends AppCompatActivity{
+import javax.net.ssl.HttpsURLConnection;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+public class ImportJason extends AppCompatActivity {
 
     private String URL_TO_HIT ;
     private Context context;
@@ -82,16 +92,22 @@ public class ImportJason extends AppCompatActivity{
         if(settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new JSONTask().execute(URL_TO_HIT);
-//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-//            if(start==true) {
-//                new JSONTask().execute(URL_TO_HIT);
-//            }
-//            else{
-//                Toast.makeText(context, R.string.failStockSoft_export_data, Toast.LENGTH_SHORT).show();
+//            if(mHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
+//            {
+//                checkUnpostedCustomer();
+//
 //
 //            }
+//            else {
+                new JSONTask().execute(URL_TO_HIT);
+//            }
         }
+
+
+    }
+
+    private void checkUnpostedCustomer() {
+        new SQLTask_unpostVoucher().execute(URL_TO_HIT);
     }
 
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
@@ -105,6 +121,15 @@ public class ImportJason extends AppCompatActivity{
         protected String doInBackground(String... strings) {
             URLConnection connection = null;
             BufferedReader reader = null;
+            String ipAddress = "";
+            String finalJson="";
+
+            try {
+                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+
+            } catch (Exception e) {
+                Toast.makeText(ImportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+            }
 
             try {
 
@@ -140,15 +165,9 @@ public class ImportJason extends AppCompatActivity{
                     sb.append(line);
                 }
 
-                String finalJson = sb.toString();
-                Log.e("finalJson'4'", finalJson);
-                if(finalJson.contains("FAIL"))
-                {
-                    start=false;
-                }
-                else
-                    if(finalJson.contains("SUCCESS"))
-                    {start=true;}
+                 finalJson = sb.toString();
+                Log.e("finalJson", "********ex1"+finalJson);
+
             } catch (MalformedURLException e) {
                 Log.e("import_unpostvoucher", "********ex1"+e.getMessage());
                 e.printStackTrace();
@@ -156,7 +175,7 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
             }
 
-            return "";
+            return finalJson;
         }
 
         @Override
@@ -169,6 +188,18 @@ public class ImportJason extends AppCompatActivity{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            if(s.contains("FAIL"))
+            {
+                start=false;
+            }
+            else
+            if(s.contains("SUCCESS"))
+            {
+                start=true;
+                new JSONTask().execute(URL_TO_HIT);
+
+            }
 //            if(start==true)
 //            {
 //                new JSONTask().execute(URL_TO_HIT);
@@ -230,23 +261,26 @@ public class ImportJason extends AppCompatActivity{
 //                }
 
                 String link= URL_TO_HIT;
-
-
-                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
-                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
-
                 URL url = new URL(link);
 
-                URLConnection conn = url.openConnection();
-
-
-                conn.setDoOutput(true);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(data);
-                wr.flush();
-
+                //*************************************
+                HttpURLConnection httpsURLConnection = (HttpURLConnection)url.openConnection();
+                httpsURLConnection.setRequestMethod("POST");
+                httpsURLConnection.setDoOutput(true);
+                httpsURLConnection.setDoInput(true);
+                OutputStream outputStream= httpsURLConnection.getOutputStream();
+//                test= " still good";
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+//                String post_data= URLEncoder.encode("username ", "UTF-8")+"="+URLEncoder.encode(username , "UTF-8")+"&"
+////                        +URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password , "UTF-8");
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
                 reader = new BufferedReader(new
-                        InputStreamReader(conn.getInputStream()));
+                        InputStreamReader(httpsURLConnection.getInputStream()));
 
 
                 StringBuilder sb = new StringBuilder();
@@ -256,9 +290,35 @@ public class ImportJason extends AppCompatActivity{
                 while((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
+                //*************************************
+//                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+//                        URLEncoder.encode(String.valueOf('1'), "UTF-8");
+//
+//                URL url = new URL(link);
+//
+//                URLConnection conn = url.openConnection();
+//
+//
+//                conn.setDoOutput(true);
+//                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+//                wr.write(data);
+//                wr.flush();
+//
+//
+//                reader = new BufferedReader(new
+//                        InputStreamReader(conn.getInputStream()));
+//
+//
+//                StringBuilder sb = new StringBuilder();
+//                String line = null;
+//
+//                // Read Server Response
+//                while((line = reader.readLine()) != null) {
+//                    sb.append(line);
+//                }
 
                 String finalJson = sb.toString();
-                Log.e("finalJson*********" , finalJson);
+                Log.e("finalJson***Import" , finalJson);
                 String rate_customer="";
                 String HideVal="";
 
@@ -317,6 +377,7 @@ public class ImportJason extends AppCompatActivity{
                             Customer.setACCPRC("0");
 
                         }
+                        Customer.setCustomerIdText(finalObject.getString("CustID"));
                     }
                     catch (Exception e)
                     {
@@ -355,7 +416,9 @@ public class ImportJason extends AppCompatActivity{
             }
                 try
                 {
+//                    `ITEMPICSPATH`
                 JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
+//                Log.e("parentArrayItems_Master",""+parentArrayItems_Master.getString(""));
                 itemsMasterList.clear();
                 for (int i = 0; i < parentArrayItems_Master.length(); i++) {
                     JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);
@@ -382,6 +445,29 @@ public class ImportJason extends AppCompatActivity{
                         item.setKind_item("***");
 
                     }
+                    try {
+                        item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
+                        Log.e("setItemHasSerialJSON",""+finalObject.getString("ITEMHASSERIAL"));
+                    }
+                    catch (Exception e)
+                    {}
+                    try {
+                        if(  finalObject.getString("ITEMPICSPATH") == "" ||  finalObject.getString("ITEMPICSPATH") == null || finalObject.getString("ITEMPICSPATH") == "null")
+                        {
+                            item.setPhotoItem("");
+                        }
+                        else {
+                            item.setPhotoItem( finalObject.getString("ITEMPICSPATH"));
+                        }
+
+
+
+                        Log.e("ITEMPICSPATH",""+finalObject.getString("ITEMPICSPATH"));
+                    }
+                    catch (Exception e)
+                    {                            item.setPhotoItem( "");
+                    }
+//                    ITEMPICSPATH
                     itemsMasterList.add(item);
                 }
                 }
@@ -657,7 +743,9 @@ public class ImportJason extends AppCompatActivity{
                 Log.e("Customer", "********ex1");
                 e.printStackTrace();
             } catch (IOException e) {
-                Log.e("Customer", e.getMessage().toString());
+                Log.e("CustomerIOException", e.getMessage().toString());
+                progressDialog.dismiss();
+//                Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
 
             } catch (JSONException e) {
@@ -665,10 +753,10 @@ public class ImportJason extends AppCompatActivity{
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                if (connection != null) {
-                    Log.e("Customer", "********ex4");
-                    // connection.disconnect();
-                }
+//                if (connection != null) {
+//                    Log.e("Customer", "********ex4");
+//                    // connection.disconnect();
+//                }
                 try {
                     if (reader != null) {
                         reader.close();
@@ -687,11 +775,12 @@ public class ImportJason extends AppCompatActivity{
             super.onPostExecute(result);
             progressDialog.dismiss();
 
-            if (result != null) {
+            if (result != null && result.size()!=0) {
                 Log.e("Customerr", "*****************" + customerList.size());
                 storeInDatabase();
             } else {
-                Toast.makeText(context, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
             }
         }
     }

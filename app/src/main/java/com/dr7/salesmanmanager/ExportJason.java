@@ -1,12 +1,17 @@
 package com.dr7.salesmanmanager;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Looper;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -15,6 +20,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -22,6 +28,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -41,12 +48,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class ExportJason extends AppCompatActivity {
 
-    private Context context;
+    public Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
-            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation;
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial;
     DatabaseHandler mHandler;
 
     public static List<Transaction> transactions = new ArrayList<>();
@@ -60,6 +69,7 @@ public class ExportJason extends AppCompatActivity {
      public  static  List<SalesManItemsBalance> salesManItemsBalanceList=new ArrayList<>();
     public  static  List<Item> stockRequestListList=new ArrayList<>();
     public  static  List<CustomerLocation> customerLocationList=new ArrayList<>();
+    public  static  List<serialModel> serialModelList=new ArrayList<>();
 //    getCustomerLocation
 
     public ExportJason(Context context) throws JSONException {
@@ -68,7 +78,26 @@ public class ExportJason extends AppCompatActivity {
     }
 
 
-    void startExportDatabase() {
+    void startExportDatabase() throws JSONException {
+        //
+//
+
+        try {
+            serialModelList = mHandler.getAllSerialItems();
+            Log.e("serialModelList",""+serialModelList);
+            jsonArraySerial = new JSONArray();
+            for (int i = 0; i < serialModelList.size(); i++)
+            {
+                if(serialModelList.get(i).getIsPosted().equals("0")){
+                    jsonArraySerial.put(serialModelList.get(i).getJSONObject());
+                }
+            }
+            Log.e("jsonArraySerial",""+jsonArraySerial.getJSONObject(0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //*************************************************************
         customerLocationList = mHandler.getCustomerLocation();
         jsonArrayLocation = new JSONArray();
         for (int i = 0; i < customerLocationList.size(); i++)
@@ -77,7 +106,15 @@ public class ExportJason extends AppCompatActivity {
             customerLocationList.get(i).getLATIT();
 
             customerLocationList.get(i).getLONG();
-            jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
+
+            if (customerLocationList.get(i).getIsPost() == 0) {
+//                customerLocationList.get(i).setIsPost(1);
+//
+
+                jsonArrayLocation.put(customerLocationList.get(i).getJSONObject());
+            }
+
+
         }
 
         //******************************************
@@ -92,13 +129,14 @@ public class ExportJason extends AppCompatActivity {
         salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
         jsonArrayBalance=new JSONArray();
 
-        for (int i = 0; i < salesManItemsBalanceList.size(); i++)
-        {
-            salesManItemsBalanceList.get(i).getSalesManNo();
-            salesManItemsBalanceList.get(i).getItemNo();
-            salesManItemsBalanceList.get(i).getQty();
-            jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
-        }
+        for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
+
+                salesManItemsBalanceList.get(i).getSalesManNo();
+                salesManItemsBalanceList.get(i).getItemNo();
+                salesManItemsBalanceList.get(i).getQty();
+                jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
+            }
+
         //******************************************
         stockRequestListList=mHandler.getAllStockRequestItems();
         jsonArrayStockRequest=new JSONArray();
@@ -110,53 +148,52 @@ public class ExportJason extends AppCompatActivity {
         }
         //********************************************
 
-        vouchers = mHandler.getAllVouchers();
+        vouchers = mHandler.getAllVouchers();// from voucher master
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
-            if (vouchers.get(i).getIsPosted() == 0)
             {
-                vouchers.get(i).setIsPosted(1);
-//                vouchers.get(i).setRemark("\\%");
-                jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                if (vouchers.get(i).getIsPosted() == 0) {
+                    jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                }
             }
 
         items = mHandler.getAllItems();
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
-            if (items.get(i).getIsPosted() == 0) {
-                items.get(i).setIsPosted(1);
-               // Log.e("getDescription",""+items.get(i).getDescription());
-                jsonArrayItems.put(items.get(i).getJSONObject());
-                //Log.e("getJSONObject",""+items.get(i).getJSONObject());
-            }
+           {
+               if (items.get(i).getIsPosted() == 0) {
 
-//        try {
-//            Log.e("export****" , jsonArrayItems.get(jsonArrayItems.length()-1).toString().trim());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+                   jsonArrayItems.put(items.get(i).getJSONObject());
+
+               }
+
+            }
 
         payments = mHandler.getAllPayments();
         jsonArrayPayments = new JSONArray();
         for (int i = 0; i < payments.size(); i++)
-            if (payments.get(i).getIsPosted() == 0) {
-                payments.get(i).setIsPosted(1);
-                jsonArrayPayments.put(payments.get(i).getJSONObject());
+     {
+         if (payments.get(i).getIsPosted() == 0) {
+//                payments.get(i).setIsPosted(1);
+             jsonArrayPayments.put(payments.get(i).getJSONObject());
+         }
             }
 
         paymentsPaper = mHandler.getAllPaymentsPaper();
         jsonArrayPaymentsPaper = new JSONArray();
         for (int i = 0; i < paymentsPaper.size(); i++)
+        {
             if (paymentsPaper.get(i).getIsPosted() == 0) {
-                paymentsPaper.get(i).setIsPosted(1);
+//                paymentsPaper.get(i).setIsPosted(1);
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
+            }
             }
 
         addedCustomer = mHandler.getAllAddedCustomer();
         jsonArrayAddedCustomer = new JSONArray();
         for (int i = 0; i < addedCustomer.size(); i++)
-            if (addedCustomer.get(i).getIsPosted() == 0) {
-                addedCustomer.get(i).setIsPosted(1);
+        {
+//                addedCustomer.get(i).setIsPosted(1);
                 jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
             }
 
@@ -179,6 +216,7 @@ public class ExportJason extends AppCompatActivity {
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
+
         }
 
         @Override
@@ -202,13 +240,18 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "2"));
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_M", jsonArrayVouchers.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("Sales_Voucher_D", jsonArrayItems.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
+//                nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", ""));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
+
+                nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
@@ -231,14 +274,32 @@ public class ExportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "" + JsonResponse);
+                Log.e("tag", "JsonResponse\t" + JsonResponse);
 
                 return JsonResponse;
 
 
-            }catch (Exception e)
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex)
+            {
+                ex.printStackTrace();
+                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
+                progressDialog.dismiss();
                 return null;
             }
 
@@ -347,9 +408,30 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updatePaymentPaper();
                     mHandler.updateAddedCustomers();
                     mHandler.updateTransactions();
+                    mHandler.updateCustomersMaster();
+                    mHandler.updateSerialTableIsposted();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
+                    if(s.contains("SAVING_ERRORDuplicate"))
+                    {
+
+                    progressDialog.dismiss();
+                    try {
+                        int indexError=s.indexOf("entry");
+
+                        String errorMessage=s.substring(indexError,indexError+42);
+                        showDialogError(errorMessage);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+
+                    }
+//                    *********************************
+
                     Toast.makeText(context, "Failed to export data", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Failed to export data");
                 }
@@ -363,12 +445,21 @@ public class ExportJason extends AppCompatActivity {
                 }
                 catch (Exception e)
                 {
-                    Log.e("ImpoException",""+e.getMessage().toString());
+                    progressDialog.dismiss();
+                    Log.e("ExportException",""+e.getMessage().toString());
 
                 }
 
             }
             progressDialog.dismiss();
         }
+    }
+
+    private void showDialogError(String message) {
+        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(context.getResources().getString(R.string.duplicateddata))
+                .setContentText(message)
+
+                .show();
     }
 }

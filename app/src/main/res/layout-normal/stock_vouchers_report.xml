@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="@string/stock_request_vouchers_report"
+        android:textColor="@color/colorblue_dark"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+            android:text="@string/from_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/from_date"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:inputType="date"
+            android:textColor="@color/add_button"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="center_vertical"
+            android:text="@string/to_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/to_date"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:inputType="date"
+            android:textColor="@color/add_button"
+            android:textSize="15sp" />
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/row225"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:layout_gravity="center"
+        android:gravity="center"
+
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/preview"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+
+            android:background="@drawable/done_button"
+            android:text="@string/preview"
+            android:textColor="@color/layer5" />
+    </LinearLayout>
+
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.3"
+        android:background="@color/layer6"
+  android:layout_margin="5dp"
+        >
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/TableTransactionsReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:background="@color/layer5">
+
+            <TableRow
+                android:background="@color/colorblue_dark"
+                >
+
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucher_number"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/voucher_date"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/remark"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:text="@string/items"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+
+            </TableRow>
+
+        </TableLayout>
+    </ScrollView>
+
+</LinearLayout>

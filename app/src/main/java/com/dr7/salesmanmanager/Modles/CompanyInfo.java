@@ -9,6 +9,24 @@ public class CompanyInfo {
     private int taxNo;
     private Bitmap logo;
     private String noteForPrint;
+    private  double longtudeCompany;
+    private  double latitudeCompany;
+
+    public double getLongtudeCompany() {
+        return longtudeCompany;
+    }
+
+    public void setLongtudeCompany(double longtudeCompany) {
+        this.longtudeCompany = longtudeCompany;
+    }
+
+    public double getLatitudeCompany() {
+        return latitudeCompany;
+    }
+
+    public void setLatitudeCompany(double latitudeCompany) {
+        this.latitudeCompany = latitudeCompany;
+    }
 
     public CompanyInfo() {
     }

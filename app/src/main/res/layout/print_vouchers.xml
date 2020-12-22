@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layer1"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,7 +25,7 @@
                 android:gravity="center"
                 android:text="@string/action_print_voucher"
                 android:textColor="@color/text_view_color"
-                android:textSize="20sp"
+                android:textSize="@dimen/content_xlarge"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -63,7 +65,7 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:text="@string/to_date"
                     android:textColor="@color/text_view_color"
@@ -75,9 +77,10 @@
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginLeft="2dp"
                     android:focusable="false"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center_vertical"
                     android:inputType="date"
                     android:textColor="@color/add_button"
@@ -87,6 +90,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
                     android:layout_width="0dp"
                     android:layout_weight="1.5"
                     android:layout_marginLeft="2dp"
@@ -94,12 +98,12 @@
                     android:gravity="right"
 
                     android:padding="3dp"
-                    android:textColor="@color/colorPrimaryDark"/>
+                    android:textColor="@color/colorblue1"/>
 <RadioGroup
     android:id="@+id/transKindRadioGroup"
     android:layout_height="wrap_content"
     android:layout_width="0dp"
-    android:layout_weight="6"
+    android:layout_weight="8"
     android:background="@drawable/back_border_edit"
     android:orientation="horizontal">
 
@@ -109,15 +113,15 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:padding="3dp"
+        android:textSize="@dimen/content_large"
+
+
         android:checked="true"
         android:text="@string/sales" />
 
     <RadioButton
         android:id="@+id/retSalesRadioButton"
-        android:textSize="12sp"
-        android:padding="3dp"
+        android:textSize="@dimen/content_large"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -125,8 +129,7 @@
 
     <RadioButton
         android:id="@+id/orderRadioButton"
-        android:textSize="12sp"
-        android:padding="3dp"
+        android:textSize="@dimen/content_large"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
@@ -137,8 +140,9 @@
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:layout_marginHorizontal="50dp"
-                    android:background="@color/red_background"
+                    android:layout_margin="5dp"
+                    android:textSize="@dimen/content_large"
+                    android:background="@color/colorblue1"
                     android:text="@string/preview"
                     android:textColor="@color/layer5" />
 
@@ -166,12 +170,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/layer2">
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -197,6 +201,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
                     android:padding="5dp"
                     android:text="@string/voucher_number"
@@ -208,7 +214,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="5dp"
+                    android:autoSizeTextType="uniform"
+
                     android:text="@string/voucher_date"
                     android:textColor="@color/text_view_color"
                     android:textStyle="bold" />

@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -35,6 +36,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         this.mOriginalValues = custList;
         this.custList = custList;
         this.customerListShow = customerListShow;
+
     }
 
     public void setItemsList(List<Customer> custList) {
@@ -86,25 +88,39 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
                 CustomerListShow.PriceListId = custList.get(i).getPriceListId();
                 CustomerListShow.paymentTerm = custList.get(i).getPayMethod();
-                CustomerListShow.latitude=custList.get(i).getCustLat();
-                CustomerListShow.longtude=custList.get(i).getCustLong();
-                Log.e("longtudeListShow","="+  CustomerListShow.longtude+"\t lati"+ CustomerListShow.latitude);
+                    if((custList.get(i).getCustLat() == null)||(custList.get(i).getCustLong() == null))
+                    {
+                        CustomerListShow.latitude="";
+                                CustomerListShow.longtude="";
+                    }
+                    else {
+                        CustomerListShow.latitude=custList.get(i).getCustLat();
+                        CustomerListShow.longtude=custList.get(i).getCustLong();
+                    }
+
+
+
                 CustomerListShow.CreditLimit = custList.get(i).getCreditLimit();
                 CustomerListShow.Max_Discount_value = custList.get(i).getMax_discount();
-                if (custList.get(i).getIsSuspended() == 1) {
+                if (custList.get(i).getIsSuspended() == 1)
+                {
                     Toast toast = Toast.makeText(context, "This customer is susbended", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 180);
                     ViewGroup group = (ViewGroup) toast.getView();
                     TextView messageTextView = (TextView) group.getChildAt(0);
                     messageTextView.setTextSize(25);
                     toast.show();
-                } else {
+                } else
+                    {
                     CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
                     customerCheckInFragment.settext1();
-                }
-                CustomerListShow.CustHideValu=custList.get(i).getHide_val();
 
-                customerListShow.dismiss();
+                }
+
+                    CustomerListShow.CustHideValu=custList.get(i).getHide_val();
+                    customerListShow.dismiss();
+
+
             }
                 else{
                     Log.e("cust",""+custList.get(i).getIsSuspended());
@@ -166,9 +182,12 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
                         String data = mOriginalValues.get(i).getCustName();
+                        int paymetho = mOriginalValues.get(i).getPayMethod();
+
+                        Log.e("mOriginalpaymetho" , "paymetho"+paymetho);
                         if (data.toLowerCase().contains(constraint.toString())) {
-                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName()));
-                            Log.e("here" , "*********2" + constraint + "*" + data);
+                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getCustId(),mOriginalValues.get(i).getCustName(),mOriginalValues.get(i).getPayMethod()));
+                            Log.e("mOriginalValues" , "*********2" + constraint + "*" + mOriginalValues.get(i).getPayMethod());
                         }
                     }
                     // set the Filtered result to return

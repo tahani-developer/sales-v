@@ -3,9 +3,15 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,12 +19,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -31,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class StockRequestVouchersReport extends AppCompatActivity {
 
     List<Voucher> vouchers;
@@ -42,11 +52,31 @@ public class StockRequestVouchersReport extends AppCompatActivity {
     Calendar myCalendar;
     DatabaseHandler obj;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(StockRequestVouchersReport.this);
         setContentView(R.layout.stock_vouchers_report);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
@@ -105,7 +135,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                             row.setPadding(5, 10, 5, 10);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer4));
+                                row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer7));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer5));
 
@@ -146,7 +176,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                                         }
                                     });
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(40, 30, 0.2f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
@@ -162,17 +192,17 @@ public class StockRequestVouchersReport extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -180,10 +210,10 @@ public class StockRequestVouchersReport extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(StockRequestVouchersReport.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog);
         Window window = dialog.getWindow();
-        window.setLayout(700, 400);
+        window.setLayout(350, 400);
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 
@@ -194,7 +224,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                 row.setPadding(5, 10, 5, 10);
 
                 if (k % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer4));
+                    row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer7));
                 else
                     row.setBackgroundColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.layer5));
 
@@ -212,7 +242,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                     textView.setTextColor(ContextCompat.getColor(StockRequestVouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
                     textView.setLayoutParams(lp2);
                     row.addView(textView);
                 }

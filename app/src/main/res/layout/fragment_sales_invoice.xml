@@ -2,11 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/layer3"
     android:orientation="vertical"
     android:paddingBottom="20dp"
     android:paddingEnd="20dp"
     android:id="@+id/mainlyout"
+    android:layoutDirection="locale"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingStart="20dp"
@@ -17,7 +19,16 @@
     >
 
     <!-- TODO: Update blank fragment layout -->
-
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:bmb_normalColor="@color/colorblue1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:bmb_draggable="true"
+        />
     <LinearLayout
         android:id="@+id/row1"
         android:layout_width="match_parent"
@@ -89,7 +100,7 @@
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_disc"
             android:text="@string/app_disc_l"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
 <!--        <ImageButton-->
 <!--            android:id="@+id/addItemImgButton2"-->
@@ -124,7 +135,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginHorizontal="10dp"
-            android:background="@drawable/ic_disc" />
+            android:background="@drawable/info_customer" />
 
         <ImageView
             android:id="@+id/balanceImgBtn"
@@ -152,6 +163,18 @@
         android:gravity="center"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/readNewDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:checked="true"
+            android:visibility="gone"
+            android:text="@string/read_new_offer"
+            android:textColor="@color/cancel_button"
+            android:textSize="18sp"
+            />
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -159,6 +182,7 @@
             android:layout_margin="5dp"
             android:elevation="3dp"
             android:background="@drawable/back_border_edit">
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -372,7 +396,7 @@
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:text="@string/app_desc"
             android:textColor="@color/text_view_color"
             android:textSize="13sp"
@@ -426,10 +450,15 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
     <LinearLayout
         android:id="@+id/row7"
         android:layout_width="match_parent"
-        android:layout_height="215dp"
+        android:layout_alignParentTop="true"
+        android:layout_height="match_parent"
         android:layout_gravity="fill"
         android:orientation="vertical">
 
@@ -442,16 +471,20 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/totals"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:columnCount="8">
+        <LinearLayout
+            android:id="@+id/totals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/layer4"
+            android:layout_alignBottom="@id/row7"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="1dp"
+            android:columnCount="8">
 
         <LinearLayout
-            android:layout_width="190dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_marginHorizontal="15dp">
 
@@ -478,8 +511,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_marginHorizontal="15dp">
 
@@ -506,8 +540,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_marginHorizontal="15dp">
 
@@ -535,8 +570,9 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:layout_marginHorizontal="15dp">
 
@@ -560,5 +596,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

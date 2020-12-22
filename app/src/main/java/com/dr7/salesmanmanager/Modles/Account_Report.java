@@ -1,6 +1,6 @@
 package com.dr7.salesmanmanager.Modles;
 
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.dr7.salesmanmanager.R;

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/layer1"
-    android:padding="5dp"
+    android:layout_width="330dp"
+    android:layout_height="300dp"
+    android:background="@color/layer7"
+    android:padding="2dp"
     android:orientation="vertical">
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView01"
+        android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:layout_height="150dp">
+    <LinearLayout android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_margin="5dp"
         android:orientation="horizontal"
-        android:background="@color/layer3"
+        android:background="@color/colorblue_dark"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
 
@@ -27,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_number"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -36,7 +40,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/item_name"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -45,7 +49,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/unit_qty"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -54,7 +58,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/total_bonus_qty"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
@@ -63,28 +67,29 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/total_sales_noTax"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@color/layer2"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_height="100dp"
+        android:background="@color/layer7"
+
+        android:layout_margin="5dp"
         >
 
         <TableLayout
             android:id="@+id/TableItemsInfo1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/layer5">
+            android:background="@color/layer7">
 
         </TableLayout>
     </ScrollView>
+    </LinearLayout>
+    </HorizontalScrollView>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -99,7 +104,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             android:imeOptions="actionDone"
-            android:background="@color/done_button"
+            android:background="@drawable/done_button"
             android:textColor="@color/layer5"
             android:text="@string/app_done"
             android:textStyle="bold"

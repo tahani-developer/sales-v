@@ -9,6 +9,15 @@ public class CustomerLocation {
     private  String   CUS_NO;
     private  String   LONG ;
     private  String  LATIT ;
+    private  int  isPost ;
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
+    }
 
     public CustomerLocation() {
     }
