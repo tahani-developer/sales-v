@@ -66,6 +66,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitudeCheckIn;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
@@ -231,6 +232,8 @@ public class CustomerCheckInFragment extends DialogFragment {
 
                                 String currentTime = tf.format(currentTimeAndDate);
                                 String currentDate = df.format(currentTimeAndDate);
+                                currentDate=convertToEnglish(currentDate);
+                                currentTime=convertToEnglish(currentTime);
                                 int salesMan =1;
                                 try {
                                     salesMan = Integer.parseInt(Login.salesMan);
