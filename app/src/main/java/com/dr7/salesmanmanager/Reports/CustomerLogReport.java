@@ -16,21 +16,24 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class CustomerLogReport extends AppCompatActivity {
     private static final String TAG = "CustomerLogReport";
 
     List<Transaction> transactionList ;
-    ImageView expotTpExcel;
+    CircleImageView expotTpExcel,expotTpPdf;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -38,14 +41,22 @@ public class CustomerLogReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(CustomerLogReport.this);
         setContentView(R.layout.customer_log_report);
-
+//
         transactionList = new ArrayList<Transaction>();
         DatabaseHandler obj = new DatabaseHandler(CustomerLogReport.this);
         transactionList = obj.getAlltransactions();
         expotTpExcel=findViewById(R.id.expotTpExcel);
+        expotTpPdf=findViewById(R.id.expotTpPdf);
+        expotTpPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportToPdf();
+            }
+        });
         expotTpExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 exportToEx();
 
             }
@@ -93,14 +104,16 @@ public class CustomerLogReport extends AppCompatActivity {
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
     }
-//    public static ExportToExcel getInstance() {
-//        if (instance == null)
-//            instance = new ExportToExcel();
-//
-//        return instance;
-//    }
-    private void exportToEx() {
 
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(CustomerLogReport.this,"ReportCustomer.xls",1,transactionList);
+
+    }
+    public  void exportToPdf(){
+        Log.e("exportToPdf",""+transactionList.size());
+        PdfConverter pdf =new PdfConverter(CustomerLogReport.this);
+        pdf.exportListToPdf(transactionList,"Customer Log Report","21/12/2020",1);
     }
 
 }

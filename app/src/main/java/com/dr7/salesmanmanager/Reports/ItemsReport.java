@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 
 import androidx.annotation.RequiresApi;
@@ -26,9 +27,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -54,7 +63,7 @@ public class ItemsReport extends AppCompatActivity {
 
     double totalSold = 0 , totalBonus = 0 , totalSales = 0 ;
     private DecimalFormat decimalFormat;
-
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -85,7 +94,7 @@ public class ItemsReport extends AppCompatActivity {
         items = new ArrayList<Item>();
         DatabaseHandler obj = new DatabaseHandler(ItemsReport.this);
         items = obj.getAllItems();
-
+        inflateBoomMenu();
         TableItemsReport = (TableLayout) findViewById(R.id.TableItemsBalanceReport);
         voucherTypeRadioGroup = (RadioGroup) findViewById(R.id.transKindRadioGroup);
         from_date = (EditText) findViewById(R.id.from_date);
@@ -156,10 +165,10 @@ public class ItemsReport extends AppCompatActivity {
                             for (int i = 0; i < 5; i++) {
 
                                 String[] record = {
-                                        items.get(n).getItemNo() + "",
-                                        items.get(n).getItemName() + "",
-                                        items.get(n).getQty() + "",
-                                        items.get(n).getBonus() + "",
+                                        items.get(n).getItemNo()    + "",
+                                        items.get(n).getItemName()   + "",
+                                        items.get(n).getQty()       + "",
+                                        items.get(n).getBonus()     + "",
                                         ""};
 
                                 calTotalSales = (items.get(n).getQty() * items.get(n).getPrice()) - items.get(n).getDisc();
@@ -213,7 +222,53 @@ public class ItemsReport extends AppCompatActivity {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(ItemsReport.this,"ItemsReport.xls",4,items);
+
+    }
+    public  void exportToPdf(){
+        Log.e("exportToPdf",""+items.size());
+        PdfConverter pdf =new PdfConverter(ItemsReport.this);
+        pdf.exportListToPdf(items,"VouchersReport",from_date.getText().toString(),4);
+    }
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override

@@ -396,7 +396,17 @@
     <string name="youHaveRequestToAdmin">You Have Request To Admin</string>
     <string name="saveOnly">Save Only</string>
     <string name="saveSuccessfuly">Save Successfuly</string>
+    <string name="transName">Trans Name</string>
+    <string name="date_voucher">Date</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="debit">Debit</string>
+    <string name="credit">Credit</string>
+    <string name="balance">Balance</string>
+    <string name="add_van_sales">Add Sales Man</string>
+    <string name="sales_man_name">Sales Man Name </string>
     <string name="checkBlutoothPrinterPaired">Check Blutooth Printer Paired</string>
+    <string name="export_to_pdf">export  to pdf</string>
+    <string name="AccountStatment">Account Statment</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

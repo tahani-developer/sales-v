@@ -55,6 +55,8 @@
 
     <string name="add_cust">اضافة عميل</string>
     <string name="cust_name">اسم العميل</string>
+<!--<string name="cust_name">  Customer Name</string>-->
+
     <string name="app_trans_kind">نوع الفاتورة :</string>
     <string name="payemtnTerm">طريقة الدفع :</string>
     <string name="app_cash">نقداً  </string>
@@ -445,5 +447,7 @@
     <string name="saveOnly">حفظ الفاتورة فقط </string>
     <string name="saveSuccessfuly">Save Successfuly</string>
     <string name="checkBlutoothPrinterPaired"> تحقق من اتصال البلوتوث للطابعة</string>
+    <string name="export_to_pdf">export  to pdf</string>
+    <string name="AccountStatment">Account Statment</string>
 
 </resources>

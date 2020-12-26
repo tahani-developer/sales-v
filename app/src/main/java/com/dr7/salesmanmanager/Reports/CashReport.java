@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
@@ -47,11 +48,18 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.bMITP;
 import com.ganesh.intermecarabic.Arabic864;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -84,10 +92,11 @@ public class CashReport  extends AppCompatActivity {
     PrintPic printPic;
     boolean isFinishPrint=false;
     byte[] printIm;
+    List<String> listCashRepost;
     TextView cash_sal, credit_sale, total_sale;
     TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext,creditCard;
     List<Voucher> voucher;
-     public static double cash = 0, credit = 0, total = 0;
+     public static double cash = 0, credit = 0, total = 0, T_cash=0,T_credit=0;
     public static double cashPayment=0,creditPayment=0,net=0,total_cash=0,creditCardPayment=0;
     int paymethod=0;
     private DecimalFormat decimalFormat;
@@ -107,7 +116,7 @@ public class CashReport  extends AppCompatActivity {
     private ImageView pic;
     CompanyInfo companyInfo;
     List<Item> vouchersales;
-
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
 
     ConstraintLayout mailLayout;
 
@@ -145,7 +154,7 @@ public class CashReport  extends AppCompatActivity {
         decimalFormat = new DecimalFormat("##.000");
         payments = new ArrayList<Payment>();
         vouchersales=new ArrayList<Item>();
-
+        inflateBoomMenu();
 
         try {
             obj = new DatabaseHandler(CashReport.this);
@@ -173,8 +182,9 @@ public class CashReport  extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clear();
+
                 if (!date.getText().toString().equals("")) {
+                    clear();
                     cash = 0;      credit = 0;   total = 0;
                     returnCridet=0;returnCash=0;
                     for (int n = 0; n < voucher.size(); n++) {
@@ -206,8 +216,8 @@ public class CashReport  extends AppCompatActivity {
                     }
 
                     total = cash + credit-returnCash-returnCridet;
-                    double T_cash=cash-returnCash;
-                    double T_credit=credit-returnCridet;
+                     T_cash=cash-returnCash;
+                     T_credit=credit-returnCridet;
                     cash_sal.setText(convertToEnglish(decimalFormat.format(T_cash ))+ "");
                     credit_sale.setText(convertToEnglish(decimalFormat.format(T_credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
@@ -301,7 +311,7 @@ public class CashReport  extends AppCompatActivity {
 //                                        }
 //                                                             lk32.setChecked(true);
 
-                                        convertLayoutToImage();
+//                                        convertLayoutToImage();
 
                                         Intent O1= new Intent(CashReport.this, bMITP.class);
                                         O1.putExtra("printKey", "3");
@@ -323,7 +333,7 @@ public class CashReport  extends AppCompatActivity {
                                         break;
                                     case 5:
                                     case 6:
-                                        convertLayoutToImage();
+//                                        convertLayoutToImage();
                                         Intent O= new Intent(CashReport.this, bMITP.class);
                                         O.putExtra("printKey", "3");
                                         startActivity(O);
@@ -357,7 +367,53 @@ public class CashReport  extends AppCompatActivity {
             }
         });
     }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(CashReport.this,"CashReport.xls",8,voucher);
+
+    }
+    public  void exportToPdf(){
+
+        PdfConverter pdf =new PdfConverter(CashReport.this);
+        pdf.exportListToPdf(voucher,"CashReport",date.getText().toString(),8);
+    }
 
     void findBT() {
         try {
@@ -711,6 +767,8 @@ public class CashReport  extends AppCompatActivity {
     }
 
     private void clear() {
+        T_cash=0;
+        T_credit=0;
     }
     void sendData2() throws IOException {
         try {
