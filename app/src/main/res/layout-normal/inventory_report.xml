@@ -8,6 +8,14 @@
     android:id="@+id/linearMain"
     android:orientation="vertical"
     android:padding="2dp">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
@@ -234,6 +242,7 @@
             android:gravity="center"
             android:text="@string/unit_qty"
             android:textStyle="bold" />
+
     </LinearLayout>
 
 
@@ -278,6 +287,17 @@
 
                 android:textColor="@color/add_button"/>
         </LinearLayout>
+    </RelativeLayout>
+        </LinearLayout>
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:bmb_normalColor="@color/colorblue1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:bmb_draggable="true"
+        />
     </RelativeLayout>
 
     <!--</ScrollView>-->

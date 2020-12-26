@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 //import android.support.design.widget.TabLayout;
 //import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
+import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
@@ -31,6 +34,14 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.sewoo.request.android.RequestHandler;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +55,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -54,6 +66,8 @@ import java.util.jar.JarException;
 import javax.net.ssl.HttpsURLConnection;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 
 public class ImportJason extends AppCompatActivity {
 
@@ -77,12 +91,23 @@ public class ImportJason extends AppCompatActivity {
     public static List<QtyOffers> qtyOffersList = new ArrayList<>();
     public  static  List<ItemsQtyOffer> itemsQtyOfferList =new ArrayList<>();
     public static List<Account_Report> account_reportList = new ArrayList<>();
+    public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
 
     boolean start =false;
+    String ipAddress="";
 
     public ImportJason(Context context){
         this.context = context ;
         this.mHandler = new DatabaseHandler(context);
+    }
+    public void  getCustomerInfo(){
+        List<Settings> settings =  mHandler.getAllSettings();
+        if(settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            Log.e("getCustomerInfo", "*****");
+            new JSONTask_AccountStatment(CustomerListShow.Customer_Name).execute();
+        }
+
     }
 
     public void startParsing(){
@@ -90,7 +115,7 @@ public class ImportJason extends AppCompatActivity {
         List<Settings> settings =  mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
         if(settings.size() != 0) {
-            String ipAddress = settings.get(0).getIpAddress();
+            ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
 //            if(mHandler.getAllSettings().get(0).getAllowOutOfRange()==1)// validate customer location
 //            {
@@ -910,5 +935,152 @@ public class ImportJason extends AppCompatActivity {
             Toast.makeText(context , s , Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }
+    }
+    private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
+
+        private  String custId="";
+        public JSONTask_AccountStatment(String customerId) {
+            this.custId=customerId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin_oracle.php";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                Log.e("BasicNameValuePair",""+custId);
+                nameValuePairs.add(new BasicNameValuePair("FLAG", "1"));
+                nameValuePairs.add(new BasicNameValuePair("customerNo", custId));
+
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_Customer", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            if (s != null) {
+                if (s.contains("CUSTOMER_Account_Statment")) {
+                    // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
+                    //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+
+                    try {
+                        result = new JSONObject(s);
+                        Account__Statment_Model requestDetail;
+
+
+                        JSONArray requestArray = null;
+                        listCustomerInfo = new ArrayList<>();
+
+                        requestArray = result.getJSONArray("CUSTOMER_Account_Statment");
+                        Log.e("requestArray",""+requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            requestDetail = new Account__Statment_Model();
+                            requestDetail.setVoucherNo(infoDetail.get("VHFNo").toString());
+                            requestDetail.setTranseNmae(infoDetail.get("TransName").toString());
+                            requestDetail.setDate_voucher(infoDetail.get("VHFDATE").toString());
+
+                            try {
+                                requestDetail.setDebit( Double.parseDouble(infoDetail.get("DEBIT").toString()));
+                                requestDetail.setCredit(Double.parseDouble(infoDetail.get("Credit").toString()));
+                            }
+                            catch (Exception e)
+                            {
+                                requestDetail.setDebit(0);
+                                requestDetail.setCredit(0);
+                            }
+
+
+                            listCustomerInfo.add(requestDetail);
+                            Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
+
+
+                        }
+                        getAccountList_text.setText("2");
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                }
+                else Log.e("onPostExecute",""+s.toString());
+//                progressDialog.dismiss();
+            }
+        }
+
     }
 }

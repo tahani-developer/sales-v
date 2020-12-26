@@ -226,7 +226,6 @@ public class Voucher {
             obj.put("voucherDiscount", voucherDiscount);
             obj.put("voucherDiscountPercent", voucherDiscountPercent);
             obj.put("remark", remark);
-
             obj.put("payMethod", payMethod);
             obj.put("isPosted", isPosted);
             obj.put("totalVoucherDiscount", totalVoucherDiscount);

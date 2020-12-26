@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
@@ -38,13 +39,23 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.RecyclerViewAdapter;
+import com.dr7.salesmanmanager.RefreshCustomerBalance;
 import com.dr7.salesmanmanager.bMITP;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,6 +78,9 @@ public class InventoryReport extends AppCompatActivity {
      DatabaseHandler obj;
      CompanyInfo companyInfo;
      public  static  String typeQty="";
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
+    //    R.drawable.ic_save_black_24dp,
+    String[] textListButtons=new String[]{};
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -94,6 +108,7 @@ public class InventoryReport extends AppCompatActivity {
         {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+        inflateBoomMenu();
         itemsReportinventory = new ArrayList<inventoryReportItem>();
         itemsInventoryPrint=new ArrayList<inventoryReportItem>();
         itemsInventoryPrint.clear();
@@ -368,6 +383,44 @@ public class InventoryReport extends AppCompatActivity {
         });
     }
 
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+
     private void printLayout() {
         try{
             if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
@@ -461,7 +514,16 @@ public class InventoryReport extends AppCompatActivity {
     }
 
 
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(InventoryReport.this,"ReportInventory.xls",2,itemsReportinventory);
 
+    }
+    public  void exportToPdf(){
+        Log.e("exportToPdf",""+itemsReportinventory.size());
+        PdfConverter pdf =new PdfConverter(InventoryReport.this);
+        pdf.exportListToPdf(itemsReportinventory,"InventoryReport","21/12/2020",2);
+    }
 
     public void clear() {
         itemsReportinventory.clear();

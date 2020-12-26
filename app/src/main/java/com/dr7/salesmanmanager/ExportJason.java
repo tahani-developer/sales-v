@@ -119,23 +119,32 @@ public class ExportJason extends AppCompatActivity {
 
         //******************************************
         transactions = mHandler.getAlltransactions();
+        Log.e("transactions",""+transactions.size());
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)
             if (transactions.get(i).getIsPosted() == 0) {
                 transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
             }
+        Log.e("jsonArrayTransactions",""+jsonArrayTransactions.length());
         //******************************************
-        salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
-        jsonArrayBalance=new JSONArray();
+        try {
 
-        for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
+            jsonArrayBalance=new JSONArray();
+            salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
+            for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
 
                 salesManItemsBalanceList.get(i).getSalesManNo();
                 salesManItemsBalanceList.get(i).getItemNo();
                 salesManItemsBalanceList.get(i).getQty();
                 jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
             }
+        }
+        catch ( Exception e)
+        {
+
+        }
+
 
         //******************************************
         stockRequestListList=mHandler.getAllStockRequestItems();
