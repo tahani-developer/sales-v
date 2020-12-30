@@ -1,6 +1,7 @@
 package com.dr7.salesmanmanager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -78,7 +79,7 @@ public class Activities extends AppCompatActivity implements
     DatabaseHandler databaseHandler;
     static String[] araySerial;
     TextView switchLayout;
-
+LocationPermissionRequest locationPermissionRequest;
 
     @Override 
     public void displayFindItemFragment() {
@@ -161,10 +162,17 @@ public class Activities extends AppCompatActivity implements
         setContentView(R.layout.activity_activities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         activitySelected = -1;
         databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
+
+
+            locationPermissionRequest = new LocationPermissionRequest(Activities.this);
+            locationPermissionRequest.timerLocation();
+
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
         mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);

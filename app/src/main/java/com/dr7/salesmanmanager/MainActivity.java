@@ -193,6 +193,7 @@ public class MainActivity extends AppCompatActivity
     LinearLayout checkInCheckOutLinear;
     public  static int time=30;
     Timer timer;
+    LocationPermissionRequest locationPermissionRequest;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -231,6 +232,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -396,6 +398,10 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
+        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+        locationPermissionRequest.timerLocation();
+
+
 
     }
 
@@ -759,6 +765,7 @@ public class MainActivity extends AppCompatActivity
                         if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
                             latitude_main = location.getLatitude();
                             longitude_main = location.getLongitude();
+
                             Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
                             mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
                             new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)

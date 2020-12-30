@@ -4,9 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,9 +30,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -53,6 +58,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -76,6 +83,7 @@ public class Login extends AppCompatActivity {
     int key_int;
     Context context;
     TextView loginText;
+    SweetAlertDialog dialogTem,sweetAlertDialog;
 
     DatabaseHandler mDHandler;
     String shortUserName = "", fullUserName = "";
@@ -93,8 +101,9 @@ public class Login extends AppCompatActivity {
     String curentDate, curentTime;
     public  static Location location_main;
     RelativeLayout mainlayout;
-
-
+String provider;
+public static  Timer timer = null;
+LocationPermissionRequest locationPermissionRequest;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +111,11 @@ public class Login extends AppCompatActivity {
         LocaleAppUtils.setConfigChange(Login.this);
         new LocaleAppUtils().changeLayot(Login.this);
         setContentView(R.layout.activity_login);
+        locationPermissionRequest=new LocationPermissionRequest(Login.this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        provider = locationManager.getBestProvider(new Criteria(), false);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
@@ -272,8 +286,123 @@ public class Login extends AppCompatActivity {
 
             }
         });
+        locationPermissionRequest.timerLocation();
 
+//        checkLocationPermission();
     }
+
+//    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+//
+//    public boolean checkLocationPermission() {
+//        if (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            // Should we show an explanation?
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+//
+//                // Show an explanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+////                new AlertDialog.Builder(this)
+////                        .setCancelable(false)
+////                        .setTitle(R.string.title_location_permission)
+////                        .setMessage(R.string.text_location_permission)
+////                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+////                            @Override
+////                            public void onClick(DialogInterface dialogInterface, int i) {
+////                                //Prompt the user once explanation has been shown
+////                                    ActivityCompat.requestPermissions(Login.this,
+////                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+////                                        MY_PERMISSIONS_REQUEST_LOCATION);
+////                            }
+////                        })
+////                        .create()
+////                        .show();
+//
+//
+//         dialogLoc();
+//
+//
+//            } else {
+//                // No explanation needed, we can request the permission.
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                        MY_PERMISSIONS_REQUEST_LOCATION);
+//
+//                Log.e("Location","explanation need");
+//
+//            }
+//            return false;
+//        } else {
+//            Log.e("Location","true need");
+//            return true;
+//        }
+//    }
+//
+//    private void dialogLoc() {
+//
+//
+//        sweetAlertDialog.setTitleText(R.string.title_location_permission);
+//        sweetAlertDialog.setContentText(String.valueOf(R.string.text_location_permission));
+//        sweetAlertDialog.setCancelButton("cancel", new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                sweetAlertDialog.dismissWithAnimation();
+//                finish();
+//            }
+//        });
+//        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//
+//                //Prompt the user once explanation has been shown
+//                ActivityCompat.requestPermissions(Login.this,
+//                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                        MY_PERMISSIONS_REQUEST_LOCATION);
+//                dialogTem=sweetAlertDialog;
+//            }
+//        });
+//        sweetAlertDialog.setCancelable(false);
+//        sweetAlertDialog.show();
+//    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case MY_PERMISSIONS_REQUEST_LOCATION: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Log.e("Location","granted");
+//                    sweetAlertDialog.dismissWithAnimation();
+//                    // permission was granted, yay! Do the
+//                    // location-related task you need to do.
+//                    if (ContextCompat.checkSelfPermission(this,
+//                            Manifest.permission.ACCESS_FINE_LOCATION)
+//                            == PackageManager.PERMISSION_GRANTED) {
+//
+//                        Log.e("Location","granted updates");
+//
+//                        //Request location updates:
+////                        locationManager.requestLocationUpdates(provider, 400, 1, (LocationListener) this);
+//                    }
+//
+//                } else {
+//
+//                    Log.e("Location","Deny");
+//                    // permission, denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//
+//                }
+//                return;
+//            }
+//
+//        }
+//    }
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;

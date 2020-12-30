@@ -1,5 +1,10 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SalesmanStations {
     private String salesmanNo;
     private String date;
@@ -77,5 +82,21 @@ public class SalesmanStations {
 
     public void setCustName(String custName) {
         this.custName = custName;
+    }
+
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+
+
+            obj.put("LATITUDE", latitude);
+            obj.put("LONGITUDE", longitude);
+            obj.put("SALESNO", salesmanNo);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
     }
 }

@@ -290,6 +290,7 @@ public class SalesInvoice extends Fragment {
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
+   LocationPermissionRequest locationPermissionRequest;
 
     public SalesInvoice() {
         // Required empty public constructor
