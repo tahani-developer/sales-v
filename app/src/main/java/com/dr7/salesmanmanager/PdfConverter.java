@@ -46,9 +46,11 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.dr7.salesmanmanager.Reports.CashReport.T_cash;
 import static com.dr7.salesmanmanager.Reports.CashReport.T_credit;
 import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.credit;
 import static com.dr7.salesmanmanager.Reports.CashReport.creditCardPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
 import static com.dr7.salesmanmanager.Reports.CashReport.net;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
 import static com.dr7.salesmanmanager.Reports.CashReport.total;
 import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.itextpdf.text.Element.ALIGN_CENTER;
@@ -280,6 +282,7 @@ public class PdfConverter {
 
 
         insertCell(pdfPTable, "      ", ALIGN_CENTER, 2, arabicFont, BaseColor.BLACK);
+        //***************************************************************************
 
          insertCell(pdfPTable,context.getString(R.string.payment), ALIGN_CENTER   , 2, arabicFont, BaseColor.BLACK);
 
@@ -291,6 +294,18 @@ public class PdfConverter {
 
         insertCell(pdfPTable,context.getResources().getString(R.string.netpayment), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, String.valueOf(net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, "      ", ALIGN_CENTER, 2, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.app_creditCard), ALIGN_CENTER, 2, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.credit_value), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+        insertCell(pdfPTable, String.valueOf((credit -returnCridet)), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+        insertCell(pdfPTable,context.getResources().getString(R.string.total_cash), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, String.valueOf(total_cash), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
 
         return pdfPTable;
 

@@ -98,6 +98,8 @@ public class bMITP extends Activity {
    Voucher printVoucher;
     List<Item>itemPrint;
     List<Item> allStudents;
+    LinearLayout mainLinearPrinting;
+    TextView text_hideDialog;
 
     static {
         fileName = dir + "//BTPrinter";
@@ -188,6 +190,8 @@ public class bMITP extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.bluetooth_menu);
+        this.mainLinearPrinting= (LinearLayout) this.findViewById(R.id.mainLinearPrinting);
+        text_hideDialog = (TextView) this.findViewById(R.id.text_hideDialog);
         this.btAddrBox = (EditText)this.findViewById(R.id.EditTextAddressBT);
         this.connectButton = (Button)this.findViewById(R.id.ButtonConnectBT);
         bMITP.this.connectButton.setEnabled(true);
@@ -245,59 +249,71 @@ public class bMITP extends Activity {
 
         this.list.setAdapter(this.adapter);
         this.addPairedDevices();
-        if(remoteDevices.size()!=0)
+        BluetoothDevice btDev = null;
+        if(obj.getAllSettings().size()!=0)
         {
-            BluetoothDevice btDev = null;
-            try {
-                btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
-            }
-            catch (Exception e)
-            {       }
-
-            try {
-                if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
-                    bMITP.this.mBluetoothAdapter.cancelDiscovery();
-                }
-
-                bMITP.this.btAddrBox.setText(btDev.getAddress());
-                bMITP.this.btConn(btDev);
-            } catch (IOException var8) {
-                AlertView.showAlert(var8.getMessage(), bMITP.this.context);
-            }
-
-        }
-        else {
-            new SweetAlertDialog(bMITP.this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText(getResources().getString(R.string.warning_message))
-                    .setContentText(getResources().getString(R.string.checkBlutoothPrinterPaired))
-                    .setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            finish();
-                        }
-                    })
-                    .show();
-
-        }
-
-
-        this.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            if(obj.getAllSettings().get(0).getApproveAdmin()==0){
+                mainLinearPrinting.setVisibility(View.VISIBLE);
+                text_hideDialog.setVisibility(View.GONE);
+                this.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 //                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
-////                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(arg2);
-//
-//                try {
-//                    if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
-//                        bMITP.this.mBluetoothAdapter.cancelDiscovery();
-//                    }
-//
-//                    bMITP.this.btAddrBox.setText(btDev.getAddress());
-//                    bMITP.this.btConn(btDev);
-//                } catch (IOException var8) {
-//                    AlertView.showAlert(var8.getMessage(), bMITP.this.context);
-//                }
+                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(arg2);
+
+                try {
+                    if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
+                        bMITP.this.mBluetoothAdapter.cancelDiscovery();
+                    }
+
+                    bMITP.this.btAddrBox.setText(btDev.getAddress());
+                    bMITP.this.btConn(btDev);
+                } catch (IOException var8) {
+                    AlertView.showAlert(var8.getMessage(), bMITP.this.context);
+                }
+                    }
+                });
             }
-        });
+            else {
+                mainLinearPrinting.setVisibility(View.GONE);
+                text_hideDialog.setVisibility(View.VISIBLE);
+                if(remoteDevices.size()!=0)
+                {
+
+                    try {
+                        btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
+                    }
+                    catch (Exception e)
+                    {       }
+
+                    try {
+                        if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
+                            bMITP.this.mBluetoothAdapter.cancelDiscovery();
+                        }
+
+                        bMITP.this.btAddrBox.setText(btDev.getAddress());
+                        bMITP.this.btConn(btDev);
+                    } catch (IOException var8) {
+                        AlertView.showAlert(var8.getMessage(), bMITP.this.context);
+                    }
+
+                }
+                else {
+                    new SweetAlertDialog(bMITP.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.checkBlutoothPrinterPaired))
+                            .setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    finish();
+                                }
+                            })
+                            .show();
+
+                }
+            }
+        }
+
+
         this.discoveryResult = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 BluetoothDevice remoteDevice = (BluetoothDevice)intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
@@ -308,10 +324,22 @@ public class bMITP extends Activity {
                     } else {
                         key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "] [Paired]";
                     }
+                    if(obj.getAllSettings().size()!=0) {
+                        if (obj.getAllSettings().get(0).getApproveAdmin() == 0) {
+                            if (bMITP.this.bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
+                                bMITP.this.remoteDevices.add(remoteDevice);
+                                bMITP.this.adapter.add(key);
+                            }
+                        }
+                        else {
+                            bMITP.this.remoteDevices.add(remoteDevice);
+                            bMITP.this.adapter.add(key);
+                        }
+
+                        }
 
 //                    if (bMITP.this.bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
-                        bMITP.this.remoteDevices.add(remoteDevice);
-                        bMITP.this.adapter.add(key);
+
                     }
 //                }
 

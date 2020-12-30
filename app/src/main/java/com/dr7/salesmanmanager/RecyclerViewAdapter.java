@@ -105,15 +105,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static ArrayList<serialModel> listSerialAllItems= new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty, bonus;
+    Button addToList;
     public String exist="";
     public  static  String curentSerial="";
     public  static   String araySerial[];
     Bitmap  itemBitmap;
     public PhotoView photoView, photoDetail;
-    public  static TextView checkState_recycler;
+    public  static TextView checkState_recycler,  checkStateResult;
     requestAdmin request;
     int typeRequest=0,haveResult=0,approveAdmin=0;
-    LinearLayout mainRequestLinear;;
+    LinearLayout mainRequestLinear;
+     LinearLayout resultLinear;
+    LinearLayout mainLinear ;
+    ImageView acceptDiscount,rejectDiscount;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -150,7 +154,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            holder.linearLayout.setBackgroundColor(R.color.done_button);
 
         holder.itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
-
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.itemName.setMovementMethod(new ScrollingMovementMethod());
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
@@ -207,7 +210,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.price.setText(convertToEnglish( threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()))+"\t\tJD");
 
-        Log.e("format",""+ threeDForm.format(items.get(holder.getAdapterPosition()).getPrice()));
 //       *******************************//////////////////////*
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
@@ -238,12 +240,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
-                    final LinearLayout resultLinear;
-                    LinearLayout mainLinear ;
-                    ImageView acceptDiscount,rejectDiscount;
-                    TextView checkStateResult=dialog.findViewById(R.id.checkStateResult);
-
-
 
 
 
@@ -255,10 +251,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             dialog.setContentView(R.layout.add_item_serial_dialog);
 
                             mainRequestLinear=dialog.findViewById(R.id.mainRequestLinear);
-
+                            checkStateResult=dialog.findViewById(R.id.checkStateResult);
+                            rejectDiscount=dialog.findViewById(R.id.rejectDiscount);
                             mainRequestLinear.setVisibility(View.GONE);
 
-                             mainLinear=dialog.findViewById(R.id.mainLinearAddItem);
+                            mainLinear=dialog.findViewById(R.id.mainLinearAddItem);
                             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                             lp.copyFrom(dialog.getWindow().getAttributes());
 
@@ -266,7 +263,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             lp.windowAnimations = R.style.DialogAnimation;
                             dialog.getWindow().setAttributes(lp);
                             bonus = dialog.findViewById(R.id.bonus);
+                            addToList = dialog.findViewById(R.id.addToList);
+                            addToList.setVisibility(View.INVISIBLE);
                             bonus.setEnabled(false);
+                            addToList.setEnabled(false);
                             serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
                             final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
                             unitWeightLinearLayout.setVisibility(View.GONE);
@@ -282,11 +282,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     Log.e("generateSerial",""+serialListitems.size());
                                     if(!unitQty.getText().toString().equals("")&&serialListitems.size()==0)
                                     {
+                                        try {
+                                            qtySerial=(int)Double.parseDouble(unitQty.getText().toString());
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            qtySerial=Integer.parseInt(unitQty.getText().toString());
+                                        }
 
-                                        qtySerial=Integer.parseInt(unitQty.getText().toString());
+
+
+
                                         counterSerial=qtySerial;
                                         if(qtySerial!=0)
                                         {flag = 1;
+                                            addToList.setEnabled(true);
+                                            addToList.setVisibility(View.VISIBLE);
 //                                            counterSerial++;
 //                                            unitQty.setText(counterSerial+"");
                                             final LinearLayoutManager layoutManager;
@@ -431,9 +442,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                            *********************************
 
                                     flag = 1;
+                                    unitQty.setEnabled(false);
                                     counterBonus++;
                                     bonus.setText(""+counterBonus);
                                     bonus.setEnabled(false);
+                                    addToList.setVisibility(View.VISIBLE);
+                                    addToList.setEnabled(true);
 //                            counterSerial++;
 //                            unitQty.setText(counterSerial+"");
                                     final LinearLayoutManager layoutManager;
@@ -469,10 +483,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     {
 
                     }
-                    resultLinear=dialog.findViewById(R.id.resultLinear);
+                    resultLinear=  dialog.findViewById(R.id.resultLinear);
                     acceptDiscount=dialog.findViewById(R.id.acceptDiscount);
                     rejectDiscount=dialog.findViewById(R.id.rejectDiscount);
-
+                    checkStateResult=dialog.findViewById(R.id.checkStateResult);
                     mainRequestLinear=dialog.findViewById(R.id.mainRequestLinear);
                     TextView discount_text=dialog.findViewById(R.id.discount_text);
                     TextView bonuss_text=dialog.findViewById(R.id.bonuss_text);
@@ -520,7 +534,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         @Override
                         public void onClick(View v) {
 //                            context.readB();
-
+                            addToList.setVisibility(View.VISIBLE);
+                            addToList.setEnabled(true);
+                            unitQty.setEnabled(false);
                             flag = 1;
                                 counterSerial++;
                                 unitQty.setText(counterSerial+"");
@@ -544,18 +560,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     });
 
                     //***************************************************************************************
-                    Button addToList = dialog.findViewById(R.id.addToList);
+                     addToList = dialog.findViewById(R.id.addToList);
                     Button cancel = dialog.findViewById(R.id.cancelAdd);
-                    if(MHandler.getAllSettings().get(0).getRequiNote()==1)
-                    {
+                    if(MHandler.getAllSettings().get(0).getRequiNote()==1) {
                         discribtionItem_linear.setVisibility(View.VISIBLE);
 
-                    }
-                    else{
+                    } else {
                         discribtionItem_linear.setVisibility(View.INVISIBLE);
 
                     }
-                    approveAdmin=MHandler.getAllSettings().get(0).getApproveAdmin();
+
+
+
+                    approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
 
                     //***********************************Request Discount ****************************************************
 
@@ -584,7 +601,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 haveResult=1;
                                 resultLinear.setVisibility(View.VISIBLE);
                                 mainRequestLinear.setVisibility(View.GONE);
-                                checkStateResult.setText(cont.getResources().getString(R.string.acceptedRequest));
+                                checkStateResult.setVisibility(View.VISIBLE);
+                                checkStateResult.setText("Accepted Request");
+                                Log.e("checkStateResult","Accepted Request");
                                 acceptDiscount.setVisibility(View.VISIBLE);
                                 rejectDiscount.setVisibility(View.GONE);
                                 addToList.setEnabled(true);
@@ -593,9 +612,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             else if(s.toString().equals("2"))
                             {
                                 haveResult=2;
-                                resultLinear.setVisibility(View.VISIBLE);
                                 mainRequestLinear.setVisibility(View.GONE);
-                                checkStateResult.setText(cont.getResources().getString(R.string.rejectedRequest));
+                                resultLinear.setVisibility(View.VISIBLE);
+
+                                checkStateResult.setVisibility(View.VISIBLE);
+                                checkStateResult.setText("Rejected Request");
+                                Log.e("checkStateResult","Rejected Request");
                                 acceptDiscount.setVisibility(View.GONE);
                                 rejectDiscount.setVisibility(View.VISIBLE);
                                 discount.setText("");
@@ -682,17 +704,41 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     if((typeRequest==1&& !discount.getText().toString().equals("")))// discount
                                     {
                                         Log.e("request",""+typeRequest);
-                                        if(!discount.getText().toString().equals(""))
-                                        {
-                                            try {
-                                                getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(),"0",items.get(holder.getAdapterPosition()).getPrice()+"",discount.getText().toString());
-                                                addToList.setEnabled(false);
-                                                discount.setEnabled(false);
-                                                request.startParsing();
-                                            } catch (Exception e) {
-                                                Log.e("request",""+e.getMessage());
+                                        if(!discount.getText().toString().equals("")) {
+                                            if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
+                                                if (items.get(holder.getAdapterPosition()).getDiscountCustomer() != 0.0) {
 
+                                                    new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE)
+                                                            .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                            .setContentText(view.getContext().getString(R.string.YouHaveItemDiscount))
+                                                            .show();
+
+                                                }
+                                                else {
+                                                    try {
+                                                        getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(),"0",items.get(holder.getAdapterPosition()).getPrice()+"",discount.getText().toString());
+                                                        addToList.setEnabled(false);
+                                                        discount.setEnabled(false);
+                                                        request.startParsing();
+                                                    } catch (Exception e) {
+                                                        Log.e("request",""+e.getMessage());
+
+                                                    }
+                                                }
                                             }
+                                            else {
+                                                try {
+                                                    getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(),"0",items.get(holder.getAdapterPosition()).getPrice()+"",discount.getText().toString());
+                                                    addToList.setEnabled(false);
+                                                    discount.setEnabled(false);
+                                                    request.startParsing();
+                                                } catch (Exception e) {
+                                                    Log.e("request",""+e.getMessage());
+
+                                                }
+                                            }
+
+
 
                                         }
                                         else {
@@ -787,6 +833,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         price.setText("" + items.get(holder.getAdapterPosition()).getPrice());
                     }
 
+
                     if (mHandler.getAllSettings().get(0).getTaxClarcKind() == 1)
 //                    discountLinearLayout.setVisibility(View.INVISIBLE);
 
@@ -811,6 +858,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     {
                         unit.setVisibility(View.GONE);
                     }
+                    //**********************************************************************************************
+                    if(MHandler.getAllSettings().get(0).getPriceByCust()==1)
+                    {
+                        if (items.get(holder.getAdapterPosition()).getDiscountCustomer() != 0.0) {
+                            discount.setText(items.get(holder.getAdapterPosition()).getDiscountCustomer() + "");
+                            discount.setEnabled(false);
+                            radioGroup.check(R.id.discPercRadioButton);
+                            radioGroup.setEnabled(false);
+                            radioGroup.setVisibility(View.GONE);
+
+
+                        }
+                    }
+
+                    //************************************************************************************************
 
 
                     addToList.setOnClickListener(new View.OnClickListener() {
@@ -828,7 +890,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             discountText=discount.getText().toString();
                             bunosText=bonus.getText().toString();
 
-                            Log.e("addTolist",""+approveAdmin+"\t"+haveResult);
                             if (current_itemHasSerial == 0 ||( current_itemHasSerial == 1 && countInvalidSerial==0))
                             {
 

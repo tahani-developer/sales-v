@@ -119,14 +119,13 @@ public class ExportJason extends AppCompatActivity {
 
         //******************************************
         transactions = mHandler.getAlltransactions();
-        Log.e("transactions",""+transactions.size());
+
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)
             if (transactions.get(i).getIsPosted() == 0) {
                 transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
             }
-        Log.e("jsonArrayTransactions",""+jsonArrayTransactions.length());
         //******************************************
         try {
 

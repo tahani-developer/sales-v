@@ -151,7 +151,8 @@ public class RequestAdmin {
             obj.put("key_validation", key_validation);
             obj.put("date_request", date);
             obj.put("time_request", time);
-            obj.put("note", note);
+            obj.put("note", "");
+//            obj.put("note", note);
             obj.put("seen_row", seen_row);
 
 

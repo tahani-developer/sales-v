@@ -252,15 +252,15 @@ public class CustomerCheckInFragment extends DialogFragment {
 //                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
 //                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                                 dismiss();
-                                if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1)
-                                {
-                                    Intent intent = new Intent(context, AccountStatment.class);
-                                    context.startActivity(intent);
-                                }
-                                else {
+//                                if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1)
+//                                {
+//                                    Intent intent = new Intent(context, AccountStatment.class);
+//                                    context.startActivity(intent);
+//                                }
+//                                else {
                                     Intent intent = new Intent(context, Activities.class);
                                     context.startActivity(intent);
-                                }
+//                                }
 
 
                             } else {

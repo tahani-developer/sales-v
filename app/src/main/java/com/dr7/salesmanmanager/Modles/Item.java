@@ -40,6 +40,15 @@ public class Item {
     private  String serialCode;
     private  String vouchDate;
     private String itemHasSerial;
+    private  double discountCustomer;
+
+    public double getDiscountCustomer() {
+        return discountCustomer;
+    }
+
+    public void setDiscountCustomer(double discountCustomer) {
+        this.discountCustomer = discountCustomer;
+    }
 
     public Bitmap getItemPhoto() {
         return itemPhoto;

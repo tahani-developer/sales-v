@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:background="@color/layer7"
     android:layoutDirection="locale"
     android:id="@+id/linearMain"
     android:orientation="vertical">
@@ -142,9 +142,9 @@
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:textSize="@dimen/content_large"
-                    android:background="@color/colorblue1"
+                    android:background="@drawable/done_button"
                     android:text="@string/preview"
-                    android:textColor="@color/layer5" />
+                    android:textColor="@color/layer7" />
 
 
             </LinearLayout>
@@ -172,11 +172,12 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:fillViewport="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/layer2">
+        android:background="@color/layer7">
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/TableTransactionsReport"

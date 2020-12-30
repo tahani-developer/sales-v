@@ -635,7 +635,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
             jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
 
-
             size_firstlist = jsonItemsList2.size();
             if (size_firstlist != 0) {
                 size_customerpriceslist = size_firstlist;
@@ -688,6 +687,7 @@ public class AddItemsFragment2 extends DialogFragment {
         String itemGroup;
         boolean existItem = false;
         Log.e("itemSerialList",""+itemSerialList.size());
+        Log.e("addItem","discount"+discount);
 
 
             for(int i = 0 ; i< obj.getItemsList().size() ; i++){
@@ -788,7 +788,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 item.setDisc(0);
                 item.setDiscPerc("0");
             }
-
+        Log.e("addItem","Itemdiscount"+item.getDisc());
             try {
                 if (item.getDiscType() == 0) {
 

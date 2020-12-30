@@ -93,7 +93,7 @@ public class DiscountFragment extends DialogFragment {
          mdHandler = new DatabaseHandler(getActivity());
         // Inflate the layout for this fragmen
 //        new LocaleAppUtils().changeLayot(Disc);
-                View view = inflater.inflate(R.layout.fragment_discount, container, false);
+        View view = inflater.inflate(R.layout.fragment_discount, container, false);
         okButton = (Button) view.findViewById(R.id.okButton);
         cancelButton = (ImageView) view.findViewById(R.id.cancelButton);
         checkState=view.findViewById(R.id.checkState);
