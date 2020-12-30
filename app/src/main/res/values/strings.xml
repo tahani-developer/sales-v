@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 31</string>
+    <string name="version"> V 43</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -322,7 +322,7 @@
     <string name="showpass">Show Passowrd</string>
     <string name="transaction">Transaction</string>
     <string name="accept">Accept</string>
-    <string name="voucherNo">Voucher No :</string>
+    <string name="voucherNo">Voucher No </string>
     <string name="toStore">To Store:</string>
     <string name="loadingItem">Loading Item ....</string>
     <string name="zero_value_taxAndNetSales">Wrong value  for zero netSales</string>
@@ -407,6 +407,11 @@
     <string name="checkBlutoothPrinterPaired">Check Blutooth Printer Paired</string>
     <string name="export_to_pdf">export  to pdf</string>
     <string name="AccountStatment">Account Statment</string>
+    <string name="last_visit">last Visit</string>
+    <string name="request">request</string>
+    <string name="YouHaveItemDiscount">You Have Item Discount</string>
+    <string name="makeRequest">Make Request For Limit Credit </string>
+    <string name="request_credit_limit">Request to exceed the limit of credit</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

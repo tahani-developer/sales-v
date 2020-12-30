@@ -368,7 +368,7 @@
     <string name="showpass">اظهار </string>
     <string name="transaction">Transaction</string>
     <string name="accept">موافق</string>
-    <string name="voucherNo">رقم الفاتورة :</string>
+    <string name="voucherNo">رقم الفاتورة </string>
     <string name="toStore">الى المخزن:</string>
     <string name="loadingItem">جاري التحميل.... </string>
     <string name="zero_value_taxAndNetSales">قيمة صفر  خاطئة في صافي المبيعات
@@ -448,6 +448,17 @@
     <string name="saveSuccessfuly">Save Successfuly</string>
     <string name="checkBlutoothPrinterPaired"> تحقق من اتصال البلوتوث للطابعة</string>
     <string name="export_to_pdf">export  to pdf</string>
-    <string name="AccountStatment">Account Statment</string>
+    <string name="AccountStatment">كشف حساب</string>
+    <string name="last_visit">أخر زيارة </string>
+    <string name="transName">إسم الحركة</string>
+    <string name="date_voucher">التاريخ</string>
+    <string name="total_balance"> اجمالي الرصيد</string>
+    <string name="debit">دائن</string>
+    <string name="credit">مدين</string>
+    <string name="balance">الرصيد</string>
+    <string name="request">request</string>
+    <string name="YouHaveItemDiscount">You Have Item Discount</string>
+    <string name="makeRequest">طلب تجاوز سقف الذمم</string>
+    <string name="request_credit_limit">Request to exceed the limit of credit</string>
 
 </resources>

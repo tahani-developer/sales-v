@@ -706,6 +706,7 @@ android:layout_margin="5dp"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
+
 </LinearLayout>
     <!--<EditText-->
     <!--android:id="@+id/Serial_No"-->

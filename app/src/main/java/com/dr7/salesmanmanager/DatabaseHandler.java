@@ -58,7 +58,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 116;
+    private static final int DATABASE_VERSION = 120;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -246,8 +246,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CustomerPrices = "CustomerPrices";
 
     private static final String ItemNumber = "ItemNumber";
+
+
     private static final String CustomerNumber = "CustomerNumber";
     private static final String Price = "Price";
+    private static final String DISCOUNT_CUSTOMER = "DISCOUNT_CUSTOMER";
+    private static final String ItemNo_ = "ItemNo_";
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -672,7 +676,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
                 + ItemNumber + " INTEGER,"
                 + CustomerNumber + " INTEGER,"
-                + Price + " INTEGER" + ")";
+                + Price + " INTEGER,"
+                +DISCOUNT_CUSTOMER+ " real,"
+                +ItemNo_+ " TEXT "
+
+                + ")";
         db.execSQL(CREATE_TABLE_CustomerPrices);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1433,6 +1441,33 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        //*****************************************************************************
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  DISCOUNT_CUSTOMER  REAL  DEFAULT 0.0 ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ItemNo_  TEXT  DEFAULT '' ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
+
     }
     public void addAccount_report(Account_Report account_report)
     {
@@ -1561,70 +1596,86 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(List<Customer> customer) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(COMPANY_NUMBER0, customer.getCompanyNumber());
-        values.put(CUS_ID, customer.getCustId());
-        values.put(CUS_NAME0, customer.getCustName());
-        values.put(ADDRESS, customer.getAddress());
-        values.put(IS_SUSPENDED, customer.getIsSuspended());
-        values.put(PRICE_LIST_ID, customer.getPriceListId());
-        values.put(CASH_CREDIT, customer.getCashCredit());
-        values.put(SALES_MAN_NO, customer.getSalesManNumber());
-        values.put(CREDIT_LIMIT, customer.getCreditLimit());
-        values.put(PAY_METHOD0, customer.getPayMethod());
-        values.put(CUST_LAT, customer.getCustLat());
-        values.put(CUST_LONG, customer.getCustLong());
-        values.put(MAX_DISCOUNT, customer.getMax_discount());
-        values.put(ACCPRC, customer.getACCPRC());
-        values.put(HIDE_VAL, customer.getHide_val());
-        values.put(IS_POST, 0);
-        values.put(CUS_ID_Text,customer.getCustomerIdText());
+        for (int i = 0; i < customer.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(COMPANY_NUMBER0, customer.get(i).getCompanyNumber());
+            values.put(CUS_ID, customer.get(i).getCustId());
+            values.put(CUS_NAME0, customer.get(i).getCustName());
+            values.put(ADDRESS, customer.get(i).getAddress());
+            values.put(IS_SUSPENDED, customer.get(i).getIsSuspended());
+            values.put(PRICE_LIST_ID, customer.get(i).getPriceListId());
+            values.put(CASH_CREDIT, customer.get(i).getCashCredit());
+            values.put(SALES_MAN_NO, customer.get(i).getSalesManNumber());
+            values.put(CREDIT_LIMIT, customer.get(i).getCreditLimit());
+            values.put(PAY_METHOD0, customer.get(i).getPayMethod());
+            values.put(CUST_LAT, customer.get(i).getCustLat());
+            values.put(CUST_LONG, customer.get(i).getCustLong());
+            values.put(MAX_DISCOUNT, customer.get(i).getMax_discount());
+            values.put(ACCPRC, customer.get(i).getACCPRC());
+            values.put(HIDE_VAL, customer.get(i).getHide_val());
+            values.put(IS_POST, 0);
+            values.put(CUS_ID_Text, customer.get(i).getCustomerIdText());
+            db.insertWithOnConflict(CUSTOMER_MASTER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
-        db.insert(CUSTOMER_MASTER, null, values);
-        db.close();
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
     }
 
-    public void addItem_Unit_Details(ItemUnitDetails item) {
+    public void addItem_Unit_Details(List<ItemUnitDetails> item) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(ComapnyNo, item.getCompanyNo());
-        values.put(ItemNo, item.getItemNo());
-        values.put(UnitID, item.getUnitId());
-        values.put(ConvRate, item.getConvRate());
+        db.beginTransaction();
 
-        db.insert(Item_Unit_Details, null, values);
-        db.close();
+        for (int i = 0; i < item.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(ComapnyNo, item.get(i).getCompanyNo());
+            values.put(ItemNo, item.get(i).getItemNo());
+            values.put(UnitID, item.get(i).getUnitId());
+            values.put(ConvRate, item.get(i).getConvRate());
+            db.insertWithOnConflict(Item_Unit_Details, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        }
+//        db.close();
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
-    public void addItemsMaster(ItemsMaster item) {
+    public void addItemsMaster(List<ItemsMaster> item) {
         db = this.getReadableDatabase();
 //        db.beginTransaction();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(ComapnyNo1, item.getCompanyNo());
-        values.put(ItemNo1, item.getItemNo());
-        values.put(Name1, item.getName());
-        values.put(CateogryID1, item.getCategoryId());
-        values.put(Barcode1, item.getBarcode());
-        values.put(IsSuspended1, item.getIsSuspended());
-        values.put(ITEM_L1, item.getItemL());
-        values.put(ITEM_F_D, item.getPosPrice());
-        values.put(KIND_ITEM,item.getKind_item());
+        for (int i = 0; i < item.size(); i++) {
+            ContentValues values = new ContentValues();
+
+            values.put(ComapnyNo1, item.get(i).getCompanyNo());
+            values.put(ItemNo1, item.get(i).getItemNo());
+            values.put(Name1, item.get(i).getName());
+            values.put(CateogryID1, item.get(i).getCategoryId());
+            values.put(Barcode1, item.get(i).getBarcode());
+            values.put(IsSuspended1, item.get(i).getIsSuspended());
+            values.put(ITEM_L1, item.get(i).getItemL());
+            values.put(ITEM_F_D, item.get(i).getPosPrice());
+            values.put(KIND_ITEM, item.get(i).getKind_item());
 
 //        if(ITEM_HAS_SERIAL)
-        values.put(ITEM_HAS_SERIAL,item.getItemHasSerial());
-        values.put(ITEM_PHOTO,item.getPhotoItem());
+            values.put(ITEM_HAS_SERIAL, item.get(i).getItemHasSerial());
+            values.put(ITEM_PHOTO, item.get(i).getPhotoItem());
 
+            db.insertWithOnConflict(Items_Master, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
+//            db.insert(, null, values);
+        }
 
-        db.insert(Items_Master, null, values);
-
-//        db.setTransactionSuccessful();
-//        db.endTransaction();
-        db.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
     //----------------------------------------------------
     public void addVisitRate(VisitRate visitRate) {
@@ -1656,33 +1707,46 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     //----------------------------------------------------
 
-    public void addPrice_List_D(PriceListD price) {
+    public void addPrice_List_D(List<PriceListD> price) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(ComapnyNo2, price.getCompanyNo());
-        values.put(PrNo2, price.getPrNo());
-        values.put(ItemNo2, price.getItemNo());
-        values.put(UnitID2, price.getUnitId());
-        values.put(Price2, price.getPrice());
-        values.put(TaxPerc2, price.getTaxPerc());
-        values.put(MinSalePrice2, price.getMinSalePrice());
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
 
-        db.insert(Price_List_D, null, values);
-        db.close();
+            values.put(ComapnyNo2, price.get(i).getCompanyNo());
+            values.put(PrNo2, price.get(i).getPrNo());
+            values.put(ItemNo2, price.get(i).getItemNo());
+            values.put(UnitID2, price.get(i).getUnitId());
+            values.put(Price2, price.get(i).getPrice());
+            values.put(TaxPerc2, price.get(i).getTaxPerc());
+            values.put(MinSalePrice2, price.get(i).getMinSalePrice());
+            db.insertWithOnConflict(Price_List_D, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
-    public void addPrice_List_M(PriceListM price) {
+    public void addPrice_List_M(List<PriceListM> price) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(ComapnyNo3, price.getCompanyNo());
-        values.put(PrNo3, price.getPrNo());
-        values.put(Description3, price.getDescribtion());
-        values.put(IsSuspended3, price.getIsSuspended());
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
 
-        db.insert(Price_List_M, null, values);
-        db.close();
+            values.put(ComapnyNo3, price.get(i).getCompanyNo());
+            values.put(PrNo3, price.get(i).getPrNo());
+            values.put(Description3, price.get(i).getDescribtion());
+            values.put(IsSuspended3, price.get(i).getIsSuspended());
+            db.insertWithOnConflict(Price_List_M, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//            db.insert(, null, values);
+        }
+//        db.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public void addSales_Team(SalesTeam salesTeam) {
@@ -1698,21 +1762,26 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.close();
     }
 
-    public void addSalesMan_Items_Balance(SalesManItemsBalance balance) {
-        db = this.getReadableDatabase();
+    public void addSalesMan_Items_Balance(List<SalesManItemsBalance > balance) {
+//        db = this.getReadableDatabase();
 //        db.beginTransaction();
-        ContentValues values = new ContentValues();
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
 
-        values.put(ComapnyNo5, balance.getCompanyNo());
-        values.put(SalesManNo5, balance.getSalesManNo());
-        values.put(ItemNo5, balance.getItemNo());
-        values.put(Qty5, balance.getQty());
+        for (int i = 0; i < balance.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(ComapnyNo5, balance.get(i).getCompanyNo());
+            values.put(SalesManNo5, balance.get(i).getSalesManNo());
+            values.put(ItemNo5, balance.get(i).getItemNo());
+            values.put(Qty5, balance.get(i).getQty());
+            db.insertWithOnConflict(SalesMan_Items_Balance, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
 
-        db.insert(SalesMan_Items_Balance, null, values);
+//        db.insert(SalesMan_Items_Balance, null, values);
 //
-//        db.setTransactionSuccessful();
-//        db.endTransaction();
-        db.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
     public void addSalesmanAndStoreLink(SalesManAndStoreLink store) {
@@ -1737,21 +1806,61 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.insert(SalesMen, null, values);
         db.close();
     }
+//    public void addItemUniteTable(List<ItemUnit> itemUnits) {
+//
+//        SQLiteDatabase Idb = this.getReadableDatabase();
+//        Idb.beginTransaction();
+//
+//        for (int i = 0; i < itemUnits.size(); i++) {
+//            ContentValues values = new ContentValues();
+////            values.put(ITEM_O_CODE5, itemUnits.get(i).getItemOCode());
+////            values.put(ITEM_BARCODE5, itemUnits.get(i).getItemBarcode());
+////            values.put(SALE_PRICE5, itemUnits.get(i).getSalePrice());
+////            values.put(ITEM_U5, convertToEnglish( itemUnits.get(i).getItemU()));
+////            values.put(U_QTY5,  convertToEnglish(""+itemUnits.get(i).getUQty()));
+////            values.put(U_SERIAL5,  convertToEnglish(""+itemUnits.get(i).getuSerial()));
+////            values.put(CALC_QTY5,  convertToEnglish(""+itemUnits.get(i).getCalcQty()));
+////            values.put(WHOLE_SALE_PRC5, itemUnits.get(i).getWholeSalePrc());
+////            values.put(PURCHASE_PRICE5, itemUnits.get(i).getPurchasePrc());
+////            values.put(PCLASS1, itemUnits.get(i).getPclAss1());
+////            values.put(PCLASS2, itemUnits.get(i).getPclAss2());
+////            values.put(PCLASS3, itemUnits.get(i).getPclAss3());
+////            values.put(IN_DATE5, itemUnits.get(i).getInDate());
+////            values.put(UNIT_NAME5, itemUnits.get(i).getUnitName());
+////            values.put(ORG_SALEPRICE, itemUnits.get(i).getOrgSalePrice());
+////            values.put(OLD_SALE_PRICE,  convertToEnglish(itemUnits.get(i).getOldSalePrice()));
+////            values.put(UPDATE_DATE,  itemUnits.get(i).getUpdateDate());
+//
+//            Idb.insertWithOnConflict(ITEM_UNITS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//
+//        }
+//
+//        Idb.setTransactionSuccessful();
+//        Idb.endTransaction();
+////        Idb.close();
+//    }
 
-    public void addCustomerPrice(CustomerPrice price) {
-        db = this.getReadableDatabase();
-//        db.beginTransaction();
-        ContentValues values = new ContentValues();
 
-        values.put(ItemNumber, price.getItemNumber());
-        values.put(CustomerNumber, price.getCustomerNumber());
-        values.put(Price, price.getPrice());
+    public void addCustomerPrice(List<CustomerPrice> price) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
 
-        db.insert(CustomerPrices, null, values);
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
 
-//        db.setTransactionSuccessful();
-//        db.endTransaction();
-        db.close();
+            values.put(ItemNumber, 0);
+            values.put(CustomerNumber, price.get(i).getCustomerNumber());
+            values.put(Price, price.get(i).getPrice());
+            values.put(DISCOUNT_CUSTOMER , price.get(i).getDiscount());
+            values.put(ItemNo_ , price.get(i).getItemNumber());
+
+            db.insertWithOnConflict(CustomerPrices, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
     public void addTransaction(Transaction transaction) {
@@ -2925,9 +3034,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE  ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , C.DISCOUNT_CUSTOMER\n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
-                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
+                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNo_ and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
 
         Log.e("***" , selectQuery);
@@ -2992,14 +3101,25 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                         item.setItemPhoto(null);
                     }
                 }
+
                 catch (Exception e)
                 {
                     item.setItemPhoto(null);
                 }
+                try {
+                    item.setDiscountCustomer(cursor.getDouble(14));
+
+                }
+                catch (Exception e)
+                {
+                    item.setDiscountCustomer(0.0);
+                }
+
 
 
                 items.add(item);
             } while (cursor.moveToNext());
+
         }
         else{
 //           items= getAllJsonItems(rate);
@@ -3054,7 +3174,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String selectQuery ="SELECT DISTINCT   listItemNo.ItemNo \n"+
       " FROM Items_Master listItemNo \n " +
             "    EXCEPT \n" +
-       " select    cast( ItemNumber as text)"+
+       " select    cast( ItemNo_ as text)"+
        " from CustomerPrices  where CustomerNumber = '"+customerId+"' ";
 
 
@@ -3081,7 +3201,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String custNum = CustomerListShow.Customer_Account;
         String selectQuery ="  select DISTINCT  C.ItemNumber\n" +
                 "        FROM  CustomerPrices C\n" +
-                "        where  CustomerNumber= '"+custNum+"' and ItemNumber= '"+itemNo+"'";
+                "        where  CustomerNumber= '"+custNum+"' and ItemNo_= '"+itemNo+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3266,7 +3386,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             String selectQuery = "select DISTINCT KIND_ITEM from Items_Master";
             db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
-            Log.e("DB_Exception","cursor"+cursor.getCount());
 
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
@@ -4500,6 +4619,31 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         return infoLocation;
+    }
+    public Transaction getLastVisitInfo(String customerId,String salesManId) {
+        Transaction infoVisit=new Transaction();
+
+        String selectQuery = "select * from TRANSACTIONS WHERE CUS_CODE ='"+customerId+"' and SALES_MAN_ID ='"+salesManId+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToLast()) {
+            try {
+               if( cursor.moveToPrevious())
+               {
+                   infoVisit.setCheckInDate( cursor.getString(3));
+                   infoVisit.setCheckInTime( cursor.getString(4));
+                   Log.e("infoVisit", "infoVisit+\t" + infoVisit.getCheckInDate() + "\t");
+               }
+            }
+            catch ( Exception e)
+            {Log.e("infoVisit", "Exception+\t\t");}
+
+
+        }
+
+
+        return infoVisit;
     }
 
     public ArrayList<Bitmap> getItemsImage() {

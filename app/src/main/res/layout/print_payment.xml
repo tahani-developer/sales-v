@@ -129,11 +129,13 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:layout_margin="5dp"
+        android:fillViewport="true"
         android:background="@drawable/back_border_edit"
         >
         <HorizontalScrollView
         android:id="@+id/HorizontalScrollView01"
         android:layout_width="match_parent"
+            android:fillViewport="true"
         android:layout_height="match_parent">
 
         <TableLayout

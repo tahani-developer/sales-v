@@ -442,6 +442,7 @@
         android:layout_width="match_parent"
         android:id="@+id/mainRequestLinear"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:layout_margin="5dp"
         android:orientation="vertical"
         android:layout_weight="5">
@@ -471,65 +472,62 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/refresh2"
-
-                android:drawableLeft="@drawable/ic_done_black_24dp"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/resultLinear"
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/resultLinear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:visibility="gone"
+        android:layout_weight="5">
+        <TextView
+            android:id="@+id/checkStateResult"
+            android:visibility="visible"
+            android:layout_weight="1"
+            android:text="@string/request_state"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+        <ImageView
+            android:id="@+id/acceptDiscount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:visibility="visible"
+            android:src="@drawable/ic_done_blue_24dp"
+            android:drawableLeft="@drawable/ic_done_black_24dp"
+            />
+        <ImageView
+            android:id="@+id/rejectDiscount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
             android:visibility="gone"
-            android:layout_weight="1">
-            <TextView
-                android:id="@+id/checkStateResult"
-                android:visibility="visible"
-                android:layout_weight="1"
-                android:text="@string/request_state"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"/>
-            <ImageView
-                android:id="@+id/acceptDiscount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:src="@drawable/ic_done_blue_24dp"
+            android:src="@drawable/ic_block_red_24dp"
 
-                android:drawableLeft="@drawable/ic_done_black_24dp"
-                />
-            <ImageView
-                android:id="@+id/rejectDiscount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+            android:drawableLeft="@drawable/ic_done_black_24dp"
+            />
+        <ImageView
+            android:id="@+id/defaultDiscount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:src="@drawable/ic_info_black_24dp"
 
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:src="@drawable/ic_block_red_24dp"
-
-                android:drawableLeft="@drawable/ic_done_black_24dp"
-                />
-            <ImageView
-                android:id="@+id/defaultDiscount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:src="@drawable/ic_info_black_24dp"
-
-                android:drawableLeft="@drawable/ic_done_black_24dp"
-                />
-        </LinearLayout>
+            android:drawableLeft="@drawable/ic_done_black_24dp"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -571,12 +569,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_weight="5"
         android:orientation="horizontal"
-        android:padding="2dp"
-
-        >
+        android:padding="2dp">
 
         <Button
             android:id="@+id/addToList"

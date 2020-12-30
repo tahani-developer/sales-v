@@ -67,4 +67,5 @@ dependencies {
     implementation files('libs/itextg-5.5.10.jar')
     //    implementation files('libs/opencsv-5.3.jar')
     implementation files('libs/jxl-2.6.12.jar')
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

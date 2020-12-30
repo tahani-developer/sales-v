@@ -6,25 +6,32 @@
     android:padding="10dp"
     android:layout_gravity="center"
     android:gravity="center"
-     android:layout_width="100dp"
-    android:layout_height="100dp">
+     android:layout_width="300dp"
+    android:layout_height="300dp">
     <LinearLayout
-        android:id="@+id/LinearLayout01"
+        android:id="@+id/mainLinearPrinting"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_width="match_parent">
+    <LinearLayout
+        android:id="@+id/LinearLayout_main"
         android:layout_width="fill_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content">
         <CheckBox
             android:text="dev_check_disconnect"
             android:visibility="gone"
             android:id="@+id/check_disconnect"
             android:layout_width="fill_parent"
+
             android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/LinearLayout02"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content">
         <!-- Divide | EditText | Button | -->
         <EditText
@@ -63,7 +70,7 @@
     <LinearLayout
         android:id="@+id/LinearLayout04"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content">
         <ListView
 
@@ -72,9 +79,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-    <TextView android:layout_height="wrap_content"
+    </LinearLayout>
+    <TextView
+        android:id="@+id/text_hideDialog"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center"
+        android:visibility="gone"
         android:textSize="16sp"
         android:textColor="@color/colorblue_dark"
         android:text="@string/Printing"/>

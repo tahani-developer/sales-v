@@ -42,7 +42,9 @@ import android.os.Message;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v4.print.PrintHelper;
 //import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
@@ -168,6 +170,14 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
     RecyclerView recyclerView;
+    public  static TextView checkState_LimitCredit,    checkStateResult,voucherValueText;
+    private EditText discValueEditText,noteEditText;
+    public ImageView requestDiscount;
+    ImageView rejectDiscount,acceptDiscount,defaultDiscount;
+    LinearLayout requestLinear,mainRequestLinear;
+    public  static  String noteRequestLimit="";
+    requestAdmin request;
+
 
     //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
@@ -286,7 +296,7 @@ public class SalesInvoice extends Fragment {
     FloatingActionButton save_floatingAction;
     boolean validDiscount=false;
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
-           R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp};
+           R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp};
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
@@ -354,14 +364,14 @@ public class SalesInvoice extends Fragment {
             }
         });
         //**********************************************************
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.info),getResources().getString(R.string.print)};
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
 
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_4_2);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
 
 
 
@@ -388,22 +398,9 @@ public class SalesInvoice extends Fragment {
                                     obj.startParsing();
                                     break;
                                 case 2:
-                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
+                                    Intent intent = new Intent(getContext(), AccountStatment.class);
+                                    getContext().startActivity(intent);
 
-                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
-                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
-                                            if (payMethod == 0) {
-                                                getDataForDiscountTotal();
-                                                salesInvoiceInterfaceListener.displayDiscountFragment();
-                                            } else {
-                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            getDataForDiscountTotal();
-
-                                            salesInvoiceInterfaceListener.displayDiscountFragment();
-                                        }
-                                    }
 
                                     break;
                                 case 3:
@@ -423,6 +420,24 @@ public class SalesInvoice extends Fragment {
                                     } catch (Exception e) {
                                         Log.e("ExceptionReprint", "" + e.getMessage());
                                         voucherNo = 0;
+                                    }
+                                    break;
+                                case 4:
+                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
+
+                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                                            if (payMethod == 0) {
+                                                getDataForDiscountTotal();
+                                                salesInvoiceInterfaceListener.displayDiscountFragment();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            getDataForDiscountTotal();
+
+                                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                                        }
                                     }
                                     break;
 
@@ -1304,7 +1319,7 @@ public class SalesInvoice extends Fragment {
 
                         }//end else
 
-                    } else {
+                    } else {// customer Not authorize
                         SaveData.setEnabled(true);
                         save_floatingAction.setEnabled(true);
                         reCheck_customerAuthorize();// test
@@ -1833,24 +1848,162 @@ public class SalesInvoice extends Fragment {
     public void reCheck_customerAuthorize() {
         SaveData.setEnabled(true);
         save_floatingAction.setEnabled(true);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(getResources().getString(R.string.not_authoriz));
-        builder.setTitle(getResources().getString(R.string.warning_message));
-        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+        if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getResources().getString(R.string.not_authoriz));
+            builder.setTitle(getResources().getString(R.string.warning_message));
+            builder.setPositiveButton(getResources().getString(R.string.makeRequest), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+//                    requestOverLimitCredit();
+
+//                 dialogInterface.dismiss();
+                }
+
+
+            }).setCancelable(true);
+            builder.create().show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getResources().getString(R.string.not_authoriz));
+            builder.setTitle(getResources().getString(R.string.warning_message));
+            builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+
+            });
+            builder.create().show();
+        }
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestOverLimitCredit() {
+        final Dialog dialog_request = new Dialog(getActivity());
+        dialog_request.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_request.setCancelable(true);
+        dialog_request.setContentView(R.layout.request_limit_cridet);
+        request=new requestAdmin(getContext());
+        final EditText noteEditText = (EditText) dialog_request.findViewById(R.id.noteEditText);
+        final Button okButton = (Button) dialog_request.findViewById(R.id.okButton);
+        final Button cancelButton = (Button) dialog_request.findViewById(R.id.cancelButton);
+        checkState_LimitCredit=dialog_request.findViewById(R.id.checkState);
+        requestDiscount = dialog_request.findViewById(R.id.requestDiscount);
+
+        voucherValueText=dialog_request.findViewById(R.id.voucherValueText);
+        voucherValueText.setText(netTotalTextView.getText().toString());
+        mainRequestLinear=dialog_request.findViewById(R.id.mainRequestLinear);
+        checkStateResult=dialog_request.findViewById(R.id.checkStateResult);
+        defaultDiscount=dialog_request.findViewById(R.id.defaultDiscount);
+        acceptDiscount=dialog_request.findViewById(R.id.acceptDiscount);
+        rejectDiscount=dialog_request.findViewById(R.id.rejectDiscount);
+        requestLinear=dialog_request.findViewById(R.id.requestLinear);
+        checkState_LimitCredit.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-//                if (customer_is_authrized()) {
-//
-//                    AddVoucher();
-//                    clearLayoutData();
-//                }
-                dialogInterface.dismiss();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                Log.e("afterTextChanged",""+s.toString());
+                if(s.toString().equals("0"))
+                {
+//                    checkState.setText("3");
+
+//                    checkStatuseRequest();
+                }
+                else
+                if(s.toString().equals("1"))
+                {
+                    requestLinear.setVisibility(View.GONE);
+                    checkStateResult.setText(getContext().getResources().getString(R.string.acceptedRequest));
+                    acceptDiscount.setVisibility(View.VISIBLE);
+                    defaultDiscount.setVisibility(View.GONE);
+                    okButton.setVisibility(View.VISIBLE);
+                    okButton.setEnabled(true);
+
+                }
+                else if(s.toString().equals("2"))
+                {
+                    requestLinear.setVisibility(View.GONE);
+                    checkStateResult.setText(getContext().getResources().getString(R.string.rejectedRequest));
+                    acceptDiscount.setVisibility(View.GONE);
+                    defaultDiscount.setVisibility(View.GONE);
+                    rejectDiscount.setVisibility(View.VISIBLE);
+                    discValueEditText.setText("");
+                    noteEditText.setText("");
+
+                }
+
+            }
         });
-        builder.create().show();
 
+        //************************************************************
+        requestDiscount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(!voucherValueText.getText().toString().equals(""))
+                {
+
+                        try {
+                            okButton.setEnabled(false);
+                            noteEditText.setEnabled(false);
+                            noteRequestLimit=noteEditText.getText().toString();
+                            discountRequest.setAmount_value(voucherValueText.getText().toString());
+                            request.startParsing();
+//
+                        } catch (Exception e) {
+                            Log.e("request",""+e.getMessage());
+
+                        }
+
+
+
+//            DiscountFragment.this.dismiss();
+
+
+
+
+                }
+                else {
+                    voucherValueText.setError("required");
+                }
+
+
+
+            }
+        });
+
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog_request.dismiss();
+            }
+        });
+        dialog_request.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

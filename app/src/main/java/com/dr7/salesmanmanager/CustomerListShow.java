@@ -59,7 +59,7 @@ public class CustomerListShow extends DialogFragment {
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
-    public  static  String latitude="",longtude="";
+    public  static  String latitude="",longtude ="";
     public static double Max_Discount_value=0;
     public static int CustHideValu=0;
     CustomersListAdapter customersListAdapter;
@@ -234,9 +234,9 @@ public class CustomerListShow extends DialogFragment {
 
         mHandler.deleteAllCustomers();
 
-        for (int i = 0; i < customerList.size(); i++) {
-            mHandler.addCustomer(customerList.get(i));
-        }
+//        for (int i = 0; i < customerList.size(); i++) {
+            mHandler.addCustomer(customerList);
+//        }
     }
 
     void initialize(View view) {

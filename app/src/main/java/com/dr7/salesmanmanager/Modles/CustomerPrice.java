@@ -1,25 +1,34 @@
 package com.dr7.salesmanmanager.Modles;
 
 public class CustomerPrice {
-    private int itemNumber;
+    private String itemNumber;
     private int customerNumber;
     private double price;
+    private double discount;
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
 
     public CustomerPrice(){
 
     }
 
-    public CustomerPrice(int itemNumber, int customerNumber, double price) {
+    public CustomerPrice(String itemNumber, int customerNumber, double price) {
         this.itemNumber = itemNumber;
         this.customerNumber = customerNumber;
         this.price = price;
     }
 
-    public int getItemNumber() {
+    public String getItemNumber() {
         return itemNumber;
     }
 
-    public void setItemNumber(int itemNumber) {
+    public void setItemNumber(String itemNumber) {
         this.itemNumber = itemNumber;
     }
 

@@ -175,8 +175,8 @@ public class Login extends AppCompatActivity {
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
 
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        passwordEditText.setText("2240m");
-        usernameEditText.setText("1");
+//        passwordEditText.setText("2240m");
+//        usernameEditText.setText("1");
         try {
             if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
                 logo.setImageDrawable(getResources().getDrawable(R.drawable.logo_vansales));

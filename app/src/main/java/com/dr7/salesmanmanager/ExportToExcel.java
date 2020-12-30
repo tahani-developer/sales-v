@@ -29,7 +29,13 @@ import jxl.write.biff.RowsExceededException;
 
 import static com.dr7.salesmanmanager.Reports.CashReport.T_cash;
 import static com.dr7.salesmanmanager.Reports.CashReport.T_credit;
+import static com.dr7.salesmanmanager.Reports.CashReport.cashPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.credit;
+import static com.dr7.salesmanmanager.Reports.CashReport.creditPayment;
+import static com.dr7.salesmanmanager.Reports.CashReport.net;
+import static com.dr7.salesmanmanager.Reports.CashReport.returnCridet;
 import static com.dr7.salesmanmanager.Reports.CashReport.total;
+import static com.dr7.salesmanmanager.Reports.CashReport.total_cash;
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 
@@ -319,7 +325,8 @@ public class ExportToExcel {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.sales)                    )); // column and row
+                sheet.mergeCells(0,0, 1, 0);
+                sheet.addCell(new Label(2, 0, context.getString(R.string.sales) )); // column and row
 
                 sheet.addCell(new Label(1, 2, context.getResources().getString(R.string.cash_sale) ));
                 sheet.addCell(new Label(3, 2, T_cash+"")   );
@@ -330,10 +337,39 @@ public class ExportToExcel {
                 sheet.addCell(new Label(1, 6, context.getResources().getString(R.string.total_sales) ));
                 sheet.addCell(new Label(3, 6, total+"")   );
 
+                sheet.mergeCells(0,1, 5, 1);// col , row, to col , to row
+                //***************************************************************************
+                sheet.mergeCells(0,7, 5, 7);
+                sheet.mergeCells(0,8, 1, 8);
+                sheet.addCell(new Label(2, 8, context.getString(R.string.payment) )); // column and row
+
+                sheet.addCell(new Label(1, 10, context.getResources().getString(R.string.cash) ));
+                sheet.addCell(new Label(3, 10, cashPayment+"")   );
+
+                sheet.addCell(new Label(1, 12, context.getResources().getString(R.string.app_cheque) ));
+                sheet.addCell(new Label(3, 12, creditPayment+"")   );
+
+                sheet.addCell(new Label(1, 14, context.getResources().getString(R.string.netpayment) ));
+                sheet.addCell(new Label(3, 14, net+"")   );
+                //********************************************************************************
+                sheet.mergeCells(0,15, 5, 15);
+
+                sheet.addCell(new Label(2, 16, context.getString(R.string.app_creditCard) )); // column and row
+
+                sheet.addCell(new Label(1, 18, context.getResources().getString(R.string.credit_value) ));
+                sheet.addCell(new Label(3, 18, (credit -returnCridet)+"")   );
+
+                sheet.addCell(new Label(1, 20, context.getResources().getString(R.string.total_cash) ));
+                sheet.addCell(new Label(3, 20, total_cash+"")   );
 
 
 
-                sheet.mergeCells(0,1, 1, 1);// col , row, to col , to row
+
+
+//
+//                sheet.mergeCells(0,1, 5, 1);// col , row, to col , to row
+
+
 
 
 //                for (int i = 0; i < list.size(); i++) {
