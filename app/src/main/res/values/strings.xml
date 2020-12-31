@@ -412,6 +412,9 @@
     <string name="YouHaveItemDiscount">You Have same Item Discount</string>
     <string name="makeRequest">Make Request For Limit Credit </string>
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
+    <string name="ok" />
+    <string name="text_location_permission">text Location Permission</string>
+    <string name="title_location_permission">Location Permission</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

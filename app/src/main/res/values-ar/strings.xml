@@ -460,5 +460,8 @@
     <string name="YouHaveItemDiscount">لايتطلب موافقة الادمن</string>
     <string name="makeRequest">طلب تجاوز سقف الذمم</string>
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
+    <string name="AccountStatment">Account Statment</string>
+    <string name="ok" />
+    <string name="text_location_permission">text Location Permission</string>
 
 </resources>
