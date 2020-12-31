@@ -1859,16 +1859,17 @@ public class SalesInvoice extends Fragment {
             builder.setMessage(getResources().getString(R.string.not_authoriz));
             builder.setTitle(getResources().getString(R.string.warning_message));
             builder.setPositiveButton(getResources().getString(R.string.makeRequest), new DialogInterface.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
                 {
 //                    requestOverLimitCredit();
-
+//
 //                 dialogInterface.dismiss();
                 }
 
 
-            }).setCancelable(true);
+            });
             builder.create().show();
         }
         else {
@@ -1890,14 +1891,15 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestOverLimitCredit() {
-        final Dialog dialog_request = new Dialog(getActivity());
+        final Dialog dialog_request = new Dialog(getActivity().getBaseContext());
         dialog_request.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_request.setCancelable(true);
         dialog_request.setContentView(R.layout.request_limit_cridet);
         request=new requestAdmin(getContext());
+        Log.e("requestOverLimitCredit",""+netTotalTextView.getText().toString());
         final EditText noteEditText = (EditText) dialog_request.findViewById(R.id.noteEditText);
         final Button okButton = (Button) dialog_request.findViewById(R.id.okButton);
-        final Button cancelButton = (Button) dialog_request.findViewById(R.id.cancelButton);
+        final ImageView cancelButton = (ImageView) dialog_request.findViewById(R.id.cancelButton);
         checkState_LimitCredit=dialog_request.findViewById(R.id.checkState);
         requestDiscount = dialog_request.findViewById(R.id.requestDiscount);
 

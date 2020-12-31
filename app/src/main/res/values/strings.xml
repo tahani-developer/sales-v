@@ -409,7 +409,7 @@
     <string name="AccountStatment">Account Statment</string>
     <string name="last_visit">last Visit</string>
     <string name="request">request</string>
-    <string name="YouHaveItemDiscount">You Have Item Discount</string>
+    <string name="YouHaveItemDiscount">You Have same Item Discount</string>
     <string name="makeRequest">Make Request For Limit Credit </string>
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
     <string name="ok" />
