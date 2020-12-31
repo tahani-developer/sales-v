@@ -134,6 +134,7 @@ public class DiscountFragment extends DialogFragment {
                     okButton.setVisibility(View.VISIBLE);
                     okButton.setEnabled(true);
 
+
                 }
                 else if(s.toString().equals("2"))
                 {
@@ -145,7 +146,14 @@ public class DiscountFragment extends DialogFragment {
                     discValueEditText.setText("");
                     noteEditText.setText("");
 
-                }
+                }else if(s.toString().equals("3"))
+                    {
+                        acceptDiscount.setVisibility(View.GONE);
+                        defaultDiscount.setVisibility(View.GONE);
+                        rejectDiscount.setVisibility(View.GONE);
+                        discValueEditText.setText("");
+                        requestLinear.setVisibility(View.VISIBLE);
+                    }
 
             }
         });
@@ -217,9 +225,11 @@ public class DiscountFragment extends DialogFragment {
                 switch (view.getId()) {
                     case R.id.okButton:
                         Log.e("okButton","okButton");
+                        checkState.setText("3");
                                addDiscount();
                                 break;
                             case R.id.cancelButton:
+                                checkState.setText("3");
 //;
                                 DiscountFragment.this.dismiss();
                                 break;

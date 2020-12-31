@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -1239,6 +1240,7 @@ public class SalesInvoice extends Fragment {
         readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveData() {
         validDiscount=false;
@@ -1297,7 +1299,9 @@ public class SalesInvoice extends Fragment {
 
                         if (virefyMaxDescount()) {
 
-                            AddVoucher();
+
+                                AddVoucher();
+
                             clearLayoutData(0);
 
                         } else {
@@ -1748,14 +1752,14 @@ public class SalesInvoice extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 100; i++) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                publishProgress(i);
-            }
+//            for (int i = 0; i < 100; i++) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                publishProgress(i);
+//            }
 
 
             salesInvoiceInterfaceListener.displayFindItemFragment2();
@@ -1765,7 +1769,7 @@ public class SalesInvoice extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-
+            dialog_progress.dismiss();
 //            pb.setProgress(values[0]);
 //            dialog_progress.setProgress(values);
         }

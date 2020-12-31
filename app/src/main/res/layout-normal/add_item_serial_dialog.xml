@@ -280,8 +280,7 @@ android:layout_margin="5dp"
             android:background="@drawable/back_border_shape"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
-
-            android:visibility="gone">
+            android:visibility="visible">
             <TextView
                 android:id="@+id/checkState"
                 android:visibility="gone"
