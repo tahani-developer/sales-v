@@ -271,6 +271,9 @@ public class requestAdmin {
                 }
                 progressDialog.dismiss();
             }
+            else {
+                progressDialog.dismiss();
+            }
         }
 
     }
