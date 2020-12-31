@@ -109,7 +109,7 @@ public class requestAdmin {
         if (settings.size() != 0) {
             getData();
             String ipAddress = settings.get(0).getIpAddress();
-            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
 
             new JSONTask().execute(URL_TO_HIT);
 
@@ -120,7 +120,7 @@ public class requestAdmin {
         if (settings.size() != 0) {
 //            getData();
             String ipAddress = settings.get(0).getIpAddress();
-            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+            URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
 
            new JSONTask_checkStateRequest().execute(URL_TO_HIT);
 
@@ -192,7 +192,7 @@ public class requestAdmin {
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost();
-                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php"));
+                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php"));
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "5"));
