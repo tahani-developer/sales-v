@@ -26,6 +26,19 @@
             android:gravity="center_vertical"
             android:layout_height="match_parent"
             android:layout_width="match_parent"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5.2"
+            android:id="@+id/serialValue"
+            android:visibility="gone"
+
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/item_serial"

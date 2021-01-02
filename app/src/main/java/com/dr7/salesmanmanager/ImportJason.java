@@ -1181,11 +1181,11 @@ public class ImportJason extends AppCompatActivity {
 
                 if (s.contains("UPDATE_SALES_MAN_SUCCESS")) {
 
-                    Toast.makeText(context, "UPDATE_SALES_MAN_SUCCESS", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "UPDATE_SALES_MAN_SUCCESS", Toast.LENGTH_SHORT).show();
                     Log.e("onPostExecute", "UPDATE_SALES_MAN_SUCCESS");
 
                 } else if (s.contains("UPDATE_SALES_MAN_FAIL")) {
-                    Toast.makeText(context, "UPDATE_SALES_MAN_FAIL", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "UPDATE_SALES_MAN_FAIL", Toast.LENGTH_SHORT).show();
                     Log.e("onPostExecute", "UPDATE_SALES_MAN_FAIL");
 
                 }

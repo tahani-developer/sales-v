@@ -40,38 +40,42 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
 
 public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHolder>{
-        Context context;
-        private AddItemsFragment2 contextAddItem;
-        List<serialModel> list;
-        DatabaseHandler databaseHandler;
-        Calendar myCalendar;
-public static List<Cheque> chequeListall;
-public  static boolean errorData=false,isFoundSerial=false;
-public int selectedBarcode=0;
-public  static String barcodeValue="";
+    Context context;
+    private AddItemsFragment2 contextAddItem;
+    List<serialModel> list;
+    DatabaseHandler databaseHandler;
+    Calendar myCalendar;
 
-public Serial_Adapter(List<serialModel> chequeList,Context context,AddItemsFragment2 contextadd){
-    Log.e("Serial_Adapter",""+chequeList.size());
-        this.context=context;
-        this.list=chequeList;
-        databaseHandler=new DatabaseHandler(context);
-        this.contextAddItem=contextadd;
+
+    public static List<Cheque> chequeListall;
+    public static boolean errorData = false, isFoundSerial = false;
+    public int selectedBarcode = 0;
+    public static String barcodeValue = "";
+    public  static  TextView serialValue_Model;
+
+    public Serial_Adapter(List<serialModel> chequeList, Context context, AddItemsFragment2 contextadd) {
+        Log.e("Serial_Adapter", "" + chequeList.size());
+        this.context = context;
+        this.list = chequeList;
+        databaseHandler = new DatabaseHandler(context);
+        this.contextAddItem = contextadd;
         // chequeListall = new ArrayList<>();
-        }
+    }
 
 
-@NonNull
-@Override
-public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup,int i){
-        View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_serial_recycler,viewGroup,false);
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_serial_recycler, viewGroup, false);
         return new Serial_Adapter.ViewHolder(view);
-        }
+    }
 
 @Override
 public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         errorData=false;
-         Log.e("position", "onBindViewHolder" + i+"errorData\t"+errorData);
+
         viewHolder.editTextSerialCode.setTag(i);
+
         viewHolder.textView_counterNo.setTag(i);
         list.get(i).setCounterSerial(i+1);
         if(i==0)
@@ -83,12 +87,12 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         @Override
         public void onClick(View v) {
             selectedBarcode=i;
-            Log.e("selectedBarcode",""+selectedBarcode);
             contextAddItem.readB();
 
         }
     });
-        viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
+    viewHolder.editTextSerialCode.setText(list.get(i).getSerialCode());
+
 
     if(list.get(i).getIsBonus().equals("1"))
     {
@@ -142,8 +146,8 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
             }).show();
         }
     });
-
         }
+
 
 @Override
 public int getItemCount(){
@@ -183,10 +187,53 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(View itemView) {
         super(itemView);
+
         textView_counterNo = itemView.findViewById(R.id.counter_ser);
         editTextSerialCode = itemView.findViewById(R.id.Serial_No);
         scanBarcode = itemView.findViewById(R.id.scanBarcode);
         deletItem = itemView.findViewById(R.id.deletItem);
+        serialValue_Model = itemView.findViewById(R.id.serialValue_Model);
+        serialValue_Model.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                boolean isUpdate=true;
+                if(s.toString().length()!=0)
+                {
+                    if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))
+                    {
+                        isUpdate= updateListCheque(selectedBarcode, s.toString());
+
+                    }
+                    if(!isUpdate)
+                    {
+                        editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+                        errorData=true;
+
+                    }else {
+                        editTextSerialCode.setError(null);
+                    }
+
+
+
+                }
+                else {
+                    updateListCheque(selectedBarcode, "");
+//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+                }
+
+
+            }
+        });
 //        editTextSerialCode.requestFocus();
         editTextSerialCode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -203,10 +250,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             public void afterTextChanged(Editable s) {
                 int position = (int) editTextSerialCode.getTag();
                 boolean isUpdate=true;
-                Log.e("afterTextChanged", "afterTextChanged" +list.get(position).getSerialCode()+"\t"+s.toString());
                 if(s.toString().length()!=0)
                 {
-                    Log.e("afterTextChanged", "afterTextChanged" +s+"\t"+s.toString());
                         if(!list.get(position).getSerialCode().equals(s.toString()))
                         {
                             isUpdate= updateListCheque(position, s.toString());
@@ -267,40 +312,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
             }
         });
-//        editText_amountvalue.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                int position = (int) editText_amountvalue.getTag();
-//                Float amountValue = 0f;
-//                try {
-//
-//                    amountValue = Float.parseFloat(s.toString());
-//                } catch (Exception e) {
-//                    amountValue = 0f;
-//                    editText_amountvalue.setError("Please Enter Valid Number");
-//
-//                }
-//                if (amountValue != 0) {
-//                    updateListAmount(position, amountValue);
-//
-//                } else {
-//                    editText_amountvalue.setError("Error Zero Value");
-//
-//                }
-//
-//
-//            }
-//        });
 
     }
     void setEditTextSerialCode(String s)
@@ -314,11 +325,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
     private boolean updateListCheque(int position, String data) {
-    Log.e("updateListCheque",""+position+data);
+
         if(data.toString().length()!=0)
         {
 
-                    Log.e("positionnOTeMPTY", "afterTextChanged" +"errorData\t"+errorData);
+
 
                     isFoundSerial=false;
 
@@ -335,7 +346,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //            Log.e("position", "afterTextChanged" + position + "errorData\t" + errorData);
             if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
                 errorData = false;
+
                 list.get(position).setSerialCode(data);
+
+                notifyDataSetChanged();
+
 
 
 
@@ -364,7 +379,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
     private void updatelistOrder(int counterUpdate) {
 
-    Log.e("updatelistOrder",""+counterUpdate);
+
     ViewHolder viewHolder = null;
     for(int i=0;i<list.size();i++)
     {

@@ -77,7 +77,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.DiscountFragment.checkState;
 import static com.dr7.salesmanmanager.DiscountFragment.noteRequest;
 import static com.dr7.salesmanmanager.DiscountFragment.stateZero;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.addToList;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.checkState_recycler;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.currentKey;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 
 public class requestAdmin {
@@ -133,6 +135,8 @@ public class requestAdmin {
         requestType=discountRequest.getRequest_type();
         Log.e("RequestAdmin", "" + discountRequest+requestType);
         discountRequest.setKey_validation(getRandomNumberString() + "");
+        currentKey=discountRequest.getKey_validation();
+        Log.e("RequestAdmin", "currentKey" + currentKey);
 
         if(discountRequest.getRequest_type().equals("1"))
         {
@@ -144,6 +148,7 @@ public class requestAdmin {
         requestList.add(discountRequest);
 
         jsonArrayRequest.put(requestList.get(0).getJSONObject());
+        Log.e("getData",""+requestList.get(0).getJSONObject());
     }
 
     public static int getRandomNumberString() {
@@ -220,7 +225,7 @@ public class requestAdmin {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "JsonResponse\t" + JsonResponse);
+                Log.e("tagadmin", "JsonResponse\t" + JsonResponse);
 
                 return JsonResponse;
 
@@ -414,27 +419,35 @@ public class requestAdmin {
                         for (int i = 0; i < notificationInfo.length(); i++) {
                              infoDetail = notificationInfo.getJSONObject(i);
                             Log.e("infoDetail", "" + infoDetail.get("status").toString());
-                            Log.e("key_validation", "" + infoDetail.get("key_validation").toString());
+                            Log.e("key_validation", "" + infoDetail.get("key_validation").toString()+"\t==="+currentKey);
+                            if(infoDetail.get("key_validation").toString().equals(currentKey))
+                            {
+                                if(infoDetail.get("status").toString().equals("1")){
+                                    addToList.setEnabled(true);
+                                    stopTimer();
+
+                                }
+                                else if(infoDetail.get("status").toString().equals("2"))
+                                {
+                                    stopTimer();
+                                }
+                                if(requestType.equals("1"))
+                                {
+                                    checkState.setText(infoDetail.get("status").toString());
+                                }
+                                else {
+
+
+                                    checkState_recycler.setText(infoDetail.get("status").toString()+infoDetail.get("key_validation").toString());
+
+                                }
+                            }
+
 
 
 
                         }
-                        if(infoDetail.get("status").toString().equals("1")){
-                            stopTimer();
 
-                        }
-                        else if(infoDetail.get("status").toString().equals("2"))
-                        {
-                            stopTimer();
-                        }
-                        if(requestType.equals("1"))
-                        {
-                            checkState.setText(infoDetail.get("status").toString());
-                        }
-                        else {
-                            checkState_recycler.setText(infoDetail.get("status").toString());
-
-                        }
 
 
 

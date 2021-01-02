@@ -1972,6 +1972,7 @@ public class SalesInvoice extends Fragment {
                             noteEditText.setEnabled(false);
                             noteRequestLimit=noteEditText.getText().toString();
                             discountRequest.setAmount_value(voucherValueText.getText().toString());
+
                             request.startParsing();
 //
                         } catch (Exception e) {

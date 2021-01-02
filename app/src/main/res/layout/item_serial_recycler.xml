@@ -25,6 +25,19 @@
 
             android:textColor="@color/text_view_color"
             android:textSize="12sp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5.2"
+            android:id="@+id/serialValue_Model"
+            android:visibility="gone"
+
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
         <ImageView
             android:id="@+id/scanBarcode"
             android:layout_height="wrap_content"

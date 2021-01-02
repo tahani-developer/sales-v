@@ -18,6 +18,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.Serial_No;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 
 public class ScanActivity extends AppCompatActivity
     implements ZXingScannerView.ResultHandler{
@@ -64,14 +65,19 @@ public class ScanActivity extends AppCompatActivity
                 Log.e("RESULT",""+rawResult.getText());
             }
             else {
-                AddItemsFragment2.barcode.setText(""+rawResult.getText());
-            Log.e("RESULT",""+rawResult.getText());
-            }
-//            AddItemsFragment2.barcode.setText(""+rawResult.getText());
-//            Log.e("RESULT",""+rawResult.getText());
-//           AddItemsFragment2.searchByBarcodeNo(rawResult.getText());
+                if(type.equals("3"))
+                {
+//                    Serial_No.setText(rawResult.getText());
+                    serialValue.setText(rawResult.getText());
+                }
+                else if(type.equals("1"))
+                {
+                    AddItemsFragment2.barcode.setText(""+rawResult.getText());
+                    Log.e("RESULT",""+rawResult.getText());
+                }
 
-//            MainActivity.tvresult.setText(rawResult.getText());
+            }
+
             onBackPressed();
 
             // If you would like to resume scanning, call this method below:

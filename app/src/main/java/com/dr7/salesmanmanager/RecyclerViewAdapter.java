@@ -76,7 +76,9 @@ import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
+import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
+import static com.dr7.salesmanmanager.Serial_Adapter.serialValue_Model;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
@@ -107,7 +109,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static serialModel serial;
     public static EditText unitQty, bonus;
     String discountCustomer = "", updateDiscountValue = "";
-    Button addToList;
+     public  static Button addToList;
     public String exist = "";
     public static String curentSerial = "";
     public static String araySerial[];
@@ -115,11 +117,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public PhotoView photoView, photoDetail;
     public static TextView checkState_recycler, checkStateResult;
     requestAdmin request;
+    public  static  String currentKey="";
+
     int typeRequest = 0, haveResult = 0, approveAdmin = 0;
     LinearLayout mainRequestLinear;
     LinearLayout resultLinear;
     LinearLayout mainLinear;
     ImageView acceptDiscount, rejectDiscount;
+    public static TextView serialValue;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -220,8 +225,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    haveCstomerDisc = false;
                                                    haveChangeCustDisc = false;
                                                    discountCustomer = "";
-
-
+                                                   currentKey="";
                                                    serialListitems = new ArrayList<>();
                                                    listSerialAllItems = new ArrayList<>();
                                                    counterSerial = 0;
@@ -250,7 +254,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                checkStateResult = dialog.findViewById(R.id.checkStateResult);
                                                                rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
                                                                mainRequestLinear.setVisibility(View.VISIBLE);
+                                                               serialValue= dialog.findViewById(R.id.serialValue);
+                                                               serialValue.addTextChangedListener(new TextWatcher() {
+                                                                   @Override
+                                                                   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                                                                   }
+
+                                                                   @Override
+                                                                   public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                                                   }
+
+                                                                   @Override
+                                                                   public void afterTextChanged(Editable s) {
+                                                                       if(!s.toString().equals(""))
+                                                                       {
+                                                                           barcodeValue=s.toString();
+                                                                           serialValue_Model.setText(s.toString());
+                                                                       }
+
+
+                                                                   }
+                                                               });
                                                                mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
                                                                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                                                                lp.copyFrom(dialog.getWindow().getAttributes());
@@ -273,9 +299,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                generateSerial.setOnClickListener(new View.OnClickListener() {
                                                                    @Override
                                                                    public void onClick(View v) {
-                                                                       Log.e("generateSerial", "generateSerial");
+
                                                                        int qtySerial = 0;
-                                                                       Log.e("generateSerial", "" + serialListitems.size());
+
                                                                        if (!unitQty.getText().toString().equals("") && serialListitems.size() == 0) {
                                                                            try {
                                                                                qtySerial = (int) Double.parseDouble(unitQty.getText().toString());
@@ -583,28 +609,34 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                            @Override
                                                            public void afterTextChanged(Editable s) {
-                                                               Log.e("afterTextChanged", "" + s.toString());
+                                                               Log.e("afterTextChanged","haveResult"+s.toString());
                                                                if (s.toString().equals("0")) {
 
-                                                               } else if (s.toString().equals("1")) {
+                                                               } else if( (s.toString().charAt(0)+"").equals("1")) {
+                                                                   Log.e("afterTextChanged","haveResult"+s.toString());
                                                                    haveResult = 1;
-                                                                   resultLinear.setVisibility(View.VISIBLE);
-                                                                   mainRequestLinear.setVisibility(View.GONE);
-                                                                   checkStateResult.setVisibility(View.VISIBLE);
-                                                                   checkStateResult.setText("Accepted Request");
-                                                                   Log.e("checkStateResult", "Accepted Request");
-                                                                   acceptDiscount.setVisibility(View.VISIBLE);
-                                                                   rejectDiscount.setVisibility(View.GONE);
-                                                                   addToList.setEnabled(true);
+                                                                   String key=s.toString().substring(1,s.length());
+                                                                   if(key.equals(currentKey))
+                                                                   {
+                                                                       resultLinear.setVisibility(View.VISIBLE);
+                                                                       mainRequestLinear.setVisibility(View.GONE);
+                                                                       checkStateResult.setVisibility(View.VISIBLE);
+                                                                       checkStateResult.setText("Accepted Request");
+                                                                       acceptDiscount.setVisibility(View.VISIBLE);
+                                                                       rejectDiscount.setVisibility(View.GONE);
+                                                                       addToList.setEnabled(true);
+                                                                   }
 
-                                                               } else if (s.toString().equals("2")) {
+
+
+                                                               } else if ((s.toString().charAt(0)+"").equals("2"))  {
                                                                    haveResult = 2;
                                                                    mainRequestLinear.setVisibility(View.GONE);
                                                                    resultLinear.setVisibility(View.VISIBLE);
 
                                                                    checkStateResult.setVisibility(View.VISIBLE);
                                                                    checkStateResult.setText("Rejected Request");
-                                                                   Log.e("checkStateResult", "Rejected Request");
+
                                                                    acceptDiscount.setVisibility(View.GONE);
                                                                    rejectDiscount.setVisibility(View.VISIBLE);
                                                                    discount.setText("");
@@ -699,6 +731,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                            if (!discountCustomer.equals(discountText)) {
 
                                                                                                try {
+                                                                                                   currentKey="";
                                                                                                    getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
                                                                                                    addToList.setEnabled(false);
                                                                                                    discount.setEnabled(false);
@@ -723,6 +756,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                            getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
                                                                                            addToList.setEnabled(false);
                                                                                            discount.setEnabled(false);
+                                                                                           currentKey="";
                                                                                            request.startParsing();
                                                                                        } catch (Exception e) {
                                                                                            Log.e("request", "" + e.getMessage());
@@ -734,6 +768,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
                                                                                        addToList.setEnabled(false);
                                                                                        discount.setEnabled(false);
+                                                                                       currentKey="";
                                                                                        request.startParsing();
                                                                                    } catch (Exception e) {
                                                                                        Log.e("request", "" + e.getMessage());
@@ -753,6 +788,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "2", items.get(holder.getAdapterPosition()).getPrice() + "", bonus.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
+                                                                                   currentKey="";
                                                                                    request.startParsing();
                                                                                } catch (Exception e) {
                                                                                    Log.e("request", "" + e.getMessage());
@@ -901,6 +937,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        else {
 
                                                                                            String unitValue;
+                                                                                           currentKey="";
                                                                                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                                                                unitValue = unit.getSelectedItem().toString();
                                                                                                Log.e("unitValue", "" + unitValue);
@@ -1107,7 +1144,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void getDataForDiscountTotal(String itemName, String type, String price, String amount) {
-        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price);
+//        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price);
+        double priceValue=0,amountValue=0,totalValue=0;
+        try {
+            priceValue=Double.parseDouble(price);
+            amountValue=Double.parseDouble(amount);
+            totalValue=priceValue*amountValue;
+        }
+        catch (Exception e){
+
+        }
         discountRequest = new RequestAdmin();
         if (MHandler.getAllSettings().size() != 0) {
             discountRequest.setSalesman_name(MHandler.getAllSettings().get(0).getSalesMan_name());
@@ -1118,7 +1164,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         discountRequest.setCustomer_no(CustomerListShow.Customer_Account);
         discountRequest.setCustomer_name(CustomerListShow.Customer_Name);
         discountRequest.setAmount_value(amount);
-        discountRequest.setTotal_voucher(price + "");// if request for item not for all voucher
+        discountRequest.setTotal_voucher(totalValue + "");// if request for item not for all voucher
         discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
 
         discountRequest.setKey_validation("");

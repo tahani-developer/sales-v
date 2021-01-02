@@ -67,7 +67,11 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             ></activity>
         <activity android:name=".SmallCaptureActivity" />
-        <activity android:name=".ScanActivity" />
+        <activity android:name=".ScanActivity"
+            android:screenOrientation="portrait"
+            >
+        </activity>
+
         <activity
             android:name=".Reports.AccountReport"
             android:label="@string/title_activity_main"
@@ -93,6 +97,7 @@
         <activity
             android:name=".Activities"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:configChanges="locale"
             android:windowSoftInputMode="adjustPan|adjustResize"
             android:theme="@style/AppTheme.NoActionBar"

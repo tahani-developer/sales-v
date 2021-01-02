@@ -68,4 +68,7 @@ dependencies {
     //    implementation files('libs/opencsv-5.3.jar')
     implementation files('libs/jxl-2.6.12.jar')
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation 'com.google.zxing:core:3.2.1'
+   // implementation 'com.journeyapps:zxing-android-embedded:3.0.3@aar'
 }

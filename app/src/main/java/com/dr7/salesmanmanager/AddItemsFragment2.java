@@ -14,6 +14,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -891,12 +892,31 @@ public class AddItemsFragment2 extends DialogFragment {
     public void readB(){
         Log.e("barcode_099", "in");
 //        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 //        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
 //        intentIntegrator.setBeepEnabled(false);
 //        intentIntegrator.setCameraId(0);
+//        intentIntegrator.setOrientationLocked(false);
 //        intentIntegrator.setPrompt("SCAN");
+//
 //        intentIntegrator.setBarcodeImageEnabled(false);
 //        intentIntegrator.initiateScan();
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            {//just for first time
+                Log.e("requestresult" ,"PERMISSION_GRANTED");
+                Intent i=new Intent(getActivity(),ScanActivity.class);
+                i.putExtra("key","3");
+                startActivity(i);
+
+            }
+        } else {
+            Intent i=new Intent(getActivity(),ScanActivity.class);
+            i.putExtra("key","3");
+            startActivity(i);
+
+        }
 
 //            IntentIntegrator integrator = new IntentIntegrator(getActivity());
 //            integrator.setOrientationLocked(false);
@@ -905,7 +925,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             //*********************************************************
-        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+//        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 //        public void scanToolbar(View view) {
 //            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
 //        }
