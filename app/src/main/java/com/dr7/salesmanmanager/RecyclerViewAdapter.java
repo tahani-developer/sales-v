@@ -1145,15 +1145,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private void getDataForDiscountTotal(String itemName, String type, String price, String amount) {
 //        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price);
-        double priceValue=0,amountValue=0,totalValue=0;
-        try {
-            priceValue=Double.parseDouble(price);
-            amountValue=Double.parseDouble(amount);
-            totalValue=priceValue*amountValue;
-        }
-        catch (Exception e){
-
-        }
+//        double priceValue=0,amountValue=0,totalValue=0;
+//        try {
+//            priceValue=Double.parseDouble(price);
+//            amountValue=Double.parseDouble(amount);
+//            totalValue=priceValue*amountValue;
+//        }
+//        catch (Exception e){
+//
+//        }
         discountRequest = new RequestAdmin();
         if (MHandler.getAllSettings().size() != 0) {
             discountRequest.setSalesman_name(MHandler.getAllSettings().get(0).getSalesMan_name());
@@ -1164,7 +1164,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         discountRequest.setCustomer_no(CustomerListShow.Customer_Account);
         discountRequest.setCustomer_name(CustomerListShow.Customer_Name);
         discountRequest.setAmount_value(amount);
-        discountRequest.setTotal_voucher(totalValue + "");// if request for item not for all voucher
+        discountRequest.setTotal_voucher(amount + "");// if request for item not for all voucher
         discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
 
         discountRequest.setKey_validation("");
