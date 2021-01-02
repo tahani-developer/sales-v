@@ -275,10 +275,10 @@ public class requestAdmin {
 
                 }
                 progressDialog.dismiss();
-            }
-            else {
+            }else{
                 progressDialog.dismiss();
             }
+
         }
 
     }

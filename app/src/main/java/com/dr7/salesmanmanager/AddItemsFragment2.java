@@ -925,7 +925,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             //*********************************************************
-//        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 //        public void scanToolbar(View view) {
 //            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
 //        }
