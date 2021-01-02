@@ -1109,7 +1109,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                 if (!ipAddress.equals("")) {
-                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin_oracle.php";
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
                 }
             } catch (Exception e) {
 
@@ -1123,7 +1123,7 @@ public class ImportJason extends AppCompatActivity {
                 request.setURI(new URI(URL_TO_HIT));
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("FLAG", "6"));
+                nameValuePairs.add(new BasicNameValuePair("_ID", "15"));
                 nameValuePairs.add(new BasicNameValuePair("UPDATE_LOCATION_SALES_MAN", jsonObject.toString()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1181,11 +1181,11 @@ public class ImportJason extends AppCompatActivity {
 
                 if (s.contains("UPDATE_SALES_MAN_SUCCESS")) {
 
-                    Toast.makeText(context, "UPDATE_SALES_MAN_SUCCESS", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "UPDATE_SALES_MAN_SUCCESS", Toast.LENGTH_SHORT).show();
                     Log.e("onPostExecute", "UPDATE_SALES_MAN_SUCCESS");
 
                 } else if (s.contains("UPDATE_SALES_MAN_FAIL")) {
-                    Toast.makeText(context, "UPDATE_SALES_MAN_FAIL", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "UPDATE_SALES_MAN_FAIL", Toast.LENGTH_SHORT).show();
                     Log.e("onPostExecute", "UPDATE_SALES_MAN_FAIL");
 
                 }

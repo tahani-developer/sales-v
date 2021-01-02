@@ -890,13 +890,14 @@ public class AddItemsFragment2 extends DialogFragment {
 
     public void readB(){
         Log.e("barcode_099", "in");
-//        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-//        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
-//        intentIntegrator.setBeepEnabled(false);
-//        intentIntegrator.setCameraId(0);
-//        intentIntegrator.setPrompt("SCAN");
-//        intentIntegrator.setBarcodeImageEnabled(false);
-//        intentIntegrator.initiateScan();
+        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setPrompt("SCAN");
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
 
 //            IntentIntegrator integrator = new IntentIntegrator(getActivity());
 //            integrator.setOrientationLocked(false);
@@ -905,7 +906,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             //*********************************************************
-        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+//        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 //        public void scanToolbar(View view) {
 //            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
 //        }
