@@ -39,7 +39,7 @@ import static com.dr7.salesmanmanager.ImportJason.listCustomerInfo;
 
 
 public class AccountStatment extends AppCompatActivity {
-
+//master
     List<Customer> customerInfoList=new ArrayList<>();
     ArrayList<Account__Statment_Model> listAccountBalance;
     RecyclerView recyclerView_report;
