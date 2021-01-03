@@ -75,6 +75,8 @@ import java.util.Timer;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.DiscountFragment.checkState;
+import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
+
 import static com.dr7.salesmanmanager.DiscountFragment.noteRequest;
 import static com.dr7.salesmanmanager.DiscountFragment.stateZero;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.addToList;
@@ -136,11 +138,13 @@ public class requestAdmin {
         Log.e("RequestAdmin", "" + discountRequest+requestType);
         discountRequest.setKey_validation(getRandomNumberString() + "");
         currentKey=discountRequest.getKey_validation();
+
         Log.e("RequestAdmin", "currentKey" + currentKey);
 
         if(discountRequest.getRequest_type().equals("1"))
         {
             discountRequest.setNote(noteRequest);
+            currentKeyTotalDiscount=discountRequest.getKey_validation();
         }
 
 
@@ -418,9 +422,7 @@ public class requestAdmin {
                         Log.e("notificationInfo",""+notificationInfo.length());
                         for (int i = 0; i < notificationInfo.length(); i++) {
                              infoDetail = notificationInfo.getJSONObject(i);
-                            Log.e("infoDetail", "" + infoDetail.get("status").toString());
-                            Log.e("key_validation", "" + infoDetail.get("key_validation").toString()+"\t==="+currentKey);
-                            if(infoDetail.get("key_validation").toString().equals(currentKey))
+                                if(infoDetail.get("key_validation").toString().equals(currentKey))
                             {
                                 if(infoDetail.get("status").toString().equals("1")){
                                     addToList.setEnabled(true);
@@ -430,18 +432,37 @@ public class requestAdmin {
                                 else if(infoDetail.get("status").toString().equals("2"))
                                 {
                                     stopTimer();
+                                   // addToList.setEnabled(false);
                                 }
                                 if(requestType.equals("1"))
                                 {
+
                                     checkState.setText(infoDetail.get("status").toString());
                                 }
                                 else {
 
 
-                                    checkState_recycler.setText(infoDetail.get("status").toString()+infoDetail.get("key_validation").toString());
+                                    checkState_recycler.setText(infoDetail.get("status").toString());
 
                                 }
                             }
+                                else if(infoDetail.get("key_validation").toString().equals(currentKeyTotalDiscount)){
+                                    if(infoDetail.get("status").toString().equals("1")){
+                                        addToList.setEnabled(true);
+                                        stopTimer();
+
+                                    }
+                                    else if(infoDetail.get("status").toString().equals("2"))
+                                    {
+                                        stopTimer();
+                                        // addToList.setEnabled(false);
+                                    }
+                                    if(requestType.equals("1"))
+                                    {
+
+                                        checkState.setText(infoDetail.get("status").toString());
+                                    }
+                                }
 
 
 

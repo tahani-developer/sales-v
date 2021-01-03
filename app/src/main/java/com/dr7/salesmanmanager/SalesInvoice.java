@@ -296,6 +296,7 @@ public class SalesInvoice extends Fragment {
     FusedLocationProviderClient mFusedLocationClient;
     FloatingActionButton save_floatingAction;
     boolean validDiscount=false;
+
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
            R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp};
 //    R.drawable.ic_save_black_24dp,
@@ -1247,7 +1248,7 @@ public class SalesInvoice extends Fragment {
 
         double discountValue=0;
         double discountPerc=0;
-        DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext());
+        DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
          discountValue = obj.getDiscountValue();
          discountPerc = obj.getDiscountPerc();
 

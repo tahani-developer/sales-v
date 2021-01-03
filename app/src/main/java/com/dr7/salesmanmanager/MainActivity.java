@@ -1247,7 +1247,7 @@ public class MainActivity extends AppCompatActivity
                 if (!addCus.getText().toString().equals("")) {
                     int payMethod=0;
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude_main, longitude_main, Login.salesMan, Login.salesManNo,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
+                            latitude_main, longitude_main, Login.salesMan, Login.salesMan,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
                   dialog.dismiss();
 //                    String customerId=getCustomerId();
 //                    if(!customerId.equals(""))

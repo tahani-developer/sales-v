@@ -616,8 +616,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    Log.e("afterTextChanged","haveResult"+s.toString());
                                                                    haveResult = 1;
                                                                    String key=s.toString().substring(1,s.length());
-                                                                   if(key.equals(currentKey))
-                                                                   {
+//                                                                   if(key.equals(currentKey))
+//                                                                   {
                                                                        resultLinear.setVisibility(View.VISIBLE);
                                                                        mainRequestLinear.setVisibility(View.GONE);
                                                                        checkStateResult.setVisibility(View.VISIBLE);
@@ -625,7 +625,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        acceptDiscount.setVisibility(View.VISIBLE);
                                                                        rejectDiscount.setVisibility(View.GONE);
                                                                        addToList.setEnabled(true);
-                                                                   }
+//                                                                   }
 
 
 
@@ -732,7 +732,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                try {
                                                                                                    currentKey="";
-                                                                                                   getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
+                                                                                                   getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
                                                                                                    addToList.setEnabled(false);
                                                                                                    discount.setEnabled(false);
                                                                                                    request.startParsing();
@@ -753,7 +753,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                    } else {
                                                                                        try {
-                                                                                           getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
+                                                                                           getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
                                                                                            addToList.setEnabled(false);
                                                                                            discount.setEnabled(false);
                                                                                            currentKey="";
@@ -765,7 +765,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    }
                                                                                } else {
                                                                                    try {
-                                                                                       getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString());
+                                                                                       getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
                                                                                        addToList.setEnabled(false);
                                                                                        discount.setEnabled(false);
                                                                                        currentKey="";
@@ -785,7 +785,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            if (!bonus.getText().toString().equals("")) {
                                                                                try {
-                                                                                   getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "2", items.get(holder.getAdapterPosition()).getPrice() + "", bonus.getText().toString());
+                                                                                   getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "2", items.get(holder.getAdapterPosition()).getPrice() + "", bonus.getText().toString(),unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
                                                                                    currentKey="";
@@ -1107,11 +1107,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            } else {
                                                                                price.setError("*Required");
+                                                                               price.requestFocus();
                                                                            }
                                                                        } else
                                                                            Toast.makeText(view.getContext(), "Invalid price or Qty", Toast.LENGTH_LONG).show();
                                                                    } else {
                                                                        unitQty.setError("*Required");
+                                                                       price.requestFocus();
                                                                    }
                                                                } else {// item  serial_No is duplcate +++++ dont save
 
@@ -1143,17 +1145,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    private void getDataForDiscountTotal(String itemName, String type, String price, String amount) {
-//        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price);
-//        double priceValue=0,amountValue=0,totalValue=0;
-//        try {
-//            priceValue=Double.parseDouble(price);
-//            amountValue=Double.parseDouble(amount);
-//            totalValue=priceValue*amountValue;
-//        }
-//        catch (Exception e){
-//
-//        }
+    private void getDataForDiscountTotal(String itemName, String type, String price, String amount,String qty) {
+        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price+amount);
+        double priceValue=0,amountValue=0,totalValue=0;
+        try {
+            priceValue=Double.parseDouble(price);
+            amountValue=Double.parseDouble(qty);
+            totalValue=priceValue*amountValue;
+        }
+        catch (Exception e){
+
+        }
         discountRequest = new RequestAdmin();
         if (MHandler.getAllSettings().size() != 0) {
             discountRequest.setSalesman_name(MHandler.getAllSettings().get(0).getSalesMan_name());
@@ -1164,7 +1166,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         discountRequest.setCustomer_no(CustomerListShow.Customer_Account);
         discountRequest.setCustomer_name(CustomerListShow.Customer_Name);
         discountRequest.setAmount_value(amount);
-        discountRequest.setTotal_voucher(amount + "");// if request for item not for all voucher
+        discountRequest.setTotal_voucher(totalValue + "");// if request for item not for all voucher
         discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
 
         discountRequest.setKey_validation("");
