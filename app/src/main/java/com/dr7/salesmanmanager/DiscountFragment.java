@@ -46,7 +46,7 @@ public class DiscountFragment extends DialogFragment {
     private Button okButton;
     ImageView  cancelButton;
     private RadioGroup discTypeRadioGroup;
-    private RadioButton discPercent;
+    private RadioButton discPercent,valueRadioButton;
     private EditText discValueEditText,noteEditText;
     public ImageView requestDiscount;
     public  static TextView checkState;
@@ -67,10 +67,13 @@ public class DiscountFragment extends DialogFragment {
     TimerTask task;
     public  static  boolean stateZero=false;
     LinearLayout mainRequestLinear;
+    String keyDiscount;
 
 
-    public DiscountFragment(Context context) {
+
+    public DiscountFragment(Context context,String key) {
         this.main_context=context;
+        this.keyDiscount=key;
 
         // Required empty public constructor
     }
@@ -94,15 +97,9 @@ public class DiscountFragment extends DialogFragment {
         // Inflate the layout for this fragmen
 //        new LocaleAppUtils().changeLayot(Disc);
         View view = inflater.inflate(R.layout.fragment_discount, container, false);
-        okButton = (Button) view.findViewById(R.id.okButton);
-        cancelButton = (ImageView) view.findViewById(R.id.cancelButton);
-        checkState=view.findViewById(R.id.checkState);
-        mainRequestLinear=view.findViewById(R.id.mainRequestLinear);
-        checkStateResult=view.findViewById(R.id.checkStateResult);
-        defaultDiscount=view.findViewById(R.id.defaultDiscount);
-        acceptDiscount=view.findViewById(R.id.acceptDiscount);
-        rejectDiscount=view.findViewById(R.id.rejectDiscount);
-        requestLinear=view.findViewById(R.id.requestLinear);
+
+        initView( view);
+
         checkState.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,9 +117,6 @@ public class DiscountFragment extends DialogFragment {
                 Log.e("afterTextChanged",""+s.toString());
                 if(s.toString().equals("0"))
                 {
-//                    checkState.setText("3");
-
-//                    checkStatuseRequest();
                 }
                 else
                     if(s.toString().equals("1"))
@@ -157,11 +151,7 @@ public class DiscountFragment extends DialogFragment {
 
             }
         });
-        discTypeRadioGroup = (RadioGroup) view.findViewById(R.id.discTypeRadioGroup);
-        discPercent = (RadioButton) view.findViewById(R.id.percentRadioButton);
-        discValueEditText = (EditText) view.findViewById(R.id.discEditText);
-        noteEditText=(EditText) view.findViewById(R.id.noteEditText);
-        requestDiscount = view.findViewById(R.id.requestDiscount);
+
         if(mdHandler.getAllSettings().size()!=0)
         {
             if(mdHandler.getAllSettings().get(0).getApproveAdmin()==0)
@@ -186,9 +176,11 @@ public class DiscountFragment extends DialogFragment {
                             okButton.setEnabled(false);
                             discValueEditText.setEnabled(false);
                             noteEditText.setEnabled(false);
-                            noteRequest=noteEditText.getText().toString();
+                            valueRadioButton.setEnabled(false);
+                            discPercent.setEnabled(false);
+                                    noteRequest=noteEditText.getText().toString();
                             discountRequest.setAmount_value(discValueEditText.getText().toString());
-
+                            requestDiscount.setEnabled(false);
                             request.startParsing();
 //
                         } catch (Exception e) {
@@ -224,12 +216,9 @@ public class DiscountFragment extends DialogFragment {
             public void onClick(View view) {
                 switch (view.getId()) {
                     case R.id.okButton:
-                        Log.e("okButton","okButton");
-                        checkState.setText("3");
                                addDiscount();
                                 break;
                             case R.id.cancelButton:
-                                checkState.setText("3");
 //;
                                 DiscountFragment.this.dismiss();
                                 break;
@@ -242,6 +231,28 @@ public class DiscountFragment extends DialogFragment {
 
                 return view;
             }
+
+    private void initView(View view) {
+        cancelButton = (ImageView) view.findViewById(R.id.cancelButton);
+        checkState=view.findViewById(R.id.checkState);
+        mainRequestLinear=view.findViewById(R.id.mainRequestLinear);
+        checkStateResult=view.findViewById(R.id.checkStateResult);
+        defaultDiscount=view.findViewById(R.id.defaultDiscount);
+        acceptDiscount=view.findViewById(R.id.acceptDiscount);
+        rejectDiscount=view.findViewById(R.id.rejectDiscount);
+        requestLinear=view.findViewById(R.id.requestLinear);
+        okButton = (Button) view.findViewById(R.id.okButton);
+        discTypeRadioGroup = (RadioGroup) view.findViewById(R.id.discTypeRadioGroup);
+        discPercent = (RadioButton) view.findViewById(R.id.percentRadioButton);
+
+        valueRadioButton= (RadioButton) view.findViewById(R.id.valueRadioButton);
+        valueRadioButton.setEnabled(true);
+        discPercent.setEnabled(true);
+        discValueEditText = (EditText) view.findViewById(R.id.discEditText);
+        noteEditText=(EditText) view.findViewById(R.id.noteEditText);
+        requestDiscount = view.findViewById(R.id.requestDiscount);
+    }
+
     void stopTimer() {
         Log.e("stopTimer","stopTimer");
         task=new TimerTask(main_context);
@@ -254,6 +265,7 @@ public class DiscountFragment extends DialogFragment {
 //        if (!check) {
 //            Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
 //        } else {
+
             try {
                 Log.e("okButton","addDiscount");
                 if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.percentRadioButton)
@@ -261,15 +273,18 @@ public class DiscountFragment extends DialogFragment {
                 else
                     discType = 0;
 
+
                 if (discType == 1) {
                     discountPerc = Double.parseDouble(discValueEditText.getText().toString().trim());
                     discountValue = invoiceTotal * discountPerc * 0.01;
 
                 } else {
+                    Log.e("addDiscount","discType="+discValueEditText.getText().toString().trim());
                     discountValue = Double.parseDouble(discValueEditText.getText().toString().trim());
                     discountPerc = invoiceTotal * discountValue;
 
                 }
+                Log.e("addDiscount","discountPerc="+discountPerc+"\t"+discountPerc);
 
                 //discountValue = Float.parseFloat(decimalFormat.format(discountValue));
 

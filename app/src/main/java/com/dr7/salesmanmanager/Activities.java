@@ -63,6 +63,7 @@ public class Activities extends AppCompatActivity implements
     private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
 
     private int activitySelected;
+    public  static  String currentKeyTotalDiscount="";
 
     private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,linearInvoice,linearPayment,linearStock;
 
@@ -119,7 +120,8 @@ LocationPermissionRequest locationPermissionRequest;
 
     @Override
     public void displayDiscountFragment() {
-        DiscountFragment discountFragment = new DiscountFragment(Activities.this);
+        currentKeyTotalDiscount="";
+        DiscountFragment discountFragment = new DiscountFragment(Activities.this,currentKeyTotalDiscount);
         discountFragment.invoiceTotal = salesInvoice.getItemsTotal();
         discountFragment.setCancelable(true);
         discountFragment.setListener(this);

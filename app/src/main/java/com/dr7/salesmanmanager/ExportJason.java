@@ -268,6 +268,7 @@ public class ExportJason extends AppCompatActivity {
 
                 HttpResponse response = client.execute(request);
 
+                Log.e("ExportDDDD",""+ipAddress.toString());
 
 
                 BufferedReader in = new BufferedReader(new
@@ -285,6 +286,7 @@ public class ExportJason extends AppCompatActivity {
 
                 JsonResponse = sb.toString();
                 Log.e("tag", "JsonResponse\t" + JsonResponse);
+                Log.e("ExportDDDD",""+JsonResponse.toString());
                 Log.e("tagexPORT", "JsonResponse"+JsonResponse );
 
                 return JsonResponse;
@@ -413,6 +415,7 @@ public class ExportJason extends AppCompatActivity {
 
 
             String impo="";
+            Log.e("ExportDDDD",""+s.toString());
             if(s != null) {
                 if (s.contains("SUCCESS")) {
                     mHandler.updateVoucher();
