@@ -230,6 +230,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             String ipAddress = "";
+            Log.e("tagexPORT", "JsonResponse" );
 
             try {
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
@@ -263,6 +264,7 @@ public class ExportJason extends AppCompatActivity {
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
+                Log.e("tagexPORT1", "JsonResponse" );
 
                 HttpResponse response = client.execute(request);
 
@@ -283,6 +285,7 @@ public class ExportJason extends AppCompatActivity {
 
                 JsonResponse = sb.toString();
                 Log.e("tag", "JsonResponse\t" + JsonResponse);
+                Log.e("tagexPORT", "JsonResponse"+JsonResponse );
 
                 return JsonResponse;
 
@@ -406,6 +409,8 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.e("tagexPORT", "JsonResponse"+s );
+
 
             String impo="";
             if(s != null) {

@@ -68,6 +68,7 @@ public class LocationPermissionRequest   extends Activity {
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     FusedLocationProviderClient mFusedLocationClient;
 SalesmanStations salesmanStations;
+public static double checkOutLong=0,checkOutLat=0;
 int  approveAdmin=-1;
     List<com.dr7.salesmanmanager.Modles.Settings> settings;
     public LocationPermissionRequest(Context context) {
@@ -285,6 +286,9 @@ int  approveAdmin=-1;
                         importJason.updateLocation(salesmanStations.getJSONObject());
                     }
                 });
+
+                checkOutLong=longitude;
+                checkOutLat=latitude;
 
                 Log.e("location123456","  "+salesmanStations.getJSONObject());
                 Log.e("location12345","    la= "+latitude +"  lo = "+longitude);

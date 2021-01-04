@@ -137,6 +137,8 @@ public class Transaction {
             obj.put("CHECK_OUT_DATE", checkOutDate);
             obj.put("CHECK_OUT_TIME", checkOutTime);
             obj.put("STATUS", status);
+            obj.put("LONG_CHECK_OUT_LOCATION", longtude);
+            obj.put("LATI_CHECK_OUT_LOCATION", latitud);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

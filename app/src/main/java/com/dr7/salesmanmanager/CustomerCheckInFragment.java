@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 //import android.support.annotation.NonNull;
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.content.ContextCompat;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,8 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.dr7.salesmanmanager.LocationPermissionRequest.checkOutLat;
+import static com.dr7.salesmanmanager.LocationPermissionRequest.checkOutLong;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
@@ -73,6 +77,7 @@ import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
+import static com.dr7.salesmanmanager.MainActivity.transactions;
 
 //import android.support.v4.app.DialogFragment;
 //import android.support.v4.app.Fragment;
@@ -104,6 +109,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     LocationManager locationManager;
 
     private static DatabaseHandler mDbHandler;
+    CountDownTimer countDownTimer;
 
     public Context context;
     LinearLayout discLayout;
@@ -377,6 +383,52 @@ public class CustomerCheckInFragment extends DialogFragment {
             Log.e("Tag", "JSONException");
         }
     }
+    void saveRealCheckOutLocation(Transaction transaction) {
+
+        LocationManager locationManager;
+        LocationListener locationListener;
+
+        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]
+                    {ACCESS_FINE_LOCATION}, 1);
+        }
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+        Log.e("timerOff","nnnnn"+lon+"    "+lat+"    "+"seconds remaining: ");
+
+        mDbHandler.updateTransactionLocationReal(transaction.getCusCode(),""+lon,""+lat,transaction.getCheckOutTime(),transaction.getCheckInDate());
+
+//                mTextField.setText("done!");
+        Log.e("timerOff","finish");
+
+
+    }
 
 
     boolean isInRange(String cusLat, String cusLong) {
@@ -489,12 +541,97 @@ public class CustomerCheckInFragment extends DialogFragment {
         SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-        String currentTime = tf.format(currentTimeAndDate);
-        String currentDate = df.format(currentTimeAndDate);
+        String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+        String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+        Transaction transaction=new Transaction();
+        transaction.setCheckInDate(currentDate);
+        transaction.setCheckOutTime(currentTime);
+        transaction.setCusCode(cusCode);
 
-        mDbHandler.updateTransaction(cusCode, currentDate, currentTime);
+        mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime));
+        timerForRealLocation(transaction);
 
     }
+
+    public void timerForRealLocation(Transaction transaction){
+
+       CountDownTimer countDownTimer= new CountDownTimer(300000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+//                mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+              Log.e("timerOff",longtudeCheckIn+"    "+latitudeCheckIn+"    "+millisUntilFinished+"seconds remaining: " + millisUntilFinished / 1000);
+
+                //here you can have your logic to set text to edittext
+            }
+
+            public void onFinish() {
+                Log.e("timerOff","nnnnn"+checkOutLong+"    "+checkOutLat+"    "+"seconds remaining: ");
+
+                mDbHandler.updateTransactionLocationReal(transaction.getCusCode(),""+checkOutLong,""+checkOutLat,transaction.getCheckOutTime(),convertToEnglish(transaction.getCheckInDate()));
+
+//                mTextField.setText("done!");
+                Log.e("timerOff","finish");
+//                saveRealCheckOutLocation(transaction);
+                cancelTimer();
+
+            }
+
+        };
+        countDownTimer.start();
+
+
+    }
+
+    void cancelTimer() {
+        if(countDownTimer!=null)
+            countDownTimer.cancel();
+    }
+
+//    public void getLoc(){
+//
+//        LocationManager locationManager;
+//        LocationListener locationListener;
+//        Log.e("locationtim1","    la= "+latitudeCheckIn +"  lo = "+longtudeCheckIn);
+//
+//        locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+//        if (ActivityCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions((Activity) context, new String[]
+//                    {ACCESS_FINE_LOCATION}, 1);
+//        }
+//
+//        locationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                latitudeCheckIn = location.getLatitude();
+//                longtudeCheckIn = location.getLongitude();
+//
+//
+//                Log.e("locationtim","    la= "+latitudeCheckIn +"  lo = "+longtudeCheckIn);
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//
+//            }
+//        };
+//
+//
+//
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//
+//    }
 
     private class JSONTask extends AsyncTask<String, String, String> {
 

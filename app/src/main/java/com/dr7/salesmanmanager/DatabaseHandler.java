@@ -58,7 +58,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 120;
+    private static final int DATABASE_VERSION = 121;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -266,6 +266,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CHECK_OUT_TIME = "CHECK_OUT_TIME";
     private static final String STATUS = "STATUS";
     private static final String IS_POSTED2 = "IS_POSTED";
+    private static final String REAL_LONGTUD = "REAL_LONGTUD";
+    private static final String REAL_LATITUDE = "REAL_LATITUDE";
+
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String TABLE_SETTING = "SETTING";
@@ -695,7 +698,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CHECK_OUT_DATE + " TEXT,"
                 + CHECK_OUT_TIME + " TEXT,"
                 + STATUS + " INTEGER,"
-                + IS_POSTED2 + " INTEGER" + ")";
+                + IS_POSTED2 + " INTEGER,"
+                + REAL_LONGTUD+ " TEXT,"
+                + REAL_LATITUDE + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_CONTACTS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1465,7 +1470,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try{
 
+            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LONGTUD  TEXT  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LATITUDE  TEXT  DEFAULT '0' ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
 
     }
@@ -1876,6 +1895,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CHECK_OUT_TIME, transaction.getCheckOutTime());
         values.put(STATUS, transaction.getStatus());
         values.put(IS_POSTED2, transaction.getIsPosted());
+        values.put(REAL_LONGTUD, transaction.getLongtude());
+        values.put(REAL_LATITUDE, transaction.getLatitud());
+
 
         db.insert(TABLE_TRANSACTIONS, null, values);
         db.close();
@@ -2488,6 +2510,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 transaction.setCheckOutTime(cursor.getString(6));
                 transaction.setStatus(Integer.parseInt(cursor.getString(7)));
                 transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
+                transaction.setLongtude(Double.parseDouble(cursor.getString(10)));
+                transaction.setLatitud(Double.parseDouble(cursor.getString(11)));
 
                 // Adding transaction to list
                 transactionList.add(transaction);
@@ -3916,6 +3940,19 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         // updating row
 
         db.update(TABLE_TRANSACTIONS, values, CUS_CODE + "=" + cusCode + " AND " + STATUS + "=" + 0, null);
+    }
+
+
+    public void updateTransactionLocationReal(String cusCode, String longitude, String latiud ,String cheackoutTime,String chechInDate) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(REAL_LONGTUD, longitude);
+        values.put(REAL_LATITUDE, latiud);
+
+        // updating row
+
+        db.update(TABLE_TRANSACTIONS, values, CUS_CODE + "= '" + cusCode + "' AND " + STATUS + "= '" + 1 +"' AND "+ IS_POSTED +"= 0 AND " + CHECK_OUT_TIME +"= '"+cheackoutTime +"' and "+CHECK_IN_DATE +"= '"+chechInDate +"'", null);
     }
 
     public void updateVoucher() {
