@@ -40,6 +40,7 @@ import androidx.core.content.ContextCompat;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -113,6 +114,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
     public Context context;
     LinearLayout discLayout;
+    int  approveAdmin=-1;
 
     public interface CustomerCheckInInterface {
         public void showCustomersList();
@@ -549,8 +551,16 @@ public class CustomerCheckInFragment extends DialogFragment {
         transaction.setCusCode(cusCode);
 
         mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime));
-        timerForRealLocation(transaction);
+        List<Settings> settings = mDbHandler.getAllSettings();
+        if (settings.size() != 0) {
+            approveAdmin= settings.get(0).getApproveAdmin();
+            Log.e("timerOff111",""+approveAdmin);
+        }
+        if(approveAdmin==1) {
+            Log.e("timerOff00",""+approveAdmin);
 
+            timerForRealLocation(transaction);
+        }
     }
 
     public void timerForRealLocation(Transaction transaction){
