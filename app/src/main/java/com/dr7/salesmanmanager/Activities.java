@@ -63,7 +63,7 @@ public class Activities extends AppCompatActivity implements
     private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
 
     private int activitySelected;
-    public  static  String currentKeyTotalDiscount="";
+    public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
 
     private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,linearInvoice,linearPayment,linearStock;
 

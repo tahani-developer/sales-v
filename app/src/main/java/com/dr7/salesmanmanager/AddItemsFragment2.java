@@ -559,13 +559,13 @@ public class AddItemsFragment2 extends DialogFragment {
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
                 for (int k = 0; k < jsonItemsList.size(); k++) {
-                    if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
+                    if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())){
                         filteredList.add(jsonItemsList.get(k));
+
                     }
                 }
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList,AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter);
-                Log.e("filteredList=","" + filteredList.size());
                 if(filteredList.size()==0)
                 {
                     Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
@@ -580,24 +580,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
         }
     }
-    /*//        int no = 0;
-//
-//        if (!barcodeValue.equals("cancelled")) {
-//            for (int k = 0; k < bundles.size(); k++) {
-//                if ((bundles.get(k).getBundleNo()).equals(Bundul)) {
-//                    no = k;
-//                    items.setSelection(no);
-//                    items.requestFocusFromTouch();
-//                    items.setSelection(no);
-//
-//                    break;
-//                }
-//            }
-//
-//        } else {
-//            ItemsListAdapter adapter = new ItemsListAdapter(LoadingOrder.this, bundles);
-//            items.setAdapter(adapter);
-//        }*/
 
     public void setListener(AddItemsInterface listener) {
         this.listener = listener;

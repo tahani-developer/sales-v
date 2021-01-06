@@ -1697,6 +1697,7 @@ public class MainActivity extends AppCompatActivity
                 showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox;
         Dialog dialog;
         LinearLayout linearSetting;
+        TextView editIp;
 
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
         @SuppressLint("SetTextI18n")
@@ -1726,6 +1727,7 @@ public class MainActivity extends AppCompatActivity
                 linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             }
 
+            editIp= (TextView) dialog.findViewById(R.id.editIp);
 
             linkEditText = (EditText) dialog.findViewById(R.id.link);
             numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
@@ -1886,6 +1888,9 @@ public class MainActivity extends AppCompatActivity
             });
             if (mDbHandler.getAllSettings().size() != 0) {
                 linkEditText.setText("" + mDbHandler.getAllSettings().get(0).getIpAddress());
+                linkEditText.setClickable(false);
+                linkEditText.setEnabled(false);
+                linkEditText.setAlpha(0.5f);
                 numOfCopy.setText("" + mDbHandler.getAllSettings().get(0).getNumOfCopy());
                 invoicEditText.setText("" + (mDbHandler.getMaxSerialNumberFromVoucherMaster(504) + 1));
                 returnEditText.setText("" + (mDbHandler.getMaxSerialNumberFromVoucherMaster(506) + 1));
@@ -2049,7 +2054,17 @@ public class MainActivity extends AppCompatActivity
                 LocaleAppUtils.setLocale(new Locale("ar"));
                 languagelocalApp="ar";
                 showCustomerList_checkbox.setChecked(true);
+                editIp.setVisibility(View.INVISIBLE);
             }
+            editIp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPasswordDialog();
+
+
+                }
+            });
+
             arabicLanguage_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -2094,6 +2109,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
+
                 }
             });
             dialog.show();
@@ -2102,6 +2118,35 @@ public class MainActivity extends AppCompatActivity
             //                             }
 
         }
+
+        private void showPasswordDialog() {
+            final EditText editText = new EditText(MainActivity.this);
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+            sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+            sweetMessage .setConfirmText("Ok");
+            sweetMessage.setCanceledOnTouchOutside(true);
+            sweetMessage.setCustomView(editText);
+            sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    if(editText.getText().toString().equals("2021000"))
+                    {
+                        linkEditText.setAlpha(1f);
+                        linkEditText.setEnabled(true);
+                        linkEditText.requestFocus();
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                    else {
+                        editText.setError("Incorrect");
+                    }
+                }
+            })
+
+                    .show();
+        }
+
         private void saveSetting() {
             settext2();
             int numOfCopys=0,invoice=0,return1=0,order=0,paymentCash=0,paymentCheque=0,paymentCredit=0;
@@ -2178,6 +2223,7 @@ public class MainActivity extends AppCompatActivity
                         /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
                         /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly);
 
+
                         finish();
                         startActivity(getIntent());
                         dialog.dismiss();
@@ -2202,7 +2248,7 @@ public class MainActivity extends AppCompatActivity
 
             else {
                 Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
-//                        linkEditText.setError("Required");
+                linkEditText.setError("Required");
             }
         }
 

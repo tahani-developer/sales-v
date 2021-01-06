@@ -173,12 +173,24 @@ public class DiscountFragment extends DialogFragment {
                         Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
                     } else {
                         try {
+                            if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.percentRadioButton)
+                            {discType = 1;
+                                discountRequest.setRequest_type("1");
+                            }
+                            else
+                            {
+                                discType = 0;
+                                discountRequest.setRequest_type("10");
+
+                            }
+
+
                             okButton.setEnabled(false);
                             discValueEditText.setEnabled(false);
                             noteEditText.setEnabled(false);
                             valueRadioButton.setEnabled(false);
                             discPercent.setEnabled(false);
-                                    noteRequest=noteEditText.getText().toString();
+                            noteRequest=noteEditText.getText().toString();
                             discountRequest.setAmount_value(discValueEditText.getText().toString());
                             requestDiscount.setEnabled(false);
                             request.startParsing();
@@ -187,10 +199,6 @@ public class DiscountFragment extends DialogFragment {
                             Log.e("request",""+e.getMessage());
 
                         }
-
-
-
-//            DiscountFragment.this.dismiss();
 
                     }
 

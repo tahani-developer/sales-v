@@ -257,18 +257,15 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
-//                nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", ""));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
 
                 nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
-                Log.e("tagexPORT1", "JsonResponse" );
+
 
                 HttpResponse response = client.execute(request);
-
-                Log.e("ExportDDDD",""+ipAddress.toString());
 
 
                 BufferedReader in = new BufferedReader(new
@@ -285,9 +282,7 @@ public class ExportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "JsonResponse\t" + JsonResponse);
-                Log.e("ExportDDDD",""+JsonResponse.toString());
-                Log.e("tagexPORT", "JsonResponse"+JsonResponse );
+
 
                 return JsonResponse;
 
@@ -411,11 +406,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tagexPORT", "JsonResponse"+s );
 
-
-            String impo="";
-            Log.e("ExportDDDD",""+s.toString());
             if(s != null) {
                 if (s.contains("SUCCESS")) {
                     mHandler.updateVoucher();

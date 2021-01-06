@@ -2510,8 +2510,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 transaction.setCheckOutTime(cursor.getString(6));
                 transaction.setStatus(Integer.parseInt(cursor.getString(7)));
                 transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
-                transaction.setLongtude(Double.parseDouble(cursor.getString(10)));
-                transaction.setLatitud(Double.parseDouble(cursor.getString(11)));
+                transaction.setLongtude(Double.parseDouble(cursor.getString(9)));
+                transaction.setLatitud(Double.parseDouble(cursor.getString(10)));
 
                 // Adding transaction to list
                 transactionList.add(transaction);

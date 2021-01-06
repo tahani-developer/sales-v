@@ -1864,7 +1864,7 @@ public class SalesInvoice extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
                 {
-//                    requestOverLimitCredit();
+                    requestOverLimitCredit();
 //
 //                 dialogInterface.dismiss();
                 }
@@ -1892,7 +1892,7 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestOverLimitCredit() {
-        final Dialog dialog_request = new Dialog(getActivity().getBaseContext());
+        final Dialog dialog_request = new Dialog(getActivity());
         dialog_request.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_request.setCancelable(true);
         dialog_request.setContentView(R.layout.request_limit_cridet);
@@ -1912,6 +1912,7 @@ public class SalesInvoice extends Fragment {
         acceptDiscount=dialog_request.findViewById(R.id.acceptDiscount);
         rejectDiscount=dialog_request.findViewById(R.id.rejectDiscount);
         requestLinear=dialog_request.findViewById(R.id.requestLinear);
+        okButton.setVisibility(View.GONE);
         checkState_LimitCredit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1927,14 +1928,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void afterTextChanged(Editable s)
             {
-                Log.e("afterTextChanged",""+s.toString());
-                if(s.toString().equals("0"))
-                {
-//                    checkState.setText("3");
-
-//                    checkStatuseRequest();
-                }
-                else
+                Log.e("afterTextChanged","checkState_LimitCredit="+s.toString());
                 if(s.toString().equals("1"))
                 {
                     requestLinear.setVisibility(View.GONE);
@@ -1952,8 +1946,7 @@ public class SalesInvoice extends Fragment {
                     acceptDiscount.setVisibility(View.GONE);
                     defaultDiscount.setVisibility(View.GONE);
                     rejectDiscount.setVisibility(View.VISIBLE);
-                    discValueEditText.setText("");
-                    noteEditText.setText("");
+
 
                 }
 
@@ -1963,36 +1956,30 @@ public class SalesInvoice extends Fragment {
         //************************************************************
         requestDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(!voucherValueText.getText().toString().equals(""))
-                {
+            public void onClick(View v) {
+                if (!voucherValueText.getText().toString().equals("")) {
 
-                        try {
-                            okButton.setEnabled(false);
-                            noteEditText.setEnabled(false);
-                            noteRequestLimit=noteEditText.getText().toString();
-                            discountRequest.setAmount_value(voucherValueText.getText().toString());
+                    try {
+                        okButton.setEnabled(false);
+                        noteEditText.setEnabled(false);
+                        noteRequestLimit = noteEditText.getText().toString();
+                        Log.e("getDataForDiscountTotal", "" + max_cridit + "\t" + voucherValueText.getText().toString() + "\t" + noteRequestLimit);
+                        getDataForDiscountTotal(max_cridit + "", voucherValueText.getText().toString(), noteRequestLimit);
 
-                            request.startParsing();
+                        request.startParsing();
 //
-                        } catch (Exception e) {
-                            Log.e("request",""+e.getMessage());
+                    } catch (Exception e) {
+                        Log.e("request", "" + e.getMessage());
 
-                        }
-
+                    }
 
 
 //            DiscountFragment.this.dismiss();
 
 
-
-
-                }
-                else {
+                } else {
                     voucherValueText.setError("required");
                 }
-
 
 
             }
@@ -2002,6 +1989,9 @@ public class SalesInvoice extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("okButton", "okButton");
+                AddVoucher();
+                clearLayoutData(0);
 
             }
         });
@@ -2014,9 +2004,36 @@ public class SalesInvoice extends Fragment {
         });
         dialog_request.show();
     }
+    private void getDataForDiscountTotal(String cridetLimit, String totalVoucher,String note) {
+        Log.e("getDataForDiscountTotal", "" + cridetLimit + "totalVoucher" + totalVoucher);
+
+        discountRequest = new RequestAdmin();
+        if (mDbHandler.getAllSettings().size() != 0) {
+            discountRequest.setSalesman_name(mDbHandler.getAllSettings().get(0).getSalesMan_name());
+        } else {
+            discountRequest.setSalesman_name("");
+        }
+        discountRequest.setSalesman_no(Login.salesMan);
+        discountRequest.setCustomer_no(CustomerListShow.Customer_Account);
+        discountRequest.setCustomer_name(CustomerListShow.Customer_Name);
+        discountRequest.setAmount_value(cridetLimit);
+        discountRequest.setTotal_voucher(totalVoucher + "");// if request for item not for all voucher
+        discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
+
+        discountRequest.setKey_validation("");
+        discountRequest.setNote(note);
+        discountRequest.setRequest_type("100");
+        discountRequest.setStatus("0");
+        getTimeAndDate();
+        discountRequest.setTime(time);
+        discountRequest.setDate(voucherDate);
+        discountRequest.setSeen_row("0");
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void AddVoucher() {
+        Log.e("okButton", "okButtonverified");
         int store_No=salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);

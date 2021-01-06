@@ -1558,6 +1558,7 @@ public class ESCPSample2
 	}
 	else {
 		item_largeName.setVisibility(View.GONE);
+		item.setVisibility(View.VISIBLE);
 		item.setText(items);
 		item.setTextSize(textSize);
 	}

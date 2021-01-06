@@ -79,7 +79,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
 import static com.dr7.salesmanmanager.Serial_Adapter.serialValue_Model;
-
+import  static  com.dr7.salesmanmanager.Activities.currentKey;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
@@ -117,14 +117,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public PhotoView photoView, photoDetail;
     public static TextView checkState_recycler, checkStateResult;
     requestAdmin request;
-    public  static  String currentKey="";
+
 
     int typeRequest = 0, haveResult = 0, approveAdmin = 0;
+
     LinearLayout mainRequestLinear;
     LinearLayout resultLinear;
     LinearLayout mainLinear;
     ImageView acceptDiscount, rejectDiscount;
     public static TextView serialValue;
+    int discountPerVal=0;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -714,16 +716,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                requestDiscount.setOnClickListener(new View.OnClickListener() {
                                                                    @Override
                                                                    public void onClick(View v) {
-                                                                       addToList.setEnabled(false);
+
                                                                        String discountText = "";
+                                                                       discountPerVal=0;
                                                                        if ((typeRequest == 1 && !discount.getText().toString().equals("")))// discount
                                                                        {
                                                                            Log.e("request", "" + typeRequest);
                                                                            if (!discount.getText().toString().equals("")) {
+                                                                               if(discPercRadioButton.isChecked())
+                                                                               {
+                                                                                   discountPerVal=1;
+                                                                               }
+                                                                               else {
+                                                                                   if(discValueRadioButton.isChecked())
+                                                                                   {
+                                                                                       discountPerVal=2;
+                                                                                   }
+                                                                               }
                                                                                if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
                                                                                    if (items.get(holder.getAdapterPosition()).getDiscountCustomer() != 0.0) {
                                                                                        discountText = discount.getText().toString();
                                                                                        haveCstomerDisc = true;
+                                                                                       addToList.setEnabled(false);
                                                                                        discountCustomer = items.get(holder.getAdapterPosition()).getDiscountCustomer() + "";
 
                                                                                        if (haveCstomerDisc) {
@@ -779,6 +793,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            } else {
                                                                                discount.setError("required");
+                                                                               discount.requestFocus();
                                                                            }
 
                                                                        } else if ((typeRequest == 2 && !bonus.getText().toString().equals(""))) {
@@ -1170,7 +1185,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
 
         discountRequest.setKey_validation("");
-        discountRequest.setNote(itemName);
+        if(type.equals("0"))
+        {
+
+            discountRequest.setNote(discountPerVal+itemName);
+        }
+        else {
+            discountRequest.setNote(itemName);
+        }
+
         discountRequest.setRequest_type(type);
         discountRequest.setStatus("0");
         getTimeAndDate();
