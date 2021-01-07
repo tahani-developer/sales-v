@@ -1785,6 +1785,8 @@ public class MainActivity extends AppCompatActivity
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
+            salesmanNmae.setEnabled(false);
+            getSalesManName();
             invoicEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -1906,13 +1908,13 @@ public class MainActivity extends AppCompatActivity
                     paymentEditTextCredit.setText("");
 
                 }
-                try {
-                    salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
-                }
-                catch (Exception e)
-                {
-
-                }
+//                try {
+//                    salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
+//                }
+//                catch (Exception e)
+//                {
+//
+//                }
 
 
 
@@ -2116,6 +2118,20 @@ public class MainActivity extends AppCompatActivity
             //  else
             //                               {
             //                             }
+
+        }
+
+        private void getSalesManName() {
+            String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+            if(salesName.equals(""))
+            {
+                salesmanNmae.setEnabled(true);
+            }
+            else {
+                salesmanNmae.setEnabled(false);
+                salesmanNmae.setText(salesName);
+            }
+
 
         }
 

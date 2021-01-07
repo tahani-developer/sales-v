@@ -555,12 +555,27 @@ public class AddItemsFragment2 extends DialogFragment {
 //        }
 //    }
    public  void searchByBarcodeNo(String barcodeValue) {
+       Log.e("searchByBarcodeNo",""+barcodeValue);
         if(!barcodeValue.equals(""))
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
                 for (int k = 0; k < jsonItemsList.size(); k++) {
                     if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())){
                         filteredList.add(jsonItemsList.get(k));
+
+                    }
+                    else
+                    {
+                        String itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
+
+                        if(!itemNo.equals(""))
+                        {
+                        if(itemNo.equals(jsonItemsList.get(k).getItemNo())){
+
+                            filteredList.add(jsonItemsList.get(k));
+                        }
+                        }
+
 
                     }
                 }

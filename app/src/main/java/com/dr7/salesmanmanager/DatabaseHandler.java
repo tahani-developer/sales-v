@@ -26,6 +26,7 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
@@ -58,12 +59,19 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 121;
+    private static final int DATABASE_VERSION = 122;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  Item_Switch  = "Item_Switch";
+
+    private static final String  ITEM_NAMEA   = "ITEM_NAMEA";
+    private static final String  ITEM_OCODE   = "ITEM_OCODE";
+    private static final String  ITEM_NCODE   = "ITEM_NCODE";
+
     //----------------------------------------------------------------------
     private static final String  SALESMAN_LOGIN_LOGHistory  = "SALESMAN_LOGIN_LOGHistory";
 
@@ -458,6 +466,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+
+        String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+                + ITEM_NAMEA + " TEXT,"
+                + ITEM_OCODE + " TEXT,"
+                + ITEM_NCODE + " TEXT"
+
+               + ")";
+        db.execSQL(CREATE_Item_Switch_TABLE);
+        //***************************************************************************************
         String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
                 + DATE_LOGIN + " TEXT,"
                 + TIME_LOGIN + " TEXT,"
@@ -1485,7 +1502,46 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
 
+            String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+                    + ITEM_NAMEA + " TEXT,"
+                    + ITEM_OCODE + " TEXT,"
+                    + ITEM_NCODE + " TEXT"
+
+                    + ")";
+            db.execSQL(CREATE_Item_Switch_TABLE);
+        }catch (Exception e){}
+
+
+    }
+
+
+
+    public void addItemSwitch(List<ItemSwitch> itemSwitch)
+    {
+        db = this.getReadableDatabase();
+        db.beginTransaction();
+        Log.e("addItemSwitch", "" + itemSwitch.size());
+
+        for (int i = 0; i < itemSwitch.size(); i++) {
+            try {
+                db = this.getReadableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(ITEM_NAMEA, itemSwitch.get(i).getItem_NAMEA());
+                values.put(ITEM_OCODE, itemSwitch.get(i).getItem_OCODE());
+                values.put(ITEM_NCODE, itemSwitch.get(i).getItem_NCODE());
+                db.insertWithOnConflict(Item_Switch, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+
+
+            } catch (Exception e) {
+                Log.e("DBAccount_Report", "" + e.getMessage());
+
+            }
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
 
     }
     public void addAccount_report(Account_Report account_report)
@@ -4484,6 +4540,31 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return  customr_Name;
 
     }
+    public String getSalesmanName_fromSalesTeam() {
+        String name="";
+        if(!Login.salesMan.equals(""))
+        {
+            String selectQuery ="select S.salesManName \n" +
+                    "from Sales_Team S WHERE  S.SalesManNo ='"+Login.salesMan+"' ";
+
+
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    name=cursor.getString(0);
+
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+
+
+        return  name;
+
+    }
 
     public int getLastVoucherNo(int vouchType) {
         int voucNo = 0;
@@ -4733,6 +4814,32 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         // updating row
         db.update(COMPANY_INFO, values, null, null);
 
+    }
+
+    public String  getItemNoForBarcode(String barcodeValue) {
+//        select ITEM_OCODE from Item_Switch where ITEM_NCODE='6008165344933'
+        String itemNo="";
+
+        String selectQuery = "select ITEM_OCODE from Item_Switch where ITEM_NCODE ='"+barcodeValue+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            try {
+
+                    itemNo=cursor.getString(0);
+
+                    Log.e("itemNo", "getItemNoForBarcode+\t" + itemNo+ "\t");
+
+            }
+            catch ( Exception e)
+            {Log.e("infoVisit", "Exception+\t\t");}
+
+
+        }
+
+
+        return itemNo;
     }
 }
 
