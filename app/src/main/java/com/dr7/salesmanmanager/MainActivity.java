@@ -42,6 +42,7 @@ import android.provider.Settings;
 //import android.support.v7.app.AlertDialog;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.Toolbar;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -134,13 +135,14 @@ import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
-
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final String TAG = "MainActivity";
     public static int menuItemState;
     static public TextView mainTextView,timeTextView;
@@ -385,7 +387,15 @@ public class MainActivity extends AppCompatActivity
 
 
 //                openReadBarcode();
-              openAddCustomerDialog();
+                try {
+                    openAddCustomerDialog();
+                }
+                catch (Exception e)
+                {
+
+                    Toast.makeText(MainActivity.this, "Check Location permission", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -591,6 +601,8 @@ public class MainActivity extends AppCompatActivity
 
                 onOptionsItemSelected(item);
     }
+
+
 
     public void saveCurrentLocation() throws InterruptedException {
         first=2;
@@ -1216,8 +1228,10 @@ public class MainActivity extends AppCompatActivity
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
+
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            dialog.dismiss();
         }
 
         locationListener = new LocationListener() {
@@ -2758,7 +2772,7 @@ dialog.dismiss();
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.e("startVoiceInput2","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -2779,6 +2793,15 @@ dialog.dismiss();
                 visitPic = extras.getParcelable("data");
                 visitPicture.setImageDrawable(new BitmapDrawable(getResources(), visitPic));
             }
+        }
+        //************************************************************
+        if(requestCode== REQ_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && null != data) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                customerNameTextView.setText(result.get(0));
+                Log.e("startVoiceInput2","result="+result);
+            }
+
         }
 
         //************************************************************

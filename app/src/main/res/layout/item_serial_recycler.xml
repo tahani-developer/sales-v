@@ -6,6 +6,7 @@
     <LinearLayout
         android:id="@+id/serialNo_linear"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
@@ -44,6 +45,13 @@
             android:layout_width="0dp"
             android:padding="3dp"
             android:src="@drawable/app_search"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/editBarcode"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_create_black_24dp"
             android:layout_weight="1"/>
 <!--        android:background="@drawable/popup_inline_error"-->
         <EditText

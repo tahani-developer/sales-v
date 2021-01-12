@@ -69,6 +69,7 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
         Intent i= new Intent( Stock_Activity.this,MainActivity.class);
         startActivity(i);
     }

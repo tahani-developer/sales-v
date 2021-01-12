@@ -44,6 +44,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
@@ -665,13 +666,23 @@ LocationPermissionRequest locationPermissionRequest;
 
 //                Log.e("MainActivity", "" + databaseHandler.isSerialCodeExist(serialBarcode+"")+araySerial.length);
                 if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not"))){
-                    item_serial.setText(serialBarcode);
+                    if(databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not"))
+                    {
+                        serialValue.setText(serialBarcode);
+                    }
+                    else
+                    {  new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(Activities.this.getString(R.string.warning_message))
+                            .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+serialBarcode)
+                            .show();}
+//                    item_serial.setText(serialBarcode);
+
 
                 }
                 else {
                     new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(Activities.this.getString(R.string.warning_message))
-                            .setContentText(Activities.this.getString(R.string.itemadedbefor))
+                            .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
                             .show();
                 }
 

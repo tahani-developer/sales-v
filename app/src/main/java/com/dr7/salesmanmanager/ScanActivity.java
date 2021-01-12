@@ -33,7 +33,11 @@ public class ScanActivity extends AppCompatActivity
             Log.e("typeonCreate",""+type);
             mScannerView = new ZXingScannerView(this);
             List<BarcodeFormat> formats = new ArrayList<>();
+            formats.add(BarcodeFormat.CODABAR);
             formats.add(BarcodeFormat.CODE_128);
+            formats.add(BarcodeFormat.MAXICODE);
+            formats.add(BarcodeFormat.CODE_93);
+            formats.add(BarcodeFormat.CODE_39);
 //            formats.add(BarcodeFormat.QR_CODE);
 
             setContentView(mScannerView);// Programmatically initialize the scanner view

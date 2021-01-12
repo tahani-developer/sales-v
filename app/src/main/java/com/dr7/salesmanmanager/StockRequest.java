@@ -360,10 +360,12 @@ public class StockRequest extends Fragment {
 
                     }
                 } else {
+                    clearLayoutData();
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                     Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
+                clearLayoutData();
                 Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
             }

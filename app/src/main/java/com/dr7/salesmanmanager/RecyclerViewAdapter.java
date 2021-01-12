@@ -108,6 +108,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static ArrayList<serialModel> listSerialAllItems = new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty, bonus;
+     LinearLayout   bonusLinearLayout;
     String discountCustomer = "", updateDiscountValue = "";
      public  static Button addToList;
     public String exist = "";
@@ -280,6 +281,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    }
                                                                });
                                                                mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
+                                                               bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
+                                                               bonusLinearLayout.setVisibility(View.GONE);
                                                                WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
                                                                lp.copyFrom(dialog.getWindow().getAttributes());
 
@@ -411,6 +414,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                Log.e("listitems_adapter", "" + s.toString());
                                                                            }
 
+
                                                                            serial_No_recyclerView.setAdapter(new Serial_Adapter(listitems_adapter, view.getContext(), context));
 
                                                                        } else {
@@ -525,7 +529,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        final RadioGroup radioGroup = dialog.findViewById(R.id.discTypeRadioGroup);
                                                        final LinearLayout discountLinearLayout = dialog.findViewById(R.id.discount_linear);
                                                        final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
-                                                       final LinearLayout bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
+                                                       bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
                                                        final LinearLayout discribtionItem_linear = dialog.findViewById(R.id.discribtionItem_linear);
                                                        final LinearLayout serialNo_linear = dialog.findViewById(R.id.serialNo_linear);
                                                        final EditText item_remark = dialog.findViewById(R.id.item_note);
@@ -674,14 +678,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    mainRequestLinear.setVisibility(View.VISIBLE);
                                                                    _linear_switch.setVisibility(View.VISIBLE);
                                                                    discountLinearLayout.setVisibility(View.VISIBLE);
-                                                                   if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0)// you can add bunos
-                                                                   {
-                                                                       bonusLinearLayout.setVisibility(View.VISIBLE);
-                                                                   } else {
-                                                                       bonus.setText("0");
-                                                                       bonusLinearLayout.setVisibility(View.INVISIBLE);
-                                                                       bonus.setEnabled(false);
-                                                                   }
+                                                                   bonusLinearLayout.setVisibility(View.GONE);
+//                                                                   if (MHandler.getAllSettings().get(0).getBonusNotAlowed() == 0)// you can add bunos
+//                                                                   {
+//                                                                       bonusLinearLayout.setVisibility(View.VISIBLE);
+//                                                                   } else {
+//                                                                       bonus.setText("0");
+//                                                                       bonusLinearLayout.setVisibility(View.INVISIBLE);
+//                                                                       bonus.setEnabled(false);
+//                                                                   }
 
                                                                } else {
                                                                    mainRequestLinear.setVisibility(View.VISIBLE);
@@ -1227,7 +1232,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
 
             if (!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not")) {
-                counter++;
+//                if(MHandler.isSerialCodePaied(serialListitems.get(i).getSerialCode()).equals("not"))
+//                {
+                    counter++;
+//                }
+
 
             }
         }

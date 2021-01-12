@@ -61,6 +61,8 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import com.google.zxing.common.StringUtils;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,12 +97,14 @@ public class AddItemsFragment2 extends DialogFragment {
     Button addToListButton, doneButton;
     SearchView search;
    public static EditText barcode;
+   public  TextView clearBarcode;
     ImageView barcodebtn;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
+    TextView emptyView;
     ListView verticalList;
     public  static   int total_items_quantity=0;
     private float descPerc;
@@ -213,6 +217,12 @@ public class AddItemsFragment2 extends DialogFragment {
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        emptyView = (TextView) view.findViewById(R.id.empty_view);
+
+// ...
+
+
+
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -364,6 +374,18 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         //***************************************************************************************
         barcode=(EditText)view.findViewById(R.id.barcode);
+        clearBarcode=(TextView) view.findViewById(R.id.clearBarcode);
+        clearBarcode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                barcode.setText("");
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+                        recyclerView.setAdapter(adapter);
+
+            }
+        });
 //        barcode.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -377,11 +399,11 @@ public class AddItemsFragment2 extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                 s=barcode.getText().toString();
-                if(!s.equals("")) {
-                    searchByBarcodeNo(s + "");
-                }
-                else{
+//                 s=barcode.getText().toString();
+//                if(!s.equals("")) {
+//                    searchByBarcodeNo(s + "");
+//                }
+//                else{
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -400,36 +422,59 @@ public class AddItemsFragment2 extends DialogFragment {
                     }
 
 
-                }
-
-            }
-        });
-        barcode.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-//                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
-//                {
-//                    // your action here
-//                    return true;
 //                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
-                    {   barcode.setText("");
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                        recyclerView.setAdapter(adapter);
-                        return true;
 
-                    }
-
-                }
-                return false;
             }
         });
+        barcode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(""))
+                {
+                    Log.e("afterTextChanged",""+s.toString());
+
+                        searchByBarcodeNo(s + "");
+
+                }
+            }
+        });
+//        barcode.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                final int DRAWABLE_LEFT = 0;
+//                final int DRAWABLE_TOP = 1;
+//                final int DRAWABLE_RIGHT = 2;
+//                final int DRAWABLE_BOTTOM = 3;
+//
+////                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+////                {
+////                    // your action here
+////                    return true;
+////                }
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+//                    {   barcode.setText("");
+//                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+//                        recyclerView.setAdapter(adapter);
+//                        return true;
+//
+//                    }
+//
+//                }
+//                return false;
+//            }
+//        });
         barcode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -562,6 +607,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 for (int k = 0; k < jsonItemsList.size(); k++) {
                     if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())){
                         filteredList.add(jsonItemsList.get(k));
+                        break;
 
                     }
                     else
@@ -573,6 +619,7 @@ public class AddItemsFragment2 extends DialogFragment {
                         if(itemNo.equals(jsonItemsList.get(k).getItemNo())){
 
                             filteredList.add(jsonItemsList.get(k));
+                            break;
                         }
                         }
 
@@ -583,7 +630,14 @@ public class AddItemsFragment2 extends DialogFragment {
                 recyclerView.setAdapter(adapter);
                 if(filteredList.size()==0)
                 {
-                    Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+//                  Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+
                 }
 
 
@@ -594,6 +648,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
         }
+
     }
 
     public void setListener(AddItemsInterface listener) {
@@ -898,27 +953,30 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //        intentIntegrator.setBarcodeImageEnabled(false);
 //        intentIntegrator.initiateScan();
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-            {//just for first time
-                Log.e("requestresult" ,"PERMISSION_GRANTED");
-                Intent i=new Intent(getActivity(),ScanActivity.class);
-                i.putExtra("key","3");
-                startActivity(i);
 
-            }
-        } else {
-            Intent i=new Intent(getActivity(),ScanActivity.class);
-            i.putExtra("key","3");
-            startActivity(i);
+        //***********************************************************************************************
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+//            {//just for first time
+//                Log.e("requestresult" ,"PERMISSION_GRANTED");
+//                Intent i=new Intent(getActivity(),ScanActivity.class);
+//                i.putExtra("key","3");
+//                startActivity(i);
+//
+//            }
+//        } else {
+//            Intent i=new Intent(getActivity(),ScanActivity.class);
+//            i.putExtra("key","3");
+//            startActivity(i);
+//
+//        }
+        //******************************************************************************
 
-        }
-
-//            IntentIntegrator integrator = new IntentIntegrator(getActivity());
-//            integrator.setOrientationLocked(false);
-//            integrator.setCaptureActivity(SmallCaptureActivity.class);
-//            integrator.initiateScan();
+            IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
 
 
             //*********************************************************

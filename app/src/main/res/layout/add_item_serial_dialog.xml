@@ -268,6 +268,16 @@
 
 <!--    </LinearLayout>-->
     <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
+    <LinearLayout
         android:id="@+id/_linear_switch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -314,122 +324,235 @@
             android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>
+    </LinearLayout>
     <LinearLayout
+        android:id="@+id/discount_linear"
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
         android:layout_marginTop="3dp"
         android:layout_weight="5.3"
+        android:visibility="visible"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
-        android:paddingLeft="5dp">
+        android:paddingLeft="5dp"
+
+        >
 
 
-        <LinearLayout
-            android:id="@+id/linear_bonus"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/app_disc"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/discount"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" />
+
+        <RadioGroup
+            android:id="@+id/discTypeRadioGroup"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/discValueRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/app_disc_type1"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+            <RadioButton
+                android:id="@+id/discPercRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/app_disc_type2"
+                android:textColor="@color/text_view_color"
+                android:textSize="10sp" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_bonus"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5.3"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+
+        >
+
+        <TextView
+            android:id="@+id/bonuss"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:orientation="horizontal"
-            android:visibility="visible">
+            android:gravity="center_vertical"
+            android:text="@string/app_bonus"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/bonuss"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="2"
-                android:textStyle="bold"
-                android:text="@string/app_bonus"
-                android:textColor="@color/text_view_color"
-               android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/bonus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-
-                android:layout_weight="2"
-                android:gravity="center"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-               android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/discount_linear"
+        <EditText
+            android:id="@+id/bonus"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_weight="5"
-            android:orientation="horizontal"
-            android:paddingStart="2dp"
-            android:paddingLeft="2dp"
-            android:visibility="visible">
 
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center_vertical"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:text="@string/app_disc"
-                android:textColor="@color/text_view_color"
-               android:textSize="12sp" />
-
-            <EditText
-                android:id="@+id/discount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-               android:textSize="12sp" />
-
-            <RadioGroup
-                android:id="@+id/discTypeRadioGroup"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="7dp"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/discValueRadioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="@string/app_disc_type1"
-                    android:textColor="@color/text_view_color"
-                   android:textSize="10sp" />
-
-                <RadioButton
-                    android:id="@+id/discPercRadioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="7dp"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:gravity="center"
-                    android:text="@string/app_disc_type2"
-                    android:textColor="@color/text_view_color"
-                   android:textSize="10sp" />
-
-            </RadioGroup>
-
-        </LinearLayout>
-
+            android:layout_weight="2"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" />
     </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="3dp"-->
+<!--        android:layout_weight="5.3"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingStart="5dp"-->
+<!--        android:paddingLeft="5dp">-->
+
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linear_bonus"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="2"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:visibility="visible">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/bonuss"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginStart="10dp"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_weight="2"-->
+<!--                android:textStyle="bold"-->
+<!--                android:text="@string/app_bonus"-->
+<!--                android:textColor="@color/text_view_color"-->
+<!--               android:textSize="12sp" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/bonus"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+
+<!--                android:layout_weight="2"-->
+<!--                android:gravity="center"-->
+<!--                android:imeOptions="actionNext"-->
+<!--                android:inputType="numberDecimal"-->
+<!--               android:textSize="12sp" />-->
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/discount_linear"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:layout_weight="5"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingStart="2dp"-->
+<!--            android:paddingLeft="2dp"-->
+<!--            android:visibility="visible">-->
+
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textStyle="bold"-->
+<!--                android:text="@string/app_disc"-->
+<!--                android:textColor="@color/text_view_color"-->
+<!--               android:textSize="12sp" />-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/discount"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:gravity="center"-->
+<!--                android:imeOptions="actionDone"-->
+<!--                android:inputType="numberDecimal"-->
+<!--               android:textSize="12sp" />-->
+
+<!--            <RadioGroup-->
+<!--                android:id="@+id/discTypeRadioGroup"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginLeft="7dp"-->
+<!--                android:layout_weight="2"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal">-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/discValueRadioButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:checked="true"-->
+<!--                    android:text="@string/app_disc_type1"-->
+<!--                    android:textColor="@color/text_view_color"-->
+<!--                   android:textSize="10sp" />-->
+
+<!--                <RadioButton-->
+<!--                    android:id="@+id/discPercRadioButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:layout_marginLeft="7dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:checked="true"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/app_disc_type2"-->
+<!--                    android:textColor="@color/text_view_color"-->
+<!--                   android:textSize="10sp" />-->
+
+<!--            </RadioGroup>-->
+
+<!--        </LinearLayout>-->
+
+<!--    </LinearLayout>-->
 
 
     <LinearLayout

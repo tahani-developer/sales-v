@@ -325,37 +325,7 @@ android:layout_margin="5dp"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/linear_bonus"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="horizontal"
-            android:visibility="visible">
 
-            <TextView
-                android:id="@+id/bonuss"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:gravity="center_vertical"
-                android:text="@string/app_bonus"
-                android:textColor="@color/text_view_color"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/bonus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-
-                android:layout_weight="2"
-                android:background="@drawable/back_border_edit"
-                android:gravity="center"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:textSize="12sp" />
-        </LinearLayout>
 
 
     </LinearLayout>
@@ -367,10 +337,13 @@ android:layout_margin="5dp"
         android:layout_height="match_parent"
         android:layout_marginTop="3dp"
         android:layout_weight="5"
+        android:visibility="visible"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
-        android:paddingLeft="5dp">
+        android:paddingLeft="5dp"
+
+        >
 
 
         <TextView
@@ -431,6 +404,45 @@ android:layout_margin="5dp"
         </RadioGroup>
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_bonus"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5"
+        android:visibility="gone"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+
+        >
+
+        <TextView
+            android:id="@+id/bonuss"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="@string/app_bonus"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/bonus"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+
+            android:layout_weight="2"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"

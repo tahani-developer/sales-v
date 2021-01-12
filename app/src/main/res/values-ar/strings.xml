@@ -462,5 +462,9 @@
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
     <string name="ok" />
     <string name="text_location_permission">text Location Permission</string>
+    <string name="invalidSerial">رقم تسلسلي خاطئ</string>
+    <string name="enter_serial">أدخل الرقم التسلسلي</string>
+    <string name="process">process</string>
+    <string name="userNotOwnwerDevice">حساب المستخدم ليس لهذا الجهاز </string>
 
 </resources>

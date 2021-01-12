@@ -59,12 +59,22 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 122;
+    private static final int DATABASE_VERSION = 123;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  SerialItemMaster  = "SerialItemMaster";
+
+    private static final String  StoreNo       = "StoreNo";
+    private static final String  ITEM_OCODE_M   = "ITEM_OCODE_M";
+    private static final String  SerialCode    = "SerialCode";
+    private static final String  Qty_serial    = "Qty_serial";
+
+
+    //----------------------------------------------------------------------
     //----------------------------------------------------------------------
     private static final String  Item_Switch  = "Item_Switch";
 
@@ -90,7 +100,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  VOUCHER_NO="VOUCHER_NO";
     private static final String ITEMNO_SERIAL="ITEMNO_SERIAL";
     private static final String DATE_VOUCHER="DATE_VOUCHER";
-    private static final  String KIND_VOUCHER="KIND_VOUCHER";
+    private static final String KIND_VOUCHER="KIND_VOUCHER";
     private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
     private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
     private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
@@ -500,12 +510,33 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 + DATE_VOUCHER + " TEXT,"
                 + STORE_NO_SALESMAN + " INTEGER,"
-                + IS_POSTED_SERIAL + " INTEGER,"+
-                IS_BONUS_SERIAL+" INTEGER"+
+                + IS_POSTED_SERIAL + " INTEGER,"
+                + IS_BONUS_SERIAL+" INTEGER"
+                +
 
 
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+        //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
+
+        try {
+
+
+
+        String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                + StoreNo + " TEXT,"
+                + ITEM_OCODE_M + " TEXT,"
+                + SerialCode + " TEXT,"
+                + Qty_serial + " TEXT"
+
+                +
+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_TABLE);
+        }catch (Exception e){}
         //-------------------------------------------------------------------------
         String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
                 + PASS_TYPE + " INTEGER,"
@@ -1512,6 +1543,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + ")";
             db.execSQL(CREATE_Item_Switch_TABLE);
         }catch (Exception e){}
+        //-------------------------------------------------------------------------
+
+        try {
+
+            String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                    + StoreNo + " TEXT,"
+                    + ITEM_OCODE_M + " TEXT,"
+                    + SerialCode + " TEXT,"
+                    + Qty_serial + " TEXT"
+
+                    +
+                    ")";
+            db.execSQL(CREATE_SERIAL_TABLE);
+        }catch (Exception e){}
 
 
     }
@@ -1625,6 +1671,35 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             db.insert(SERIAL_ITEMS_TABLE, null, values);
             Log.e("add_Serial",""+serialModelItem.getSerialCode());
             db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+    public void add_SerialMasteItems(List<serialModel> serialModelItem)
+    {
+
+        try {
+            db = this.getReadableDatabase();
+            db.beginTransaction();
+
+            for (int i = 0; i < serialModelItem.size(); i++) {
+                ContentValues values = new ContentValues();
+                values.put(StoreNo, serialModelItem.get(i).getStoreNo());
+
+                values.put( ITEM_OCODE_M , serialModelItem.get(i).getItemNo());
+
+                values.put(SerialCode, serialModelItem.get(i).getSerialCode());
+                values.put(Qty_serial, serialModelItem.get(i).getQty());
+
+
+                db.insertWithOnConflict(SerialItemMaster, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
         }
         catch (Exception e){
             Log.e("Dbhandler_addItemQOf",""+e.getMessage());
@@ -4688,11 +4763,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return true;
     }
-//    select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
+//  select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
     public String isSerialCodeExist(String serialCode) {
-//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
-    String count = "not";
-    String selectQuery = "select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+//  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+    String count = "not",isPaid="";
+    Log.e("isSerialCodeExist",""+serialCode);
+    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"'  ";
     db = this.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -4700,9 +4776,26 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         count = cursor.getString(0);
     }
-        Log.e("isCustomerMaster_posted", "isCustomerMaster_posted+\t" + count + "\t");
+        Log.e("isSerialCodeExist", "isSerialCodeExist+\t" + count + "\t");
+        if(cursor != null)
+        {
+            cursor.close();
+            cursor=null;
+            db.close();
+        }
+
+        if(!count.equals("not"))// exist in DataBase
+        {
+
+                count="not";
+
+        }
+        else {count="0";}
     return count;
 }
+
+
+
 
     public String getItemNameBonus(String bonusItemNo) {
         String name = "";
@@ -4823,23 +4916,44 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String selectQuery = "select ITEM_OCODE from Item_Switch where ITEM_NCODE ='"+barcodeValue+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-
+        try {
         if (cursor.moveToFirst()) {
-            try {
+
 
                     itemNo=cursor.getString(0);
 
                     Log.e("itemNo", "getItemNoForBarcode+\t" + itemNo+ "\t");
 
             }
-            catch ( Exception e)
-            {Log.e("infoVisit", "Exception+\t\t");}
+
 
 
         }
+        catch ( Exception e)
+        {itemNo="";
+            Log.e("infoVisit", "Exception+\t\t");}
+        if(cursor != null)
+            cursor.close();
 
 
         return itemNo;
     }
+    //******************************************************************
+    public String isSerialCodePaied(String serialCode) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+        String valueSer = "not";
+        String selectQuery = "select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            valueSer = cursor.getString(0);
+        }
+        Log.e("isSerialCodePaied", "isSerialCodePaied+\t" + valueSer + "\t");
+        return valueSer;
+    }
+    //******************************************************
 }
 
