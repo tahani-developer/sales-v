@@ -524,12 +524,12 @@ public class Login extends AppCompatActivity {
                     {
                         if(mDHandler.getAllSettings().get(0).getApproveAdmin()==1)
                         {
-                           checkIpDevice() ;
-//                            goToMain();
+//                           checkIpDevice() ;
+                            goToMain();
                         }
                         else {
-                            checkIpDevice() ;
-//                            goToMain();
+//                            checkIpDevice() ;
+                            goToMain();
                         }
                     }
                     else {

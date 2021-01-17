@@ -682,6 +682,23 @@ public class ImportJason extends AppCompatActivity {
                     price.setCustomerNumber(finalObject.getInt("CUSTOMER_NO"));
                     price.setPrice(finalObject.getDouble("PRICE"));
                     price.setDiscount(finalObject.getDouble("DISCOUNT"));
+
+                    try {
+                        price.setOther_Discount(finalObject.getString("OTHER_DISCOUNT"));
+                        price.setFromDate(finalObject.getString("FROM_DATE"));
+                        price.setToDate(finalObject.getString("TO_DATE"));
+                        price.setListNo(finalObject.getString("LIST_NO"));
+                        price.setListType(finalObject.getString("LIST_TYPE"));
+                    } catch (Exception e) {
+                        price.setOther_Discount("");
+                        price.setFromDate("");
+                        price.setToDate("");
+                        price.setListNo("");
+                        price.setListType("");
+                        Log.e("ImportData","Exception_customer_prices");
+
+                    }
+
                     customerPricesList.add(price);
 
                 }
@@ -919,6 +936,8 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllOffersQty();
             mHandler.deletItemsOfferQty();
             mHandler.deletAcountReport();
+            mHandler.deleteAllItemsSwitch();
+            mHandler.deleteAllItemsSerialMaster();
 
             if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
 

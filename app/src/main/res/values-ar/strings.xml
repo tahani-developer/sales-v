@@ -466,5 +466,6 @@
     <string name="enter_serial">أدخل الرقم التسلسلي</string>
     <string name="process">process</string>
     <string name="userNotOwnwerDevice">حساب المستخدم ليس لهذا الجهاز </string>
+    <string name="enterCustomerName">أدخل اسم العميل</string>
 
 </resources>

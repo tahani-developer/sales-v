@@ -19,16 +19,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
 
+    android:layout_gravity="center"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.journeyapps.barcodescanner.CompoundBarcodeView
         android:id="@+id/zxing_barcode_scanner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="170dp"
 
-      android:background="@color/white"
-        android:padding="30dp"
+        android:background="@color/white"
+        android:padding="20dp"
         app:zxing_preview_scaling_strategy="fitXY"
         app:zxing_use_texture_view="true" />
 

@@ -40,6 +40,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterBonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterSerial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 
 public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHolder>{
     Context context;
@@ -248,19 +249,27 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 boolean isUpdate=true;
                 if(s.toString().length()!=0)
                 {
-                    if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))
-                    {
-                        isUpdate= updateListCheque(selectedBarcode, s.toString());
+                   if( checkInTotalBarcode(s.toString()))// not in the current voucher
+                   {
+                       if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))// not in curent ListSerial adapter
+                       {
+                           isUpdate= updateListCheque(selectedBarcode, s.toString());
 
-                    }
-                    if(!isUpdate)
-                    {
-                        editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
-                        errorData=true;
+                       }
+                       if(!isUpdate)
+                       {
+                           editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+                           errorData=true;
 
-                    }else {
-                        editTextSerialCode.setError(null);
-                    }
+                       }else {
+                           editTextSerialCode.setError(null);
+                       }
+                   }
+                   else {
+                       editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+                       errorData=true;
+                   }
+
 
 
 
@@ -354,6 +363,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
+    }
+
+    private boolean checkInTotalBarcode(String serial) {
+        for(int i=0;i<listSerialTotal.size();i++)
+        {
+            if(listSerialTotal.get(i).getSerialCode().equals(serial))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void openeditDialog() {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -264,11 +265,18 @@ public class CustomerListShow extends DialogFragment {
         try {
             if(flag==1)
             {
+
                 Log.e("startVoiceInput2",""+flag);
-                getActivity().startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+               getActivity().startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
             }
 
         } catch (ActivityNotFoundException a) {
+            String appPackageName = "com.dr7.salesmanmanager";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
 
         }
     }

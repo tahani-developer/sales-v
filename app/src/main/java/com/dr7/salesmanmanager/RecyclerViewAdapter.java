@@ -72,6 +72,7 @@ import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
+import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -105,7 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static int flag = 0, counterSerial = 0, counterBonus = 0;
     RecyclerView serial_No_recyclerView;
     public static ArrayList<serialModel> serialListitems = new ArrayList<>();
-    public static ArrayList<serialModel> listSerialAllItems = new ArrayList<>();
+
     public static serialModel serial;
     public static EditText unitQty, bonus;
      LinearLayout   bonusLinearLayout;
@@ -230,7 +231,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    discountCustomer = "";
                                                    currentKey="";
                                                    serialListitems = new ArrayList<>();
-                                                   listSerialAllItems = new ArrayList<>();
+                                                   itemNoSelected ="";
                                                    counterSerial = 0;
                                                    counterBonus = 0;
                                                    for (int i = 0; i < localItemNumber.size(); i++) {
@@ -244,7 +245,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        final Dialog dialog = new Dialog(view.getContext());
                                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                        dialog.setCancelable(false);
-
+                                                       itemNoSelected=items.get(holder.getAdapterPosition()).getItemNo();
+                                                       Log.e("itemNoSelected",""+itemNoSelected);
 
                                                        try {
 
@@ -332,7 +334,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    serial.setSerialCode("");
                                                                                    serial.setIsBonus("0");
                                                                                    serialListitems.add(serial);
-                                                                                   listSerialAllItems.add(serial);
+
                                                                                }
 
 
@@ -557,7 +559,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                serial.setSerialCode("");
                                                                serial.setIsBonus("0");
                                                                serialListitems.add(serial);
-                                                               listSerialAllItems.add(serial);
+
 
                                                                serial_No_recyclerView.setLayoutManager(layoutManager);
 
@@ -845,15 +847,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        public void onClick(DialogInterface dialogInterface, int i) {
 
                                                                            int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
-                                                                           MHandler.deletSerialItems_byVoucherNo(vouch);
+                                                                           Log.e("cancel3","serialListitemsInCardView"+serialListitems.size());
+                                                                           serialListitems.clear();
+                                                                           Log.e("cancel3",""+serialListitems.size());
+//                                                                           MHandler.deletSerialItems_byVoucherNo(vouch);
+
                                                                            float count = 0;
                                                                            // delete from main list
-//                                        for(int j=0;j< List.size();j++)
-//                                        {
-//                                            count+= List.get(j).getQty();
-//                                        }
-//                                             Log.e("count",""+count);
-//                                           Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+//
                                                                            total_items_quantity -= count;
                                                                            totalQty_textView.setText(total_items_quantity + "");
                                                                            dialog.dismiss();
@@ -917,6 +918,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            @SuppressLint("ResourceAsColor")
                                                            @Override
                                                            public void onClick(View v) {
+                                                               Log.e("addToList",""+serialListitems.size());
                                                                String qtyText = "", discountText = "", bunosText = "";
                                                                int countInvalidSerial = 0;
                                                                if (serialListitems.size() != 0) {
@@ -973,6 +975,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                        AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                        List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                        Offers appliedOffer = null;
+                                                                                                       Log.e("offer",""+offer.size());
 //                                                            Log.e("offer",""+offer.size()+"\t"+offer.get(0).getPromotionType());
 
                                                                                                        if (offer.size() != 0) {
@@ -997,6 +1000,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                                }
                                                                                                            } else {
+                                                                                                               Log.e("getPromotionType",""+offer.get(0).getPromotionType());
                                                                                                                //(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString()))   //******calculate discount item before 11/9
                                                                                                                double disount_totalnew = 0, unitQty_double = 0;
 
@@ -1274,6 +1278,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Offers> checkOffers(String itemNo) {
 
         Offers offer = null;
+        List<Offers> offers;
         List<Offers> Offers = new ArrayList<>();
         try {
             Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -1282,7 +1287,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             date = convertToEnglish(date);
 
 
-            List<Offers> offers = MHandler.getAllOffers();
+            if(MHandler.getAllSettings().get(0).getApproveAdmin()==0)
+            {
+                offers = MHandler.getAllOffers();
+                Log.e("checkOffers",""+offers.size());
+            }
+            else {
+                offers = MHandler.getAllOffersFromCustomerPrices();
+            }
+
+
 
 
             for (int i = 0; i < offers.size(); i++) {
@@ -1304,6 +1318,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Offers getAppliedOffer(String itemNo, String qty, int flag) {
 
+        Log.e("offer",""+itemNo+"\t"+qty);
         double qtyy = Double.parseDouble(qty);
         List<Offers> offer = checkOffers(itemNo);
 

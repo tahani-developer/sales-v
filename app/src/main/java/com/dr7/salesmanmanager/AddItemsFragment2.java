@@ -76,6 +76,7 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
@@ -153,6 +154,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
+
 
 //        voucherDate = convertToEnglish(voucherDate);
 
@@ -334,8 +336,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     ArrayList<Item> filteredList = new ArrayList<>();
 
-//                    "jkgb".matches()
-
                     boolean isFound=false;
                     for(int i=0;i<jsonItemsList.size();i++){
                         for(int j=0;j<arrOfStr.length;j++){
@@ -386,14 +386,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
             }
         });
-//        barcode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                barcode.setText("");
-////                 Intent i=new Intent(getActivity(),ScanActivity.class);
-////                 startActivity(i);
-//            }
-//        });
         barcodebtn=(ImageView)view.findViewById(R.id.searchBarcode);
         barcodebtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -509,20 +501,41 @@ public class AddItemsFragment2 extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         float count=0;
 
+
 //                        total_items_quantity -= List.size();
 //                        totalQty_textView.setText("+"+0);
 //                        total_items_quantity=0;
-                        for(int j=0;j<List.size();j++)
+                        if(listSerialTotal.size()!=0)
                         {
-                            count+=List.get(j).getQty();
+                            for(int k=0;k<listSerialTotal.size();k++)
+                            {
+                                for(int j=0;j<List.size();j++)
+                                {
+                                    count+=List.get(j).getQty();
+                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo()))
+                                    {
+
+                                        listSerialTotal.remove(k);
+                                    }
+                                }
+                            }
                         }
+                        else {
+                            for(int j=0;j<List.size();j++)
+                            {
+                                count+=List.get(j).getQty();
+                            }
+
+                        }
+
+
 //                        Log.e("count",""+count);
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
                         total_items_quantity-=count;
                         totalQty_textView.setText(total_items_quantity+"");
                         List.clear();
                        int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
-                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
+//                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
 
 
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
@@ -601,6 +614,13 @@ public class AddItemsFragment2 extends DialogFragment {
 //    }
    public  void searchByBarcodeNo(String barcodeValue) {
        Log.e("searchByBarcodeNo",""+barcodeValue);
+       String itemNo="";
+       try {
+            itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
+       }catch (Exception e){
+           itemNo="";
+       }
+
         if(!barcodeValue.equals(""))
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
@@ -612,7 +632,6 @@ public class AddItemsFragment2 extends DialogFragment {
                     }
                     else
                     {
-                        String itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
 
                         if(!itemNo.equals(""))
                         {
@@ -739,8 +758,7 @@ public class AddItemsFragment2 extends DialogFragment {
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         boolean existItem = false;
-        Log.e("itemSerialList",""+itemSerialList.size());
-        Log.e("addItem","discount"+discount);
+
 
 
             for(int i = 0 ; i< obj.getItemsList().size() ; i++){
@@ -841,7 +859,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 item.setDisc(0);
                 item.setDiscPerc("0");
             }
-        Log.e("addItem","Itemdiscount"+item.getDisc());
+
             try {
                 if (item.getDiscType() == 0) {
 
@@ -903,13 +921,10 @@ public class AddItemsFragment2 extends DialogFragment {
                     itemSerialList.get(i).setKindVoucher("");
                     itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
                     itemSerialList.get(i).setStoreNo(storeNo);
-                    Log.e("voucherNumberTextView",""+voucherNumberTextView.getText().toString());
+                    listSerialTotal.add( itemSerialList.get(i));
 
                 }
-                for(int j=0;j<itemSerialList.size();j++)
-                {
-                    mDbHandler.add_Serial(itemSerialList.get(j));
-                }
+
 
             }
 
@@ -943,47 +958,61 @@ public class AddItemsFragment2 extends DialogFragment {
 
     public void readB(){
         Log.e("barcode_099", "in");
-//        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
-//        intentIntegrator.setBeepEnabled(false);
-//        intentIntegrator.setCameraId(0);
-//        intentIntegrator.setOrientationLocked(false);
-//        intentIntegrator.setPrompt("SCAN");
-//
-//        intentIntegrator.setBarcodeImageEnabled(false);
-//        intentIntegrator.initiateScan();
+       // openIntegratorLandScapeActivity();
 
-        //***********************************************************************************************
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
-//            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-//            {//just for first time
-//                Log.e("requestresult" ,"PERMISSION_GRANTED");
-//                Intent i=new Intent(getActivity(),ScanActivity.class);
-//                i.putExtra("key","3");
-//                startActivity(i);
-//
-//            }
-//        } else {
-//            Intent i=new Intent(getActivity(),ScanActivity.class);
-//            i.putExtra("key","3");
-//            startActivity(i);
-//
-//        }
-        //******************************************************************************
+       // openSannActivity();
 
-            IntentIntegrator integrator = new IntentIntegrator(getActivity());
-            integrator.setOrientationLocked(false);
-            integrator.setCaptureActivity(SmallCaptureActivity.class);
-            integrator.initiateScan();
-
-
+       // openSmallActivity();
             //*********************************************************
-       // new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+        openSmallScanerTextView();
+        //**************************************************************
 //        public void scanToolbar(View view) {
 //            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
 //        }
+
+    }
+
+    private void openIntegratorLandScapeActivity() {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setPrompt("SCAN");
+
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
+    }
+
+    private void openSannActivity() {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            {//just for first time
+                Log.e("requestresult" ,"PERMISSION_GRANTED");
+                Intent i=new Intent(getActivity(),ScanActivity.class);
+                i.putExtra("key","3");
+                startActivity(i);
+
+            }
+        } else {
+            Intent i=new Intent(getActivity(),ScanActivity.class);
+            i.putExtra("key","3");
+            startActivity(i);
+
+        }
+    }
+
+    private void openSmallActivity() {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+    }
+
+    private void openSmallScanerTextView() {
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }
 

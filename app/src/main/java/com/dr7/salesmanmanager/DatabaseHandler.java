@@ -53,13 +53,15 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+
 public class
 
 DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 123;
+    private static final int DATABASE_VERSION = 124;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -270,6 +272,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Price = "Price";
     private static final String DISCOUNT_CUSTOMER = "DISCOUNT_CUSTOMER";
     private static final String ItemNo_ = "ItemNo_";
+    private static final String Other_Discount   = "Other_Discount";
+    private static final String FromDate         = "FromDate";
+    private static final String ToDate          = "ToDate";
+    private static final String ListNo          = "ListNo";
+    private static final String ListType        = "ListType";
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -728,8 +735,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ItemNumber + " INTEGER,"
                 + CustomerNumber + " INTEGER,"
                 + Price + " INTEGER,"
-                +DISCOUNT_CUSTOMER+ " real,"
-                +ItemNo_+ " TEXT "
+                + DISCOUNT_CUSTOMER + " real,"
+                + ItemNo_ + " TEXT,"
+                + Other_Discount + " TEXT,"
+                + FromDate + " TEXT,"
+                + ToDate + " TEXT,"
+                + ListNo + " TEXT,"
+                + ListType + " TEXT"
 
                 + ")";
         db.execSQL(CREATE_TABLE_CustomerPrices);
@@ -1517,6 +1529,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  Other_Discount  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  FromDate  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ToDate  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ListNo  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ListType  TEXT  DEFAULT '' ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
         try{
 
@@ -2001,8 +2028,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             values.put(ItemNumber, 0);
             values.put(CustomerNumber, price.get(i).getCustomerNumber());
             values.put(Price, price.get(i).getPrice());
-            values.put(DISCOUNT_CUSTOMER , price.get(i).getDiscount());
-            values.put(ItemNo_ , price.get(i).getItemNumber());
+            values.put(DISCOUNT_CUSTOMER, price.get(i).getDiscount());
+            values.put(ItemNo_, price.get(i).getItemNumber());
+            values.put(Other_Discount, price.get(i).getOther_Discount());
+            values.put(FromDate, price.get(i).getFromDate());
+            values.put(ToDate, price.get(i).getToDate());
+            values.put(ListNo, price.get(i).getListNo());
+            values.put(ListType, price.get(i).getListType());
 
             db.insertWithOnConflict(CustomerPrices, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
@@ -2486,7 +2518,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     public List<serialModel> getAllSerialItems() {
         List<serialModel> infos = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE"+ " WHERE IS_POSTED_SERIAL = " + 0;
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3961,7 +3993,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     public List<Offers> getAllOffers() {
         List<Offers> offers = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + VS_PROMOTION;
+        String selectQuery = "SELECT * FROM " + VS_PROMOTION    ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -4216,11 +4248,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(Qty5, existQty);
         db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
     }
-    public void deletSerialItems() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + SERIAL_ITEMS_TABLE);
-        db.close();
-    }
+
     public void deletSerialItems_byVoucherNo(int vouch_no ) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where VOUCHER_NO =" +vouch_no);
@@ -4261,6 +4289,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void deleteAllCustomers() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + CUSTOMER_MASTER);
+        db.close();
+    }
+    public void deleteAllItemsSwitch() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + Item_Switch);
+        db.close();
+    }
+    public void deleteAllItemsSerialMaster() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SerialItemMaster );
         db.close();
     }
 
@@ -4768,7 +4806,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
     String count = "not",isPaid="";
     Log.e("isSerialCodeExist",""+serialCode);
-    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"'  ";
+    String itemNo="";
+    itemNo=itemNoSelected;
+        Log.e("itemNoSelected","="+itemNoSelected+"\t"+itemNo);
+    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
     db = this.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -4953,6 +4994,46 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         Log.e("isSerialCodePaied", "isSerialCodePaied+\t" + valueSer + "\t");
         return valueSer;
+    }
+
+    public List<Offers> getAllOffersFromCustomerPrices() {
+        List<Offers> offers = new ArrayList<>();
+        String customerNo=CustomerListShow.Customer_Account;
+        String selectQuery = "select FromDate,ToDate,DISCOUNT_CUSTOMER,Other_Discount,ItemNo_  from CustomerPrices WHERE CustomerNumber='"+customerNo+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Offers offer = new Offers();
+                offer.setPromotionID(1);
+                offer.setPromotionType(1);
+                offer.setItemQty(1);
+                offer.setBonusItemNo("");
+
+                offer.setFromDate(cursor.getString(0));
+                offer.setToDate(cursor.getString(1));//*************
+                offer.setBonusQty(Double.parseDouble(cursor.getString(2)));
+                offer.setOtherDiscount(cursor.getString(3));
+                Log.e("otherDis",""+offer.getOtherDiscount()+"\t"+offer.getBonusQty());
+                if(!cursor.getString(3).equals("0"))
+                {
+                    double otherDis=Double.parseDouble(offer.getOtherDiscount());
+                    Log.e("otherDis",""+otherDis);
+                   offer.setBonusQty(offer.getBonusQty()+otherDis);
+                }
+
+                offer.setItemNo(cursor.getString(4));
+
+
+
+
+                offers.add(offer);
+            } while (cursor.moveToNext());
+        }
+
+
+        return offers;
     }
     //******************************************************
 }

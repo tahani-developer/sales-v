@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.content.ContextCompat;
 import android.os.CountDownTimer;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +101,7 @@ public class CustomerCheckInFragment extends DialogFragment {
     double currentLat, currentLon;
     JSONObject obj;
     private ProgressDialog progressDialog;
-
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
     static String cusCode;
     String cusName;
     int status;
@@ -313,6 +315,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                 switch (v.getId()) {
                     case R.id.find_img_button:
                         customerCheckInListener.displayCustomerListShow();
+//                        startVoiceInput(1);
                         break;
                 }
 
@@ -335,7 +338,28 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         return view;
     }
+    private void startVoiceInput(int flag) {
+        Log.e("startVoiceInput",""+flag);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?");
+        try {
+            if(flag==1)
+            {
 
+                Log.e("startVoiceInput2",""+flag);
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+            }
+
+        } catch (ActivityNotFoundException a) {
+            Log.e("ActivityNotFoundExcep",""+a.getMessage());
+
+        }
+        catch (Exception e){
+            Log.e("ActivityNotFoundExcep",""+e.getMessage());
+        }
+    }
     void saveCustLocation(String custId) {
 
         LocationManager locationManager;

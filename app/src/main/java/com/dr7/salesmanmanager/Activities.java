@@ -46,6 +46,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
@@ -452,7 +453,7 @@ LocationPermissionRequest locationPermissionRequest;
 
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    clearSerial();
+//                                    clearSerial();
                                     displayReceipt();
                                 }
                             });
@@ -482,7 +483,7 @@ LocationPermissionRequest locationPermissionRequest;
 //                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                                clearSerial();
+//                                clearSerial();
                                 displayStockRequest();
 //                                new TaskStock().execute();
                             }
@@ -530,10 +531,11 @@ LocationPermissionRequest locationPermissionRequest;
             String curentVoucherNo=voucherNumberTextView.getText().toString();
             int curent=Integer.parseInt(curentVoucherNo);
             int lastNo= databaseHandler.getLastVoucherNo(SalesInvoice.voucherType);
-            Log.e("onBackPressed",""+curentVoucherNo+"\t"+lastNo);
+
             if(!curentVoucherNo.equals(lastNo+"") )
             {
                 databaseHandler.deletSerialItems_byVoucherNo(curent);
+
 
             }
         }
@@ -556,7 +558,7 @@ LocationPermissionRequest locationPermissionRequest;
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                clearSerial();
+//                clearSerial();
 
                 back();
                 saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
@@ -656,17 +658,13 @@ LocationPermissionRequest locationPermissionRequest;
             } else {
 
                 Log.e("MainActivity", "" + Result.getContents());
-//                    Toast.makeText(this, "Scan ___" + Result.getContents(), Toast.LENGTH_SHORT).show();
-//                TostMesage(getResources().getString(R.string.scan)+Result.getContents());
-//                barCodTextTemp.setText(Result.getContents() + "");
-//                openEditerCheck();
+
 
                 String serialBarcode = Result.getContents();
-//                araySerial= serialBarcode.split(";");
 
-//                Log.e("MainActivity", "" + databaseHandler.isSerialCodeExist(serialBarcode+"")+araySerial.length);
                 if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not"))){
-                    if(databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not"))
+                    if((databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==504)||
+                            (!databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==506))
                     {
                         serialValue.setText(serialBarcode);
                     }
@@ -675,7 +673,6 @@ LocationPermissionRequest locationPermissionRequest;
                             .setTitleText(Activities.this.getString(R.string.warning_message))
                             .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+serialBarcode)
                             .show();}
-//                    item_serial.setText(serialBarcode);
 
 
                 }

@@ -15,6 +15,7 @@ import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -49,7 +50,7 @@ public class DeExportJason extends AppCompatActivity {
     private String fromDate, toDate;
     private int flag;
     private ProgressDialog progressDialog;
-    private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments, jsonArrayPaymentsPaper, jsonArrayAddedCustomer;
+    private JSONArray jsonArrayVouchers, jsonArraySerial,jsonArrayItems, jsonArrayPayments, jsonArrayPaymentsPaper, jsonArrayAddedCustomer;
     DatabaseHandler mHandler;
     String myFormat = "dd/MM/yyyy"; //In which you need put here
     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -58,6 +59,7 @@ public class DeExportJason extends AppCompatActivity {
     public static List<Item> items = new ArrayList<>();
     public static List<Payment> payments = new ArrayList<>();
     public static List<Payment> paymentsPaper = new ArrayList<>();
+    public  static  List<serialModel> serialModelList=new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
 
     public DeExportJason(Context context, String fromDate, String toDate, int flag) {
@@ -74,6 +76,7 @@ public class DeExportJason extends AppCompatActivity {
         jsonArrayItems = new JSONArray();
         jsonArrayPayments = new JSONArray();
         jsonArrayPaymentsPaper = new JSONArray();
+        jsonArraySerial = new JSONArray();
 
         if (flag == 0) {
             vouchers = mHandler.getAllVouchers();
@@ -94,7 +97,8 @@ public class DeExportJason extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-        } else if (flag == 1) {
+        } else
+            if (flag == 1) {
             payments = mHandler.getAllPayments();
             paymentsPaper = mHandler.getAllPaymentsPaper();
             filterPayment();
@@ -108,11 +112,18 @@ public class DeExportJason extends AppCompatActivity {
             }
 
         } else {
+
             vouchers = mHandler.getAllVouchers();
             items = mHandler.getAllItems();
             payments = mHandler.getAllPayments();
             paymentsPaper = mHandler.getAllPaymentsPaper();
-            filterInvoice();
+            serialModelList = mHandler.getAllSerialItems();
+            addedCustomer = mHandler.getAllAddedCustomer();
+
+
+
+
+                filterInvoice();
             filterPayment();
 
             for (int i = 0; i < vouchers.size(); i++) {
@@ -131,18 +142,22 @@ public class DeExportJason extends AppCompatActivity {
             for (int i = 0; i < paymentsPaper.size(); i++) {
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
-            addedCustomer = mHandler.getAllAddedCustomer();
+
             jsonArrayAddedCustomer = new JSONArray();
             for (int i = 0; i < addedCustomer.size(); i++)
                 {
                     jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
                 }
+                for (int i = 0; i < serialModelList.size(); i++)
+                {
+                    jsonArraySerial.put(serialModelList.get(i).getJSONObject());
 
+                }
         }
 
 
 
-//        new DeExportJason.JSONTask().execute();
+        new DeExportJason.JSONTask().execute();
 
     }
 
@@ -196,6 +211,8 @@ public class DeExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
+
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
                 HttpResponse response = client.execute(request);
@@ -297,6 +314,7 @@ public class DeExportJason extends AppCompatActivity {
                     if(flag==2)
                     {
                         mHandler.updateAddedCustomers();
+                        mHandler.updateSerialTableIsposted();
                     }
 
 
