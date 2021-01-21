@@ -39,6 +39,15 @@ public class Settings {
     private int  showItemImage;
     private int  approveAdmin;
     private  int saveOnly;
+    private  int show_quantity_sold;
+
+    public int getShow_quantity_sold() {
+        return show_quantity_sold;
+    }
+
+    public void setShow_quantity_sold(int show_quantity_sold) {
+        this.show_quantity_sold = show_quantity_sold;
+    }
 
     public int getSaveOnly() {
         return saveOnly;

@@ -617,7 +617,12 @@ public class AddItemsFragment2 extends DialogFragment {
        String itemNo="";
        try {
             itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
-       }catch (Exception e){
+            if(itemNo.equals(""))
+            {
+                itemNo=mDbHandler.getItemNoForSerial(barcodeValue);
+            }
+       }catch (Exception e)
+       {
            itemNo="";
        }
 

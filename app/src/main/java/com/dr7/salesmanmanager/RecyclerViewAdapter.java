@@ -128,7 +128,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     LinearLayout mainLinear;
     ImageView acceptDiscount, rejectDiscount;
     public static TextView serialValue;
-    int discountPerVal=0;
+    int discountPerVal=0,showSolidQty=0;
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
@@ -144,7 +144,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         localItemNumber = new ArrayList<>();
 //        this.listBitmap=listItemImage;
 
-        Log.e("settingPriceCus", "" + settingPriceCus);
     }
 
     @Override
@@ -215,8 +214,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.price.setText(convertToEnglish(threeDForm.format(items.get(holder.getAdapterPosition()).getPrice())) + "\t\tJD");
 
-//       *******************************//////////////////////*
-        holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
+//       *******************************//////////////////////
+        if(showSolidQty==1)
+        {
+            holder.tax.setText("" + MHandler.getSolidQtyForItem(items.get(holder.getAdapterPosition()).getItemNo()));
+            holder.textViewTax.setText(context.getResources().getString(R.string.solidQty));
+        }
+        else {
+            holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
+            holder.textViewTax.setText(context.getResources().getString(R.string.tax));
+        }
+
+
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
         holder.posprice.setText(items.get(holder.getAdapterPosition()).getPosPrice() + "");
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +255,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                        dialog.setCancelable(false);
                                                        itemNoSelected=items.get(holder.getAdapterPosition()).getItemNo();
-                                                       Log.e("itemNoSelected",""+itemNoSelected);
 
                                                        try {
 
@@ -975,7 +983,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                        AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                        List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                        Offers appliedOffer = null;
-                                                                                                       Log.e("offer",""+offer.size());
+//                                                                                                       Log.e("offer",""+offer.size());
 //                                                            Log.e("offer",""+offer.size()+"\t"+offer.get(0).getPromotionType());
 
                                                                                                        if (offer.size() != 0) {
@@ -1286,15 +1294,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
 
-
-            if(MHandler.getAllSettings().get(0).getApproveAdmin()==0)
-            {
-                offers = MHandler.getAllOffers();
-                Log.e("checkOffers",""+offers.size());
-            }
-            else {
-                offers = MHandler.getAllOffersFromCustomerPrices();
-            }
+            offers = MHandler.getAllOffers();
+//            if(MHandler.getAllSettings().get(0).getApproveAdmin()==0)
+//            {
+//
+////                Log.e("checkOffers",""+offers.size());
+//            }
+//            else {
+//                offers = MHandler.getAllOffersFromCustomerPrices();
+//            }
 
 
 
@@ -1318,7 +1326,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Offers getAppliedOffer(String itemNo, String qty, int flag) {
 
-        Log.e("offer",""+itemNo+"\t"+qty);
+//        Log.e("offer",""+itemNo+"\t"+qty);
         double qtyy = Double.parseDouble(qty);
         List<Offers> offer = checkOffers(itemNo);
 
@@ -1416,7 +1424,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         LinearLayout linearLayout;
         CardView cardView;
         TableRow row_qty;
-        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice;
+        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice,textViewTax;
         ImageView imagespecial;
 
 
@@ -1436,6 +1444,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             row_qty = itemView.findViewById(R.id.row_qty);
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");
+            textViewTax= itemView.findViewById(R.id.textTitleTax);
+            showSolidQty=MHandler.getAllSettings().get(0).getShow_quantity_sold();
         }
     }
 

@@ -43,6 +43,7 @@ import android.os.Message;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v4.print.PrintHelper;
 //import android.support.v7.widget.RecyclerView;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -55,6 +56,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -204,7 +206,7 @@ public class SalesInvoice extends Fragment {
     public List<ItemsQtyOffer> itemsQtyOfferList;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou, unposted_payment, unposted_voucher;
     public ListView itemsListView;
-    public static List<Item> items;
+    public static ArrayList<Item> items;
     public ItemsListAdapter itemsListAdapter;
     private ImageView custInfoImgButton, SaveData;
     private CircleImageView addItemImgButton2, refreshData, rePrintimage;
@@ -337,6 +339,7 @@ public class SalesInvoice extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         listSerialTotal=new ArrayList<>();
         listSerialTotal.clear();
         try {
@@ -373,90 +376,8 @@ public class SalesInvoice extends Fragment {
             }
         });
         //**********************************************************
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+        inflateBoomMenu(view );
 
-
-        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
-
-        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
-
-
-
-        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
-//            bmb.addBuilder(new SimpleCircleButton.Builder()
-//                    .normalImageRes(listImageIcone[i]));
-            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
-                    .normalImageRes(listImageIcone[i])
-                    .textSize(10)
-                    .normalText(textListButtons[i])
-                    .textPadding(new Rect(5, 15, 5, 0))
-                    .listener(new OnBMClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.M)
-                        @Override
-                        public void onBoomButtonClick(int index) {
-                            // When the boom-button corresponding this builder is clicked.
-                            switch (index)
-                            {
-                                case 0:
-                                    clearAllData();
-                                    break;
-                                case 1:
-                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
-                                    obj.startParsing();
-                                    break;
-                                case 2:
-                                    Intent intent = new Intent(getContext(), AccountStatment.class);
-                                    getContext().startActivity(intent);
-
-
-                                    break;
-                                case 3:
-
-
-                                    try {
-                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
-                                        if (voucherNo != 0 && voucherNo != -1) {
-                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
-                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
-                                            printLastVoucher(voucherNo, voucherForPrint);
-                                        } else {
-                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
-
-                                        }
-
-                                    } catch (Exception e) {
-                                        Log.e("ExceptionReprint", "" + e.getMessage());
-                                        voucherNo = 0;
-                                    }
-                                    break;
-                                case 4:
-                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
-
-                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
-                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
-                                            if (payMethod == 0) {
-                                                getDataForDiscountTotal();
-                                                salesInvoiceInterfaceListener.displayDiscountFragment();
-                                            } else {
-                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            getDataForDiscountTotal();
-
-                                            salesInvoiceInterfaceListener.displayDiscountFragment();
-                                        }
-                                    }
-                                    break;
-
-                            }
-                        }
-                    });
-            bmb.addBuilder(builder);
-
-
-        }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         getTimeAndDate();
 
@@ -887,6 +808,108 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         return view;
+    }
+//          if(savedInstanceState!=null){
+//
+//        items=(ArrayList)savedInstanceState.getSerializable("arrayItems");
+//        itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
+//        itemsListView.setAdapter(itemsListAdapter);
+//        Log.e("items",""+items.size());
+//    }
+//        else {
+//        items = new ArrayList<>();
+//    }
+
+    private void inflateBoomMenu(View view) {
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+
+
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
+
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+//            bmb.addBuilder(new SimpleCircleButton.Builder()
+//                    .normalImageRes(listImageIcone[i]));
+            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+                    .textSize(13)
+                    .normalText(textListButtons[i])
+                    .textPadding(new Rect(5, 5, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    clearAllData();
+                                    break;
+                                case 1:
+                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+                                    obj.startParsing();
+                                    break;
+                                case 2:
+                                    Intent intent = new Intent(getContext(), AccountStatment.class);
+                                    getContext().startActivity(intent);
+
+
+                                    break;
+                                case 3:
+
+
+                                    try {
+                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                                        if (voucherNo != 0 && voucherNo != -1) {
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
+                                            printLastVoucher(voucherNo, voucherForPrint);
+                                        } else {
+                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e("ExceptionReprint", "" + e.getMessage());
+                                        voucherNo = 0;
+                                    }
+                                    break;
+                                case 4:
+                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
+
+                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                                            if (payMethod == 0) {
+                                                getDataForDiscountTotal();
+                                                salesInvoiceInterfaceListener.displayDiscountFragment();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            getDataForDiscountTotal();
+
+                                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                                        }
+                                    }
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+
+
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("arrayItems",  items);
     }
 
     private void getTimeAndDate() {

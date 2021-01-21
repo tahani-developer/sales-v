@@ -186,7 +186,11 @@ public class CustomerCheckInFragment extends DialogFragment {
         Customer_Account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customerCheckInListener.displayCustomerListShow();
+                try {
+                    customerCheckInListener.displayCustomerListShow();
+                }
+                catch (Exception e){}
+
             }
         });
         customernametest = CustomerListShow.Customer_Name.toString();
@@ -338,6 +342,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
         return view;
     }
+
     private void startVoiceInput(int flag) {
         Log.e("startVoiceInput",""+flag);
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);

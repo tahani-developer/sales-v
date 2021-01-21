@@ -41,6 +41,18 @@ android:padding="5dp"
                     android:gravity="center"
                     android:background="@color/layer7"
                     android:orientation="vertical">
+                    <TextView
+
+                        android:layout_width="match_parent"
+                        android:visibility="invisible"
+
+                        android:layout_height="match_parent"
+                        android:layout_weight="9"
+                        android:text="@string/save"
+                        android:gravity="top|center"
+                        android:textColor="@color/colorblue1"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
                 <RelativeLayout
 
                     android:layout_width="match_parent"
@@ -48,7 +60,7 @@ android:padding="5dp"
 
                     android:layout_gravity="center"
                     android:layout_marginRight="3dp"
-                    android:layout_weight="7"
+                    android:layout_weight="7.9"
                     android:gravity="center"
 
                     >
@@ -81,38 +93,39 @@ android:padding="5dp"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
+
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/save_floatingAction"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="6.5"
+                        android:layout_weight="2"
                         android:layout_gravity="center"
 
                         android:layout_margin="2dp"
                         app:borderWidth="0dp"
-
-
+                        android:scaleType="center"
                         android:background="@color/white"
                         app:backgroundTint="@color/white"
                         android:outlineSpotShadowColor="@color/colorblue1"
                         android:outlineAmbientShadowColor="@color/colorblue1"
-
+                        app:fabCustomSize="65dp"
                         android:backgroundTint="@color/white"
                         android:src="@drawable/ic_done_black_24dp"
+                        app:maxImageSize ="46dp"
 
                         android:visibility="visible"
-                        app:fabSize="auto" />
+                        app:fabSize="normal" />
                     <TextView
 
                         android:layout_width="match_parent"
-                        android:visibility="gone"
+                        android:visibility="visible"
 
                         android:layout_height="match_parent"
-                        android:layout_weight="8"
+                        android:layout_weight="10"
                         android:text="@string/save"
                         android:gravity="top|center"
                         android:textColor="@color/colorblue1"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -574,7 +587,7 @@ android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <TextView
 
@@ -602,7 +615,7 @@ android:padding="5dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/app_price"
-                    android:gravity="center"
+
 
                     android:textColor="@color/white"
                     android:textSize="14sp"
@@ -618,7 +631,7 @@ android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -630,14 +643,14 @@ android:padding="5dp"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+
 
                     android:text="@string/app_amount"
                     android:textColor="@color/white"

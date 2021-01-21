@@ -456,7 +456,7 @@
     <string name="debit">دائن</string>
     <string name="credit">مدين</string>
     <string name="balance">الرصيد</string>
-    <string name="request">request</string>
+    <string name="request">خصم</string>
     <string name="YouHaveItemDiscount">لايتطلب موافقة الادمن</string>
     <string name="makeRequest">طلب تجاوز سقف الذمم</string>
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
@@ -467,5 +467,7 @@
     <string name="process">process</string>
     <string name="userNotOwnwerDevice">حساب المستخدم ليس لهذا الجهاز </string>
     <string name="enterCustomerName">أدخل اسم العميل</string>
+    <string name="showSolidQty">اظهار الكميات المباعة</string>
+    <string name="solidQty">الكمية المباعة</string>
 
 </resources>

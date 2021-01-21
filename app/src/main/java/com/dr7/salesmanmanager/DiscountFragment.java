@@ -269,10 +269,10 @@ public class DiscountFragment extends DialogFragment {
 
 
     private void addDiscount() {
-//        Boolean check = checkDiscount();
-//        if (!check) {
-//            Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
-//        } else {
+        Boolean check = checkDiscount();
+        if (!check) {
+            Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
+        } else {
 
             try {
                 Log.e("okButton","addDiscount");
@@ -308,7 +308,7 @@ public class DiscountFragment extends DialogFragment {
 
             DiscountFragment.this.dismiss();
 
-//        }
+        }
     }
 
     private void showMessage(int flag) {
