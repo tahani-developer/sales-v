@@ -316,7 +316,31 @@
                         app:autoSizeStepGranularity="1sp"
                         app:autoSizeTextType="uniform" />
                 </TableRow>
+                <TableRow
+                    android:id="@+id/table_solidQty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/solidQty"
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="12sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewsolidQty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="12sp"
+                        />
+                </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="0dp"

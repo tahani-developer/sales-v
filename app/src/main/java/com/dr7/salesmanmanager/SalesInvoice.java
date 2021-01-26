@@ -1978,6 +1978,7 @@ public class SalesInvoice extends Fragment {
                     try {
                         okButton.setEnabled(false);
                         noteEditText.setEnabled(false);
+                        requestDiscount.setEnabled(false);
                         noteRequestLimit = noteEditText.getText().toString();
                         Log.e("getDataForDiscountTotal", "" + max_cridit + "\t" + voucherValueText.getText().toString() + "\t" + noteRequestLimit);
                         getDataForDiscountTotal(max_cridit + "", voucherValueText.getText().toString(), noteRequestLimit);
@@ -2005,6 +2006,7 @@ public class SalesInvoice extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog_request.dismiss();
                 AddVoucher();
                 clearLayoutData(0);
 

@@ -370,7 +370,7 @@ public class requestAdmin {
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost();
-                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php"));
+                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php"));
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "6"));

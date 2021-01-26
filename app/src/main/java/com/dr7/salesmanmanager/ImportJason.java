@@ -168,6 +168,11 @@ public class ImportJason extends AppCompatActivity {
 
     }
 
+    public void getPriceFromAdmin() {
+        Log.e("getPriceFromAdmin","getPriceFromAdmin");
+      new  JSONTask_getPciceFromAdmin().execute();
+    }
+
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
 
         @Override
@@ -1564,6 +1569,119 @@ public class ImportJason extends AppCompatActivity {
 //
                 } else
                 {if(s.contains("UPDATE_SALES_MAN_FAIL"))
+
+                    pdValidation.dismissWithAnimation();
+                }
+            }else pdValidation.dismissWithAnimation();
+        }
+
+    }
+    private class JSONTask_getPciceFromAdmin extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+
+        //public JSONTask_AccountStatment(String customerId) {
+//            this.custId = customerId;
+//        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+                nameValuePairs.add(new BasicNameValuePair("_ID", "21"));
+
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("getPciceFromAdmin ", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            if (s != null) {
+                Log.e("getPciceFromAdmin ", "JsonResponse\t" + s.toString());
+                if (!s.contains("notupDate")) {
+                    pdValidation.dismissWithAnimation();
+                   startParsing();
+//
+                } else
+                {
 
                     pdValidation.dismissWithAnimation();
                 }

@@ -40,6 +40,15 @@ public class Settings {
     private int  approveAdmin;
     private  int saveOnly;
     private  int show_quantity_sold;
+    private  int readOfferFromAdmin;
+
+    public int getReadOfferFromAdmin() {
+        return readOfferFromAdmin;
+    }
+
+    public void setReadOfferFromAdmin(int readOfferFromAdmin) {
+        this.readOfferFromAdmin = readOfferFromAdmin;
+    }
 
     public int getShow_quantity_sold() {
         return show_quantity_sold;

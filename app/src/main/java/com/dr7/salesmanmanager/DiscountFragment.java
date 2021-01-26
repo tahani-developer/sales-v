@@ -99,6 +99,8 @@ public class DiscountFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_discount, container, false);
 
         initView( view);
+        discountPerc=0;
+        discountValue=0;
 
         checkState.addTextChangedListener(new TextWatcher() {
             @Override
@@ -282,14 +284,15 @@ public class DiscountFragment extends DialogFragment {
                     discType = 0;
 
 
-                if (discType == 1) {
+                if (discType == 1) {// percent value
                     discountPerc = Double.parseDouble(discValueEditText.getText().toString().trim());
                     discountValue = invoiceTotal * discountPerc * 0.01;
 
                 } else {
                     Log.e("addDiscount","discType="+discValueEditText.getText().toString().trim());
                     discountValue = Double.parseDouble(discValueEditText.getText().toString().trim());
-                    discountPerc = invoiceTotal * discountValue;
+                   // discountPerc = invoiceTotal * discountValue;
+                    discountPerc=0;
 
                 }
                 Log.e("addDiscount","discountPerc="+discountPerc+"\t"+discountPerc);

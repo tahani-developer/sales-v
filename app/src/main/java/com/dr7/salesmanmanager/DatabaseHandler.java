@@ -61,7 +61,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 125;
+    private static final int DATABASE_VERSION = 126;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -336,6 +336,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String APPROVE_ADMIN="APPROVE_ADMIN";
     private static final String SAVE_ONLY="SAVE_ONLY";
     private static final String SHOW_QUANTITY_SOLD="SHOW_QUANTITY_SOLD";
+    private static final String READ_OFFER_FROM_ADMIN="READ_OFFER_FROM_ADMIN";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -805,7 +806,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 + APPROVE_ADMIN + " INTEGER,"
                 + SAVE_ONLY +" INTEGER,"
-                +SHOW_QUANTITY_SOLD+" INTEGER"
+                +SHOW_QUANTITY_SOLD+" INTEGER,"
+                +READ_OFFER_FROM_ADMIN+" INTEGER"
 
 
         + ")";
@@ -1110,6 +1112,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD SHOW_QUANTITY_SOLD  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD READ_OFFER_FROM_ADMIN  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -2098,7 +2107,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
-                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty) {
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2141,6 +2150,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SAVE_ONLY,saveOnly);
         Log.e("showSolidQty",""+showSolidQty);
         values.put(SHOW_QUANTITY_SOLD,showSolidQty);
+        values.put(READ_OFFER_FROM_ADMIN,offerFromAdmin);
+
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -2493,6 +2504,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setApproveAdmin((cursor.getInt(35)));
                 setting.setSaveOnly((cursor.getInt(36)));
                 setting.setShow_quantity_sold((cursor.getInt(37)));
+                setting.setReadOfferFromAdmin((cursor.getInt(38)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());
@@ -5029,12 +5041,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 if(!cursor.getString(3).equals("0"))
                 {
                     double otherDis=Double.parseDouble(offer.getOtherDiscount());
-                    Log.e("otherDis",""+otherDis);
+                    Log.e("otherDis1",""+otherDis);
                    offer.setBonusQty(offer.getBonusQty()+otherDis);
                 }
-
+                Log.e("otherDis2",""+offer.getBonusQty());
                 offer.setItemNo(cursor.getString(4));
-
 
 
 

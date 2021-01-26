@@ -217,14 +217,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //       *******************************//////////////////////
         if(showSolidQty==1)
         {
-            holder.tax.setText("" + MHandler.getSolidQtyForItem(items.get(holder.getAdapterPosition()).getItemNo()));
-            holder.textViewTax.setText(context.getResources().getString(R.string.solidQty));
+            holder.table_solidQty.setVisibility(View.VISIBLE);
+            holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(items.get(holder.getAdapterPosition()).getItemNo()));
+
+
         }
         else {
-            holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
-            holder.textViewTax.setText(context.getResources().getString(R.string.tax));
+            holder.table_solidQty.setVisibility(View.GONE);
         }
-
+        holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
 
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
         holder.posprice.setText(items.get(holder.getAdapterPosition()).getPosPrice() + "");
@@ -926,7 +927,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            @SuppressLint("ResourceAsColor")
                                                            @Override
                                                            public void onClick(View v) {
-                                                               Log.e("addToList",""+serialListitems.size());
                                                                String qtyText = "", discountText = "", bunosText = "";
                                                                int countInvalidSerial = 0;
                                                                if (serialListitems.size() != 0) {
@@ -1091,6 +1091,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    } else {
                                                                                                                        appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
                                                                                                                        if (appliedOffer != null) {
+                                                                                                                           Log.e("appliedOffer","addItem"+appliedOffer.getBonusQty());
                                                                                                                            String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                                    holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
@@ -1295,14 +1296,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             date = convertToEnglish(date);
 
             offers = MHandler.getAllOffers();
-//            if(MHandler.getAllSettings().get(0).getApproveAdmin()==0)
-//            {
-//
-////                Log.e("checkOffers",""+offers.size());
-//            }
-//            else {
-//                offers = MHandler.getAllOffersFromCustomerPrices();
-//            }
+            if(MHandler.getAllSettings().get(0).getReadOfferFromAdmin()==0)
+            {
+                offers = MHandler.getAllOffers();
+                Log.e("checkOffers1",""+offers.size());
+            }
+            else {
+                offers = MHandler.getAllOffersFromCustomerPrices();
+                Log.e("checkOffers2",""+offers.size());
+            }
 
 
 
@@ -1315,6 +1317,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     offer = offers.get(i);
                     Offers.add(offer);
+                    Log.e("Offers",""+Offers.size()+"\t"+Offers.get(0).getBonusQty());
+
                 }
             }
 
@@ -1326,7 +1330,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Offers getAppliedOffer(String itemNo, String qty, int flag) {
 
-//        Log.e("offer",""+itemNo+"\t"+qty);
+        Log.e("getAppliedOffer",""+itemNo+"\t"+qty);
         double qtyy = Double.parseDouble(qty);
         List<Offers> offer = checkOffers(itemNo);
 
@@ -1344,6 +1348,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         for (int i = 0; i < offer.size(); i++) {
             if (iq == offer.get(i).getItemQty())
+                Log.e("getAppliedOffer","return"+offer.get(i));
                 return offer.get(i);
         }
 
@@ -1423,8 +1428,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         LinearLayout linearLayout;
         CardView cardView;
-        TableRow row_qty;
-        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice,textViewTax;
+        TableRow row_qty,table_solidQty;
+        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice,textViewTax,textViewsolidQty;
         ImageView imagespecial;
 
 
@@ -1442,6 +1447,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             barcode = itemView.findViewById(R.id.textViewBarcode);
             posprice = itemView.findViewById(R.id.textViewPosPrice);
             row_qty = itemView.findViewById(R.id.row_qty);
+            table_solidQty= itemView.findViewById(R.id.table_solidQty);
+            textViewsolidQty= itemView.findViewById(R.id.textViewsolidQty);
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");
             textViewTax= itemView.findViewById(R.id.textTitleTax);

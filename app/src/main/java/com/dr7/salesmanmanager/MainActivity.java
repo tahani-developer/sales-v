@@ -29,7 +29,6 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.provider.Settings;
 //import android.support.annotation.Nullable;
 //import android.support.annotation.RequiresApi;
 //import android.support.design.widget.FloatingActionButton;
@@ -84,6 +83,7 @@ import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
@@ -145,6 +145,9 @@ public class MainActivity extends AppCompatActivity
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final String TAG = "MainActivity";
     public static int menuItemState;
+    String typeImport="";
+    int  approveAdmin=-1,workOnLine=-1;
+    public  static  EditText passwordFromAdmin;
     static public TextView mainTextView,timeTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
@@ -542,8 +545,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            openPasswordDialog(1);
-//            openPasswordDialog(10);
+//            openPasswordDialog(1);
+            openPasswordDialog(10);
 
         } else if (id == R.id.action_print_voucher) {
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
@@ -1029,8 +1032,17 @@ public class MainActivity extends AppCompatActivity
                                     {
                                         if(isPosted==true)
                                         {
-                                            ImportJason obj = new ImportJason(MainActivity.this);
-                                            obj.startParsing();
+                                            Log.e("getAllSettings",""+mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin());
+                                            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+                                            {
+                                                ImportJason obj = new ImportJason(MainActivity.this);
+                                                obj.getPriceFromAdmin();
+                                            }
+                                            else {
+                                                ImportJason obj = new ImportJason(MainActivity.this);
+                                                obj.startParsing();
+                                            }
+
                                         }
                                         else{
                                             Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
@@ -1118,6 +1130,39 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+//
+//      if(getTypeImport().equals("1"))
+//    {
+////                                               ImportJason obj = new ImportJason(MainActivity.this);
+////                                               obj.setFlagImport();
+//    }
+//                                           else {
+//        ImportJason obj = new ImportJason(MainActivity.this);
+//        obj.startParsing();
+//    }
+
+    private String getTypeImport() {
+         typeImport="0";
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.itemImportfromadmin));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                typeImport="1";
+            }
+        }).setCancelButton(getResources().getString(R.string.no), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                typeImport="2";
+            }
+        })
+
+                .show();
+        return  typeImport;
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -1416,6 +1461,28 @@ public class MainActivity extends AppCompatActivity
 
                 CustomerCheckInFragment obj = new CustomerCheckInFragment();
                 obj.editCheckOutTimeAndDate();
+                List<Settings> settings = mDbHandler.getAllSettings();
+                if (settings.size() != 0) {
+                    workOnLine= settings.get(0).getWorkOnline();
+                    Log.e("workOnLine",""+workOnLine);
+                }
+                if(workOnLine==1) {
+                    ExportJason objJson = null;
+                    try {
+                        objJson = new ExportJason(MainActivity.this);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        objJson.startExportDatabase();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+
 
                // openVisitRateDialog();  stopped just for new customer
             }
@@ -1585,7 +1652,8 @@ public class MainActivity extends AppCompatActivity
         lp.gravity = Gravity.CENTER;
         lp.windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setAttributes(lp);
-
+        passwordFromAdmin=dialog.findViewById(R.id.passwordFromAdmin);
+        getPassword();
         LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
         try{
             if(languagelocalApp.equals("ar"))
@@ -1605,6 +1673,7 @@ public class MainActivity extends AppCompatActivity
             mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         final EditText password = (EditText) dialog.findViewById(R.id.editText1);
+
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
         final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
@@ -1625,12 +1694,16 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if(flag == 10)
                 {
-                   if( password.getText().toString().equals("2021m$003"))
+//                   if( password.getText().toString().equals("2021m$003"))
+                       if( password.getText().toString().trim().equals(passwordFromAdmin.getText().toString()))
                    {
                        dialog.dismiss();
                        openSetting alert = new openSetting();
                        alert.showDialog(MainActivity.this, "Error de conexión al servidor");
                    }
+                       else {
+                           password.setError(getResources().getString(R.string.invalidPassword));
+                       }
 
                 }
                 else {
@@ -1704,7 +1777,16 @@ public class MainActivity extends AppCompatActivity
         });
         dialog.show();
     }
+    private void getPassword() {
+        ExportJason exportData = null;
+        try {
+            exportData = new ExportJason(MainActivity.this);
+            exportData.getPassowrdSetting();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+    }
     public class openSetting {
         boolean validSerial = false, validReturn = false, validOrder = false;
         EditText linkEditText, numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit, salesmanNmae;
@@ -1715,7 +1797,7 @@ public class MainActivity extends AppCompatActivity
         CheckBox checkBox_canChangePrice, readDiscount, workOnline, paymetod_check, bonusNotAlowed, noOfferForCredit, customerAuthor,
                 passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
                 showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
-                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox;
+                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox;
         Dialog dialog;
         LinearLayout linearSetting;
         TextView editIp;
@@ -1796,6 +1878,7 @@ public class MainActivity extends AppCompatActivity
             approveAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.approveAdmin_checkbox);
             asaveOnly_checkbox= (CheckBox) dialog.findViewById(R.id.asaveOnly_checkbox);
             showSolidQty_checkbox= (CheckBox) dialog.findViewById(R.id.showSolidQty_checkbox);
+            offerFromAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.offerFromAdmin_checkbox);
             FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
             okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2062,6 +2145,13 @@ public class MainActivity extends AppCompatActivity
                 else {
                     showSolidQty_checkbox.setChecked(false);
                 }
+                if (mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin() == 1) {
+                    offerFromAdmin_checkbox.setChecked(true);
+                }
+                else {
+                    offerFromAdmin_checkbox.setChecked(false);
+                }
+
 
 
             }else {
@@ -2239,18 +2329,20 @@ public class MainActivity extends AppCompatActivity
                         int approveAdm=approveAdmin_checkbox.isChecked()?1:0;
                         int saveOnly=asaveOnly_checkbox.isChecked()?1:0;
                         int showsolidQty= showSolidQty_checkbox.isChecked()?1:0;
+                        int offerAdmin= offerFromAdmin_checkbox.isChecked()?1:0;
+
 
                         Log.e("showsolidQty",""+showsolidQty);
 
 
                         String salesmanname=salesmanNmae.getText().toString();
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
-                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
-                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
-                        /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
-                        /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty);
+                        mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
+                        mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
+                        mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
+                        /*cash*/mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
+                        /*credit card*/mDbHandler.addSetting(link, taxKind, 2, paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin);
 
 
                         finish();
