@@ -74,6 +74,8 @@ import java.util.Timer;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Activities.currentKey;
+import static com.dr7.salesmanmanager.Activities.keyCreditLimit;
 import static com.dr7.salesmanmanager.DiscountFragment.checkState;
 import static com.dr7.salesmanmanager.Activities.currentKeyTotalDiscount;
 
@@ -81,7 +83,8 @@ import static com.dr7.salesmanmanager.DiscountFragment.noteRequest;
 import static com.dr7.salesmanmanager.DiscountFragment.stateZero;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.addToList;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.checkState_recycler;
-import static com.dr7.salesmanmanager.RecyclerViewAdapter.currentKey;
+
+import static com.dr7.salesmanmanager.SalesInvoice.checkState_LimitCredit;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 
 public class requestAdmin {
@@ -137,14 +140,22 @@ public class requestAdmin {
         requestType=discountRequest.getRequest_type();
         Log.e("RequestAdmin", "" + discountRequest+requestType);
         discountRequest.setKey_validation(getRandomNumberString() + "");
-        currentKey=discountRequest.getKey_validation();
+
 
         Log.e("RequestAdmin", "currentKey" + currentKey);
 
-        if(discountRequest.getRequest_type().equals("1"))
+        // for total Discount 1 ===> percent     10===> value
+        if(discountRequest.getRequest_type().equals("1")||discountRequest.getRequest_type().equals("10"))
         {
             discountRequest.setNote(noteRequest);
             currentKeyTotalDiscount=discountRequest.getKey_validation();
+        }
+        else if(discountRequest.getRequest_type().equals("100"))
+        {
+            keyCreditLimit=discountRequest.getKey_validation();
+        }
+        else  if(discountRequest.getRequest_type().equals("0")){
+            currentKey=discountRequest.getKey_validation();
         }
 
 
@@ -261,13 +272,16 @@ public class requestAdmin {
             super.onPostExecute(s);
             if (s != null) {
                 if (s.contains("SUCCESS")) {
-                    if(requestType.equals("1"))
+                    if(requestType.equals("1")||requestType.equals("10"))
                     {
                         checkState.setText("0");
                         stateZero=true;
                     }
                     else {
+                        if(requestType.equals("0"))
                         checkState_recycler.setText("0");
+                        else   if(requestType.equals("100"))
+                            checkState_LimitCredit.setText("0");
                     }
 
 
@@ -289,22 +303,37 @@ public class requestAdmin {
 
 
     public void checkRequestState() {
-        requestType=discountRequest.getRequest_type();
-        Log.e("checkStatuseRequest","firstJSONTask_checkStateRequest");
-        if(requestType.equals("1"))
+        if( discountRequest!=null)
         {
-            if(checkState.getText().toString().equals("0"))
+            requestType=discountRequest.getRequest_type();
+            Log.e("checkStatuseRequest","firstJSONTask_checkStateRequest");
+            if(requestType.equals("1")||requestType.equals("10"))
             {
-                new  JSONTask_checkStateRequest().execute();
+                if(checkState.getText().toString().equals("0"))
+                {
+                    new  JSONTask_checkStateRequest().execute();
+                }
             }
-        }
-        else {
-            if(checkState_recycler.getText().toString().equals("0"))
-            {
-                new  JSONTask_checkStateRequest().execute();
-            }
+            else {
+                if(requestType.equals("0"))
+                {
+                    if(checkState_recycler.getText().toString().equals("0"))
+                    {
+                        new  JSONTask_checkStateRequest().execute();
+                    }
+                }
+                else if(requestType.equals("100"))
+                {
+                    if(checkState_LimitCredit.getText().toString().equals("0")){
+                        new  JSONTask_checkStateRequest().execute();
+                    }
+                }
 
+
+
+            }
         }
+
 
 
 
@@ -341,7 +370,7 @@ public class requestAdmin {
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
                 HttpPost request = new HttpPost();
-                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php"));
+                request.setURI(new URI("http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php"));
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "6"));
@@ -419,50 +448,68 @@ public class requestAdmin {
                         notificationInfo = result.getJSONArray("STATUSE_REQUEST");
                         JSONObject infoDetail=null;
 
-                        Log.e("notificationInfo",""+notificationInfo.length());
+                        Log.e("key_validation","keyCreditLimit= "+keyCreditLimit+"\tcurrentKey="+currentKey+"\tcurrentKeyTotalDiscount="+currentKeyTotalDiscount);
                         for (int i = 0; i < notificationInfo.length(); i++) {
                              infoDetail = notificationInfo.getJSONObject(i);
-                                if(infoDetail.get("key_validation").toString().equals(currentKey))
+                            Log.e("infoDetail",""+infoDetail.get("key_validation").toString());
+
+                            if(infoDetail.get("key_validation").toString().equals(currentKey))// for item request
                             {
                                 if(infoDetail.get("status").toString().equals("1")){
                                     addToList.setEnabled(true);
+                                    discountRequest=null;
                                     stopTimer();
 
                                 }
                                 else if(infoDetail.get("status").toString().equals("2"))
-                                {
+                                { discountRequest=null;
                                     stopTimer();
                                    // addToList.setEnabled(false);
                                 }
-                                if(requestType.equals("1"))
-                                {
 
-                                    checkState.setText(infoDetail.get("status").toString());
-                                }
-                                else {
 
 
                                     checkState_recycler.setText(infoDetail.get("status").toString());
 
-                                }
+
                             }
-                                else if(infoDetail.get("key_validation").toString().equals(currentKeyTotalDiscount)){
+                                else
+                                    if(infoDetail.get("key_validation").toString().equals(currentKeyTotalDiscount)){// for all voucher Discount
                                     if(infoDetail.get("status").toString().equals("1")){
                                         addToList.setEnabled(true);
+                                        discountRequest=null;
                                         stopTimer();
 
                                     }
                                     else if(infoDetail.get("status").toString().equals("2"))
                                     {
+                                        discountRequest=null;
                                         stopTimer();
                                         // addToList.setEnabled(false);
                                     }
-                                    if(requestType.equals("1"))
-                                    {
 
                                         checkState.setText(infoDetail.get("status").toString());
-                                    }
+
                                 }
+                                else if(infoDetail.get("key_validation").toString().equals(keyCreditLimit)){// for accsed limit credit
+                                    Log.e("key_validation","==="+keyCreditLimit);
+                                    if(infoDetail.get("status").toString().equals("1")){
+                                        discountRequest=null;
+                                        stopTimer();
+
+                                    }
+                                    else if(infoDetail.get("status").toString().equals("2"))
+                                    {
+                                        discountRequest=null;
+                                        stopTimer();
+
+                                    }
+
+
+                                        checkState_LimitCredit.setText(infoDetail.get("status").toString());
+
+                                }
+
 
 
 

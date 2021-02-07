@@ -99,6 +99,8 @@ public class DiscountFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_discount, container, false);
 
         initView( view);
+        discountPerc=0;
+        discountValue=0;
 
         checkState.addTextChangedListener(new TextWatcher() {
             @Override
@@ -173,12 +175,24 @@ public class DiscountFragment extends DialogFragment {
                         Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
                     } else {
                         try {
+                            if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.percentRadioButton)
+                            {discType = 1;
+                                discountRequest.setRequest_type("1");
+                            }
+                            else
+                            {
+                                discType = 0;
+                                discountRequest.setRequest_type("10");
+
+                            }
+
+
                             okButton.setEnabled(false);
                             discValueEditText.setEnabled(false);
                             noteEditText.setEnabled(false);
                             valueRadioButton.setEnabled(false);
                             discPercent.setEnabled(false);
-                                    noteRequest=noteEditText.getText().toString();
+                            noteRequest=noteEditText.getText().toString();
                             discountRequest.setAmount_value(discValueEditText.getText().toString());
                             requestDiscount.setEnabled(false);
                             request.startParsing();
@@ -187,10 +201,6 @@ public class DiscountFragment extends DialogFragment {
                             Log.e("request",""+e.getMessage());
 
                         }
-
-
-
-//            DiscountFragment.this.dismiss();
 
                     }
 
@@ -261,10 +271,10 @@ public class DiscountFragment extends DialogFragment {
 
 
     private void addDiscount() {
-//        Boolean check = checkDiscount();
-//        if (!check) {
-//            Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
-//        } else {
+        Boolean check = checkDiscount();
+        if (!check) {
+            Toast.makeText(getActivity(), "Invalid Discount Value please Enter a valid Discount", Toast.LENGTH_LONG).show();
+        } else {
 
             try {
                 Log.e("okButton","addDiscount");
@@ -274,14 +284,15 @@ public class DiscountFragment extends DialogFragment {
                     discType = 0;
 
 
-                if (discType == 1) {
+                if (discType == 1) {// percent value
                     discountPerc = Double.parseDouble(discValueEditText.getText().toString().trim());
                     discountValue = invoiceTotal * discountPerc * 0.01;
 
                 } else {
                     Log.e("addDiscount","discType="+discValueEditText.getText().toString().trim());
                     discountValue = Double.parseDouble(discValueEditText.getText().toString().trim());
-                    discountPerc = invoiceTotal * discountValue;
+                   // discountPerc = invoiceTotal * discountValue;
+                    discountPerc=0;
 
                 }
                 Log.e("addDiscount","discountPerc="+discountPerc+"\t"+discountPerc);
@@ -300,7 +311,7 @@ public class DiscountFragment extends DialogFragment {
 
             DiscountFragment.this.dismiss();
 
-//        }
+        }
     }
 
     private void showMessage(int flag) {

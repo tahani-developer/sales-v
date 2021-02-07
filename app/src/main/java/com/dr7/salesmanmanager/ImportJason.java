@@ -3,6 +3,8 @@ package com.dr7.salesmanmanager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 //import android.support.design.widget.TabLayout;
 //import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,7 @@ import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
@@ -32,6 +36,7 @@ import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.google.gson.Gson;
 import com.sewoo.request.android.RequestHandler;
@@ -70,6 +75,8 @@ import javax.net.ssl.HttpsURLConnection;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
+import static com.dr7.salesmanmanager.Login.checkIpDevice;
+import static com.dr7.salesmanmanager.Login.previousIp;
 
 public class ImportJason extends AppCompatActivity {
 
@@ -77,10 +84,13 @@ public class ImportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
+    SweetAlertDialog pdValidation;
+    public  String curentIpDevice="";
 
     public static List<Customer> customerList = new ArrayList<>();
     public static List<ItemUnitDetails> itemUnitDetailsList = new ArrayList<>();
     public static List<ItemsMaster> itemsMasterList = new ArrayList<>();
+    public static List<ItemSwitch> itemsSwitchList = new ArrayList<>();
     public static List<PriceListD> priceListDpList = new ArrayList<>();
     public static List<PriceListM> priceListMpList = new ArrayList<>();
     public static List<SalesTeam> salesTeamList = new ArrayList<>();
@@ -94,6 +104,7 @@ public class ImportJason extends AppCompatActivity {
     public static List<ItemsQtyOffer> itemsQtyOfferList = new ArrayList<>();
     public static List<Account_Report> account_reportList = new ArrayList<>();
     public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
+    public static ArrayList<serialModel> itemSerialList=new ArrayList<>();
 
     boolean start = false;
     String ipAddress = "";
@@ -105,6 +116,9 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
+        }
+        else {
+            Toast.makeText(context, "Check Setting Ip", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,6 +155,22 @@ public class ImportJason extends AppCompatActivity {
 
     private void checkUnpostedCustomer() {
         new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+    }
+
+    public void getPreviousIpForSalesMen() {
+     new JSONTask_PreviousIp().execute();
+    }
+
+    public void addCurentIp(String currentIp) {
+        curentIpDevice=currentIp;
+        Log.e("addCurentIp","="+curentIpDevice);
+        new JSONTask_AddIpDevice().execute();
+
+    }
+
+    public void getPriceFromAdmin() {
+        Log.e("getPriceFromAdmin","getPriceFromAdmin");
+      new  JSONTask_getPciceFromAdmin().execute();
     }
 
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
@@ -429,6 +459,45 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+
+                try {
+                    JSONArray parentArrayItem_Serial_Details = parentObject.getJSONArray("ITEMS_SERIALs");
+                    itemSerialList.clear();
+                    for (int i = 0; i < parentArrayItem_Serial_Details.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Serial_Details.getJSONObject(i);
+
+                        serialModel item = new serialModel();
+                        item.setStoreNo(finalObject.getString("STORENO"));
+                        item.setItemNo(finalObject.getString("ITEMOCODE"));
+                        item.setSerialCode(finalObject.getString("SERIALCODE"));
+                        item.setQty(finalObject.getString("QTY"));
+
+                        itemSerialList.add(item);
+                    }
+                    Log.e("itemSerialList",""+itemSerialList.size());
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                try {
+                    JSONArray parentArrayItem_Switch = parentObject.getJSONArray("item_swich");
+                    itemsSwitchList.clear();
+                    for (int i = 0; i < parentArrayItem_Switch.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Switch.getJSONObject(i);
+
+                        ItemSwitch item = new ItemSwitch();
+                        item.setItem_NAMEA(finalObject.getString("ITEMNAMEA"));
+                        item.setItem_OCODE(finalObject.getString("ITEMOCODE"));
+                        item.setItem_NCODE(finalObject.getString("ITEMNCODE"));
+
+                        itemsSwitchList.add(item);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
+
+
+
                 try {
 //                    `ITEMPICSPATH`
                     JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
@@ -618,6 +687,23 @@ public class ImportJason extends AppCompatActivity {
                     price.setCustomerNumber(finalObject.getInt("CUSTOMER_NO"));
                     price.setPrice(finalObject.getDouble("PRICE"));
                     price.setDiscount(finalObject.getDouble("DISCOUNT"));
+
+                    try {
+                        price.setOther_Discount(finalObject.getString("OTHER_DISCOUNT"));
+                        price.setFromDate(finalObject.getString("FROM_DATE"));
+                        price.setToDate(finalObject.getString("TO_DATE"));
+                        price.setListNo(finalObject.getString("LIST_NO"));
+                        price.setListType(finalObject.getString("LIST_TYPE"));
+                    } catch (Exception e) {
+                        price.setOther_Discount("");
+                        price.setFromDate("");
+                        price.setToDate("");
+                        price.setListNo("");
+                        price.setListType("");
+                        Log.e("ImportData","Exception_customer_prices");
+
+                    }
+
                     customerPricesList.add(price);
 
                 }
@@ -810,6 +896,7 @@ public class ImportJason extends AppCompatActivity {
     private class SQLTask extends AsyncTask<String, Integer, String> {
         ProgressBar pb;
         Dialog dialog;
+        TextView title_progresspar;
 
         @Override
         protected void onPreExecute() {
@@ -823,6 +910,7 @@ public class ImportJason extends AppCompatActivity {
             window.setLayout(500, 250);
 
             pb = (ProgressBar) dialog.findViewById(R.id.progress);
+            title_progresspar= (TextView) dialog.findViewById(R.id.title_progresspar);
 
             dialog.show();
         }
@@ -853,6 +941,8 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllOffersQty();
             mHandler.deletItemsOfferQty();
             mHandler.deletAcountReport();
+            mHandler.deleteAllItemsSwitch();
+            mHandler.deleteAllItemsSerialMaster();
 
             if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
 
@@ -860,35 +950,50 @@ public class ImportJason extends AppCompatActivity {
                 mHandler.deleteAllSalesManItemsBalance();
                 mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList);
                 Log.e("In***" , " inaddSalesMan_Items_Balance");
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        // Stuff that updates the UI
+                        title_progresspar.setText("add_SalesMan_Items_Balance");
+
+                    }
+                });
+
             }
+            mHandler.add_SerialMasteItems(itemSerialList);
+            Log.e("In***" , " inadd_SerialMasteItems");
+            setText(title_progresspar,"add_Serial_Items");
 
 
-//            for (int i = 0; i < customerList.size(); i++) {
-                mHandler.addCustomer(customerList);
+            mHandler.addCustomer(customerList);
             Log.e("In***" , " inaddCustomer");
-//            }
+            setText(title_progresspar,"add_Customer");
 
-//            for (int i = 0; i < itemUnitDetailsList.size(); i++) {
-                mHandler.addItem_Unit_Details(itemUnitDetailsList);
+            mHandler.addItem_Unit_Details(itemUnitDetailsList);
             Log.e("In***" , " inaddItem_Unit_Details");
-//            }
+            setText(title_progresspar,"add_Item_Unit_Details");
 
-//            for (int i = 0; i < itemsMasterList.size(); i++) {
-                mHandler.addItemsMaster(itemsMasterList);
+            mHandler.addItemsMaster(itemsMasterList);
             Log.e("In***" , " inaddItemsMaster");
-//            }
+            setText(title_progresspar,"add_items_Master");
 
-//            for (int i = 0; i < priceListDpList.size(); i++) {
-                mHandler.addPrice_List_D(priceListDpList);
-//            }
+            mHandler.addItemSwitch(itemsSwitchList);
+            Log.e("In***" , " inaaddItemSwitch");
+                        setText(title_progresspar,"add_items_Switch");
 
-//            for (int i = 0; i < priceListMpList.size(); i++) {
+            mHandler.addPrice_List_D(priceListDpList);
+            setText(title_progresspar,"add_price_ListD");
+
                 mHandler.addPrice_List_M(priceListMpList);
             Log.e("In***" , " in");
-//            }
+            setText(title_progresspar,"add_price_ListM");
+
             for (int i = 0; i < salesTeamList.size(); i++) {
                 mHandler.addSales_Team(salesTeamList.get(i));
             }
+            setText(title_progresspar,"add_salesTeam");
             Log.e("In***" , " addSales_Teamin");
 
 
@@ -901,27 +1006,35 @@ public class ImportJason extends AppCompatActivity {
                 mHandler.addSalesmen(salesMenList.get(i));
             }
             Log.e("In***" , "inaddSalesmen");
+            setText(title_progresspar,"add_Salesmen");
 
-//            for (int i = 0; i < customerPricesList.size(); i++) {
-                mHandler.addCustomerPrice(customerPricesList);
-//            }
+            mHandler.addCustomerPrice(customerPricesList);
+            setText(title_progresspar,"add_customerPricesList");
+
 
             for (int i = 0; i < offersList.size(); i++) {
                 mHandler.addOffer(offersList.get(i));
             }
+            setText(title_progresspar,"add_offersList");
+
             for (int i = 0; i < qtyOffersList.size(); i++) {
                 mHandler.addQtyOffers(qtyOffersList.get(i));
             }
+            setText(title_progresspar,"add_qtyOffers");
+
 
             for (int i = 0; i < itemsQtyOfferList.size(); i++) {
                 mHandler.add_Items_Qty_Offer(itemsQtyOfferList.get(i));
             }
+            setText(title_progresspar,"add_itemsQtyOffer");
+
             for (int i = 0; i < account_reportList.size(); i++) {
                 mHandler.addAccount_report(account_reportList.get(i));
             }
             for (int i = 0; i < salesmanStationsList.size(); i++) {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }
+            setText(title_progresspar,"add_salesmanStation");
             Log.e("In***" , "addSalesmanStation_finish");
 
             return "Finish Store";
@@ -940,6 +1053,14 @@ public class ImportJason extends AppCompatActivity {
             super.onPostExecute(s);
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
             dialog.dismiss();
+        }
+        private void setText(final TextView text,final String value){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    text.setText(value);
+                }
+            });
         }
     }
 
@@ -1127,7 +1248,7 @@ public class ImportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("UPDATE_LOCATION_SALES_MAN", jsonObject.toString()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-                Log.e("tag_CustomerInfo", "jsonObject.toString()\t" + jsonObject.toString());
+              //  Log.e("tag_CustomerInfo", "jsonObject.toString()\t" + jsonObject.toString());
 
                 HttpResponse response = client.execute(request);
 
@@ -1197,6 +1318,376 @@ public class ImportJason extends AppCompatActivity {
 //                progressDialog.dismiss();
         }
     }
+    private class JSONTask_PreviousIp extends AsyncTask<String, String, String> {
 
+        private String custId = "";
+
+        //public JSONTask_AccountStatment(String customerId) {
+//            this.custId = customerId;
+//        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                Log.e("JSONTask_PreviousIp", "" + Login.salesMan);
+                nameValuePairs.add(new BasicNameValuePair("_ID", "10"));
+                nameValuePairs.add(new BasicNameValuePair("SalesManNo", Login.salesMan));
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_Customer", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            if (s != null) {
+                if (s.contains("IpAdressForSalesMan")) {
+
+                    try {
+                        result = new JSONObject(s);
+                        Account__Statment_Model requestDetail;
+
+
+                        JSONArray requestArray = null;
+                        listCustomerInfo = new ArrayList<>();
+
+                        requestArray = result.getJSONArray("IpAdressForSalesMan");
+
+                        JSONObject infoDetail = requestArray.getJSONObject(0);
+                        previousIp=infoDetail.get("IpAddressDevice").toString();
+                        Log.e("requestArray", "previousIp" +previousIp );
+                        if(previousIp.equals(""))
+                        {
+                            checkIpDevice.setText("2");// to add ip
+                        }
+                        else {
+                            checkIpDevice.setText(previousIp);
+                        }
+
+                        pdValidation.dismissWithAnimation();
+//                        getAccountList_text.setText("2");
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else
+                {
+                    if(s.contains("Not definded id"))
+                    {
+                        checkIpDevice.setText("-1");
+                    }
+                    Log.e("onPostExecute", "" + s.toString());
+
+                    pdValidation.dismissWithAnimation();
+                }
+            }else pdValidation.dismissWithAnimation();
+        }
+
+    }
+    private class JSONTask_AddIpDevice extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+
+        //public JSONTask_AccountStatment(String customerId) {
+//            this.custId = customerId;
+//        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                Log.e("JSONTask_PreviousIp", "" + curentIpDevice);
+                nameValuePairs.add(new BasicNameValuePair("_ID", "11"));
+                nameValuePairs.add(new BasicNameValuePair("SALESNO",Login.salesMan));
+                nameValuePairs.add(new BasicNameValuePair("IpDevice", curentIpDevice));
+
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_addIpDevice", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            if (s != null) {
+                if (s.contains("UPDATE_SALES_MAN_SUCCESS")) {
+                    checkIpDevice.setText("-1");
+
+                        pdValidation.dismissWithAnimation();
+//
+                } else
+                {if(s.contains("UPDATE_SALES_MAN_FAIL"))
+
+                    pdValidation.dismissWithAnimation();
+                }
+            }else pdValidation.dismissWithAnimation();
+        }
+
+    }
+    private class JSONTask_getPciceFromAdmin extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+
+        //public JSONTask_AccountStatment(String customerId) {
+//            this.custId = customerId;
+//        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+                nameValuePairs.add(new BasicNameValuePair("_ID", "21"));
+
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("getPciceFromAdmin ", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            if (s != null) {
+                Log.e("getPciceFromAdmin ", "JsonResponse\t" + s.toString());
+                if (!s.contains("notupDate")) {
+                    pdValidation.dismissWithAnimation();
+                   startParsing();
+//
+                } else
+                {
+
+                    pdValidation.dismissWithAnimation();
+                }
+            }else pdValidation.dismissWithAnimation();
+        }
+
+    }
     }
 

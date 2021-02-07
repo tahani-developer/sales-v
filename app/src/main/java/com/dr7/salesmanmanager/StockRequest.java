@@ -25,6 +25,7 @@ import androidx.print.PrintHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -99,6 +100,7 @@ public class StockRequest extends Fragment {
 //        new LocaleAppUtils().changeLayot(MainActivity.this);
         final View view = inflater.inflate(R.layout.fragment_stock_request, container, false);
         mDbHandler = new DatabaseHandler(getActivity());
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         itemCountTable=mDbHandler.getCountItemsMaster();
         mainLinear=view.findViewById(R.id.mainLinear);
         try {
@@ -221,7 +223,14 @@ public class StockRequest extends Fragment {
                                 mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
                                         items.get(i).getItemName(), items.get(i).getQty(), voucherDate));
                             }
-                            printStock();
+                            try {
+                                printStock();
+                            }
+                            catch (Exception e)
+                            {
+                                clearLayoutData();
+                            }
+
                         }
 
                     }
@@ -360,10 +369,12 @@ public class StockRequest extends Fragment {
 
                     }
                 } else {
+                    clearLayoutData();
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                     Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
+                clearLayoutData();
                 Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
             }

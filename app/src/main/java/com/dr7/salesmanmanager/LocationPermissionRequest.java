@@ -132,7 +132,7 @@ int  approveAdmin=-1;
                 ActivityCompat.requestPermissions((Activity) context,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
-                Log.e("Location", "explanation need");
+               // Log.e("Location", "explanation need");
 
                 runOnUiThread(new Runnable() {
                     public void run() {

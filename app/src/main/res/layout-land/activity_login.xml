@@ -117,4 +117,16 @@
         android:textColor="@color/white"
         android:text="@string/version"
         android:textSize="20sp" />
+    <TextView
+        android:id="@+id/checkIpDevice"
+        android:layout_width="96dp"
+        android:layout_height="91dp"
+        android:visibility="gone"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:padding="5dp"
+
+
+        />
 </RelativeLayout>

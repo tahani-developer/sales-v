@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -50,6 +51,8 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
+
 public class ExportJason extends AppCompatActivity {
 
     public Context context;
@@ -57,6 +60,7 @@ public class ExportJason extends AppCompatActivity {
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
             jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial;
     DatabaseHandler mHandler;
+    public static  SweetAlertDialog pd,pdValidation;
 
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
@@ -123,7 +127,7 @@ public class ExportJason extends AppCompatActivity {
         jsonArrayTransactions = new JSONArray();
         for (int i = 0; i < transactions.size(); i++)
             if (transactions.get(i).getIsPosted() == 0) {
-                transactions.get(i).setIsPosted(1);
+//                transactions.get(i).setIsPosted(1);
                 jsonArrayTransactions.put(transactions.get(i).getJSONObject());
             }
         //******************************************
@@ -254,21 +258,19 @@ public class ExportJason extends AppCompatActivity {
 
                 nameValuePairs.add(new BasicNameValuePair("Payments", jsonArrayPayments.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("Payments_Checks", jsonArrayPaymentsPaper.toString().trim()));
-                nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
                 nameValuePairs.add(new BasicNameValuePair("TABLE_TRANSACTIONS", jsonArrayTransactions.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("Added_Customers", jsonArrayAddedCustomer.toString().trim()));
+
                 nameValuePairs.add(new BasicNameValuePair("LOAD_VAN", jsonArrayBalance.toString().trim()));
-//                nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", ""));
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
 
                 nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
-                Log.e("tagexPORT1", "JsonResponse" );
+
 
                 HttpResponse response = client.execute(request);
-
-                Log.e("ExportDDDD",""+ipAddress.toString());
 
 
                 BufferedReader in = new BufferedReader(new
@@ -285,9 +287,8 @@ public class ExportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag", "JsonResponse\t" + JsonResponse);
-                Log.e("ExportDDDD",""+JsonResponse.toString());
-                Log.e("tagexPORT", "JsonResponse"+JsonResponse );
+                Log.e("JsonResponse","Export"+JsonResponse);
+
 
                 return JsonResponse;
 
@@ -411,11 +412,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tagexPORT", "JsonResponse"+s );
 
-
-            String impo="";
-            Log.e("ExportDDDD",""+s.toString());
             if(s != null) {
                 if (s.contains("SUCCESS")) {
                     mHandler.updateVoucher();
@@ -470,7 +467,145 @@ public class ExportJason extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+    public void getPassowrdSetting() {
+        new JSONTask_getPassword().execute();
+    }
+    private class JSONTask_getPassword extends AsyncTask<String, String, String> {
 
+        public  String passwordValue="";
+        String ipAddress="",URL_TO_HIT="";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+                if(!ipAddress.equals(""))
+                {
+                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+                Log.e("rowId","BasicNameValuePair"+passwordValue);
+                nameValuePairs.add(new BasicNameValuePair("_ID", "25"));
+
+                nameValuePairs.add(new BasicNameValuePair("PasswordType", "1"));
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tagUpdate", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }
+            //org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("tag", "onPostExecute"+s.toString());
+            String impo = "";
+            JSONObject result=null;
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("PasswordKeyValue")) {
+                    try {
+                        result = new JSONObject(s);
+                        JSONArray notificationInfo = null;
+                        notificationInfo = result.getJSONArray("PasswordKeyValue");
+                        JSONObject infoDetail=null;
+                        infoDetail = notificationInfo.getJSONObject(0);
+
+                        Log.e("infoDetail",""+infoDetail.get("passwordKey").toString());
+                        passwordFromAdmin.setText(infoDetail.get("passwordKey").toString());
+
+
+
+
+
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+
+
+
+                }
+                else if(s.contains("Not definded id"))
+                {
+                    Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+
+    }
     private void showDialogError(String message) {
         new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(context.getResources().getString(R.string.duplicateddata))

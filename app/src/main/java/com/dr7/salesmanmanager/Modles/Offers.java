@@ -9,6 +9,15 @@ public class Offers {
     private double itemQty;
     private double bonusQty;
     private String bonusItemNo;
+    private String otherDiscount;
+
+    public String getOtherDiscount() {
+        return otherDiscount;
+    }
+
+    public void setOtherDiscount(String otherDiscount) {
+        this.otherDiscount = otherDiscount;
+    }
 
     public Offers(int promotionID, int promotionType, String fromDate, String toDate, String itemNo, double itemQty,
                   double bonusQty, String bonusItemNo) {

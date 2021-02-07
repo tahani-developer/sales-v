@@ -12,12 +12,16 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -86,7 +90,7 @@ public class Login extends AppCompatActivity {
     int key_int;
     Context context;
     TextView loginText;
-    SweetAlertDialog dialogTem,sweetAlertDialog;
+    SweetAlertDialog dialogTem, sweetAlertDialog;
 
     DatabaseHandler mDHandler;
     String shortUserName = "", fullUserName = "";
@@ -94,19 +98,22 @@ public class Login extends AppCompatActivity {
     boolean exist = false;
     int index = 0;
     List<SalesMan> salesMenList;
-    public static String languagelocalApp="";
+    public static String languagelocalApp = "";
     FusedLocationProviderClient fusedLocationClient;
     LocationRequest mLocationRequest;
-    public   LocationManager locationManager;
+    public LocationManager locationManager;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     Date currentTimeAndDate;
     SimpleDateFormat df, df2;
     String curentDate, curentTime;
-    public  static Location location_main;
+    public static Location location_main;
     RelativeLayout mainlayout;
-String provider;
-public static  Timer timer = null;
-LocationPermissionRequest locationPermissionRequest;
+    String provider;
+    public static Timer timer = null;
+    LocationPermissionRequest locationPermissionRequest;
+   public static String currentIp="",previousIp="";
+    String serialNo2="";
+    public  static  TextView checkIpDevice;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +121,8 @@ LocationPermissionRequest locationPermissionRequest;
         LocaleAppUtils.setConfigChange(Login.this);
         new LocaleAppUtils().changeLayot(Login.this);
         setContentView(R.layout.activity_login);
-        locationPermissionRequest=new LocationPermissionRequest(Login.this);
+        checkIpDevice=findViewById(R.id.checkIpDevice);
+        locationPermissionRequest = new LocationPermissionRequest(Login.this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         provider = locationManager.getBestProvider(new Criteria(), false);
@@ -124,45 +132,45 @@ LocationPermissionRequest locationPermissionRequest;
         model_key = new activeKey();
         loginText = (TextView) findViewById(R.id.logInTextView);
         currentTimeAndDate = Calendar.getInstance().getTime();
-        Log.e("currentTimeAndDate",""+currentTimeAndDate);
+        Log.e("currentTimeAndDate", "" + currentTimeAndDate);
         df = new SimpleDateFormat("dd/MM/yyyy");
         curentDate = df.format(currentTimeAndDate);
         curentDate = convertToEnglish(curentDate);
-        Log.e("curentDate",""+curentDate);
+        Log.e("curentDate", "" + curentDate);
 
         df2 = new SimpleDateFormat("hh:mm:ss");
-        curentTime=df2.format(currentTimeAndDate);
-        curentTime=convertToEnglish(curentTime);
-        Log.e("curentTime",""+curentTime);
+        curentTime = df2.format(currentTimeAndDate);
+        curentTime = convertToEnglish(curentTime);
+        Log.e("curentTime", "" + curentTime);
+        getIpAddressForDevice();
         validLocation();
         try {
-            Log.e("languagelocalApp",""+languagelocalApp);
+            Log.e("languagelocalApp", "" + languagelocalApp);
 
             if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {
-                    languagelocalApp="ar";
+                    languagelocalApp = "ar";
                     LocaleAppUtils.setLocale(new Locale("ar"));
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 } else {
-                    languagelocalApp="en";
+                    languagelocalApp = "en";
                     LocaleAppUtils.setLocale(new Locale("en"));
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 }
-            }
-            else {
-                languagelocalApp="ar";
+            } else {
+                languagelocalApp = "ar";
                 LocaleAppUtils.setLocale(new Locale("ar"));
                 LocaleAppUtils.setConfigChange(Login.this);
 
             }
 
 
-            Log.e("languagelocalApp2",""+languagelocalApp);
+            Log.e("languagelocalApp2", "" + languagelocalApp);
 
         } catch (Exception e) {
-            languagelocalApp="ar";
+            languagelocalApp = "ar";
             LocaleAppUtils.setLocale(new Locale("ar"));
             LocaleAppUtils.setConfigChange(Login.this);
 
@@ -170,19 +178,15 @@ LocationPermissionRequest locationPermissionRequest;
         mainlayout = (RelativeLayout) findViewById(R.id.mainlayout);
 
         try {
-            if (languagelocalApp.equals("ar"))
-            {
+            if (languagelocalApp.equals("ar")) {
                 mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            }
-            else
-            {
+            } else {
                 if (languagelocalApp.equals("en")) {
                     mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
 
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         //   model_key.setKey(123);
@@ -205,14 +209,13 @@ LocationPermissionRequest locationPermissionRequest;
         }
 
 
-
         loginCardView = (CardView) findViewById(R.id.loginCardView);
         loginCardView.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                CompanyInfo companyLocation=mDHandler.getCompanyLocation();
-                Log.e("companyLocation",""+companyLocation.getLongtudeCompany());
+                CompanyInfo companyLocation = mDHandler.getCompanyLocation();
+                Log.e("companyLocation", "" + companyLocation.getLongtudeCompany());
                 String user = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
                 salesMenList = mDHandler.getAllSalesMen();
@@ -226,8 +229,7 @@ LocationPermissionRequest locationPermissionRequest;
                             exist = true;
                             index = 1;
                             isMasterLogin = true;
-                        }
-                        else{
+                        } else {
                             new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
                                     .setTitleText(getResources().getString(R.string.warning_message))
                                     .setContentText(getResources().getString(R.string.failUsers))
@@ -247,8 +249,7 @@ LocationPermissionRequest locationPermissionRequest;
 
                     }
 
-                }
-                else {//item in list
+                } else {//item in list
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
 
@@ -266,8 +267,7 @@ LocationPermissionRequest locationPermissionRequest;
                                         break;
                                     }
 
-                                }
-                                else {
+                                } else {
                                     checkFullName(i, fullUserName);
 
                                 }
@@ -291,9 +291,99 @@ LocationPermissionRequest locationPermissionRequest;
         });
         locationPermissionRequest.timerLocation();
 
+        checkIpDevice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(""))
+                {
+                    if(s.toString().equals("-1"))
+                    {
+                        goToMain();
+                    }
+                    else {
+                        if(s.toString().equals("2"))
+                        {
+                            Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
+                            addCurentIp(currentIp);
+                        }
+                        else {
+                            verifyIpDevice();
+                        }
+
+                    }
+
+                }
+            }
+        });
 //        checkLocationPermission();
     }
 
+    private String getIpAddressForDevice() {
+        String ipNo="";
+        
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
+        }
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return "";
+            }
+            else {
+                ipNo = Build.getSerial();
+            }
+
+        }
+        else {
+            ipNo = Build.SERIAL;
+        }
+        Log.e("getMacAddress","MAC Address : " + ipNo);
+
+
+        Log.e("getMacAddress","serialNo2"+ipNo);
+        return ipNo;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 101:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    else {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+                            serialNo2 = Build.getSerial();
+
+
+                        }
+                        else {
+                            serialNo2 = Build.SERIAL;
+                        }
+
+                       Log.e("serialNo2","Permissions  "+serialNo2);
+                    }
+                } else {
+                    //not granted
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 //    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 //
 //    public boolean checkLocationPermission() {
@@ -433,12 +523,26 @@ LocationPermissionRequest locationPermissionRequest;
                     catch (Exception e){
 
                     }
+                    if(mDHandler.getAllSettings().size()!=0)
+                    {
+                        if(mDHandler.getAllSettings().get(0).getApproveAdmin()==1)
+                        {
+//                           checkIpDevice() ;
+                            goToMain();
+                        }
+                        else {
+//                            checkIpDevice() ;
+                            goToMain();
+                        }
+                    }
+                    else {
+                        goToMain();
+                    }
 
                     locationPermissionRequest.closeLocation();
 
 //                    if(validLocation()){}
-                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(main);
+                   
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
                 }
             } else {
@@ -454,8 +558,7 @@ LocationPermissionRequest locationPermissionRequest;
                         salesManNo = passwordEditText.getText().toString();
                        locationPermissionRequest.closeLocation();
 
-                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(main);
+                       goToMain();
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
 
 
@@ -468,6 +571,48 @@ LocationPermissionRequest locationPermissionRequest;
         } else
             Toast.makeText(Login.this, "UserName does not exist", Toast.LENGTH_SHORT).show();
         exist = false;
+    }
+
+    private void checkIpDevice() {
+        currentIp=getIpAddressForDevice();
+        previousIp=getPreviousIpForSalesMen();
+        //V22219AQ02457
+
+    }
+    public  void  verifyIpDevice(){
+        Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
+        if(previousIp.equals(currentIp)){
+            goToMain();
+
+        }
+        else {
+            if(!previousIp.equals(currentIp)&& !previousIp.equals(""))
+            {
+                new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(getResources().getString(R.string.warning_message))
+                        .setContentText(getResources().getString(R.string.userNotOwnwerDevice))
+                        .show();
+            }
+
+        }
+    }
+
+    private void addCurentIp(String currentIp) {
+        ImportJason importJason=new ImportJason(Login.this);
+        importJason.addCurentIp(currentIp);
+    }
+
+    private String getPreviousIpForSalesMen() {
+
+        Log.e("getPreviousIpFo","INNNN");
+        ImportJason importJason=new ImportJason(Login.this);
+        importJason.getPreviousIpForSalesMen();
+        return  "";
+    }
+
+    private void goToMain() {
+        Intent main = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(main);
     }
 
     private boolean validLocation() {

@@ -154,17 +154,29 @@ public class bMITP extends Activity {
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
             }
+            else {
+                Log.e("lastConnAddr",""+lastConnAddr);
+                fWriter.close();
+            }
 
             fWriter.close();
         } catch (FileNotFoundException var3) {
-            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+            Log.e("BluetoothConnectMenu1", var3.getMessage(), var3);
+            if(getData.equals("6"))
+            {
+                finish();
+                Intent i=new Intent(context,Stock_Activity.class);
+                startActivity(i);
+            }
+
+
         } catch (IOException var4) {
-            Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+            Log.e("BluetoothConnectMenu2", var4.getMessage(), var4);
         }
         catch (Exception e)
 
         {
-            Log.e("BluetoothConnectMenu", e.getMessage());
+            Log.e("BluetoothConnectMenu3", e.getMessage());
         }
 
     }

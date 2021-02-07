@@ -43,7 +43,9 @@ import android.os.Message;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v4.print.PrintHelper;
 //import android.support.v7.widget.RecyclerView;
+import android.os.Parcelable;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
@@ -54,6 +56,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -84,6 +87,7 @@ import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.AccountReport;
 import com.dr7.salesmanmanager.Reports.ItemsReport;
 import com.dr7.salesmanmanager.Reports.VouchersReport;
@@ -178,6 +182,9 @@ public class SalesInvoice extends Fragment {
     LinearLayout requestLinear,mainRequestLinear;
     public  static  String noteRequestLimit="";
     requestAdmin request;
+    boolean validCustomerName=false,updatedName=false;
+    public  static  String itemNoSelected="";
+    public  static  List <serialModel> listSerialTotal;
 
 
     //    public static  List<Item> jsonItemsList;
@@ -199,7 +206,7 @@ public class SalesInvoice extends Fragment {
     public List<ItemsQtyOffer> itemsQtyOfferList;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou, unposted_payment, unposted_voucher;
     public ListView itemsListView;
-    public static List<Item> items;
+    public static ArrayList<Item> items;
     public ItemsListAdapter itemsListAdapter;
     private ImageView custInfoImgButton, SaveData;
     private CircleImageView addItemImgButton2, refreshData, rePrintimage;
@@ -332,7 +339,9 @@ public class SalesInvoice extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        listSerialTotal=new ArrayList<>();
+        listSerialTotal.clear();
         try {
             if (languagelocalApp.equals("ar"))
             {
@@ -367,90 +376,8 @@ public class SalesInvoice extends Fragment {
             }
         });
         //**********************************************************
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+        inflateBoomMenu(view );
 
-
-        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
-
-        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
-
-
-
-        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
-//            bmb.addBuilder(new SimpleCircleButton.Builder()
-//                    .normalImageRes(listImageIcone[i]));
-            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
-                    .normalImageRes(listImageIcone[i])
-                    .textSize(10)
-                    .normalText(textListButtons[i])
-                    .textPadding(new Rect(5, 15, 5, 0))
-                    .listener(new OnBMClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.M)
-                        @Override
-                        public void onBoomButtonClick(int index) {
-                            // When the boom-button corresponding this builder is clicked.
-                            switch (index)
-                            {
-                                case 0:
-                                    clearAllData();
-                                    break;
-                                case 1:
-                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
-                                    obj.startParsing();
-                                    break;
-                                case 2:
-                                    Intent intent = new Intent(getContext(), AccountStatment.class);
-                                    getContext().startActivity(intent);
-
-
-                                    break;
-                                case 3:
-
-
-                                    try {
-                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
-                                        if (voucherNo != 0 && voucherNo != -1) {
-                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
-                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
-                                            printLastVoucher(voucherNo, voucherForPrint);
-                                        } else {
-                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
-
-                                        }
-
-                                    } catch (Exception e) {
-                                        Log.e("ExceptionReprint", "" + e.getMessage());
-                                        voucherNo = 0;
-                                    }
-                                    break;
-                                case 4:
-                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
-
-                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
-                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
-                                            if (payMethod == 0) {
-                                                getDataForDiscountTotal();
-                                                salesInvoiceInterfaceListener.displayDiscountFragment();
-                                            } else {
-                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } else {
-                                            getDataForDiscountTotal();
-
-                                            salesInvoiceInterfaceListener.displayDiscountFragment();
-                                        }
-                                    }
-                                    break;
-
-                            }
-                        }
-                    });
-            bmb.addBuilder(builder);
-
-
-        }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         getTimeAndDate();
 
@@ -882,6 +809,108 @@ public class SalesInvoice extends Fragment {
         });
         return view;
     }
+//          if(savedInstanceState!=null){
+//
+//        items=(ArrayList)savedInstanceState.getSerializable("arrayItems");
+//        itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
+//        itemsListView.setAdapter(itemsListAdapter);
+//        Log.e("items",""+items.size());
+//    }
+//        else {
+//        items = new ArrayList<>();
+//    }
+
+    private void inflateBoomMenu(View view) {
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+
+
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
+
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+//            bmb.addBuilder(new SimpleCircleButton.Builder()
+//                    .normalImageRes(listImageIcone[i]));
+            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+                    .textSize(13)
+                    .normalText(textListButtons[i])
+                    .textPadding(new Rect(5, 5, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    clearAllData();
+                                    break;
+                                case 1:
+                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+                                    obj.startParsing();
+                                    break;
+                                case 2:
+                                    Intent intent = new Intent(getContext(), AccountStatment.class);
+                                    getContext().startActivity(intent);
+
+
+                                    break;
+                                case 3:
+
+
+                                    try {
+                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                                        if (voucherNo != 0 && voucherNo != -1) {
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
+                                            printLastVoucher(voucherNo, voucherForPrint);
+                                        } else {
+                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e("ExceptionReprint", "" + e.getMessage());
+                                        voucherNo = 0;
+                                    }
+                                    break;
+                                case 4:
+                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
+
+                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                                            if (payMethod == 0) {
+                                                getDataForDiscountTotal();
+                                                salesInvoiceInterfaceListener.displayDiscountFragment();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            getDataForDiscountTotal();
+
+                                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                                        }
+                                    }
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+
+
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("arrayItems",  items);
+    }
 
     private void getTimeAndDate() {
         currentTimeAndDate = Calendar.getInstance().getTime();
@@ -1244,65 +1273,104 @@ public class SalesInvoice extends Fragment {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveData() {
-        validDiscount=false;
+        validCustomerName=false;
+        if(CustomerListShow.Customer_Name.equals("عميل نقدي"))
+        {
+            showCustomerNameDialog();
 
-        double discountValue=0;
-        double discountPerc=0;
-        DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
-         discountValue = obj.getDiscountValue();
-         discountPerc = obj.getDiscountPerc();
-
-        double totalDisc = Double.parseDouble(discTextView.getText().toString());
-        double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-        double tax = 0, netSales = 0;
-        String netsale_txt = "";
-        netsale_txt = netTotalTextView.getText().toString();
-        Log.e("textNt", "" + netsale_txt);
-
-        try {
-            tax = Double.parseDouble(taxTextView.getText().toString());
-            netSales = Double.parseDouble(netTotalTextView.getText().toString());
-            Log.e("netSales_isnan", "" + Double.isNaN(netSales));
-
-        } catch (Exception e) {
-            tax = 0;
-            Log.e("tax error E", "" + tax + "   " + taxTextView.getText().toString());
+        }else {
+            validCustomerName=true;
 
         }
+        if(validCustomerName||updatedName)
+        {
+            validDiscount=false;
 
-        voucherType=getVoucherTypeCurrent();
+            double discountValue=0;
+            double discountPerc=0;
+            DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
+            discountValue = obj.getDiscountValue();
+            discountPerc = obj.getDiscountPerc();
 
-        if (netSales != 0 && !Double.isNaN(netSales)) {// test nan
+            double totalDisc = Double.parseDouble(discTextView.getText().toString());
+            double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
+            double tax = 0, netSales = 0;
+            String netsale_txt = "";
+            netsale_txt = netTotalTextView.getText().toString();
+            Log.e("textNt", "" + netsale_txt);
 
-            Log.e("not zero ", "tax=" + tax + "\t" + netSales);
-            //******************************
+            try {
+                tax = Double.parseDouble(taxTextView.getText().toString());
+                netSales = Double.parseDouble(netTotalTextView.getText().toString());
 
+            } catch (Exception e) {
+                tax = 0;
+                Log.e("tax error E", "" + tax + "   " + taxTextView.getText().toString());
 
-            if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
-                Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
-                SaveData.setEnabled(true);
-                save_floatingAction.setEnabled(true);
+            }
 
-            } else {
-                voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+            voucherType=getVoucherTypeCurrent();
 
-                String remark = " " + remarkEditText.getText().toString();
-                salesMan = Integer.parseInt(Login.salesMan);
-
-                voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                        salesMan, discountValue, discountPerc, remark, payMethod,
-                        0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                        CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
-                if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
-
-                    if (customer_is_authrized()) {
+            if (netSales != 0 && !Double.isNaN(netSales)) {// test nan
 
 
-                        if (virefyMaxDescount()) {
+                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
+                    Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
+                    SaveData.setEnabled(true);
+                    save_floatingAction.setEnabled(true);
+
+                } else {
+                    voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+
+                    String remark = " " + remarkEditText.getText().toString();
+                    salesMan = Integer.parseInt(Login.salesMan);
+
+                    voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
+                            salesMan, discountValue, discountPerc, remark, payMethod,
+                            0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
+                    if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
+
+                        if (customer_is_authrized()) {
+
+
+                            if (virefyMaxDescount()) {
 
 
                                 AddVoucher();
 
+                                clearLayoutData(0);
+
+                            } else {
+                                SaveData.setEnabled(true);
+                                save_floatingAction.setEnabled(true);
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
+                                builder.setTitle(getResources().getString(R.string.app_alert));
+                                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+
+                                    }
+                                });
+
+
+                                builder.create().show();
+
+
+                            }//end else
+
+                        } else {// customer Not authorize
+                            SaveData.setEnabled(true);
+                            save_floatingAction.setEnabled(true);
+                            reCheck_customerAuthorize();// test
+                        }
+                    } else {// you should not authorize customer account balance
+
+
+                        if (virefyMaxDescount()) {
+                            AddVoucher();
                             clearLayoutData(0);
 
                         } else {
@@ -1324,110 +1392,69 @@ public class SalesInvoice extends Fragment {
 
 
                         }//end else
-
-                    } else {// customer Not authorize
-                        SaveData.setEnabled(true);
-                        save_floatingAction.setEnabled(true);
-                        reCheck_customerAuthorize();// test
                     }
-                } else {// you should not authorize customer account balance
-
-
-                    if (virefyMaxDescount()) {
-                        AddVoucher();
-                        clearLayoutData(0);
-
-                    } else {
-                        SaveData.setEnabled(true);
-                        save_floatingAction.setEnabled(true);
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
-                        builder.setTitle(getResources().getString(R.string.app_alert));
-                        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-
-                            }
-                        });
-
-
-                        builder.create().show();
-
-
-                    }//end else
                 }
+            } else {// if tax ==0 or net sales==0 don't save data
+                SaveData.setEnabled(true);
+                save_floatingAction.setEnabled(true);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
+                builder.setTitle(getResources().getString(R.string.warning_message));
+                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+
+
+                });
+                builder.create().show();
+
             }
-        } else {// if tax ==0 or net sales==0 don't save data
-            SaveData.setEnabled(true);
-            save_floatingAction.setEnabled(true);
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
-            builder.setTitle(getResources().getString(R.string.warning_message));
-            builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-
-
-            });
-            builder.create().show();
+        }else {
 
         }
+
     }
 
+    private void showCustomerNameDialog() {
+        final EditText editText = new EditText(getActivity());
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE);
 
-    private double calcTotalDiscountOffer() {
-        discountValue=0;
-        double discount=0;
-        int foundOne=0;
-        Log.e("foundOne",""+foundOne);
-
-        for(int i=0;i<items.size();i++)
-        {
-            if(items.get(i).getItemNo().equals("7614900002274"))
-            {
-                if(items.get(i).getQty()>11)
+        sweetMessage.setTitleText(getResources().getString(R.string.enterCustomerName));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(false);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(!editText.getText().toString().equals(""))
                 {
-                    foundOne++;
-                }
-            }
-            else {
-                if(items.get(i).getItemNo().equals("7614900008818")) //جولد كوست أبيض
-                {
-                    if(items.get(i).getQty()>6)
-                    {
-                        foundOne++;
-                    }
+                    CustomerListShow.Customer_Name=editText.getText().toString();
+                    validCustomerName=true;
+                    updatedName=true;
+                    saveData();
+                    sweetAlertDialog.dismissWithAnimation();
                 }
                 else {
-                    if(items.get(i).getItemNo().equals("4033100039492"))// ld light
-                    {
-                        if(items.get(i).getQty()>5)
-                        {
-                            foundOne++;
-                        }
-                    }
+                    validCustomerName=false;
+                    editText.setError("Incorrect");
                 }
-
             }
-        }
-        Log.e("foundOne",""+foundOne);
-        if(foundOne==3)
-        {
-            return discount=4.8;
-        }
-        else {
-            discount=0;
-        }
+        }).setCancelButton(getResources().getString(R.string.cancel), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                SaveData.setEnabled(true);
+                save_floatingAction.setEnabled(true);
+                sweetAlertDialog.dismissWithAnimation();
+            }
+        })
 
-        return  discount;
+                .show();
     }
 
     public int getVoucherTypeCurrent() {
     int checkedId=voucherTypeRadioGroup.getCheckedRadioButtonId();
-    Log.e("getVoucherTypeCurrent",""+checkedId);
         switch (checkedId) {
             case R.id.salesRadioButton:
                 voucherType = 504;
@@ -1440,14 +1467,12 @@ public class SalesInvoice extends Fragment {
                 break;
 
         }
-        Log.e("getVoucherTypeCurrent","voucherType\t"+voucherType);
         return  voucherType;
     }
 
     private void refrechItemForReprint() {
         itemForPrintLast = new ArrayList<Item>();
         itemForPrintLast = mDbHandler.getAllItems();//test
-        Log.e("itemForPrintLast", "" + itemForPrintLast.size());
 
     }
 
@@ -1771,17 +1796,11 @@ public class SalesInvoice extends Fragment {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             dialog_progress.dismiss();
-//            pb.setProgress(values[0]);
-//            dialog_progress.setProgress(values);
+
         }
 
         @Override
         protected void onPreExecute() {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             super.onPreExecute();
             dialog_progress = new ProgressDialog(getActivity());
             dialog_progress.setCancelable(false);
@@ -1826,7 +1845,6 @@ public class SalesInvoice extends Fragment {
 
             discount_voucher = ((maxDiscounr_value * subTotal) / 100);
             maxDisc.setText(convertToEnglish(decimalFormat.format(discount_voucher) + ""));
-            Log.e("max", "" + maxDiscounr_value + "\t" + discount_voucher);
         } catch (Exception e)
         {
 
@@ -1864,7 +1882,7 @@ public class SalesInvoice extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i)
                 {
-//                    requestOverLimitCredit();
+                    requestOverLimitCredit();
 //
 //                 dialogInterface.dismiss();
                 }
@@ -1892,12 +1910,11 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestOverLimitCredit() {
-        final Dialog dialog_request = new Dialog(getActivity().getBaseContext());
+        final Dialog dialog_request = new Dialog(getActivity());
         dialog_request.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog_request.setCancelable(true);
         dialog_request.setContentView(R.layout.request_limit_cridet);
         request=new requestAdmin(getContext());
-        Log.e("requestOverLimitCredit",""+netTotalTextView.getText().toString());
         final EditText noteEditText = (EditText) dialog_request.findViewById(R.id.noteEditText);
         final Button okButton = (Button) dialog_request.findViewById(R.id.okButton);
         final ImageView cancelButton = (ImageView) dialog_request.findViewById(R.id.cancelButton);
@@ -1912,6 +1929,7 @@ public class SalesInvoice extends Fragment {
         acceptDiscount=dialog_request.findViewById(R.id.acceptDiscount);
         rejectDiscount=dialog_request.findViewById(R.id.rejectDiscount);
         requestLinear=dialog_request.findViewById(R.id.requestLinear);
+        okButton.setVisibility(View.GONE);
         checkState_LimitCredit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1927,14 +1945,6 @@ public class SalesInvoice extends Fragment {
             @Override
             public void afterTextChanged(Editable s)
             {
-                Log.e("afterTextChanged",""+s.toString());
-                if(s.toString().equals("0"))
-                {
-//                    checkState.setText("3");
-
-//                    checkStatuseRequest();
-                }
-                else
                 if(s.toString().equals("1"))
                 {
                     requestLinear.setVisibility(View.GONE);
@@ -1952,8 +1962,7 @@ public class SalesInvoice extends Fragment {
                     acceptDiscount.setVisibility(View.GONE);
                     defaultDiscount.setVisibility(View.GONE);
                     rejectDiscount.setVisibility(View.VISIBLE);
-                    discValueEditText.setText("");
-                    noteEditText.setText("");
+
 
                 }
 
@@ -1963,36 +1972,31 @@ public class SalesInvoice extends Fragment {
         //************************************************************
         requestDiscount.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(!voucherValueText.getText().toString().equals(""))
-                {
+            public void onClick(View v) {
+                if (!voucherValueText.getText().toString().equals("")) {
 
-                        try {
-                            okButton.setEnabled(false);
-                            noteEditText.setEnabled(false);
-                            noteRequestLimit=noteEditText.getText().toString();
-                            discountRequest.setAmount_value(voucherValueText.getText().toString());
+                    try {
+                        okButton.setEnabled(false);
+                        noteEditText.setEnabled(false);
+                        requestDiscount.setEnabled(false);
+                        noteRequestLimit = noteEditText.getText().toString();
+                        Log.e("getDataForDiscountTotal", "" + max_cridit + "\t" + voucherValueText.getText().toString() + "\t" + noteRequestLimit);
+                        getDataForDiscountTotal(max_cridit + "", voucherValueText.getText().toString(), noteRequestLimit);
 
-                            request.startParsing();
+                        request.startParsing();
 //
-                        } catch (Exception e) {
-                            Log.e("request",""+e.getMessage());
+                    } catch (Exception e) {
+                        Log.e("request", "" + e.getMessage());
 
-                        }
-
+                    }
 
 
 //            DiscountFragment.this.dismiss();
 
 
-
-
-                }
-                else {
+                } else {
                     voucherValueText.setError("required");
                 }
-
 
 
             }
@@ -2002,6 +2006,9 @@ public class SalesInvoice extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog_request.dismiss();
+                AddVoucher();
+                clearLayoutData(0);
 
             }
         });
@@ -2014,12 +2021,41 @@ public class SalesInvoice extends Fragment {
         });
         dialog_request.show();
     }
+    private void getDataForDiscountTotal(String cridetLimit, String totalVoucher,String note) {
+        discountRequest = new RequestAdmin();
+        if (mDbHandler.getAllSettings().size() != 0) {
+            discountRequest.setSalesman_name(mDbHandler.getAllSettings().get(0).getSalesMan_name());
+        } else {
+            discountRequest.setSalesman_name("");
+        }
+        discountRequest.setSalesman_no(Login.salesMan);
+        discountRequest.setCustomer_no(CustomerListShow.Customer_Account);
+        discountRequest.setCustomer_name(CustomerListShow.Customer_Name);
+        discountRequest.setAmount_value(cridetLimit);
+        discountRequest.setTotal_voucher(totalVoucher + "");// if request for item not for all voucher
+        discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
+
+        discountRequest.setKey_validation("");
+        discountRequest.setNote(note);
+        discountRequest.setRequest_type("100");
+        discountRequest.setStatus("0");
+        getTimeAndDate();
+        discountRequest.setTime(time);
+        discountRequest.setDate(voucherDate);
+        discountRequest.setSeen_row("0");
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void AddVoucher() {
         int store_No=salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
+
+                for(int j=0;j<listSerialTotal.size();j++)
+                {
+                    mDbHandler.add_Serial(listSerialTotal.get(j));
+                }
         savedState = 2;// addesd sucssesfulley
         for (int i = 0; i < items.size(); i++) {
 
@@ -2027,17 +2063,12 @@ public class SalesInvoice extends Fragment {
                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                     items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
                     items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(),items.get(i).getSerialCode());
-            Log.e("getSerialCode", "" + items.get(i).getSerialCode());
+
             totalQty_forPrint += items.get(i).getQty();
             itemsList.add(item);
-            Log.e("AddVoucher", "" + item.getDescription());
-
             mDbHandler.addItem(item);
             itemForPrint.add(item);
-//            if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
-//            {
                 mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
-//            }
 
 
             if (voucherType == 504)
@@ -2177,7 +2208,6 @@ public class SalesInvoice extends Fragment {
         String disc = discTextView.getText().toString();
         if (disc != "") {
             discount_total_voucher = Double.parseDouble(disc);
-            Log.e("discount_voucher", "" + discount_total_voucher);
 
         } else {
             discount_total_voucher = 0;
@@ -2208,7 +2238,6 @@ public class SalesInvoice extends Fragment {
         for (int i = 0; i < customer_balance.size(); i++) {
             cash_cridit = Double.parseDouble(customer_balance.get(i).getCashCredit() + "");
             max_cridit = Double.parseDouble(customer_balance.get(i).getCreditLimit() + "");
-            Log.e("cas= ", "" + cash_cridit + "\t creditlimit = " + max_cridit);
         }
 
 
@@ -2236,7 +2265,6 @@ public class SalesInvoice extends Fragment {
             }
         }
         available_balance = max_cridit - cash_cridit - unposted_sales_credit + unposted_payment;
-        Log.e("available_balance",""+available_balance);
         if (available_balance >= voucher.getNetSales())
             return true;
         else
@@ -2257,20 +2285,39 @@ public class SalesInvoice extends Fragment {
                     builder.setCancelable(true);
                     builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
                     if(items.get(position).getItemHasSerial().equals("1")){
-
+                        String itemNoForDelete = items.get(position).getItemNo();
                         builder.setItems(R.array.list_items_dialog_SERIAL, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
                                     case 0:
-                                        String st = "";
+
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
                                         if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
                                         {
 
+
                                             try {
-                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
+
+//                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
+
+                                                if(listSerialTotal.size()!=0)
+                                                {
+                                                    for(int k=0;k<listSerialTotal.size();k++)
+                                                    {
+
+                                                            if(listSerialTotal.get(k).getItemNo().equals(itemNoForDelete))
+                                                            {
+
+                                                                listSerialTotal.remove(k);
+                                                            }
+
+                                                    }
+
+                                                }
+
+
                                             }
                                             catch (Exception e)
                                             {}
@@ -2311,17 +2358,7 @@ public class SalesInvoice extends Fragment {
                                         String st = "";
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
-                                        if(items.get(position).getItemHasSerial().equals("1"))
-                                        {
 
-                                            try {
-                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
-                                            }
-                                            catch (Exception e)
-                                            {}
-
-
-                                        }
 
                                         items.remove(position);
 
@@ -2358,11 +2395,9 @@ public class SalesInvoice extends Fragment {
                                             public void onClick(View v) {
                                                 float availableQty = 0;
                                                 List<Item> jsonItemsList_insal = jsonItemsList;
-                                                Log.e("jsonItemsList", "" + jsonItemsList.size());
                                                 for (int i = 0; i < jsonItemsList.size(); i++) {
                                                     if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
                                                         availableQty = jsonItemsList.get(i).getQty();
-                                                        Log.e("availableQty", "" + availableQty);
 
                                                         break;
                                                     }
@@ -2371,7 +2406,6 @@ public class SalesInvoice extends Fragment {
                                                         availableQty >= Float.parseFloat(qty.getText().toString()) ||
                                                         voucherType == 506) {
                                                     total_items_quantity -= items.get(position).getQty();
-                                                    Log.e("total_itemsbefore", "" + total_items_quantity);
                                                     items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
                                                     updaQty = Double.parseDouble(qty.getText().toString());
 //                                                currentDisc=items.get(position).getDisc();
@@ -2389,7 +2423,6 @@ public class SalesInvoice extends Fragment {
                                                     }
 
                                                     total_items_quantity += items.get(position).getQty();
-                                                    Log.e("total_itemsafter", "" + total_items_quantity);
                                                     totalQty_textView.setText("+" + total_items_quantity);
                                                     if (items.get(position).getDiscType() == 0)
                                                         items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
@@ -2401,7 +2434,7 @@ public class SalesInvoice extends Fragment {
                                                     dialog.dismiss();
                                                 } else {
                                                     Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
-                                                    Log.e("qty", qty.getText().toString());
+
                                                     dialog.dismiss();
                                                 }
                                             }
@@ -2501,30 +2534,12 @@ public class SalesInvoice extends Fragment {
         items.clear();
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
+        listSerialTotal.clear();
     }
 
     private void clearLayoutData(int flag) {
         int vouch=0;
-        try {
-
-            vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
-
-
-            if(flag==1)// to clear serial  by voucher number
-            {
-                if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1)
-                {
-                    mDbHandler.deletSerialItems_byVoucherNo(vouch);
-                }
-
-            }
-
-        }
-        catch (Exception e)
-        {}
-
-
-            //        paymentTermRadioGroup.check(R.id.creditRadioButton);
+        vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
             remarkEditText.setText("");
             clearItemsList();
 //        calculateTotals();
@@ -2558,6 +2573,7 @@ public class SalesInvoice extends Fragment {
             refrechItemForReprint();
             SaveData.setEnabled(true);
         save_floatingAction.setEnabled(true);
+        listSerialTotal.clear();
 
     }
 
@@ -2569,7 +2585,7 @@ public class SalesInvoice extends Fragment {
         double itemTax, itemTotal, itemTotalAfterTax,
                 itemTotalPerc, itemDiscVal, posPrice, totalQty = 0;
         //**********************************************************************
-        list_discount_offers = mDbHandler.getDiscountOffers();
+        list_discount_offers = mDbHandler.getDiscountOffers();// total discount
         itemsQtyOfferList = mDbHandler.getItemsQtyOffer();
         String itemGroup;
         subTotal = 0.0;

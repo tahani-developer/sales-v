@@ -61,6 +61,8 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import com.google.zxing.common.StringUtils;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,6 +76,7 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
@@ -95,12 +98,14 @@ public class AddItemsFragment2 extends DialogFragment {
     Button addToListButton, doneButton;
     SearchView search;
    public static EditText barcode;
+   public  TextView clearBarcode;
     ImageView barcodebtn;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
+    TextView emptyView;
     ListView verticalList;
     public  static   int total_items_quantity=0;
     private float descPerc;
@@ -149,6 +154,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
+
 
 //        voucherDate = convertToEnglish(voucherDate);
 
@@ -213,6 +219,12 @@ public class AddItemsFragment2 extends DialogFragment {
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        emptyView = (TextView) view.findViewById(R.id.empty_view);
+
+// ...
+
+
+
         recyclerView.setLayoutManager(linearLayoutManager);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -324,8 +336,6 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     ArrayList<Item> filteredList = new ArrayList<>();
 
-//                    "jkgb".matches()
-
                     boolean isFound=false;
                     for(int i=0;i<jsonItemsList.size();i++){
                         for(int j=0;j<arrOfStr.length;j++){
@@ -364,24 +374,28 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         //***************************************************************************************
         barcode=(EditText)view.findViewById(R.id.barcode);
-//        barcode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                barcode.setText("");
-////                 Intent i=new Intent(getActivity(),ScanActivity.class);
-////                 startActivity(i);
-//            }
-//        });
+        clearBarcode=(TextView) view.findViewById(R.id.clearBarcode);
+        clearBarcode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                barcode.setText("");
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+                        recyclerView.setAdapter(adapter);
+
+            }
+        });
         barcodebtn=(ImageView)view.findViewById(R.id.searchBarcode);
         barcodebtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                 s=barcode.getText().toString();
-                if(!s.equals("")) {
-                    searchByBarcodeNo(s + "");
-                }
-                else{
+//                 s=barcode.getText().toString();
+//                if(!s.equals("")) {
+//                    searchByBarcodeNo(s + "");
+//                }
+//                else{
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -400,36 +414,59 @@ public class AddItemsFragment2 extends DialogFragment {
                     }
 
 
-                }
-
-            }
-        });
-        barcode.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-//                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
-//                {
-//                    // your action here
-//                    return true;
 //                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
-                    {   barcode.setText("");
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                        recyclerView.setAdapter(adapter);
-                        return true;
 
-                    }
-
-                }
-                return false;
             }
         });
+        barcode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(""))
+                {
+                    Log.e("afterTextChanged",""+s.toString());
+
+                        searchByBarcodeNo(s + "");
+
+                }
+            }
+        });
+//        barcode.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                final int DRAWABLE_LEFT = 0;
+//                final int DRAWABLE_TOP = 1;
+//                final int DRAWABLE_RIGHT = 2;
+//                final int DRAWABLE_BOTTOM = 3;
+//
+////                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+////                {
+////                    // your action here
+////                    return true;
+////                }
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+//                    {   barcode.setText("");
+//                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+//                        recyclerView.setAdapter(adapter);
+//                        return true;
+//
+//                    }
+//
+//                }
+//                return false;
+//            }
+//        });
         barcode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -464,20 +501,41 @@ public class AddItemsFragment2 extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         float count=0;
 
+
 //                        total_items_quantity -= List.size();
 //                        totalQty_textView.setText("+"+0);
 //                        total_items_quantity=0;
-                        for(int j=0;j<List.size();j++)
+                        if(listSerialTotal.size()!=0)
                         {
-                            count+=List.get(j).getQty();
+                            for(int k=0;k<listSerialTotal.size();k++)
+                            {
+                                for(int j=0;j<List.size();j++)
+                                {
+                                    count+=List.get(j).getQty();
+                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo()))
+                                    {
+
+                                        listSerialTotal.remove(k);
+                                    }
+                                }
+                            }
                         }
+                        else {
+                            for(int j=0;j<List.size();j++)
+                            {
+                                count+=List.get(j).getQty();
+                            }
+
+                        }
+
+
 //                        Log.e("count",""+count);
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
                         total_items_quantity-=count;
                         totalQty_textView.setText(total_items_quantity+"");
                         List.clear();
                        int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
-                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
+//                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
 
 
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
@@ -555,20 +613,55 @@ public class AddItemsFragment2 extends DialogFragment {
 //        }
 //    }
    public  void searchByBarcodeNo(String barcodeValue) {
+       Log.e("searchByBarcodeNo",""+barcodeValue);
+       String itemNo="";
+       try {
+            itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
+            if(itemNo.equals(""))
+            {
+                itemNo=mDbHandler.getItemNoForSerial(barcodeValue);
+            }
+       }catch (Exception e)
+       {
+           itemNo="";
+       }
+
         if(!barcodeValue.equals(""))
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
                 for (int k = 0; k < jsonItemsList.size(); k++) {
-                    if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
+                    if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())){
                         filteredList.add(jsonItemsList.get(k));
+                        break;
+
+                    }
+                    else
+                    {
+
+                        if(!itemNo.equals(""))
+                        {
+                        if(itemNo.equals(jsonItemsList.get(k).getItemNo())){
+
+                            filteredList.add(jsonItemsList.get(k));
+                            break;
+                        }
+                        }
+
+
                     }
                 }
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList,AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter);
-                Log.e("filteredList=","" + filteredList.size());
                 if(filteredList.size()==0)
                 {
-                    Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+//                  Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+
                 }
 
 
@@ -579,25 +672,8 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
         }
+
     }
-    /*//        int no = 0;
-//
-//        if (!barcodeValue.equals("cancelled")) {
-//            for (int k = 0; k < bundles.size(); k++) {
-//                if ((bundles.get(k).getBundleNo()).equals(Bundul)) {
-//                    no = k;
-//                    items.setSelection(no);
-//                    items.requestFocusFromTouch();
-//                    items.setSelection(no);
-//
-//                    break;
-//                }
-//            }
-//
-//        } else {
-//            ItemsListAdapter adapter = new ItemsListAdapter(LoadingOrder.this, bundles);
-//            items.setAdapter(adapter);
-//        }*/
 
     public void setListener(AddItemsInterface listener) {
         this.listener = listener;
@@ -687,8 +763,7 @@ public class AddItemsFragment2 extends DialogFragment {
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         boolean existItem = false;
-        Log.e("itemSerialList",""+itemSerialList.size());
-        Log.e("addItem","discount"+discount);
+
 
 
             for(int i = 0 ; i< obj.getItemsList().size() ; i++){
@@ -789,7 +864,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 item.setDisc(0);
                 item.setDiscPerc("0");
             }
-        Log.e("addItem","Itemdiscount"+item.getDisc());
+
             try {
                 if (item.getDiscType() == 0) {
 
@@ -851,13 +926,10 @@ public class AddItemsFragment2 extends DialogFragment {
                     itemSerialList.get(i).setKindVoucher("");
                     itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
                     itemSerialList.get(i).setStoreNo(storeNo);
-                    Log.e("voucherNumberTextView",""+voucherNumberTextView.getText().toString());
+                    listSerialTotal.add( itemSerialList.get(i));
 
                 }
-                for(int j=0;j<itemSerialList.size();j++)
-                {
-                    mDbHandler.add_Serial(itemSerialList.get(j));
-                }
+
 
             }
 
@@ -891,17 +963,35 @@ public class AddItemsFragment2 extends DialogFragment {
 
     public void readB(){
         Log.e("barcode_099", "in");
-//        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
-//        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
-//        intentIntegrator.setBeepEnabled(false);
-//        intentIntegrator.setCameraId(0);
-//        intentIntegrator.setOrientationLocked(false);
-//        intentIntegrator.setPrompt("SCAN");
-//
-//        intentIntegrator.setBarcodeImageEnabled(false);
-//        intentIntegrator.initiateScan();
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+       // openIntegratorLandScapeActivity();
+
+       // openSannActivity();
+
+       // openSmallActivity();
+            //*********************************************************
+        openSmallScanerTextView();
+        //**************************************************************
+//        public void scanToolbar(View view) {
+//            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
+//        }
+
+    }
+
+    private void openIntegratorLandScapeActivity() {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setPrompt("SCAN");
+
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
+    }
+
+    private void openSannActivity() {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             {//just for first time
@@ -917,18 +1007,17 @@ public class AddItemsFragment2 extends DialogFragment {
             startActivity(i);
 
         }
+    }
 
-//            IntentIntegrator integrator = new IntentIntegrator(getActivity());
-//            integrator.setOrientationLocked(false);
-//            integrator.setCaptureActivity(SmallCaptureActivity.class);
-//            integrator.initiateScan();
+    private void openSmallActivity() {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+    }
 
-
-            //*********************************************************
-       // new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
-//        public void scanToolbar(View view) {
-//            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
-//        }
+    private void openSmallScanerTextView() {
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }
 

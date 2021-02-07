@@ -6,11 +6,13 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by mohd darras on 29/12/2017.
  */
 
-public class Item {
+public class Item implements Serializable {
     private String itemNo ,itemName , unit;
     private String date ;
     private float  qty;

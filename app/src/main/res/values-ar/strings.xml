@@ -456,11 +456,22 @@
     <string name="debit">دائن</string>
     <string name="credit">مدين</string>
     <string name="balance">الرصيد</string>
-    <string name="request">request</string>
+    <string name="request">خصم</string>
     <string name="YouHaveItemDiscount">لايتطلب موافقة الادمن</string>
     <string name="makeRequest">طلب تجاوز سقف الذمم</string>
-    <string name="request_credit_limit">Request to exceed the limit of credit</string>
+    <string name="request_credit_limit">طلب تجاوز سقف الذمة</string>
     <string name="ok" />
     <string name="text_location_permission">text Location Permission</string>
+    <string name="invalidSerial">رقم تسلسلي خاطئ</string>
+    <string name="enter_serial">أدخل الرقم التسلسلي</string>
+    <string name="process">process</string>
+    <string name="userNotOwnwerDevice">حساب المستخدم ليس لهذا الجهاز </string>
+    <string name="enterCustomerName">أدخل اسم العميل</string>
+    <string name="showSolidQty">اظهار الكميات المباعة</string>
+    <string name="solidQty">الكمية المباعة</string>
+    <string name="readOfferFromAdmin">قراءةالعروض والاسعار من الادمن</string>
+    <string name="itemImportfromadmin">استيراد الاسعار من برنامج الادمن?</string>
+    <string name="no">لا</string>
+    <string name="invalidPassword">كلمة المرور خاطئة</string>
 
 </resources>

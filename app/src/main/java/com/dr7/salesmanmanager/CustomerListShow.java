@@ -1,13 +1,17 @@
 package com.dr7.salesmanmanager;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.app.DialogFragment;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -46,6 +51,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class CustomerListShow extends DialogFragment {
@@ -54,18 +60,22 @@ public class CustomerListShow extends DialogFragment {
     public ListView itemsListView;
     public List<Customer> customerList;
     public List<Customer> emptyCustomerList;
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
     private Button update;
-    private EditText customerNameTextView;
+    public static EditText customerNameTextView;
     public static String Customer_Name = "No Customer Selected !", Customer_Account = "", PriceListId = "";
     public static int CashCredit , paymentTerm = 1;
     public static double CreditLimit=0;
     public  static  String latitude="",longtude ="";
+
     public static double Max_Discount_value=0;
     public static int CustHideValu=0;
+
     CustomersListAdapter customersListAdapter;
     DatabaseHandler mHandler;
     private ProgressDialog progressDialog;
     LinearLayout mainlayout;
+    TextView mSpeakBtn;
 
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
@@ -91,7 +101,15 @@ public class CustomerListShow extends DialogFragment {
         getDialog().setTitle(getResources().getString(R.string.app_select_customer));
         final View view = inflater.inflate(R.layout.customers_list, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.discLayout);
+        mSpeakBtn= view.findViewById(R.id.btnSpeak);
+        mSpeakBtn.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Log.e("startVoiceInput2","on");
+                startVoiceInput(1);
+            }
+        });
         try {
             if (languagelocalApp.equals("ar"))
             {
@@ -237,6 +255,30 @@ public class CustomerListShow extends DialogFragment {
 //        for (int i = 0; i < customerList.size(); i++) {
             mHandler.addCustomer(customerList);
 //        }
+    }
+    private void startVoiceInput(int flag) {
+        Log.e("startVoiceInput",""+flag);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?");
+        try {
+            if(flag==1)
+            {
+
+                Log.e("startVoiceInput2",""+flag);
+               getActivity().startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+            }
+
+        } catch (ActivityNotFoundException a) {
+            String appPackageName = "com.dr7.salesmanmanager";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+
+        }
     }
 
     void initialize(View view) {

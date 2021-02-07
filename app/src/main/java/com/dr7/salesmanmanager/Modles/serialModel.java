@@ -15,6 +15,15 @@ public class serialModel {
     private String storeNo;
     private  String isPosted;
     private  String isBonus;
+    private  String qty;
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
+    }
 
     public String getIsBonus() {
         return isBonus;

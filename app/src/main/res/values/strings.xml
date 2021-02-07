@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 44</string>
+    <string name="version"> V 54</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -415,6 +415,17 @@
     <string name="ok" />
     <string name="text_location_permission">text Location Permission</string>
     <string name="title_location_permission">Location Permission</string>
+    <string name="invalidSerial">Invalid Serial</string>
+    <string name="enter_serial">Enter Serial Code</string>
+    <string name="process">process</string>
+    <string name="userNotOwnwerDevice">User  Account  Not For this Device</string>
+    <string name="enterCustomerName">Enter Customer Name</string>
+    <string name="showSolidQty">Show Solid Qty</string>
+    <string name="solidQty">Solid Qty</string>
+    <string name="readOfferFromAdmin">Offer and price From Admin</string>
+    <string name="itemImportfromadmin">Import price from Admin?</string>
+    <string name="no">No</string>
+    <string name="invalidPassword">Invalid Password</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

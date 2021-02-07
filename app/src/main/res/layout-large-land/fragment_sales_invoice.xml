@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/mainlyout"
     android:layoutDirection="locale"
-android:padding="5dp"
+    android:padding="5dp"
 
     tools:context="com.dr7.salesmanmanager.SalesInvoice"
 
@@ -41,64 +41,53 @@ android:padding="5dp"
                     android:gravity="center"
                     android:background="@color/layer7"
                     android:orientation="vertical">
-                    <TextView
+
+                    <RelativeLayout
 
                         android:layout_width="match_parent"
-                        android:visibility="invisible"
-
                         android:layout_height="match_parent"
-                        android:layout_weight="10"
-                        android:text="@string/save"
-                        android:gravity="top|center"
-                        android:textColor="@color/colorblue1"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                <RelativeLayout
 
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="3dp"
+                        android:layout_weight="7"
+                        android:gravity="center"
 
-                    android:layout_gravity="center"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="7.9"
-                    android:gravity="center"
+                        >
 
-                    >
-
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/addItemImgButton2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentTop="true"
-                        android:layout_margin="10dp"
-                        android:clickable="true"
-                        android:src="@drawable/items2"
-                        app:civ_border_color="@color/colorPrimaryDark" />
-                    <!--            android:layout_marginLeft="50dp"-->
-                    <TextView
-                        android:id="@+id/items_quntity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/addItemImgButton2"
-                        android:layout_alignLeft="@+id/addItemImgButton2"
-                        android:layout_alignRight="@+id/addItemImgButton2"
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/addItemImgButton2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:layout_margin="10dp"
+                            android:clickable="true"
+                            android:src="@drawable/items2"
+                            app:civ_border_color="@color/colorPrimaryDark" />
+                        <!--            android:layout_marginLeft="50dp"-->
+                        <TextView
+                            android:id="@+id/items_quntity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/addItemImgButton2"
+                            android:layout_alignLeft="@+id/addItemImgButton2"
+                            android:layout_alignRight="@+id/addItemImgButton2"
 
 
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginTop="1dp"
-                        android:padding="3dp"
-                        android:text="+"
-                        android:textColor="@color/cancel_button"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:layout_marginTop="10dp"
+                            android:padding="3dp"
+                            android:text="+"
+                            android:textColor="@color/cancel_button"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/save_floatingAction"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2.2"
+                        android:layout_weight="7.9"
                         android:layout_gravity="center"
 
                         android:layout_margin="2dp"
@@ -111,7 +100,7 @@ android:padding="5dp"
                         app:fabCustomSize="65dp"
                         android:backgroundTint="@color/white"
                         android:src="@drawable/ic_done_black_24dp"
-                        app:maxImageSize ="46dp"
+                        app:maxImageSize ="36dp"
 
                         android:visibility="visible"
                         app:fabSize="normal" />
@@ -149,7 +138,7 @@ android:padding="5dp"
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                       android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_weight="2"
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal"
@@ -191,7 +180,7 @@ android:padding="5dp"
                         <LinearLayout
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
-                          android:layout_margin="5dp"
+                            android:layout_margin="5dp"
 
                             android:background="@color/colorblue1"
                             android:orientation="vertical" />
@@ -252,7 +241,7 @@ android:padding="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/payemtnTerm"
-                           android:layout_margin="10dp"
+                                android:layout_margin="10dp"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -576,7 +565,7 @@ android:padding="5dp"
                 android:background="@color/colorblue_dark"
                 android:orientation="horizontal"
 
-       >
+                >
 
                 <TextView
 
