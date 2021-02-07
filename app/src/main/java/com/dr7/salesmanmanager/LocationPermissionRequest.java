@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,12 +31,19 @@ import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 
 import java.util.List;
@@ -45,6 +54,7 @@ import java.util.TimerTask;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.ContentValues.TAG;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class LocationPermissionRequest   extends Activity {
@@ -65,15 +75,18 @@ public class LocationPermissionRequest   extends Activity {
     ImportJason importJason;
     String userCountry, userAddress;
     DatabaseHandler mHandler;
+boolean flag=true;
+int req=0;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     FusedLocationProviderClient mFusedLocationClient;
 SalesmanStations salesmanStations;
+    public  static  boolean openDialog=false;
 public static double checkOutLong=0,checkOutLat=0;
 int  approveAdmin=-1;
     List<com.dr7.salesmanmanager.Modles.Settings> settings;
     public LocationPermissionRequest(Context context) {
         this.context = context;
-        sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+       // sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 //        getlocattTest();
         importJason=new ImportJason(context);
@@ -85,6 +98,7 @@ int  approveAdmin=-1;
         if (settings.size() != 0) {
            approveAdmin= settings.get(0).getApproveAdmin();
         }
+        timer = new Timer();
 
     }
 
@@ -94,18 +108,19 @@ int  approveAdmin=-1;
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
+            Log.e("Location", "ooooo");
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
 //                msg.arg1 = 1;
 //                handler.sendMessage(msg);
+                Log.e("Location", "oo111ooo  "+OpenFlag);
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        if (OpenFlag == 1) {
+//                        if (OpenFlag == 1) {
                             dialogLoc();
 
-                        }
+//                        }
 
                     }
                 });
@@ -121,10 +136,10 @@ int  approveAdmin=-1;
 
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        if (OpenFlag == 1) {
+//                        if (OpenFlag == 1) {
                             dialogLoc();
 
-                        }
+//                        }
                         openAppSettings();
                     }
                 });
@@ -134,12 +149,23 @@ int  approveAdmin=-1;
 
             try {
                 sweetAlertDialog.dismissWithAnimation();
+                dialogTem.dismissWithAnimation();
+
             } catch (Exception e) {
                 Log.e("Location", "true need2");
             }
 
             runOnUiThread(new Runnable() {
                 public void run() {
+                boolean iso=    isLocationEnabled(context);
+                    Log.e("Location", "hh  "+iso);
+
+
+                    if(!iso && !openDialog){
+                        openDialog=true;
+                       flag=false;
+                        displayLocationSettingsRequest(context);
+                    }
                     getLoc();
                 }
             });
@@ -155,10 +181,10 @@ int  approveAdmin=-1;
 
     private void dialogLoc() {
         OpenFlag = 0;
-        sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
-
-        sweetAlertDialog.setTitleText(R.string.title_location_permission);
-        sweetAlertDialog.setContentText(String.valueOf(R.string.text_location_permission));
+//        sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+//
+//        sweetAlertDialog.setTitleText(R.string.title_location_permission);
+//        sweetAlertDialog.setContentText(String.valueOf(R.string.text_location_permission));
 //        sweetAlertDialog.setCancelButton("cancel", new SweetAlertDialog.OnSweetClickListener() {
 //            @Override
 //            public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -166,27 +192,31 @@ int  approveAdmin=-1;
 ////                 finish();
 //            }
 //        });
-        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog) {
 
                 //Prompt the user once explanation has been shown
                 ActivityCompat.requestPermissions((Activity) context,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
-                dialogTem = sweetAlertDialog;
+              //  dialogTem = sweetAlertDialog;
 
-
-            }
-        });
-        sweetAlertDialog.setCancelable(false);
-        sweetAlertDialog.show();
+//            }
+//        });
+//        sweetAlertDialog.setCancelable(false);
+//        sweetAlertDialog.show();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        Log.e("Locationss", "iiiii");
+        Log.e("Locationss", "granted"+requestCode);
+        OpenFlag = 1;
+
         switch (requestCode) {
+
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
@@ -194,6 +224,7 @@ int  approveAdmin=-1;
                     Log.e("Location", "granted");
                     try {
                         sweetAlertDialog.dismissWithAnimation();
+                        dialogTem.dismissWithAnimation();
                     } catch (Exception r) {
 
                     }
@@ -203,7 +234,7 @@ int  approveAdmin=-1;
                     if (ContextCompat.checkSelfPermission(context,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
-
+                        OpenFlag=1;
                         Log.e("Location", "granted updates");
 
                         //Request location updates:
@@ -214,6 +245,7 @@ int  approveAdmin=-1;
 
                     Log.e("Location", "Deny");
 
+                    OpenFlag=1;
                     // permission, denied, boo! Disable the
                     // functionality that depends on this permission.
 
@@ -226,22 +258,26 @@ int  approveAdmin=-1;
 
     public void timerLocation(){
 
-        if(approveAdmin==1) {
-            timer = new Timer();
+
+
             timer.schedule(new TimerTask() {
 
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void run() {
-//                if(flag){
-//                }
+                    Log.e("locationApp", "" +approveAdmin);
+                    approveAdmin= settings.get(0).getApproveAdmin();
+                    if(approveAdmin==1) {
+//                        if (OpenFlag==1) {
+                            Log.e("locationRec", "" + req);
+                            checkLocationPermission();
+//                        }
 
-                    checkLocationPermission();
-
+                    }
                 }
 
             }, 0, 1000);
-        }
+
 
     }
 
@@ -259,7 +295,98 @@ int  approveAdmin=-1;
         context.startActivity( applicationDetailsSettingsIntent );
 
     }
+    private void turnGPSOn(){
 
+
+        try {
+//            String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+//            if (!provider.contains("gps")) { //if gps is disabled
+//                final Intent poke = new Intent();
+//                poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+//                poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+//                poke.setData(Uri.parse("3"));
+//                sendBroadcast(poke);
+//
+//            }
+
+//            Intent intent=new Intent("android.location.GPS_ENABLED_CHANGE");
+//            intent.putExtra("enabled", true);
+//            sendBroadcast(intent);
+
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }catch (Exception e){
+
+            Log.e("Location", "error for open gps location" + e.toString());
+        }
+    }
+    private void displayLocationSettingsRequest(Context context) {
+
+        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API).build();
+        googleApiClient.connect();
+        Log.e("Locationnnnn", "bbb");
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(10000 / 2);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        Log.e("Locationnnnn", "bbb"+result.toString());
+
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i("Location", "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult((Activity) context, 10001);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
+    }
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+
+        }else{
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+
+
+    }
     public void getLoc(){
 
         LocationManager locationManager;
@@ -315,6 +442,14 @@ int  approveAdmin=-1;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
     }
+
+    public void closeLocation() {
+        if (timer!=null) {
+            timer.cancel();
+        }else {
+            Log.e("timerIsNull","kkk");
+        }
+           }
 
 
 //    private void getlocattTest() {

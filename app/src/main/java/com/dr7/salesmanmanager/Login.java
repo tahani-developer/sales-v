@@ -2,6 +2,7 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -47,6 +48,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.OutputStreamWriter;
@@ -64,6 +66,7 @@ import java.util.TimerTask;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
@@ -431,6 +434,7 @@ LocationPermissionRequest locationPermissionRequest;
 
                     }
 
+                    locationPermissionRequest.closeLocation();
 
 //                    if(validLocation()){}
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
@@ -448,10 +452,13 @@ LocationPermissionRequest locationPermissionRequest;
 
                         salesMan = usernameEditText.getText().toString();
                         salesManNo = passwordEditText.getText().toString();
+                       locationPermissionRequest.closeLocation();
 
                         Intent main = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(main);
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
+
+
                     }
 
                 } else
@@ -722,6 +729,7 @@ LocationPermissionRequest locationPermissionRequest;
 //
                     Toast.makeText(Login.this, "welcome" + salesMan, Toast.LENGTH_SHORT).show();
 
+                    locationPermissionRequest.closeLocation();
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
                     //  CustomIntent.customType(getBaseContext(),"left-to-right");
@@ -733,6 +741,30 @@ LocationPermissionRequest locationPermissionRequest;
         });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
+        switch (requestCode) {
+            case 10001:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        openDialog=false;
+                        Toast.makeText(Login.this, states.isLocationPresent() + "", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        openDialog=false;
+                        Toast.makeText(Login.this, "Canceled", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
     }
 
     private class RequestLogin extends AsyncTask {
