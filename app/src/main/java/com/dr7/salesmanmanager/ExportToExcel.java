@@ -14,6 +14,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.itextpdf.text.BaseColor;
 
 import java.io.File;
@@ -101,6 +102,9 @@ public class ExportToExcel {
                 break;
             case 8:
                 workbook = cashReport(workbook, (List<Voucher>) list );
+                break;
+            case 9:
+                workbook = SerialListReport(workbook, (List<serialModel>) list );
                 break;
         }
 
@@ -504,6 +508,49 @@ public class ExportToExcel {
                     sheet.addCell(new Label(2, i + 2,      list.get(i).getRemark()));
                     sheet.addCell(new Label(3, i + 2,  list.get(i).getSaleManNumber()+""));
                     sheet.addCell(new Label(4, i + 2,  list.get(i).getPayMethod()+""));
+                    sheet.mergeCells(0,i + 2, 1, i + 2);// col , row, to col , to row
+
+                }
+
+            } catch (RowsExceededException e) {
+                e.printStackTrace();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+            workbook.write();
+            try {
+                workbook.close();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workbook;
+
+    }
+    WritableWorkbook SerialListReport(WritableWorkbook workbook, List<serialModel> list) {
+
+        try {
+            WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
+
+            try {
+                sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_number)                    )); // column and row
+
+                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.voucher_date) ));
+                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.remark)   ));
+
+
+
+                sheet.mergeCells(0,1, 1, 1);// col , row, to col , to row
+
+
+                for (int i = 0; i < list.size(); i++) {
+//                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber()+""));
+//                    sheet.addCell(new Label(3, i + 2, list.get(i).getVoucherDate()+""));
+//                    sheet.addCell(new Label(4, i + 2, list.get(i).getRemark()+""));
+
+
                     sheet.mergeCells(0,i + 2, 1, i + 2);// col , row, to col , to row
 
                 }

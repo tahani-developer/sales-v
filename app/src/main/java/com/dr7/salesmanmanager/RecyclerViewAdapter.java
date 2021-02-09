@@ -233,6 +233,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                                                @Override
                                                public void onClick(final View view) {
+                                                   holder.cardView.setEnabled(false);
                                                    typeRequest = 0;
                                                    haveResult = 0;
                                                    itemInlocalList = false;
@@ -659,6 +660,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    discount.setText("");
                                                                    bonus.setText("");
                                                                    addToList.setEnabled(true);
+                                                                   unitQty.setEnabled(true);
+                                                                   if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
+                                                                   {
+                                                                       price.setEnabled(true);
+                                                                   }
+
+                                                                   discPercRadioButton.setEnabled(true);
+                                                                   discValueRadioButton.setEnabled(true);
+
 
                                                                }
 
@@ -754,6 +764,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        discountText = discount.getText().toString();
                                                                                        haveCstomerDisc = true;
                                                                                        addToList.setEnabled(false);
+                                                                                       price.setEnabled(false);
                                                                                        discountCustomer = items.get(holder.getAdapterPosition()).getDiscountCustomer() + "";
 
                                                                                        if (haveCstomerDisc) {
@@ -762,9 +773,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                try {
                                                                                                    currentKey="";
+                                                                                                   requestDiscount.setEnabled(false);
                                                                                                    getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "0", items.get(holder.getAdapterPosition()).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
                                                                                                    addToList.setEnabled(false);
                                                                                                    discount.setEnabled(false);
+                                                                                                   unitQty.setEnabled(false);
+                                                                                                   price.setEnabled(false);
+                                                                                                   discPercRadioButton.setEnabled(false);
+                                                                                                   discValueRadioButton.setEnabled(false);
                                                                                                    request.startParsing();
                                                                                                } catch (Exception e) {
                                                                                                    Log.e("request", "" + e.getMessage());
@@ -787,6 +803,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                            addToList.setEnabled(false);
                                                                                            discount.setEnabled(false);
                                                                                            currentKey="";
+                                                                                           unitQty.setEnabled(false);
+                                                                                           price.setEnabled(false);
+                                                                                           requestDiscount.setEnabled(false);
+                                                                                           discPercRadioButton.setEnabled(false);
+                                                                                           discValueRadioButton.setEnabled(false);
                                                                                            request.startParsing();
                                                                                        } catch (Exception e) {
                                                                                            Log.e("request", "" + e.getMessage());
@@ -799,6 +820,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        addToList.setEnabled(false);
                                                                                        discount.setEnabled(false);
                                                                                        currentKey="";
+                                                                                       unitQty.setEnabled(false);
+                                                                                       price.setEnabled(false);
+                                                                                       requestDiscount.setEnabled(false);
+                                                                                       discPercRadioButton.setEnabled(false);
+                                                                                       discValueRadioButton.setEnabled(false);
                                                                                        request.startParsing();
                                                                                    } catch (Exception e) {
                                                                                        Log.e("request", "" + e.getMessage());
@@ -810,6 +836,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            } else {
                                                                                discount.setError("required");
                                                                                discount.requestFocus();
+                                                                               unitQty.setEnabled(true);
+                                                                               if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
+                                                                               {
+                                                                                   price.setEnabled(true);
+                                                                               }
                                                                            }
 
                                                                        } else if ((typeRequest == 2 && !bonus.getText().toString().equals(""))) {
@@ -819,7 +850,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    getDataForDiscountTotal(items.get(holder.getAdapterPosition()).getItemName(), "2", items.get(holder.getAdapterPosition()).getPrice() + "", bonus.getText().toString(),unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
+                                                                                   unitQty.setEnabled(false);
+                                                                                   price.setEnabled(false);
                                                                                    currentKey="";
+                                                                                   discPercRadioButton.setEnabled(false);
+                                                                                   discValueRadioButton.setEnabled(false);
+                                                                                   requestDiscount.setEnabled(false);
                                                                                    request.startParsing();
                                                                                } catch (Exception e) {
                                                                                    Log.e("request", "" + e.getMessage());
@@ -828,6 +864,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            } else {
                                                                                bonus.setError("required");
+                                                                               bonus.requestFocus();
+                                                                               unitQty.setEnabled(true);
+                                                                               if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
+                                                                               {
+                                                                                   price.setEnabled(true);
+                                                                               }
                                                                            }
 
                                                                        }// end else
@@ -843,6 +885,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        cancel.setOnClickListener(new View.OnClickListener() {
                                                            @Override
                                                            public void onClick(View v) {
+                                                               holder.cardView.setEnabled(true);
                                                                if (serialListitems.size() != 0) {
                                                                    // delete serial if exist and alert screen if full list
                                                                    AlertDialog.Builder builder2 = new AlertDialog.Builder(context.getActivity());
@@ -927,6 +970,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            @SuppressLint("ResourceAsColor")
                                                            @Override
                                                            public void onClick(View v) {
+                                                               holder.cardView.setEnabled(true);
                                                                String qtyText = "", discountText = "", bunosText = "";
                                                                int countInvalidSerial = 0;
                                                                if (serialListitems.size() != 0) {

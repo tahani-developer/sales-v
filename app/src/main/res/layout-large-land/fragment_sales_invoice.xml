@@ -139,17 +139,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="5dp"
-                        android:layout_weight="2"
+                        android:layout_weight="1.8"
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal"
 
                         >
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="10"
+                            android:elevation="3dp"
+                            android:orientation="vertical"
+
+                            >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_margin="1dp"
                             android:elevation="3dp"
                             android:orientation="horizontal"
 
@@ -158,8 +167,8 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_weight="3"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:text="@string/voucher_number"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp"
@@ -169,12 +178,27 @@
                                 android:id="@+id/voucherNumber"
                                 android:layout_width="match_parent"
                                 android:layout_weight="3"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_gravity="center"
                                 android:layout_margin="5dp"
                                 android:gravity="center_vertical"
                                 android:textColor="@color/colorblue_dark"
                                 android:textSize="14sp" />
+                        </LinearLayout>
+                            <TextView
+                                android:id="@+id/priceListNo"
+                                android:layout_width="match_parent"
+                                android:layout_weight="1"
+
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+
+                                android:textColor="@color/red_background"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:text="@string/price_ListNo"
+
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -198,7 +222,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_weight="3"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
+                                android:layout_margin="5dp"
 
                                 android:text="@string/cust_name"
                                 android:textColor="@color/text_view_color"
@@ -285,19 +309,28 @@
 
                             android:background="@color/colorblue1"
                             android:orientation="vertical" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="6"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_weight="6"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/tvTrKind"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/app_trans_kind"
-                                android:layout_margin="10dp"
+                                android:layout_margin="5dp"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -343,6 +376,33 @@
 
                             </RadioGroup>
                         </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/linearRegulerOfferList"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="6"
+                                    android:visibility="gone"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:id="@+id/voucherRegular_Offer"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/Reguler_Offer"
+                                        android:layout_margin="5dp"
+                                        android:textColor="@color/text_view_color"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+                                    <Spinner
+                                        android:id="@+id/voucherTypeSpinner"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="6"
+                                        android:textSize="16sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout

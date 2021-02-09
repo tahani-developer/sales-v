@@ -24,7 +24,7 @@ import java.util.List;
 public class ItemsListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<Item> itemList;
+    private List<Item> itemList,secondListItems;
     private DecimalFormat decimalFormat;
     int typeScreen=0;//0 landscap
 
@@ -32,6 +32,7 @@ public class ItemsListAdapter extends BaseAdapter {
     {
         this.context = context;
         this.itemList = itemList;
+
         decimalFormat = new DecimalFormat("##.000");
         this.typeScreen=type;
         Log.e("typeScreen",""+typeScreen+"\t type"+type);

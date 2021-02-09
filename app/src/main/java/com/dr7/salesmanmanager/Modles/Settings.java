@@ -41,6 +41,15 @@ public class Settings {
     private  int saveOnly;
     private  int show_quantity_sold;
     private  int readOfferFromAdmin;
+    private  String ipPort;
+
+    public String getIpPort() {
+        return ipPort;
+    }
+
+    public void setIpPort(String ipPort) {
+        this.ipPort = ipPort;
+    }
 
     public int getReadOfferFromAdmin() {
         return readOfferFromAdmin;

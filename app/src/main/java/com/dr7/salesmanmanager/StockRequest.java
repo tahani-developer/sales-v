@@ -10,10 +10,13 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -49,6 +52,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 
@@ -58,12 +63,12 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class StockRequest extends Fragment {
 
     public ListView itemsListView;
-    private ImageButton addItemImgButton, newImgBtn ;
+    public static ImageButton addItemImgButton, newImgBtn ;
     FloatingActionButton SaveData;
     private EditText remarkEditText;
     private TextView voucherNumberTextView;
     public static TextView totalQty;
-    public List<Item> items;
+    public  static  List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
     private static DatabaseHandler mDbHandler;
     public static int voucherNumber;
@@ -74,8 +79,12 @@ public class StockRequest extends Fragment {
     ProgressDialog dialog_progress;
     int itemCountTable;
     LinearLayout mainLinear;
-
+    public static List<Item> itemsRequiredList = new ArrayList<>();
+    SweetAlertDialog getPdValidationItemCard;
     public static Voucher voucherStockItem;
+    DecimalFormat threeDForm;
+    double curentQ=0;
+    public  static TextView clearData;
 
     public List<Item> getItemsStockList() {
         return this.items;
@@ -102,6 +111,11 @@ public class StockRequest extends Fragment {
         mDbHandler = new DatabaseHandler(getActivity());
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         itemCountTable=mDbHandler.getCountItemsMaster();
+
+
+        threeDForm = new DecimalFormat("00.00");
+
+//        Log.e("itemsRequiredList",""+itemsRequiredList.size()+"\t"+itemsRequiredList.get(0).getQty());
         mainLinear=view.findViewById(R.id.mainLinear);
         try {
             if (languagelocalApp.equals("ar"))
@@ -131,14 +145,50 @@ public class StockRequest extends Fragment {
         totalQty = (TextView) view.findViewById(R.id.total_qty);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumberTextView);
         voucherNumberTextView.setText(voucherNumber + "");
+        clearData=(TextView) view.findViewById(R.id.clearData);
+        clearData.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!s.toString().equals(""))
+                {
+                    if(s.toString().equals("1"))
+                    {
+                        clearItemsList();
+                    }
+                    else if(s.toString().equals("2"))
+                    {
+                        getPdValidationItemCard = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+                        getPdValidationItemCard.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                        getPdValidationItemCard.setTitleText(getActivity().getResources().getString(R.string.process) + "3");
+                        getPdValidationItemCard.setCancelable(false);
+                        getPdValidationItemCard.show();
+                    }
+                    else if(s.toString().equals("3"))
+                    {
+                        getPdValidationItemCard.dismissWithAnimation();
+                    }
+                }
+
+            }
+        });
         addItemImgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                addItemImgButton.setEnabled(false);
                 if(itemCountTable>=500)
                 {
-                    new TaskStock().execute();
-
+//                    new TaskStock().execute();
+                    stockInterFace.displayFindItemStockFragment();
                 }
                 else
                 {
@@ -156,7 +206,7 @@ public class StockRequest extends Fragment {
             }
         });
 
-
+        itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
         items = new ArrayList<>();
         listItemStock = new ArrayList<>();
         itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
@@ -212,7 +262,7 @@ public class StockRequest extends Fragment {
                             int salesMan = Integer.parseInt(Login.salesMan);
 
                             double total = Double.parseDouble(totalQty.getText().toString());
-                            voucherStock = new Voucher(0, voucherNumber, voucherDate,
+                            voucherStock = new Voucher(0, voucherNumber, convertToEnglish(voucherDate),
                                     salesMan, remark, total, 0);
 //                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
 //                                    salesMan, remark, total, 0));
@@ -220,11 +270,22 @@ public class StockRequest extends Fragment {
 
 
                             for (int i = 0; i < items.size(); i++) {
+                                String cureQty=convertToEnglish(threeDForm.format(items.get(i).getCurrentQty()));
+                                curentQ=Double.parseDouble(cureQty);
                                 mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
-                                        items.get(i).getItemName(), items.get(i).getQty(), voucherDate));
+                                        items.get(i).getItemName(), items.get(i).getQty(), convertToEnglish(voucherDate),curentQ));
                             }
                             try {
-                                printStock();
+                                if(mDbHandler.getAllSettings().get(0).getSaveOnly()!=1)
+                                {  printStock();}
+                                else {
+                                    clearLayoutData();
+                                    clearItemsList();
+                                    new SweetAlertDialog(view.getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                                            .setTitleText(view.getContext().getString(R.string.saveSuccessfuly))
+                                            .show();
+                                }
+
                             }
                             catch (Exception e)
                             {
@@ -244,18 +305,22 @@ public class StockRequest extends Fragment {
 
         return view;
     }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
     class TaskStock extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {
-            for (int i = 0; i < 100; i++) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                publishProgress(i);
-            }
+//            for (int i = 0; i < 100; i++) {
+//                try {
+//                    Thread.sleep(100);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                publishProgress(i);
+//            }
             stockInterFace.displayFindItemStockFragment();
             return "items";
         }
@@ -266,11 +331,11 @@ public class StockRequest extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             super.onPreExecute();
             dialog_progress = new ProgressDialog(getActivity());
             dialog_progress.setCancelable(false);
@@ -370,11 +435,13 @@ public class StockRequest extends Fragment {
                     }
                 } else {
                     clearLayoutData();
+                    clearItemsList();
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                     Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 clearLayoutData();
+                clearItemsList();
                 Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
             }
@@ -398,6 +465,7 @@ public class StockRequest extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             items.remove(position);
+                            itemsRequiredList.get(position).setQty(0);
                             itemsListView.setAdapter(itemsListAdapter);
                             calculateTotals();
                         }
@@ -428,18 +496,25 @@ public class StockRequest extends Fragment {
 
     private void clearLayoutData() {
         remarkEditText.setText(" ");
-        totalQty.setText("");
-        calculateTotals();
+
+        //calculateTotals();
 
         voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
+        totalQty.setText("00.00");
+
     }
 
     public void clearItemsList() {
         items.clear();
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
+        for(int i=0;i<itemsRequiredList.size();i++)
+        {
+            itemsRequiredList.get(i).setQty(0);
+        }
+
     }
 
     public class ItemsListStockAdapter extends BaseAdapter {

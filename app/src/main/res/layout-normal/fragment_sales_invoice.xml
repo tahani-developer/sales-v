@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         >
 
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_height="match_parent"
@@ -128,11 +129,15 @@
                     android:orientation="vertical">
 
                 </LinearLayout>
-
-                <LinearLayout
+                <ScrollView
+                    android:id="@+id/scrollView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
+                    android:fillViewport="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
 
                     android:orientation="vertical"
 
@@ -142,7 +147,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="3dp"
-                        android:layout_weight="2"
+                        android:layout_weight="1.5"
+
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal"
 
@@ -150,8 +156,9 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_margin="1dp"
+
                             android:layout_weight="10"
                             android:elevation="3dp"
                             android:orientation="vertical"
@@ -159,10 +166,11 @@
                             >
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:layout_gravity="center"
-                                android:gravity="center_vertical"
+                                android:gravity="center"
                                 android:text="@string/voucher_number"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="12sp"
@@ -170,13 +178,31 @@
 
                             <TextView
                                 android:id="@+id/voucherNumber"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text=""
                                 android:layout_gravity="center"
-                                android:layout_margin="5dp"
-                                android:gravity="center_vertical"
+                                android:layout_margin="2dp"
+                                android:gravity="center"
                                 android:textColor="@color/colorblue_dark"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+
+                                />
+                            <TextView
+                                android:id="@+id/priceListNo"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:layout_margin="2dp"
+
+                                android:gravity="center"
+                                android:textColor="@color/red_background"
+                                android:textSize="12sp"
+                                android:text="@string/price_ListNo"
+
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -189,7 +215,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_margin="1dp"
                             android:layout_weight="6"
                             android:orientation="vertical"
@@ -197,8 +223,9 @@
                             >
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:layout_gravity="center"
                                 android:layout_marginStart="2dp"
                                 android:layout_marginLeft="2dp"
@@ -210,8 +237,9 @@
 
                             <TextView
                                 android:id="@+id/invoiceCustomerName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:layout_gravity="center"
                                 android:layout_margin="2dp"
                                 android:lines="1"
@@ -229,7 +257,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="2dp"
-                        android:layout_weight="1.5"
+                        android:layout_weight="1"
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal">
 
@@ -283,18 +311,27 @@
 
                             android:background="@color/colorblue1"
                             android:orientation="vertical" />
-
-                        <LinearLayout   android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:layout_weight="6"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
                             android:orientation="vertical">
                             <TextView
                                 android:id="@+id/tvTrKind"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/app_trans_kind"
-                                android:layout_gravity="center"
-                                android:gravity="center_vertical"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
@@ -311,36 +348,65 @@
                                     android:id="@+id/salesRadioButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dp"
+
                                     android:textColorHint="@color/colorblue1"
                                     android:checked="true"
                                     android:text="@string/app_sales_inv2"
                                     android:textColor="@color/text_view_color"
-                                    android:textSize="10sp" />
+                                    android:textSize="9sp" />
 
                                 <RadioButton
                                     android:id="@+id/retSalesRadioButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="1dp"
+
                                     android:checked="false"
                                     android:text="@string/app_ret_inv2"
                                     android:textColor="@color/text_view_color"
-                                    android:textSize="10sp" />
+                                    android:textSize="9sp" />
 
 
                             <RadioButton
                                 android:id="@+id/orderRadioButton"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="1dp"
+
                                 android:checked="false"
                                 android:text="@string/app_cust_order2"
                                 android:textColor="@color/text_view_color"
-                                android:textSize="10sp" />
+                                android:textSize="9sp" />
 
                         </RadioGroup>
                         </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/linearRegulerOfferList"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/voucherRegular_Offer"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="3"
+                                        android:text="@string/Reguler_Offer"
+                                        android:layout_margin="2dp"
+                                        android:textColor="@color/text_view_color"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                    <Spinner
+                                        android:id="@+id/voucherTypeSpinner"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+
+                                        android:layout_weight="3"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -348,8 +414,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:layout_marginBottom="10dp"
+                        android:layout_weight="2.5"
+                        android:layout_marginBottom="5dp"
                         android:background="@drawable/back_border_edit"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -374,8 +440,40 @@
                             android:textSize="10sp" />
 
                     </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/row5uil"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2"
+                        android:visibility="invisible"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/back_border_edit"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/app_remark"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="12sp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/remarkEditTeiouxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="3dp"
+                            android:textColor="@color/colorblue_dark"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
                 </LinearLayout>
+                </ScrollView>
 
 
                 <ImageButton
@@ -461,6 +559,7 @@
                 <!--android:visibility="invisible"/>-->
 
             </LinearLayout>
+
 
 
             <!--    <LinearLayout-->
@@ -654,21 +753,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2.5">
-
-
-
-                <!--        <com.nightonke.boommenu.BoomMenuButton-->
-                <!--            android:id="@+id/bmb"-->
-                <!--            android:layout_width="wrap_content"-->
-                <!--            android:layout_height="wrap_content"-->
-                <!--           -->
-                <!--           android:background="@drawable/ic_search_black_24dp"-->
-                <!--            app:bmb_normalColor="@color/colorblue1"-->
-
-                <!--            android:layout_alignBottom="@+id/row7"-->
-                <!--            android:layout_alignRight="@+id/row7"-->
-                <!--            android:layout_margin="5dp"-->
-                <!--            />-->
                 <LinearLayout
                     android:id="@+id/row7"
                     android:layout_width="match_parent"

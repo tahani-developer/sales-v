@@ -59,6 +59,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -70,6 +71,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -81,6 +83,7 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
@@ -94,6 +97,7 @@ import com.dr7.salesmanmanager.Reports.VouchersReport;
 import com.ganesh.intermecarabic.Arabic864;
 
 import org.json.JSONArray;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -184,7 +188,10 @@ public class SalesInvoice extends Fragment {
     requestAdmin request;
     boolean validCustomerName=false,updatedName=false;
     public  static  String itemNoSelected="";
-    public  static  List <serialModel> listSerialTotal;
+    public  static  List <serialModel> listSerialTotal,copyListSerial;
+    public Spinner voucherTypeSpinner;
+    public  static  int priceListTypeVoucher=0,listOfferNo=-1;
+    LinearLayout linearRegulerOfferList;
 
 
     //    public static  List<Item> jsonItemsList;
@@ -206,10 +213,13 @@ public class SalesInvoice extends Fragment {
     public List<ItemsQtyOffer> itemsQtyOfferList;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou, unposted_payment, unposted_voucher;
     public ListView itemsListView;
+    ArrayList<OfferListMaster> currentListActive;
     public static ArrayList<Item> items;
+    ArrayList<Integer> itemIteratot;
     public ItemsListAdapter itemsListAdapter;
     private ImageView custInfoImgButton, SaveData;
-    private CircleImageView addItemImgButton2, refreshData, rePrintimage;
+    private CircleImageView  refreshData, rePrintimage;
+    public  static CircleImageView addItemImgButton2;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
@@ -218,7 +228,7 @@ public class SalesInvoice extends Fragment {
     private double subTotal, totalTaxValue, netTotal;
     public double totalDiscount = 0, discount_oofers_total_cash = 0, discount_oofers_total_credit = 0, sum_discount = 0, disc_items_value = 0, disc_items_total = 0;
     private TextView taxTextView, subTotalTextView, netTotalTextView;
-    public static TextView totalQty_textView;
+    public static TextView totalQty_textView,priceListNo;
     public  CheckBox readNewDiscount;
     public TextView discTextView;
     public ImageButton discountButton;
@@ -229,7 +239,7 @@ public class SalesInvoice extends Fragment {
     private static DatabaseHandler mDbHandler;
     public static int voucherType = 504;
     public int voucherNumber;
-    public int payMethod;
+    public  static  int payMethod;
     boolean isFinishPrint = false;
     double total_Qty = 0.0;
     double totalQty_forPrint = 0;
@@ -342,6 +352,8 @@ public class SalesInvoice extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         listSerialTotal=new ArrayList<>();
         listSerialTotal.clear();
+        copyListSerial=new ArrayList<>();
+
         try {
             if (languagelocalApp.equals("ar"))
             {
@@ -726,6 +738,7 @@ public class SalesInvoice extends Fragment {
 
             @Override
             public void onClick(View view) {
+                addItemImgButton2.setEnabled(false);
                 if (itemCountTable >= 500) {
                     new SalesInvoice.Task().execute();
 
@@ -768,6 +781,13 @@ public class SalesInvoice extends Fragment {
 
         itemsListView = (ListView) view.findViewById(R.id.itemsListView);
         items = new ArrayList<>();
+//        itemIteratot=new ArrayList<>();
+//        for (int i=0;i<items.size();i++)
+//        {
+//            itemIteratot.set(i,0);
+//            Log.e("itemIteratot",""+itemIteratot.size()+"\titem"+itemIteratot.get(0));
+//        }
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // landscape
@@ -779,6 +799,7 @@ public class SalesInvoice extends Fragment {
 
         }
         itemsListView.setAdapter(itemsListAdapter);
+
 //        totalQty_textView.setText(items.size()+"");
 
 
@@ -1268,6 +1289,97 @@ public class SalesInvoice extends Fragment {
         maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
         readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
+        priceListNo=(TextView) view.findViewById(R.id.priceListNo);
+        linearRegulerOfferList=(LinearLayout) view.findViewById(R.id.linearRegulerOfferList);
+        if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+        {
+            priceListNo.setVisibility(View.VISIBLE);
+            linearRegulerOfferList.setVisibility(View.VISIBLE);
+            getPriceListNo();
+        }
+        else {
+            priceListNo.setVisibility(View.GONE);
+            linearRegulerOfferList.setVisibility(View.GONE);
+        }
+        voucherTypeSpinner=(Spinner) view.findViewById(R.id.voucherTypeSpinner);
+      currentListActive=new ArrayList<>();
+            fillSpiner();
+
+
+    }
+
+    private void fillSpiner() {
+        ArrayList<String> kinds = new ArrayList<>();
+        String dateCurent=getCurentTimeDate(1);
+        kinds.add(getResources().getString(R.string.regular));
+
+        try {
+           currentListActive=mDbHandler.getPriceOfferActive(dateCurent);
+            Log.e("currentListActive",""+currentListActive.size()+"\t"+currentListActive.get(0).getPO_LIST_NAME());
+
+            for(int i=0;i<currentListActive.size();i++)
+            {
+                kinds.add(currentListActive.get(i).getPO_LIST_NAME().toString());
+
+            }
+        }catch (Exception e){}
+
+
+        ArrayAdapter<String> paymentKind = new ArrayAdapter<String>(getActivity(), R.layout.spinner_style, kinds);
+        voucherTypeSpinner.setAdapter(paymentKind);
+        voucherTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(i!=0&&currentListActive.size()!=0)
+                {
+                    listOfferNo=currentListActive.get(i-1).getPO_LIST_NO();
+                }
+
+                priceListTypeVoucher=i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+    private void getPriceListNo() {
+        String dateCurent=getCurentTimeDate(1);
+//        ArrayList<OfferListMaster> currentListActive=mDbHandler.getPriceOfferActive(dateCurent);
+        String rate_customer = mDbHandler.getPriceListNoMaster(dateCurent);
+        if(rate_customer.equals("0")||rate_customer.equals(""))
+        {
+            priceListNo.setVisibility(View.GONE);
+        }
+        priceListNo.setText(getActivity().getResources().getString(R.string.price_ListNo)+"\t"+ rate_customer);
+    }
+    public String getCurentTimeDate(int flag){
+        String dateCurent,timeCurrent,dateTime="";
+        Date currentTimeAndDate;
+        SimpleDateFormat dateFormat, timeformat;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        if(flag==1)// return date
+        {
+
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateCurent = dateFormat.format(currentTimeAndDate);
+            dateTime=convertToEnglish(dateCurent);
+
+        }
+        else {
+            if(flag==2)// return time
+            {
+                timeformat = new SimpleDateFormat("hh:mm:ss");
+                dateCurent = timeformat.format(currentTimeAndDate);
+                dateTime=convertToEnglish(dateCurent);
+            }
+        }
+        return dateTime;
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -2068,7 +2180,8 @@ public class SalesInvoice extends Fragment {
             itemsList.add(item);
             mDbHandler.addItem(item);
             itemForPrint.add(item);
-                mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
+            mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
+               // exportSerialToExcel(listSerialTotal, voucherNo);
 
 
             if (voucherType == 504)
@@ -2196,6 +2309,11 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    private void exportSerialToExcel(List<serialModel> list,int voucheNum) {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(getActivity(),"SerialVoucher"+voucheNum+".xls",3,list);
+    }
+
     private boolean virefyMaxDescount() {
         double discount_voucher = 0;
         double discount_total_voucher = 0;
@@ -2291,29 +2409,42 @@ public class SalesInvoice extends Fragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
                                     case 0:
+                                        copyListSerial.clear();
 
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
                                         if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
                                         {
 
-
                                             try {
-
 //                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
 
                                                 if(listSerialTotal.size()!=0)
                                                 {
+
                                                     for(int k=0;k<listSerialTotal.size();k++)
                                                     {
-
                                                             if(listSerialTotal.get(k).getItemNo().equals(itemNoForDelete))
                                                             {
 
-                                                                listSerialTotal.remove(k);
+                                                            }
+                                                            else {
+
+                                                                try {
+                                                                    copyListSerial.add(listSerialTotal.get(k));
+
+                                                                }
+                                                                catch (Exception e)
+                                                                {
+                                                                    Log.e("Exception",""+e.getMessage());
+                                                                }
+
+
                                                             }
 
                                                     }
+
+                                                    listSerialTotal=copyListSerial;
 
                                                 }
 
@@ -2326,7 +2457,6 @@ public class SalesInvoice extends Fragment {
                                         }
 
                                         items.remove(position);
-
 
                                         itemsListView.setAdapter(itemsListAdapter);
                                         calculateTotals();

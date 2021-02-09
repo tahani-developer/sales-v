@@ -27,6 +27,7 @@ import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
@@ -45,6 +46,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -56,6 +58,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -103,11 +106,12 @@ public class ImportJason extends AppCompatActivity {
     public static List<QtyOffers> qtyOffersList = new ArrayList<>();
     public static List<ItemsQtyOffer> itemsQtyOfferList = new ArrayList<>();
     public static List<Account_Report> account_reportList = new ArrayList<>();
+    public static List<OfferListMaster> offerListMasterArrayList = new ArrayList<>();
     public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
     public static ArrayList<serialModel> itemSerialList=new ArrayList<>();
 
     boolean start = false;
-    String ipAddress = "";
+    String ipAddress = "",ipWithPort="";
 
     public ImportJason(Context context) {
         this.context = context;
@@ -116,6 +120,8 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
+            ipWithPort=settings.get(0).getIpPort();
+            Log.e("ipWithPort",""+ipWithPort);
         }
         else {
             Toast.makeText(context, "Check Setting Ip", Toast.LENGTH_SHORT).show();
@@ -128,8 +134,183 @@ public class ImportJason extends AppCompatActivity {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getCustomerInfo", "*****");
             new JSONTask_AccountStatment(CustomerListShow.Customer_Account).execute();
+          //  new SyncRemark().execute();
         }
 
+    }
+    private class SyncRemark extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context,R.style.MyTheme);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+
+//            pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+//            pd.setTitleText("يتم استيراد Remark");
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+
+//                final List<MainSetting>mainSettings=dbHandler.getAllMainSetting();
+//                String ip="";
+//                if(mainSettings.size()!=0) {
+//                    ip=mainSettings.get(0).getIP();
+//                }
+                //http://localhost:8082/GetACCOUNTSTATMENT?ACCNO=402001100
+                //http://localhost:8082/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100
+                String link = "http://10.0.0.22:8081/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+              //  String link = "http://" + ipAddress + "/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+//                String link = "http://"+ip + "/GetNotes";
+                Log.e("ipAdress", "ip -->" + link);
+
+                // ITEM_CARD
+//                String max=dbHandler.getMaxInDate("ITEM_SWITCH");
+//                String maxInDate="";
+//                if(max.equals("-1")) {
+//                    maxInDate="05/03/2020";
+//                }else{
+//                    maxInDate=max.substring(0,10);
+//                    String date[]=maxInDate.split("-");
+//                    maxInDate=date[2]+"/"+date[1]+"/"+date[0];
+//                    Log.e("splitSwitch ",""+maxInDate);
+//                }
+//                String data = "MAXDATE=" + URLEncoder.encode(maxInDate, "UTF-8");
+////
+                URL url = new URL(link);
+
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("GET");
+
+//                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+//                wr.writeBytes(data);
+//                wr.flush();
+//                wr.close();
+//                Log.e("url____",""+link+data);
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "TAG_itemSwitch -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+//            if (JsonResponse != null && JsonResponse.contains("REMARKBODY")) {
+                JSONObject result = null;
+                String impo = "";
+                if (JsonResponse != null) {
+                    if (JsonResponse.contains("VHFNo")) {
+                        // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
+                        //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+
+                        try {
+//                            result = new JSONObject(s);
+                            Account__Statment_Model requestDetail;
+
+
+                            JSONArray requestArray = null;
+                            listCustomerInfo = new ArrayList<>();
+
+                            requestArray = result.getJSONArray(JsonResponse);
+                            Log.e("requestArray", "" + requestArray.length());
+
+
+                            for (int i = 0; i < requestArray.length(); i++) {
+                                JSONObject infoDetail = requestArray.getJSONObject(i);
+                                requestDetail = new Account__Statment_Model();
+                                requestDetail.setVoucherNo(infoDetail.get("VHFNo").toString());
+                                requestDetail.setTranseNmae(infoDetail.get("TransName").toString());
+                                requestDetail.setDate_voucher(infoDetail.get("VHFDATE").toString());
+
+                                try {
+                                    requestDetail.setDebit(Double.parseDouble(infoDetail.get("DEBIT").toString()));
+                                    requestDetail.setCredit(Double.parseDouble(infoDetail.get("Credit").toString()));
+                                } catch (Exception e) {
+                                    requestDetail.setDebit(0);
+                                    requestDetail.setCredit(0);
+                                }
+
+
+                                listCustomerInfo.add(requestDetail);
+                                Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
+
+
+                            }
+                            getAccountList_text.setText("2");
+
+                        } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                            e.printStackTrace();
+                        }
+                    }
+//                    else
+//                        Log.e("onPostExecute", "" + .toString());
+//                progressDialog.dismiss();
+                }
+
+//            }
+            else if (JsonResponse != null && JsonResponse.contains("No Data Found.")){
+//                new SyncItemUnite().execute();
+//                pd.dismissWithAnimation();
+
+            }else {
+                Log.e("TAG_itemSwitch", "****Failed to export data");
+//                progressDialog.dismiss();
+//                if(pd!=null) {
+//                    pd.dismiss();
+//                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+//                            .setTitleText("استيراد Remark")
+//                            .setContentText("فشل استيراد Remark")
+//                            .show();
+//                }
+            }
+
+        }
     }
 
     public void startParsing() {
@@ -169,7 +350,6 @@ public class ImportJason extends AppCompatActivity {
     }
 
     public void getPriceFromAdmin() {
-        Log.e("getPriceFromAdmin","getPriceFromAdmin");
       new  JSONTask_getPciceFromAdmin().execute();
     }
 
@@ -847,6 +1027,32 @@ public class ImportJason extends AppCompatActivity {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
+                //*********************************************************************
+                try {
+                    JSONArray parentArrayOfferMaster = parentObject.getJSONArray("price_offer_list_master");
+                    offerListMasterArrayList.clear();
+                    for (int i = 0; i < parentArrayOfferMaster.length(); i++) {
+                        JSONObject finalObject = parentArrayOfferMaster.getJSONObject(i);
+
+                        OfferListMaster offerListMaster = new OfferListMaster();
+                       int openList= finalObject.getInt("CLOSE_OPEN_LIST");
+                       int activeList=finalObject.getInt("ACTIVATE_LIST");
+                       if(openList==0 && activeList==0)
+                       {
+                           offerListMaster.setPO_LIST_NO(finalObject.getInt("PO_LIST_NO"));
+                           offerListMaster.setPO_LIST_NAME(finalObject.getString("PO_LIST_NAME"));
+                           offerListMaster.setPO_LIST_TYPE(finalObject.getInt("PO_LIST_TYPE"));
+                           offerListMaster.setFROM_DATE(finalObject.getString("FROM_DATE"));
+                           offerListMaster.setTO_DATE(finalObject.getString("TO_DATE"));
+
+                           offerListMasterArrayList.add(offerListMaster);
+                       }
+
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
 
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
@@ -943,6 +1149,7 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deletAcountReport();
             mHandler.deleteAllItemsSwitch();
             mHandler.deleteAllItemsSerialMaster();
+            mHandler.deleteOfferMaster();
 
             if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
 
@@ -1011,7 +1218,8 @@ public class ImportJason extends AppCompatActivity {
             mHandler.addCustomerPrice(customerPricesList);
             setText(title_progresspar,"add_customerPricesList");
 
-
+            mHandler.add_OfferListMaster(offerListMasterArrayList);
+            setText(title_progresspar,"add_OfferListMaster");
             for (int i = 0; i < offersList.size(); i++) {
                 mHandler.addOffer(offersList.get(i));
             }
@@ -1035,6 +1243,7 @@ public class ImportJason extends AppCompatActivity {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }
             setText(title_progresspar,"add_salesmanStation");
+
             Log.e("In***" , "addSalesmanStation_finish");
 
             return "Finish Store";
@@ -1084,9 +1293,14 @@ public class ImportJason extends AppCompatActivity {
 
             try {
 
+                //+custId
 
                 if (!ipAddress.equals("")) {
-                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin_oracle.php";
+                  //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO="+custId;
+                    Log.e("URL_TO_HIT",""+URL_TO_HIT);
+                  // URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin_oracle.php";
                 }
             } catch (Exception e) {
 
@@ -1096,16 +1310,15 @@ public class ImportJason extends AppCompatActivity {
 
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
-                HttpPost request = new HttpPost();
+                HttpGet request = new HttpGet();
                 request.setURI(new URI(URL_TO_HIT));
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                Log.e("BasicNameValuePair", "" + custId);
-                nameValuePairs.add(new BasicNameValuePair("FLAG", "1"));
-                nameValuePairs.add(new BasicNameValuePair("customerNo", custId));
+//                nameValuePairs.add(new BasicNameValuePair("FLAG", "1"));
+//                nameValuePairs.add(new BasicNameValuePair("customerNo", custId));
 
 
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+              //  request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 
 
                 HttpResponse response = client.execute(request);
@@ -1125,7 +1338,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("tag_Customer", "JsonResponse\t" + JsonResponse);
+                Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
 
                 return JsonResponse;
 
@@ -1139,7 +1352,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -1159,19 +1372,19 @@ public class ImportJason extends AppCompatActivity {
             JSONObject result = null;
             String impo = "";
             if (s != null) {
-                if (s.contains("CUSTOMER_Account_Statment")) {
+                if (s.contains("VHFNo")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
                     //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
 
                     try {
-                        result = new JSONObject(s);
+//                        result = new JSONObject(s);
                         Account__Statment_Model requestDetail;
 
 
                         JSONArray requestArray = null;
                         listCustomerInfo = new ArrayList<>();
 
-                        requestArray = result.getJSONArray("CUSTOMER_Account_Statment");
+                        requestArray =  new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
 
 
@@ -1192,7 +1405,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                             listCustomerInfo.add(requestDetail);
-                            Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
+                            //Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
 
 
                         }
@@ -1281,7 +1494,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Ip Connection Failed UPDATE_LOCATION", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -1397,7 +1610,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Ip Connection Failed PreviousIp", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -1542,7 +1755,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Ip Connection Failed AddIpDevice", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -1655,7 +1868,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Ip Connection Failed PciceFromAdmin", Toast.LENGTH_LONG).show();
                     }
                 });
 

@@ -235,6 +235,7 @@ public class Voucher {
             obj.put("custName", custName);
             obj.put("custNumber", custNumber);
             obj.put("voucherYear", voucherYear);
+            obj.put("totalQty", totalQty);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

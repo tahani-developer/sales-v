@@ -57,6 +57,7 @@ public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHold
     public  static  TextView serialValue_Model;
     public  int currentUpdate=-1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
+    public  int sunmiDevice=0;
 
     public Serial_Adapter(List<serialModel> chequeList, Context context, AddItemsFragment2 contextadd) {
 
@@ -73,6 +74,11 @@ public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHold
                 isClicked.add(0);
             }
 
+        }
+        if(databaseHandler.getPrinterSetting()==6)
+        {
+            sunmiDevice=1;
+            Log.e("sunmiDevice",""+sunmiDevice);
         }
         // chequeListall = new ArrayList<>();
     }
@@ -100,15 +106,24 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
 
         }
         else {// exist value ==1
+            if(sunmiDevice!=1)
+            {
+                viewHolder.editTextSerialCode.requestFocus();
+            }
 
-            viewHolder.editTextSerialCode.requestFocus();
+
             viewHolder.serialNo_linear.setBackgroundColor(context.getResources().getColor(R.color.layer5));
         }
 
         Log.e("currentUpdate",""+currentUpdate+"\t"+viewHolder.editTextSerialCode.getTag());
         if(viewHolder.editTextSerialCode.getTag().equals((currentUpdate)+""))
         {
-            viewHolder.editTextSerialCode.requestFocus();
+            if(sunmiDevice!=1)
+            {
+                viewHolder.editTextSerialCode.requestFocus();
+
+            }
+
             viewHolder.editTextSerialCode.setText("Curent");
         }
 
@@ -208,7 +223,7 @@ private void updateLabel(EditText editText){
         }
 
 public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView textView_counterNo;
+    TextView textView_counterNo,errorSerial;
 
     public   EditText editTextSerialCode;
     Spinner spinner_bank;
@@ -219,6 +234,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         textView_counterNo = itemView.findViewById(R.id.counter_ser);
+        errorSerial=itemView.findViewById(R.id.errorSerial);
         editTextSerialCode = itemView.findViewById(R.id.Serial_No);
         serialNo_linear=itemView.findViewById(R.id.serialNo_linear);
 //        editTextSerialCode.setEnabled(false);
@@ -309,8 +325,14 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                         if(!isUpdate)
                         {
-                            editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
-                            editTextSerialCode.setText("");
+                            Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+isUpdate);
+                           if(sunmiDevice!=1)
+                           {
+                               editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
+
+                               editTextSerialCode.setText("");
+                           }
+
                             errorData=true;
 
                         }else {
@@ -360,6 +382,39 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
 
+            }
+        });
+
+        errorSerial.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(""))
+                {
+                    int po= Integer.parseInt(s.toString());
+                    updateListCheque(po,"error");
+//
+//                    if(s.toString().equals("delet"))
+//                    {
+//
+//                        Log.e("afterTextChanged","delet");
+//                        editTextSerialCode.setText("");
+//                    }
+//                    else if(s.toString().equals("invalidSerial"))
+//                    {
+//                        editTextSerialCode.setText("");
+//                    }
+                }
             }
         });
 
@@ -420,8 +475,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         if(data.toString().length()!=0)
         {
 
-
-
                     isFoundSerial=false;
 
                         for(int h=0;h<list.size();h++)
@@ -433,8 +486,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                             }
                         }
 
-
-//            Log.e("position", "afterTextChanged" + position + "errorData\t" + errorData);
             if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
 //                if(databaseHandler.isSerialCodePaied(data).equals("not"))
 //                {
@@ -448,25 +499,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                     notifyDataSetChanged();
 
-
-
-
-//                Log.e("positionYES", "afterTextChanged" + position + " s.toString()\t" + data);
                     return true;
-//                }
-//                else {
-//                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-//                            .setTitleText(context.getString(R.string.warning_message))
-//                            .setContentText(context.getString(R.string.duplicate))
-//                            .show();
-//                    return false;
-//
-//                }
+
 
             } else {
-//                Log.e("positionNo", "afterTextChanged" + position + " s.toString()\t" + data);
                 errorData = true;
-                list.get(position).setSerialCode(data);
                 if(isFoundSerial)
                 {
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)

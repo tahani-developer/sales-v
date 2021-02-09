@@ -57,21 +57,36 @@
         <EditText
             android:id="@+id/Serial_No"
             android:layout_width="0dp"
-            android:layout_weight="7"
             android:layout_height="match_parent"
-            android:layout_margin="3dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="7"
             android:inputType="text"
             android:lines="1"
-            android:maxLines="1"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse"
             android:background="@drawable/back_border_edit"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/errorSerial"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white_alphe"
+
+
+            android:layout_weight="1.5"
+            android:inputType="text"
+            android:enabled="false"
+           android:visibility="visible"
             android:textSize="12sp" />
         <EditText
             android:id="@+id/serialTextWatcher"
             android:layout_width="0dp"
             android:layout_weight="3"
             android:visibility="gone"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="5dp"
 
             android:textAppearance="?android:attr/textAppearanceSmallInverse"

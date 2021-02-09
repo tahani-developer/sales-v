@@ -75,8 +75,12 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
+import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.payMethod;
+import static com.dr7.salesmanmanager.SalesInvoice.priceListTypeVoucher;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
@@ -188,7 +192,23 @@ public class AddItemsFragment2 extends DialogFragment {
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
-        fillListItemJson();
+        try {
+            if(!Login.salesMan.equals(""))
+            {
+                fillListItemJson();
+            }
+            else {
+                AddItemsFragment2.this.dismiss();
+                Intent i=new Intent(getActivity(),Login.class);
+                startActivity(i);
+            }
+        }catch (Exception e)
+        {
+            Log.e("Exception","getItems"+e.getMessage());
+
+        }
+
+
 
 //        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
 //
@@ -500,7 +520,7 @@ public class AddItemsFragment2 extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         float count=0;
-
+                        addItemImgButton2.setEnabled(true);
 
 //                        total_items_quantity -= List.size();
 //                        totalQty_textView.setText("+"+0);
@@ -516,6 +536,7 @@ public class AddItemsFragment2 extends DialogFragment {
                                     {
 
                                         listSerialTotal.remove(k);
+                                        k--;
                                     }
                                 }
                             }
@@ -555,6 +576,7 @@ public class AddItemsFragment2 extends DialogFragment {
             public void onClick(View view) {
                 try {
                     listener.addItemsToList(List);
+                    addItemImgButton2.setEnabled(true);
                     AddItemsFragment2.this.dismiss();
                 }
                 catch (Exception e)
@@ -694,6 +716,7 @@ public class AddItemsFragment2 extends DialogFragment {
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
+        String dateCurent=getCurentTimeDate(1);
         String rate_customer = mDbHandler.getRateOfCustomer();
         if(rate_customer.equals(""))
         {
@@ -703,17 +726,38 @@ public class AddItemsFragment2 extends DialogFragment {
         Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
-            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
         else {
             List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
 
-            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+            //from customers pricess
 
+            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+            {
+                if(priceListTypeVoucher!=0)
+                {
+                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+listOfferNo,payMethod,dateCurent);
+                    Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
+                }
+                else {// regular list
+
+
+                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+priceListTypeVoucher,payMethod,dateCurent);
+                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,0); // from price list d
+                }
+
+
+            }
+            else {
+                jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
+            }
             size_firstlist = jsonItemsList2.size();
-            if (size_firstlist != 0) {
+            Log.e("size_firstlist",""+size_firstlist);
+            if (size_firstlist != 0&&priceListTypeVoucher!=1) {
                 size_customerpriceslist = size_firstlist;
 
                 for (int k = 0; k < size_firstlist; k++) {
@@ -721,7 +765,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 }
                 //****************************************************************************************
 
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+
 
 
                 for (int i = 0; i < jsonItemsList.size(); i++) {
@@ -739,11 +783,18 @@ public class AddItemsFragment2 extends DialogFragment {
                 }
 
                 jsonItemsList = jsonItemsList_intermidiate;
+                Log.e("jsonItemsList",""+jsonItemsList.size());
 
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
 
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+                if(priceListTypeVoucher!=0)
+                {
+                    jsonItemsList=jsonItemsList2;
+                }else {
+                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
+                }
+
             }
 
 //            Collections.sort(jsonItemsList<itemNoList>);
@@ -776,7 +827,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
         if(existItem) {
-            Toast toast = Toast.makeText(context, "This item has been added before !", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);
@@ -908,7 +959,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
                 List.add(item);
-                Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.succsesful), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 180);
                 ViewGroup group = (ViewGroup) toast.getView();
                 TextView messageTextView = (TextView) group.getChildAt(0);
@@ -976,6 +1027,30 @@ public class AddItemsFragment2 extends DialogFragment {
 //        }
 
     }
+   public String getCurentTimeDate(int flag){
+       String dateCurent,timeCurrent,dateTime="";
+       Date currentTimeAndDate;
+       SimpleDateFormat dateFormat, timeformat;
+       currentTimeAndDate = Calendar.getInstance().getTime();
+       if(flag==1)// return date
+       {
+
+           dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+           dateCurent = dateFormat.format(currentTimeAndDate);
+           dateTime=convertToEnglish(dateCurent);
+
+       }
+       else {
+           if(flag==2)// return time
+           {
+               timeformat = new SimpleDateFormat("hh:mm:ss");
+               dateCurent = timeformat.format(currentTimeAndDate);
+               dateTime=convertToEnglish(dateCurent);
+           }
+       }
+       return dateTime;
+
+   }
 
     private void openIntegratorLandScapeActivity() {
         IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());

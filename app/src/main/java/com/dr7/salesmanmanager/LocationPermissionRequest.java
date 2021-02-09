@@ -225,7 +225,7 @@ int  approveAdmin=-1;
     }
 
     public void timerLocation(){
-
+       // approveAdmin= settings.get(0).getApproveAdmin();
         if(approveAdmin==1) {
             timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -236,7 +236,7 @@ int  approveAdmin=-1;
 //                if(flag){
 //                }
 
-                   // checkLocationPermission();
+                    checkLocationPermission();
 
                 }
 

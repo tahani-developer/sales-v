@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class serialModel {
     private String  serialCode;
-    private  int    counterSerial;
+    private  int  counterSerial;
     private String voucherNo;
     private String itemNo;
     private String dateVoucher;

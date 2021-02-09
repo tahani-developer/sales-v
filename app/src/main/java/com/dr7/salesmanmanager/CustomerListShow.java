@@ -514,11 +514,27 @@ public class CustomerListShow extends DialogFragment {
             progressDialog.dismiss();
 
             if (result != null) {
+                if(result.size()!=0)
+                {
+
+
+                storeInDatabase();
+                if(mHandler.getAllSettings().size() != 0) {
+
+                    if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1) {
+                        customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                    }
+
+                }
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
                 itemsListView.setAdapter(customersListAdapter);
-                storeInDatabase();
+
                 Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
-            } else {
+                }
+                else {
+
+                }
+                } else {
                 Toast.makeText(getActivity(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
             }
         }

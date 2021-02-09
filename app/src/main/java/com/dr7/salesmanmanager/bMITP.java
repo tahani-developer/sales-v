@@ -67,6 +67,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
 import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
+import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
@@ -150,7 +151,7 @@ public class bMITP extends Activity {
                 tempDir.mkdir();
             }
 
-            FileWriter fWriter = new FileWriter(fileName);
+         FileWriter fWriter = new FileWriter(fileName);
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
             }
@@ -163,10 +164,11 @@ public class bMITP extends Activity {
         } catch (FileNotFoundException var3) {
             Log.e("BluetoothConnectMenu1", var3.getMessage(), var3);
             if(getData.equals("6"))
-            {
+            { clearData.setText("1");
                 finish();
-                Intent i=new Intent(context,Stock_Activity.class);
-                startActivity(i);
+
+//                Intent i=new Intent(context,Stock_Activity.class);
+//                startActivity(i);
             }
 
 
@@ -399,12 +401,12 @@ public class bMITP extends Activity {
                 this.unregisterReceiver(this.disconnectReceiver);
             }
 
-            this.saveSettingFile();
+       this.saveSettingFile();
             this.bluetoothPort.disconnect();
         } catch (IOException var2) {
-            Log.e("BluetoothConnectMenu", var2.getMessage(), var2);
+            Log.e("BluetoothConnectMenu2", var2.getMessage(), var2);
         } catch (InterruptedException var3) {
-            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+            Log.e("BluetoothConnectMenu3", var3.getMessage(), var3);
         }
 
         if (this.hThread != null && this.hThread.isAlive()) {

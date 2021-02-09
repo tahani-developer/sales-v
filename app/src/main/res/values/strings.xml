@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 54</string>
+    <string name="version"> V 60</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -186,7 +186,7 @@
     <string name="payments_serial_from">Payments Serial</string>
     <string name="save">Save</string>
     <string name="company_number">Company Number</string>
-    <string name="voucher_number">Voucher Number</string>
+    <string name="voucher_number">Voucher NO</string>
     <string name="payment_term">Payment term</string>
     <string name="payment_number">Payment Number</string>
     <string name="voucher_type">Voucher Type</string>
@@ -426,6 +426,13 @@
     <string name="itemImportfromadmin">Import price from Admin?</string>
     <string name="no">No</string>
     <string name="invalidPassword">Invalid Password</string>
+    <string name="Reguler_Offer">Reguler / Offer</string>
+    <string name="price_ListNo">Price ListNo</string>
+    <string name="regular">Regular</string>
+    <string name="offer">Offer</string>
+    <string name="IP_PORT">IP PORT</string>
+    <string name="availableQty">Available Qty</string>
+    <string name="requiredQty">Required Qty</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

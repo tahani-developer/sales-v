@@ -473,5 +473,12 @@
     <string name="itemImportfromadmin">استيراد الاسعار من برنامج الادمن?</string>
     <string name="no">لا</string>
     <string name="invalidPassword">كلمة المرور خاطئة</string>
+    <string name="Reguler_Offer">عادي/عرض</string>
+    <string name="price_ListNo">Price ListNo</string>
+    <string name="regular">Regular</string>
+    <string name="offer">Offer</string>
+    <string name="IP_PORT">IP PORT</string>
+    <string name="availableQty">الكميات الحالية</string>
+    <string name="requiredQty">الكميات المطلوبة</string>
 
 </resources>

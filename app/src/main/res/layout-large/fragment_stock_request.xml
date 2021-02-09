@@ -57,6 +57,17 @@
                         android:textSize="@dimen/content_large"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"/>
+                    <TextView
+                        android:id="@+id/clearData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:visibility="gone"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:text="@string/voucher_number"
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="@dimen/content" />
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/row351"

@@ -58,7 +58,7 @@ public class ExportJason extends AppCompatActivity {
     public Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
-            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial;
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial,jsonArrayStockRequestMaster;
     DatabaseHandler mHandler;
     public static  SweetAlertDialog pd,pdValidation;
 
@@ -155,9 +155,29 @@ public class ExportJason extends AppCompatActivity {
 
         for (int i = 0; i < stockRequestListList.size(); i++)
         {
+            if(stockRequestListList.get(i).getIsPosted()==0)
+            {
+                jsonArrayStockRequest.put(stockRequestListList.get(i).getJSONObject());
+            }
 
-            jsonArrayStockRequest.put(stockRequestListList.get(i).getJSONObject());
+
         }
+
+        //*************************************************
+        requestVouchers=mHandler.getAllStockRequestVouchers();
+        jsonArrayStockRequestMaster=new JSONArray();
+
+        for (int i = 0; i < requestVouchers.size(); i++)
+        {
+            if(requestVouchers.get(i).getIsPosted()==0)
+            {
+                jsonArrayStockRequestMaster.put(requestVouchers.get(i).getJSONObject());
+            }
+
+
+        }
+
+        //********************************************
         //********************************************
 
         vouchers = mHandler.getAllVouchers();// from voucher master
@@ -265,6 +285,9 @@ public class ExportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("CUSTOMER_LOCATION", jsonArrayLocation.toString().trim()));
 
                 nameValuePairs.add(new BasicNameValuePair("ITEMSERIALS", jsonArraySerial.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("REQUEST_STOCK_M", jsonArrayStockRequestMaster.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("REQUEST_STOCK_D", jsonArrayStockRequest.toString().trim()));
+
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
 
@@ -423,6 +446,8 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updateTransactions();
                     mHandler.updateCustomersMaster();
                     mHandler.updateSerialTableIsposted();
+                    mHandler.updateRequestStockMaster();
+                    mHandler.updateRequestStockDetail();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
@@ -567,7 +592,6 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("tag", "onPostExecute"+s.toString());
             String impo = "";
             JSONObject result=null;
             pdValidation.dismissWithAnimation();

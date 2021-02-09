@@ -43,6 +43,15 @@ public class Item implements Serializable {
     private  String vouchDate;
     private String itemHasSerial;
     private  double discountCustomer;
+    private  double currentQty;
+
+    public double getCurrentQty() {
+        return currentQty;
+    }
+
+    public void setCurrentQty(double currentQty) {
+        this.currentQty = currentQty;
+    }
 
     public double getDiscountCustomer() {
         return discountCustomer;
@@ -178,13 +187,14 @@ public class Item implements Serializable {
     }
 
     //constructor for stock request
-    public Item( int companyNumber,int voucherNumber , String itemNo, String itemName, float qty , String date) {
+    public Item( int companyNumber,int voucherNumber , String itemNo, String itemName, float qty , String date,double cureQty) {
         this.companyNumber = companyNumber;
         this.voucherNumber = voucherNumber;
         this.itemNo = itemNo;
         this.itemName = itemName;
         this.qty = qty;
         this.date = date;
+        this.currentQty=cureQty;
     }
 
 
@@ -442,6 +452,8 @@ public class Item implements Serializable {
             obj.put("itemYear", year);
             obj.put("ITEM_DESCRITION", description);
             obj.put("SERIAL_CODE", serialCode);
+            obj.put("VoucherDate",date);
+            obj.put("currentQty",currentQty);
 //            obj.put("ITEMHASSERIAL", itemHasSerial);
 
 
