@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,7 +43,9 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -560,6 +563,8 @@ LocationPermissionRequest locationPermissionRequest;
             public void onClick(DialogInterface dialogInterface, int i) {
 //                clearSerial();
 
+                locationPermissionRequest.closeLocation();
+                MainActivity. masterControlLoc.setText("2");
                 back();
                 saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
@@ -569,6 +574,7 @@ LocationPermissionRequest locationPermissionRequest;
                 linearMainActivities.setVisibility(View.VISIBLE);
                 switchLayout.setVisibility(View.GONE);
 //                salesInvoice.total_items_quantity=0
+
 
             }
         });
@@ -636,6 +642,7 @@ LocationPermissionRequest locationPermissionRequest;
 
 
     public void back() {
+
         super.onBackPressed();
 
     }
@@ -693,5 +700,27 @@ LocationPermissionRequest locationPermissionRequest;
             super.onActivityResult(requestCode, resultCode, data);
         }
 //        }
+
+        switch (requestCode) {
+            case 10001:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
+
+                        openDialog=false;
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
+
+                        openDialog=false;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+
     }
 }

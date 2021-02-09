@@ -135,6 +135,7 @@ import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity
     LocationPermissionRequest locationPermissionRequest;
     Transaction transactionRealTime;
 
+    public  static TextView masterControlLoc;
 
 
 
@@ -275,7 +277,27 @@ public class MainActivity extends AppCompatActivity
         first=1;
 
         TextView textTimer = (TextView)findViewById(R.id.timerTextView);
+        masterControlLoc=findViewById(R.id.masterControlLoc);
+        masterControlLoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(masterControlLoc.getText().toString().equals("2")) {
+                    locationOPen();
+                    masterControlLoc.setText("0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         isClickLocation=1;
         try {
             if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)
@@ -495,6 +517,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            locationPermissionRequest.closeLocation();
             finish();
         }
     }
@@ -947,6 +970,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_activities) {
+            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, Activities.class);
             startActivity(intent);
 
@@ -955,7 +979,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_exp_data) {
-
+            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to post data ? This will take few minutes !")
@@ -994,10 +1018,12 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.customers_location) {
+            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.sales_man_map) {
+            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, SalesmanMap.class);
             startActivity(intent);
 
@@ -1014,6 +1040,7 @@ public class MainActivity extends AppCompatActivity
 
 
         else if (id == R.id.nav_imp_data) {
+            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to update data ? This will take few minutes !")
@@ -1078,6 +1105,7 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_refreshdata) {
+            locationPermissionRequest.closeLocation();
 //            new AlertDialog.Builder(this)
 //                    .setTitle("Confirm Update")
 //                    .setMessage("Are you sure you want to refresh data ? This will take few minutes !")
@@ -1101,17 +1129,18 @@ public class MainActivity extends AppCompatActivity
 //                    .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_sign_out) {
+            locationPermissionRequest.closeLocation();
 //            Intent intent = new Intent(this, CPCL2Menu.class);
 //            startActivity(intent);
 
         } else if (id == R.id.nav_clear_local) {
-
+            locationPermissionRequest.closeLocation();
             mDbHandler.deleteAllPostedData();
 
         }
 
         else if (id == R.id.nav_backup_data) {
-
+            locationPermissionRequest.closeLocation();
 
             try {
                 verifyStoragePermissions(MainActivity.this);
@@ -1127,6 +1156,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if (id == R.id.nav_stock) {
+            locationPermissionRequest.closeLocation();
            finish();
            Intent i=new Intent(MainActivity.this,Stock_Activity.class);
            startActivity(i);
@@ -2359,6 +2389,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         finish();
+                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
                     }
@@ -2873,6 +2904,11 @@ dialog.dismiss();
         editText.setText(sdf.format(myCalendar.getTime()));
     }
 
+    public void locationOPen(){
+        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+        locationPermissionRequest.timerLocation();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2928,6 +2964,27 @@ dialog.dismiss();
 
 
             }
+        }
+
+        switch (requestCode) {
+            case 10001:
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    // All required changes were successfully made
+                    Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
+
+                    openDialog=false;
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
+
+                    openDialog=false;
+                    break;
+                default:
+                    break;
+            }
+                break;
         }
     }
 
