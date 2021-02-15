@@ -73,6 +73,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -129,7 +130,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ImageView acceptDiscount, rejectDiscount;
     public static TextView serialValue;
     int discountPerVal=0,showSolidQty=0;
-
+    int vouch,kindVoucher=504;
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
@@ -138,6 +139,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             isClicked.add(0);
         }
         cont = context.getActivity();
+         vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
+        kindVoucher=voucherType;
         MHandler = new DatabaseHandler(cont);
         settingPriceCus = MHandler.getAllSettings().get(0).getPriceByCust();
         showItemImageSetting = MHandler.getAllSettings().get(0).getShowItemImage();
@@ -245,6 +248,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    itemNoSelected ="";
                                                    counterSerial = 0;
                                                    counterBonus = 0;
+                                                   getTimeAndDate();
                                                    for (int i = 0; i < localItemNumber.size(); i++) {
                                                        if (localItemNumber.get(i).equals(items.get(holder.getAdapterPosition()).getItemNo())) {
                                                            showAlertDialog();
@@ -343,6 +347,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    serial.setCounterSerial(i);
                                                                                    serial.setSerialCode("");
                                                                                    serial.setIsBonus("0");
+                                                                                   serial.setIsDeleted("0");
+                                                                                   serial.setVoucherNo(vouch+"");
+                                                                                   serial.setKindVoucher(kindVoucher+"");
+                                                                                   serial.setStoreNo(Login.salesMan);
+                                                                                   serial.setDateVoucher(voucherDate);
+                                                                                   serial.setItemNo(itemNoSelected);
                                                                                    serialListitems.add(serial);
 
                                                                                }
@@ -407,11 +417,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    serialMod.setSerialCode(araySerial[i]);
                                                                                    if (isbonus.equals("0")) {
                                                                                        serialMod.setCounterSerial(++counterSerial);
+                                                                                       serialMod.setVoucherNo(vouch+"");
+                                                                                       serialMod.setKindVoucher(kindVoucher+"");
+                                                                                       serialMod.setStoreNo(Login.salesMan);
+                                                                                       serialMod.setDateVoucher(voucherDate);
+                                                                                       serialMod.setItemNo(itemNoSelected);
                                                                                        unitQty.setText(counterSerial + "");
 
 
                                                                                    } else {
                                                                                        serialMod.setCounterSerial(++counterBonus);
+                                                                                       serialMod.setVoucherNo(vouch+"");
+                                                                                       serialMod.setKindVoucher(kindVoucher+"");
+                                                                                       serialMod.setStoreNo(Login.salesMan);
+                                                                                       serialMod.setDateVoucher(voucherDate);
+                                                                                       serialMod.setItemNo(itemNoSelected);
                                                                                        bonus.setText(counterBonus + "");
                                                                                    }
 
@@ -480,6 +500,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        serial.setCounterSerial(counterBonus);
                                                                        serial.setSerialCode("");
                                                                        serial.setIsBonus("1");
+                                                                       serial.setIsDeleted("0");
+                                                                       serial.setVoucherNo(vouch+"");
                                                                        serialListitems.add(serial);
 
 
@@ -568,7 +590,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                serial.setCounterSerial(counterSerial);
                                                                serial.setSerialCode("");
                                                                serial.setIsBonus("0");
+                                                               serial.setIsDeleted("0");
+                                                               serial.setVoucherNo(vouch+"");
+                                                               serial.setKindVoucher(kindVoucher+"");
+                                                               serial.setStoreNo(Login.salesMan);
+                                                               serial.setDateVoucher(voucherDate);
+                                                               serial.setItemNo(itemNoSelected);
+
                                                                serialListitems.add(serial);
+
 
 
                                                                serial_No_recyclerView.setLayoutManager(layoutManager);
@@ -898,8 +928,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        @Override
                                                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                                           int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
-                                                                           Log.e("cancel3","serialListitemsInCardView"+serialListitems.size());
+                                                                          // int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
+                                                                           try {
+                                                                               Log.e("cancel3","serialListitemsInCardView"+serialListitems.size());
+                                                                               for(int k=0;k<listMasterSerialForBuckup.size();k++)
+                                                                               {
+                                                                                   MHandler.add_SerialBackup(listMasterSerialForBuckup.get(k),1);
+                                                                               }
+                                                                               Log.e("listMasterSerialFor","addToList="+listMasterSerialForBuckup.size());
+                                                                           }catch (Exception e){}
+
                                                                            serialListitems.clear();
                                                                            Log.e("cancel3",""+serialListitems.size());
 //                                                                           MHandler.deletSerialItems_byVoucherNo(vouch);
@@ -971,6 +1009,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            @Override
                                                            public void onClick(View v) {
                                                                holder.cardView.setEnabled(true);
+                                                               //listMasterSerialForBuckup.addAll(serialListitems);
+                                                               for(int i=0;i<listMasterSerialForBuckup.size();i++)
+                                                               {
+                                                                   mHandler.add_SerialBackup(listMasterSerialForBuckup.get(i),0);
+                                                               }
+                                                               Log.e("listMasterSerialFor","addToList="+listMasterSerialForBuckup.size());
                                                                String qtyText = "", discountText = "", bunosText = "";
                                                                int countInvalidSerial = 0;
                                                                if (serialListitems.size() != 0) {
@@ -1221,6 +1265,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         );
 
     }
+
+
 
     private void getDataForDiscountTotal(String itemName, String type, String price, String amount,String qty) {
         Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price+amount);

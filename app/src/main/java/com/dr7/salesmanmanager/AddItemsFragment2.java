@@ -76,7 +76,9 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
+import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
+import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.payMethod;
@@ -525,6 +527,12 @@ public class AddItemsFragment2 extends DialogFragment {
 //                        total_items_quantity -= List.size();
 //                        totalQty_textView.setText("+"+0);
 //                        total_items_quantity=0;
+                        for(int h=0;h<List.size();h++)
+                        {
+
+                            updateListSerialBukupDeleted( List.get(h).getItemNo(),voucherNumberTextView.getText().toString());
+                        }
+
                         if(listSerialTotal.size()!=0)
                         {
                             for(int k=0;k<listSerialTotal.size();k++)
@@ -634,6 +642,12 @@ public class AddItemsFragment2 extends DialogFragment {
 //            super.onActivityResult(requestCode, resultCode, data);
 //        }
 //    }
+    private void updateListSerialBukupDeleted(String itemNoSelected, String vouch) {
+//        for(int j=0;j<listMasterSerialForBuckup.size();j++)
+//        {
+        mDbHandler.updateitemDeletedInSerialTable_Backup(itemNoSelected,vouch);
+//        }
+    }
    public  void searchByBarcodeNo(String barcodeValue) {
        Log.e("searchByBarcodeNo",""+barcodeValue);
        String itemNo="";
@@ -977,6 +991,8 @@ public class AddItemsFragment2 extends DialogFragment {
                     itemSerialList.get(i).setKindVoucher("");
                     itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
                     itemSerialList.get(i).setStoreNo(storeNo);
+                    itemSerialList.get(i).setIsDeleted("0");
+                    itemSerialList.get(i).setDateDelete(voucherDate);
                     listSerialTotal.add( itemSerialList.get(i));
 
                 }

@@ -29,6 +29,7 @@ import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
+import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
@@ -37,6 +38,7 @@ import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.UnCollect_Modell;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.google.gson.Gson;
@@ -80,6 +82,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.previousIp;
+import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
 
@@ -87,7 +90,7 @@ public class ImportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
-    SweetAlertDialog pdValidation;
+    SweetAlertDialog pdValidation,pdPayments;
     public  String curentIpDevice="";
 
     public static List<Customer> customerList = new ArrayList<>();
@@ -109,6 +112,8 @@ public class ImportJason extends AppCompatActivity {
     public static List<OfferListMaster> offerListMasterArrayList = new ArrayList<>();
     public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
     public static ArrayList<serialModel> itemSerialList=new ArrayList<>();
+    public static ArrayList<UnCollect_Modell> unCollectlList=new ArrayList<>();
+    public static ArrayList<Payment> paymentChequesList=new ArrayList<>();
 
     boolean start = false;
     String ipAddress = "",ipWithPort="";
@@ -138,6 +143,28 @@ public class ImportJason extends AppCompatActivity {
         }
 
     }
+
+    public void getUnCollectedCheques() {
+        List<Settings> settings = mHandler.getAllSettings();
+        if (settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            Log.e("getUnCollectedCheques", "*****");
+            new JSONTask_UncollectedCheques(CustomerListShow.Customer_Account).execute();
+            //  new SyncRemark().execute();
+        }
+
+    }
+
+    public void getAllcheques() {
+        List<Settings> settings = mHandler.getAllSettings();
+        if (settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            Log.e("getUnCollectedCheques", "*****");
+            new JSONTask_GetAllCheques(CustomerListShow.Customer_Account).execute();
+            //  new SyncRemark().execute();
+        }
+    }
+
     private class SyncRemark extends AsyncTask<String, String, String> {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
@@ -1273,17 +1300,22 @@ public class ImportJason extends AppCompatActivity {
         }
     }
 
-    private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
+    private class JSONTask_UncollectedCheques extends AsyncTask<String, String, String> {
 
         private String custId = "";
 
-        public JSONTask_AccountStatment(String customerId) {
+        public JSONTask_UncollectedCheques(String customerId) {
             this.custId = customerId;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
             String do_ = "my";
 
         }
@@ -1296,11 +1328,323 @@ public class ImportJason extends AppCompatActivity {
                 //+custId
 
                 if (!ipAddress.equals("")) {
+                    //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
                   //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                    if(ipAddress.contains(":"))
+                    {
+                        int ind=ipAddress.indexOf(":");
+                        ipAddress=ipAddress.substring(0,ind);
+                    }
+//                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/GetTheUnCollectedCheques?ACCNO=1224";
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("AccCode")) {
+                    // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
+                    //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+
+                    try {
+                        //[{"AccCode":"1224","RECVD":"3528","PAIDAMT":"0"}]
+                        UnCollect_Modell requestDetail;
+
+
+                        JSONArray requestArray = null;
+                        listCustomerInfo = new ArrayList<>();
+
+                        requestArray =  new JSONArray(s);
+                        Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            requestDetail = new UnCollect_Modell();
+                            requestDetail.setAccCode(infoDetail.get("AccCode").toString());
+                            requestDetail.setRECVD(infoDetail.get("RECVD").toString());
+                            requestDetail.setPAIDAMT(infoDetail.get("PAIDAMT").toString());
+
+
+
+                            unCollectlList.add(requestDetail);
+                            Log.e("listRequest", "listCustomerInfo" + unCollectlList.size());
+
+
+                        }
+                        if(unCollectlList.size()!=0)
+                        {
+                            resultData.setText("yes");
+                        }
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+            }
+        }
+
+    }
+    private class JSONTask_GetAllCheques extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+
+        public JSONTask_GetAllCheques(String customerId) {
+            this.custId = customerId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdPayments = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdPayments.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdPayments.setTitleText(context.getResources().getString(R.string.process));
+            pdPayments.setCancelable(false);
+            pdPayments.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                //+custId
+
+                if (!ipAddress.equals("")) {
+                    //http://10.0.0.22:8082/GetAllTheCheques?ACCNO=1224
+                    //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
+                    if(ipAddress.contains(":"))
+                    {
+                        int ind=ipAddress.indexOf(":");
+                        ipAddress=ipAddress.substring(0,ind);
+                    }
+
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/GetAllTheCheques?ACCNO=1224";
+                }
+            } catch (Exception e) {
+                pdPayments.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_allcheques", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        pdPayments.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            pdPayments.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("VHFNo")) {
+                    // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
+                    //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+
+                    try {
+
+                        Payment requestDetail;
+//                        ChequeNo
+
+
+                        JSONArray requestArray = null;
+                        paymentChequesList = new ArrayList<>();
+
+                        requestArray =  new JSONArray(s);
+                        Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            requestDetail = new Payment();
+                            try {
+                                requestDetail.setCheckNumber(Integer.parseInt(infoDetail.get("ChequeNo").toString()));
+                            }
+                            catch (Exception e){ requestDetail.setCheckNumber(111);}
+                            //
+
+                            requestDetail.setDueDate(infoDetail.get("DueDate").toString());
+                            requestDetail.setBank("Jordan Bank");
+                            try {
+                                requestDetail.setAmount(Double.parseDouble(infoDetail.get("CAmount").toString()));
+
+                            }catch (Exception e){requestDetail.setAmount(0);}
+
+
+
+                            paymentChequesList.add(requestDetail);
+                            Log.e("listRequest", "listCustomerInfo" + unCollectlList.size());
+
+
+                        }
+                        if(paymentChequesList.size()!=0)
+                        {
+                            resultData.setText("payment");
+                        }
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+            }
+        }
+
+    }
+    private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+
+        public JSONTask_AccountStatment(String customerId) {
+            this.custId = customerId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                //+custId
+
+                if (!ipAddress.equals("")) {
+                    //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                    if(ipAddress.contains(":"))
+                    {
+                        int ind=ipAddress.indexOf(":");
+                        ipAddress=ipAddress.substring(0,ind);
+                    }
                     URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO="+custId;
-                    Log.e("URL_TO_HIT",""+URL_TO_HIT);
-                  // URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin_oracle.php";
                 }
             } catch (Exception e) {
 
@@ -1318,7 +1662,7 @@ public class ImportJason extends AppCompatActivity {
 //                nameValuePairs.add(new BasicNameValuePair("customerNo", custId));
 
 
-              //  request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+                //  request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 
 
                 HttpResponse response = client.execute(request);
@@ -1371,6 +1715,7 @@ public class ImportJason extends AppCompatActivity {
 
             JSONObject result = null;
             String impo = "";
+            pdValidation.dismissWithAnimation();
             if (s != null) {
                 if (s.contains("VHFNo")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -1421,7 +1766,6 @@ public class ImportJason extends AppCompatActivity {
         }
 
     }
-
     private class JSONTask_UpdateLocation extends AsyncTask<String, String, String> {
 
         JSONObject jsonObject;

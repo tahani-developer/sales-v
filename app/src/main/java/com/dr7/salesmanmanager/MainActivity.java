@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
     public static int menuItemState;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
-    public  static  EditText passwordFromAdmin;
+    public  static  EditText passwordFromAdmin, password ;
     static public TextView mainTextView,timeTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
@@ -1039,6 +1039,8 @@ public class MainActivity extends AppCompatActivity
 
 
         else if (id == R.id.nav_imp_data) {
+            Log.e("nav_imp_data","nav_imp_data");
+         //   locationPermissionRequest.closeLocation();
 //            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
@@ -1127,16 +1129,27 @@ public class MainActivity extends AppCompatActivity
 //                    })
 //                    .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.nav_sign_out) {
-//            locationPermissionRequest.closeLocation();
-//            Intent intent = new Intent(this, CPCL2Menu.class);
-//            startActivity(intent);
-
-        } else if (id == R.id.nav_clear_local) {
+        }
+//        else if (id == R.id.nav_sign_out) {
+////            locationPermissionRequest.closeLocation();
+////            Intent intent = new Intent(this, CPCL2Menu.class);
+////            startActivity(intent);
+//
+//        }
+        else if (id == R.id.nav_clear_local) {
 //            locationPermissionRequest.closeLocation();
             mDbHandler.deleteAllPostedData();
+        }
+        else if (id == R.id.nav_unCollectedchecked) {
+          //  locationPermissionRequest.closeLocation();
+            finish();
+          Intent in=new Intent(MainActivity.this,UnCollectedData.class);
+          startActivity(in);
+            Log.e("nav_unCollectedchecked","nav_unCollectedchecked");
+
 
         }
+
 
         else if (id == R.id.nav_backup_data) {
 //            locationPermissionRequest.closeLocation();
@@ -1687,7 +1700,8 @@ public class MainActivity extends AppCompatActivity
         lp.windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setAttributes(lp);
         passwordFromAdmin=dialog.findViewById(R.id.passwordFromAdmin);
-//        getPassword();
+
+        passwordFromAdmin.setText("");
         LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
         try{
             if(languagelocalApp.equals("ar"))
@@ -1706,7 +1720,7 @@ public class MainActivity extends AppCompatActivity
         {
             mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        final EditText password = (EditText) dialog.findViewById(R.id.editText1);
+        password = (EditText) dialog.findViewById(R.id.editText1);
 
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
@@ -1728,16 +1742,23 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 if(flag == 10)
                 {
+
 //                   if( password.getText().toString().equals("2021m$003"))
-                       if( password.getText().toString().trim().equals(passwordFromAdmin.getText().toString())||password.getText().toString().trim().equals("111000222"))
-                   {
-                       dialog.dismiss();
-                       openSetting alert = new openSetting();
-                       alert.showDialog(MainActivity.this, "Error de conexión al servidor");
-                   }
-                       else {
-                           password.setError(getResources().getString(R.string.invalidPassword));
-                       }
+                    if(passwordFromAdmin.getText().toString().equals("")) {
+                        getPassword();
+                    }
+                        if( (password.getText().toString().trim().equals(passwordFromAdmin.getText().toString()))&&(!password.getText().toString().equals("")))
+                    {
+                        dialog.dismiss();
+                        openSetting alert = new openSetting();
+                        alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                    }
+                    else {
+                        password.setError(getResources().getString(R.string.invalidPassword));
+                    }
+
+
+
 
                 }
                 else {

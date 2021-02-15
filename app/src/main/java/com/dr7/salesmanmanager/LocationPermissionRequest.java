@@ -274,7 +274,7 @@ int  approveAdmin=-1;
 
                     if(approveAdmin==1) {
 //                        if (OpenFlag==1) {
-                            Log.e("locationRec", "" + req);
+                           // Log.e("locationRec", "" + req);
                             checkLocationPermission();
 //                        }
 

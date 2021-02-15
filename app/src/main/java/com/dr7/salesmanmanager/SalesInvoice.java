@@ -189,7 +189,7 @@ public class SalesInvoice extends Fragment {
     requestAdmin request;
     boolean validCustomerName=false,updatedName=false;
     public  static  String itemNoSelected="";
-    public  static  List <serialModel> listSerialTotal,copyListSerial;
+    public  static  List <serialModel> listSerialTotal,copyListSerial,listMasterSerialForBuckup;
     public Spinner voucherTypeSpinner;
     public  static  int priceListTypeVoucher=0,listOfferNo=-1;
     LinearLayout linearRegulerOfferList;
@@ -316,7 +316,7 @@ public class SalesInvoice extends Fragment {
     boolean validDiscount=false;
 
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
-           R.drawable.ic_info_outline_white_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp};
+          R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp};
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
@@ -352,6 +352,7 @@ public class SalesInvoice extends Fragment {
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         listSerialTotal=new ArrayList<>();
+        listMasterSerialForBuckup=new ArrayList<>();
         listSerialTotal.clear();
         copyListSerial=new ArrayList<>();
         contextG=getActivity().getApplicationContext();
@@ -536,6 +537,7 @@ public class SalesInvoice extends Fragment {
                                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int whichButton) {
 
+                                        updateListSerialBukupDeleted("",voucherNo+"");
                                         clearItemsList();
                                         clearLayoutData(1);
 
@@ -675,6 +677,7 @@ public class SalesInvoice extends Fragment {
                                     netTotal = 0.0;
                                     totalDiscount = 0;
                                     sum_discount = 0;
+                                    updateListSerialBukupDeleted("",voucherNo+"");
                                     clearLayoutData(1);
                                 }
                                 calculateTotals();
@@ -689,6 +692,7 @@ public class SalesInvoice extends Fragment {
                                     netTotal = 0.0;
                                     totalDiscount = 0;
                                     sum_discount = 0;
+                                    updateListSerialBukupDeleted("",voucherNo+"");
                                     clearLayoutData(1);
                                 }
                                 calculateTotals();
@@ -844,14 +848,14 @@ public class SalesInvoice extends Fragment {
 //    }
 
     private void inflateBoomMenu(View view) {
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.balance),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request)};
 
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_2);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_4_2);
 
 
 
@@ -871,19 +875,15 @@ public class SalesInvoice extends Fragment {
                             switch (index)
                             {
                                 case 0:
+                                    updateListSerialBukupDeleted("",voucherNo+"");
                                     clearAllData();
                                     break;
                                 case 1:
                                     RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
                                     obj.startParsing();
                                     break;
+
                                 case 2:
-                                    Intent intent = new Intent(getContext(), AccountStatment.class);
-                                    getContext().startActivity(intent);
-
-
-                                    break;
-                                case 3:
 
 
                                     try {
@@ -902,7 +902,7 @@ public class SalesInvoice extends Fragment {
                                         voucherNo = 0;
                                     }
                                     break;
-                                case 4:
+                                case 3:
                                     if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
 
                                         if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
@@ -1100,7 +1100,7 @@ public class SalesInvoice extends Fragment {
             public void onClick(DialogInterface dialogInterface, int i) {
 
 
-
+                updateListSerialBukupDeleted("",voucherNo+"");
                 clearLayoutData(1);
             }
         });
@@ -2412,16 +2412,21 @@ public class SalesInvoice extends Fragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
                                     case 0:
-                                        copyListSerial.clear();
+                                        //copyListSerial.clear();
 
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
+
                                         if(mDbHandler.getAllSettings().get(0).getWork_serialNo()==1||items.get(position).getItemHasSerial().equals("1"))
                                         {
 
                                             try {
-//                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
 
+                                               updateListSerialBukupDeleted( itemNoForDelete,voucherNumberTextView.getText().toString());
+
+
+//                                                mDbHandler.deletSerialItems_byItemNo(items.get(position).getItemNo());
+                                               // Log.e("listSerialTotal","copyListSerial.size()"+copyListSerial.size()+"\tlistSerialTotal="+listSerialTotal.size());
                                                 if(listSerialTotal.size()!=0)
                                                 {
 
@@ -2430,24 +2435,29 @@ public class SalesInvoice extends Fragment {
                                                             if(listSerialTotal.get(k).getItemNo().equals(itemNoForDelete))
                                                             {
 
+                                                                listSerialTotal.remove(k);
+                                                                k--;
                                                             }
-                                                            else {
-
-                                                                try {
-                                                                    copyListSerial.add(listSerialTotal.get(k));
-
-                                                                }
-                                                                catch (Exception e)
-                                                                {
-                                                                    Log.e("Exception",""+e.getMessage());
-                                                                }
-
-
-                                                            }
+//                                                            else {
+//
+//                                                                try {
+//                                                                    copyListSerial.add(listSerialTotal.get(k));
+//                                                                    Log.e("copyListSerial",""+copyListSerial.size());
+//
+//                                                                }
+//                                                                catch (Exception e)
+//                                                                {
+//                                                                    Log.e("Exception",""+e.getMessage());
+//                                                                }
+//
+//
+//                                                            }
 
                                                     }
+//                                                    Log.e("copyListSerial",""+copyListSerial.size());
+                                                  //  Log.e("listSerialTotal",""+listSerialTotal.size());
 
-                                                    listSerialTotal=copyListSerial;
+//                                                    listSerialTotal=copyListSerial;
 
                                                 }
 
@@ -2471,6 +2481,7 @@ public class SalesInvoice extends Fragment {
                                     case 1:
 
 
+                                        updateListSerialBukupDeleted("",voucherNo+"");
                                         clearItemsList();
                                         clearLayoutData(1);
                                         total_items_quantity = 0;
@@ -2583,6 +2594,7 @@ public class SalesInvoice extends Fragment {
 
                                         break;
                                     case 2:
+                                        updateListSerialBukupDeleted("",voucherNo+"");
                                         clearItemsList();
                                         clearLayoutData(1);
                                         total_items_quantity = 0;
@@ -2597,6 +2609,13 @@ public class SalesInvoice extends Fragment {
 
                 }
             };
+    private void updateListSerialBukupDeleted(String itemNoSelected, String vouch) {
+
+            mDbHandler.updateitemDeletedInSerialTable_Backup(itemNoSelected,vouch);
+
+
+
+    }
 
     public String[] getIndexToBeUpdated() {
         return rowToBeUpdated;
