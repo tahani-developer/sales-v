@@ -31,7 +31,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <application
         android:allowBackup="true"
 
@@ -79,7 +80,7 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Modles.Account_Report" />
+
         <activity android:name=".Splashscreen" />
         <activity android:name=".bluetoothprinter" />
         <activity
@@ -192,6 +193,15 @@
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
             android:theme="@android:style/Theme.Dialog" />
+
+
+        <!-- defining the service class here -->
+        <service android:name=".BackgroundGpsServices"
+            android:stopWithTask="false"
+            android:process=":BackgroundGpsServices"
+            android:enabled="true"/>
+
+        <activity android:name=".noThingNotifi" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

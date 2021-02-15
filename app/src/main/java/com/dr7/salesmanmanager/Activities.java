@@ -85,7 +85,7 @@ public class Activities extends AppCompatActivity implements
     DatabaseHandler databaseHandler;
     static String[] araySerial;
     TextView switchLayout;
-LocationPermissionRequest locationPermissionRequest;
+// LocationPermissionRequest locationPermissionRequest;
 
     @Override 
     public void displayFindItemFragment() {
@@ -176,9 +176,8 @@ LocationPermissionRequest locationPermissionRequest;
         databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
 
-
-            locationPermissionRequest = new LocationPermissionRequest(Activities.this);
-            locationPermissionRequest.timerLocation();
+            //locationPermissionRequest = new LocationPermissionRequest(Activities.this);
+//            locationPermissionRequest.timerLocation();
 
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
@@ -563,7 +562,7 @@ LocationPermissionRequest locationPermissionRequest;
             public void onClick(DialogInterface dialogInterface, int i) {
 //                clearSerial();
 
-                locationPermissionRequest.closeLocation();
+              //  locationPermissionRequest.closeLocation();
                 MainActivity. masterControlLoc.setText("2");
                 back();
                 saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
@@ -708,7 +707,7 @@ LocationPermissionRequest locationPermissionRequest;
                         // All required changes were successfully made
                         Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
 
-                        openDialog=false;
+                        openDialog=true;
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to

@@ -137,6 +137,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
+
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 
@@ -199,11 +200,10 @@ public class MainActivity extends AppCompatActivity
     LinearLayout checkInCheckOutLinear;
     public  static int time=30;
     Timer timer;
-    LocationPermissionRequest locationPermissionRequest;
+//    LocationPermissionRequest locationPermissionRequest;
     Transaction transactionRealTime;
 
     public  static TextView masterControlLoc;
-
 
 
     public static void settext2() {
@@ -275,7 +275,6 @@ public class MainActivity extends AppCompatActivity
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first=1;
-
         TextView textTimer = (TextView)findViewById(R.id.timerTextView);
         masterControlLoc=findViewById(R.id.masterControlLoc);
         masterControlLoc.addTextChangedListener(new TextWatcher() {
@@ -288,7 +287,7 @@ public class MainActivity extends AppCompatActivity
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(masterControlLoc.getText().toString().equals("2")) {
-                    locationOPen();
+//                    locationOPen();
                     masterControlLoc.setText("0");
                 }
             }
@@ -441,8 +440,8 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
-        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
-        locationPermissionRequest.timerLocation();
+//        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+//        locationPermissionRequest.timerLocation();
 
 
 
@@ -517,7 +516,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             finish();
         }
     }
@@ -970,7 +969,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_activities) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, Activities.class);
             startActivity(intent);
 
@@ -979,7 +978,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_exp_data) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to post data ? This will take few minutes !")
@@ -1018,12 +1017,12 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.customers_location) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.sales_man_map) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, SalesmanMap.class);
             startActivity(intent);
 
@@ -1040,7 +1039,7 @@ public class MainActivity extends AppCompatActivity
 
 
         else if (id == R.id.nav_imp_data) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to update data ? This will take few minutes !")
@@ -1105,7 +1104,7 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_refreshdata) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
 //            new AlertDialog.Builder(this)
 //                    .setTitle("Confirm Update")
 //                    .setMessage("Are you sure you want to refresh data ? This will take few minutes !")
@@ -1129,18 +1128,18 @@ public class MainActivity extends AppCompatActivity
 //                    .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_sign_out) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
 //            Intent intent = new Intent(this, CPCL2Menu.class);
 //            startActivity(intent);
 
         } else if (id == R.id.nav_clear_local) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             mDbHandler.deleteAllPostedData();
 
         }
 
         else if (id == R.id.nav_backup_data) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
 
             try {
                 verifyStoragePermissions(MainActivity.this);
@@ -1156,7 +1155,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         else if (id == R.id.nav_stock) {
-            locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
            finish();
            Intent i=new Intent(MainActivity.this,Stock_Activity.class);
            startActivity(i);
@@ -2389,7 +2388,7 @@ public class MainActivity extends AppCompatActivity
 
 
                         finish();
-                        locationPermissionRequest.closeLocation();
+//                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
                     }
@@ -2905,8 +2904,8 @@ dialog.dismiss();
     }
 
     public void locationOPen(){
-        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
-        locationPermissionRequest.timerLocation();
+//        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+//        locationPermissionRequest.timerLocation();
     }
 
     @Override
@@ -2973,7 +2972,7 @@ dialog.dismiss();
                     // All required changes were successfully made
                     Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
 
-                    openDialog=false;
+                    openDialog=true;
                     break;
                 case Activity.RESULT_CANCELED:
                     // The user was asked to change settings, but chose not to

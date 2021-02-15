@@ -1494,7 +1494,7 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
 
-                        Toast.makeText(context, "Ip Connection Failed UPDATE_LOCATION", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, "Ip Connection Failed UPDATE_LOCATION", Toast.LENGTH_LONG).show();
                     }
                 });
 

@@ -144,6 +144,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.CustomerCheckInFragment.customernametest;
 
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
@@ -353,6 +354,7 @@ public class SalesInvoice extends Fragment {
         listSerialTotal=new ArrayList<>();
         listSerialTotal.clear();
         copyListSerial=new ArrayList<>();
+        contextG=getActivity().getApplicationContext();
 
         try {
             if (languagelocalApp.equals("ar"))
@@ -1538,6 +1540,7 @@ public class SalesInvoice extends Fragment {
         sweetMessage.setCanceledOnTouchOutside(false);
         sweetMessage.setCustomView(editText);
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(!editText.getText().toString().equals(""))

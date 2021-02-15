@@ -13,6 +13,7 @@ import com.dr7.salesmanmanager.Reports.Reports;
 import java.util.Locale;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class LocaleAppUtils {
@@ -42,6 +43,7 @@ public class LocaleAppUtils {
     }
     public static void changeLayot(Context context){
         mHandler = new DatabaseHandler(context);
+        contextG=context;
         if (mHandler.getAllSettings().size() != 0) {
             if (mHandler.getAllSettings().get(0).getArabic_language() == 1) {
                 languagelocalApp="ar";

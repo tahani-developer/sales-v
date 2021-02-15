@@ -114,12 +114,17 @@ public class Login extends AppCompatActivity {
    public static String currentIp="",previousIp="";
     String serialNo2="";
     public  static  TextView checkIpDevice;
+    public static Context contextG;
+
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleAppUtils.setConfigChange(Login.this);
+
         new LocaleAppUtils().changeLayot(Login.this);
+
         setContentView(R.layout.activity_login);
         checkIpDevice=findViewById(R.id.checkIpDevice);
         locationPermissionRequest = new LocationPermissionRequest(Login.this);
@@ -212,6 +217,7 @@ public class Login extends AppCompatActivity {
         loginCardView = (CardView) findViewById(R.id.loginCardView);
         loginCardView.setOnClickListener(new OnClickListener() {
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 CompanyInfo companyLocation = mDHandler.getCompanyLocation();
@@ -289,7 +295,7 @@ public class Login extends AppCompatActivity {
 
             }
         });
-        locationPermissionRequest.timerLocation();
+       locationPermissionRequest.timerLocation();
 
         checkIpDevice.addTextChangedListener(new TextWatcher() {
             @Override
@@ -302,6 +308,7 @@ public class Login extends AppCompatActivity {
 
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -500,6 +507,7 @@ public class Login extends AppCompatActivity {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkExistToLogin() {
         if (exist) {
             if (isMasterLogin) {
@@ -539,7 +547,7 @@ public class Login extends AppCompatActivity {
                         goToMain();
                     }
 
-                    locationPermissionRequest.closeLocation();
+//                    locationPermissionRequest.closeLocation();
 
 //                    if(validLocation()){}
                    
@@ -556,7 +564,7 @@ public class Login extends AppCompatActivity {
 
                         salesMan = usernameEditText.getText().toString();
                         salesManNo = passwordEditText.getText().toString();
-                       locationPermissionRequest.closeLocation();
+//                       locationPermissionRequest.closeLocation();
 
                        goToMain();
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
@@ -579,6 +587,7 @@ public class Login extends AppCompatActivity {
         //V22219AQ02457
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public  void  verifyIpDevice(){
         Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
         if(previousIp.equals(currentIp)){
@@ -610,10 +619,30 @@ public class Login extends AppCompatActivity {
         return  "";
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
-        Intent main = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(main);
-    }
+
+//
+//        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(Login.this);
+//       boolean tt= locationPermissionRequest.checkLocationPermission();
+//Log.e("LocationPermission","Request"+tt);
+//
+//if(tt) {
+    //startService(new Intent(Login.this, MyService.class));
+        startService(new Intent(Login.this, BackgroundGpsServices.class));
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+//            Log.e("LocationSdk","startService"+Build.VERSION.SDK_INT);
+//            startService(new Intent(Login.this, BackgroundGpsServices.class));
+//        } else {
+//            Log.e("LocationSdk","startForegroundService"+Build.VERSION.SDK_INT);
+//            Intent serviceIntent = new Intent(Login.this, BackgroundGpsServices.class);
+//            ContextCompat.startForegroundService(Login.this, serviceIntent );
+//          // startForegroundService(new Intent(Login.this, BackgroundGpsServices.class));
+//        }
+    Intent main = new Intent(getApplicationContext(), MainActivity.class);
+    startActivity(main);
+}
+//    }
 
     private boolean validLocation() {
 //        getCompanyLocation();
@@ -874,7 +903,7 @@ public class Login extends AppCompatActivity {
 //
                     Toast.makeText(Login.this, "welcome" + salesMan, Toast.LENGTH_SHORT).show();
 
-                    locationPermissionRequest.closeLocation();
+//                    locationPermissionRequest.closeLocation();
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
                     //  CustomIntent.customType(getBaseContext(),"left-to-right");

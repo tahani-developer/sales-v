@@ -55,13 +55,13 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.ContentValues.TAG;
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class LocationPermissionRequest   extends Activity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     Context context;
     SweetAlertDialog dialogTem, sweetAlertDialog;
-    Message msg = new Message();
     int OpenFlag = 1;
     LocationManager locationManager;
     Timer timer;
@@ -73,25 +73,21 @@ public class LocationPermissionRequest   extends Activity {
     double longitude;
     double latitude;
     ImportJason importJason;
-    String userCountry, userAddress;
     DatabaseHandler mHandler;
 boolean flag=true;
 int req=0;
-    private static final int REQUEST_LOCATION_PERMISSION = 3;
     FusedLocationProviderClient mFusedLocationClient;
 SalesmanStations salesmanStations;
     public  static  boolean openDialog=false;
 public static double checkOutLong=0,checkOutLat=0;
 int  approveAdmin=-1;
+    GoogleApiClient googleApiClient;
     List<com.dr7.salesmanmanager.Modles.Settings> settings;
     public LocationPermissionRequest(Context context) {
-        this.context = context;
-       // sweetAlertDialog = new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE);
+        this.context = contextG;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-//        getlocattTest();
         importJason=new ImportJason(context);
         salesmanStations=new SalesmanStations();
-//        getLoc();
         mHandler=new DatabaseHandler(context);
         settings = mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
@@ -265,8 +261,17 @@ int  approveAdmin=-1;
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void run() {
+                    context = contextG;
                     Log.e("locationApp", "" +approveAdmin);
-                    approveAdmin= settings.get(0).getApproveAdmin();
+                    try {
+                        settings = mHandler.getAllSettings();
+                        if (settings.size() != 0) {
+                            approveAdmin = settings.get(0).getApproveAdmin();
+                        }
+                    }catch (Exception e){
+                        approveAdmin=0;
+                    }
+
                     if(approveAdmin==1) {
 //                        if (OpenFlag==1) {
                             Log.e("locationRec", "" + req);
@@ -322,47 +327,55 @@ int  approveAdmin=-1;
     }
     private void displayLocationSettingsRequest(Context context) {
 
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API).build();
-        googleApiClient.connect();
-        Log.e("Locationnnnn", "bbb");
+        if(googleApiClient==null) {
+        openDialog = true;
+            googleApiClient = new GoogleApiClient.Builder(context)
+                    .addApi(LocationServices.API).build();
+            googleApiClient.connect();
+            Log.e("Locationnnnn", "bbb");
 
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//            locationRequest.setInterval(1000000000);
+//            locationRequest.setFastestInterval(1000000000 / 2);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+            builder.setAlwaysShow(false);
 
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        Log.e("Locationnnnn", "bbb"+result.toString());
+            PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+            Log.e("Locationnnnn", "bbb" + result.toString());
 
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()) {
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i("Location", "All location settings are satisfied.");
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
-
-                        try {
-                            // Show the dialog by calling startResolutionForResult(), and check the result
-                            // in onActivityResult().
-                            status.startResolutionForResult((Activity) context, 10001);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "PendingIntent unable to execute request.");
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
-                        break;
+            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+                @Override
+                public void onResult(LocationSettingsResult result) {
+                    final Status status = result.getStatus();
+                    switch (status.getStatusCode()) {
+                        case LocationSettingsStatusCodes.SUCCESS:
+                            openDialog = true;
+                            Log.i("Location", "All location settings are satisfied.");
+                            break;
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+                            openDialog = false;
+                            try {
+                                // Show the dialog by calling startResolutionForResult(), and check the result
+                                // in onActivityResult().
+                                status.startResolutionForResult((Activity) context, 10001);
+                            } catch (IntentSender.SendIntentException e) {
+                                openDialog = false;
+                                Log.i(TAG, "PendingIntent unable to execute request.");
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            openDialog = false;
+                            Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }else {
+
+        }
     }
 
     public static boolean isLocationEnabled(Context context) {
@@ -443,131 +456,14 @@ int  approveAdmin=-1;
 
     }
 
-    public void closeLocation() {
-        if (timer!=null) {
-            timer.cancel();
-        }else {
-            Log.e("timerIsNull","kkk");
-        }
-           }
-
-
-//    private void getlocattTest() {
-//
-//        locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {// Not granted permission
-//
-//            ActivityCompat.requestPermissions((Activity) context, new String[]
-//                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
-////
+//    public void closeLocation() {
+//        if (timer!=null) {
+//            timer.cancel();
+//        }else {
+//            Log.e("timerIsNull","kkk");
 //        }
-//        if (mFusedLocationClient != null) {
-//            Log.e("mFusedLocationClient","");
-//            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-////            requestLocationUpdates();
-//        }
-//        else {
-//            Log.e("mFusedLocationClient",""+mFusedLocationClient);
-//        }
-//
-//    }
-
-//    public void requestLocationUpdates() {
-//        Log.e("requestLocationUpdates","ll");
-//        mLocationRequest = new LocationRequest();
-//        mLocationRequest.setInterval(10000); // two minute interval
-//        mLocationRequest.setFastestInterval(10000);
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-//        if (ContextCompat.checkSelfPermission(context,
-//                Manifest.permission.ACCESS_FINE_LOCATION)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-//        }
-//    }
-
-//    LocationCallback mLocationCallback = new LocationCallback(){
-//        @Override
-//        public void onLocationResult(LocationResult locationResult) {
-//            Log.e("onLocationResult",""+locationResult);
-//
-//                for (Location location : locationResult.getLocations()) {
-////                    Log.e("MainActivity", "getLocationComp: " + location.getLatitude() + " " + location.getLongitude());
-//
-//                    latitude = location.getLatitude();
-//                    longitude = location.getLongitude();
-//
-//                        }
-//
-//                    Log.e("locationPer", "" + latitude + "\t" + longitude);
-//
-//                }};
+//           }
 
 
 
-//   public void location(){
-//
-//        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-//
-//
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-//
-//            return;
-//        }
-//
-//        try {
-//
-//            gps_loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//            network_loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-//
-//            Log.e("location123"," g= "+gps_loc+"    n= "+network_loc);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        if (gps_loc != null) {
-//            final_loc = gps_loc;
-//            latitude = final_loc.getLatitude();
-//            longitude = final_loc.getLongitude();
-//
-//            Log.e("location1234"," f= "+final_loc+"    la= "+latitude +"  lo = "+longitude);
-//
-//        }
-//        else if (network_loc != null) {
-//            final_loc = network_loc;
-//            latitude = final_loc.getLatitude();
-//            longitude = final_loc.getLongitude();
-//
-//            Log.e("location12345"," f= "+final_loc+"    la= "+latitude +"  lo = "+longitude);
-//
-//        }
-//        else {
-//            latitude = 0.0;
-//            longitude = 0.0;
-//        }
-//
-//
-//        ActivityCompat.requestPermissions((Activity) context, new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_NETWORK_STATE}, 1);
-//
-//        try {
-//
-//            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-//            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-//            if (addresses != null && addresses.size() > 0) {
-//                userCountry = addresses.get(0).getCountryName();
-//                userAddress = addresses.get(0).getAddressLine(0);
-////                tv.setText(userCountry + ", " + userAddress);
-//            }
-//            else {
-//                userCountry = "Unknown";
-////                tv.setText(userCountry);
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }
