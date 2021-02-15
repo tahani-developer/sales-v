@@ -474,11 +474,16 @@
     <string name="no">لا</string>
     <string name="invalidPassword">كلمة المرور خاطئة</string>
     <string name="Reguler_Offer">عادي/عرض</string>
-    <string name="price_ListNo">Price ListNo</string>
-    <string name="regular">Regular</string>
-    <string name="offer">Offer</string>
+    <string name="price_ListNo">رقم قائمة الاسعار</string>
+    <string name="regular">عادي</string>
+    <string name="offer">عرض</string>
     <string name="IP_PORT">IP PORT</string>
     <string name="availableQty">الكميات الحالية</string>
     <string name="requiredQty">الكميات المطلوبة</string>
+    <string name="unCollectedCheques">شيكات برسم التحصيل</string>
+    <string name="chaequeDate">التاريخ</string>
+    <string name="recivedAmount">الكميات المستلمة</string>
+    <string name="validation">جاري التحقق</string>
+    <string name="PAIDAMT">Paid Amount</string>
 
 </resources>

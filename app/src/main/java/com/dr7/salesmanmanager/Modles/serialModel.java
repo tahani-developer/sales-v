@@ -16,6 +16,24 @@ public class serialModel {
     private  String isPosted;
     private  String isBonus;
     private  String qty;
+    private  String isDeleted;
+    private  String dateDelete;
+
+    public String getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(String isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public String getDateDelete() {
+        return dateDelete;
+    }
+
+    public void setDateDelete(String dateDelete) {
+        this.dateDelete = dateDelete;
+    }
 
     public String getQty() {
         return qty;

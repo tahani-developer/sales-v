@@ -51,10 +51,14 @@ import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 public class
@@ -63,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 131;
+    private static final int DATABASE_VERSION = 132;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -120,6 +124,23 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
     private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
     //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    private static final String SERIAL_ITEMS_TABLE_backup  = "SERIAL_ITEMS_TABLE_backup";
+    private static final String  KEY_SERIAL2="KEY_SERIAL2";
+    private static final String SERIAL_CODE_NO2 ="SERIAL_CODE_NO2";
+    private static final String COUNTER_SERIAL2 ="COUNTER_SERIAL2";
+    private static final String  VOUCHER_NO2="VOUCHER_NO2";
+    private static final String ITEMNO_SERIAL2="ITEMNO_SERIAL2";
+    private static final String DATE_VOUCHER2="DATE_VOUCHER2";
+    private static final String KIND_VOUCHER2="KIND_VOUCHER2";
+    private static final String  STORE_NO_SALESMAN2="STORE_NO_SALESMAN2";
+    private static final String  IS_POSTED_SERIAL2="IS_POSTED_SERIAL2";
+    private static final String  IS_BONUS_SERIAL2="IS_BONUS_SERIAL2";
+    private static final String  isItemDelete="isItemDelete";
+    private static final String  dateDelete="dateDelete";
+    //----------------------------------------------------------------------
+
+
     private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
     private static final String PASS_TYPE = "PASS_TYPE";
     private static final String PASS_NO = "PASS_NO";
@@ -542,6 +563,25 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
         //-------------------------------------------------------------------------
+
+        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO2 + " TEXT,"
+                + COUNTER_SERIAL2 + " INTEGER,"
+                + VOUCHER_NO2 + " INTEGER,"
+                + ITEMNO_SERIAL2 + " TEXT,"
+                + KIND_VOUCHER2 + " TEXT,"
+
+                + DATE_VOUCHER2 + " TEXT,"
+                + STORE_NO_SALESMAN2 + " INTEGER,"
+                + IS_POSTED_SERIAL2 + " INTEGER,"
+                + IS_BONUS_SERIAL2+" INTEGER,"
+                +isItemDelete+ " INTEGER,"
+
+                +dateDelete+" TEXT"+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
         //-------------------------------------------------------------------------
 
         try {
@@ -1685,7 +1725,24 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO2 + " TEXT,"
+                + COUNTER_SERIAL2 + " INTEGER,"
+                + VOUCHER_NO2 + " INTEGER,"
+                + ITEMNO_SERIAL2 + " TEXT,"
+                + KIND_VOUCHER2 + " TEXT,"
 
+                + DATE_VOUCHER2 + " TEXT,"
+                + STORE_NO_SALESMAN2 + " INTEGER,"
+                + IS_POSTED_SERIAL2 + " INTEGER,"
+                + IS_BONUS_SERIAL2+" INTEGER,"
+                +isItemDelete+ " INTEGER,"
+
+                +dateDelete+" TEXT" +
+
+        ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
 
     }
 
@@ -1805,6 +1862,46 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
     }
+    public void add_SerialBackup(serialModel serialModelItem,int flag)
+    {
+        try {
+
+            Log.e("listMasterSerialFor","add_SerialBackup="+serialModelItem.getSerialCode());
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(SERIAL_CODE_NO2, serialModelItem.getSerialCode());
+            values.put(COUNTER_SERIAL2, serialModelItem.getCounterSerial());
+            values.put(VOUCHER_NO2, serialModelItem.getVoucherNo());
+            values.put(ITEMNO_SERIAL2, serialModelItem.getItemNo());
+            values.put(DATE_VOUCHER2, serialModelItem.getDateVoucher());
+            values.put(KIND_VOUCHER2, serialModelItem.getKindVoucher());
+            values.put(STORE_NO_SALESMAN2, serialModelItem.getStoreNo());
+            values.put(IS_POSTED_SERIAL2, "0");
+            values.put(IS_BONUS_SERIAL2, serialModelItem.getIsBonus());
+            if(flag==1)
+            {
+                values.put(isItemDelete, "1");
+            }
+            else {
+                values.put(isItemDelete, serialModelItem.getIsDeleted());
+            }
+
+            values.put(dateDelete, serialModelItem.getDateDelete());
+
+
+
+            db.insert(SERIAL_ITEMS_TABLE_backup, null, values);
+            Log.e("add_Serial",""+serialModelItem.getSerialCode());
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+
     public void add_SerialMasteItems(List<serialModel> serialModelItem)
     {
 
@@ -4775,6 +4872,57 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //        values.put(, serialModelItem.getStoreNo());
 
     }
+    public void updateitemDeletedInSerialTable_Backup( String itemNo,String voucherNo ) {
+        db = this.getWritableDatabase();
+        String dateTime="";
+        dateTime=getCurentTimeDate(1);
+        dateTime=dateTime+getCurentTimeDate(2);
+        Log.e("updateVOUCHERNO",""+itemNo);
+        ContentValues values = new ContentValues();
+        values.put(isItemDelete, "1");
+        values.put(dateDelete, dateTime);
+        if(itemNo.equals(""))
+        {
+            db.update(SERIAL_ITEMS_TABLE_backup, values, VOUCHER_NO2    + " = '" + voucherNo + "'"   , null);
+
+        }
+        else {
+            db.update(SERIAL_ITEMS_TABLE_backup, values, VOUCHER_NO2    + " = '" + voucherNo + "' and ITEMNO_SERIAL2='"+itemNo+"'"   , null);
+
+        }
+
+
+//        values.put(, serialModelItem.getStoreNo());
+
+    }
+    public String getCurentTimeDate(int flag){
+        String dateCurent,timeCurrent,dateTime="";
+        Date currentTimeAndDate;
+        SimpleDateFormat dateFormat, timeformat;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        if(flag==1)// return date
+        {
+
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateCurent = dateFormat.format(currentTimeAndDate);
+            dateTime=convertToEnglish(dateCurent);
+
+        }
+        else {
+            if(flag==2)// return time
+            {
+                timeformat = new SimpleDateFormat("hh:mm:ss");
+                dateCurent = timeformat.format(currentTimeAndDate);
+                dateTime=convertToEnglish(dateCurent);
+            }
+        }
+        return dateTime;
+
+    }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
 
 
 
@@ -5121,7 +5269,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         count = cursor.getString(0);
     }
-        Log.e("isSerialCodeExist", "isSerialCodeExist+\t" + count + "\t");
+        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t");
         if(cursor != null)
         {
             cursor.close();

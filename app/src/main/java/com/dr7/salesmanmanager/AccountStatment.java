@@ -44,7 +44,7 @@ public class AccountStatment extends AppCompatActivity {
     ArrayList<Account__Statment_Model> listAccountBalance;
     RecyclerView recyclerView_report;
     LinearLayoutManager layoutManager;
-    public  static TextView getAccountList_text;
+    public  static TextView getAccountList_text,total_qty_text;
     Button preview_button_account;
      Spinner customerSpinner;
      String customerId="";
@@ -185,6 +185,7 @@ public class AccountStatment extends AppCompatActivity {
         recyclerView_report.setLayoutManager(layoutManager);
         lastVisitDateTime=findViewById(R.id.last_visit_text);
         databaseHandler=new DatabaseHandler(AccountStatment.this);
+        total_qty_text=findViewById(R.id.total_qty_text);
         getLastVaisit();
     }
 
@@ -215,41 +216,6 @@ public class AccountStatment extends AppCompatActivity {
 
     private void fillAdapter() {
 
-
-//        Account__Statment_Model accBalance=new Account__Statment_Model();
-//        accBalance.setVoucherNo("1002");
-//        accBalance.setTranseNmae("sale");
-//        accBalance.setDate_voucher("17/12");
-//        accBalance.setDebit(50);
-//        accBalance.setCredit(0);
-//        accBalance.setBalance(0);
-//        listAccountBalance.add(accBalance);
-//
-//        accBalance=new Account__Statment_Model();
-//        accBalance.setVoucherNo("1003");
-//        accBalance.setTranseNmae("sale");
-//        accBalance.setDate_voucher("17/12");
-//        accBalance.setDebit(100);
-//        accBalance.setCredit(0);
-//        accBalance.setBalance(0);
-//        listAccountBalance.add(accBalance);
-//
-//        accBalance=new Account__Statment_Model();
-//        accBalance.setVoucherNo("1003");
-//        accBalance.setTranseNmae("payment");
-//        accBalance.setDate_voucher("17/12");
-//        accBalance.setDebit(0);
-//        accBalance.setCredit(100);
-//        accBalance.setBalance(0);
-//        listAccountBalance.add(accBalance);
-//        accBalance=new Account__Statment_Model();
-//        accBalance.setVoucherNo("1003");
-//        accBalance.setTranseNmae("payment");
-//        accBalance.setDate_voucher("17/12");
-//        accBalance.setDebit(0);
-//        accBalance.setCredit(50);
-//        accBalance.setBalance(0);
-//        listAccountBalance.add(accBalance);
         AccountStatmentAdapter adapter = new AccountStatmentAdapter(listCustomerInfo, AccountStatment.this);
         recyclerView_report.setAdapter(adapter);
     }
@@ -258,7 +224,7 @@ public class AccountStatment extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        Intent i=new Intent(AccountStatment.this,MainActivity.class);
+        Intent i=new Intent(AccountStatment.this,Activities.class);
         startActivity(i);
     }
 }

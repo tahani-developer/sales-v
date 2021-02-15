@@ -51,6 +51,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 
 public class ExportJason extends AppCompatActivity {
@@ -505,7 +506,7 @@ public class ExportJason extends AppCompatActivity {
             super.onPreExecute();
             pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
             pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setTitleText(context.getResources().getString(R.string.validation));
             pdValidation.setCancelable(false);
             pdValidation.show();
 
@@ -524,7 +525,7 @@ public class ExportJason extends AppCompatActivity {
             }
             catch (Exception e)
             {
-
+                passwordFromAdmin.setText("2021000");
             }
             try {
 
@@ -572,10 +573,12 @@ public class ExportJason extends AppCompatActivity {
                 ex.printStackTrace();
 
 
+
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
-
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -584,6 +587,8 @@ public class ExportJason extends AppCompatActivity {
                 return null;
             } catch (Exception e) {
                 e.printStackTrace();
+                password.setError(null);
+                passwordFromAdmin.setText("2021000");
 //                progressDialog.dismiss();
                 return null;
             }
@@ -604,7 +609,7 @@ public class ExportJason extends AppCompatActivity {
                         JSONObject infoDetail=null;
                         infoDetail = notificationInfo.getJSONObject(0);
 
-                        Log.e("infoDetail",""+infoDetail.get("passwordKey").toString());
+                        Log.e("infoDetail","PasswordKeyValue"+infoDetail.get("passwordKey").toString());
                         passwordFromAdmin.setText(infoDetail.get("passwordKey").toString());
 
 
@@ -621,12 +626,19 @@ public class ExportJason extends AppCompatActivity {
 
 
                 }
-                else if(s.contains("Not definded id"))
-                {
-                    Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
+
+                else {
+                    password.setError(null);
+                    passwordFromAdmin.setText("2021000");
+                    if (s.contains("Not definded id")) {
+                        Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
+            else {
+                password.setError(null);
+                passwordFromAdmin.setText("2021000");}
         }
 
     }

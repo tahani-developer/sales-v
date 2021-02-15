@@ -65,7 +65,7 @@ public class Activities extends AppCompatActivity implements
 
     private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
-    private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
+    private CardView saleCardView, receiptCardView, accountBalance, supplimentCardView;
 
     private int activitySelected;
     public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
@@ -222,6 +222,7 @@ LocationPermissionRequest locationPermissionRequest;
         transaction_imageview.setOnClickListener(onClickListener);
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
+        accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
         supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
         switchLayout=findViewById(R.id.switchLayout);
@@ -239,6 +240,9 @@ LocationPermissionRequest locationPermissionRequest;
         saleImageView.setOnClickListener(onClickListener);
         receiptImageView.setOnClickListener(onClickListener);
         stockImageView.setOnClickListener(onClickListener);
+        accountBalance.setOnClickListener(onClickListener);
+        receiptCardView.setOnClickListener(onClickListener);
+        saleCardView.setOnClickListener(onClickListener);
 
         saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
@@ -402,7 +406,7 @@ LocationPermissionRequest locationPermissionRequest;
             Log.e("onClick",""+view.getId());
 //
             switch (view.getId()) {
-                case R.id.saleInvImageView:
+                case R.id.saleCardView:
                    // saleImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 0)
@@ -441,7 +445,7 @@ LocationPermissionRequest locationPermissionRequest;
 
                     break;
 
-                case R.id.paymentImageView:
+                case R.id.receiptCardView:
                 //   receiptImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 1)
@@ -525,6 +529,30 @@ LocationPermissionRequest locationPermissionRequest;
 
 //                    displayTransactionFragment();
                     break;
+                case  R.id.accountBalanceCardView:
+                    if (!isFragmentBlank) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                        builder2.setCancelable(false);
+                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                finish();
+                                Intent inte=new Intent(Activities.this,AccountStatment.class);
+                                startActivity(inte);
+                            }
+                        });
+
+                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                        builder2.create().show();
+                    } else {
+
+
+                    }
+                    break;
             }
         }
     };
@@ -537,7 +565,8 @@ LocationPermissionRequest locationPermissionRequest;
 
             if(!curentVoucherNo.equals(lastNo+"") )
             {
-                databaseHandler.deletSerialItems_byVoucherNo(curent);
+                databaseHandler.updateitemDeletedInSerialTable_Backup("",curentVoucherNo);
+//                databaseHandler.updateitemDeletedInSerialTable_Backup(curent);
 
 
             }
@@ -561,7 +590,7 @@ LocationPermissionRequest locationPermissionRequest;
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-//                clearSerial();
+                clearSerial();
 
                 locationPermissionRequest.closeLocation();
                 MainActivity. masterControlLoc.setText("2");
@@ -664,19 +693,23 @@ LocationPermissionRequest locationPermissionRequest;
                 Toast.makeText(Activities.this, "cancelled", Toast.LENGTH_SHORT).show();
             } else {
 
-                Log.e("MainActivity", "" + Result.getContents());
+                Log.e("Activities1", "onActivityResult" + Result.getContents());
 
 
                 String serialBarcode = Result.getContents();
 
-                if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not"))){
+                if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not")))
+                {
                     if((databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==504)||
                             (!databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==506))
                     {
+                        Log.e("Activities2", "onActivityResult+true+serialBarcode" + serialBarcode);
                         serialValue.setText(serialBarcode);
                     }
                     else
-                    {  new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                    {
+                        Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + serialBarcode);
+                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(Activities.this.getString(R.string.warning_message))
                             .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+serialBarcode)
                             .show();}
@@ -684,6 +717,8 @@ LocationPermissionRequest locationPermissionRequest;
 
                 }
                 else {
+                    Log.e("Activities4", "onActivityResult+false+isSerialCodeExist" + serialBarcode);
+
                     new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(Activities.this.getString(R.string.warning_message))
                             .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)

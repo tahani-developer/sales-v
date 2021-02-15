@@ -345,16 +345,7 @@
     </LinearLayout>
         </HorizontalScrollView>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:text="@string/total_balance"
-            android:textColor="@color/white"
-            android:textSize="14sp"
 
-            android:textStyle="bold" />
     </LinearLayout>
 
 
@@ -362,15 +353,25 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_weight="9"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/colorblue_dark"
         android:layout_alignBottom="@id/recyclerView_report"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/total_balance"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/total_qty_text"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:layout_weight="1"
             android:textStyle="bold"
             android:gravity="center"

@@ -265,11 +265,14 @@ int  approveAdmin=-1;
                 @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void run() {
-                    Log.e("locationApp", "" +approveAdmin);
-                    approveAdmin= settings.get(0).getApproveAdmin();
+                   // Log.e("locationApp", "" +approveAdmin);
+                    try {
+                        approveAdmin= settings.get(0).getApproveAdmin();
+                    }catch (Exception e){approveAdmin=0;}
+
                     if(approveAdmin==1) {
 //                        if (OpenFlag==1) {
-                            Log.e("locationRec", "" + req);
+                           // Log.e("locationRec", "" + req);
                             checkLocationPermission();
 //                        }
 
@@ -325,7 +328,7 @@ int  approveAdmin=-1;
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API).build();
         googleApiClient.connect();
-        Log.e("Locationnnnn", "bbb");
+       // Log.e("Locationnnnn", "bbb");
 
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -417,8 +420,8 @@ int  approveAdmin=-1;
                 checkOutLong=longitude;
                 checkOutLat=latitude;
 
-                Log.e("location123456","  "+salesmanStations.getJSONObject());
-                Log.e("location12345","    la= "+latitude +"  lo = "+longitude);
+              //  Log.e("location123456","  "+salesmanStations.getJSONObject());
+               // Log.e("location12345","    la= "+latitude +"  lo = "+longitude);
             }
 
             @Override
@@ -445,9 +448,12 @@ int  approveAdmin=-1;
 
     public void closeLocation() {
         if (timer!=null) {
+           // Log.e("closeLocation","timer2="+timer.purge());
+            //timer.purge();
             timer.cancel();
+            timer=null;
         }else {
-            Log.e("timerIsNull","kkk");
+           // Log.e("timerIsNull","kkk");
         }
            }
 
