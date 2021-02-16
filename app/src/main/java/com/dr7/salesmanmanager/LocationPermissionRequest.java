@@ -262,7 +262,7 @@ int  approveAdmin=-1;
                 @Override
                 public void run() {
                     context = contextG;
-                    Log.e("locationApp", "" +approveAdmin);
+                   // Log.e("locationApp", "" +approveAdmin);
                     try {
                         settings = mHandler.getAllSettings();
                         if (settings.size() != 0) {
@@ -281,7 +281,7 @@ int  approveAdmin=-1;
                     }
                 }
 
-            }, 0, 1000);
+            }, 0, 30000);
 
 
     }

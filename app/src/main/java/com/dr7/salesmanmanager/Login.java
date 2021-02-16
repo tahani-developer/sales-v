@@ -41,6 +41,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Transaction;
@@ -55,11 +56,21 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +81,7 @@ import java.util.TimerTask;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
@@ -295,7 +307,8 @@ public class Login extends AppCompatActivity {
 
             }
         });
-       locationPermissionRequest.timerLocation();
+       //locationPermissionRequest.timerLocation();
+//        new SyncLocation().execute();
 
         checkIpDevice.addTextChangedListener(new TextWatcher() {
             @Override
@@ -628,17 +641,17 @@ public class Login extends AppCompatActivity {
 //Log.e("LocationPermission","Request"+tt);
 //
 //if(tt) {
-    //startService(new Intent(Login.this, MyService.class));
-        startService(new Intent(Login.this, BackgroundGpsServices.class));
-//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-//            Log.e("LocationSdk","startService"+Build.VERSION.SDK_INT);
-//            startService(new Intent(Login.this, BackgroundGpsServices.class));
-//        } else {
-//            Log.e("LocationSdk","startForegroundService"+Build.VERSION.SDK_INT);
-//            Intent serviceIntent = new Intent(Login.this, BackgroundGpsServices.class);
-//            ContextCompat.startForegroundService(Login.this, serviceIntent );
-//          // startForegroundService(new Intent(Login.this, BackgroundGpsServices.class));
-//        }
+   //startService(new Intent(Login.this, MyService.class));
+      startService(new Intent(Login.this, BackgroundGpsServices.class));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            Log.e("LocationSdk","startService"+Build.VERSION.SDK_INT);
+            startService(new Intent(Login.this, BackgroundGpsServices.class));
+        } else {
+            Log.e("LocationSdk","startForegroundService"+Build.VERSION.SDK_INT);
+            Intent serviceIntent = new Intent(Login.this, BackgroundGpsServices.class);
+            ContextCompat.startForegroundService(Login.this, serviceIntent );
+          // startForegroundService(new Intent(Login.this, BackgroundGpsServices.class));
+        }
     Intent main = new Intent(getApplicationContext(), MainActivity.class);
     startActivity(main);
 }
@@ -982,5 +995,37 @@ public class Login extends AppCompatActivity {
             return null;
         }
     }// Class RequestLogin
+
+
+    private class SyncLocation extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            locationPermissionRequest.timerLocation();
+
+
+return  "ok";
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+
+
+
+        }
+    }
 
 }

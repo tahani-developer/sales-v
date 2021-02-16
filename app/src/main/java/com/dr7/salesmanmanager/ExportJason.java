@@ -261,6 +261,7 @@ public class ExportJason extends AppCompatActivity {
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
 
             } catch (Exception e) {
+                progressDialog.dismiss();
                 Toast.makeText(ExportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
             }
 
@@ -326,7 +327,7 @@ public class ExportJason extends AppCompatActivity {
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
-
+                        progressDialog.dismiss();
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
                 });

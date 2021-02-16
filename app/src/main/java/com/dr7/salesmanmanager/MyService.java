@@ -200,8 +200,8 @@ List<Settings>settings;
 //                            {ACCESS_FINE_LOCATION},
 //                    1);
 
-                Intent intent = new Intent(MyService.this, noThingNotifi.class);
-                startActivity(intent);
+               // Intent intent = new Intent(MyService.this, noThingNotifi.class);
+                //startActivity(intent);
                 //showWarningAlert(MyService.this);
                 Log.e("requestPermissions", "false");
             }

@@ -38,7 +38,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
@@ -82,14 +85,43 @@ public class PdfConverter {
     public PdfConverter(Context context) {
         this.context = context;
     }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
+    public String getCurentTimeDate(int flag){
+        String dateCurent,timeCurrent,dateTime="";
+        Date currentTimeAndDate;
+        SimpleDateFormat dateFormat, timeformat;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        if(flag==1)// return date
+        {
 
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateCurent = dateFormat.format(currentTimeAndDate);
+            dateTime=convertToEnglish(dateCurent);
+
+        }
+        else {
+            if(flag==2)// return time
+            {
+                timeformat = new SimpleDateFormat("hh:mm:ss");
+                dateCurent = timeformat.format(currentTimeAndDate);
+                dateTime=convertToEnglish(dateCurent);
+            }
+        }
+        return dateTime;
+
+    }
     public void exportListToPdf(List<?> list, String headerDate, String date,int report ) {
 
         PdfPTable pdfPTable= new PdfPTable(1);
         PdfPTable pdfPTableHeader= new PdfPTable(1);
         pdfPTable = getContentTable(  list,report);
-
-        pdfPTableHeader = getHeaderTable(list,report,headerDate,date);
+        String dateTime="";
+        dateTime=getCurentTimeDate(1);
+        //dateTime=dateTime+getCurentTimeDate(2);
+        pdfPTableHeader = getHeaderTable(list,report,headerDate,dateTime);
 
         try {
 //
@@ -153,10 +185,37 @@ public class PdfConverter {
             case 8:
                 tableContent=creatCashReport((List<Voucher>) list);
                 break;
+            case 9:
+                tableContent=createunCollectedReport((List<Payment>) list);
+                break;
         }
         return  tableContent;
     }
+    private PdfPTable createunCollectedReport(List<Payment> list)
+    {
+        createPDF("UnCollectedCheques_Report" + ".pdf");
+        PdfPTable pdfPTable = new PdfPTable(4);
+        pdfPTable.setWidthPercentage(100f);
+        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        insertCell(pdfPTable,context.getString(R.string.app_bank_name)                    , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getString(R.string.check_number      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getString(R.string.chaequeDate      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.app_amount   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
+        pdfPTable.setHeaderRows(1);
+        for (int i = 0; i < list.size(); i++) {
+            insertCell(pdfPTable, String.valueOf(list.get(i).getBank() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getCheckNumber())       , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getDueDate()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getAmount()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+
+
+        }
+        return pdfPTable;
+
+    }
     private PdfPTable creatTableCustomerLog(List<Transaction> list) {
         createPDF("CustomerLog_Report" + ".pdf");
         PdfPTable pdfPTable = new PdfPTable(7);

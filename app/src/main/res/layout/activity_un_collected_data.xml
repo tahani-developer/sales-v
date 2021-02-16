@@ -377,7 +377,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:bmb_normalColor="@color/colorblue1"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             app:bmb_draggable="true"

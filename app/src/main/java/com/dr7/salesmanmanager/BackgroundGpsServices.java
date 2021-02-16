@@ -31,7 +31,7 @@ public  class BackgroundGpsServices extends Service implements LocationListener 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate() {
-        sendNotification(this, false);
+        //sendNotification(this, false);
         salesmanStations=new SalesmanStations();
         startLocationUpdates();
     }
@@ -52,8 +52,8 @@ public  class BackgroundGpsServices extends Service implements LocationListener 
 
     @Override
     public void onLocationChanged(Location location) {
-        sendNotification(BackgroundGpsServices.this, true);
-        salesmanStations.setSalesmanNo("1");
+        //sendNotification(BackgroundGpsServices.this, true);
+        salesmanStations.setSalesmanNo("102020");
         salesmanStations.setLatitude("" + location.getLatitude());
         salesmanStations.setLongitude("" + location.getLongitude());
 
@@ -87,29 +87,29 @@ public  class BackgroundGpsServices extends Service implements LocationListener 
     public void onProviderDisabled(String provider) {
     }
 
-    public static void sendNotification(Service service, boolean isUpdate) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Intent intent = new Intent(service, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, intent, PendingIntent.FLAG_NO_CREATE);
-            NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(service)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("INFO_NOTIFICATION_TITLE")
-                    .setOngoing(true)
-                    .setAutoCancel(false)
-                    .setContentText("INFO_NOTIFICATION_MESSAGE")
-                    .setContentIntent(pendingIntent);
-            Notification notification = mNotifyBuilder.build();
-
-            if (isUpdate) {
-                NotificationManager notificationManager = (NotificationManager) service.getSystemService(NOTIFICATION_SERVICE);
-                if (notificationManager != null) {
-                    notificationManager.notify(NOTIFICATION_ID, notification);
-                }
-            } else {
-                service.startForeground(NOTIFICATION_ID, notification);
-            }
-        }
-    }
+//    public static void sendNotification(Service service, boolean isUpdate) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            Intent intent = new Intent(service, MainActivity.class);
+//            PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, intent, PendingIntent.FLAG_NO_CREATE);
+//            NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(service)
+//                    .setSmallIcon(R.mipmap.ic_launcher)
+//                    .setContentTitle("INFO_NOTIFICATION_TITLE")
+//                    .setOngoing(true)
+//                    .setAutoCancel(false)
+//                    .setContentText("INFO_NOTIFICATION_MESSAGE")
+//                    .setContentIntent(pendingIntent);
+//            Notification notification = mNotifyBuilder.build();
+//
+//            if (isUpdate) {
+//                NotificationManager notificationManager = (NotificationManager) service.getSystemService(NOTIFICATION_SERVICE);
+//                if (notificationManager != null) {
+//                    notificationManager.notify(NOTIFICATION_ID, notification);
+//                }
+//            } else {
+//                service.startForeground(NOTIFICATION_ID, notification);
+//            }
+//        }
+//    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
