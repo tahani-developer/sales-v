@@ -5,6 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
     <supports-screens
@@ -26,13 +27,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -185,10 +187,11 @@
 
 
         <!-- defining the service class here -->
-        <service android:name=".BackgroundGpsServices"
-            android:stopWithTask="false"
-            android:process=":BackgroundGpsServices"
-            android:enabled="true"/>
+        <service android:name=".MyServices"
+            android:foregroundServiceType="location"
+            android:enabled="true"
+            android:launchMode="singleTop"
+            android:stopWithTask="false"/>
 
         <activity android:name=".noThingNotifi" />
 

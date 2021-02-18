@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 132;
+    private static final int DATABASE_VERSION = 133;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -512,6 +512,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SERIAL = "SERIAL";
     private static final String CUSTOMR_NO = "CUSTOMR_NO";
     private static final String CUSUSTOMR_NAME = "CUSUSTOMR_NAME";
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String SalesMenLogIn = "SalesMenLogIn";
+
+    private static final String UserNo_LogIn = "UserNo_LogIn";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -1063,8 +1067,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CUSTOMR_NO + " TEXT,"
                 + CUSUSTOMR_NAME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
+        String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+                + UserNo_LogIn + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
     }
+
 
     // Upgrading database
     @Override
@@ -1743,6 +1752,19 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
+
+
+        try{
+
+            String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+                    + UserNo_LogIn + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
 
     }
 
@@ -2492,6 +2514,17 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(PAY_YEAR, payment.getYear());
 
         db.insert(PAYMENTS, null, values);
+        db.close();
+    }
+
+    public void addUserNO(String  USER_NO) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(UserNo_LogIn,USER_NO);
+
+
+        db.insert(SalesMenLogIn, null, values);
         db.close();
     }
 
@@ -4286,6 +4319,30 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return vouchers;
     }
 
+
+    public String getAllUserNo() {
+
+        // Select All Query
+        String userNO="";
+
+        String selectQuery = "SELECT * FROM " + SalesMenLogIn;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+              userNO= cursor.getString(0);
+
+
+            } while (cursor.moveToNext());
+        }
+
+        return userNO;
+    }
+
     public List<Item> getAllStockRequestItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -4651,6 +4708,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where VOUCHER_NO =" +vouch_no);
         db.close();
     }
+
+    public void deletAllSalesLogIn() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SalesMenLogIn);
+        db.close();
+    }
+
     public void deletSerialItems_byItemNo(String item_no ) {
         //delete from SERIAL_ITEMS_TABLE where ITEMNO_SERIAL=1003
         //+ "= '" + custNo + "'"

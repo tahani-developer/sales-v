@@ -85,6 +85,7 @@ public class Activities extends AppCompatActivity implements
     DatabaseHandler databaseHandler;
     static String[] araySerial;
     TextView switchLayout;
+    public  static  LocationPermissionRequest locationPermissionRequestAc;
 // LocationPermissionRequest locationPermissionRequest;
 
     @Override 
@@ -170,7 +171,7 @@ public class Activities extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        locationPermissionRequestAc=new LocationPermissionRequest(Activities.this);
         animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         activitySelected = -1;
         databaseHandler=new DatabaseHandler(Activities.this);

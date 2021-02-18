@@ -138,12 +138,14 @@ import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.content.ContextCompat.getSystemServiceName;
 import static com.dr7.salesmanmanager.Activities.discvalue_static;
 
+import static com.dr7.salesmanmanager.Activities.locationPermissionRequestAc;
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.CustomerCheckInFragment.customernametest;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
@@ -156,6 +158,7 @@ import android.location.LocationManager;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -320,8 +323,9 @@ public class SalesInvoice extends Fragment {
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
-   LocationPermissionRequest locationPermissionRequest;
 
+    List<Settings>settingsList=new ArrayList<>();
+    int approveAdmin=0;
     public SalesInvoice() {
         // Required empty public constructor
     }
@@ -376,7 +380,6 @@ public class SalesInvoice extends Fragment {
 
 
 
-
         //**********************************************************
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // landscape
@@ -385,9 +388,31 @@ public class SalesInvoice extends Fragment {
         }
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                saveVoucherData();
+
+       try {
+            approveAdmin = settingsList.get(0).getApproveAdmin();
+       }catch (Exception e){
+            approveAdmin=0;
+       }
+        if(approveAdmin==1) {
+
+                boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
+
+                Log.e("LocationIn","GoToMain"+locCheck);
+                if(locCheck){
+                    saveVoucherData();
+                }else {
+                    //
+                }
+
+
+        }else{
+            saveVoucherData();
+        }
+
             }
         });
         //**********************************************************
@@ -398,6 +423,9 @@ public class SalesInvoice extends Fragment {
 
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
+
+        settingsList= mDbHandler.getAllSettings();
+
         itemCountTable = mDbHandler.getCountItemsMaster();
         listItemImage=new ArrayList<>();
 //        listItemImage=mDbHandler.getItemsImage();
@@ -827,9 +855,30 @@ public class SalesInvoice extends Fragment {
         });
 
         SaveData.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                saveVoucherData();
+                try {
+                    approveAdmin = settingsList.get(0).getApproveAdmin();
+                }catch (Exception e){
+                    approveAdmin=0;
+                }
+                if(approveAdmin==1) {
+
+                    boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
+
+                    Log.e("LocationIn","GoToMain"+locCheck);
+                    if(locCheck){
+                        saveVoucherData();
+                    }else {
+                        //
+                    }
+
+
+                }else{
+                    saveVoucherData();
+                }
+
 
 
             }//end save data
@@ -5147,6 +5196,36 @@ public class SalesInvoice extends Fragment {
                     }
                     return;
                 }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Location", "granted");
+                    Log.e("LocationIn","GoToMain 1");
+
+                    saveVoucherData();
+                    // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Log.e("Location", "granted updates");
+                        Log.e("LocationIn","GoToMain 2");
+                        //Request location updates:
+//                        locationPermissionRequest.
+//                        locationManager.requestLocationUpdates(provider, 400, 1, (LocationListener) this);
+                    }
+
+                } else {
+                    Log.e("LocationIn","GoToMain 3");
+                    Log.e("Location", "Deny");
+                    // permission, denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                    Toast.makeText(getActivity(), "Please Allow location permission  to save voucher ", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
 
         }
     }

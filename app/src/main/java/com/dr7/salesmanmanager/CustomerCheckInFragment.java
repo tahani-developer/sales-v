@@ -70,8 +70,7 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
-import static com.dr7.salesmanmanager.LocationPermissionRequest.checkOutLat;
-import static com.dr7.salesmanmanager.LocationPermissionRequest.checkOutLong;
+
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
@@ -81,6 +80,8 @@ import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 import static com.dr7.salesmanmanager.MainActivity.longtudeCheckIn;
 import static com.dr7.salesmanmanager.MainActivity.transactions;
+import static com.dr7.salesmanmanager.MyServices.checkOutLat;
+import static com.dr7.salesmanmanager.MyServices.checkOutLong;
 
 //import android.support.v4.app.DialogFragment;
 //import android.support.v4.app.Fragment;
