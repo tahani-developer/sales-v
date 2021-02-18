@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -2485,6 +2486,11 @@ public class MainActivity extends AppCompatActivity
 //                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
+
+                            stopService(new Intent(MainActivity.this, MyServices.class));
+
+                            startService(new Intent(MainActivity.this, MyServices.class));
+
                     }
                     else
                     {

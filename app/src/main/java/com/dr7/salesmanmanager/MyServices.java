@@ -33,11 +33,13 @@ public class MyServices extends Service {
     MediaPlayer player;
     int i=0;
     Timer T;
-    int approveAdmin=-1;
+    public static int approveAdmin=-1;
+    String userNo="0";
     DatabaseHandler db = new DatabaseHandler(MyServices.this);
     List<Settings> settings=new ArrayList<>();
     SalesmanStations salesmanStations=new SalesmanStations();
     public static double checkOutLong=0,checkOutLat=0;
+    double latitude,longitude;
     public IBinder onBind(Intent arg0) {
         Log.e(TAG, "onBind()" );
         return null;
@@ -46,15 +48,17 @@ public class MyServices extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-//        player = MediaPlayer.create(this, R.raw.jorgesys_song);
-//        player.setLooping(true);
-//        player.setVolume(100, 100);
-//        Toast.makeText(this, "Service started...", Toast.LENGTH_SHORT).show();
+
         Log.e(TAG, "onCreate() , service started...");
 
     }
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        settings = db.getAllSettings();
+        userNo= db.getAllUserNo();
+        if (settings.size() != 0) {
+            approveAdmin= settings.get(0).getApproveAdmin();
+            Log.e(TAG,"spical"+approveAdmin+"   ");
+        }
 
             Timer();
 
@@ -72,13 +76,7 @@ public class MyServices extends Service {
             @Override
             public void run() {
                 Log.e(TAG, "onStartCommand() , service started..."+i++);
-                settings = db.getAllSettings();
-                if (settings.size() != 0) {
-                    approveAdmin= settings.get(0).getApproveAdmin();
-                }
 
-                db.getAllSettings();
-                Log.e(TAG,"approveAdminnn = "+approveAdmin+"   ");
 
                 Log.e(TAG,"approveAdmin = "+approveAdmin+"   ="+getApplicationContext().toString());
 
@@ -89,6 +87,37 @@ public class MyServices extends Service {
                     h.post(new Runnable() {
                         public void run() {
                             Log.e(TAG,"getLoc = "+approveAdmin);
+                            Handler h = new Handler(Looper.getMainLooper());
+                            h.post(new Runnable() {
+                                public void run() {
+                                    Log.e(TAG, "  tttt");
+                                    if(approveAdmin==1) {
+
+                                        try {
+                                            if (TextUtils.isEmpty(userNo)) {
+
+                                                userNo="";
+
+                                            }
+                                        }catch (Exception e){
+                                            userNo="";
+                                        }
+                                        salesmanStations.setSalesmanNo(userNo);
+                                        salesmanStations.setLatitude("" + latitude);
+                                        salesmanStations.setLongitude("" + longitude);
+                                        Log.e(TAG, "  nnn");
+                                        Log.e(TAG, " mmmm " + salesmanStations.getJSONObject());
+
+                                            if (latitude !=0||longitude!=0)
+                                            {
+                                                ImportJason importJason = new ImportJason(MyServices.this);
+                                            importJason.updateLocation(salesmanStations.getJSONObject());
+                                        }
+                                    }else {
+                                        Log.e(TAG, "  no App Import");
+                                    }
+                                }
+                            });
                             getLoc();
                         }
                     });
@@ -98,7 +127,7 @@ public class MyServices extends Service {
 
                 }
             }
-        }, 10, 30000);
+        }, 10, 10000);
     }
 
     public IBinder onUnBind(Intent arg0) {
@@ -106,10 +135,15 @@ public class MyServices extends Service {
         return null;
     }
 
-    public  void onStop() {
+    @Override
+    public boolean stopService(Intent name) {
+        // TODO Auto-generated method stub
+        T.cancel();
 
-        Log.e(TAG, "onStop()");
+        return super.stopService(name);
+
     }
+
     public void onPause() {
         Log.e(TAG, "onPause()");
     }
@@ -119,6 +153,7 @@ public class MyServices extends Service {
 //        player.release();
 //        Toast.makeText(this, "Service stopped...", Toast.LENGTH_SHORT).show();
         Timer();
+
         Log.e(TAG, "onCreate() , service stopped...");
     }
 
@@ -165,48 +200,47 @@ public class MyServices extends Service {
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-//                latitude = location.getLatitude();
-//                longitude = location.getLongitude();
-                    String userNo= db.getAllUserNo();
-                    try {
-                        if (TextUtils.isEmpty(userNo)) {
-
-                            userNo="";
-
-                        }
-                    }catch (Exception e){
-                        userNo="";
-                    }
-                    salesmanStations.setSalesmanNo(userNo);
-                    salesmanStations.setLatitude("" + location.getLatitude());
-                    salesmanStations.setLongitude("" + location.getLongitude());
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+//                    String userNo= db.getAllUserNo();
+//                    try {
+//                        if (TextUtils.isEmpty(userNo)) {
+//
+//                            userNo="";
+//
+//                        }
+//                    }catch (Exception e){
+//                        userNo="";
+//                    }
+//                    salesmanStations.setSalesmanNo(userNo);
+//                    salesmanStations.setLatitude("" + location.getLatitude());
+//                    salesmanStations.setLongitude("" + location.getLongitude());
                     checkOutLong=location.getLongitude();
                     checkOutLat=location.getLatitude();
 
-                    settings = db.getAllSettings();
-                    if (settings.size() != 0) {
-                        approveAdmin= settings.get(0).getApproveAdmin();
-                    }
+//                    settings = db.getAllSettings();
+//                    if (settings.size() != 0) {
+//                        approveAdmin= settings.get(0).getApproveAdmin();
+//                    }
 
-                    db.getAllSettings();
-                    Log.e(TAG,"approveAdminnn = "+approveAdmin+"   "+userNo);
+               //     Log.e(TAG,"approveAdminnn = "+approveAdmin+"   "+userNo);
 
                     Log.e(TAG,"approveAdmin = "+approveAdmin+"   ="+getApplicationContext().toString());
 
-                Handler h = new Handler(Looper.getMainLooper());
-                h.post(new Runnable() {
-                    public void run() {
-                        Log.e(TAG, "  tttt");
-                        if(approveAdmin==1) {
-                            Log.e(TAG, "  nnn");
-                            Log.e(TAG, "  " + salesmanStations.getJSONObject());
-                            ImportJason importJason = new ImportJason(MyServices.this);
-                            importJason.updateLocation(salesmanStations.getJSONObject());
-                        }else {
-                            Log.e(TAG, "  no App Import");
-                        }
-                    }
-                });
+//                Handler h = new Handler(Looper.getMainLooper());
+//                h.post(new Runnable() {
+//                    public void run() {
+//                        Log.e(TAG, "  tttt");
+//                        if(approveAdmin==1) {
+//                            Log.e(TAG, "  nnn");
+//                            Log.e(TAG, "  " + salesmanStations.getJSONObject());
+//                            ImportJason importJason = new ImportJason(MyServices.this);
+//                            importJason.updateLocation(salesmanStations.getJSONObject());
+//                        }else {
+//                            Log.e(TAG, "  no App Import");
+//                        }
+//                    }
+//                });
 
 
                  //   Log.e(TAG, "  " + salesmanStations.getJSONObject());

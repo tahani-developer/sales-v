@@ -187,10 +187,12 @@
 
 
         <!-- defining the service class here -->
+        <!--            android:launchMode="singleTask"-->
         <service android:name=".MyServices"
             android:foregroundServiceType="location"
             android:enabled="true"
-            android:launchMode="singleTop"
+            android:process=":MyServicesSalesMan"
+            android:finishOnTaskLaunch="true"
             android:stopWithTask="false"/>
 
         <activity android:name=".noThingNotifi" />
