@@ -48,6 +48,12 @@ public class MyServices extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        settings = db.getAllSettings();
+        userNo= db.getAllUserNo();
+        if (settings.size() != 0) {
+            approveAdmin= settings.get(0).getApproveAdmin();
+            Log.e(TAG,"spical"+approveAdmin+"   ");
+        }
 
         Log.e(TAG, "onCreate() , service started...");
 
