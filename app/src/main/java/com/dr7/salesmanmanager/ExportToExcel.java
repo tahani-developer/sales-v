@@ -106,10 +106,14 @@ public class ExportToExcel {
             case 9:
                 workbook = SerialListReport(workbook, (List<serialModel>) list );
                 break;
+            case 10:
+                workbook = unCollectedReport(workbook , (List<Payment>) list );
+                break;
+
         }
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/blackseawood/";
+        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSalesExcelReport/";
         file = new File(directory_path);
         if (!file.exists()) {
             file.mkdirs();
@@ -126,7 +130,50 @@ public class ExportToExcel {
             Toast.makeText(context, "Excel program needed!", Toast.LENGTH_SHORT).show();
         }
     }
+//********************************************************************
+WritableWorkbook unCollectedReport(WritableWorkbook workbook, List<Payment> list) {
 
+    try {
+        WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
+
+        try {
+            sheet.addCell(new Label(0, 0, context.getString(R.string.app_bank_name)            )); // column and row
+            sheet.addCell(new Label(1, 0, context.getString(R.string.check_number   )) );
+
+            sheet.addCell(new Label(2, 0, context.getString(R.string.chaequeDate   )) );
+            sheet.addCell(new Label(3, 0, context.getString(R.string.app_amount   )) );
+
+            sheet.mergeCells(0,1, 3, 1);// col , row, to col , to row
+
+            for (int i = 0; i < list.size(); i++) {
+                sheet.addCell(new Label(0, i + 2, list.get(i).getBank()+""));
+                sheet.addCell(new Label(1, i + 2,      list.get(i).getCheckNumber()+""));
+                sheet.addCell(new Label(2, i + 2,  list.get(i).getDueDate()+""));
+                sheet.addCell(new Label(3, i + 2,  list.get(i).getAmount()+""));
+
+
+                //sheet.mergeCells(0,i + 2, 1, i + 2);// col , row, to col , to row
+
+            }
+
+        } catch (RowsExceededException e) {
+            e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        }
+        workbook.write();
+          Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
+        try {
+            workbook.close();
+        } catch (WriteException e) {
+            e.printStackTrace();
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return workbook;
+
+}
 
 //*********************************************************************
 

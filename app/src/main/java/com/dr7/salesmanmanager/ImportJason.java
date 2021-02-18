@@ -1337,7 +1337,7 @@ public class ImportJason extends AppCompatActivity {
                     }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/GetTheUnCollectedCheques?ACCNO=1224";
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO="+custId;
                 }
             } catch (Exception e) {
 
@@ -1486,7 +1486,7 @@ public class ImportJason extends AppCompatActivity {
                         ipAddress=ipAddress.substring(0,ind);
                     }
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/GetAllTheCheques?ACCNO=1224";
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetAllTheCheques?ACCNO="+custId;
                 }
             } catch (Exception e) {
                 pdPayments.dismissWithAnimation();

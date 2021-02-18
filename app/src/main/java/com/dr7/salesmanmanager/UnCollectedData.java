@@ -1,10 +1,12 @@
 package com.dr7.salesmanmanager;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +20,14 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Reports.CustomerLogReport;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -32,6 +41,7 @@ public class UnCollectedData extends AppCompatActivity {
     ArrayList<Payment> paymentArrayList;
     TableLayout tableCheckData;
     int position = 0;
+    int[] listImageIcone=new int[]{R.drawable.pdf_,R.drawable.excel_e};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +88,61 @@ public class UnCollectedData extends AppCompatActivity {
             }
         });
        // getPayment();
+        inflateBoomMenu();
+
+    }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_1);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    convertToPdf();
+
+                                    break;
+                                case 1:
+                                    convertToExcel();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void convertToPdf() {
+        PdfConverter pdf =new PdfConverter(UnCollectedData.this);
+       pdf.exportListToPdf(paymentArrayList,"UncollectedChequesReport","",9);
 
     }
 
+    private void convertToExcel() {
+
+        ExportToExcel exportToExcel=new ExportToExcel();
+      exportToExcel.createExcelFile(UnCollectedData.this,"UncollectedChequesReport.xls",10,paymentArrayList);
+
+
+
+
+    }
     private void getPayment() {
         Payment data = new Payment();
         data.setBank("Arab Bank");
