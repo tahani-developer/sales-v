@@ -76,6 +76,7 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
+import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
@@ -828,19 +829,24 @@ public class AddItemsFragment2 extends DialogFragment {
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         boolean existItem = false;
+        float previousePrice=0,curentPrice=0;
+        try {
+             curentPrice=Float.parseFloat(price.trim());
+        }catch (Exception e){curentPrice=0;}
+
 
 
 
             for(int i = 0 ; i< obj.getItemsList().size() ; i++){
-                Log.e("***" , obj.getItemsList().get(i).getItemNo() + " " + itemNumber);
                 if(obj.getItemsList().get(i).getItemNo().equals(itemNumber)){
+                    previousePrice=obj.getItemsList().get(i).getPrice();
                     existItem = true;
                     break;
                 }
             }
+       // Log.e("canChangePrice",""+canChangePrice+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
 
-
-        if(existItem) {
+        if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
             Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();

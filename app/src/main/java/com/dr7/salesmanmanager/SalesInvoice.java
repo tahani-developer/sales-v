@@ -193,6 +193,7 @@ public class SalesInvoice extends Fragment {
     public Spinner voucherTypeSpinner;
     public  static  int priceListTypeVoucher=0,listOfferNo=-1;
     LinearLayout linearRegulerOfferList;
+    public  static int canChangePrice=0;
 
 
     //    public static  List<Item> jsonItemsList;
@@ -834,6 +835,8 @@ public class SalesInvoice extends Fragment {
 
             }//end save data
         });
+        canChangePrice=mDbHandler.getAllSettings().get(0).getCanChangePrice();
+        Log.e("canChangePrice",""+canChangePrice);
         return view;
     }
 //          if(savedInstanceState!=null){

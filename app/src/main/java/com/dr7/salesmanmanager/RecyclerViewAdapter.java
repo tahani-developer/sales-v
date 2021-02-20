@@ -71,6 +71,7 @@ import static android.widget.LinearLayout.VERTICAL;
 
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
@@ -251,9 +252,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    getTimeAndDate();
                                                    for (int i = 0; i < localItemNumber.size(); i++) {
                                                        if (localItemNumber.get(i).equals(items.get(holder.getAdapterPosition()).getItemNo())) {
-                                                           showAlertDialog();
-                                                           itemInlocalList = true;
-                                                           break;
+//                                                           if(canChangePrice==0)
+//                                                           {
+                                                               showAlertDialog();
+                                                               itemInlocalList = true;
+                                                               break;
+//                                                           }
+
                                                        }
                                                    }
                                                    if (itemInlocalList == false) {
@@ -1258,6 +1263,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        });
                                                        dialog.show();
 
+                                                   }else {
+//                                                       new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+//                                                               .setTitleText(view.getContext().getString(R.string.warning_message))
+//                                                               .setContentText(view.getContext().getString(R.string.itemadedbefor))
+//                                                               .show();
                                                    }
                                                }
                                            }//on click
@@ -1360,6 +1370,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void showAlertDialog() {
+        Log.e("showAlertDialog","truuuuu");
         AlertDialog.Builder builder = new AlertDialog.Builder(cont);
         builder.setTitle(R.string.app_alert);
         builder.setCancelable(true);

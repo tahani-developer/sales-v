@@ -185,7 +185,7 @@
             <TextView
                 android:id="@+id/textView_voucherNo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
@@ -208,7 +208,7 @@
             <TextView
                 android:id="@+id/textView_transName"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
@@ -228,7 +228,7 @@
             <TextView
                 android:id="@+id/textView_date_voucher"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
@@ -247,7 +247,7 @@
             <TextView
                 android:id="@+id/textView_debit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
@@ -266,7 +266,7 @@
             <TextView
                 android:id="@+id/textView_cridit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
@@ -285,7 +285,7 @@
             <TextView
                 android:id="@+id/textView_balance"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
 
                 android:layout_weight="1"
                 android:gravity="center"
