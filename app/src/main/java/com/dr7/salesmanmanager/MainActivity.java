@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -135,6 +136,7 @@ import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
@@ -200,8 +202,12 @@ public class MainActivity extends AppCompatActivity
     LinearLayout checkInCheckOutLinear;
     public  static int time=30;
     Timer timer;
-//    LocationPermissionRequest locationPermissionRequest;
+    LocationPermissionRequest locationPermissionRequest;
     Transaction transactionRealTime;
+    boolean customerCheckInOk=false;
+
+    List<Settings>settingsList;
+    int NoLocationAsk=0;
 
     public  static TextView masterControlLoc;
 
@@ -275,8 +281,25 @@ public class MainActivity extends AppCompatActivity
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         first=1;
+        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
         TextView textTimer = (TextView)findViewById(R.id.timerTextView);
         masterControlLoc=findViewById(R.id.masterControlLoc);
+
+        settingsList= mDbHandler.getAllSettings();
+        try {
+            approveAdmin=settingsList.get(0).getApproveAdmin();
+        }catch (Exception e){
+            approveAdmin=0;
+        }
+
+        if(approveAdmin==1) {
+            boolean locCheck = locationPermissionRequest.checkLocationPermission();
+
+            Log.e("LocationIn", "Main1" + locCheck);
+
+        }
+
+
         masterControlLoc.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -371,14 +394,20 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
-                    if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
-                        checknum = 1;
-                        menuItemState = 1;
-                        openSelectCustDialog();
-                    } else {
-                        Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
-//                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+                    customerCheckInOk=true;
+//                  checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
+
+                    if(approveAdmin==1) {
+                        boolean locCheck = locationPermissionRequest.checkLocationPermission();
+
+                        Log.e("LocationIn", "GoToMain" + locCheck);
+                        if (locCheck) {
+                            customerCheckInDialog();
+                        }else{
+                           // customerCheckInDialog();
+                        }
+                    }else {
+                        customerCheckInDialog();
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
@@ -453,6 +482,17 @@ public class MainActivity extends AppCompatActivity
             integrator.setCaptureActivity(SmallCaptureActivity.class);
             integrator.initiateScan();
 //        new IntentIntegrator(MainActivity.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+    }
+
+    void customerCheckInDialog(){
+        if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
+            checknum = 1;
+            menuItemState = 1;
+            openSelectCustDialog();
+        } else {
+            Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
+//                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+        }
     }
 
     public  void getlocationForCheckIn() {
@@ -921,6 +961,7 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -939,6 +980,39 @@ public class MainActivity extends AppCompatActivity
 
                 }
                 return;
+            }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Location", "granted");
+                    Log.e("LocationIn","GoToMain 1");
+                    if(customerCheckInOk){
+                        customerCheckInDialog();
+                        customerCheckInOk=false;
+                    }
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(MainActivity                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  .this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Log.e("Location", "granted updates");
+                        Log.e("LocationIn","GoToMain 2");
+
+                    }
+
+                } else {
+                    Log.e("LocationIn","GoToMain 3");
+                    Log.e("Location", "Deny");
+                    // permission, denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+//                    NoLocationAsk++;
+//                    if(NoLocationAsk!=1) {
+//                        locationPermissionRequest.checkLocationPermission();
+//                    }
+                }
+                break;
             }
         }
     }
@@ -1130,7 +1204,7 @@ public class MainActivity extends AppCompatActivity
 //                    .setNegativeButton("Cancel", null).show();
 
         }
-//        else if (id == R.id.nav_sign_out) {
+        //        else if (id == R.id.nav_sign_out) {
 ////            locationPermissionRequest.closeLocation();
 ////            Intent intent = new Intent(this, CPCL2Menu.class);
 ////            startActivity(intent);
@@ -2412,6 +2486,11 @@ public class MainActivity extends AppCompatActivity
 //                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
+
+                            stopService(new Intent(MainActivity.this, MyServices.class));
+
+                            startService(new Intent(MainActivity.this, MyServices.class));
+
                     }
                     else
                     {

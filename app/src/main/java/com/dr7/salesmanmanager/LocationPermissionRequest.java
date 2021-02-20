@@ -64,7 +64,7 @@ public class LocationPermissionRequest   extends Activity {
     SweetAlertDialog dialogTem, sweetAlertDialog;
     int OpenFlag = 1;
     LocationManager locationManager;
-    Timer timer;
+    //Timer timer;
     private LocationRequest mLocationRequest;
     GPSTracker gps;
     Location gps_loc;
@@ -79,7 +79,7 @@ int req=0;
     FusedLocationProviderClient mFusedLocationClient;
 SalesmanStations salesmanStations;
     public  static  boolean openDialog=false;
-public static double checkOutLong=0,checkOutLat=0;
+
 int  approveAdmin=-1;
     GoogleApiClient googleApiClient;
     List<com.dr7.salesmanmanager.Modles.Settings> settings;
@@ -94,7 +94,7 @@ int  approveAdmin=-1;
         if (settings.size() != 0) {
            approveAdmin= settings.get(0).getApproveAdmin();
         }
-        timer = new Timer();
+        //timer = new Timer();
 
     }
 
@@ -136,7 +136,7 @@ int  approveAdmin=-1;
                             dialogLoc();
 
 //                        }
-                        openAppSettings();
+                       // openAppSettings();
                     }
                 });
             }
@@ -162,7 +162,7 @@ int  approveAdmin=-1;
                        flag=false;
                         displayLocationSettingsRequest(context);
                     }
-                    getLoc();
+                  //  getLoc();
                 }
             });
 
@@ -252,39 +252,39 @@ int  approveAdmin=-1;
         }
     }
 
-    public void timerLocation(){
-
-
-
-            timer.schedule(new TimerTask() {
-
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void run() {
-                    context = contextG;
-                   // Log.e("locationApp", "" +approveAdmin);
-                    try {
-                        settings = mHandler.getAllSettings();
-                        if (settings.size() != 0) {
-                            approveAdmin = settings.get(0).getApproveAdmin();
-                        }
-                    }catch (Exception e){
-                        approveAdmin=0;
-                    }
-
-                    if(approveAdmin==1) {
-//                        if (OpenFlag==1) {
-                           // Log.e("locationRec", "" + req);
-                            checkLocationPermission();
+//    public void timerLocation(){
+//
+//
+//
+//            timer.schedule(new TimerTask() {
+//
+//                @RequiresApi(api = Build.VERSION_CODES.M)
+//                @Override
+//                public void run() {
+//                    context = contextG;
+//                    Log.e("locationApp", "" +approveAdmin);
+//                    try {
+//                        settings = mHandler.getAllSettings();
+//                        if (settings.size() != 0) {
+//                            approveAdmin = settings.get(0).getApproveAdmin();
 //                        }
-
-                    }
-                }
-
-            }, 0, 30000);
-
-
-    }
+//                    }catch (Exception e){
+//                        approveAdmin=0;
+//                    }
+//
+//                    if(approveAdmin==1) {
+////                        if (OpenFlag==1) {
+//                           // Log.e("locationRec", "" + req);
+//                            checkLocationPermission();
+////                        }
+//
+//                    }
+//                }
+//
+//            }, 0, 1000);
+//
+//
+//    }
 
 
     public void openAppSettings() {
@@ -325,9 +325,9 @@ int  approveAdmin=-1;
             Log.e("Location", "error for open gps location" + e.toString());
         }
     }
-    private void displayLocationSettingsRequest(Context context) {
+    public void displayLocationSettingsRequest(Context context) {
 
-        if(googleApiClient==null) {
+
         openDialog = true;
             googleApiClient = new GoogleApiClient.Builder(context)
                     .addApi(LocationServices.API).build();
@@ -373,9 +373,7 @@ int  approveAdmin=-1;
                     }
                 }
             });
-        }else {
 
-        }
     }
 
     public static boolean isLocationEnabled(Context context) {
@@ -421,14 +419,14 @@ int  approveAdmin=-1;
                 salesmanStations.setSalesmanNo(Login.salesMan);
                 salesmanStations.setLatitude(""+latitude);
                 salesmanStations.setLongitude(""+longitude);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        importJason.updateLocation(salesmanStations.getJSONObject());
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        importJason.updateLocation(salesmanStations.getJSONObject());
+//                    }
+//                });
 
-                checkOutLong=longitude;
-                checkOutLat=latitude;
+               // checkOutLong=longitude;
+                //checkOutLat=latitude;
 
                 Log.e("location123456","  "+salesmanStations.getJSONObject());
                 Log.e("location12345","    la= "+latitude +"  lo = "+longitude);

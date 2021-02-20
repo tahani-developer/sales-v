@@ -45,6 +45,34 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+// settings = db.getAllSettings();
+//                    if (settings.size() != 0) {
+//                        approveAdmin= settings.get(0).getApproveAdmin();
+//                    }
+//
+//                    db.getAllSettings();
+//                Log.e("StickyLocation","approveAdminnn = "+approveAdmin+"   ="+contextG);
+//
+//                Log.e("StickyLocation","approveAdmin = "+approveAdmin+"   ="+getApplicationContext().toString());
+//
+//                    if(approveAdmin==1) {
+//                        Log.e("StickyLocation","approveAdmin IN  = "+approveAdmin);
+//
+////                        LocationPermissionRequest locationPermissionRequest = new LocationPermissionRequest(MyService.this);
+////                        locationPermissionRequest.checkLocationPermission();
+//                        Handler h = new Handler(Looper.getMainLooper());
+//                        h.post(new Runnable() {
+//                            public void run() {
+//                                Log.e("StickyLocation","getLoc = "+approveAdmin);
+//                                getLoc();
+//                            }
+//                        });
+//
+//                    }else {
+//                        Log.e("StickyLocation","no approveAdmin = "+approveAdmin);
+//
+//                    }
+
 
 /**
  * Created by Rawan on 2019.

@@ -41,9 +41,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Reports.Reports;
@@ -81,6 +81,7 @@ import java.util.TimerTask;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
@@ -307,8 +308,7 @@ public class Login extends AppCompatActivity {
 
             }
         });
-       //locationPermissionRequest.timerLocation();
-//        new SyncLocation().execute();
+      // locationPermissionRequest.timerLocation();
 
         checkIpDevice.addTextChangedListener(new TextWatcher() {
             @Override
@@ -400,6 +400,42 @@ public class Login extends AppCompatActivity {
                     //not granted
                 }
                 break;
+
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Location", "granted");
+                    Log.e("LocationIn","GoToMain 1");
+
+                   // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
+                    startService(new Intent(Login.this, MyServices.class));
+                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(main);
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(Login.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Log.e("Location", "granted updates");
+                        Log.e("LocationIn","GoToMain 2");
+                        //Request location updates:
+//                        locationPermissionRequest.
+//                        locationManager.requestLocationUpdates(provider, 400, 1, (LocationListener) this);
+                    }
+
+                } else {
+                    Log.e("LocationIn","GoToMain 3");
+                    Log.e("Location", "Deny");
+                    // permission, denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                break;
+            }
+
+
+
+
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -634,26 +670,36 @@ public class Login extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
+       List<Settings>settingsList= mDHandler.getAllSettings();
+        int approveAdmin=0;
+       try {
+            approveAdmin = settingsList.get(0).getApproveAdmin();
+       }catch (Exception e){
+            approveAdmin=0;
+       }
+        Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
-//
-//        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(Login.this);
-//       boolean tt= locationPermissionRequest.checkLocationPermission();
-//Log.e("LocationPermission","Request"+tt);
-//
-//if(tt) {
-   //startService(new Intent(Login.this, MyService.class));
-      startService(new Intent(Login.this, BackgroundGpsServices.class));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Log.e("LocationSdk","startService"+Build.VERSION.SDK_INT);
-            startService(new Intent(Login.this, BackgroundGpsServices.class));
-        } else {
-            Log.e("LocationSdk","startForegroundService"+Build.VERSION.SDK_INT);
-            Intent serviceIntent = new Intent(Login.this, BackgroundGpsServices.class);
-            ContextCompat.startForegroundService(Login.this, serviceIntent );
-          // startForegroundService(new Intent(Login.this, BackgroundGpsServices.class));
+        mDHandler.deletAllSalesLogIn();
+        mDHandler.addUserNO(Login.salesMan);
+
+        if(approveAdmin==1) {
+        boolean locCheck= locationPermissionRequest.checkLocationPermission();
+
+        Log.e("LocationIn","GoToMain"+locCheck);
+        if(locCheck){
+            Log.e("LocationIn","GoToMain IN "+locCheck);
+            startService(new Intent(Login.this, MyServices.class));
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(main);
+        }else {
+            Log.e("LocationIn","GoToMain else "+locCheck);
         }
-    Intent main = new Intent(getApplicationContext(), MainActivity.class);
-    startActivity(main);
+
+        }else {
+            Log.e("LocationIn","GoToMain no approve" +approveAdmin);
+            Intent main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(main);
+        }
 }
 //    }
 
@@ -995,37 +1041,5 @@ public class Login extends AppCompatActivity {
             return null;
         }
     }// Class RequestLogin
-
-
-    private class SyncLocation extends AsyncTask<String, String, String> {
-        private String JsonResponse = null;
-        private HttpURLConnection urlConnection = null;
-        private BufferedReader reader = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            locationPermissionRequest.timerLocation();
-
-
-return  "ok";
-        }
-
-        @Override
-        protected void onPostExecute(String JsonResponse) {
-            super.onPostExecute(JsonResponse);
-
-
-
-
-        }
-    }
 
 }
