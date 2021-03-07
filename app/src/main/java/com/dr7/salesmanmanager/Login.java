@@ -12,6 +12,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -20,6 +22,7 @@ import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -55,6 +58,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,6 +93,7 @@ import static com.dr7.salesmanmanager.MainActivity.latitude_main;
 import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
+
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
 
@@ -103,6 +108,8 @@ public class Login extends AppCompatActivity {
     int key_int;
     Context context;
     TextView loginText;
+    EditText ipEditText;
+    public  static String userNo="";
     SweetAlertDialog dialogTem, sweetAlertDialog;
 
     DatabaseHandler mDHandler;
@@ -120,7 +127,7 @@ public class Login extends AppCompatActivity {
     SimpleDateFormat df, df2;
     String curentDate, curentTime;
     public static Location location_main;
-    RelativeLayout mainlayout;
+    LinearLayout mainlayout;
     String provider;
     public static Timer timer = null;
     LocationPermissionRequest locationPermissionRequest;
@@ -128,6 +135,7 @@ public class Login extends AppCompatActivity {
     String serialNo2="";
     public  static  TextView checkIpDevice;
     public static Context contextG;
+    FloatingActionButton setting_floatingBtn;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -138,28 +146,9 @@ public class Login extends AppCompatActivity {
 
         new LocaleAppUtils().changeLayot(Login.this);
 
-        setContentView(R.layout.activity_login);
-        checkIpDevice=findViewById(R.id.checkIpDevice);
-        locationPermissionRequest = new LocationPermissionRequest(Login.this);
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        setContentView(R.layout.login_free_size);
+        initialView();
 
-        provider = locationManager.getBestProvider(new Criteria(), false);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mDHandler = new DatabaseHandler(Login.this);
-        model_key = new activeKey();
-        loginText = (TextView) findViewById(R.id.logInTextView);
-        currentTimeAndDate = Calendar.getInstance().getTime();
-        Log.e("currentTimeAndDate", "" + currentTimeAndDate);
-        df = new SimpleDateFormat("dd/MM/yyyy");
-        curentDate = df.format(currentTimeAndDate);
-        curentDate = convertToEnglish(curentDate);
-        Log.e("curentDate", "" + curentDate);
-
-        df2 = new SimpleDateFormat("hh:mm:ss");
-        curentTime = df2.format(currentTimeAndDate);
-        curentTime = convertToEnglish(curentTime);
-        Log.e("curentTime", "" + curentTime);
         getIpAddressForDevice();
         validLocation();
         try {
@@ -193,7 +182,6 @@ public class Login extends AppCompatActivity {
             LocaleAppUtils.setConfigChange(Login.this);
 
         }
-        mainlayout = (RelativeLayout) findViewById(R.id.mainlayout);
 
         try {
             if (languagelocalApp.equals("ar")) {
@@ -207,34 +195,14 @@ public class Login extends AppCompatActivity {
         } catch (Exception e) {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        //   model_key.setKey(123);
+        setLogo();
 
-        Log.e("model", "model_key" + model_key.getKey());
-        logo = (CircleImageView) findViewById(R.id.imageView3);
-        usernameEditText = (EditText) findViewById(R.id.usernameEditText);
-
-        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-//        passwordEditText.setText("2240m");
-//        usernameEditText.setText("1");
-        try {
-            if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
-                logo.setImageDrawable(getResources().getDrawable(R.drawable.logo_vansales));
-            } else {
-                logo.setImageBitmap(mDHandler.getAllCompanyInfo().get(0).getLogo());
-            }
-        } catch (Exception e) {
-
-        }
-
-
-        loginCardView = (CardView) findViewById(R.id.loginCardView);
         loginCardView.setOnClickListener(new OnClickListener() {
 
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
                 CompanyInfo companyLocation = mDHandler.getCompanyLocation();
-                Log.e("companyLocation", "" + companyLocation.getLongtudeCompany());
                 String user = usernameEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
                 salesMenList = mDHandler.getAllSalesMen();
@@ -309,44 +277,190 @@ public class Login extends AppCompatActivity {
             }
         });
       // locationPermissionRequest.timerLocation();
-
-        checkIpDevice.addTextChangedListener(new TextWatcher() {
+        setting_floatingBtn.setOnClickListener(new OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onClick(View view) {
+                showSettingIpDialog();
+            }
+        });
+    }
+
+    private void showSettingIpDialog() {
+        final Dialog dialog = new Dialog(Login.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.ip_setting_dialog);
+        dialog.show();
+
+        //****************************
+        ipEditText = (EditText) dialog.findViewById(R.id.ipEditText);
+        final EditText portSetting = (EditText) dialog.findViewById(R.id.portSetting);
+        final EditText storeNo_edit = (EditText) dialog.findViewById(R.id.storeNo_edit);
+         TextView editIp= (TextView) dialog.findViewById(R.id.editIp);
+
+        final Button cancel_button = (Button) dialog.findViewById(R.id.cancelBtn);
+        final Button importData = (Button) dialog.findViewById(R.id.importData);
+        //********************************fill data******************************************
+        if(mDHandler.getAllSettings().size()!=0)
+        {
+            ipEditText.setText(mDHandler.getAllSettings().get(0).getIpAddress());
+            portSetting.setText(mDHandler.getAllSettings().get(0).getIpPort());
+            storeNo_edit.setText(mDHandler.getAllUserNo());
+
+            ipEditText.setClickable(false);
+            ipEditText.setEnabled(false);
+//            ipEditText.setAlpha(0.5f);
+        }
+        else {
+            ipEditText.setEnabled(true);
+        }
+        editIp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPasswordDialog();
+
 
             }
+        });
 
+        cancel_button.setOnClickListener(new OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            public void onClick(View v) {
+                dialog.dismiss();
             }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
+        });
+        final Button ok_button = (Button) dialog.findViewById(R.id.saveSetting);
+        ok_button.setOnClickListener(new OnClickListener() {
             @Override
-            public void afterTextChanged(Editable s) {
-
-                if(!s.toString().equals(""))
+            public void onClick(View v) {
+                if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
                 {
-                    if(s.toString().equals("-1"))
-                    {
-                        goToMain();
-                    }
-                    else {
-                        if(s.toString().equals("2"))
-                        {
-                            Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
-                            addCurentIp(currentIp);
-                        }
-                        else {
-                            verifyIpDevice();
-                        }
-
-                    }
-
+                    addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString());
+                    dialog.dismiss();
+                  Log.e("validateNotEmpty","validateNotEmpty");
+                }
+                else {                  Log.e("validateNotEmpty","NOTTTTT");
                 }
             }
         });
-//        checkLocationPermission();
+        importData.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
+                {
+                    if(mDHandler.getAllSettings().size()==0)
+                    {
+                        addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString());
+
+                    }
+                    ImportJason importJason=new ImportJason(Login.this);
+                    importJason.startParsing(storeNo_edit.getText().toString());
+                    dialog.dismiss();
+                }
+
+            }
+        });
+    }
+    private void showPasswordDialog() {
+        final EditText editText = new EditText(Login.this);
+        editText.setTextColor(getResources().getColor(R.color.text_view_color));
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(Login.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+                    ipEditText.setAlpha(1f);
+                    ipEditText.setEnabled(true);
+                    ipEditText.requestFocus();
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+                else {
+                    editText.setError("Incorrect");
+                }
+            }
+        })
+
+                .show();
+    }
+    private void addIpSetting(String ipAddress, String ipPort) {
+        if(mDHandler.getAllSettings().size()==0)
+        {
+            mDHandler.addIPSetting(504,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(506,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(508,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(1,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(4,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(2,0,ipAddress,ipPort);
+        }
+        else {
+            mDHandler.updateIpSetting(ipAddress,ipPort);
+        }
+
+    }
+
+    private boolean validateNotEmpty(EditText editText) {
+        if(!editText.getText().toString().equals(""))
+        {
+            editText.setError(null);
+            return true;
+        }
+        else {
+            editText.setError(getResources().getString(R.string.reqired_filled));
+            editText.requestFocus();
+            return false;
+        }
+
+    }
+
+    private void setLogo() {
+        try {
+            if (mDHandler.getAllCompanyInfo().get(0).getLogo() == null) {
+                logo.setImageDrawable(getResources().getDrawable(R.drawable.logo_vansales));
+            } else {
+                logo.setImageBitmap(mDHandler.getAllCompanyInfo().get(0).getLogo());
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void initialView() {
+        checkIpDevice=findViewById(R.id.checkIpDevice);
+        locationPermissionRequest = new LocationPermissionRequest(Login.this);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        provider = locationManager.getBestProvider(new Criteria(), false);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mDHandler = new DatabaseHandler(Login.this);
+        model_key = new activeKey();
+        loginText = (TextView) findViewById(R.id.logInTextView);
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        Log.e("currentTimeAndDate", "" + currentTimeAndDate);
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        curentDate = df.format(currentTimeAndDate);
+        curentDate = convertToEnglish(curentDate);
+        Log.e("curentDate", "" + curentDate);
+
+        df2 = new SimpleDateFormat("hh:mm:ss");
+        curentTime = df2.format(currentTimeAndDate);
+        curentTime = convertToEnglish(curentTime);
+        Log.e("curentTime", "" + curentTime);
+        mainlayout = (LinearLayout) findViewById(R.id.mainlayout);
+        setting_floatingBtn=findViewById(R.id.setting_floatingBtn);
+        logo = (CircleImageView) findViewById(R.id.imageView3);
+        usernameEditText = (EditText) findViewById(R.id.usernameEditText);
+
+        passwordEditText = (EditText) findViewById(R.id.passwordEditText);
+        loginCardView = (CardView) findViewById(R.id.loginCardView);
+        userNo= mDHandler.getAllUserNo();
     }
 
     private String getIpAddressForDevice() {
@@ -584,16 +698,18 @@ public class Login extends AppCompatActivity {
                     {
                         if(mDHandler.getAllSettings().get(0).getApproveAdmin()==1)
                         {
-//                           checkIpDevice() ;
-                            goToMain();
+//                            goToMain();
+                            verifyIpDevice();
                         }
                         else {
-//                            checkIpDevice() ;
-                            goToMain();
+
+                            verifyIpDevice();
+//                            goToMain();
                         }
                     }
                     else {
-                        goToMain();
+//                        goToMain();
+                        verifyIpDevice();
                     }
 
 //                    locationPermissionRequest.closeLocation();
@@ -614,8 +730,8 @@ public class Login extends AppCompatActivity {
                         salesMan = usernameEditText.getText().toString();
                         salesManNo = passwordEditText.getText().toString();
 //                       locationPermissionRequest.closeLocation();
-
-                       goToMain();
+                        verifyIpDevice();
+//                       goToMain();
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
 
 
@@ -630,7 +746,7 @@ public class Login extends AppCompatActivity {
         exist = false;
     }
 
-    private void checkIpDevice() {
+    private void getIpDevice() {
         currentIp=getIpAddressForDevice();
         previousIp=getPreviousIpForSalesMen();
         //V22219AQ02457
@@ -638,8 +754,9 @@ public class Login extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void  verifyIpDevice(){
+        getIpDevice();
         Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
-        if(previousIp.equals(currentIp)){
+        if(previousIp.equals(currentIp)||previousIp.equals("")){
             goToMain();
 
         }
@@ -662,10 +779,22 @@ public class Login extends AppCompatActivity {
 
     private String getPreviousIpForSalesMen() {
 
-        Log.e("getPreviousIpFo","INNNN");
-        ImportJason importJason=new ImportJason(Login.this);
-        importJason.getPreviousIpForSalesMen();
-        return  "";
+        String ipDevice=mDHandler.getIpAddresDevice_fromSalesTeam();
+        Log.e("getPreviousIpFo","ipDevice"+ipDevice);
+        if(ipDevice.equals(""))
+        {
+          ipDevice= getIpAddressForDevice();
+           mDHandler.updatIpDevice(ipDevice);
+           addCurentIp(ipDevice);
+            return  "";
+        }
+        else {
+            return ipDevice;
+        }
+
+//        ImportJason importJason=new ImportJason(Login.this);
+//        importJason.getPreviousIpForSalesMen();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -684,6 +813,10 @@ public class Login extends AppCompatActivity {
 
         if(approveAdmin==1) {
         boolean locCheck= locationPermissionRequest.checkLocationPermission();
+        boolean isNetworkAvailable=isNetworkAvailable();
+        if(!isNetworkAvailable){
+            Toast.makeText(Login.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+        }
 
         Log.e("LocationIn","GoToMain"+locCheck);
         if(locCheck){
@@ -703,6 +836,12 @@ public class Login extends AppCompatActivity {
 }
 //    }
 
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     private boolean validLocation() {
 //        getCompanyLocation();
 //        getCurentLocation();

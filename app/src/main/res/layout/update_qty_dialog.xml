@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
     android:layout_height="170dp"
-    android:background="@color/layer1"
+    android:background="@color/layer7"
     android:padding="20dp"
     android:orientation="vertical">
 
@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_view_color"
+            android:textColor="@color/colorblue_dark"
             android:gravity="center"
             android:textSize="16sp"
             android:layout_margin="5dp"
@@ -32,7 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:ems="10"
             android:inputType="numberDecimal"
             android:paddingHorizontal="10dp" />

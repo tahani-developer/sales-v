@@ -61,46 +61,49 @@ public class CustomerLogReport extends AppCompatActivity {
 
             }
         });
+        try {
 
 
-        TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
+            TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
 
-        for (int n = 0; n <transactionList.size() ; n++) {
-            TableRow row = new TableRow(this);
-            row.setPadding(5 , 10 , 5 , 10);
+            for (int n = 0; n < transactionList.size(); n++) {
+                TableRow row = new TableRow(this);
+                row.setPadding(5, 10, 5, 10);
 
-            if (n % 2 == 0)
-                row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
-            else
-                row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
+                if (n % 2 == 0)
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
+                else
+                    row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer7));
 
-            for (int i = 0; i < 8; i++) {
+                for (int i = 0; i < 8; i++) {
 
-                String [] record = {transactionList.get(n).getSalesManId()+"" ,
-                        transactionList.get(n).getCusCode()+"",
-                        transactionList.get(n).getCusName(),
-                        transactionList.get(n).getCheckInDate(),
-                        transactionList.get(n).getCheckInTime(),
-                        transactionList.get(n).getCheckOutDate(),
-                        transactionList.get(n).getCheckOutTime(),
-                        transactionList.get(n).getStatus()+""};
+                    String[] record = {transactionList.get(n).getSalesManId() + "",
+                            transactionList.get(n).getCusCode() + "",
+                            transactionList.get(n).getCusName(),
+                            transactionList.get(n).getCheckInDate(),
+                            transactionList.get(n).getCheckInTime(),
+                            transactionList.get(n).getCheckOutDate(),
+                            transactionList.get(n).getCheckOutTime(),
+                            transactionList.get(n).getStatus() + ""};
 
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    row.setLayoutParams(lp);
 
-                TextView textView = new TextView(this);
-                textView.setText(record[i]);
-                textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
-                textView.setGravity(Gravity.CENTER);
+                    TextView textView = new TextView(this);
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
+                    textView.setGravity(Gravity.CENTER);
 
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                textView.setLayoutParams(lp2);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    textView.setLayoutParams(lp2);
 
-                row.addView(textView);
+                    row.addView(textView);
+                }
+                TableCustomerLogReport.addView(row);
             }
-            TableCustomerLogReport.addView(row);
-        }
+        }catch (Exception e){
 
+        }
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
     }

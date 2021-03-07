@@ -59,7 +59,7 @@ public class AccountStatment extends AppCompatActivity {
         setContentView(R.layout.activity_account_statment);
 
         ImportJason importJason =new ImportJason(AccountStatment.this);
-        importJason.getCustomerInfo();
+        importJason.getCustomerInfo(0);
 
         initialView();
         inflateBoomMenu();

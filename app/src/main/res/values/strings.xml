@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 62</string>
+    <string name="version"> V 67</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -430,7 +430,7 @@
     <string name="price_ListNo">Price ListNo</string>
     <string name="regular">Regular</string>
     <string name="offer">Offer</string>
-    <string name="IP_PORT">IP PORT</string>
+    <string name="IP_PORT">PORT</string>
     <string name="availableQty">Available Qty</string>
     <string name="requiredQty">Required Qty</string>
     <string name="unCollectedCheques">Un Collected Cheques</string>
@@ -438,6 +438,12 @@
     <string name="recivedAmount">Recived Amount</string>
     <string name="validation">Validation</string>
     <string name="PAIDAMT">Paid Amount</string>
+    <string name="action_settings_ip">Settings Ip</string>
+    <string name="storeNo">User No</string>
+    <string name="checkQtyServer">Check Qty Server</string>
+    <string name="exportingData">Exporting Data</string>
+    <string name="insufficientQuantity">Insufficient Quantity</string>
+    <string name="invalidValue">Invalid Value</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -3,6 +3,7 @@
     <color name="colorPrimary">#04578A</color>
     <color name="colorPrimaryDark">#04578A</color>
     <color name="colorAccent">#463E3F</color>
+    <color name="blue2">#2196F3</color>
     <color name="colorBlack">#0C0B0B</color>
     <color name="amountColor">#387C44</color>
 
@@ -27,6 +28,7 @@
     <color name="second_color">#327C41</color>
     <color name="add_button">#25383C</color>
     <color name="done_button">#3F86B5</color>
+    <color name="done_button2">#7CC8FA</color>
 <!--    <color name="done_button">#327C41</color>-->
 
     <color name="cancel_button">#E6CA221C</color>

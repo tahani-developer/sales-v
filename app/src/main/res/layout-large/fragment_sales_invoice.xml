@@ -53,6 +53,12 @@ android:padding="5dp"
                         android:textColor="@color/colorblue1"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/finishPrint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:textSize="25dp" />
                 <RelativeLayout
 
                     android:layout_width="match_parent"

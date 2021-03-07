@@ -13,6 +13,17 @@
     <!--    <ImageView-->
     <!--        android:id="@+id/imageView3"-->
     <!--      />-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/setting_floatingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorblue_dark"
+        android:elevation="5dp"
+        app:rippleColor="@color/colorblue_dark"
+        android:src="@drawable/ic_settings_white_24dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView3"
@@ -95,7 +106,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeStepGranularity="2sp"
 
                 android:text="@string/app_day_start"
                 android:textColor="@color/layer5"

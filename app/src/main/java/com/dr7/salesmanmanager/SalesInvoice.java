@@ -89,6 +89,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.RequestAdmin;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.AccountReport;
@@ -97,6 +98,7 @@ import com.dr7.salesmanmanager.Reports.VouchersReport;
 import com.ganesh.intermecarabic.Arabic864;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
@@ -177,6 +179,7 @@ import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
 import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
@@ -260,6 +263,7 @@ public class SalesInvoice extends Fragment {
     static Voucher voucherForPrint;
     static List<Item> itemsList;
 
+    public  static TextView finishPrint;
     bluetoothprinter object;
 
     BluetoothAdapter mBluetoothAdapter;
@@ -318,15 +322,18 @@ public class SalesInvoice extends Fragment {
     FusedLocationProviderClient mFusedLocationClient;
     FloatingActionButton save_floatingAction;
     boolean validDiscount=false;
+    int checkQtyServer=0  ,sales=1;
 
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
-          R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp};
+          R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp
+            ,R.drawable.ic_account_balance_white_24dp};
 //    R.drawable.ic_save_black_24dp,
     String[] textListButtons=new String[]{};
    public static RequestAdmin discountRequest;
 
     List<Settings>settingsList=new ArrayList<>();
     int approveAdmin=0;
+    Transaction transaction;
     public SalesInvoice() {
         // Required empty public constructor
     }
@@ -417,10 +424,11 @@ public class SalesInvoice extends Fragment {
             }
         });
         //**********************************************************
+        getTimeAndDate();
         inflateBoomMenu(view );
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        getTimeAndDate();
+
 
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
@@ -445,6 +453,7 @@ public class SalesInvoice extends Fragment {
             retSalesRadioButton.setEnabled(false);
         }
 
+       checkQtyServer= mDbHandler.getAllSettings().get(0).getQtyServer();
         addItemImgButton2 = (CircleImageView) view.findViewById(R.id.addItemImgButton2);
 
         rePrintimage = (CircleImageView) view.findViewById(R.id.pic_Re_print);
@@ -767,27 +776,93 @@ public class SalesInvoice extends Fragment {
                 }
             });
         }
+        try {
+            sales=Integer.parseInt(Login.salesMan);
+        }
+        catch (Exception e){
+            sales=1;
+        }
+        finishPrint=view.findViewById(R.id.finishPrint);
+        finishPrint.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!editable.toString().equals(""))
+                {
+                    if(editable.toString().equals("finish"))
+                    {
+                        if(checkQtyServer==1)
+                        {
+                            ExportJason exportJason= null;
+                            try {
+                                exportJason = new ExportJason(getActivity());
+                                exportJason.startExportDatabase();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            addItemImgButton2.setEnabled(true);
+
+                        }
+                    }
+                }
+
+            }
+        });
         addItemImgButton2.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 addItemImgButton2.setEnabled(false);
-                if (itemCountTable >= 500) {
-                    new SalesInvoice.Task().execute();
+                if(checkQtyServer==0)
+                {
+                    if (itemCountTable >= 500) {
+                        new SalesInvoice.Task().execute();
 
-                } else {
-                    try {
-                        salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+                    } else {
+                        try {
+                            salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+                        }
+                        catch (Exception e)
+                        {         }
+
                     }
-               catch (Exception e)
-               {
 
 
-               }
+
 
                 }
+                else {
+                    if(mDbHandler.getIsPosted(sales)==0)
+                    {
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.exportingData), Toast.LENGTH_SHORT).show();
+                        finishPrint.setText("finish");
+                    }
+                    else {
+                        if (itemCountTable >= 500) {
+                            new SalesInvoice.Task().execute();
+
+                        } else {
+                            try {
+                                salesInvoiceInterfaceListener.displayFindItemFragment2();//for test
+                            }
+                            catch (Exception e)
+                            {         }
+
+                        }
+                    }
+
+                }
+
+
 
             }
         });
@@ -886,6 +961,8 @@ public class SalesInvoice extends Fragment {
         });
         canChangePrice=mDbHandler.getAllSettings().get(0).getCanChangePrice();
         Log.e("canChangePrice",""+canChangePrice);
+
+
         return view;
     }
 //          if(savedInstanceState!=null){
@@ -900,23 +977,101 @@ public class SalesInvoice extends Fragment {
 //    }
 
     private void inflateBoomMenu(View view) {
-        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request)};
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request),getResources().getString(R.string.last_visit)};
 
 
         BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
 
-        bmb.setButtonEnum(ButtonEnum.TextInsideCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_4_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_4_2);
+        bmb.setButtonEnum(ButtonEnum.TextOutsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_3);
+
+        for (int j = 0; j < bmb.getPiecePlaceEnum().pieceNumber(); j++) {
+            TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[j])
+                    .textSize(12)
+                    .normalText(textListButtons[j])
+                    .textPadding(new Rect(5, 5, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index) {
+                                case 0:
+                                    updateListSerialBukupDeleted("", voucherNo + "");
+                                    clearAllData();
+                                    break;
+                                case 1:
+                                    RefreshCustomerBalance obj = new RefreshCustomerBalance(getActivity());
+                                    obj.startParsing();
+                                    break;
+
+                                case 2:
 
 
+                                    try {
+                                        voucherNo = mDbHandler.getLastVoucherNo(voucherType);
+                                        if (voucherNo != 0 && voucherNo != -1) {
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
+                                            printLastVoucher(voucherNo, voucherForPrint);
+                                        } else {
+                                            Toast.makeText(getActivity(), "there is no voucher for this customer and this type of voucher ", Toast.LENGTH_SHORT).show();
 
+                                        }
+
+                                    } catch (Exception e) {
+                                        Log.e("ExceptionReprint", "" + e.getMessage());
+                                        voucherNo = 0;
+                                    }
+                                    break;
+                                case 3:
+                                    if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 0) {
+
+                                        if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1) {
+                                            Log.e("discountButton", "=" + mDbHandler.getAllSettings().get(0).getNoOffer_for_credit());
+                                            if (payMethod == 0) {
+                                                getDataForDiscountTotal();
+                                                salesInvoiceInterfaceListener.displayDiscountFragment();
+                                            } else {
+                                                Toast.makeText(getActivity(), "Sory, you can not add discount in cash invoice  .......", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            getDataForDiscountTotal();
+
+                                            salesInvoiceInterfaceListener.displayDiscountFragment();
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    showLastVisitDialog();
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+        }
+       // inflateMenuInsideText(view);
+
+    }
+
+    private void inflateMenuInsideText(View view) {
+        textListButtons=new String[]{getResources().getString(R.string.delet),getResources().getString(R.string.refresh),getResources().getString(R.string.print),getResources().getString(R.string.request),getResources().getString(R.string.last_visit)};
+
+
+        BoomMenuButton bmb = (BoomMenuButton)view.findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextOutsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_5_3);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_5_3);
         for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
 //            bmb.addBuilder(new SimpleCircleButton.Builder()
 //                    .normalImageRes(listImageIcone[i]));
-            TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
+
+            TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
                     .normalImageRes(listImageIcone[i])
-                    .textSize(13)
+                    .textSize(12)
                     .normalText(textListButtons[i])
                     .textPadding(new Rect(5, 5, 5, 0))
                     .listener(new OnBMClickListener() {
@@ -972,6 +1127,9 @@ public class SalesInvoice extends Fragment {
                                         }
                                     }
                                     break;
+                                case 4:
+                             showLastVisitDialog();
+                                    break;
 
                             }
                         }
@@ -981,6 +1139,35 @@ public class SalesInvoice extends Fragment {
 
         }
     }
+
+    private void showLastVisitDialog() {
+        String lastVisit=getLastVaisit();
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText(getResources().getString(R.string.last_visit))
+                .setContentText(lastVisit)
+                .show();
+
+    }
+    private String getLastVaisit() {
+        String visit="";
+        transaction=new Transaction();
+        if(!CustomerListShow.Customer_Account.equals(""))
+        {
+            transaction=mDbHandler.getLastVisitInfo(CustomerListShow.Customer_Account,Login.salesMan);
+            if(transaction.getCheckInDate()!=null)
+            {
+                visit=transaction.getCheckInDate()+"\t\t"+transaction.getCheckInTime();
+                Log.e("getLastVaisit",""+CustomerListShow.Customer_Account+"\t"+Login.salesMan+"\t"+transaction.getCheckInDate());
+            }
+            else {
+                visit=voucherDate+"\t\t"+time;
+            }
+
+        }
+
+        return  visit;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -2340,10 +2527,14 @@ public class SalesInvoice extends Fragment {
                        } else {
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                            Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+
+
+                               finishPrint.setText("finish");
+
                        }
                    } catch (Exception e) {
                        Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
-
+                       finishPrint.setText("finish");
                    }
 
 
@@ -2354,6 +2545,17 @@ public class SalesInvoice extends Fragment {
                }
            }
            else {
+
+               if(mDbHandler.getAllSettings().get(0).getQtyServer()==1){
+                   try {
+                       ExportJason exportJason=new ExportJason(getActivity());
+                       exportJason.startExportDatabase();
+                   } catch (JSONException e) {
+                       e.printStackTrace();
+                   }
+
+
+               }
                new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
                        .setTitleText(getContext().getString(R.string.succsesful))
                        .show();
@@ -2586,52 +2788,74 @@ public class SalesInvoice extends Fragment {
                                         Button okButton = (Button) dialog.findViewById(R.id.button1);
                                         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
 
+
                                         okButton.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                float availableQty = 0;
-                                                List<Item> jsonItemsList_insal = jsonItemsList;
-                                                for (int i = 0; i < jsonItemsList.size(); i++) {
-                                                    if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
-                                                        availableQty = jsonItemsList.get(i).getQty();
+                                                float availableQty = 0,updateQty=0;
+                                                if (!qty.getText().toString().equals("")) {
+                                                    if (!qty.getText().toString().equals(".")) {
+                                                        if (Float.parseFloat((qty.getText().toString()))!=0) {
 
-                                                        break;
-                                                    }
-                                                }
-                                                if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
-                                                        availableQty >= Float.parseFloat(qty.getText().toString()) ||
-                                                        voucherType == 506) {
-                                                    total_items_quantity -= items.get(position).getQty();
-                                                    items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
-                                                    updaQty = Double.parseDouble(qty.getText().toString());
+
+                                                            List<Item> jsonItemsList_insal = jsonItemsList;
+                                                            for (int i = 0; i < jsonItemsList.size(); i++) {
+                                                                if (items.get(position).getItemNo().equals(jsonItemsList.get(i).getItemNo())) {
+                                                                    availableQty = jsonItemsList.get(i).getQty();
+
+                                                                    break;
+                                                                }
+                                                            }
+                                                            if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1 ||
+                                                                    availableQty >= Float.parseFloat(qty.getText().toString()) ||
+                                                                    voucherType == 506) {
+                                                                total_items_quantity -= items.get(position).getQty();
+
+                                                                try {
+                                                                    items.get(position).setQty(Float.parseFloat(qty.getText().toString()));
+                                                                    updaQty = Double.parseDouble(qty.getText().toString());
+                                                                } catch (Exception e) {
+
+                                                                }
+
+
 //                                                currentDisc=items.get(position).getDisc();
 //                                                if(items.get(position).getDisc()!=0) {
-                                                    List<Offers> offer = checkOffers(items.get(position).getItemNo());
-                                                    if (offer.size() > 0) {
-                                                        appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
-                                                        if (appliedOffer != null) {
+                                                                List<Offers> offer = checkOffers(items.get(position).getItemNo());
+                                                                if (offer.size() > 0) {
+                                                                    appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
+                                                                    if (appliedOffer != null) {
 
-                                                            disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
-                                                            items.get(position).setDisc(disount_totalnew);
+                                                                        disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
+                                                                        items.get(position).setDisc(disount_totalnew);
 
 
+                                                                    }
+                                                                }
+
+                                                                total_items_quantity += items.get(position).getQty();
+                                                                totalQty_textView.setText("+" + total_items_quantity);
+                                                                if (items.get(position).getDiscType() == 0)
+                                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+                                                                else
+                                                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+                                                                calculateTotals();
+                                                                itemsListView.setAdapter(itemsListAdapter);
+
+                                                                dialog.dismiss();
+                                                            } else {
+                                                                Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
+
+                                                                dialog.dismiss();
+                                                            }
+                                                        } else {
+                                                            qty.setError("Invalid Zero");
                                                         }
-                                                    }
+                                                    }else {qty.setError("Invalid . ");}
+                                                }
 
-                                                    total_items_quantity += items.get(position).getQty();
-                                                    totalQty_textView.setText("+" + total_items_quantity);
-                                                    if (items.get(position).getDiscType() == 0)
-                                                        items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
-                                                    else
-                                                        items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
-                                                    calculateTotals();
-                                                    itemsListView.setAdapter(itemsListAdapter);
-
-                                                    dialog.dismiss();
-                                                } else {
-                                                    Toast.makeText(getActivity(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
-
-                                                    dialog.dismiss();
+                                                  else {
+                                                    qty.setError("Required");
                                                 }
                                             }
                                         });

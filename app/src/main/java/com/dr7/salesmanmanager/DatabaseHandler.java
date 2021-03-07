@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 133;
+    private static final int DATABASE_VERSION = 135;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -274,7 +274,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SalesManNo4 = "SalesManNo";
     private static final String SalesManName4 = "SalesManName";
     private static final String IsSuspended4 = "IsSuspended";
-
+    private static final String IP_ADDRESS_DEVICE = "IP_ADDRESS_DEVICE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SalesMan_Items_Balance = "SalesMan_Items_Balance";
 
@@ -372,6 +372,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SHOW_QUANTITY_SOLD="SHOW_QUANTITY_SOLD";
     private static final String READ_OFFER_FROM_ADMIN="READ_OFFER_FROM_ADMIN";
     private static final String IP_PORT="IP_PORT";
+    private static final String CheckQtyServer="CheckQtyServer";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -785,7 +786,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ComapnyNo4 + " INTEGER,"
                 + SalesManNo4 + " INTEGER,"
                 + SalesManName4 + " TEXT,"
-                + IsSuspended4 + " INTEGER" + ")";
+                + IsSuspended4 + " INTEGER,"
+
+                +IP_ADDRESS_DEVICE+ " TEXT"
+
+                + ")";
         db.execSQL(CREATE_TABLE_Sales_Team);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -886,13 +891,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + SHOW_IMAGE_ITEM + " INTEGER,"
 
                 + APPROVE_ADMIN + " INTEGER,"
-                + SAVE_ONLY +" INTEGER,"
-                +SHOW_QUANTITY_SOLD+" INTEGER,"
-                +READ_OFFER_FROM_ADMIN+" INTEGER,"
-                +IP_PORT+ " TEXT"
+                + SAVE_ONLY + " INTEGER,"
+                + SHOW_QUANTITY_SOLD + " INTEGER,"
+                + READ_OFFER_FROM_ADMIN + " INTEGER,"
+                + IP_PORT + " TEXT,"
+                + CheckQtyServer + " INTEGER"
 
 
-        + ")";
+                + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1216,6 +1222,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD IP_PORT  TEXT NOT NULL DEFAULT ' '");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1764,6 +1778,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try{
+
+            db.execSQL("ALTER TABLE Sales_Team ADD  IP_ADDRESS_DEVICE  TEXT  DEFAULT '' ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
 
 
     }
@@ -2181,7 +2204,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SalesManNo4, salesTeam.getSalesManNo());
         values.put(SalesManName4, salesTeam.getSalesManName());
         values.put(IsSuspended4, salesTeam.getIsSuspended());
-
+        values.put(IP_ADDRESS_DEVICE, salesTeam.getIpAddressDevice());
         db.insert(Sales_Team, null, values);
         db.close();
     }
@@ -2335,7 +2358,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
-                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort) {
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2381,10 +2404,67 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SHOW_QUANTITY_SOLD,showSolidQty);
         values.put(READ_OFFER_FROM_ADMIN,offerFromAdmin);
         values.put(IP_PORT,ipPort);
+        values.put(  CheckQtyServer,checkServer);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
+    public void addIPSetting(int transKind,int serialNo,String ipAddress,String ipPort) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        //,String ipPort
+        int defaultValue=0;
+
+        values.put(TRANS_KIND, transKind);
+        values.put(SERIAL_NUMBER, serialNo);
+        values.put(IP_ADDRESS, ipAddress);
+        values.put(TAX_CALC_KIND, defaultValue);
+        values.put(PRICE_BYCUSTOMER, defaultValue);
+        values.put(USE_WEIGHT_CASE, defaultValue);
+        values.put(ALLOAW_MINUS, defaultValue);
+        values.put(NUMBER_OF_COPIES, 1);
+        values.put(SALESMAN_CUSTOMERS, defaultValue);
+        values.put(MIN_SALE_PRICE, defaultValue);
+        values.put(PRINT_METHOD, defaultValue);
+        values.put(CAN_CHANGE_PRICE, defaultValue);
+        values.put(ALLOW_OUT_OF_RANGE, defaultValue);
+        values.put(READ_DISCOUNT_FROM_OFFERS, defaultValue);
+        values.put(WORK_ONLINE, defaultValue);
+        values.put(PAYMETHOD_CHECK, defaultValue);
+        values.put(BONUS_NOT_ALLOWED,defaultValue);//16
+        values.put(NO_OFFERS_FOR_CREDIT_INVOICE,defaultValue);
+        values.put(AMOUNT_OF_MAX_DISCOUNT,defaultValue);
+        values.put(Customer_Authorized,defaultValue);
+        values.put(Password_Data,defaultValue);
+        values.put(Arabic_Language,1);
+        values.put(HideQty,defaultValue);
+        values.put(LockCashReport,defaultValue);
+        values.put(salesManName,"");
+        values.put(PreventOrder,defaultValue);
+        values.put(RequiredNote,defaultValue);
+        values.put(PreventTotalDiscount,defaultValue);
+        values.put(AutomaticCheque,defaultValue);
+        values.put(Tafqit,defaultValue);
+        values.put(PreventChangPayMeth,defaultValue);
+        values.put(ShowCustomerList,1);
+        values.put(NoReturnInvoice,defaultValue);
+        values.put(WORK_WITH_SERIAL,defaultValue);
+        values.put(SHOW_IMAGE_ITEM,defaultValue);
+        values.put(APPROVE_ADMIN,defaultValue);
+        values.put(SAVE_ONLY,defaultValue);
+        Log.e("showSolidQty","");
+        values.put(SHOW_QUANTITY_SOLD,defaultValue);
+        values.put(READ_OFFER_FROM_ADMIN,defaultValue);
+        values.put(IP_PORT,ipPort);
+        values.put(CheckQtyServer,defaultValue);
+
+        db.insert(TABLE_SETTING, null, values);
+        db.close();
+    }
+
+
+
 
     public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude) {
         db = this.getReadableDatabase();
@@ -2751,7 +2831,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setShow_quantity_sold((cursor.getInt(37)));
                 setting.setReadOfferFromAdmin((cursor.getInt(38)));
                 setting.setIpPort((cursor.getString(39)));
-
+                setting.setQtyServer((cursor.getInt(40)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -2855,9 +2935,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String selectQuery = "SELECT  SERIAL_NUMBER FROM " + TABLE_SETTING + " WHERE TRANS_KIND = " + voucherType;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
+        int maxVoucher=0;
+        try {
+            cursor.moveToFirst();
 
-        int maxVoucher = Integer.parseInt(cursor.getString(0));
+             maxVoucher = Integer.parseInt(cursor.getString(0));
+        }
+        catch (Exception e){maxVoucher=0;}
+
+
         return maxVoucher;
 
     }
@@ -2865,17 +2951,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
         String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '"+voucherType+"' ),-1)" ;
         db = this.getWritableDatabase();
+        int maxVoucher=0;
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
+        try {
+            cursor.moveToFirst();
 
 
-        int maxVoucher = Integer.parseInt(cursor.getString(0));
-        if(maxVoucher==-1)
-        {
-            maxVoucher=getMaxSerialNumber(voucherType);
-            Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
-        }
-        Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
+             maxVoucher = Integer.parseInt(cursor.getString(0));
+            if(maxVoucher==-1)
+            {
+                maxVoucher=getMaxSerialNumber(voucherType);
+                Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
+            }
+            Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
+        }catch (Exception e){maxVoucher=0;}
+
         return maxVoucher;
 
     }
@@ -5197,6 +5287,35 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
 
+    public String getIpAddresDevice_fromSalesTeam() {
+        String name="";
+        if(!Login.salesMan.equals(""))
+        {
+            String selectQuery ="select S.IP_ADDRESS_DEVICE \n" +
+                    "from Sales_Team S WHERE  S.SalesManNo ='"+Login.salesMan+"' ";
+
+
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    name=cursor.getString(0);
+
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+
+
+        return  name;
+
+    }
+
+
+
+
     public int getLastVoucherNo(int vouchType) {
         int voucNo = 0;
         String cusNo = CustomerListShow.Customer_Account;
@@ -5648,6 +5767,30 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         return offersList;
+    }
+
+    public void updateIpSetting(String ipAddress, String ipPort) {
+
+        Log.e("updateIpSetting",""+ipAddress+"\t"+ipPort+"\t"+ipPort);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IP_ADDRESS, ipAddress);
+        if(!ipPort.equals("")){
+            values.put(IP_PORT, ipPort);
+        }
+
+
+        // updating row
+        db.update(TABLE_SETTING, values, null, null);
+    }
+
+    public void updatIpDevice(String ipDevice) {
+        Log.e("updateIpSetting",""+ipDevice);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(IP_ADDRESS_DEVICE, ipDevice);
+        db.update(Sales_Team, values, null, null);
     }
 }
 

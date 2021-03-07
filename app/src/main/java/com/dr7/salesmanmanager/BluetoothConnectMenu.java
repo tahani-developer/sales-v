@@ -79,6 +79,7 @@ import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrint;
 import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsReportinventory;
 import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
+import static com.dr7.salesmanmanager.SalesInvoice.finishPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
 import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
@@ -521,6 +522,11 @@ public class BluetoothConnectMenu extends Activity {
                                         e.printStackTrace();
                                     }
                                     TOTAL = 0;
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
+
                                 } else {
                                     Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER(voucherforPrint);
                                     sample.imageTestArabic(1, bit_voucher_Headre);
@@ -573,6 +579,10 @@ public class BluetoothConnectMenu extends Activity {
 
                                     Bitmap bit_voucher_Footer = convertLayoutToImage_Footer(voucherforPrint, long_listItems);
                                     sample.imageTestArabic(1, bit_voucher_Footer);
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
 
                                 }
                             } else {// large name
@@ -587,6 +597,10 @@ public class BluetoothConnectMenu extends Activity {
                                         e.printStackTrace();
                                     }
                                     TOTAL = 0;
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
                                 } else {
                                     Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
                                     sample.imageTestEnglish(1, bit_voucher_Headre);

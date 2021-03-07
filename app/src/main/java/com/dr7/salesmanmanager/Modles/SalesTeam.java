@@ -5,13 +5,22 @@ public class SalesTeam {
     private int companyNo;
     private String salesManNo;
     private String salesManName;
-    private int isSuspended;
+    private String isSuspended;
+    private String ipAddressDevice;
+
+    public String getIpAddressDevice() {
+        return ipAddressDevice;
+    }
+
+    public void setIpAddressDevice(String ipAddressDevice) {
+        this.ipAddressDevice = ipAddressDevice;
+    }
 
     public SalesTeam(){
 
     }
 
-    public SalesTeam(int companyNo, String salesManNo, String salesManName, int isSuspended) {
+    public SalesTeam(int companyNo, String salesManNo, String salesManName, String isSuspended) {
         this.companyNo = companyNo;
         this.salesManNo = salesManNo;
         this.salesManName = salesManName;
@@ -42,11 +51,11 @@ public class SalesTeam {
         this.salesManName = salesManName;
     }
 
-    public int getIsSuspended() {
+    public String getIsSuspended() {
         return isSuspended;
     }
 
-    public void setIsSuspended(int isSuspended) {
+    public void setIsSuspended(String isSuspended) {
         this.isSuspended = isSuspended;
     }
 }

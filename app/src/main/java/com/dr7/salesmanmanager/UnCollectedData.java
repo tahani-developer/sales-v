@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -43,10 +44,12 @@ public class UnCollectedData extends AppCompatActivity {
     int position = 0;
     int[] listImageIcone=new int[]{R.drawable.pdf_,R.drawable.excel_e};
 
+    String type="0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_un_collected_data);
+        type = getIntent().getStringExtra("type");
         initialView();
         ImportJason importJason = new ImportJason(UnCollectedData.this);
         importJason.getUnCollectedCheques();
@@ -133,7 +136,25 @@ public class UnCollectedData extends AppCompatActivity {
        pdf.exportListToPdf(paymentArrayList,"UncollectedChequesReport","",9);
 
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        if(type.equals("1"))
+        {
+            Intent i=new Intent(UnCollectedData.this,MainActivity.class);
+            startActivity(i);
+        }
+        else {
+            if(type.equals("2"))
+            {
+                Intent in=new Intent(UnCollectedData.this,Activities.class);
+                startActivity(in);
+            }
 
+        }
+
+    }
     private void convertToExcel() {
 
         ExportToExcel exportToExcel=new ExportToExcel();

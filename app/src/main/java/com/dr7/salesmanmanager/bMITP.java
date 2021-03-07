@@ -63,6 +63,7 @@ import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.AccountReport.acount_report_list;
+import static com.dr7.salesmanmanager.SalesInvoice.finishPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
 import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
@@ -548,6 +549,7 @@ public class bMITP extends Activity {
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+
                               }
                           }else {// just for ejabi customer (English Voucher ) and for  Large Name
                               for (int i = 0; i < settings; i++) {
@@ -566,6 +568,7 @@ public class bMITP extends Activity {
                           for(int i=0;i<settings;i++) {
 //                              sample.printMultilingualFontEsc(1);
                               sample.printMultilingualFontEsc3(1,printVoucher,itemPrint);
+                              finishPrint.setText("finish");
 
                           }}
                           else {

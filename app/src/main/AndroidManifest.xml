@@ -46,7 +46,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".UnCollectedData"></activity>
+        <activity android:name=".UnCollectedData"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

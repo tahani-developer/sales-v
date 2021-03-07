@@ -6,9 +6,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,10 +37,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -45,6 +50,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.MainActivity.curentDate;
+import static com.dr7.salesmanmanager.MainActivity.curentTime;
 import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
@@ -65,18 +72,19 @@ public class Activities extends AppCompatActivity implements
 
     private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
-    private CardView saleCardView, receiptCardView, accountBalance, supplimentCardView;
+    private CardView saleCardView, receiptCardView, accountBalance, supplimentCardView,uncollectChechue;
 
     private int activitySelected;
     public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
 
-    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,linearInvoice,linearPayment,linearStock;
+    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,
+            linearInvoice,linearPayment,linearStock,linearBalance,linearuncollect,dashLayout,fragmentContainer;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
 
     private StockRequest stockRequest;
-
+    Transaction transaction;
     private DecimalFormat decimalFormat;
 
     private boolean isFragmentBlank;
@@ -85,6 +93,7 @@ public class Activities extends AppCompatActivity implements
     DatabaseHandler databaseHandler;
     static String[] araySerial;
     TextView switchLayout;
+    public static TextView totalBalance_text,lastVisit_textView;
     public  static  LocationPermissionRequest locationPermissionRequestAc;
 // LocationPermissionRequest locationPermissionRequest;
 
@@ -167,7 +176,7 @@ public class Activities extends AppCompatActivity implements
 
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(Activities.this);
-        setContentView(R.layout.activity_activities);
+        setContentView(R.layout.dashbord_activities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -181,26 +190,39 @@ public class Activities extends AppCompatActivity implements
 //            locationPermissionRequest.timerLocation();
 
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
-        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
-        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
+        totalBalance_text=findViewById(R.id.totalBalance_text);
+        lastVisit_textView=findViewById(R.id.lastVisit_textView);
+//        fillLastVisit();
+//        fiiltotalBalance();
+//        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
+//        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
         linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
                 linearPayment= (LinearLayout)findViewById(R.id.linearPayment);
-                linearStock= (LinearLayout)findViewById(R.id.linearStock);
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mainLinearHolder.setOrientation(LinearLayout.HORIZONTAL);
-            linearMainActivities.setOrientation(LinearLayout.VERTICAL);
-            linearStock.setOrientation(LinearLayout.VERTICAL);
-            linearPayment.setOrientation(LinearLayout.VERTICAL);
-            linearInvoice.setOrientation(LinearLayout.VERTICAL);
-            //Do some stuff
-        }
-        else {
-            mainLinearHolder.setOrientation(LinearLayout.VERTICAL);
-            linearMainActivities.setOrientation(LinearLayout.HORIZONTAL);
-            linearStock.setOrientation(LinearLayout.HORIZONTAL);
-            linearPayment.setOrientation(LinearLayout.HORIZONTAL);
-            linearInvoice.setOrientation(LinearLayout.HORIZONTAL);
-        }
+//                linearStock= (LinearLayout)findViewById(R.id.linearStock);
+
+        linearBalance   = (LinearLayout)findViewById(R.id.linearBalance);
+        linearuncollect = (LinearLayout)findViewById(R.id.linearuncollect);
+        dashLayout = (LinearLayout)findViewById(R.id.dashLayout);
+        fragmentContainer= (LinearLayout)findViewById(R.id.fragmentContainer);
+//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+//           // mainLinearHolder.setOrientation(LinearLayout.HORIZONTAL);
+////            linearMainActivities.setOrientation(LinearLayout.VERTICAL);
+////            linearStock.setOrientation(LinearLayout.VERTICAL);
+//            linearPayment.setOrientation(LinearLayout.VERTICAL);
+//            linearInvoice.setOrientation(LinearLayout.VERTICAL);
+//            linearBalance.setOrientation(LinearLayout.VERTICAL);
+//            linearuncollect.setOrientation(LinearLayout.VERTICAL);
+//            //Do some stuff
+//        }
+//        else {
+//           // mainLinearHolder.setOrientation(LinearLayout.VERTICAL);
+////            linearMainActivities.setOrientation(LinearLayout.HORIZONTAL);
+////            linearStock.setOrientation(LinearLayout.HORIZONTAL);
+//            linearPayment.setOrientation(LinearLayout.HORIZONTAL);
+//            linearInvoice.setOrientation(LinearLayout.HORIZONTAL);
+//            linearBalance.setOrientation(LinearLayout.HORIZONTAL);
+//            linearuncollect.setOrientation(LinearLayout.HORIZONTAL);
+//        }
         try {
             if (languagelocalApp.equals("ar"))
             {
@@ -218,50 +240,113 @@ public class Activities extends AppCompatActivity implements
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
-        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
-        transaction_imageview.setOnClickListener(onClickListener);
+//        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
+//        transaction_imageview.setOnClickListener(onClickListener);
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
+        uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
-        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
-        switchLayout=findViewById(R.id.switchLayout);
-        switchLayout.setVisibility(View.GONE);
-        switchLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                linearMainActivities.setVisibility(View.VISIBLE);
-//                switchLayout.setVisibility(View.GONE);
-            }
-        });
+//        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
+//        switchLayout=findViewById(R.id.switchLayout);
+//        switchLayout.setVisibility(View.GONE);
+//        switchLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                linearMainActivities.setVisibility(View.VISIBLE);
+////                switchLayout.setVisibility(View.GONE);
+//            }
+//        });
         receiptImageView = (ImageView) findViewById(R.id.paymentImageView);
-        stockImageView = (ImageView) findViewById(R.id.stockRequestImageView);
+//        stockImageView = (ImageView) findViewById(R.id.stockRequestImageView);
 
         saleImageView.setOnClickListener(onClickListener);
         receiptImageView.setOnClickListener(onClickListener);
-        stockImageView.setOnClickListener(onClickListener);
+     //   stockImageView.setOnClickListener(onClickListener);
         accountBalance.setOnClickListener(onClickListener);
+        uncollectChechue.setOnClickListener(onClickListener);
         receiptCardView.setOnClickListener(onClickListener);
         saleCardView.setOnClickListener(onClickListener);
 
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+      //  saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         // newOrderCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //accountBalance.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //uncollectChechue.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
+        //supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
         decimalFormat = new DecimalFormat("##.000");
         if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
-            saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
-            receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-            supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+            //saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+           // receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+          ///  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                    new Task().execute();
             discvalue_static = 0;
-            displaySaleInvoice();
+//            displaySaleInvoice();
         }
 
     }
 
-    private void displaySaleInvoice() {
+    private void fiiltotalBalance() {
 
+//        if(!totalBalance_text.getText().toString().equals("")){
+            if(isNetworkAvailable())
+            {
+                ImportJason importJason =new ImportJason(Activities.this);
+                importJason.getCustomerInfo(2);
+            }
+
+//        }
+
+
+
+    }
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            //You can replace it with your name
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void fillLastVisit() {
+        String lastVisit=getLastVaisit();
+        lastVisit_textView.setText(lastVisit);
+    }
+    private String getLastVaisit() {
+        String visit="";
+        transaction=new Transaction();
+        if(!CustomerListShow.Customer_Account.equals(""))
+        {
+            transaction=databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account,Login.salesMan);
+            if(transaction.getCheckInDate()!=null)
+            {
+                visit=transaction.getCheckInDate()+"\t\t"+transaction.getCheckInTime();
+                Log.e("getLastVaisit",""+CustomerListShow.Customer_Account+"\t"+Login.salesMan+"\t"+transaction.getCheckInDate());
+            }
+            else {
+                visit=curentDate+"\t\t"+curentTime;
+            }
+
+        }
+
+        return  visit;
+    }
+
+
+    private void displaySaleInvoice() {
+        dashLayout.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
         //   if (activitySelected == 0)
         //      return;
 //        linearMainActivities.setVisibility(View.GONE);
@@ -351,13 +436,15 @@ public class Activities extends AppCompatActivity implements
 //        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
 //        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//        isFragmentBlank = false;
+        isFragmentBlank = false;
 //        AddItemsFragment2.total_items_quantity=0;
     }
 
     private void displayReceipt() {
 //        linearMainActivities.setVisibility(View.GONE);
 //        switchLayout.setVisibility(View.VISIBLE);
+        dashLayout.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
         activitySelected = 1;
         FragmentManager fragmentManager = getSupportFragmentManager();
         ReceiptVoucher receiptVoucher = new ReceiptVoucher();
@@ -371,9 +458,9 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, receiptVoucher);
         transaction.addToBackStack(null);
         transaction.commit();
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+       // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
         isFragmentBlank = false;
     }
 
@@ -393,9 +480,9 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, stockRequest);
         transaction.addToBackStack(null);
         transaction.commit();
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+       // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+      //  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
         isFragmentBlank = false;
     }
 
@@ -419,10 +506,11 @@ public class Activities extends AppCompatActivity implements
                             builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
-                                    receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                                    supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                                   // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+                                    //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                                  //  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                    new Task().execute();
+
                                     discvalue_static=0;
                                     displaySaleInvoice();
                                 }
@@ -432,10 +520,11 @@ public class Activities extends AppCompatActivity implements
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                         } else {
-                            saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
-                            receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                            supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                          //  saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+                            //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                           // supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                            new Task().execute();
+                            dashLayout.setVisibility(View.GONE);
                             discvalue_static=0;
                             displaySaleInvoice();
                         }//displaySaleInvoice();
@@ -461,6 +550,7 @@ public class Activities extends AppCompatActivity implements
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
 //                                    clearSerial();
+                                    dashLayout.setVisibility(View.GONE);
                                     displayReceipt();
                                 }
                             });
@@ -468,6 +558,7 @@ public class Activities extends AppCompatActivity implements
                             builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                             builder2.create().show();
                         } else {
+                            dashLayout.setVisibility(View.GONE);
                             displayReceipt();
                         }
                         // displayReceipt();
@@ -476,59 +567,59 @@ public class Activities extends AppCompatActivity implements
                         Toast.makeText(Activities.this, "Please Select a Customer", Toast.LENGTH_LONG).show();
                     break;
 
-                case R.id.stockRequestImageView:
-                  //  stockImageView.startAnimation(animZoomIn);
-                    if (!isFragmentBlank) {
-                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
-                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                        builder2.setCancelable(false);
-                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
-                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-//                                clearSerial();
-                                displayStockRequest();
-//                                new TaskStock().execute();
-                            }
-                        });
-
-                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
-                        builder2.create().show();
-                    } else {
-//                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                        displayStockRequest();
-
-                    }
-                    break;
-                case R.id.transaction_ImageView:
-                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
-                    if (!isFragmentBlank) {
-                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
-                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                        builder2.setCancelable(false);
-                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
-                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                displayTransactionFragment();
-                            }
-                        });
-
-                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
-                        builder2.create().show();
-                    } else {
-//                        displayTransactionFragment();
-                    }
-
-//                    displayTransactionFragment();
-                    break;
+//                case R.id.stockRequestImageView:
+//                  //  stockImageView.startAnimation(animZoomIn);
+//                    if (!isFragmentBlank) {
+//                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+//                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                        builder2.setCancelable(false);
+//                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+//                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+////                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+////                                clearSerial();
+//                                displayStockRequest();
+////                                new TaskStock().execute();
+//                            }
+//                        });
+//
+//                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+//                        builder2.create().show();
+//                    } else {
+////                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+//                        displayStockRequest();
+//
+//                    }
+//                    break;
+//                case R.id.transaction_ImageView:
+//                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
+//                    if (!isFragmentBlank) {
+//                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+//                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                        builder2.setCancelable(false);
+//                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+//                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+////                                displayTransactionFragment();
+//                            }
+//                        });
+//
+//                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+//                        builder2.create().show();
+//                    } else {
+////                        displayTransactionFragment();
+//                    }
+//
+////                    displayTransactionFragment();
+//                    break;
                 case  R.id.accountBalanceCardView:
                     if (!isFragmentBlank) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
@@ -549,7 +640,37 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
+                        finish();
+                        Intent inte=new Intent(Activities.this,AccountStatment.class);
+                        startActivity(inte);
 
+                    }
+                    break;
+                case  R.id.unCollectChequesCardView:
+                    if (!isFragmentBlank) {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                        builder2.setCancelable(false);
+                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                finish();
+                                Intent inte=new Intent(Activities.this,UnCollectedData.class);
+                                inte.putExtra("type","2");
+                                startActivity(inte);
+                            }
+                        });
+
+                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                        builder2.create().show();
+                    } else {
+                        finish();
+                        Intent inte=new Intent(Activities.this,UnCollectedData.class);
+                        inte.putExtra("type","2");
+                        startActivity(inte);
 
                     }
                     break;
@@ -590,18 +711,22 @@ public class Activities extends AppCompatActivity implements
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                clearSerial();
+                isFragmentBlank = true;
+                activitySelected=-1;
+
 
               //  locationPermissionRequest.closeLocation();
                 MainActivity. masterControlLoc.setText("2");
+                dashLayout.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
+                clearSerial();
+               // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+               // supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
                 back();
-                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                isFragmentBlank = true;
-                activitySelected=-1;
-                linearMainActivities.setVisibility(View.VISIBLE);
-                switchLayout.setVisibility(View.GONE);
+//                linearMainActivities.setVisibility(View.VISIBLE);
+              //  switchLayout.setVisibility(View.GONE);
 //                salesInvoice.total_items_quantity=0
 
 

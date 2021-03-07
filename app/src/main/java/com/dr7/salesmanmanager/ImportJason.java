@@ -80,6 +80,7 @@ import javax.net.ssl.HttpsURLConnection;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
+import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
@@ -114,7 +115,7 @@ public class ImportJason extends AppCompatActivity {
     public static ArrayList<serialModel> itemSerialList=new ArrayList<>();
     public static ArrayList<UnCollect_Modell> unCollectlList=new ArrayList<>();
     public static ArrayList<Payment> paymentChequesList=new ArrayList<>();
-
+    String userNo= "";
     boolean start = false;
     String ipAddress = "",ipWithPort="";
 
@@ -127,18 +128,19 @@ public class ImportJason extends AppCompatActivity {
             ipAddress = settings.get(0).getIpAddress();
             ipWithPort=settings.get(0).getIpPort();
             Log.e("ipWithPort",""+ipWithPort);
+            userNo= mHandler.getAllUserNo();
         }
         else {
             Toast.makeText(context, "Check Setting Ip", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void getCustomerInfo() {
+    public void getCustomerInfo(int type) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getCustomerInfo", "*****");
-            new JSONTask_AccountStatment(CustomerListShow.Customer_Account).execute();
+            new JSONTask_AccountStatment(CustomerListShow.Customer_Account,type).execute();
           //  new SyncRemark().execute();
         }
 
@@ -159,11 +161,14 @@ public class ImportJason extends AppCompatActivity {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-            Log.e("getUnCollectedCheques", "*****");
             new JSONTask_GetAllCheques(CustomerListShow.Customer_Account).execute();
-            //  new SyncRemark().execute();
+
         }
     }
+
+//    public float getAvailableQty(String itemNoSelected) {
+//        return
+//    }
 
     private class SyncRemark extends AsyncTask<String, String, String> {
         private String JsonResponse = null;
@@ -340,7 +345,7 @@ public class ImportJason extends AppCompatActivity {
         }
     }
 
-    public void startParsing() {
+    public void startParsing(String salesNo) {
 
         List<Settings> settings = mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
@@ -354,7 +359,7 @@ public class ImportJason extends AppCompatActivity {
 //
 //            }
 //            else {
-            new JSONTask().execute(URL_TO_HIT);
+            new JSONTask(salesNo).execute(URL_TO_HIT);
 //            }
         }
 
@@ -372,7 +377,7 @@ public class ImportJason extends AppCompatActivity {
     public void addCurentIp(String currentIp) {
         curentIpDevice=currentIp;
         Log.e("addCurentIp","="+curentIpDevice);
-        new JSONTask_AddIpDevice().execute();
+        //new JSONTask_AddIpDevice().execute();
 
     }
 
@@ -383,6 +388,7 @@ public class ImportJason extends AppCompatActivity {
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
 
         @Override
+
         protected void onPreExecute() {
             super.onPreExecute();
         }
@@ -463,7 +469,8 @@ public class ImportJason extends AppCompatActivity {
                 start = false;
             } else if (s.contains("SUCCESS")) {
                 start = true;
-                new JSONTask().execute(URL_TO_HIT);
+
+                new JSONTask(userNo).execute(URL_TO_HIT);
 
             }
 //            if(start==true)
@@ -488,6 +495,12 @@ public class ImportJason extends AppCompatActivity {
 
     private class JSONTask extends AsyncTask<String, String, List<Customer>> {
 
+        public  String salesNo="";
+        public  JSONTask(String sales){
+            this.salesNo=sales;
+            Log.e("JSONTask","salesNo"+salesNo);
+
+        }
         @Override
         protected void onPreExecute() {
             try {
@@ -537,6 +550,7 @@ public class ImportJason extends AppCompatActivity {
 ////                        +URLEncoder.encode("password", "UTF-8")+"="+URLEncoder.encode(password , "UTF-8");
                 String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
                         URLEncoder.encode(String.valueOf('1'), "UTF-8");
+                //+"&"+ URLEncoder.encode("SalesManNo", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(salesNo), "UTF-8");
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
@@ -803,10 +817,19 @@ public class ImportJason extends AppCompatActivity {
                         item.setCompanyNo(finalObject.getInt("ComapnyNo"));
                         item.setSalesManNo(finalObject.getString("SalesManNo"));
                         item.setSalesManName(finalObject.getString("SalesManName"));
-                        item.setIsSuspended(0);
-//                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
+                        try {
+                        item.setIsSuspended(finalObject.getString("IsSuspended"));
+                        }catch (Exception e)
+                        {
+                        Log.e("setIsSuspended",""+e.getMessage());
+                        item.setIsSuspended(finalObject.getString("IsSuspended"));
+                        }
 
-                    salesTeamList.add(item);
+
+                        item.setIpAddressDevice(finalObject.getString("IpAddressDevice"));
+
+
+                        salesTeamList.add(item);
                 }
                 Log.e("ImportData", salesTeamList.size()+"");
             }
@@ -1159,7 +1182,7 @@ public class ImportJason extends AppCompatActivity {
                 }
                 publishProgress(i);
             }
-
+            int   storeNo=1;
             mHandler.deleteAllCustomers();
             mHandler.deleteAllItemUnitDetails();
             mHandler.deleteAllItemsMaster();
@@ -1177,10 +1200,14 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllItemsSwitch();
             mHandler.deleteAllItemsSerialMaster();
             mHandler.deleteOfferMaster();
+            try {
+                 storeNo=Integer.parseInt(userNo);
+            }
+            catch (Exception e){storeNo=1;}
 
-            if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
+            if (mHandler.getIsPosted(storeNo) == 1) {
 
-
+//                if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
                 mHandler.deleteAllSalesManItemsBalance();
                 mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList);
                 Log.e("In***" , " inaddSalesMan_Items_Balance");
@@ -1613,9 +1640,11 @@ public class ImportJason extends AppCompatActivity {
     private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
 
         private String custId = "";
+        private  int type=0;
 
-        public JSONTask_AccountStatment(String customerId) {
+        public JSONTask_AccountStatment(String customerId,int typeImpo) {
             this.custId = customerId;
+            this.type=typeImpo;
         }
 
         @Override
@@ -1647,7 +1676,7 @@ public class ImportJason extends AppCompatActivity {
                     URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO="+custId;
                 }
             } catch (Exception e) {
-
+                pdValidation.dismissWithAnimation();
             }
 
             try {
@@ -1695,7 +1724,7 @@ public class ImportJason extends AppCompatActivity {
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
-
+                        pdValidation.dismissWithAnimation();
                         Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -1729,6 +1758,7 @@ public class ImportJason extends AppCompatActivity {
                         JSONArray requestArray = null;
                         listCustomerInfo = new ArrayList<>();
 
+                        double totalBalance=0;
                         requestArray =  new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
 
@@ -1747,6 +1777,20 @@ public class ImportJason extends AppCompatActivity {
                                 requestDetail.setDebit(0);
                                 requestDetail.setCredit(0);
                             }
+                            if(requestDetail.getDebit()!=0.0)
+                            {
+                                totalBalance+=requestDetail.getDebit();
+                            }
+
+                            if(requestDetail.getCredit()!=0.0)
+                            {
+
+                                totalBalance-=requestDetail.getCredit();
+
+                            }
+
+                            requestDetail.setBalance(totalBalance);
+                            Log.e("onBindViewHolder","=total="+totalBalance);
 
 
                             listCustomerInfo.add(requestDetail);
@@ -1754,7 +1798,15 @@ public class ImportJason extends AppCompatActivity {
 
 
                         }
-                        getAccountList_text.setText("2");
+                        if(type==0)
+                        {
+                            getAccountList_text.setText("2");
+                        }
+                        else {
+                            if(listCustomerInfo.size()!=0)
+                            totalBalance_text.setText(listCustomerInfo.get(listCustomerInfo.size()-1).getBalance()+"");
+                        }
+
 
                     } catch (JSONException e) {
 //                        progressDialog.dismiss();
@@ -2235,7 +2287,7 @@ public class ImportJason extends AppCompatActivity {
                 Log.e("getPciceFromAdmin ", "JsonResponse\t" + s.toString());
                 if (!s.contains("notupDate")) {
                     pdValidation.dismissWithAnimation();
-                   startParsing();
+                   startParsing(userNo);
 //
                 } else
                 {

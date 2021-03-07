@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
     android:orientation="horizontal"
-    android:id="@+id/liner_inventory">
+    android:id="@+id/liner_inventory"
+
+    >
 
 
     <TextView
@@ -13,11 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="14sp"
         android:padding="2dp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+     />
 
 
     <TextView
@@ -26,34 +29,34 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="14sp"
         android:padding="2dp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+  />
 
     <TextView
         android:id="@+id/date_transe"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="14sp"
         android:gravity="center"
         android:padding="2dp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+   />
     <TextView
         android:id="@+id/debit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="14sp"
         android:padding="2dp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+       />
     <TextView
         android:id="@+id/credit"
         android:layout_width="0dp"
@@ -61,21 +64,21 @@
         android:layout_weight="1"
         android:gravity="center"
         android:padding="2dp"
-        android:textSize="14sp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+      />
     <TextView
         android:id="@+id/balance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="14sp"
         android:padding="2dp"
         android:text=""
         android:textColor="@color/colorPrimary"
-        android:textColorLink="@color/colorPrimary" />
+        android:textColorLink="@color/colorPrimary"
+       />
 
 
 </LinearLayout>

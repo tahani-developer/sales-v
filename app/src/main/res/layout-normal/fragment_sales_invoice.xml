@@ -83,6 +83,12 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         />
+                    <TextView
+                        android:id="@+id/finishPrint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:textSize="25dp" />
                 </RelativeLayout>
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/save_floatingAction"

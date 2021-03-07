@@ -5,13 +5,16 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.media.effect.EffectUpdateListener;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -117,6 +120,16 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
             {
                 viewHolder.editTextSerialCode.requestFocus();
             }
+            else {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewHolder.editTextSerialCode.requestFocus();
+
+                    }
+                });
+
+            }
 
 
             viewHolder.serialNo_linear.setBackgroundColor(context.getResources().getColor(R.color.layer5));
@@ -128,7 +141,15 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
             if(sunmiDevice!=1)
             {
                 viewHolder.editTextSerialCode.requestFocus();
-               // viewHolder.editTextSerialCode.setText("Curent");
+            }
+            else {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewHolder.editTextSerialCode.requestFocus();
+
+                    }
+                });
             }
 
 
@@ -260,7 +281,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             }
         });
         serialValue_Model = itemView.findViewById(R.id.serialValue_Model);
-        serialValue_Model.addTextChangedListener(new TextWatcher() {
+        serialValue_Model.addTextChangedListener(new TextWatcher() {// FROM BARCODE
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -294,6 +315,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                                try {
                                    errorSerial.setText(selectedBarcode+"");
                                    errorSerial.setError(context.getResources().getString(R.string.duplicate));
+                                   Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+
                                }
                                catch (Exception e){
                                    Log.e("serialValue_Model","Exception"+e.getMessage());
@@ -341,24 +364,74 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
             }
         });
-//        editTextSerialCode.requestFocus();
-        editTextSerialCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if(sunmiDevice==1){
 
-            }
+            editTextSerialCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                            || actionId == EditorInfo.IME_NULL) {
+                        Log.e("setOnEditorActio", "afterTextChangedNOT" +"errorData\t"+event.toString());
+                        int position = (int) editTextSerialCode.getTag();
+                        boolean isUpdate=true;
+                        if(editTextSerialCode.toString().length()!=0)
+                        {
+                            if(!list.get(position).getSerialCode().equals(editTextSerialCode.getText().toString()))
+                            {
+                                isUpdate= updateListCheque(position, editTextSerialCode.getText().toString());
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                int position = (int) editTextSerialCode.getTag();
-                boolean isUpdate=true;
-                if(s.toString().length()!=0)
-                {
+                            if(!isUpdate)// not exist serial in serial master
+                            {
+
+                                editTextSerialCode.setSelectAllOnFocus(true);
+                                new Handler().post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        editTextSerialCode.requestFocus();
+                                        editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
+
+                                        editTextSerialCode.setText("");
+
+                                    }
+                                });
+                                errorData=true;
+
+                            }else {
+                                    editTextSerialCode.setError(null);
+                            }
+                    }
+
+
+                    }
+
+
+                    return false;
+                }
+            });
+
+
+        }
+        else {
+            editTextSerialCode.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int position = (int) editTextSerialCode.getTag();
+                    boolean isUpdate=true;
+                    if(s.toString().length()!=0)
+                    {
                         if(!list.get(position).getSerialCode().equals(s.toString()))
                         {
                             Log.e("positionnMPTY1", "afterTextChanged" +"position\t"+position);
@@ -367,19 +440,26 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                         }
 
-                        if(!isUpdate)
+                        if(!isUpdate)// not exist serial in serial master
                         {
                             Log.e("positionnMPTY2", "afterTextChangedNOT" +"errorData\t"+isUpdate);
-                           if(sunmiDevice!=1)
-                           {
-                               editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
+                            if(sunmiDevice!=1)
+                            {
+                                editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
 
-                               editTextSerialCode.setText("");
-                           }
-                           else {
-                               errorSerial.setText(""+position);
-                               errorSerial.setError(context.getResources().getString(R.string.invalidSerial));
-                           }
+                                editTextSerialCode.setText("");
+                            }
+                            else {
+
+                                errorSerial.setText(""+position);
+                                errorSerial.setError(context.getResources().getString(R.string.invalidSerial));
+                                if(  s.toString().length()>14                  )
+                                {
+                                    Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            }
 
                             errorData=true;
 
@@ -429,16 +509,18 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //
 //
 //                    }
-                }
-                else {
+                    }
+                    else {
 //                    updateListCheque(position, "");
 //                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+                    }
+
+
+
                 }
+            });
+        }
 
-
-
-            }
-        });
 
         errorSerial.addTextChangedListener(new TextWatcher() {
             @Override
@@ -502,11 +584,24 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(!editText.getText().toString().equals(""))
                 {
-                    editTextSerialCode.setText(editText.getText().toString());
-//                    linkEditText.setAlpha(1f);
-//                    linkEditText.setEnabled(true);
-//                    linkEditText.requestFocus();
-                    sweetAlertDialog.dismissWithAnimation();
+                    if(sunmiDevice!=1)
+                    {
+                        editTextSerialCode.setText(editText.getText().toString());
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+
+                    else {
+                        if(validSerial(editText.getText().toString()))
+                        {
+                            editTextSerialCode.setText(editText.getText().toString());
+                            sweetAlertDialog.dismissWithAnimation();
+
+                        }
+                        else {editText.setError(context.getResources().getString(R.string.invalidSerial));
+                        editText.setText("");}
+
+                    }
+
                 }
                 else {
                     editText.setError(context.getResources().getString(R.string.reqired_filled));
@@ -525,6 +620,71 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 }
 
+    private boolean validSerial(String serialValue) {
+
+            isFoundSerial=false;
+
+            for(int h=0;h<list.size();h++)
+            {
+
+                if(list.get(h).getSerialCode().equals(serialValue))
+                {
+                    isFoundSerial=true;
+                }
+            }
+            if(isFoundSerial==true)
+            {// FOUND  IN CURRENT LIST
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(context.getString(R.string.warning_message))
+                        .setContentText(context.getString(R.string.duplicate))
+                        .show();
+                Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+
+                return  false;
+            }
+
+
+
+        //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
+//            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
+        if (databaseHandler.isSerialCodeExist(serialValue).equals("not")) {
+            if((databaseHandler.isSerialCodePaied(serialValue+"").equals("not")&&voucherType==504)||
+                    (!databaseHandler.isSerialCodePaied(serialValue+"").equals("not")&&voucherType==506))
+            {
+
+                return true;
+
+            }
+            else {// duplicated
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(context.getString(R.string.warning_message))
+                        .setContentText(context.getString(R.string.duplicate))
+                        .show();
+
+                Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+
+                return  false;
+            }
+
+        } else {
+            errorData = true;
+            // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+
+            if(isFoundSerial)
+            {
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(context.getString(R.string.warning_message))
+                        .setContentText(context.getString(R.string.duplicate))
+                        .show();
+
+            }
+
+
+            return false;
+
+
+        }
+    }
 
 
     private boolean updateListCheque(int position, String data) {
@@ -537,6 +697,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                // Log.e("errorSerial2", "afterTextChanged" +"position\t"+data);
                 list.get(position).setSerialCode("");
                 listMasterSerialForBuckup.get(position).setIsDeleted("1");
+
                // isFoundSerial=true;
 
                 return false;
@@ -553,11 +714,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                     }
                 }
                 if(isFoundSerial==true)
-                {
+                {// FOUND  IN CURRENT LIST
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(context.getString(R.string.warning_message))
                             .setContentText(context.getString(R.string.duplicate))
                             .show();
+                    Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+
                     return  false;
                 }
             }
@@ -588,17 +751,23 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                             .setTitleText(context.getString(R.string.warning_message))
                             .setContentText(context.getString(R.string.duplicate))
                             .show();
+
+                    Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+
                     return  false;
                 }
 
             } else {
                 errorData = true;
+               // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+
                 if(isFoundSerial)
                 {
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(context.getString(R.string.warning_message))
                             .setContentText(context.getString(R.string.duplicate))
                             .show();
+
                 }
 
 
@@ -625,6 +794,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
     }
+
 
     public int getSelectedBarcode() {
         return selectedBarcode;

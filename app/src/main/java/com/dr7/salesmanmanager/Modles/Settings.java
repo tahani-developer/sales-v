@@ -42,6 +42,15 @@ public class Settings {
     private  int show_quantity_sold;
     private  int readOfferFromAdmin;
     private  String ipPort;
+    private  int qtyServer;
+
+    public int getQtyServer() {
+        return qtyServer;
+    }
+
+    public void setQtyServer(int qtyServer) {
+        this.qtyServer = qtyServer;
+    }
 
     public String getIpPort() {
         return ipPort;

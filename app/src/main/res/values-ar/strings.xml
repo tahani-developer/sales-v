@@ -159,7 +159,7 @@
     <string name="CHECK_OUT_TIME">وقت الخروج</string>
     <string name="STATUS">الحالة</string>
 
-    <string name="server_ip">رقم ال ip</string>
+    <string name="server_ip">عنوان IP</string>
     <string name="tax_calc_kind">نوع حساب الضريبة</string>
     <string name="exclude">خاضع</string>
     <string name="include">شامل</string>
@@ -477,7 +477,7 @@
     <string name="price_ListNo">رقم قائمة الاسعار</string>
     <string name="regular">عادي</string>
     <string name="offer">عرض</string>
-    <string name="IP_PORT">IP PORT</string>
+    <string name="IP_PORT">المنفذ</string>
     <string name="availableQty">الكميات الحالية</string>
     <string name="requiredQty">الكميات المطلوبة</string>
     <string name="unCollectedCheques">شيكات برسم التحصيل</string>
@@ -485,5 +485,11 @@
     <string name="recivedAmount">الكميات المستلمة</string>
     <string name="validation">جاري التحقق</string>
     <string name="PAIDAMT">Paid Amount</string>
+    <string name="action_settings_ip">إعدادات Ip</string>
+    <string name="storeNo">رقم المندوب</string>
+    <string name="checkQtyServer">التأكد من كميات المستودع الرئيسي</string>
+    <string name="exportingData">جاري تصدير البيانات</string>
+    <string name="insufficientQuantity">لايوجد كمية كافية</string>
+    <string name="invalidValue">قيمة خاطئة</string>
 
 </resources>
