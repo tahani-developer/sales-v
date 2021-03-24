@@ -102,6 +102,7 @@ public class bMITP extends Activity {
     List<Item> allStudents;
     LinearLayout mainLinearPrinting;
     TextView text_hideDialog;
+    double itemDiscount=0;
 
     static {
         fileName = dir + "//BTPrinter";
@@ -265,6 +266,7 @@ public class bMITP extends Activity {
         this.list.setAdapter(this.adapter);
         this.addPairedDevices();
         BluetoothDevice btDev = null;
+
         if(obj.getAllSettings().size()!=0)
         {
             if(obj.getAllSettings().get(0).getApproveAdmin()==0){
@@ -483,6 +485,7 @@ public class bMITP extends Activity {
         }
 
         protected void onPreExecute() {
+           String s="";
             this.dialog.setTitle(" Try Connect ");
             this.dialog.setMessage("Please Wait ....");
             this.dialog.show();
@@ -491,7 +494,7 @@ public class bMITP extends Activity {
 
         protected Integer doInBackground(BluetoothDevice... params) {
             Integer retVal = null;
-
+           String s="";
             try {
                 bMITP.this.bluetoothPort.connect(params[0]);
                 bMITP.this.lastConnAddr = params[0].getAddress();

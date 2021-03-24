@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 67</string>
+    <string name="version"> V 75</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -444,6 +444,14 @@
     <string name="exportingData">Exporting Data</string>
     <string name="insufficientQuantity">Insufficient Quantity</string>
     <string name="invalidValue">Invalid Value</string>
+    <string name="serialIsNotPaied">Serial Is Not Paied !!!</string>
+    <string name="dontShowTaxOnprinter">Dont Show Tax On Printer</string>
+    <string name="thereIsduplicatedSerial">There Is Duplicated Serial</string>
+    <string name="checkinternetConnection">check internet Connection</string>
+    <string name="CONO">CONO</string>
+    <string name="forItemNo">Serial For Item No</string>
+    <string name="forVoucherNo">For Voucher No</string>
+    <string name="inThisVoucher">In This Voucher</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

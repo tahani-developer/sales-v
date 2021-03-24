@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 135;
+    private static final int DATABASE_VERSION = 137;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -373,6 +373,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String READ_OFFER_FROM_ADMIN="READ_OFFER_FROM_ADMIN";
     private static final String IP_PORT="IP_PORT";
     private static final String CheckQtyServer="CheckQtyServer";
+    private static final String DontShowTaxOnPrinter="DontShowTaxOnPrinter";
+    private static final String CONO="CONO";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -895,7 +898,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + SHOW_QUANTITY_SOLD + " INTEGER,"
                 + READ_OFFER_FROM_ADMIN + " INTEGER,"
                 + IP_PORT + " TEXT,"
-                + CheckQtyServer + " INTEGER"
+                + CheckQtyServer + " INTEGER,"
+                +DontShowTaxOnPrinter + " INTEGER,"
+                +CONO+ " TEXT"
 
 
                 + ")";
@@ -1230,6 +1235,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD DontShowTaxOnPrinter INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD CONO TEXT NOT NULL DEFAULT ''");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -2358,7 +2377,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
-                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer) {
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,int dontShowTax,String cono) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2405,11 +2424,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(READ_OFFER_FROM_ADMIN,offerFromAdmin);
         values.put(IP_PORT,ipPort);
         values.put(  CheckQtyServer,checkServer);
+        values.put(  DontShowTaxOnPrinter,dontShowTax);
+        values.put(  CONO,cono);
+
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
-    public void addIPSetting(int transKind,int serialNo,String ipAddress,String ipPort) {
+    public void addIPSetting(int transKind,int serialNo,String ipAddress,String ipPort,String compaNO) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2453,11 +2475,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SHOW_IMAGE_ITEM,defaultValue);
         values.put(APPROVE_ADMIN,defaultValue);
         values.put(SAVE_ONLY,defaultValue);
-        Log.e("showSolidQty","");
         values.put(SHOW_QUANTITY_SOLD,defaultValue);
         values.put(READ_OFFER_FROM_ADMIN,defaultValue);
         values.put(IP_PORT,ipPort);
         values.put(CheckQtyServer,defaultValue);
+        values.put(DontShowTaxOnPrinter,defaultValue);
+        values.put(CONO,compaNO);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -2832,6 +2855,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setReadOfferFromAdmin((cursor.getInt(38)));
                 setting.setIpPort((cursor.getString(39)));
                 setting.setQtyServer((cursor.getInt(40)));
+                setting.setDontShowtax((cursor.getInt(41)));
+                setting.setCoNo((cursor.getString(42)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -3123,7 +3148,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             do {
                 Customer customer = new Customer();
 
-                customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                customer.setCompanyNumber(cursor.getString(0));
                 customer.setCustId(cursor.getString(1));
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
@@ -3188,7 +3213,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             do {
                 Customer customer = new Customer();
 
-                customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                customer.setCompanyNumber(cursor.getString(0));
                 customer.setCustId(cursor.getString(1));// test talley
 
                 customer.setCustName(cursor.getString(2));
@@ -3366,7 +3391,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         if (cursor.moveToFirst()) {
             do {
                 ItemsMaster itemsMaster = new ItemsMaster();
-                itemsMaster.setCompanyNo(Integer.parseInt(cursor.getString(0)));
+                itemsMaster.setCompanyNo(cursor.getString(0));
                 itemsMaster.setItemNo(cursor.getString(1));
                 itemsMaster.setName(cursor.getString(2));
                 itemsMaster.setCategoryId(cursor.getString(3));
@@ -5442,31 +5467,46 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public String isSerialCodeExist(String serialCode) {
 //  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
     String count = "not",isPaid="";
-    String itemNo="";
+    String itemNo="",itemNoExist="";
     itemNo=itemNoSelected;
-    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
+
+
+//    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
+        String selectQuery = "select SerialCode,ITEM_OCODE_M from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"'";
+
+
     db = this.getWritableDatabase();
     Cursor cursor = db.rawQuery(selectQuery, null);
 
     if (cursor.moveToFirst()) {
 
         count = cursor.getString(0);
+        itemNoExist = cursor.getString(1);
     }
-        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t");
+        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t"+itemNoExist);
         if(cursor != null)
         {
             cursor.close();
             cursor=null;
             db.close();
         }
-
-        if(!count.equals("not"))// exist in DataBase
+        if(itemNoExist.equals(itemNo))
         {
-
-                count="not";
-
+            count="not";
         }
-        else {count="0";}
+        else {
+            count=itemNoExist;
+        }
+
+//        if(!count.equals("not"))// exist in DataBase
+//        {
+//
+//                count="not";
+//
+//        }
+//        else {
+//            Log.e("itemNoExist",""+itemNoExist);
+//            count=itemNoExist;}
     return count;
 }
 
@@ -5616,18 +5656,36 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     //******************************************************************
     public String isSerialCodePaied(String serialCode) {
+       // ***********************************
 //        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
-        String valueSer = "not";
-        String selectQuery = "select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+        String valueSer = "not",voucherKind="",voucherNo="",voucherDate="";
+        String selectQuery = "select SERIAL_CODE_NO ,KIND_VOUCHER ,VOUCHER_NO,DATE_VOUCHER from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
 
         db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        if (cursor.moveToFirst()) {
+        try {
+            if (cursor.moveToLast()) {
+                valueSer = cursor.getString(0);
+                voucherKind=cursor.getString(1);
+                voucherNo=cursor.getString(2);
+                voucherDate=cursor.getString(3);
 
-            valueSer = cursor.getString(0);
+            }
+        }
+        catch (Exception e){
+            valueSer = "not";
+        }
+
+        if(!valueSer.equals("not")){// exist in DB
+            valueSer=voucherNo+"&"+voucherDate;
+
         }
         Log.e("isSerialCodePaied", "isSerialCodePaied+\t" + valueSer + "\t");
+        if(voucherKind.equals("506"))// returned serial
+        {
+            valueSer = "not";
+        }
         return valueSer;
     }
 
@@ -5769,7 +5827,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return offersList;
     }
 
-    public void updateIpSetting(String ipAddress, String ipPort) {
+    public void updateIpSetting(String ipAddress, String ipPort,String cono) {
 
         Log.e("updateIpSetting",""+ipAddress+"\t"+ipPort+"\t"+ipPort);
         db = this.getWritableDatabase();
@@ -5778,6 +5836,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(IP_ADDRESS, ipAddress);
         if(!ipPort.equals("")){
             values.put(IP_PORT, ipPort);
+            values.put(CONO, cono);
+
         }
 
 
@@ -5791,6 +5851,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         ContentValues values = new ContentValues();
         values.put(IP_ADDRESS_DEVICE, ipDevice);
         db.update(Sales_Team, values, null, null);
+    }
+
+    public void deleteExcept(String salesMan) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //db.execSQL("delete from " + ITEMS_QTY_OFFER);
+        db.execSQL("DELETE from SerialItemMaster where StoreNo<>"+salesMan);
+        db.execSQL("DELETE from SalesMan_Items_Balance where SalesManNo<>"+salesMan);
+        db.close();
     }
 }
 

@@ -994,7 +994,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 {
                     itemSerialList.get(i).setItemNo(itemNumber);
                     itemSerialList.get(i).setDateVoucher(voucherDate);
-                    itemSerialList.get(i).setKindVoucher("");
+                    itemSerialList.get(i).setKindVoucher(voucherType+"");
                     itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
                     itemSerialList.get(i).setStoreNo(storeNo);
                     itemSerialList.get(i).setIsDeleted("0");
@@ -1034,8 +1034,9 @@ public class AddItemsFragment2 extends DialogFragment {
         Log.e("onStop","================"+voucherNumberTextView.getText().toString());
     }
 
-    public void readB(){
+    public  void readB(){
         Log.e("barcode_099", "in");
+        Log.e("currentUpdate",""+"readB");
        // openIntegratorLandScapeActivity();
 
        // openSannActivity();
@@ -1113,7 +1114,7 @@ public class AddItemsFragment2 extends DialogFragment {
             integrator.initiateScan();
     }
 
-    private void openSmallScanerTextView() {
+    public void openSmallScanerTextView() {
         new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }

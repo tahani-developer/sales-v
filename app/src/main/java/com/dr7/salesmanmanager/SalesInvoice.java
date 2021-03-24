@@ -6,11 +6,8 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.app.Notification;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,8 +31,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 //import android.support.annotation.NonNull;
 //import android.support.annotation.RequiresApi;
 //import android.support.v4.app.ActivityCompat;
@@ -43,16 +38,13 @@ import android.os.Message;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v4.print.PrintHelper;
 //import android.support.v7.widget.RecyclerView;
-import android.os.Parcelable;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -62,13 +54,11 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -77,7 +67,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
@@ -92,14 +81,10 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
-import com.dr7.salesmanmanager.Reports.AccountReport;
-import com.dr7.salesmanmanager.Reports.ItemsReport;
-import com.dr7.salesmanmanager.Reports.VouchersReport;
 import com.ganesh.intermecarabic.Arabic864;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -110,7 +95,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -120,9 +104,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -130,8 +116,6 @@ import java.util.UUID;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static android.app.ProgressDialog.STYLE_SPINNER;
 
 import static android.content.Context.LOCATION_SERVICE;
 //import static android.support.v4.app.DialogFragment.STYLE_NORMAL;
@@ -143,18 +127,11 @@ import static com.dr7.salesmanmanager.Activities.discvalue_static;
 import static com.dr7.salesmanmanager.Activities.locationPermissionRequestAc;
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
-import static com.dr7.salesmanmanager.AddItemsFragment2.s;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
-import static com.dr7.salesmanmanager.CustomerCheckInFragment.customernametest;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
-
-import static com.dr7.salesmanmanager.MainActivity.latitude_main;
-import static com.dr7.salesmanmanager.MainActivity.location_main;
-import static com.dr7.salesmanmanager.MainActivity.longitude_main;
-import static com.dr7.salesmanmanager.PrintVoucher.verifyStoragePermissions;
 
 import android.location.LocationManager;
 
@@ -165,20 +142,12 @@ import androidx.print.PrintHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
 import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.ButtonEnum;
@@ -196,6 +165,7 @@ public class SalesInvoice extends Fragment {
     boolean validCustomerName=false,updatedName=false;
     public  static  String itemNoSelected="";
     public  static  List <serialModel> listSerialTotal,copyListSerial,listMasterSerialForBuckup;
+    List<String>listSerialValue=new ArrayList<>();
     public Spinner voucherTypeSpinner;
     public  static  int priceListTypeVoucher=0,listOfferNo=-1;
     LinearLayout linearRegulerOfferList;
@@ -310,7 +280,7 @@ public class SalesInvoice extends Fragment {
     SalesInvoiceInterface salesInvoiceInterfaceListener;
     Date currentTimeAndDate;
     SimpleDateFormat df, df2,formatTime;
-    String voucherDate, voucherYear,time;
+    public  static  String voucherDate, voucherYear,time;
     CompanyInfo companyInfo;
     double limit_offer = 0;
     ImageButton maxDiscount;
@@ -322,7 +292,7 @@ public class SalesInvoice extends Fragment {
     FusedLocationProviderClient mFusedLocationClient;
     FloatingActionButton save_floatingAction;
     boolean validDiscount=false;
-    int checkQtyServer=0  ,sales=1;
+    public  static  int checkQtyServer=0  ,sales=1;
 
     int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
           R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp
@@ -394,6 +364,7 @@ public class SalesInvoice extends Fragment {
         } else {
             // portrait
         }
+        getTimeAndDate();
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -424,7 +395,7 @@ public class SalesInvoice extends Fragment {
             }
         });
         //**********************************************************
-        getTimeAndDate();
+
         inflateBoomMenu(view );
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -1174,7 +1145,7 @@ public class SalesInvoice extends Fragment {
         outState.putSerializable("arrayItems",  items);
     }
 
-    private void getTimeAndDate() {
+    public void getTimeAndDate() {
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
         formatTime=new SimpleDateFormat("hh:mm:ss");
@@ -1688,11 +1659,20 @@ public class SalesInvoice extends Fragment {
 
 
                             if (virefyMaxDescount()) {
+                                if (verifySerialListDosenotDuplicates()) {
+                                    AddVoucher();
+                                    clearLayoutData(0);
+                                } else {
+                                    SaveData.setEnabled(true);
+                                    save_floatingAction.setEnabled(true);
+                                    new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText(getContext().getString(R.string.warning_message))
+                                            .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
+                                            .show();
+
+                                }
 
 
-                                AddVoucher();
-
-                                clearLayoutData(0);
 
                             } else {
                                 SaveData.setEnabled(true);
@@ -1723,8 +1703,19 @@ public class SalesInvoice extends Fragment {
 
 
                         if (virefyMaxDescount()) {
-                            AddVoucher();
-                            clearLayoutData(0);
+                            if (verifySerialListDosenotDuplicates()) {
+                                AddVoucher();
+                                clearLayoutData(0);
+                            } else {
+                                SaveData.setEnabled(true);
+                                save_floatingAction.setEnabled(true);
+                                new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                        .setTitleText(getContext().getString(R.string.warning_message))
+                                        .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
+                                        .show();
+
+                            }
+
 
                         } else {
                             SaveData.setEnabled(true);
@@ -1882,6 +1873,7 @@ public class SalesInvoice extends Fragment {
     static Voucher vouchLast;
 
     private void printLastVoucher(int voucher_no, Voucher vouchPrint) {
+        getTimeAndDate();
         if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
 
             try {
@@ -2361,8 +2353,27 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View v) {
                 dialog_request.dismiss();
-                AddVoucher();
-                clearLayoutData(0);
+                if(listSerialTotal.size()!=0)
+                {
+                    if (verifySerialListDosenotDuplicates()) {
+                        AddVoucher();
+                        clearLayoutData(0);
+                    } else {
+                        SaveData.setEnabled(true);
+                        save_floatingAction.setEnabled(true);
+                        new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getContext().getString(R.string.warning_message))
+                                .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
+                                .show();
+
+                    }
+                }
+                else {
+                    AddVoucher();
+                    clearLayoutData(0);
+                }
+
+
 
             }
         });
@@ -2402,28 +2413,31 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void AddVoucher() {
-        int store_No=salesMan;
+//        if (verifySerialListDosenotDuplicates()) {
+
+
+
+        int store_No = salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
 
-                for(int j=0;j<listSerialTotal.size();j++)
-                {
-                    mDbHandler.add_Serial(listSerialTotal.get(j));
-                }
+        for (int j = 0; j < listSerialTotal.size(); j++) {
+            mDbHandler.add_Serial(listSerialTotal.get(j));
+        }
         savedState = 2;// addesd sucssesfulley
         for (int i = 0; i < items.size(); i++) {
 
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                     items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
-                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(),items.get(i).getSerialCode());
+                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(), items.get(i).getSerialCode());
 
             totalQty_forPrint += items.get(i).getQty();
             itemsList.add(item);
             mDbHandler.addItem(item);
             itemForPrint.add(item);
-            mDbHandler.updatevoucherKindInSerialTable(voucherType ,voucherNumber,store_No);
-               // exportSerialToExcel(listSerialTotal, voucherNo);
+           // mDbHandler.updatevoucherKindInSerialTable(voucherType, voucherNumber, store_No);
+            // exportSerialToExcel(listSerialTotal, voucherNo);
 
 
             if (voucherType == 504)
@@ -2435,23 +2449,24 @@ public class SalesInvoice extends Fragment {
 
         }
         mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+        getTimeAndDate();
 
 
-           if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 0) {
-               if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
+        if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 0) {
+            if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
 
-                   try {
-                       int printer = mDbHandler.getPrinterSetting();
-                       companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                       if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
-                           switch (printer) {
-                               case 0:
-                                   Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
-                                   i.putExtra("printKey", "1");
-                                   startActivity(i);
+                try {
+                    int printer = mDbHandler.getPrinterSetting();
+                    companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                        switch (printer) {
+                            case 0:
+                                Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
+                                i.putExtra("printKey", "1");
+                                startActivity(i);
 //                                                             lk30.setChecked(true);
-                                   break;
-                               case 1:
+                                break;
+                            case 1:
 
 //                            try {
 //                                findBT();
@@ -2459,16 +2474,16 @@ public class SalesInvoice extends Fragment {
 //                            } catch (IOException e) {
 //                                e.printStackTrace();
 //                            }
-                                   voucherShow = voucher;
+                                voucherShow = voucher;
 
 //                                   convertLayoutToImage(voucher);
-                                   Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                   intent1.putExtra("printKey", "1");
-                                   startActivity(intent1);
+                                Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+                                intent1.putExtra("printKey", "1");
+                                startActivity(intent1);
 
 //                                                             lk31.setChecked(true);
-                                   break;
-                               case 2:
+                                break;
+                            case 2:
 
 //                               try {
 //                                   findBT();
@@ -2477,16 +2492,16 @@ public class SalesInvoice extends Fragment {
 //                                   e.printStackTrace();
 //                               }
 //                                                             lk32.setChecked(true);
-                                   voucherShow = voucher;
+                                voucherShow = voucher;
 
 //                                   convertLayoutToImage(voucher);
-                                   Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                   O1.putExtra("printKey", "1");
-                                   startActivity(O1);
+                                Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+                                O1.putExtra("printKey", "1");
+                                startActivity(O1);
 
 
-                                   break;
-                               case 3:
+                                break;
+                            case 3:
 
 //                            try {
 //                                findBT();
@@ -2497,74 +2512,114 @@ public class SalesInvoice extends Fragment {
 //
 //                                                                voucherShow = voucher;
 //                                   convertLayoutToImage(voucher);
-                                   Intent inte3 = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                   inte3.putExtra("printKey", "1");
-                                   startActivity(inte3);//qs.setChecked(true);
-                                   break;
-                               case 4:
-                                   printTally(voucher);
-                                   break;
+                                Intent inte3 = new Intent(getActivity().getBaseContext(), bMITP.class);
+                                inte3.putExtra("printKey", "1");
+                                startActivity(inte3);//qs.setChecked(true);
+                                break;
+                            case 4:
+                                printTally(voucher);
+                                break;
 
 
-                               case 5:
+                            case 5:
 
 //                             MTP.setChecked(true);
 
 
-                               case 6:
+                            case 6:
 
 //                             InnerPrenter.setChecked(true);
-                                   voucherShow = voucher;
+                                voucherShow = voucher;
 //                            convertLayoutToImage(voucher);
-                                   Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                   O.putExtra("printKey", "1");
-                                   startActivity(O);
+                                Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
+                                O.putExtra("printKey", "1");
+                                startActivity(O);
 
 
-                                   break;
+                                break;
 
-                           }
-                       } else {
+                        }
+                    } else {
 //                   Toast.makeText(SalesInvoice.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
-                           Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 
 
-                               finishPrint.setText("finish");
+                        finishPrint.setText("finish");
 
-                       }
-                   } catch (Exception e) {
-                       Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
-                       finishPrint.setText("finish");
-                   }
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                    finishPrint.setText("finish");
+                }
 
 
 //                                                } catch (IOException ex) {
 //                                                }
-               } else {
-                   hiddenDialog();
-               }
-           }
-           else {
+            } else {
+                hiddenDialog();
+            }
+        } else {
 
-               if(mDbHandler.getAllSettings().get(0).getQtyServer()==1){
-                   try {
-                       ExportJason exportJason=new ExportJason(getActivity());
-                       exportJason.startExportDatabase();
-                   } catch (JSONException e) {
-                       e.printStackTrace();
-                   }
-
-
-               }
-               new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
-                       .setTitleText(getContext().getString(R.string.succsesful))
-                       .show();
-           }
+            if (mDbHandler.getAllSettings().get(0).getQtyServer() == 1) {
+                try {
+                    ExportJason exportJason = new ExportJason(getActivity());
+                    exportJason.startExportDatabase();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
 
+            }
+            new SweetAlertDialog(getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText(getContext().getString(R.string.succsesful))
+                    .show();
+        }
+
+
+//    }
+//        else {
+//            SaveData.setEnabled(true);
+//            save_floatingAction.setEnabled(true);
+//            new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+//                    .setTitleText(getContext().getString(R.string.warning_message))
+//                    .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
+//                    .show();
+//        }
+
+    }
+
+    private boolean verifySerialListDosenotDuplicates() {
+        listSerialValue=new ArrayList<>();
+        for (int i=0;i<listSerialTotal.size();i++)
+        {
+            listSerialValue.add(listSerialTotal.get(i).getSerialCode());
+        }
+        if(hasDuplicate(listSerialValue))
+        {
+           return  false;
+        }
+        else return true;
 
 
     }
+
+//    private void verifySerialListDosenotDuplicates() {
+//        findDuplicates(listSerialTotal);
+//    }
+//    public Set<Integer> findDuplicates(List<String> listContainingDuplicates)
+//    {
+//        final Set<Integer> setToReturn = new HashSet<>();
+//        final Set<Integer> set1 = new HashSet<>();
+//
+//        for (Integer yourInt : listContainingDuplicates)
+//        {
+//            if (!set1.add(yourInt))
+//            {
+//                setToReturn.add(yourInt);
+//            }
+//        }
+//        return setToReturn;
+//    }
 
     private void exportSerialToExcel(List<serialModel> list,int voucheNum) {
         ExportToExcel exportToExcel=new ExportToExcel();
@@ -3003,6 +3058,37 @@ public class SalesInvoice extends Fragment {
         save_floatingAction.setEnabled(true);
         listSerialTotal.clear();
 
+    }
+    public static <T> List getDuplicate(Collection<T> list) {
+
+        final List<T> duplicatedObjects = new ArrayList<T>();
+        Set<T> set = new HashSet<T>() {
+            @Override
+            public boolean add(T e) {
+                if (contains(e)) {
+                    duplicatedObjects.add(e);
+                }
+                return super.add(e);
+            }
+        };
+        for (T t : list) {
+            set.add(t);
+        }
+        return duplicatedObjects;
+    }
+
+
+//    public static <T> boolean hasDuplicate(Collection<T> list) {
+//        if (getDuplicate(list).isEmpty())
+//            return false;
+//        return true;
+//    }
+    public static <T> boolean hasDuplicate(Iterable<T> all) {
+        Set<T> set = new HashSet<T>();
+        // Set#add returns false if the set does not change, which
+        // indicates that a duplicate element has been added.
+        for (T each: all) if (!set.add(each)) return true;
+        return false;
     }
 
     public void calculateTotals() {

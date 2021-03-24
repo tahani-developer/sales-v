@@ -19,6 +19,7 @@ import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
@@ -51,6 +52,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 
@@ -75,6 +77,8 @@ public class ExportJason extends AppCompatActivity {
     public  static  List<Item> stockRequestListList=new ArrayList<>();
     public  static  List<CustomerLocation> customerLocationList=new ArrayList<>();
     public  static  List<serialModel> serialModelList=new ArrayList<>();
+    int  approveAdmin=-1,workOnLine=-1;
+    boolean isPosted = true;
 //    getCustomerLocation
 
     public ExportJason(Context context) throws JSONException {
@@ -229,8 +233,9 @@ public class ExportJason extends AppCompatActivity {
 //                addedCustomer.get(i).setIsPosted(1);
                 jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
             }
+       // getData();
 
-        new ExportJason.JSONTask().execute();
+       new ExportJason.JSONTask().execute();
 
 
 
@@ -450,6 +455,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updateSerialTableIsposted();
                     mHandler.updateRequestStockMaster();
                     mHandler.updateRequestStockDetail();
+                    getData();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
                 } else {
@@ -494,6 +500,29 @@ public class ExportJason extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
+    private void getData() {
+        List<Settings> settings =mHandler.getAllSettings();
+        if (settings.size() != 0) {
+            workOnLine= settings.get(0).getWorkOnline();
+            Log.e("workOnLine",""+workOnLine);
+        }
+        if(workOnLine==1) {
+            isPosted=mHandler.isAllVoucher_posted();
+
+                if(isPosted==true)
+                {
+                    ImportJason obj = new ImportJason(context);
+                    obj.getItemBalance(userNo);
+                }
+                else{
+                    Toast.makeText(context,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+                }
+
+        }
+
+    }
+
     public void getPassowrdSetting() {
         new JSONTask_getPassword().execute();
     }

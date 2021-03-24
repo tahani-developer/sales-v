@@ -2,7 +2,7 @@ package com.dr7.salesmanmanager.Modles;
 
 public class ItemUnitDetails {
 
-    private int companyNo;
+    private String companyNo;
     private String itemNo;
     private String unitId;
     private double convRate;
@@ -11,18 +11,18 @@ public class ItemUnitDetails {
 
     }
 
-    public ItemUnitDetails(int companyNo, String itemNo, String unitId, double convRate) {
+    public ItemUnitDetails(String companyNo, String itemNo, String unitId, double convRate) {
         this.companyNo = companyNo;
         this.itemNo = itemNo;
         this.unitId = unitId;
         this.convRate = convRate;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return companyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.companyNo = companyNo;
     }
 

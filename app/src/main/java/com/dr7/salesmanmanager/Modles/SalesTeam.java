@@ -2,7 +2,7 @@ package com.dr7.salesmanmanager.Modles;
 
 public class SalesTeam {
 
-    private int companyNo;
+    private String companyNo;
     private String salesManNo;
     private String salesManName;
     private String isSuspended;
@@ -20,18 +20,18 @@ public class SalesTeam {
 
     }
 
-    public SalesTeam(int companyNo, String salesManNo, String salesManName, String isSuspended) {
+    public SalesTeam(String companyNo, String salesManNo, String salesManName, String isSuspended) {
         this.companyNo = companyNo;
         this.salesManNo = salesManNo;
         this.salesManName = salesManName;
         this.isSuspended = isSuspended;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return companyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.companyNo = companyNo;
     }
 

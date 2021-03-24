@@ -256,7 +256,7 @@ public class RefreshData {
                     for (int i = 0; i < parentArrayItemQty.length(); i++) {
                         JSONObject finalObject = parentArrayItemQty.getJSONObject(i);
                         SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
-                        salesManItemsBalance.setCompanyNo(finalObject.getInt("ComapnyNo"));
+                        salesManItemsBalance.setCompanyNo(finalObject.getString("ComapnyNo"));
                         salesManItemsBalance.setSalesManNo(finalObject.getString("SalesManNo"));
                         salesManItemsBalance.setItemNo(finalObject.getString("ItemNo"));
                         salesManItemsBalance.setQty(finalObject.getDouble("Qty"));

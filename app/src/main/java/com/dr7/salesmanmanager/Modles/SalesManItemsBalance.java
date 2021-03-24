@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SalesManItemsBalance {
 
-    private int ComapnyNo;
+    private String ComapnyNo;
     private String SalesManNo;
     private String ItemNo;
     private double Qty;
@@ -25,18 +25,18 @@ public class SalesManItemsBalance {
         return CASHREPORT;
     }
 
-    public SalesManItemsBalance(int companyNo, String salesManNo, String itemNo, double qty) {
+    public SalesManItemsBalance(String companyNo, String salesManNo, String itemNo, double qty) {
         this.ComapnyNo = companyNo;
         this.SalesManNo = salesManNo;
         this.ItemNo = itemNo;
         this.Qty = qty;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return ComapnyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.ComapnyNo = companyNo;
     }
 

@@ -62,8 +62,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -109,6 +111,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     RecyclerView serial_No_recyclerView;
     public static ArrayList<serialModel> serialListitems = new ArrayList<>();
 
+    List<String>listSerialValue=new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty, bonus;
      LinearLayout   bonusLinearLayout;
@@ -298,6 +301,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        {
                                                                            barcodeValue=s.toString();
                                                                            serialValue_Model.setText(s.toString());
+
                                                                        }
 
 
@@ -428,6 +432,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        serialMod.setKindVoucher(kindVoucher+"");
                                                                                        serialMod.setStoreNo(Login.salesMan);
                                                                                        serialMod.setDateVoucher(voucherDate);
+                                                                                       serialMod.setKindVoucher(voucherType+"");
                                                                                        serialMod.setItemNo(itemNoSelected);
                                                                                        unitQty.setText(counterSerial + "");
 
@@ -509,6 +514,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        serial.setIsBonus("1");
                                                                        serial.setIsDeleted("0");
                                                                        serial.setVoucherNo(vouch+"");
+                                                                       serial.setKindVoucher(kindVoucher+"");
                                                                        serialListitems.add(serial);
 
 
@@ -603,7 +609,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                serial.setStoreNo(Login.salesMan);
                                                                serial.setDateVoucher(voucherDate);
                                                                serial.setItemNo(itemNoSelected);
-
                                                                serialListitems.add(serial);
 
 
@@ -1264,10 +1269,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                .setContentText(view.getContext().getString(R.string.reqired_filled))
                                                                                .show();
                                                                    } else {
-                                                                       new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
-                                                                               .setTitleText(view.getContext().getString(R.string.warning_message))
-                                                                               .setContentText(view.getContext().getString(R.string.itemadedbefor))
-                                                                               .show();
+                                                                       if(countInvalidSerial==100)
+                                                                       {
+                                                                           new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                   .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                   .setContentText(view.getContext().getString(R.string.thereIsduplicatedSerial))
+                                                                                   .show();
+
+                                                                       }else {
+                                                                           new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                   .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                                                   .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                                                                   .show();
+                                                                       }
+
                                                                    }
 
 
@@ -1377,8 +1392,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private int checkSerialDB() {
+        listSerialValue =new ArrayList<>();
         int counter = 0;
         for (int i = 0; i < serialListitems.size(); i++) {
+            listSerialValue.add(serialListitems.get(i).getSerialCode());
             if (serialListitems.get(i).getSerialCode().equals("")) {
                 counter = -1;
 
@@ -1389,16 +1406,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                if(MHandler.isSerialCodePaied(serialListitems.get(i).getSerialCode()).equals("not"))
 //                {
                     counter++;
+                String ItemNo=MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()+"");
+
+                if(!ItemNo.equals("")){
+                    new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(cont.getString(R.string.warning_message))
+                            .setContentText(cont.getString(R.string.invalidSerial)+"\t"+serialListitems.get(i).getSerialCode()+"\t"+cont.getString(R.string.forItemNo)+ItemNo)
+                            .show();
+                }else {
+                    new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(cont.getString(R.string.warning_message))
+                            .setContentText(cont.getString(R.string.invalidSerial)+"\t"+serialListitems.get(i).getSerialCode())
+                            .show();
+
+                }
 //                }
 
 
             }
+
         }
-        Log.e("counter", "" + counter);
+
+        if(hasDuplicate(listSerialValue)){counter=100;}
+
         return counter;
 
     }
-
+    public static <T> boolean hasDuplicate(Iterable<T> all) {
+        Set<T> set = new HashSet<T>();
+        // Set#add returns false if the set does not change, which
+        // indicates that a duplicate element has been added.
+        for (T each: all) if (!set.add(each)) return true;
+        return false;
+    }
     public void showImageOfCheck(Bitmap bitmap) {
         final Dialog dialog = new Dialog(context.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -192,8 +192,8 @@ public class Activities extends AppCompatActivity implements
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         totalBalance_text=findViewById(R.id.totalBalance_text);
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
-//        fillLastVisit();
-//        fiiltotalBalance();
+        fillLastVisit();
+        fiiltotalBalance();
 //        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
 //        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
         linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
@@ -822,32 +822,84 @@ public class Activities extends AppCompatActivity implements
 
 
                 String serialBarcode = Result.getContents();
-
-                if((databaseHandler.isSerialCodeExist(serialBarcode+"").equals("not")))
+                String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode+"");
+                if((ItemNo.equals("not")))
                 {
                     if((databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==504)||
                             (!databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==506))
                     {
-                        Log.e("Activities2", "onActivityResult+true+serialBarcode" + serialBarcode);
                         serialValue.setText(serialBarcode);
                     }
-                    else
-                    {
-                        Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + serialBarcode);
-                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(Activities.this.getString(R.string.warning_message))
-                            .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+serialBarcode)
-                            .show();}
+                    else {
+                        if (voucherType == 506) {
+                            new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(Activities.this.getString(R.string.warning_message))
+                                    .setContentText(Activities.this.getString(R.string.serialIsNotPaied) + "\t" + serialBarcode)
+                                    .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            openSmallScanerTextView();
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            try {
+                                String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode+"");
+                                String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                                voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
+
+                                new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                        .setContentText(Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode+ "\t"+Activities.this.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+Activities.this.getString(R.string.voucher_date)+"\t"+voucherDate)
+                                        .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                openSmallScanerTextView();
+                                                sweetAlertDialog.dismissWithAnimation();
+                                            }
+                                        })
+                                        .show();
+                            }catch (Exception e){
+                                Toast.makeText(Activities.this, ""+Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode, Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    }
 
 
                 }
                 else {
-                    Log.e("Activities4", "onActivityResult+false+isSerialCodeExist" + serialBarcode);
 
-                    new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(Activities.this.getString(R.string.warning_message))
-                            .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
-                            .show();
+
+                    if(!ItemNo.equals("")){
+                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(Activities.this.getString(R.string.warning_message))
+                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Activities.this.getString(R.string.forItemNo)+ItemNo)
+                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        openSmallScanerTextView();
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }else {
+                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(Activities.this.getString(R.string.warning_message))
+                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
+                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                        openSmallScanerTextView();
+                                        sweetAlertDialog.dismissWithAnimation();
+
+                                    }
+                                })
+                                .show();
+
+                    }
+
                 }
 
 
@@ -881,6 +933,10 @@ public class Activities extends AppCompatActivity implements
                 }
                 break;
         }
+
+    }
+    public void openSmallScanerTextView() {
+        new IntentIntegrator(Activities.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }
 }

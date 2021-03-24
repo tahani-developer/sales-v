@@ -43,6 +43,24 @@ public class Settings {
     private  int readOfferFromAdmin;
     private  String ipPort;
     private  int qtyServer;
+    private  int dontShowtax;
+    private  String coNo;
+
+    public String getCoNo() {
+        return coNo;
+    }
+
+    public void setCoNo(String coNo) {
+        this.coNo = coNo;
+    }
+
+    public int getDontShowtax() {
+        return dontShowtax;
+    }
+
+    public void setDontShowtax(int dontShowtax) {
+        this.dontShowtax = dontShowtax;
+    }
 
     public int getQtyServer() {
         return qtyServer;

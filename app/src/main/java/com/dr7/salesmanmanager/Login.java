@@ -138,6 +138,7 @@ public class Login extends AppCompatActivity {
     FloatingActionButton setting_floatingBtn;
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -298,6 +299,8 @@ public class Login extends AppCompatActivity {
         final EditText storeNo_edit = (EditText) dialog.findViewById(R.id.storeNo_edit);
          TextView editIp= (TextView) dialog.findViewById(R.id.editIp);
 
+        final EditText cono = (EditText) dialog.findViewById(R.id.cono);
+
         final Button cancel_button = (Button) dialog.findViewById(R.id.cancelBtn);
         final Button importData = (Button) dialog.findViewById(R.id.importData);
         //********************************fill data******************************************
@@ -306,6 +309,7 @@ public class Login extends AppCompatActivity {
             ipEditText.setText(mDHandler.getAllSettings().get(0).getIpAddress());
             portSetting.setText(mDHandler.getAllSettings().get(0).getIpPort());
             storeNo_edit.setText(mDHandler.getAllUserNo());
+            cono.setText(mDHandler.getAllSettings().get(0).getCoNo());
 
             ipEditText.setClickable(false);
             ipEditText.setEnabled(false);
@@ -335,7 +339,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
                 {
-                    addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString());
+                    addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     dialog.dismiss();
                   Log.e("validateNotEmpty","validateNotEmpty");
                 }
@@ -350,9 +354,13 @@ public class Login extends AppCompatActivity {
                 {
                     if(mDHandler.getAllSettings().size()==0)
                     {
-                        addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString());
+                        addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
 
                     }
+                    else {
+                        mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
+                    }
+                    mDHandler.addUserNO(storeNo_edit.getText().toString());
                     ImportJason importJason=new ImportJason(Login.this);
                     importJason.startParsing(storeNo_edit.getText().toString());
                     dialog.dismiss();
@@ -389,18 +397,18 @@ public class Login extends AppCompatActivity {
 
                 .show();
     }
-    private void addIpSetting(String ipAddress, String ipPort) {
+    private void addIpSetting(String ipAddress, String ipPort,String cono) {
         if(mDHandler.getAllSettings().size()==0)
         {
-            mDHandler.addIPSetting(504,0,ipAddress,ipPort);
-            mDHandler.addIPSetting(506,0,ipAddress,ipPort);
-            mDHandler.addIPSetting(508,0,ipAddress,ipPort);
-            mDHandler.addIPSetting(1,0,ipAddress,ipPort);
-            mDHandler.addIPSetting(4,0,ipAddress,ipPort);
-            mDHandler.addIPSetting(2,0,ipAddress,ipPort);
+            mDHandler.addIPSetting(504,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(506,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(508,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(1,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(4,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(2,0,ipAddress,ipPort,cono);
         }
         else {
-            mDHandler.updateIpSetting(ipAddress,ipPort);
+            mDHandler.updateIpSetting(ipAddress,ipPort,cono);
         }
 
     }
@@ -680,7 +688,7 @@ public class Login extends AppCompatActivity {
                     showDialog_key();
                 } else {
 
-                    salesMan = usernameEditText.getText().toString();
+                    salesMan = convertToEnglish(usernameEditText.getText().toString());
                     salesManNo = passwordEditText.getText().toString();
                     try {
                         Transaction transaction=new Transaction();
@@ -727,8 +735,8 @@ public class Login extends AppCompatActivity {
                         showDialog_key();
                     } else {
 
-                        salesMan = usernameEditText.getText().toString();
-                        salesManNo = passwordEditText.getText().toString();
+                        salesMan =convertToEnglish( usernameEditText.getText().toString());
+                        salesManNo =passwordEditText.getText().toString();
 //                       locationPermissionRequest.closeLocation();
                         verifyIpDevice();
 //                       goToMain();
@@ -754,22 +762,23 @@ public class Login extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void  verifyIpDevice(){
-        getIpDevice();
-        Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
-        if(previousIp.equals(currentIp)||previousIp.equals("")){
-            goToMain();
-
-        }
-        else {
-            if(!previousIp.equals(currentIp)&& !previousIp.equals(""))
-            {
-                new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(getResources().getString(R.string.warning_message))
-                        .setContentText(getResources().getString(R.string.userNotOwnwerDevice))
-                        .show();
-            }
-
-        }
+        goToMain();
+//        getIpDevice();
+//        Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
+//        if(previousIp.equals(currentIp)||previousIp.equals("")){
+//            goToMain();
+//
+//        }
+//        else {
+//            if(!previousIp.equals(currentIp)&& !previousIp.equals(""))
+//            {
+//                new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.userNotOwnwerDevice))
+//                        .show();
+//            }
+//
+//        }
     }
 
     private void addCurentIp(String currentIp) {
@@ -810,6 +819,20 @@ public class Login extends AppCompatActivity {
 
         mDHandler.deletAllSalesLogIn();
         mDHandler.addUserNO(Login.salesMan);
+        try {
+            if(!Login.salesMan.equals("1"))
+            {
+                if(Integer.parseInt(Login.salesMan)!=1)
+                {
+                    mDHandler.deleteExcept(Login.salesMan);
+                }
+
+            }
+
+        }catch (Exception e){
+            Log.e("deleteExcept",""+Login.salesMan);
+        }
+
 
         if(approveAdmin==1) {
         boolean locCheck= locationPermissionRequest.checkLocationPermission();
@@ -1096,7 +1119,7 @@ public class Login extends AppCompatActivity {
                 key_value_Db = mDHandler.getActiveKeyValue();
                 Log.e("key_value_Db", "" + key_value_Db);
                 if (key_value_Db == key_int) {
-                    salesMan = usernameEditText.getText().toString();
+                    salesMan =convertToEnglish(  usernameEditText.getText().toString());
                     salesManNo = passwordEditText.getText().toString();
 //
                     Toast.makeText(Login.this, "welcome" + salesMan, Toast.LENGTH_SHORT).show();

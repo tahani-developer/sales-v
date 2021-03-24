@@ -2,7 +2,7 @@ package com.dr7.salesmanmanager.Modles;
 
 public class PriceListD {
 
-    private int companyNo;
+    private String companyNo;
     private int prNo;
     private String itemNo;
     private String unitId;
@@ -14,7 +14,7 @@ public class PriceListD {
 
     }
 
-    public PriceListD(int companyNo, int prNo, String itemNo, String unitId,
+    public PriceListD(String companyNo, int prNo, String itemNo, String unitId,
                       double price, double taxPerc, double minSalePrice) {
         this.companyNo = companyNo;
         this.prNo = prNo;
@@ -25,11 +25,11 @@ public class PriceListD {
         this.minSalePrice = minSalePrice;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return companyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.companyNo = companyNo;
     }
 

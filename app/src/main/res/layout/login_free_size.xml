@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorblue_dark"
             android:elevation="5dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:rippleColor="@color/colorblue_dark"
             app:fabSize="mini"
             android:src="@drawable/ic_settings_white_24dp"

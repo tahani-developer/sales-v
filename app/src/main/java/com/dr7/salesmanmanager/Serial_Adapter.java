@@ -43,6 +43,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterBonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterSerial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
+import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
@@ -63,7 +64,7 @@ public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHold
     public  static  TextView serialValue_Model;
     public  int currentUpdate=-1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
-    public  int sunmiDevice=0;
+    public  int sunmiDevice=0,dontShowTax=0;
 
 
     public Serial_Adapter(List<serialModel> chequeList, Context context, AddItemsFragment2 contextadd) {
@@ -89,6 +90,8 @@ public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHold
             sunmiDevice=1;
             Log.e("sunmiDevice",""+sunmiDevice);
         }
+        checkQtyServer=0;
+
         // chequeListall = new ArrayList<>();
     }
 
@@ -108,6 +111,9 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
 
         viewHolder.textView_counterNo.setTag(i);
         list.get(i).setCounterSerial(i+1);
+        Log.e("onBindViewHolder","voucherType"+voucherType+"\t"+list.get(i).getKindVoucher());
+        list.get(i).setKindVoucher(voucherType+"");
+        Log.e("onBindViewHolder","voucherType"+voucherType+"\t"+list.get(i).getKindVoucher());
 
         if(isClicked.get(i)==0 )//empty
         {
@@ -116,22 +122,28 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
 
         }
         else {// exist value ==1
-            if(sunmiDevice!=1)
-            {
-                viewHolder.editTextSerialCode.requestFocus();
-            }
-            else {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewHolder.editTextSerialCode.requestFocus();
 
-                    }
-                });
-
-            }
-
-
+//            if(sunmiDevice!=1)
+//            {
+////                viewHolder.editTextSerialCode.requestFocus();
+//                Log.e("currentUpdate",""+currentUpdate+"readB");
+//                viewHolder.editTextSerialCode.requestFocus();
+//                selectedBarcode=i;
+//                contextAddItem.readB();
+//            }
+//            else {
+//                new Handler().post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        viewHolder.editTextSerialCode.requestFocus();
+//
+//                    }
+//                });
+//
+//            }
+            viewHolder.editTextSerialCode.requestFocus();
+            selectedBarcode=i;
+            contextAddItem.readB();
             viewHolder.serialNo_linear.setBackgroundColor(context.getResources().getColor(R.color.layer5));
         }
 
@@ -140,7 +152,10 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         {
             if(sunmiDevice!=1)
             {
+                Log.e("currentUpdate",""+currentUpdate+"readB");
                 viewHolder.editTextSerialCode.requestFocus();
+//                selectedBarcode=i;
+//                contextAddItem.readB();
             }
             else {
                 new Handler().post(new Runnable() {
@@ -280,142 +295,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 openeditDialog();
             }
         });
+
         serialValue_Model = itemView.findViewById(R.id.serialValue_Model);
-        serialValue_Model.addTextChangedListener(new TextWatcher() {// FROM BARCODE
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                boolean isUpdate=true;
-                Log.e("afterTextChanged","serialValue_Model="+serialValue_Model.getText().toString()+"\tselectedBarcode"+selectedBarcode);
-                if(s.toString().length()!=0)
-                {
-                   if( checkInTotalBarcode(s.toString()))// not in the current voucher
-                   {
-                       if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))// not in curent ListSerial adapter
-                       {
-                           isUpdate= updateListCheque(selectedBarcode, s.toString());
-
-                       }
-                       if(!isUpdate)
-                       {
-                           if(sunmiDevice!=1)
-                           {
-                               editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
-                           }
-                           else {
-                               try {
-                                   errorSerial.setText(selectedBarcode+"");
-                                   errorSerial.setError(context.getResources().getString(R.string.duplicate));
-                                   Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
-
-                               }
-                               catch (Exception e){
-                                   Log.e("serialValue_Model","Exception"+e.getMessage());
-                               }
-
-                              // errorSerial.setError(context.getResources().getString(R.string.duplicate));
-                           }
-
-                           errorData=true;
-
-                       }else {// updated sucssesfuly
-                           if(sunmiDevice!=1)
-                           {
-                               editTextSerialCode.setError(null);
-
-                           }
-                           else {
-                               errorSerial.setError(null);
-                           }
-
-                       }
-                   }
-                   else {
-                       if(sunmiDevice!=1) {
-                           editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
-                       }
-                       else {
-                           errorSerial.setText(selectedBarcode);
-                           errorSerial.setError(context.getResources().getString(R.string.duplicate));
-
-                          // errorSerial.setError(context.getResources().getString(R.string.duplicate));
-                       }
-                       errorData=true;
-                   }
-
-
-
-
-                }
-                else {
-                    updateListCheque(selectedBarcode, "");
-//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
-                }
-
-
-            }
-        });
-        if(sunmiDevice==1){
-
-            editTextSerialCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
-                            || actionId == EditorInfo.IME_NULL) {
-                        Log.e("setOnEditorActio", "afterTextChangedNOT" +"errorData\t"+event.toString());
-                        int position = (int) editTextSerialCode.getTag();
-                        boolean isUpdate=true;
-                        if(editTextSerialCode.toString().length()!=0)
-                        {
-                            if(!list.get(position).getSerialCode().equals(editTextSerialCode.getText().toString()))
-                            {
-                                isUpdate= updateListCheque(position, editTextSerialCode.getText().toString());
-
-
-                            }
-
-                            if(!isUpdate)// not exist serial in serial master
-                            {
-
-                                editTextSerialCode.setSelectAllOnFocus(true);
-                                new Handler().post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        editTextSerialCode.requestFocus();
-                                        editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
-
-                                        editTextSerialCode.setText("");
-
-                                    }
-                                });
-                                errorData=true;
-
-                            }else {
-                                    editTextSerialCode.setError(null);
-                            }
-                    }
-
-
-                    }
-
-
-                    return false;
-                }
-            });
-
-
-        }
-        else {
-            editTextSerialCode.addTextChangedListener(new TextWatcher() {
+            serialValue_Model.addTextChangedListener(new TextWatcher() {// FROM BARCODE
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -428,15 +311,93 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    int position = (int) editTextSerialCode.getTag();
                     boolean isUpdate=true;
+                    Log.e("afterTextChanged","serialValue_Model="+serialValue_Model.getText().toString()+"\tselectedBarcode"+selectedBarcode);
+//                    if(s.toString().length()!=0)
+//                    {
+//                        if( checkInTotalBarcode(s.toString()))// not in the current voucher
+//                        {
+//                            if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))// not in curent ListSerial adapter
+//                            {
+//                                if(checkQtyServer==0){
+//                                    isUpdate= updateListCheque(selectedBarcode, s.toString(),0);
+//                                }
+//                                else {
+//                                    isUpdate= updateListCheque(selectedBarcode, s.toString(),0);
+//                                }
+//
+//
+//                            }
+//                            if(!isUpdate)
+//                            {
+//                                if(sunmiDevice!=1)
+//                                {
+//                                    editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+//                                }
+//                                else {
+//                                    try {
+//                                        errorSerial.setText(selectedBarcode+"");
+//                                        errorSerial.setError(context.getResources().getString(R.string.duplicate));
+//                                        Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+//
+//                                    }
+//                                    catch (Exception e){
+//                                        Log.e("serialValue_Model","Exception"+e.getMessage());
+//                                    }
+//
+//                                    // errorSerial.setError(context.getResources().getString(R.string.duplicate));
+//                                }
+//
+//                                errorData=true;
+//
+//                            }else {// updated sucssesfuly
+//                                if(sunmiDevice!=1)
+//                                {
+//                                    editTextSerialCode.setError(null);
+//
+//                                }
+//                                else {
+//                                    errorSerial.setError(null);
+//                                }
+//
+//                            }
+//                        }
+//                        else {
+//                            if(sunmiDevice!=1) {
+//                                editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
+//                            }
+//                            else {
+//                                errorSerial.setText(selectedBarcode);
+//                                errorSerial.setError(context.getResources().getString(R.string.duplicate));
+//
+//                                // errorSerial.setError(context.getResources().getString(R.string.duplicate));
+//                            }
+//                            errorData=true;
+//                        }
+//
+//
+//
+//
+//                    }
+//                    else {
+//                        updateListCheque(selectedBarcode, "",0);
+////                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+//                    }
+//
+                    //***************************Edit Text Serial Method********************************
+
                     if(s.toString().length()!=0)
                     {
-                        if(!list.get(position).getSerialCode().equals(s.toString()))
+                        if(!list.get(selectedBarcode).getSerialCode().equals(s.toString()))
                         {
-                            Log.e("positionnMPTY1", "afterTextChanged" +"position\t"+position);
-                            isUpdate= updateListCheque(position, s.toString());
+                            Log.e("positionnMPTY1", "afterTextChanged" +"position\t"+selectedBarcode);
 
+                            if(checkQtyServer==0){
+                                isUpdate= updateListCheque(selectedBarcode, s.toString(),0);
+                            }
+                            else {
+                                isUpdate= updateListCheque(selectedBarcode, s.toString(),0);
+                            }
 
                         }
 
@@ -451,7 +412,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                             }
                             else {
 
-                                errorSerial.setText(""+position);
+                                errorSerial.setText(""+selectedBarcode);
                                 errorSerial.setError(context.getResources().getString(R.string.invalidSerial));
                                 if(  s.toString().length()>14                  )
                                 {
@@ -474,41 +435,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
                         }
 
-//                    Log.e("positionnOTeMPTY", "afterTextChanged" +"errorData\t"+errorData);
-//
-//                    isFoundSerial=false;
-//
-//                        for(int h=0;h<list.size();h++)
-//                        {
-//
-//                            if(list.get(h).getSerialCode().equals(s.toString()))
-//                            {
-//                                isFoundSerial=true;
-//                            }
-//                        }
-//
-//
-//                    Log.e("position", "afterTextChanged" + position+"errorData\t"+errorData);
-//                    if((databaseHandler.isSerialCodeExist(s.toString()).equals("not"))&&(isFoundSerial==false))
-//                    {
-//                        errorData=false;
-//                        editTextSerialCode.setError(null);
-//                        updateListCheque(position, s.toString());
-//                        Log.e("positionYES", "afterTextChanged" + position+" s.toString()\t"+ s.toString());
-//                    }
-//                    else {
-//                        Log.e("positionNo", "afterTextChanged" + position+" s.toString()\t"+ s.toString());
-//                        updateListCheque(position, "");
-//                        errorData=true;
-//                        editTextSerialCode.setError(context.getResources().getString(R.string.duplicate));
-//                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-//                                .setTitleText(context.getString(R.string.warning_message))
-//                                .setContentText(context.getString(R.string.itemadedbefor))
-//                                .show();
-//
-//
-//
-//                    }
                     }
                     else {
 //                    updateListCheque(position, "");
@@ -516,32 +442,160 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                     }
 
 
-
                 }
             });
-        }
+            if(sunmiDevice==1){
+
+                editTextSerialCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                                || actionId == EditorInfo.IME_NULL) {
+                            Log.e("setOnEditorActio", "afterTextChangedNOT" +"errorData\t"+event.toString());
+                            int position = (int) editTextSerialCode.getTag();
+                            boolean isUpdate=true;
+                            if(editTextSerialCode.toString().length()!=0)
+                            {
+                                if(!list.get(position).getSerialCode().equals(editTextSerialCode.getText().toString()))
+                                {
+                                    if(checkQtyServer==0){
+                                        isUpdate= updateListCheque(position, editTextSerialCode.getText().toString(),0);
+                                    }
+                                    else {
+                                        isUpdate= updateListCheque(position, editTextSerialCode.getText().toString(),0);
+                                    }
+//                                    isUpdate= updateListCheque(, ,0);
 
 
-        errorSerial.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                }
+
+                                if(!isUpdate)// not exist serial in serial master
+                                {
+
+                                    editTextSerialCode.setSelectAllOnFocus(true);
+                                    new Handler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            editTextSerialCode.requestFocus();
+                                            editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
+
+                                            editTextSerialCode.setText("");
+
+                                        }
+                                    });
+                                    errorData=true;
+
+                                }else {
+                                    editTextSerialCode.setError(null);
+                                }
+                            }
+
+
+                        }
+
+
+                        return false;
+                    }
+                });
+
 
             }
+            else {
+                editTextSerialCode.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
 
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        int position = (int) editTextSerialCode.getTag();
+                        boolean isUpdate=true;
+                        if(s.toString().length()!=0)
+                        {
+                            if(!list.get(position).getSerialCode().equals(s.toString()))
+                            {
+                                Log.e("positionnMPTY1", "afterTextChanged" +"position\t"+position);
+
+                                if(checkQtyServer==0){
+                                    isUpdate= updateListCheque(position, s.toString(),0);
+                                }
+                                else {
+                                    isUpdate= updateListCheque(position, s.toString(),0);
+                                }
+
+                            }
+
+                            if(!isUpdate)// not exist serial in serial master
+                            {
+                                Log.e("positionnMPTY2", "afterTextChangedNOT" +"errorData\t"+isUpdate);
+                                if(sunmiDevice!=1)
+                                {
+                                    editTextSerialCode.setError(context.getResources().getString(R.string.invalidSerial));
+
+                                    editTextSerialCode.setText("");
+                                }
+                                else {
+
+                                    errorSerial.setText(""+position);
+                                    errorSerial.setError(context.getResources().getString(R.string.invalidSerial));
+                                    if(  s.toString().length()>14                  )
+                                    {
+                                        Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }
+
+                                errorData=true;
+
+                            }else {
+                                if(sunmiDevice!=1)
+                                {
+                                    editTextSerialCode.setError(null);
+                                }
+                                else {
+                                    errorSerial.setError(null);
+                                }
+
+                            }
+
+                        }
+                        else {
+//                    updateListCheque(position, "");
+//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+                        }
+
+
+
+                    }
+                });
             }
+            errorSerial.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                }
 
-                if(!s.toString().equals(""))
-                {
-                    int po= Integer.parseInt(s.toString());
-                    Log.e("errorSerial1", "afterTextChanged" +"position\t"+po);
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if(!s.toString().equals(""))
+                    {
+                        int po= Integer.parseInt(s.toString());
+                        Log.e("errorSerial1", "afterTextChanged" +"position\t"+po);
 //                    errorSerial.setError("Invalid");
-                    updateListCheque(po,"error");
+                        updateListCheque(po,"error",0);
 //
 //                    if(s.toString().equals("delet"))
 //                    {
@@ -553,9 +607,41 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //                    {
 //                        editTextSerialCode.setText("");
 //                    }
+                    }
                 }
-            }
-        });
+            });
+//        }
+//        else {
+//            editTextSerialCode.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable editable) {
+//                    if(editable.toString().length()!=0)
+//                    {
+//                        int position = (int) editTextSerialCode.getTag();
+//                        updateListCheque(position, editTextSerialCode.getText().toString(),1);
+//
+//                    }
+//
+//                }
+//            });
+//
+//
+//        }
+
+
+
+
+
 
     }
 
@@ -584,13 +670,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(!editText.getText().toString().equals(""))
                 {
-                    if(sunmiDevice!=1)
-                    {
-                        editTextSerialCode.setText(editText.getText().toString());
-                        sweetAlertDialog.dismissWithAnimation();
-                    }
-
-                    else {
+//                    if(sunmiDevice!=1)
+//                    {
+//                        editTextSerialCode.setText(editText.getText().toString());
+//                        sweetAlertDialog.dismissWithAnimation();
+//                    }
+//
+//                    else {
                         if(validSerial(editText.getText().toString()))
                         {
                             editTextSerialCode.setText(editText.getText().toString());
@@ -600,7 +686,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                         else {editText.setError(context.getResources().getString(R.string.invalidSerial));
                         editText.setText("");}
 
-                    }
+//                    }
 
                 }
                 else {
@@ -637,6 +723,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText(context.getString(R.string.warning_message))
                         .setContentText(context.getString(R.string.duplicate))
+                        .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                contextAddItem.readB();
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
                         .show();
                 Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
 
@@ -656,9 +749,20 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
             }
             else {// duplicated
+                String voucherNo=databaseHandler.isSerialCodePaied(serialValue+"");
+                String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
+
+                Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + voucherNo+"\t"+voucherDate);
                 new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText(context.getString(R.string.warning_message))
-                        .setContentText(context.getString(R.string.duplicate))
+                        .setContentText(context.getString(R.string.duplicate) +"\t"+serialValue+ "\t"+context.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+context.getString(R.string.voucher_date)+"\t"+voucherDate)
+                        .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                contextAddItem.readB();
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
                         .show();
 
                 Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
@@ -668,16 +772,37 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
         } else {
             errorData = true;
-            // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
 
-            if(isFoundSerial)
-            {
+            // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+            String ItemNo=databaseHandler.isSerialCodeExist(serialValue+"");
+
+            Log.e("ItemNo","ValidSerial"+ItemNo);
+            if(!ItemNo.equals("")){
                 new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText(context.getString(R.string.warning_message))
-                        .setContentText(context.getString(R.string.duplicate))
+                        .setContentText(context.getString(R.string.invalidSerial)+"\t"+serialValue+"\t"+context.getString(R.string.forItemNo)+ItemNo)
+                        .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                contextAddItem.readB();
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
                         .show();
-
+            }else {
+                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(context.getString(R.string.warning_message))
+                        .setContentText(context.getString(R.string.invalidSerial)+"\t"+serialValue)
+                        .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                contextAddItem.readB();
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
             }
+
 
 
             return false;
@@ -687,8 +812,22 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    private boolean updateListCheque(int position, String data) {
-       // Log.e("updateListCheque", "afterTextChanged" +"position\t"+position+data);
+    private boolean updateListCheque(int position, String data,int dontValidate) {
+        Log.e("updateListCheque", "afterTextChanged" +"position\t"+position+data+"\tdontValidate="+dontValidate);
+
+        if(dontValidate==1){
+            list.get(position).setSerialCode(data);
+            listMasterSerialForBuckup.get(position).setSerialCode(data);
+            currentUpdate = position;
+
+            isClicked.set(position, 0);
+            isClicked.set(position + 1, 1);
+            notifyDataSetChanged();
+            return  true;
+
+        }
+        else {
+
 
         if(data.toString().length()!=0)
         {
@@ -711,15 +850,23 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                     if(list.get(h).getSerialCode().equals(data))
                     {
                         isFoundSerial=true;
+                        break;
                     }
                 }
                 if(isFoundSerial==true)
                 {// FOUND  IN CURRENT LIST
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(context.getString(R.string.warning_message))
-                            .setContentText(context.getString(R.string.duplicate))
+                            .setContentText(context.getString(R.string.duplicate)+"\t"+context.getResources().getString(R.string.inThisVoucher))
+                            .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    contextAddItem.readB();
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            })
                             .show();
-                    Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.duplicate)+"\t"+context.getResources().getString(R.string.inThisVoucher), Toast.LENGTH_SHORT).show();
 
                     return  false;
                 }
@@ -747,12 +894,38 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
             }
                 else {// duplicated
-                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText(context.getString(R.string.warning_message))
-                            .setContentText(context.getString(R.string.duplicate))
-                            .show();
+                    if(voucherType==506)
+                    {
+                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(context.getString(R.string.warning_message))
+                                .setContentText(context.getString(R.string.serialIsNotPaied))
+                                .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        contextAddItem.readB();
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        String voucherNo=databaseHandler.isSerialCodePaied(data+"");
+                        String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                        voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
 
-                    Toast.makeText(context, context.getResources().getString(R.string.duplicate), Toast.LENGTH_SHORT).show();
+                        Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + voucherNo+"\t"+voucherDate);
+                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                .setContentText(context.getString(R.string.duplicate) +"\t"+data+ "\t"+context.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+context.getString(R.string.voucher_date)+"\t"+voucherDate)
+                                .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        contextAddItem.readB();
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+
 
                     return  false;
                 }
@@ -760,15 +933,34 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             } else {
                 errorData = true;
                // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
-
-                if(isFoundSerial)
-                {
+                String ItemNo=databaseHandler.isSerialCodeExist(data+"");
+                if(!ItemNo.equals("")){
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(context.getString(R.string.warning_message))
-                            .setContentText(context.getString(R.string.duplicate))
+                            .setContentText(context.getString(R.string.invalidSerial)+"\t"+data+"\t"+context.getString(R.string.forItemNo)+ItemNo)
+                            .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    contextAddItem.readB();
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            })
                             .show();
-
                 }
+                else {
+                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(context.getString(R.string.warning_message))
+                            .setContentText(context.getString(R.string.invalidSerial)+"\t"+data)
+                            .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    contextAddItem.readB();
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            })
+                            .show();
+                }
+
 
 
                 return false;
@@ -776,10 +968,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
             }
         }
+
         else {
             return  true;
 //                    updateListCheque(position, "");
 //                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+        }
         }
 
     }

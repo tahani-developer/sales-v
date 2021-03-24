@@ -2,7 +2,7 @@ package com.dr7.salesmanmanager.Modles;
 
 public class ItemsMaster {
 
-    private int companyNo;
+    private String companyNo;
     private String itemNo;
     private String name;
     private String categoryId;
@@ -34,7 +34,7 @@ public class ItemsMaster {
 
     }
 
-    public ItemsMaster(int companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended, double itemL, double posPrice, String kind_item) {
+    public ItemsMaster(String companyNo, String itemNo, String name, String categoryId, String barcode, int isSuspended, double itemL, double posPrice, String kind_item) {
         this.companyNo = companyNo;
         this.itemNo = itemNo;
         this.name = name;
@@ -62,11 +62,11 @@ public class ItemsMaster {
         this.kind_item = kind_item;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return companyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.companyNo = companyNo;
     }
 

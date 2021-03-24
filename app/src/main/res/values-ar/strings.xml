@@ -491,5 +491,13 @@
     <string name="exportingData">جاري تصدير البيانات</string>
     <string name="insufficientQuantity">لايوجد كمية كافية</string>
     <string name="invalidValue">قيمة خاطئة</string>
+    <string name="serialIsNotPaied">السيريال غير مباع !!!</string>
+    <string name="dontShowTaxOnprinter">عدم اظهار الضريبة في الطباعة</string>
+    <string name="thereIsduplicatedSerial">يوجد سيريال مكرر</string>
+    <string name="checkinternetConnection">تأكد من اتصال الانترنت</string>
+    <string name="CONO">رقم الشركة</string>
+    <string name="forItemNo">السيريال للمادة رقم </string>
+    <string name="forVoucherNo">للفاتورة رقم </string>
+    <string name="inThisVoucher">في هذه الفاتورة</string>
 
 </resources>

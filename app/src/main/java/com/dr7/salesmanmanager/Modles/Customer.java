@@ -8,7 +8,7 @@ import android.util.Log;
 
 public class Customer {
 
-    private int companyNumber;
+    private String companyNumber;
     private String custId;
     private String custName;
     private String address;
@@ -72,7 +72,7 @@ public class Customer {
         Hide_val = hide_val;
     }
 
-    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended,
+    public Customer(String companyNumber, String custId, String custName, String address, int isSuspended,
                     String priceListId, int cashCredit, String salesManNumber, double creditLimit, int payMethod, String custLat, String custLong,
                     double max_discount, String ACCPRC, int hide_val, int isPost, String customerIdText) {
         this.companyNumber = companyNumber;
@@ -108,7 +108,7 @@ public class Customer {
         this.ACCPRC = ACCPRC;
     }
 
-    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
+    public Customer(String companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
                     int cashCredit, String salesManNumber, double creditLimit,
                     int payMethod, String custLat, String custLong, double max_discount, String ACCPRC, String customerAccount, String customerName) {
         this.companyNumber = companyNumber;
@@ -129,7 +129,7 @@ public class Customer {
         this.customerName = customerName;
     }
 
-    public Customer(int companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
+    public Customer(String companyNumber, String custId, String custName, String address, int isSuspended, String priceListId,
                     int cashCredit, String salesManNumber, double creditLimit,
                     int payMethod, String custLat, String custLong, double max_discount, String customerAccount, String customerName) {
         this.companyNumber = companyNumber;
@@ -155,7 +155,7 @@ public class Customer {
 //        this.payMethod=pay;
 //    }
 
-    public int getCompanyNumber() {
+    public String getCompanyNumber() {
         return companyNumber;
     }
 
@@ -174,7 +174,7 @@ public class Customer {
       }
     }
 
-    public void setCompanyNumber(int companyNumber) {
+    public void setCompanyNumber(String companyNumber) {
         this.companyNumber = companyNumber;
     }
 

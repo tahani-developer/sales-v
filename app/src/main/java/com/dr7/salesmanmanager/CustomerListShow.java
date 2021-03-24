@@ -30,9 +30,26 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.ItemSwitch;
+import com.dr7.salesmanmanager.Modles.ItemsMaster;
+import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.Offers;
+import com.dr7.salesmanmanager.Modles.PriceListD;
+import com.dr7.salesmanmanager.Modles.PriceListM;
+import com.dr7.salesmanmanager.Modles.QtyOffers;
+import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
+import com.dr7.salesmanmanager.Modles.SalesTeam;
+import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
+import com.dr7.salesmanmanager.Reports.SalesMan;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +62,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -76,6 +95,7 @@ public class CustomerListShow extends DialogFragment {
     private ProgressDialog progressDialog;
     LinearLayout mainlayout;
     TextView mSpeakBtn;
+    String ipAddress="",ipWithPort,SalesManLogin,CONO;
 
     public CustomerListShow.CustomerListShow_interface getListener() {
         return listener;
@@ -291,11 +311,18 @@ public class CustomerListShow extends DialogFragment {
             public void onClick(View view) {
 
                 if(settings.size() != 0) {
-                    String ipAddress = settings.get(0).getIpAddress();
+                     ipAddress = settings.get(0).getIpAddress();
+                    ipWithPort=settings.get(0).getIpPort();
+                    SalesManLogin= mHandler.getAllUserNo();
+                    CONO=mHandler.getAllSettings().get(0).getCoNo();
+                    Log.e("SalesManLogin",""+SalesManLogin);
+                   // URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
                     URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
                     if (isInternetAccessed()) {
                         try {
-                            new JSONTask().execute(URL_TO_HIT);
+                          //  new JSONTask().execute(URL_TO_HIT);
+                            new JSONTaskDelphi().execute(URL_TO_HIT);
+
                         }
                         catch (Exception e)
                         {Log.e("updateCustomer",""+e.getMessage());}
@@ -333,7 +360,224 @@ public class CustomerListShow extends DialogFragment {
             return false;
     }
 
+    private class JSONTaskDelphi extends AsyncTask<String, String, List<Customer>> {
 
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(true);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+        @Override
+        protected List<Customer> doInBackground(String... params) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+
+                try {
+
+
+                    //+custId
+
+                    if (!ipAddress.equals("")) {
+                        //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
+                        //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                        if(ipAddress.contains(":"))
+                        {
+                            int ind=ipAddress.indexOf(":");
+                            ipAddress=ipAddress.substring(0,ind);
+                        }
+//                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
+
+                        //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+                        http://localhost:8082/GetVanCUSTOMERS?CONO=295&STRNO=66
+                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanCUSTOMERS?STRNO="+SalesManLogin+"&CONO="+CONO;
+
+                        Log.e("URL_TO_HIT",""+URL_TO_HIT);
+                    }
+                } catch (Exception e) {
+
+                }
+
+
+
+                String link = URL_TO_HIT;
+                URL url = new URL(link);
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+                Log.e("finalJson***Import", finalJson);
+                String rate_customer = "";
+                String HideVal = "";
+
+                JSONObject parentObject = new JSONObject(finalJson);
+                try {
+                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
+                    customerList.clear();
+                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
+                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+
+                        Customer Customer = new Customer();
+                        Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
+                        Customer.setCustId(finalObject.getString("CUSTID"));
+                        Customer.setCustName(finalObject.getString("CUSTNAME"));
+                        Customer.setAddress(finalObject.getString("ADDRESS"));
+//                    if (finalObject.getString("IsSuspended") == null)
+                        Customer.setIsSuspended(0);
+//                    else
+//                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
+                        Customer.setPriceListId(finalObject.getString("PRICELISTID"));
+                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
+                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        try {
+                            Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                        } catch (Exception e) {
+                            Customer.setPayMethod(-1);
+
+                        }
+                        Customer.setCustLat(finalObject.getString("LATITUDE"));
+                        Customer.setCustLong(finalObject.getString("LONGITUDE"));
+
+
+                        try {
+                            rate_customer = finalObject.getString("ACCPRC");
+                            if (!rate_customer.equals("null"))
+                                Customer.setACCPRC(rate_customer);
+                            else {
+                                Customer.setACCPRC("0");
+
+                            }
+                        } catch (Exception e) {
+                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            Customer.setACCPRC("0");
+
+                        }
+                        //*******************************
+                        try {
+                            HideVal = finalObject.getString("HIDE_VAL");
+                            if (!HideVal.equals("null") && !HideVal.equals("") && !HideVal.equals("NULL"))
+                                Customer.setHide_val(Integer.parseInt(HideVal));
+                            else {
+                                Customer.setACCPRC("0");
+
+                            }
+                            Customer.setCustomerIdText(finalObject.getString("CUSTID"));
+                        } catch (Exception e) {
+                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            Customer.setACCPRC("0");
+
+                        }
+                        //*******************************
+
+                        customerList.add(Customer);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
+
+
+            } catch (MalformedURLException e) {
+                Log.e("Customer", "********ex1");
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e("CustomerIOException", e.getMessage().toString());
+                progressDialog.dismiss();
+//                Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+
+            } catch (JSONException e) {
+                Log.e("Customer", "********ex3  " + e.toString());
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } finally {
+                Log.e("Customer", "********finally");
+                progressDialog.dismiss();
+//                if (connection != null) {
+//                    Log.e("Customer", "********ex4");
+//                    // connection.disconnect();
+//                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                }
+            }
+            return customerList;
+        }
+
+
+        @Override
+        protected void onPostExecute(final List<Customer> result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            if (result != null) {
+                if(result.size()!=0)
+                {
+
+
+                    storeInDatabase();
+                    if(mHandler.getAllSettings().size() != 0) {
+
+                        if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1) {
+                            customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
+                        }
+
+                    }
+                    customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), customerList);
+                    itemsListView.setAdapter(customersListAdapter);
+
+                    Toast.makeText(getActivity(), "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                }
+            } else {
+                Toast.makeText(getActivity(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private class JSONTask extends AsyncTask<String, String, List<Customer>> {
 
         @Override
@@ -402,7 +646,7 @@ public class CustomerListShow extends DialogFragment {
                     String rate_customer="";
                     String HideVal="";
                     Customer Customer = new Customer();
-                    Customer.setCompanyNumber(finalObject.getInt("ComapnyNo"));
+                    Customer.setCompanyNumber(finalObject.getString("ComapnyNo"));
                     Customer.setCustId(finalObject.getString("CustID"));
                     Customer.setCustName(finalObject.getString("CustName"));
                     Customer.setAddress(finalObject.getString("Address"));
