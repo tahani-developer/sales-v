@@ -2,16 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/layer7"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
 
-    <TextView
+
+        <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/stock_request_vouchers_report"
-        android:textColor="@color/text_view_color"
+        android:textColor="@color/colorblue_dark"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -35,12 +47,14 @@
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
             android:gravity="center_vertical"
+            android:background="@drawable/back_border_edit"
             android:textColor="@color/add_button"
             android:textSize="15sp"
             android:inputType="date"
@@ -59,11 +73,13 @@
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:background="@drawable/back_border_edit"
             android:gravity="center_vertical"
             android:textColor="@color/add_button"
             android:textSize="15sp"
@@ -74,10 +90,11 @@
 
         <Button
             android:id="@+id/preview"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:textColor="@color/layer5"
-            android:background="@color/red_background"
+            android:textColor="@color/layer7"
+            android:background="@drawable/done_button"
             android:layout_marginLeft="60dp"
             android:layout_marginStart="60dp"
             android:text="@string/preview" />
@@ -91,7 +108,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="370dp"
-        android:background="@color/layer2"
+        android:background="@color/layer6"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginEnd="20dp"
@@ -104,10 +121,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:background="@color/layer5">
+            android:background="@color/colorblue_dark">
 
             <TableRow
-                android:background="@color/layer3"
+                android:background="@color/colorblue_dark"
                 >
 
 
@@ -117,7 +134,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -127,7 +144,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/voucher_date"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -138,7 +155,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/remark"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -148,7 +165,7 @@
                     android:layout_weight="0.2"
                     android:gravity="center"
                     android:text="@string/items"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
                     android:padding="5dp"/>
 
@@ -156,5 +173,16 @@
 
         </TableLayout>
     </ScrollView>
+        </LinearLayout>
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_normalColor="@color/colorblue1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:bmb_draggable="true"
+            />
+    </RelativeLayout>
 
 </LinearLayout>

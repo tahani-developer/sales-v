@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layoutDirection="locale"
+    android:layout_height="match_parent">
+    <androidx.cardview.widget.CardView
+
+        android:id="@+id/cardView"
+        android:layout_width="230dp"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/layer7"
+        android:layout_margin="8dp"
+        android:elevation="20dp"
+        app:cardCornerRadius="20dp">
+
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layoutDirection="locale"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                >
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/imagespecial"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    android:layout_height="50sp"-->
+                <!--                    android:text="Test Item"-->
+                <!--                    android:layout_gravity="left"-->
+                <!--                    android:visibility="visible"-->
+
+                <!--                    android:src="@drawable/specialred"-->
+                <!--                 />-->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imagespecial"
+                    android:layout_width="45dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/specialred"
+                    android:text="Test Item"
+                    android:visibility="gone"
+                    app:civ_border_color="@color/colorPrimaryDark" />
+
+
+                <!--                <ScrollView-->
+                <!--                    android:layout_height="match_parent"-->
+
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    >-->
+                <TextView
+                    android:id="@+id/textViewItemName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="3dp"
+
+                    android:background="@drawable/back_border_shape"
+                    android:lines="1"
+                    android:maxLines="1"
+
+                    android:gravity="center"
+                    android:scrollbars = "vertical"
+
+
+
+                    android:textColor="@color/layer7"
+                    android:textSize="16sp"
+
+
+
+                    />
+                <!--                </ScrollView>-->
+
+
+            </LinearLayout>
+
+
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="center"-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:padding="3dp">-->
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/textViewItemName"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:text="Test Item"-->
+            <!--                    android:textColor="@color/layer5"-->
+            <!--                   android:textSize="16sp" />-->
+
+            <!--            </LinearLayout>-->
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/No"
+                        android:textColor="@color/colorblue_dark"
+                         android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textViewItemNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1456394518541"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp" />
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_margin="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item_name"
+                        android:textColor="@color/layer5"
+                         android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textViewTradeMark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/layer5"
+                         android:textSize="16sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category"
+                        android:textColor="@color/colorblue_dark"
+                         android:textSize="16sp"
+
+
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp"
+                        />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/row_qty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:visibility="visible"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/qty"
+                        android:textColor="@color/colorblue_dark"
+                         android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewUnit_qty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp"
+                        />
+
+                </TableRow>
+
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:id="@+id/textTitleTax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tax"
+                        android:textColor="@color/colorblue_dark"
+                         android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewTax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp"
+                        />
+                </TableRow>
+                <TableRow
+                    android:id="@+id/table_solidQty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_container"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/solidQty"
+                        android:textColor="@color/colorblue_dark"
+                        android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewsolidQty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="16sp"
+                        />
+                </TableRow>
+                <TextView
+
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="3dp"
+
+                    android:background="@color/layer5"
+                    />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:id="@+id/textViewPricee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_price"
+                        android:visibility="invisible"
+                        android:textColor="@color/layer5"
+                         android:textSize="16sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/redlighht"
+                         android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="200  JD"
+ />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    android:layout_margin="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/barcode"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp"
+                        android:visibility="invisible"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewBarcode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/second_color"
+                         android:textSize="16sp"
+                        android:visibility="invisible" />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    android:layout_margin="1dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pos_price"
+                        android:textColor="@color/text_view_color"
+                         android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textViewPosPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
+                        android:textColor="@color/second_color"
+                         android:textSize="16sp"
+                        android:visibility="visible" />
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

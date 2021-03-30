@@ -13,20 +13,50 @@ public class AddedCustomer {
     private String salesMan;
     private String salesmanNo;
     private int isPosted;
+    private String ADRESS_CUSTOMER;
+    private String     TELEPHONE;
+    private String CONTACT_PERSON;
+
+    public String getADRESS_CUSTOMER() {
+        return ADRESS_CUSTOMER;
+    }
+
+    public void setADRESS_CUSTOMER(String ADRESS_CUSTOMER) {
+        this.ADRESS_CUSTOMER = ADRESS_CUSTOMER;
+    }
+
+    public String getTELEPHONE() {
+        return TELEPHONE;
+    }
+
+    public void setTELEPHONE(String TELEPHONE) {
+        this.TELEPHONE = TELEPHONE;
+    }
+
+    public String getCONTACT_PERSON() {
+        return CONTACT_PERSON;
+    }
+
+    public void setCONTACT_PERSON(String CONTACT_PERSON) {
+        this.CONTACT_PERSON = CONTACT_PERSON;
+    }
 
     public AddedCustomer(){
 
     }
 
-    public AddedCustomer(String custName, String remark, double latitude, double longtitude ,String salesMan ,
-                         int isPosted, String salesmanNo) {
+
+    public AddedCustomer(String custName, String remark, double latitude, double longtitude, String salesMan, String salesmanNo, int isPosted, String ADRESS_CUSTOMER, String TELEPHONE, String CONTACT_PERSON) {
         this.custName = custName;
         this.remark = remark;
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.salesMan = salesMan;
-        this.isPosted = isPosted;
         this.salesmanNo = salesmanNo;
+        this.isPosted = isPosted;
+        this.ADRESS_CUSTOMER = ADRESS_CUSTOMER;
+        this.TELEPHONE = TELEPHONE;
+        this.CONTACT_PERSON = CONTACT_PERSON;
     }
 
     public String getCustName() {

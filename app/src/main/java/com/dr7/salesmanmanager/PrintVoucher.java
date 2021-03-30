@@ -1,6 +1,8 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,18 +11,21 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.print.PrintHelper;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.print.PrintHelper;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -37,11 +42,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
+
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.ganesh.intermecarabic.Arabic864;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -64,6 +76,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class PrintVoucher extends AppCompatActivity {
     Bitmap testB;
@@ -95,6 +111,12 @@ public class PrintVoucher extends AppCompatActivity {
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    SweetAlertDialog pd;
     volatile boolean stopWorker;
     TextView doneinsewooprint;
     boolean isFinishPrint = false;
@@ -110,16 +132,37 @@ public class PrintVoucher extends AppCompatActivity {
     RadioGroup  voucherTypeRadioGroup;
     int voucherType = 504;
 
+    LinearLayout linearMain;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PrintVoucher.this);
         setContentView(R.layout.print_vouchers);
         try {
             closeBT();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         decimalFormat = new DecimalFormat("##.000");
         vouchers = new ArrayList<Voucher>();
@@ -194,7 +237,7 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                            row.setPadding(2, 10, 2, 10);
+                            row.setPadding(5, 5, 10, 5);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -202,7 +245,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 row.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
 
                             for (int i = 0; i < 9; i++) {
-                                String[] record = {vouchers.get(n).getCustName() + "",
+                                String[] record = {vouchers.get(n).getCustName() + "\t\t\t\t\t\t",
                                         vouchers.get(n).getVoucherNumber() + "",
                                         vouchers.get(n).getVoucherDate() + "",
                                         vouchers.get(n).getPayMethod() + "",
@@ -224,16 +267,17 @@ public class PrintVoucher extends AppCompatActivity {
                                 }
 
 
-                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                                 row.setLayoutParams(lp);
 
                                 if (i != 8) {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(record[i]);
+//                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
 
 
@@ -242,7 +286,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(getResources().getString(R.string.print));
-                                    textView.setTextSize(12);
+
 
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
@@ -255,8 +299,9 @@ public class PrintVoucher extends AppCompatActivity {
 
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
+                                            String s="";
 
-                                            if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("") && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0 && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
+                                            try{ if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("") && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0 && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
                                                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
 //                                                     try {
                                                     Log.e("voucher", "  " + vouch.getVoucherNumber());
@@ -329,6 +374,17 @@ public class PrintVoucher extends AppCompatActivity {
 
 
                                                                 break;
+                                                            case 6:
+
+                                                                vouch1 = vouch;
+                                                                voucherPrint=vouch;
+//                                                                convertLayoutToImageW();
+                                                                Intent o12 = new Intent(PrintVoucher.this, bMITP.class);
+                                                                o12.putExtra("printKey", "0");
+                                                                startActivity(o12);
+
+
+                                                                break;
 
                                                         }
                                                     }
@@ -350,15 +406,18 @@ public class PrintVoucher extends AppCompatActivity {
                                                 }
                                             } else {
                                                 Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                                            }}
+                                            catch (Exception e)
+                                            {
+                                                Toast.makeText(PrintVoucher.this, ""+getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
                                             }
+
                                         }
                                     });
 
+                                    TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                    textView.setLayoutParams(lp25);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
-
-
-                                    textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
                             }
@@ -371,18 +430,18 @@ public class PrintVoucher extends AppCompatActivity {
                     Toast.makeText(PrintVoucher.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
             }
         });
-
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -416,7 +475,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy/MM/dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -1069,7 +1128,11 @@ public class PrintVoucher extends AppCompatActivity {
 
 
     void printTally(Voucher voucher) {
-
+        pd = new SweetAlertDialog(PrintVoucher.this, SweetAlertDialog.PROGRESS_TYPE);
+        pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pd.setTitleText(PrintVoucher.this.getResources().getString(R.string.Printing));
+        pd.setCancelable(false);
+        pd.show();
         Bitmap bitmap = null;
         Bitmap bitmap2 = null;
         List<Item> items1=new ArrayList<>();
@@ -1088,8 +1151,10 @@ public class PrintVoucher extends AppCompatActivity {
             try {
                 Settings settings = obj.getAllSettings().get(0);
                 File file = savebitmap(bitmap, settings.getNumOfCopy(),"org");
-                Log.e("save image ", "" + file.getAbsolutePath());
+                pd.dismissWithAnimation();
+//                Log.e("save image ", "" + file.getAbsolutePath());
             } catch (IOException e) {
+                pd.dismissWithAnimation();
                 e.printStackTrace();
             }
 
@@ -1104,10 +1169,12 @@ public class PrintVoucher extends AppCompatActivity {
                 try {
 
                     File file = savebitmap(bitmap, 1,"fir"+""+i);
+                    pd.dismissWithAnimation();
                     File file2 = savebitmap(bitmap2, 1,"sec"+""+i);
 
                     Log.e("save image ", "" + file.getAbsolutePath());
                 } catch (IOException e) {
+                    pd.dismissWithAnimation();
                     e.printStackTrace();
                 }
             }
@@ -1119,7 +1186,7 @@ public class PrintVoucher extends AppCompatActivity {
 
     }
 
-    public static File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
+    public  File savebitmap(Bitmap bmp, int numCope,String next) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         File f = null;
@@ -1134,14 +1201,41 @@ public class PrintVoucher extends AppCompatActivity {
 
 
 //        f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-            fo.close();
+            try {
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            }
+            catch (Exception e)
+            {
+                pd.dismissWithAnimation();
+                verifyStoragePermissions(PrintVoucher.this);
+
+
+            }
+
+
+
+
         }
+
         return f;
     }
 
 
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
     public Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
 
@@ -1596,7 +1690,11 @@ public class PrintVoucher extends AppCompatActivity {
                 voucherTyp = "طلب جديد";
                 break;
         }
-        img.setImageBitmap(companyInfo.getLogo());
+        try {
+            img.setImageBitmap(companyInfo.getLogo());
+        }
+        catch (Exception e)
+        {}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
         taxNo.setText("" + companyInfo.getTaxNo());
@@ -1639,6 +1737,7 @@ public class PrintVoucher extends AppCompatActivity {
                     TextView textView = new TextView(PrintVoucher.this);
                     textView.setGravity(Gravity.CENTER);
                     textView.setTextSize(32);
+                    Log.e("LayoutParams",""+items.get(j).getItemName());
 
                     switch (i) {
                         case 0:

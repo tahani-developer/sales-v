@@ -1,17 +1,24 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.RequiresApi;
+//import android.support.v4.app.FragmentManager;
+
+
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,12 +26,38 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dr7.salesmanmanager.Modles.Item;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
+import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Reports.Reports;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.net.InetAddress;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.MainActivity.curentDate;
+import static com.dr7.salesmanmanager.MainActivity.curentTime;
+import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
+import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 //import de.hdodenhof.circleimageview.CircleImageView;
 //import maes.tech.intentanim.CustomIntent;
@@ -39,23 +72,30 @@ public class Activities extends AppCompatActivity implements
 
     private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
-    private CardView saleCardView, receiptCardView, newOrderCardView, supplimentCardView;
+    private CardView saleCardView, receiptCardView, accountBalance, supplimentCardView,uncollectChechue;
 
     private int activitySelected;
+    public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
 
-    private LinearLayout salesInvoiceLayout;
+    private LinearLayout salesInvoiceLayout,mainlayout,linearMainActivities,mainLinearHolder,
+            linearInvoice,linearPayment,linearStock,linearBalance,linearuncollect,dashLayout,fragmentContainer;
 
     private SalesInvoice salesInvoice;
     private  Transaction_Fragment transaction_fragment;
 
     private StockRequest stockRequest;
-
+    Transaction transaction;
     private DecimalFormat decimalFormat;
 
     private boolean isFragmentBlank;
     boolean canClose;
     ProgressDialog dialog_progress;
-
+    DatabaseHandler databaseHandler;
+    static String[] araySerial;
+    TextView switchLayout;
+    public static TextView totalBalance_text,lastVisit_textView;
+    public  static  LocationPermissionRequest locationPermissionRequestAc;
+// LocationPermissionRequest locationPermissionRequest;
 
     @Override 
     public void displayFindItemFragment() {
@@ -95,7 +135,8 @@ public class Activities extends AppCompatActivity implements
 
     @Override
     public void displayDiscountFragment() {
-        DiscountFragment discountFragment = new DiscountFragment();
+        currentKeyTotalDiscount="";
+        DiscountFragment discountFragment = new DiscountFragment(Activities.this,currentKeyTotalDiscount);
         discountFragment.invoiceTotal = salesInvoice.getItemsTotal();
         discountFragment.setCancelable(true);
         discountFragment.setListener(this);
@@ -128,45 +169,188 @@ public class Activities extends AppCompatActivity implements
     }
 
     Animation animZoomIn ;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activities);
+        new LocaleAppUtils().changeLayot(Activities.this);
+        setContentView(R.layout.dashbord_activities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        locationPermissionRequestAc=new LocationPermissionRequest(Activities.this);
         animZoomIn = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.zoom_in);
         activitySelected = -1;
+        databaseHandler=new DatabaseHandler(Activities.this);
         isFragmentBlank = true;
+
+            //locationPermissionRequest = new LocationPermissionRequest(Activities.this);
+//            locationPermissionRequest.timerLocation();
+
+        mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
+        totalBalance_text=findViewById(R.id.totalBalance_text);
+        lastVisit_textView=findViewById(R.id.lastVisit_textView);
+        fillLastVisit();
+        fiiltotalBalance();
+//        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
+//        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
+        linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
+                linearPayment= (LinearLayout)findViewById(R.id.linearPayment);
+//                linearStock= (LinearLayout)findViewById(R.id.linearStock);
+
+        linearBalance   = (LinearLayout)findViewById(R.id.linearBalance);
+        linearuncollect = (LinearLayout)findViewById(R.id.linearuncollect);
+        dashLayout = (LinearLayout)findViewById(R.id.dashLayout);
+        fragmentContainer= (LinearLayout)findViewById(R.id.fragmentContainer);
+//        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+//           // mainLinearHolder.setOrientation(LinearLayout.HORIZONTAL);
+////            linearMainActivities.setOrientation(LinearLayout.VERTICAL);
+////            linearStock.setOrientation(LinearLayout.VERTICAL);
+//            linearPayment.setOrientation(LinearLayout.VERTICAL);
+//            linearInvoice.setOrientation(LinearLayout.VERTICAL);
+//            linearBalance.setOrientation(LinearLayout.VERTICAL);
+//            linearuncollect.setOrientation(LinearLayout.VERTICAL);
+//            //Do some stuff
+//        }
+//        else {
+//           // mainLinearHolder.setOrientation(LinearLayout.VERTICAL);
+////            linearMainActivities.setOrientation(LinearLayout.HORIZONTAL);
+////            linearStock.setOrientation(LinearLayout.HORIZONTAL);
+//            linearPayment.setOrientation(LinearLayout.HORIZONTAL);
+//            linearInvoice.setOrientation(LinearLayout.HORIZONTAL);
+//            linearBalance.setOrientation(LinearLayout.HORIZONTAL);
+//            linearuncollect.setOrientation(LinearLayout.HORIZONTAL);
+//        }
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         saleImageView = (ImageView) findViewById(R.id.saleInvImageView);
-        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
-        transaction_imageview.setOnClickListener(onClickListener);
+//        transaction_imageview= (ImageView) findViewById(R.id.transaction_ImageView);
+//        transaction_imageview.setOnClickListener(onClickListener);
         saleCardView = (CardView) findViewById(R.id.saleCardView);
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
+        accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
+        uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
-        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
-
+//        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
+//        switchLayout=findViewById(R.id.switchLayout);
+//        switchLayout.setVisibility(View.GONE);
+//        switchLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                linearMainActivities.setVisibility(View.VISIBLE);
+////                switchLayout.setVisibility(View.GONE);
+//            }
+//        });
         receiptImageView = (ImageView) findViewById(R.id.paymentImageView);
-        stockImageView = (ImageView) findViewById(R.id.stockRequestImageView);
+//        stockImageView = (ImageView) findViewById(R.id.stockRequestImageView);
 
         saleImageView.setOnClickListener(onClickListener);
         receiptImageView.setOnClickListener(onClickListener);
-        stockImageView.setOnClickListener(onClickListener);
+     //   stockImageView.setOnClickListener(onClickListener);
+        accountBalance.setOnClickListener(onClickListener);
+        uncollectChechue.setOnClickListener(onClickListener);
+        receiptCardView.setOnClickListener(onClickListener);
+        saleCardView.setOnClickListener(onClickListener);
 
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+      //  saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         // newOrderCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //accountBalance.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //uncollectChechue.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
+        //supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
         decimalFormat = new DecimalFormat("##.000");
+        if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
+            //saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+           // receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+          ///  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+//                                    new Task().execute();
+            discvalue_static = 0;
+//            displaySaleInvoice();
+        }
 
     }
 
-    private void displaySaleInvoice() {
+    private void fiiltotalBalance() {
 
+//        if(!totalBalance_text.getText().toString().equals("")){
+            if(isNetworkAvailable())
+            {
+                ImportJason importJason =new ImportJason(Activities.this);
+                importJason.getCustomerInfo(2);
+            }
+
+//        }
+
+
+
+    }
+    public boolean isInternetAvailable() {
+        try {
+            InetAddress ipAddr = InetAddress.getByName("google.com");
+            //You can replace it with your name
+            return !ipAddr.equals("");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void fillLastVisit() {
+        String lastVisit=getLastVaisit();
+        lastVisit_textView.setText(lastVisit);
+    }
+    private String getLastVaisit() {
+        String visit="";
+        transaction=new Transaction();
+        if(!CustomerListShow.Customer_Account.equals(""))
+        {
+            transaction=databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account,Login.salesMan);
+            if(transaction.getCheckInDate()!=null)
+            {
+                visit=transaction.getCheckInDate()+"\t\t"+transaction.getCheckInTime();
+                Log.e("getLastVaisit",""+CustomerListShow.Customer_Account+"\t"+Login.salesMan+"\t"+transaction.getCheckInDate());
+            }
+            else {
+                visit=curentDate+"\t\t"+curentTime;
+            }
+
+        }
+
+        return  visit;
+    }
+
+
+    private void displaySaleInvoice() {
+        dashLayout.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
         //   if (activitySelected == 0)
         //      return;
-
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 0;
         FragmentManager fragmentManager = getSupportFragmentManager();
         salesInvoice = new SalesInvoice();
@@ -252,12 +436,15 @@ public class Activities extends AppCompatActivity implements
 //        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
 //        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//        isFragmentBlank = false;
+        isFragmentBlank = false;
 //        AddItemsFragment2.total_items_quantity=0;
     }
 
     private void displayReceipt() {
-
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
+        dashLayout.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
         activitySelected = 1;
         FragmentManager fragmentManager = getSupportFragmentManager();
         ReceiptVoucher receiptVoucher = new ReceiptVoucher();
@@ -271,14 +458,15 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, receiptVoucher);
         transaction.addToBackStack(null);
         transaction.commit();
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+       // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
         isFragmentBlank = false;
     }
 
     private void displayStockRequest() {
-
+//        linearMainActivities.setVisibility(View.GONE);
+//        switchLayout.setVisibility(View.VISIBLE);
         activitySelected = 2;
         FragmentManager fragmentManager = getSupportFragmentManager();
         stockRequest = new StockRequest();
@@ -292,9 +480,9 @@ public class Activities extends AppCompatActivity implements
         transaction.replace(R.id.fragmentContainer, stockRequest);
         transaction.addToBackStack(null);
         transaction.commit();
-        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+       // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+        //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+      //  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
         isFragmentBlank = false;
     }
 
@@ -302,8 +490,10 @@ public class Activities extends AppCompatActivity implements
     private OnClickListener onClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
+            Log.e("onClick",""+view.getId());
+//
             switch (view.getId()) {
-                case R.id.saleInvImageView:
+                case R.id.saleCardView:
                    // saleImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 0)
@@ -316,10 +506,11 @@ public class Activities extends AppCompatActivity implements
                             builder.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                                    receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                                    supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                                   // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+                                    //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                                  //  supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                                    new Task().execute();
+
                                     discvalue_static=0;
                                     displaySaleInvoice();
                                 }
@@ -329,19 +520,21 @@ public class Activities extends AppCompatActivity implements
                             AlertDialog alertDialog = builder.create();
                             alertDialog.show();
                         } else {
-                            saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                            receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                            supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                          //  saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorblue_dark));
+                            //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                           // supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
 //                            new Task().execute();
+                            dashLayout.setVisibility(View.GONE);
                             discvalue_static=0;
                             displaySaleInvoice();
                         }//displaySaleInvoice();
 
                     } else
                         Toast.makeText(Activities.this, "Please Select a Customer", Toast.LENGTH_LONG).show();
+
                     break;
 
-                case R.id.paymentImageView:
+                case R.id.receiptCardView:
                 //   receiptImageView.startAnimation(animZoomIn);
                     if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
                         if (activitySelected == 1)
@@ -356,6 +549,8 @@ public class Activities extends AppCompatActivity implements
 
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+//                                    clearSerial();
+                                    dashLayout.setVisibility(View.GONE);
                                     displayReceipt();
                                 }
                             });
@@ -363,6 +558,7 @@ public class Activities extends AppCompatActivity implements
                             builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                             builder2.create().show();
                         } else {
+                            dashLayout.setVisibility(View.GONE);
                             displayReceipt();
                         }
                         // displayReceipt();
@@ -371,8 +567,60 @@ public class Activities extends AppCompatActivity implements
                         Toast.makeText(Activities.this, "Please Select a Customer", Toast.LENGTH_LONG).show();
                     break;
 
-                case R.id.stockRequestImageView:
-                  //  stockImageView.startAnimation(animZoomIn);
+//                case R.id.stockRequestImageView:
+//                  //  stockImageView.startAnimation(animZoomIn);
+//                    if (!isFragmentBlank) {
+//                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+//                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                        builder2.setCancelable(false);
+//                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+//                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+////                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+////                                clearSerial();
+//                                displayStockRequest();
+////                                new TaskStock().execute();
+//                            }
+//                        });
+//
+//                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+//                        builder2.create().show();
+//                    } else {
+////                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+////                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
+//                        displayStockRequest();
+//
+//                    }
+//                    break;
+//                case R.id.transaction_ImageView:
+//                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
+//                    if (!isFragmentBlank) {
+//                        AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+//                        builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                        builder2.setCancelable(false);
+//                        builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+//                        builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+//
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+////                                displayTransactionFragment();
+//                            }
+//                        });
+//
+//                        builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+//                        builder2.create().show();
+//                    } else {
+////                        displayTransactionFragment();
+//                    }
+//
+////                    displayTransactionFragment();
+//                    break;
+                case  R.id.accountBalanceCardView:
                     if (!isFragmentBlank) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
                         builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
@@ -382,26 +630,23 @@ public class Activities extends AppCompatActivity implements
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-//                                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                                displayStockRequest();
-//                                new TaskStock().execute();
+
+                                finish();
+                                Intent inte=new Intent(Activities.this,AccountStatment.class);
+                                startActivity(inte);
                             }
                         });
 
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-//                        saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                        receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-//                        supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.second_color));
-                        displayStockRequest();
+                        finish();
+                        Intent inte=new Intent(Activities.this,AccountStatment.class);
+                        startActivity(inte);
 
                     }
                     break;
-                case R.id.transaction_ImageView:
-                    Toast.makeText(Activities.this, "transaction clicked", Toast.LENGTH_SHORT).show();
+                case  R.id.unCollectChequesCardView:
                     if (!isFragmentBlank) {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
                         builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
@@ -411,21 +656,49 @@ public class Activities extends AppCompatActivity implements
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-//                                displayTransactionFragment();
+
+                                finish();
+                                Intent inte=new Intent(Activities.this,UnCollectedData.class);
+                                inte.putExtra("type","2");
+                                startActivity(inte);
                             }
                         });
 
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-//                        displayTransactionFragment();
-                    }
+                        finish();
+                        Intent inte=new Intent(Activities.this,UnCollectedData.class);
+                        inte.putExtra("type","2");
+                        startActivity(inte);
 
-//                    displayTransactionFragment();
+                    }
                     break;
             }
         }
     };
+
+    private void clearSerial() {
+        try {
+            String curentVoucherNo=voucherNumberTextView.getText().toString();
+            int curent=Integer.parseInt(curentVoucherNo);
+            int lastNo= databaseHandler.getLastVoucherNo(SalesInvoice.voucherType);
+
+            if(!curentVoucherNo.equals(lastNo+"") )
+            {
+                databaseHandler.updateitemDeletedInSerialTable_Backup("",curentVoucherNo);
+//                databaseHandler.updateitemDeletedInSerialTable_Backup(curent);
+
+
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e("onBackPressed",""+e.getMessage());
+        }
+    }
+
     @Override
     public void onBackPressed() {
 
@@ -438,12 +711,24 @@ public class Activities extends AppCompatActivity implements
 
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                back();
-                saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
-                supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
                 isFragmentBlank = true;
+                activitySelected=-1;
+
+
+              //  locationPermissionRequest.closeLocation();
+                MainActivity. masterControlLoc.setText("2");
+                dashLayout.setVisibility(View.VISIBLE);
+                fragmentContainer.setVisibility(View.GONE);
+                clearSerial();
+               // saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+                //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+               // supplimentCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
+
+                back();
+//                linearMainActivities.setVisibility(View.VISIBLE);
+              //  switchLayout.setVisibility(View.GONE);
 //                salesInvoice.total_items_quantity=0
+
 
             }
         });
@@ -511,12 +796,147 @@ public class Activities extends AppCompatActivity implements
 
 
     public void back() {
+
         super.onBackPressed();
 
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("MainActivity", ""+requestCode);
+//        if (requestCode == 0x0000c0de) {
+        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (Result != null) {
+            if (Result.getContents() == null) {
+                Log.e("MainActivity", "cancelled scan");
+                Toast.makeText(Activities.this, "cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Log.e("Activities1", "onActivityResult" + Result.getContents());
+
+
+                String serialBarcode = Result.getContents();
+                String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode+"");
+                if((ItemNo.equals("not")))
+                {
+                    if((databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==504)||
+                            (!databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==506))
+                    {
+                        serialValue.setText(serialBarcode);
+                    }
+                    else {
+                        if (voucherType == 506) {
+                            new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(Activities.this.getString(R.string.warning_message))
+                                    .setContentText(Activities.this.getString(R.string.serialIsNotPaied) + "\t" + serialBarcode)
+                                    .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            openSmallScanerTextView();
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            try {
+                                String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode+"");
+                                String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                                voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
+
+                                new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                        .setContentText(Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode+ "\t"+Activities.this.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+Activities.this.getString(R.string.voucher_date)+"\t"+voucherDate)
+                                        .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                openSmallScanerTextView();
+                                                sweetAlertDialog.dismissWithAnimation();
+                                            }
+                                        })
+                                        .show();
+                            }catch (Exception e){
+                                Toast.makeText(Activities.this, ""+Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode, Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    }
+
+
+                }
+                else {
+
+
+                    if(!ItemNo.equals("")){
+                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(Activities.this.getString(R.string.warning_message))
+                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Activities.this.getString(R.string.forItemNo)+ItemNo)
+                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        openSmallScanerTextView();
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }else {
+                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(Activities.this.getString(R.string.warning_message))
+                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
+                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                        openSmallScanerTextView();
+                                        sweetAlertDialog.dismissWithAnimation();
+
+                                    }
+                                })
+                                .show();
+
+                    }
+
+                }
+
+
+
+
+
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+//        }
+
+        switch (requestCode) {
+            case 10001:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
+
+                        openDialog=true;
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
+
+                        openDialog=false;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+
+    }
+    public void openSmallScanerTextView() {
+        new IntentIntegrator(Activities.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
     }
 }

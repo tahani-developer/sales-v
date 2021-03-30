@@ -1,14 +1,19 @@
 package com.dr7.salesmanmanager;
 
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TabLayout;
+//import android.support.annotation.RequiresApi;
+//import android.support.design.widget.TabLayout;
 
-
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.text.Layout;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -16,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.app.Fragment;
+
+import com.google.android.material.tabs.TabLayout;
 
 
 /**
@@ -31,6 +38,7 @@ public class Transaction_Fragment extends Fragment {
     }
 
 
+    @SuppressLint("WrongConstant")
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

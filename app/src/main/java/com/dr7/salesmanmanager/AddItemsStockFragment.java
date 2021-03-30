@@ -7,10 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,10 +36,14 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
+import static com.dr7.salesmanmanager.StockRequest.addItemImgButton;
+import static com.dr7.salesmanmanager.StockRequest.items;
+import static com.dr7.salesmanmanager.StockRequest.itemsRequiredList;
 import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
 
 
@@ -54,6 +61,8 @@ public class AddItemsStockFragment extends DialogFragment {
     public static EditText barcode;
     ImageView barcodebtn;
     CompanyInfo companyInfo;
+    DecimalFormat threeDForm;
+
 
     public AddItemsInterface getListener() {
         return listener;
@@ -77,13 +86,15 @@ public class AddItemsStockFragment extends DialogFragment {
 
         List = new ArrayList<Item>();
         List.clear();
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
 
         final View view = inflater.inflate(R.layout.add_items_stock_dialog, container, false);
-
+        addItemImgButton.setEnabled(true);
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+        threeDForm = new DecimalFormat("00.00");
 //        String rate_customer=mHandler.getRateOfCustomer();
 //        Log.e("rate addItem",""+rate_customer);
 //        if (mHandler.getAllSettings().get(0).getPriceByCust() == 0)
@@ -92,7 +103,13 @@ public class AddItemsStockFragment extends DialogFragment {
 //            jsonItemsList = mHandler.getAllJsonItems2(rate_customer);
         jsonItemsList = new ArrayList<>();
         companyInfo = new CompanyInfo();
-        jsonItemsList = mHandler.getAllJsonItemsStock();
+        jsonItemsList=itemsRequiredList;
+       // jsonItemsList = mHandler.getAllJsonItemsStock(1);
+
+
+
+
+
 
         // ****************************** Category Spinner Spenner*****************************************************
 
@@ -149,6 +166,7 @@ public class AddItemsStockFragment extends DialogFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView2);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity() , 1));
         StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
         recyclerView.setAdapter(adapter);
 
@@ -281,6 +299,7 @@ public class AddItemsStockFragment extends DialogFragment {
                 }
                 else{
                     Intent i=new Intent(getActivity(),ScanActivity.class);
+                    i.putExtra("key","1");
                     startActivity(i);
                     searchByBarcodeNo(s + "");
 
@@ -320,12 +339,24 @@ public class AddItemsStockFragment extends DialogFragment {
         doneButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                addItemsList();
                 listener.addItemsStockToList(List);
                 AddItemsStockFragment.this.dismiss();
             }
         });
         return view;
     }
+
+    private void addItemsList() {
+        for(int i=0;i<itemsRequiredList.size();i++)
+        {
+            addItem(itemsRequiredList.get(i).getItemNo(), itemsRequiredList.get(i).getItemName(),
+                    "0","1", (itemsRequiredList.get(i).getQty()+""),
+                    "1"+itemsRequiredList.get(i).getPrice(),
+                    "0", "0", getContext(),itemsRequiredList.get(i).getCurrentQty());
+        }
+    }
+
     public  void searchByBarcodeNo(String barcodeValue) {
         if(!barcodeValue.equals(""))
         {
@@ -365,23 +396,31 @@ public class AddItemsStockFragment extends DialogFragment {
 
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit , String qty,
-                           String price, String bonus, String discount, RadioGroup discTypeRadioGroup, Context context) {
-
+                           String price, String bonus, String discount, Context context,double currentQty) {
+//        RadioGroup discTypeRadioGroup,
+        boolean found=false;
         item = new Item();
         item.setItemNo(itemNumber);
         item.setItemName(itemName);
         item.setTax(Float.parseFloat(tax.trim()));
         item.setVoucherNumber(voucherNumber);
 
+        float qtyValue=0;
+        try {
+            qtyValue= Float.parseFloat(qty.trim());
+        }
+        catch (Exception e){qtyValue=0;}
+
         try {
             item.setUnit(unit);
-            item.setQty(Float.parseFloat(qty.trim()));
+            item.setQty(qtyValue);
             item.setPrice(Float.parseFloat(price.trim()));
             if (bonus == "")
                 item.setBonus(Float.parseFloat("0.0"));
             else
                 item.setBonus(Float.parseFloat(bonus));
             item.setTax(Float.parseFloat(tax.trim()));
+            item.setCurrentQty(currentQty);
 
         } catch (NumberFormatException e) {
             item.setUnit("");
@@ -394,12 +433,12 @@ public class AddItemsStockFragment extends DialogFragment {
             Log.e("Add new item error", e.getMessage().toString());
         }
 
-
-        if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-            item.setDiscType(1);
-        } else {
-            item.setDiscType(0);
-        }
+//
+//        if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
+//            item.setDiscType(1);
+//        } else {
+//            item.setDiscType(0);
+//        }
 
         try {
             if (item.getDiscType() == 0) {
@@ -428,26 +467,45 @@ public class AddItemsStockFragment extends DialogFragment {
         } catch (NumberFormatException e) {
             item.setAmount(0);
         }
-
-
+        Toast toast=null;
         if ((!item.getItemName().equals("")) && item.getAmount() > 0) {
-            List.add(item);
-            Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(20);
-            toast.show();
+            found=false;
+            for(int i=0;i<items.size();i++)
+            {
+                if(items.get(i).getItemNo().equals(itemNumber))
+                {
+                    found=true;
+                    items.get(i).setQty(qtyValue);
+
+                     //toast = Toast.makeText(context, "UpdatedSuccessfully", Toast.LENGTH_SHORT);
+
+                }
+            }
+            if(found==false)
+            {
+                List.add(item);
+                /// toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT);
+            }
+
+
+
+
+
+//            toast.setGravity(Gravity.CENTER, 0, 180);
+//            ViewGroup group = (ViewGroup) toast.getView();
+//            TextView messageTextView = (TextView) group.getChildAt(0);
+//            messageTextView.setTextSize(20);
+//            toast.show();
 
             return true;
 
         } else {
-            Toast toast = Toast.makeText(context, "Items has not been added, insure your entries", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(20);
-            toast.show();
+//            toast = Toast.makeText(context, "Items has not been added, insure your entries", Toast.LENGTH_LONG);
+//            toast.setGravity(Gravity.CENTER, 0, 180);
+//            ViewGroup group = (ViewGroup) toast.getView();
+//            TextView messageTextView = (TextView) group.getChildAt(0);
+//            messageTextView.setTextSize(20);
+//            toast.show();
             return false;
         }
     }

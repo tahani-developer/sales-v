@@ -55,16 +55,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.AccountReport.acount_report_list;
+import static com.dr7.salesmanmanager.SalesInvoice.finishPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
 import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
+import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
@@ -96,6 +100,9 @@ public class bMITP extends Activity {
    Voucher printVoucher;
     List<Item>itemPrint;
     List<Item> allStudents;
+    LinearLayout mainLinearPrinting;
+    TextView text_hideDialog;
+    double itemDiscount=0;
 
     static {
         fileName = dir + "//BTPrinter";
@@ -146,16 +153,34 @@ public class bMITP extends Activity {
                 tempDir.mkdir();
             }
 
-            FileWriter fWriter = new FileWriter(fileName);
+         FileWriter fWriter = new FileWriter(fileName);
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
+            }
+            else {
+                Log.e("lastConnAddr",""+lastConnAddr);
+                fWriter.close();
             }
 
             fWriter.close();
         } catch (FileNotFoundException var3) {
-            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+            Log.e("BluetoothConnectMenu1", var3.getMessage(), var3);
+            if(getData.equals("6"))
+            { clearData.setText("1");
+                finish();
+
+//                Intent i=new Intent(context,Stock_Activity.class);
+//                startActivity(i);
+            }
+
+
         } catch (IOException var4) {
-            Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+            Log.e("BluetoothConnectMenu2", var4.getMessage(), var4);
+        }
+        catch (Exception e)
+
+        {
+            Log.e("BluetoothConnectMenu3", e.getMessage());
         }
 
     }
@@ -173,6 +198,7 @@ public class bMITP extends Activity {
                 this.remoteDevices.add(pairedDevice);
                 this.adapter.add(pairedDevice.getName() + "\n[" + pairedDevice.getAddress() + "] [Paired]");
             }
+        Log.e("remoteDevices",""+remoteDevices.size());
 //        }
 
     }
@@ -180,6 +206,8 @@ public class bMITP extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.bluetooth_menu);
+        this.mainLinearPrinting= (LinearLayout) this.findViewById(R.id.mainLinearPrinting);
+        text_hideDialog = (TextView) this.findViewById(R.id.text_hideDialog);
         this.btAddrBox = (EditText)this.findViewById(R.id.EditTextAddressBT);
         this.connectButton = (Button)this.findViewById(R.id.ButtonConnectBT);
         bMITP.this.connectButton.setEnabled(true);
@@ -237,8 +265,16 @@ public class bMITP extends Activity {
 
         this.list.setAdapter(this.adapter);
         this.addPairedDevices();
-        this.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        BluetoothDevice btDev = null;
+
+        if(obj.getAllSettings().size()!=0)
+        {
+            if(obj.getAllSettings().get(0).getApproveAdmin()==0){
+                mainLinearPrinting.setVisibility(View.VISIBLE);
+                text_hideDialog.setVisibility(View.GONE);
+                this.list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+//                BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
                 BluetoothDevice btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(arg2);
 
                 try {
@@ -251,8 +287,50 @@ public class bMITP extends Activity {
                 } catch (IOException var8) {
                     AlertView.showAlert(var8.getMessage(), bMITP.this.context);
                 }
+                    }
+                });
             }
-        });
+            else {
+                mainLinearPrinting.setVisibility(View.GONE);
+                text_hideDialog.setVisibility(View.VISIBLE);
+                if(remoteDevices.size()!=0)
+                {
+
+                    try {
+                        btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
+                    }
+                    catch (Exception e)
+                    {       }
+
+                    try {
+                        if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
+                            bMITP.this.mBluetoothAdapter.cancelDiscovery();
+                        }
+
+                        bMITP.this.btAddrBox.setText(btDev.getAddress());
+                        bMITP.this.btConn(btDev);
+                    } catch (IOException var8) {
+                        AlertView.showAlert(var8.getMessage(), bMITP.this.context);
+                    }
+
+                }
+                else {
+                    new SweetAlertDialog(bMITP.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.checkBlutoothPrinterPaired))
+                            .setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    finish();
+                                }
+                            })
+                            .show();
+
+                }
+            }
+        }
+
+
         this.discoveryResult = new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
                 BluetoothDevice remoteDevice = (BluetoothDevice)intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
@@ -263,10 +341,22 @@ public class bMITP extends Activity {
                     } else {
                         key = remoteDevice.getName() + "\n[" + remoteDevice.getAddress() + "] [Paired]";
                     }
+                    if(obj.getAllSettings().size()!=0) {
+                        if (obj.getAllSettings().get(0).getApproveAdmin() == 0) {
+                            if (bMITP.this.bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
+                                bMITP.this.remoteDevices.add(remoteDevice);
+                                bMITP.this.adapter.add(key);
+                            }
+                        }
+                        else {
+                            bMITP.this.remoteDevices.add(remoteDevice);
+                            bMITP.this.adapter.add(key);
+                        }
+
+                        }
 
 //                    if (bMITP.this.bluetoothPort.isValidAddress(remoteDevice.getAddress())) {
-                        bMITP.this.remoteDevices.add(remoteDevice);
-                        bMITP.this.adapter.add(key);
+
                     }
 //                }
 
@@ -314,12 +404,12 @@ public class bMITP extends Activity {
                 this.unregisterReceiver(this.disconnectReceiver);
             }
 
-            this.saveSettingFile();
+       this.saveSettingFile();
             this.bluetoothPort.disconnect();
         } catch (IOException var2) {
-            Log.e("BluetoothConnectMenu", var2.getMessage(), var2);
+            Log.e("BluetoothConnectMenu2", var2.getMessage(), var2);
         } catch (InterruptedException var3) {
-            Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+            Log.e("BluetoothConnectMenu3", var3.getMessage(), var3);
         }
 
         if (this.hThread != null && this.hThread.isAlive()) {
@@ -362,6 +452,7 @@ public class bMITP extends Activity {
     }
 
     private void btConn(BluetoothDevice btDev) throws IOException {
+        if(remoteDevices.size()!=0)
         (new bMITP.connTask()).execute(new BluetoothDevice[]{btDev});
     }
 
@@ -394,6 +485,7 @@ public class bMITP extends Activity {
         }
 
         protected void onPreExecute() {
+           String s="";
             this.dialog.setTitle(" Try Connect ");
             this.dialog.setMessage("Please Wait ....");
             this.dialog.show();
@@ -402,7 +494,7 @@ public class bMITP extends Activity {
 
         protected Integer doInBackground(BluetoothDevice... params) {
             Integer retVal = null;
-
+           String s="";
             try {
                 bMITP.this.bluetoothPort.connect(params[0]);
                 bMITP.this.lastConnAddr = params[0].getAddress();
@@ -430,8 +522,8 @@ public class bMITP extends Activity {
                     this.dialog.dismiss();
                 }
 
-                Toast toast = Toast.makeText(bMITP.this.context, "Now Printing ", Toast.LENGTH_SHORT);
-                toast.show();
+//                Toast toast = Toast.makeText(bMITP.this.context, "Now Printing ", Toast.LENGTH_SHORT);
+//                toast.show();
 
 
                 int count =Integer.parseInt(getData);
@@ -460,6 +552,7 @@ public class bMITP extends Activity {
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+
                               }
                           }else {// just for ejabi customer (English Voucher ) and for  Large Name
                               for (int i = 0; i < settings; i++) {
@@ -478,6 +571,7 @@ public class bMITP extends Activity {
                           for(int i=0;i<settings;i++) {
 //                              sample.printMultilingualFontEsc(1);
                               sample.printMultilingualFontEsc3(1,printVoucher,itemPrint);
+                              finishPrint.setText("finish");
 
                           }}
                           else {
@@ -504,6 +598,7 @@ public class bMITP extends Activity {
                           Log.e("Re","print");
 
                           paymentsforPrint.clear();
+
                           break;
 
                       case 3:
@@ -531,9 +626,12 @@ public class bMITP extends Activity {
 
                           break;
                       case 6:
-                          if(printShape==0)
-                          {}
-                          else{
+//                          if(printShape==0)
+//                          {
+//
+//
+//                          }
+//                          else{
 
                               for(int i=0;i<settings;i++) {
                                   sample.printMultilingualFontStock_EJABI(0);
@@ -541,7 +639,7 @@ public class bMITP extends Activity {
 
 
 
-                          }
+//                          }
 
 
                           break;
@@ -561,6 +659,25 @@ public class bMITP extends Activity {
                               }
 
                           }
+
+                          break;
+                          //*****************************************************************************
+                      case 9:// print inventory report
+
+//                          if(printShape==0) {
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+//                                  itemsInventoryPrint
+                                  sample.printMultilingualFontEscInventory();
+                              }
+//                          }
+//                          else {
+//                              for (int i = 0; i < settings; i++) {
+////                              sample.printMultilingualFontEsc(0);
+//                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+//                              }
+//
+//                          }
 
                           break;
 
@@ -595,188 +712,5 @@ public class bMITP extends Activity {
         return newValue;
     }
 
-//    public void convertLayoutToImageW(Context context,ESCPSample2 sample,int settingsSi) {
-//        LinearLayout linearView = null;
-//
-//        final Dialog dialogs = new Dialog(context);
-//        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialogs.setCancelable(false);
-//        dialogs.setContentView(R.layout.printdialog);
-////            fill_theVocher( voucherPrint);
-//
-//        TextView	doneinsewooprint;
-//
-//        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-//        doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
-//
-//        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
-//        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
-//
-//        compname = (TextView) dialogs.findViewById(R.id.compname);
-//        tel = (TextView) dialogs.findViewById(R.id.tel);
-//        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
-//        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
-//        date = (TextView) dialogs.findViewById(R.id.date);
-//        custname = (TextView) dialogs.findViewById(R.id.custname);
-//        note = (TextView) dialogs.findViewById(R.id.note);
-//        vhType = (TextView) dialogs.findViewById(R.id.vhType);
-//        paytype = (TextView) dialogs.findViewById(R.id.paytype);
-//        total = (TextView) dialogs.findViewById(R.id.total);
-//        discount = (TextView) dialogs.findViewById(R.id.discount);
-//        tax = (TextView) dialogs.findViewById(R.id.tax);
-//        ammont = (TextView) dialogs.findViewById(R.id.ammont);
-//        textW = (TextView) dialogs.findViewById(R.id.wa1);
-//        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
-////
-//
-//
-//
-//        String voucherTyp = "";
-//        switch (printVoucher.getVoucherType()) {
-//            case 504:
-//                voucherTyp = "فاتورة بيع";
-//                break;
-//            case 506:
-//                voucherTyp = "فاتورة مرتجعات";
-//                break;
-//            case 508:
-//                voucherTyp = "طلب جديد";
-//                break;
-//        }
-//        img.setImageBitmap(companyInfo.getLogo());
-//        compname.setText(companyInfo.getCompanyName());
-//        tel.setText("" + companyInfo.getcompanyTel());
-//        taxNo.setText("" + companyInfo.getTaxNo());
-//        vhNo.setText("" + printVoucher.getVoucherNumber());
-//        date.setText(printVoucher.getVoucherDate());
-//        custname.setText(printVoucher.getCustName());
-//        note.setText(printVoucher.getRemark());
-//        vhType.setText(voucherTyp);
-//
-//        paytype.setText((printVoucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
-//        total.setText("" + printVoucher.getSubTotal());
-//        discount.setText("" + printVoucher.getVoucherDiscount());///
-//        tax.setText("" + printVoucher.getTax());
-//        ammont.setText("" + printVoucher.getNetSales());
-//
-//
-//        if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
-//            textW.setVisibility(View.GONE);
-//        } else {
-//            textW.setVisibility(View.VISIBLE);
-//        }
-//
-//
-//        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-//        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-//        lp2.setMargins(0, 7, 0, 0);
-//        lp3.setMargins(0, 7, 0, 0);
-//
-//        for (int j = 0; j < itemPrint.size(); j++) {
-//
-//            if (printVoucher.getVoucherNumber() == itemPrint.get(j).getVoucherNumber()) {
-//                final TableRow row = new TableRow(context);
-//
-//
-//                for (int i = 0; i <= 7; i++) {
-//                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-//                    lp.setMargins(0, 10, 0, 0);
-//                    row.setLayoutParams(lp);
-//
-//                    TextView textView = new TextView(context);
-//                    textView.setGravity(Gravity.CENTER);
-//                    textView.setTextSize(18);
-//
-//                    switch (i) {
-//                        case 0:
-//                            textView.setText(itemPrint.get(j).getItemName());
-//                            textView.setLayoutParams(lp3);
-//                            break;
-//
-//
-//                        case 1:
-//                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
-//                                textView.setText("" + itemPrint.get(j).getUnit());
-//                                textView.setLayoutParams(lp2);
-//                            } else {
-//                                textView.setText("" + itemPrint.get(j).getQty());
-//                                textView.setLayoutParams(lp2);
-//                            }
-//                            break;
-//
-//                        case 2:
-//                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
-//                                textView.setText("" + itemPrint.get(j).getQty());
-//                                textView.setLayoutParams(lp2);
-//                                textView.setVisibility(View.VISIBLE);
-//                            } else {
-//                                textView.setVisibility(View.GONE);
-//                            }
-//                            break;
-//
-//                        case 3:
-//                            textView.setText("" + itemPrint.get(j).getPrice());
-//                            textView.setLayoutParams(lp2);
-//                            break;
-//
-//
-//                        case 4:
-//                            String amount = "" + (itemPrint.get(j).getQty() * itemPrint.get(j).getPrice() - itemPrint.get(j).getDisc());
-//                            amount = convertToEnglish(amount);
-//                            textView.setText(amount);
-//                            textView.setLayoutParams(lp2);
-//                            break;
-//                    }
-//                    row.addView(textView);
-//                }
-//
-//
-//                tabLayout.addView(row);
-//            }
-//        }
-//
-//
-//        dialogs.show();
-//
-//
-//        for(int i=0;i<settingsSi;i++) {
-////                              sample.printMultilingualFontEsc(1);
-//            try {
-//                sample.printMultilingualFontEsc3(1,printVoucher,itemPrint);
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//
-////        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
-////        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
-////
-////        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-////                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-////        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
-////
-////        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
-////
-//////        linearView.setDrawingCacheEnabled(true);
-//////        linearView.buildDrawingCache();
-//////        Bitmap bit =linearView.getDrawingCache();
-////
-//////        linearView.setDrawingCacheEnabled(true);
-//////        linearView.buildDrawingCache();
-//////        Bitmap bit =linearView.getDrawingCache();
-////
-////        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
-////        Canvas canvas = new Canvas(bitmap);
-////        Drawable bgDrawable = linearView.getBackground();
-////        if (bgDrawable != null) {
-////            bgDrawable.draw(canvas);
-////        } else {
-////            canvas.drawColor(Color.WHITE);
-////        }
-////        linearView.draw(canvas);
-//
-////        return bitmap;// creates bitmap and returns the same
-//    }
 
 }

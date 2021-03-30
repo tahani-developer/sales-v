@@ -14,11 +14,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +47,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.ganesh.intermecarabic.Arabic864;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -63,6 +70,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class PrintPayment extends AppCompatActivity {
     Bitmap testB;
@@ -108,16 +117,37 @@ public class PrintPayment extends AppCompatActivity {
     String itemsString2 = "";
     DatabaseHandler obj;
     static double TOTAL=0;
+    LinearLayout linearMain;
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PrintPayment.this);
         setContentView(R.layout.print_payment);
         try {
             closeBT();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         payment = new ArrayList<>();
 //        vouchers = new ArrayList<Voucher>();
@@ -182,7 +212,7 @@ public class PrintPayment extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintPayment.this);
-                            row.setPadding(2, 10, 2, 10);
+                            row.setPadding(5, 10, 5, 5);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -208,19 +238,23 @@ public class PrintPayment extends AppCompatActivity {
                                     case 1:
                                         record[6] = getResources().getString(R.string.cash);
                                         break;
+                                    case 2:
+                                        record[6] = getResources().getString(R.string.app_creditCard);
+                                        break;
                                 }
 
 
-                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                                 row.setLayoutParams(lp);
 
                                 if (i != 7) {
                                     TextView textView = new TextView(PrintPayment.this);
                                     textView.setText(record[i]);
+//                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintPayment.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1f);
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                     textView.setLayoutParams(lp2);
 
 
@@ -229,7 +263,9 @@ public class PrintPayment extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(PrintPayment.this);
                                     textView.setText(getResources().getString(R.string.print));
-                                    textView.setTextSize(12);
+//                                    textView.setTextSize(12);
+//                                    TableRow.LayoutParams lp22 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//                                    textView.setLayoutParams(lp22);
 
                                     textView.setTextColor(ContextCompat.getColor(PrintPayment.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintPayment.this, R.color.colorAccent));
@@ -308,16 +344,17 @@ public class PrintPayment extends AppCompatActivity {
 
 
                                                             case 5:
+                                                            case 6:
 
 
                                                                 paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
                                                                 pay1 = pay;
-                                                                convertLayoutToImage(pay);
+//                                                                convertLayoutToImage(pay);
                                                                 Intent O1 = new Intent(PrintPayment.this, bMITP.class);
                                                                 O1.putExtra("printKey", "4");
                                                                 startActivity(O1);
-                                                                Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
-
+                                                                Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+                                                                break;
 //                                                                MTP.setChecked(true);
 
                                                         }
@@ -345,10 +382,8 @@ public class PrintPayment extends AppCompatActivity {
                                     });
 
 
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.7f);
-
-
-                                    textView.setLayoutParams(lp2);
+                                    TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                    textView.setLayoutParams(lp25);
                                     row.addView(textView);
                                 }
                             }
@@ -358,21 +393,26 @@ public class PrintPayment extends AppCompatActivity {
                     }
 
                 } else
+                {
                     Toast.makeText(PrintPayment.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
+                    from_date.setError("Required");
+                    to_date.setError("Required");
+                }
+
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
 
@@ -402,7 +442,7 @@ public class PrintPayment extends AppCompatActivity {
 
 
     private void updateLabel(int flag) {
-        String myFormat = "yyy/MM/dd"; //In which you need put here
+        String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         if (flag == 0)
@@ -419,26 +459,28 @@ public class PrintPayment extends AppCompatActivity {
         return d;
     }
 
-    public boolean filters(int n) {
+public boolean filters(int n) {
+    String beginDate = from_date.getText().toString();
+    String toDate = to_date.getText().toString();
 
+    String date = payment.get(n).getPayDate();
+    Log.e("date",""+date);
 
-        String fromDate = from_date.getText().toString().trim();
-        String toDate = to_date.getText().toString();
-
-        String date = payment.get(n).getPayDate();
-
-        try {
-            Log.e("tag", "*****" + date + "***" + fromDate);
-            if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+    try {
+            if ((formatDate(date).after(formatDate(beginDate)) || formatDate(date).equals(formatDate(beginDate))) &&
                     (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
+            {
                 return true;
+            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        return false;
+//        }
+    } catch (ParseException e) {
+        e.printStackTrace();
     }
+
+    return false;
+}
 
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Payment pay) {
@@ -1537,9 +1579,7 @@ public class PrintPayment extends AppCompatActivity {
                 Bitmap bitmap2  = BitmapFactory.decodeStream(inputStream);
                 pic.setImageBitmap(bitmap2);
                 pic.setDrawingCacheEnabled(true);
-
                 Bitmap bitmap = pic.getDrawingCache();
-
                 PrintPic printPic = PrintPic.getInstance();
                 printPic.init(bitmap);
                 byte[] bitmapdata = printPic.printDraw();

@@ -1,12 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/layer5"
+    android:orientation="horizontal"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+
+    >
+
+    <TextView
+        android:id="@+id/itemNoTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/app_item_no"
+        android:textColor="#000000"
+        android:visibility="gone"
+        android:textSize="@dimen/items_list_font_size"
+        />
+    <TextView
+        android:id="@+id/DescTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+
+        android:gravity="center"
+        android:text="@string/app_desc"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+    <TextView
+        android:id="@+id/qtyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/app_qty"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+    <TextView
+        android:id="@+id/priceTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/app_price"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+
+    <TextView
+        android:id="@+id/bonusTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:text="@string/app_bonus"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+
+    <TextView
+        android:id="@+id/lineDiscTextView"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/app_line_disc"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+    <TextView
+        android:id="@+id/amountTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/app_amount"
+        android:textColor="#000000"
+        android:textSize="@dimen/items_list_font_size"
+        />
+        <TextView
+            android:id="@+id/showDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:visibility="gone"
+
+            android:drawableStart="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:textColor="#000000"
+            android:textSize="@dimen/items_list_font_size"
+            android:drawableLeft="@drawable/ic_keyboard_arrow_down_black_24dp" />
+</LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/layer5"
+        android:background="@color/white"
+        android:id="@+id/detailLayout"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -14,46 +111,25 @@
         android:paddingTop="10dp"
 
         >
-
         <TextView
-            android:id="@+id/itemNoTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/No"
+            android:textColor="#000000"
+            android:textSize="@dimen/items_list_font_size"
+            />
+        <TextView
+            android:id="@+id/itemNoTextView_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:text="@string/app_item_no"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
             />
-        <TextView
-            android:id="@+id/DescTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/app_desc"
-            android:textColor="#000000"
-            android:textSize="@dimen/items_list_font_size"
-            />
-        <TextView
-            android:id="@+id/qtyTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/app_qty"
-            android:textColor="#000000"
-            android:textSize="@dimen/items_list_font_size"
-            />
-        <TextView
-            android:id="@+id/priceTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/app_price"
-            android:textColor="#000000"
-            android:textSize="@dimen/items_list_font_size"
-            />
 
         <TextView
-            android:id="@+id/bonusTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -63,7 +139,15 @@
             />
 
         <TextView
-            android:id="@+id/lineDiscTextView"
+            android:id="@+id/bonusTextView_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/app_bonus"
+            android:textColor="#000000"
+            android:textSize="@dimen/items_list_font_size"
+            />
+        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,13 +156,14 @@
             android:textSize="@dimen/items_list_font_size"
             />
         <TextView
-            android:id="@+id/amountTextView"
+            android:id="@+id/lineDiscTextView_detail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/app_amount"
+            android:layout_weight="2"
+            android:text="@string/app_line_disc"
             android:textColor="#000000"
             android:textSize="@dimen/items_list_font_size"
             />
+
     </LinearLayout>
 </LinearLayout>

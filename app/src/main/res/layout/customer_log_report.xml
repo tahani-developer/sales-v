@@ -1,25 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    android:background="@color/white"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="4.5"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/expotTpExcel"
+        android:layout_width="match_parent"
+        android:layout_weight="8"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:padding="5dp"
+        android:layout_gravity="center"
+
+        android:src="@drawable/excel_small" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/expotTpPdf"
+            android:layout_width="match_parent"
+            android:layout_weight="8"
+            android:visibility="visible"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="center"
+            android:src="@drawable/pdf_icon" />
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
         android:gravity="center"
+        android:layout_margin="5dp"
+
+        android:layout_weight="2"
         android:text="@string/customer_log_report"
-        android:textColor="@color/text_view_color"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textColor="@color/colorblue_dark3"
+        android:textSize="18sp"
+        android:textStyle="bold"
+ />
+    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/row2"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_weight="4.5"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        >-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:text="@string/from_date"-->
+<!--            android:textColor="@color/text_view_color"-->
+<!--            android:textSize="14sp" />-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/from_date"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:textColor="@color/add_button"-->
+<!--            android:textSize="14sp"-->
+<!--            android:inputType="date"-->
+<!--            android:focusable="false"/>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:text="@string/to_date"-->
+<!--            android:textColor="@color/text_view_color"-->
+<!--            android:textSize="17sp" />-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/to_date"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="5dp"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:textColor="@color/add_button"-->
+<!--            android:textSize="15sp"-->
+<!--            android:inputType="date"-->
+<!--            android:focusable="false"/>-->
+
+
+
+<!--    </LinearLayout>-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/row24"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_weight="4.5"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        >-->
+<!--    <Button-->
+<!--        android:id="@+id/preview"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_weight="2"-->
+<!--        android:background="@drawable/done_button"-->
+<!--        android:text="@string/preview"-->
+<!--        android:textColor="@color/layer5" />-->
+<!--    </LinearLayout>-->
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView01"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+
+        >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/layer2"
-        android:layout_margin="20dp"
+        android:background="@color/layer6"
+        android:layout_margin="15dp"
         >
 
         <TableLayout
@@ -27,13 +148,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:background="@color/layer5">
+            android:background="@color/white">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/layer3"
-                android:padding="10dp">
+                android:background="@color/colorblue_dark"
+                android:padding="5dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -41,8 +162,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/SALES_MAN_ID"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_margin="3dp"
+                    android:visibility="gone"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -50,8 +179,17 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CUS_CODE"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="1.3dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:visibility="gone"
+                    android:background="@color/colorblue1"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -59,8 +197,17 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CUS_NAME"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="1.3dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:visibility="gone"
+                    android:background="@color/colorblue1"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -68,8 +215,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_IN_DATE"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="1.3dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:background="@color/colorblue1"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -77,8 +232,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_IN_TIME"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="1.3dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:background="@color/colorblue1"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -86,8 +249,16 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_OUT_DATE"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="1.3dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:background="@color/colorblue1"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -95,8 +266,15 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_OUT_TIME"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorblue1"
+                    android:layout_margin="3dp"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -104,10 +282,20 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/STATUS"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="center"
+                    android:text="@string/STATUS"
+                    android:visibility="invisible"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
 
         </TableLayout>
     </ScrollView>
+    </HorizontalScrollView>
 </LinearLayout>

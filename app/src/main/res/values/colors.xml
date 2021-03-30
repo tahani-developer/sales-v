@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#EB303F9B</color>
+    <color name="colorPrimary">#04578A</color>
+    <color name="colorPrimaryDark">#04578A</color>
     <color name="colorAccent">#463E3F</color>
+    <color name="blue2">#2196F3</color>
+    <color name="colorBlack">#0C0B0B</color>
     <color name="amountColor">#387C44</color>
+
     <color name="colorblue1">#3F86B5</color>
+    <color name="colorblue_dark">#04578A</color>
+    <color name="colorblue_dark3">#016392</color>
+
+<!--    <color name="colorblue_dark">#26526D</color>-->
     <color name="layer1">#B6B6B4</color>
     <color name="layer2">#D1D0CE</color>
     <color name="layer3">#ECECEB</color>
-    <color name="layer4">#F2BCC6CC</color>
+    <color name="layer4">#F2B4C3CC</color>
     <color name="layer5">#CFD8DC</color>
+    <color name="layer6">#CBECECEB</color>
+    <color name="layer7">#F3F8F8F7</color>
 
     <color name="purble1">#B4B798EE</color>
     <color name="purble0">#304EF3</color>
@@ -18,8 +27,11 @@
     <color name="white_alphe">#9EFDFBFB</color>
     <color name="second_color">#327C41</color>
     <color name="add_button">#25383C</color>
-    <color name="done_button">#327C41</color>
-    <color name="cancel_button">#C24641</color>
+    <color name="done_button">#3F86B5</color>
+    <color name="done_button2">#7CC8FA</color>
+<!--    <color name="done_button">#327C41</color>-->
+
+    <color name="cancel_button">#E6CA221C</color>
     <color name="red_background">#E9B6332D</color>
 
     <color name="ok_button">#327C41</color>
@@ -27,5 +39,5 @@
     <color name="radio_group">#b2ffb2</color>
     <color name="yelow">#F5E028</color>
 
-
+    <color name="redlighht">#B5FA372F</color>
 </resources>

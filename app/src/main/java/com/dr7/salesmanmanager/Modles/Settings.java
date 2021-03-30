@@ -27,6 +27,168 @@ public class Settings {
     private int  hide_qty;
     private int lock_cashreport;
     private String salesMan_name;
+    private int priventOrder;
+    private int requiNote;
+    private int preventTotalDisc;
+    private int automaticCheque;
+    private int tafqit;
+    private int preventChangPayMeth;
+    private int  ShowCustomerList;
+    private int  noReturnInvoice;
+    private int  work_serialNo;
+    private int  showItemImage;
+    private int  approveAdmin;
+    private  int saveOnly;
+    private  int show_quantity_sold;
+    private  int readOfferFromAdmin;
+    private  String ipPort;
+    private  int qtyServer;
+    private  int dontShowtax;
+    private  String coNo;
+
+    public String getCoNo() {
+        return coNo;
+    }
+
+    public void setCoNo(String coNo) {
+        this.coNo = coNo;
+    }
+
+    public int getDontShowtax() {
+        return dontShowtax;
+    }
+
+    public void setDontShowtax(int dontShowtax) {
+        this.dontShowtax = dontShowtax;
+    }
+
+    public int getQtyServer() {
+        return qtyServer;
+    }
+
+    public void setQtyServer(int qtyServer) {
+        this.qtyServer = qtyServer;
+    }
+
+    public String getIpPort() {
+        return ipPort;
+    }
+
+    public void setIpPort(String ipPort) {
+        this.ipPort = ipPort;
+    }
+
+    public int getReadOfferFromAdmin() {
+        return readOfferFromAdmin;
+    }
+
+    public void setReadOfferFromAdmin(int readOfferFromAdmin) {
+        this.readOfferFromAdmin = readOfferFromAdmin;
+    }
+
+    public int getShow_quantity_sold() {
+        return show_quantity_sold;
+    }
+
+    public void setShow_quantity_sold(int show_quantity_sold) {
+        this.show_quantity_sold = show_quantity_sold;
+    }
+
+    public int getSaveOnly() {
+        return saveOnly;
+    }
+
+    public void setSaveOnly(int saveOnly) {
+        this.saveOnly = saveOnly;
+    }
+
+    public int getApproveAdmin() {
+        return approveAdmin;
+    }
+
+    public void setApproveAdmin(int approveAdmin) {
+        this.approveAdmin = approveAdmin;
+    }
+
+    public int getShowItemImage() {
+        return showItemImage;
+    }
+
+    public void setShowItemImage(int showItemImage) {
+        this.showItemImage = showItemImage;
+    }
+
+    public int getWork_serialNo() {
+        return work_serialNo;
+    }
+
+    public void setWork_serialNo(int work_serialNo) {
+        this.work_serialNo = work_serialNo;
+    }
+
+    public int getNoReturnInvoice() {
+        return noReturnInvoice;
+    }
+
+    public void setNoReturnInvoice(int noReturnInvoice) {
+        this.noReturnInvoice = noReturnInvoice;
+    }
+
+    public int getShowCustomerList() {
+        return ShowCustomerList;
+    }
+
+    public void setShowCustomerList(int showCustomerList) {
+        ShowCustomerList = showCustomerList;
+    }
+
+    public int getPreventChangPayMeth() {
+        return preventChangPayMeth;
+    }
+
+    public void setPreventChangPayMeth(int preventChangPayMeth) {
+        this.preventChangPayMeth = preventChangPayMeth;
+    }
+
+    public int getTafqit() {
+        return tafqit;
+    }
+
+    public void setTafqit(int tafqit) {
+        this.tafqit = tafqit;
+    }
+
+    public int getAutomaticCheque() {
+        return automaticCheque;
+    }
+
+    public void setAutomaticCheque(int automaticCheque) {
+        this.automaticCheque = automaticCheque;
+    }
+
+    public int getPreventTotalDisc() {
+        return preventTotalDisc;
+    }
+
+    public void setPreventTotalDisc(int preventTotalDisc) {
+        this.preventTotalDisc = preventTotalDisc;
+    }
+
+    public int getPriventOrder() {
+        return priventOrder;
+    }
+
+    public void setPriventOrder(int priventOrder) {
+        this.priventOrder = priventOrder;
+    }
+
+    public int getRequiNote() {
+        return requiNote;
+    }
+
+    public void setRequiNote(int requiNote) {
+        this.requiNote = requiNote;
+    }
 
     public String getSalesMan_name() {
         return salesMan_name;

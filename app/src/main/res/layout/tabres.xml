@@ -2,16 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:id="@+id/tab"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+        <TextView
+            android:id="@+id/ittem_largeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
 
+            android:textColor="@color/add_button"
+
+            android:textDirection="ltr"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </TableRow>
     <TableLayout
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:id="@+id/total"
@@ -21,7 +38,28 @@
                 android:gravity="center"
                 android:text="المجموع"
                 android:textColor="@color/add_button"
-                android:textSize="18sp"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/item_discount"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:text="  الخصم "
+                android:textColor="@color/add_button"
+                android:textDirection="rtl"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/item_"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:textColor="@color/add_button"
+                android:textDirection="rtl"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -32,8 +70,9 @@
                 android:gravity="center"
                 android:text="سعر الوحده"
                 android:textColor="@color/add_button"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/qty"
@@ -42,7 +81,7 @@
                 android:gravity="center"
                 android:text="العدد"
                 android:textColor="@color/add_button"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -50,10 +89,11 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:text="السلعه"
                 android:textColor="@color/add_button"
                 android:textDirection="rtl"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
         </TableRow>
 

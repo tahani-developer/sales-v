@@ -20,7 +20,12 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+//import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +49,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Port.AlertView;
 import com.sewoo.port.android.BluetoothPort;
 import com.sewoo.request.android.RequestHandler;
@@ -55,17 +61,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.TOTAL;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
+import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrint;
+import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsReportinventory;
+import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
+import static com.dr7.salesmanmanager.SalesInvoice.finishPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
 import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
@@ -496,154 +510,182 @@ public class BluetoothConnectMenu extends Activity {
                             }
 
 
+                            if (printShape == 0) {
 
-
-                            if(printShape==0){
-                            if (TOTAL < 20) {
+                                if (TOTAL < 20) {
 //                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
-                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
-                                sample.imageTestArabic(1, bit);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                TOTAL = 0;
-                            } else {
-                                Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER(voucherforPrint);
-                                sample.imageTestArabic(1, bit_voucher_Headre);
-                                size_subList = Math.ceil(long_listItems.size() / 30.0);
-                                int n = 0, k = 30;
+                                    Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
+                                    sample.imageTestArabic(1, bit);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    TOTAL = 0;
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
 
-                                for (int i = 0; i < size_subList; i++) {//3
-                                    if (long_listItems.size() <= 30) {
-                                        Bitmap bit_voucher_Body = convertLayoutToImage_Body(voucherforPrint, long_listItems, 0);
-                                        sample.imageTestArabic(1, bit_voucher_Body);
-                                        try {
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else {
-                                        try {
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
+                                } else {
+                                    Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER(voucherforPrint);
+                                    sample.imageTestArabic(1, bit_voucher_Headre);
+                                    size_subList = Math.ceil(long_listItems.size() / 30.0);
+                                    int n = 0, k = 30;
+
+                                    for (int i = 0; i < size_subList; i++) {//3
+                                        if (long_listItems.size() <= 30) {
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body(voucherforPrint, long_listItems, 0);
+                                            sample.imageTestArabic(1, bit_voucher_Body);
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else {
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
 
 
-                                        if (i == size_subList - 1) {
-                                            k = long_listItems.size();
+                                            if (i == size_subList - 1) {
+                                                k = long_listItems.size();
 
-                                        }
+                                            }
 
 
-                                        Bitmap bit_voucher_Body = convertLayoutToImage_Body(voucherforPrint, long_listItems.subList(n, k), n);
-                                        sample.imageTestArabic(1, bit_voucher_Body);
-                                        Log.e("n+k", " \t" + n + " " + k);
-                                        n = n + 30;
-                                        k = n + 30;
-                                        try {
-                                            Thread.sleep(2000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body(voucherforPrint, long_listItems.subList(n, k), n);
+                                            sample.imageTestArabic(1, bit_voucher_Body);
+                                            Log.e("n+k", " \t" + n + " " + k);
+                                            n = n + 30;
+                                            k = n + 30;
+                                            try {
+                                                Thread.sleep(2000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
                                         }
 
                                     }
 
+                                    try {
+                                        Thread.sleep(8000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Bitmap bit_voucher_Footer = convertLayoutToImage_Footer(voucherforPrint, long_listItems);
+                                    sample.imageTestArabic(1, bit_voucher_Footer);
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
+
                                 }
+                            } else {// large name
 
-                                try {
-                                            Thread.sleep(8000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                Bitmap bit_voucher_Footer = convertLayoutToImage_Footer(voucherforPrint, long_listItems);
-                                sample.imageTestArabic(1, bit_voucher_Footer);
-
-                            }}
-                            else {
-
-                            if (TOTAL < 20) {
+                                if (TOTAL < 20) {
 //                                Bitmap bit = convertLayoutToImage(voucherforPrint, itemforPrint);
-                                Bitmap bit = convertLayoutToImageEjape(voucherforPrint, itemforPrint);
-                                sample.imageTestEnglish(1, bit);
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                TOTAL = 0;
-                            }
-                            else {
-                                Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
-                                sample.imageTestEnglish(1, bit_voucher_Headre);
-                                size_subList = Math.ceil(long_listItems.size() / 30.0);
-                                int n = 0, k = 30;
+                                    Bitmap bit = convertLayoutToImageEjape(voucherforPrint, itemforPrint);
+                                    sample.imageTestEnglish(1, bit);
+                                    try {
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    TOTAL = 0;
+                                    if(count==1)
+                                    {
+                                        finishPrint.setText("finish");
+                                    }
+                                } else {
+                                    Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
+                                    sample.imageTestEnglish(1, bit_voucher_Headre);
+                                    size_subList = Math.ceil(long_listItems.size() / 30.0);
+                                    int n = 0, k = 30;
 
-                                for (int i = 0; i < size_subList; i++) {//3
-                                    if (long_listItems.size() <= 30) {
-                                        Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems, 0);
-                                        sample.imageTestEnglish(1, bit_voucher_Body);
-                                        try {
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    } else {
-                                        try {
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-
-
-                                        if (i == size_subList - 1) {
-                                            k = long_listItems.size();
-
-                                        }
+                                    for (int i = 0; i < size_subList; i++) {//3
+                                        if (long_listItems.size() <= 30) {
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems, 0);
+                                            sample.imageTestEnglish(1, bit_voucher_Body);
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        } else {
+                                            try {
+                                                Thread.sleep(1000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
 
 
-                                        Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems.subList(n, k), n);
-                                        sample.imageTestEnglish(1, bit_voucher_Body);
-                                        Log.e("n+k", " \t" + n + " " + k);
-                                        n = n + 30;
-                                        k = n + 30;
-                                        try {
-                                            Thread.sleep(2000);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
+                                            if (i == size_subList - 1) {
+                                                k = long_listItems.size();
+
+                                            }
+
+
+                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems.subList(n, k), n);
+                                            sample.imageTestEnglish(1, bit_voucher_Body);
+                                            Log.e("n+k", " \t" + n + " " + k);
+                                            n = n + 30;
+                                            k = n + 30;
+                                            try {
+                                                Thread.sleep(2000);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+
                                         }
 
                                     }
 
-                                }
+                                    try {
+                                        Thread.sleep(8000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
 
-                                try {
-                                    Thread.sleep(8000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                                    Bitmap bit_voucher_Footer = convertLayoutToImage_Footer_ejabe(voucherforPrint, long_listItems);
+                                    sample.imageTestEnglish(1, bit_voucher_Footer);
 
-                                Bitmap bit_voucher_Footer = convertLayoutToImage_Footer_ejabe(voucherforPrint, long_listItems);
-                                sample.imageTestEnglish(1, bit_voucher_Footer);
+                                }
 
                             }
-
-                        }
 
 //                        itemForPrint.clear();
 
                         } else {
                             if (count == 2||count==4 || count==8) {//  (8) for print last payment===> ReciptVoucher
                                 if(count==2){
+                                    payList=paymentsforPrint;
+                                    payforBank=ReceiptVoucher.payment;
+
+                                }
+                                else if(count==4){
+                                    payList=paymentPrinter;
+                                    payforBank=pay1;
+                                }
+                                else if(count==8){
+                                    payList=ReceiptVoucher.paymentPrinter;
+                                    payforBank=ReceiptVoucher.pay1;
+                                }
+                                if(count==2){//2=== from ReceptVoucher
 //                                payList=paymentsforPrint;
 //                                payforBank=ReceiptVoucher.payment;
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(2);
-                                    }else {
-                                        sample.printMultilingualFontCash_EJABI(2);
+                                    }else {// ejabi Layout
+                                       // sample.imageTestEnglish_ejabi(1,bitmap);
+                                        Bitmap bit = convertLayoutToImage_Recept();
+//                                        Log.e("getAllCompanyInfo",""+bitmap);
+                                        sample.imageTestEnglish(1, bit);
+//                                        sample.printMultilingualFontCash_EJABI(2);
 
                                     }
                                 paymentsforPrint.clear();
@@ -654,7 +696,11 @@ public class BluetoothConnectMenu extends Activity {
                                     if(printShape==0) {
                                         sample.printMultilingualFontCash(count);
                                     }else {
-                                        sample.printMultilingualFontCash_EJABI(count);
+                                        Bitmap bit = convertLayoutToImage_Recept();
+//                                        Log.e("getAllCompanyInfo",""+bitmap);
+                                        sample.imageTestEnglish(1, bit);
+                                       // sample.imageTestEnglish_ejabi(1,bitmap);
+//                                        sample.printMultilingualFontCash_EJABI(count);
 
                                     }
 //                                    paymentsforPrint.clear();
@@ -681,65 +727,30 @@ public class BluetoothConnectMenu extends Activity {
                                     }
                                     listItemStock.clear();
                                     totalQty.setText("0.000");
-//                                    TOTAL = 0;
-//                                }
-//                                else {
-//                                    Bitmap bit_voucher_Headre = convertLayoutToImage_HEADER_Ejabe(voucherforPrint);
-//                                    sample.imageTestEnglish(1, bit_voucher_Headre);
-//                                    size_subList = Math.ceil(long_listItems.size() / 30.0);
-//                                    int n = 0, k = 30;
-//
-//                                    for (int i = 0; i < size_subList; i++) {//3
-//                                        if (long_listItems.size() <= 30) {
-//                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems, 0);
-//                                            sample.imageTestEnglish(1, bit_voucher_Body);
-//                                            try {
-//                                                Thread.sleep(1000);
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        } else {
-//                                            try {
-//                                                Thread.sleep(1000);
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//
-//                                            if (i == size_subList - 1) {
-//                                                k = long_listItems.size();
-//
-//                                            }
-//
-//
-//                                            Bitmap bit_voucher_Body = convertLayoutToImage_Body_ejabi(voucherforPrint, long_listItems.subList(n, k), n);
-//                                            sample.imageTestEnglish(1, bit_voucher_Body);
-//                                            Log.e("n+k", " \t" + n + " " + k);
-//                                            n = n + 30;
-//                                            k = n + 30;
-//                                            try {
-//                                                Thread.sleep(2000);
-//                                            } catch (InterruptedException e) {
-//                                                e.printStackTrace();
-//                                            }
-//
-//                                        }
-//
-//                                    }
-//
-//                                    try {
-//                                        Thread.sleep(8000);
-//                                    } catch (InterruptedException e) {
-//                                        e.printStackTrace();
-//                                    }
-//
-//                                    Bitmap bit_voucher_Footer = convertLayoutToImage_Footer_ejabe(voucherforPrint, long_listItems);
-//                                    sample.imageTestEnglish(1, bit_voucher_Footer);
-//
-//                                }
 
+                            }
+                            else if(count == 9)
+                            {// print Inventory Report
+                                Log.e("printInventory",""+count+"report"+itemsInventoryPrint.size());
+                                double totalqty=0;
+                                Bitmap headerLayout=convertToImage_HEADER_Prin();
 
+                                sample.imageTestEnglish(1, headerLayout);
+                                for(int i=0;i<itemsInventoryPrint.size();i++)
+                                {
+                                    totalqty+=itemsInventoryPrint.get(i).getQty();
 
+                                    Bitmap inventoryLayout=convertToImage_inventoryRow(itemsInventoryPrint.get(i));
+                                    sample.imageTestEnglish(1, inventoryLayout);
+                                }
+                                Bitmap inventoryLayout_footer=convertToImage_inventoryFooter(totalqty);
+                                sample.imageTestEnglish(1, inventoryLayout_footer);
+
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
 
 
                             }
@@ -776,6 +787,95 @@ public class BluetoothConnectMenu extends Activity {
 
             super.onPostExecute(result);
         }
+
+    }
+
+    private Bitmap convertToImage_inventoryFooter(double totalqty) {
+        Log.e("inventoryFooter",""+totalqty);
+        LinearLayout linearView = null;
+        final Dialog dialog_Header = new Dialog(BluetoothConnectMenu.this);
+        dialog_Header.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_Header.setCancelable(false);
+        dialog_Header.setContentView(R.layout.header_layout_print);
+
+        TextView total_qty   ;
+        LinearLayout printFooter,mainLayout;
+         printFooter=dialog_Header.findViewById(R.id.printFooter);
+        mainLayout=dialog_Header.findViewById(R.id.ll);
+        mainLayout.setVisibility(View.GONE);
+        printFooter.setVisibility(View.VISIBLE);
+
+        total_qty = (TextView) dialog_Header.findViewById(R.id.totalQty_Text);
+                total_qty.setText(totalqty+"");
+
+        linearView = (LinearLayout) dialog_Header.findViewById(R.id.printFooter);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(1, 1, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+
+        return bit;// creates bitmap and returns the same
+
+
+
+
+
+    }
+
+    private Bitmap convertToImage_inventoryRow(inventoryReportItem inventoryItem) {
+        Log.e("inventoryItem", "width=" +inventoryItem.getName()+ " ");
+        LinearLayout linearView = null;
+        final Dialog dialog_Header = new Dialog(BluetoothConnectMenu.this);
+        dialog_Header.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_Header.setCancelable(false);
+        dialog_Header.setContentView(R.layout.print_inventory_row);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        TextView doneinsewooprint = (TextView) dialog_Header.findViewById(R.id.done);
+
+        TextView textView_itemName, textView_itemQuantity, textView_itemNumber, largeName;
+
+//        textView_itemName = (TextView) dialog_Header.findViewById(R.id.textView_itemName);
+        textView_itemQuantity = (TextView) dialog_Header.findViewById(R.id.textView_itemQuantity);
+        textView_itemNumber = (TextView) dialog_Header.findViewById(R.id.textView_itemNumber);
+        largeName = dialog_Header.findViewById(R.id.textView_itemName_large);
+        largeName.setVisibility(View.VISIBLE);
+        largeName.setText(inventoryItem.getName());
+
+//        if(inventoryItem.getName().length()>15)
+//        {
+//            largeName.setVisibility(View.VISIBLE);
+//            largeName.setText(inventoryItem.getName());
+////            textView_itemName.setVisibility(View.GONE);
+//        }
+//        else {
+//            largeName.setVisibility(View.GONE);
+//            textView_itemName.setText(inventoryItem.getName());
+//        }
+
+        textView_itemQuantity.setText(inventoryItem.getQty()+"");
+
+        textView_itemNumber.setText(inventoryItem.getItemNo());
+
+
+//        dialog_Header.show();
+
+        linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(1, 1, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+
+        return bit;// creates bitmap and returns the same
+
 
     }
 
@@ -833,6 +933,69 @@ public class BluetoothConnectMenu extends Activity {
         salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
         paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
         dialog_Header.show();
+
+        linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(1, 1, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+
+        return bit;// creates bitmap and returns the same
+
+
+    }
+    private Bitmap convertToImage_HEADER_Prin() {
+        LinearLayout linearView = null;
+        final Dialog dialog_Header = new Dialog(BluetoothConnectMenu.this);
+        dialog_Header.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_Header.setCancelable(false);
+        dialog_Header.setContentView(R.layout.header_layout_print);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        Date currentTimeAndDate;
+        SimpleDateFormat df, df2;
+        String voucherDate, voucherYear;
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        voucherDate = df.format(currentTimeAndDate);
+        voucherDate = convertToEnglish(voucherDate);
+        TextView doneinsewooprint = (TextView) dialog_Header.findViewById(R.id.done);
+
+        TextView compname, tel, taxNo, salesName  ,date,note,qtyTypeText   ;
+        ImageView img = (ImageView) dialog_Header.findViewById(R.id.img);
+        compname = (TextView) dialog_Header.findViewById(R.id.compname);
+        tel = (TextView) dialog_Header.findViewById(R.id.tel);
+        taxNo = (TextView) dialog_Header.findViewById(R.id.taxNo);
+        qtyTypeText=(TextView) dialog_Header.findViewById(R.id.qtyTypeText);
+        LinearLayout printFooter,mainLayout;
+        printFooter=dialog_Header.findViewById(R.id.printFooter);
+        mainLayout=dialog_Header.findViewById(R.id.ll);
+        mainLayout.setVisibility(View.VISIBLE);
+        printFooter.setVisibility(View.INVISIBLE);
+        date = (TextView) dialog_Header.findViewById(R.id.date);
+        note = (TextView) dialog_Header.findViewById(R.id.note);
+
+        date.setText(voucherDate+"");
+        note.setText(companyInfo.getNoteForPrint());
+        salesName = (TextView) dialog_Header.findViewById(R.id.salesman_name);
+
+        if (companyInfo.getLogo()!=(null))
+        {
+            img.setImageBitmap(companyInfo.getLogo());
+        }
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        qtyTypeText.setText(typeQty+"");
+        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
+
+//        dialog_Header.show();
 
         linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);
 
@@ -921,6 +1084,142 @@ public class BluetoothConnectMenu extends Activity {
 
     }
 
+
+    private Bitmap convertLayoutToImage_Recept() {
+        LinearLayout linearView = null;
+        final Dialog dialog_Header = new Dialog(BluetoothConnectMenu.this);
+        dialog_Header.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog_Header.setCancelable(false);
+        dialog_Header.setContentView(R.layout.recept_voucher_ejabi);
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        TextView doneinsewooprint = (TextView) dialog_Header.findViewById(R.id.done);
+
+        TextView compname, store,tel, taxNo, vhNo, date, textView_amount, note, vhType, paytype,salesName ,amount_ofMoney,customerName    ;
+        ImageView img = (ImageView) dialog_Header.findViewById(R.id.img);
+        compname = (TextView) dialog_Header.findViewById(R.id.compname);
+        tel = (TextView) dialog_Header.findViewById(R.id.tel);
+        taxNo = (TextView) dialog_Header.findViewById(R.id.taxNo);
+        amount_ofMoney = (TextView) dialog_Header.findViewById(R.id.textView_amount_ofMoney);
+        vhNo = (TextView) dialog_Header.findViewById(R.id.vhNo);
+        date = (TextView) dialog_Header.findViewById(R.id.date);
+        textView_amount = (TextView) dialog_Header.findViewById(R.id.textView_amount);
+        note = (TextView) dialog_Header.findViewById(R.id.note);
+        paytype = (TextView) dialog_Header.findViewById(R.id.paytype);
+        store= (TextView) dialog_Header.findViewById(R.id.store);
+        salesName = (TextView) dialog_Header.findViewById(R.id.salesman_name);
+        customerName = (TextView) dialog_Header.findViewById(R.id.textView_customerName);
+        TableLayout tabLayout = (TableLayout) dialog_Header.findViewById(R.id.table_bank_info);
+        //************************** Fill Data  *******************************************
+
+        if (companyInfo.getLogo()!=(null))
+        {
+            img.setImageBitmap(companyInfo.getLogo());
+
+        }
+        else{
+            img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+
+            Toast.makeText(context, "Upload Company Logo For Print ", Toast.LENGTH_SHORT).show();
+        }
+        textView_amount.setText( payforBank.getAmount()+"");
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
+        {
+            amount_ofMoney.setText(getArabicString( payforBank.getAmount() +""));
+
+        }
+        else {
+
+        }
+        vhNo.setText("" + payforBank.getVoucherNumber());
+        date.setText(payforBank.getPayDate());
+        customerName.setText(payforBank.getCustName());
+//        custname.setText(voucher.getCustName());
+        note.setText( payforBank.getRemark() );
+//        payforBank.getAmount()
+
+        store.setText(Login.salesMan);
+        salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
+        paytype.setText((payforBank.getPayMethod() == 1 ? "Cash" : "Credit") );
+
+        if (payforBank.getPayMethod() == 1||payforBank.getPayMethod()==2) {
+            tabLayout.setVisibility(View.GONE);
+        }
+        else {
+            tabLayout.setVisibility(View.VISIBLE);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,TableRow.LayoutParams.WRAP_CONTENT,1.0f);
+            lp.setMargins(0, 7, 0, 0);
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp2.setMargins(0, 7, 0, 0);
+
+
+            if(count==2){
+                payList=paymentsforPrint;
+                payforBank=ReceiptVoucher.payment;
+
+            }
+            else if(count==4){
+                payList=paymentPrinter;
+                payforBank=pay1;
+            }
+            else if(count==8){
+                payList=ReceiptVoucher.paymentPrinter;
+                payforBank=ReceiptVoucher.pay1;
+            }
+
+//        List<Payment> payments = obj.getRequestedPaymentsPaper(pay.getVoucherNumber());
+            List<Payment> payments =payList;
+            for (int n = 0; n < payments.size(); n++) {
+//                if (payments.get(n).getVoucherNumber() == mDbHandler.getMaxSerialNumber(4)) {
+                final TableRow row = new TableRow(BluetoothConnectMenu.this);
+                row.setPadding(0, 10, 0, 10);
+                Log.e("paymentprint",""+payments.size());
+                for (int i = 0; i < 4; i++) {
+
+                    String[] record = {
+                            payments.get(n).getBank() + "",
+                            payments.get(n).getCheckNumber() + "",
+                            payments.get(n).getDueDate() + "",
+                            payments.get(n).getAmount() + "",
+                    };
+
+                    row.setLayoutParams(lp);
+                    TextView textView = new TextView(BluetoothConnectMenu.this);
+                    textView.setText(record[i]);
+                    textView.setTextColor(ContextCompat.getColor(BluetoothConnectMenu.this, R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(18);
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
+
+                }
+
+                tabLayout.addView(row);
+            }
+        }
+
+        dialog_Header.show();
+
+        linearView = (LinearLayout) dialog_Header.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        linearView.layout(1, 1, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+
+        return bit;// creates bitmap and returns the same
+
+
+    }
+
     private Bitmap convertLayoutToImage_Footer(Voucher voucher,List<Item> items) {
         LinearLayout linearView = null;
 
@@ -968,7 +1267,9 @@ public class BluetoothConnectMenu extends Activity {
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
         TextView doneinsewooprint = (TextView) dialog_footer.findViewById(R.id.done);
 
-        TextView total, discount, tax, ammont, Total_qty_total;
+        TextView total, discount, tax, ammont, Total_qty_total,amountText;
+        LinearLayout linearArabicAmount=(LinearLayout) dialog_footer.findViewById(R.id.linearArabicAmount);
+        amountText = (TextView) dialog_footer.findViewById(R.id.amountText);
         total = (TextView) dialog_footer.findViewById(R.id.total);
         discount = (TextView) dialog_footer.findViewById(R.id.discount);
         tax = (TextView) dialog_footer.findViewById(R.id.tax);
@@ -980,6 +1281,18 @@ public class BluetoothConnectMenu extends Activity {
         Total_qty_total=(TextView) dialog_footer.findViewById(R.id.total_qty);
         Total_qty_total.setText(count+"");
         linearView = (LinearLayout) dialog_footer.findViewById(R.id.ll);
+        if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1)
+        {
+            linearArabicAmount.setVisibility(View.VISIBLE);
+            amountText.setText( getArabicString(voucher.getNetSales()+""));
+        }
+        else {
+            linearArabicAmount.setVisibility(View.GONE);
+
+        }
+
+
+
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -1076,6 +1389,7 @@ public class BluetoothConnectMenu extends Activity {
 
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp4 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
         lp2.setMargins(0, 7, 0, 0);
         lp3.setMargins(0, 7, 0, 0);
         for (int j = 0; j < items.size(); j++) {
@@ -1099,7 +1413,15 @@ public class BluetoothConnectMenu extends Activity {
                     switch (i) {
                         case 0:
                             textView.setText(items.get(j).getItemName());
-                            textView.setLayoutParams(lp3);
+                            Log.e("textView",""+items.get(j).getItemName().length());
+                            if(items.get(j).getItemName().length()<=11)
+                            {
+                                textView.setLayoutParams(lp3);
+                            }
+                              else {
+                                textView.setLayoutParams(lp4);
+                            }
+
                             break;
 
 
@@ -1185,7 +1507,7 @@ public class BluetoothConnectMenu extends Activity {
 
     private Bitmap convertLayoutToImageEjape(Voucher voucher,List<Item> items) {
         LinearLayout linearView = null;
-        int CusId=Integer.parseInt(voucher.getCustNumber());
+        String CusId=(voucher.getCustNumber());
 
         valueCheckHidPrice=obj.getHideValuForCustomer(CusId);
         Log.e("valueHidPriceBluDBase",""+valueCheckHidPrice);
@@ -1202,7 +1524,8 @@ public class BluetoothConnectMenu extends Activity {
         TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
         TextView compname,store, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,
-                total_qty_text,salesName,textViewPrice,textviewTotal;
+                total_qty_text,salesName,textViewPrice,textviewTotal,amountText;
+        LinearLayout linearArabicAmount=(LinearLayout) dialogs.findViewById(R.id.linearArabicAmount);
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
         TableRow totalrow,discountrow,netrow,taxrow;
         totalrow=(TableRow) dialogs.findViewById(R.id.rowTotal);
@@ -1214,6 +1537,7 @@ public class BluetoothConnectMenu extends Activity {
         textviewTotal = (TextView) dialogs.findViewById(R.id.textViewTotal);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
+        amountText = (TextView) dialogs.findViewById(R.id.amountText);
         tel = (TextView) dialogs.findViewById(R.id.tel);
         taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
         vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
@@ -1370,10 +1694,6 @@ public class BluetoothConnectMenu extends Activity {
 
 
                 }
-//                final TableRow rows = new TableRow(BluetoothConnectMenu.this);
-//                TableRow.LayoutParams lp = new TableRow.LayoutParams(500, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-//                lp.setMargins(0, 10, 0, 0);
-//                rows.setLayoutParams(lp);
                 TextView textViews = new TextView(BluetoothConnectMenu.this);
                 textViews.setTextSize(14);
                 textViews.setPadding(0,0,0,5);
@@ -1389,7 +1709,16 @@ public class BluetoothConnectMenu extends Activity {
 
 
         total_qty_text.setText(count+"");
-        Log.e("countItem",""+count);
+        if(obj.getAllSettings().get(0).getTafqit()==1&& valueCheckHidPrice!=1)
+        {
+            linearArabicAmount.setVisibility(View.VISIBLE);
+            amountText.setText( getArabicString(voucher.getNetSales()+""));
+        }
+        else {
+            linearArabicAmount.setVisibility(View.GONE);
+
+        }
+       // Log.e("getArabicString","\t"+ getArabicString(voucher.getNetSales()+""));
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);

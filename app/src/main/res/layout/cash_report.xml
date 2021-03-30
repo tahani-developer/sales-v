@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:textDirection="locale"
+    android:id="@+id/mailLayout"
+    android:background="@color/white"
   >
+
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:bmb_draggable="true"
+
+        app:bmb_normalColor="@color/colorblue1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/row2"
@@ -30,7 +45,7 @@
             android:gravity="center_vertical"
             android:text="@string/app_cash_report"
             android:layout_marginLeft="20dp"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/text_view_color"
             android:textSize="30dp" />
 
        <LinearLayout
@@ -59,8 +74,8 @@
                android:id="@+id/preview_cash_report"
                android:layout_width="100dp"
                android:layout_height="match_parent"
-               android:textColor="@color/text_view_color"
-               android:background="@color/red_background"
+               android:textColor="@color/white"
+          android:background="@drawable/done_button"
                android:layout_marginLeft="100dp"
                android:layout_marginStart="150dp"
                android:text="@string/preview" />
@@ -94,7 +109,7 @@
         android:layout_marginEnd="10dp"
      android:foregroundGravity="center"
         android:layout_marginRight="20dp"
-        android:background="@color/white"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/row2">
@@ -202,7 +217,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="20dp"
-        android:background="@color/white"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TableSalesReport">
@@ -300,6 +315,47 @@
                 android:textStyle="bold" />
         </TableRow>
         <TableRow
+            android:layout_marginTop="20dp"
+            android:background="@color/colorblue1">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/app_creditCard"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp"
+            android:background="@color/layer3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dp"
+                android:text="@string/creditvalue"
+                android:textColor="@color/text_view_color"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_credit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:padding="1dp"
+                android:textColor="@color/text_view_color"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </TableRow>
+        <TableRow
             android:layout_marginTop="40dp"
             android:background="@color/layer3">
 
@@ -326,4 +382,4 @@
         </TableRow>
     </TableLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

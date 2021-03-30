@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:id="@+id/mainlayout"
+    android:layoutDirection="locale"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_blue">
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+
+        android:layout_gravity="center"
+        android:padding="3dp"
+        android:gravity="center"
+        android:layout_weight="7.5">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/setting_floatingBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorblue_dark"
+            android:elevation="5dp"
+            android:visibility="visible"
+            app:rippleColor="@color/colorblue_dark"
+            app:fabSize="mini"
+            android:src="@drawable/ic_settings_white_24dp"
+
+            android:layout_gravity="left"
+            android:gravity="left"
+
+
+            />
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/imageView3"
+            android:layout_gravity="left"
+            android:gravity="left"
+            android:padding="5dp"
+            android:text="@string/version"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_weight="6">
+        <TextView
+            android:id="@+id/ve010"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/imageView3"
+            android:layout_gravity="right"
+            android:gravity="right|center"
+            android:padding="5dp"
+
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+
+            android:src="@drawable/logo_vansales"
+            app:civ_border_color="@color/colorblue_dark"
+            app:civ_border_width="2dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp"
+            />
+        <TextView
+            android:id="@+id/ve0"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/imageView3"
+            android:layout_gravity="right"
+            android:gravity="right|center"
+            android:padding="5dp"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="8">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_margin="10dp"
+        android:layout_weight="6">
+
+        <LinearLayout
+
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+
+            >
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi1202"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/colorblue_dark3"
+                >
+            </androidx.cardview.widget.CardView>
+            <EditText
+                android:id="@+id/usernameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1.5"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/back_border_edit"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:padding="2dp"
+                android:ems="10"
+                android:hint="@string/app_username"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_view_color"
+                android:textColorHint="@color/layer1"
+                android:textSize="14sp" />
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi12052"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/colorblue_dark3">
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+
+            >
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi201202"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/colorblue_dark3"
+                >
+            </androidx.cardview.widget.CardView>
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:layout_margin="5dp"
+                android:layoutDirection="locale"
+                android:padding="2dp"
+
+                android:background="@drawable/back_border_edit"
+
+                android:drawableLeft="@drawable/ic_lock_black_24dp"
+                android:textColorHint="@color/layer1"
+                android:textColor="@color/text_view_color"
+                android:ems="10"
+                android:hint="@string/app_password"
+                android:inputType="textPassword"
+                android:textSize="14sp" />
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi1852052"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/colorblue_dark3">
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+
+            >
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi12"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+
+                android:visibility="invisible"
+                app:cardBackgroundColor="@color/colorblue_dark3"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="10dp">
+            </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+
+            android:id="@+id/loginCardView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_below="@+id/passwordEditText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+
+            app:cardBackgroundColor="@color/colorblue_dark3"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="5dp">
+
+
+                <TextView
+                    android:id="@+id/logInTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_centerInParent="true"
+                    android:textSize="16sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+
+                    android:text="@string/app_day_start"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+        </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/logi1252"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                android:layout_weight="1"
+                android:layout_below="@+id/passwordEditText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34dp"
+
+                app:cardBackgroundColor="@color/colorblue_dark3"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="10dp">
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="6">
+    </LinearLayout>
+</LinearLayout>

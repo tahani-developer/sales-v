@@ -8,9 +8,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
+import androidx.fragment.app.FragmentActivity;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.google.android.gms.maps.CameraUpdateFactory;

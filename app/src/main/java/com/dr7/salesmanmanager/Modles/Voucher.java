@@ -5,6 +5,9 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class Voucher {
 
 
@@ -232,6 +235,7 @@ public class Voucher {
             obj.put("custName", custName);
             obj.put("custNumber", custNumber);
             obj.put("voucherYear", voucherYear);
+            obj.put("totalQty", totalQty);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

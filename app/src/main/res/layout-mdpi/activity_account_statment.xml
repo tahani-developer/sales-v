@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="locale"
+    android:background="@color/white"
+    android:id="@+id/linearMain"
+    android:orientation="vertical"
+    android:padding="2dp">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_weight="8.8"
+        android:layout_margin="2dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+
+        >
+
+        <TextView
+            android:id="@+id/print"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="9"
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="2dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="2"
+            android:text="@string/AccountStatment"
+            android:textColor="@color/colorblue_dark"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeMinTextSize="12sp"
+            android:textStyle="bold"
+            android:drawableLeft="@drawable/ic_person_black_24dp" />
+        <TextView
+            android:id="@+id/customerName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/getAccountList_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_weight="1.5"
+  />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/row221"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="8.8"
+
+        android:orientation="horizontal"
+        android:padding="2dp"
+        >
+
+        <TextView
+            android:id="@+id/last"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textColor="@color/colorblue_dark"
+            android:autoSizeTextType="uniform"
+            android:textSize="14sp"
+            android:autoSizeStepGranularity="2sp"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeMinTextSize="12sp"
+            android:textStyle="bold"
+            android:text="@string/last_visit"
+            android:drawableStart="@drawable/ic_account_balance_black_b_24dp"
+
+            android:drawableLeft="@drawable/ic_account_balance_black_b_24dp" />
+        <TextView
+            android:id="@+id/last_visit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/text_view_color"
+            android:textSize="14sp" />
+        <Spinner
+            android:id="@+id/cat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+
+            android:layout_weight="2.3"
+            android:visibility="gone"
+
+            android:gravity="center"
+            android:padding="3dp" />
+        <Button
+            android:id="@+id/preview_button_account"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight="3"
+            android:background="@drawable/done_button"
+            android:text="@string/preview"
+            android:textColor="@color/colorblue_dark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+        <HorizontalScrollView
+            android:id="@+id/HorizontalScrollView01"
+            android:layout_width="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="horizontal"
+            android:layout_height="match_parent"
+
+            >
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:orientation="vertical"
+        android:layout_width="match_parent">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginLeft="5dp"-->
+<!--        android:layout_marginTop="2dp"-->
+<!--        android:layout_marginRight="5dp"-->
+<!--        android:layout_marginBottom="1dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_weight="10.5"-->
+<!--        android:background="@color/colorblue_dark"-->
+<!--        android:orientation="horizontal">-->
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="10.5"
+            android:layout_margin="2dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@color/colorblue_dark"
+            android:padding="2dp">
+
+
+            <TextView
+                android:id="@+id/textView_voucherNo"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/voucherNo"
+
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/textView_transName"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/transName"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/textView_date_voucher"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/date_voucher"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_debit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/debit"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_cridit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/credit"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/balance"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </TableRow>
+<!--    </LinearLayout>-->
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+
+        android:layout_margin="2dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:padding="2dp"
+            android:layout_margin="2dp"
+            android:background="@drawable/back_border_edit"
+
+            android:orientation="vertical"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+<!--        <LinearLayout-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:background="@color/colorblue_dark"-->
+<!--            android:layout_alignBottom="@id/recyclerView_report"-->
+<!--            android:orientation="horizontal">-->
+<!--            <TextView android:layout_height="wrap_content"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="2"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/total_balance"-->
+
+<!--                android:textColor="@color/white"/>-->
+<!--            <TextView-->
+<!--                android:id="@+id/total_qty_text"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textStyle="bold"-->
+<!--                android:gravity="center"-->
+<!--                android:text="00.00"-->
+
+<!--                android:textColor="@color/white"/>-->
+<!--        </LinearLayout>-->
+    </RelativeLayout>
+    </LinearLayout>
+        </HorizontalScrollView>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_weight="9"
+        android:visibility="visible"
+        android:background="@color/colorblue_dark"
+        android:layout_alignBottom="@id/recyclerView_report"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/total_balance"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_qty_text"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="00.00"
+            android:textSize="14sp"
+
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <!--</ScrollView>-->
+        </LinearLayout>
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_normalColor="@color/colorblue1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:bmb_draggable="true"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

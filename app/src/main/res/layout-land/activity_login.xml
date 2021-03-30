@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="locale"
+
+    android:background="@drawable/background_blue"
+    android:id="@+id/mainlayout"
+    tools:context="com.dr7.salesmanmanager.Login">
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView3"-->
+    <!--      />-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/setting_floatingBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorblue_dark"
+        android:elevation="5dp"
+        app:rippleColor="@color/colorblue_dark"
+        android:src="@drawable/ic_settings_white_24dp"
+        app:fabSize="mini"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="64dp"
+        android:clickable="true"
+
+        android:src="@drawable/logo_vansales"
+        app:civ_border_color="@color/colorblue_dark"
+        app:civ_border_width="2dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/imageView3"
+        android:layout_alignLeft="@+id/imageView3"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="-71dp"
+        android:layout_marginLeft="-51dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/back_border_edit"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:ems="10"
+        android:hint="@string/app_username"
+        android:inputType="textPersonName"
+        android:textColor="@color/text_view_color"
+        android:textColorHint="@color/layer1"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layoutDirection="locale"
+        android:layout_below="@+id/usernameEditText"
+        android:layout_alignStart="@+id/usernameEditText"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/usernameEditText"
+        android:layout_marginStart="-2dp"
+        android:layout_marginLeft="-2dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/back_border_edit"
+
+        android:drawableLeft="@drawable/ic_lock_black_24dp"
+        android:textColorHint="@color/layer1"
+        android:textColor="@color/text_view_color"
+        android:ems="10"
+        android:hint="@string/app_password"
+        android:inputType="textPassword"
+        android:textSize="16sp" />
+
+    <androidx.cardview.widget.CardView
+
+        android:id="@+id/loginCardView"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/passwordEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+
+        app:cardBackgroundColor="@color/colorblue_dark3"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/logInTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="16sp"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeStepGranularity="2sp"
+
+                android:text="@string/app_day_start"
+                android:textColor="@color/layer5"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="96dp"
+        android:layout_height="91dp"
+        android:layout_above="@+id/imageView3"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="-59dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:text="@string/version"
+        android:textSize="20sp" />
+    <TextView
+        android:id="@+id/checkIpDevice"
+        android:layout_width="96dp"
+        android:layout_height="91dp"
+        android:visibility="gone"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:padding="5dp"
+
+
+        />
+</RelativeLayout>

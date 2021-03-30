@@ -1,15 +1,18 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by mohd darras on 29/12/2017.
  */
 
-public class Item {
+public class Item implements Serializable {
     private String itemNo ,itemName , unit;
     private String date ;
     private float  qty;
@@ -35,6 +38,78 @@ public class Item {
     private double posPrice;
     private String salesmanNo;
     private  String Kind_item;
+    private  String cust;
+    private  String serialCode;
+    private  String vouchDate;
+    private String itemHasSerial;
+    private  double discountCustomer;
+    private  double currentQty;
+
+    public double getCurrentQty() {
+        return currentQty;
+    }
+
+    public void setCurrentQty(double currentQty) {
+        this.currentQty = currentQty;
+    }
+
+    public double getDiscountCustomer() {
+        return discountCustomer;
+    }
+
+    public void setDiscountCustomer(double discountCustomer) {
+        this.discountCustomer = discountCustomer;
+    }
+
+    public Bitmap getItemPhoto() {
+        return itemPhoto;
+    }
+
+    public void setItemPhoto(Bitmap itemPhoto) {
+        this.itemPhoto = itemPhoto;
+    }
+
+    private Bitmap itemPhoto;
+
+//    public String getItemPhoto() {
+//        return itemPhoto;
+//    }
+//
+//    public void setItemPhoto(String itemPhoto) {
+//        this.itemPhoto = itemPhoto;
+//    }
+
+    public String getItemHasSerial() {
+        return itemHasSerial;
+    }
+
+    public void setItemHasSerial(String itemHasSerial) {
+        this.itemHasSerial = itemHasSerial;
+    }
+
+    public String getSerialCode() {
+        return serialCode;
+    }
+
+    public void setSerialCode(String serialCode) {
+        this.serialCode = serialCode;
+    }
+
+    public String getVouchDate() {
+        return vouchDate;
+    }
+
+    public void setVouchDate(String vouchDate) {
+        this.vouchDate = vouchDate;
+    }
+
+    public String getCust() {
+        return cust;
+    }
+
+    public void setCust(String cust) {
+        this.cust = cust;
+    }
 
     public Item()
     {
@@ -90,7 +165,7 @@ public class Item {
     //constructor for sales invoice
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
                 float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
-                float taxPercent,int isPosted) {
+                float taxPercent,int isPosted,String description, String serial_code) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -107,16 +182,19 @@ public class Item {
         this.taxValue = taxValue;
         this.taxPercent = taxPercent;
         this.isPosted = isPosted;
+        this.description=description;
+        this.serialCode=serial_code;
     }
 
     //constructor for stock request
-    public Item( int companyNumber,int voucherNumber , String itemNo, String itemName, float qty , String date) {
+    public Item( int companyNumber,int voucherNumber , String itemNo, String itemName, float qty , String date,double cureQty) {
         this.companyNumber = companyNumber;
         this.voucherNumber = voucherNumber;
         this.itemNo = itemNo;
         this.itemName = itemName;
         this.qty = qty;
         this.date = date;
+        this.currentQty=cureQty;
     }
 
 
@@ -372,6 +450,13 @@ public class Item {
             obj.put("companyNumber", companyNumber);
             obj.put("isPosted", isPosted);
             obj.put("itemYear", year);
+            obj.put("ITEM_DESCRITION", description);
+            obj.put("SERIAL_CODE", serialCode);
+            obj.put("VoucherDate",date);
+            obj.put("currentQty",currentQty);
+//            obj.put("ITEMHASSERIAL", itemHasSerial);
+
+
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

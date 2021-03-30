@@ -8,19 +8,29 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.util.ArrayMap;
+//import android.support.annotation.RequiresApi;
+import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
@@ -37,11 +47,19 @@ import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.activeKey;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
+import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 public class
 
@@ -49,12 +67,89 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 74;
+    private static final int DATABASE_VERSION = 137;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  price_offer_list_master  = "price_offer_list_master";
+
+    private static final String  PO_LIST_NO       = "PO_LIST_NO";
+    private static final String  PO_LIST_NAME   = "PO_LIST_NAME";
+    private static final String  PO_LIST_TYPE    = "PO_LIST_TYPE";
+    private static final String  FROM_DATE_master    = "FROM_DATE_master";
+    private static final String  TO_DATE_master="TO_DATE_master";
+
+
+    //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    private static final String  SerialItemMaster  = "SerialItemMaster";
+
+    private static final String  StoreNo       = "StoreNo";
+    private static final String  ITEM_OCODE_M   = "ITEM_OCODE_M";
+    private static final String  SerialCode    = "SerialCode";
+    private static final String  Qty_serial    = "Qty_serial";
+
+
+    //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    private static final String  Item_Switch  = "Item_Switch";
+
+    private static final String  ITEM_NAMEA   = "ITEM_NAMEA";
+    private static final String  ITEM_OCODE   = "ITEM_OCODE";
+    private static final String  ITEM_NCODE   = "ITEM_NCODE";
+
+    //----------------------------------------------------------------------
+    private static final String  SALESMAN_LOGIN_LOGHistory  = "SALESMAN_LOGIN_LOGHistory";
+
+    private static final String  DATE_LOGIN = "DATE_LOGIN";
+    private static final String  TIME_LOGIN = "TIME_LOGIN";
+    private static final String  TIME_LOGOUT= "TIME_LOGOUT";
+    private static final String  LONGTUDE2  = "LONGTUDE2";
+    private static final String  LATITUDE2  = "LATITUDE2";
+    private static final String  SALESMAN_NO= "SALESMAN_NO";
+    private static final String  IS_POSTED_LOGIN= "IS_POSTED_LOGIN";
+    //----------------------------------------------------------------------
+    private static final String SERIAL_ITEMS_TABLE  = "SERIAL_ITEMS_TABLE";
+    private static final String  KEY_SERIAL="KEY_SERIAL";
+    private static final String SERIAL_CODE_NO ="SERIAL_CODE_NO";
+    private static final String COUNTER_SERIAL ="COUNTER_SERIAL";
+    private static final String  VOUCHER_NO="VOUCHER_NO";
+    private static final String ITEMNO_SERIAL="ITEMNO_SERIAL";
+    private static final String DATE_VOUCHER="DATE_VOUCHER";
+    private static final String KIND_VOUCHER="KIND_VOUCHER";
+    private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
+    private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
+    private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
+    //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    private static final String SERIAL_ITEMS_TABLE_backup  = "SERIAL_ITEMS_TABLE_backup";
+    private static final String  KEY_SERIAL2="KEY_SERIAL2";
+    private static final String SERIAL_CODE_NO2 ="SERIAL_CODE_NO2";
+    private static final String COUNTER_SERIAL2 ="COUNTER_SERIAL2";
+    private static final String  VOUCHER_NO2="VOUCHER_NO2";
+    private static final String ITEMNO_SERIAL2="ITEMNO_SERIAL2";
+    private static final String DATE_VOUCHER2="DATE_VOUCHER2";
+    private static final String KIND_VOUCHER2="KIND_VOUCHER2";
+    private static final String  STORE_NO_SALESMAN2="STORE_NO_SALESMAN2";
+    private static final String  IS_POSTED_SERIAL2="IS_POSTED_SERIAL2";
+    private static final String  IS_BONUS_SERIAL2="IS_BONUS_SERIAL2";
+    private static final String  isItemDelete="isItemDelete";
+    private static final String  dateDelete="dateDelete";
+    //----------------------------------------------------------------------
+
+
+    private static final String PASSWORD_TABLE  = "PASSWORD_TABLE";
+    private static final String PASS_TYPE = "PASS_TYPE";
+    private static final String PASS_NO = "PASS_NO";
+    //----------------------------------------------------------------------
+
+    private static final String CUSTOMER_LOCATION  = "CUSTOMER_LOCATION";
+    private static final String CUS_NO = "CUS_NO";
+    private static final String LONG = "LONG";
+    private static final String LATIT = "LATIT";
     //----------------------------------------------------------------------
 
     private static final String ACCOUNT_REPORT  = "ACCOUNT_REPORT";
@@ -90,6 +185,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SETTING_TABLE="PRINTER_SETTING_TABLE";
     private static final String PRINTER_SETTING ="PRINTER_SETTING";
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
+    private static final String SHORT_INVOICE ="SHORT_INVOICE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -124,6 +220,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ACCPRC = "ACCPRC";
     private static final String HIDE_VAL = "HIDE_VAL";
 
+    private static final String IS_POST = "IS_POST";
+    private static final String CUS_ID_Text="CUS_ID_Text";
+
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Item_Unit_Details = "Item_Unit_Details";
 
@@ -144,6 +244,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_L1 = "ITEM_L";
     private static final String ITEM_F_D = "F_D";
     private static final String KIND_ITEM= "KIND_ITEM";
+    private static final String ITEM_HAS_SERIAL= "ITEM_HAS_SERIAL";
+    private static final String ITEM_PHOTO= "ITEM_PHOTO";
+    /*byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length); */
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String Price_List_D = "Price_List_D";
 
@@ -170,7 +274,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SalesManNo4 = "SalesManNo";
     private static final String SalesManName4 = "SalesManName";
     private static final String IsSuspended4 = "IsSuspended";
-
+    private static final String IP_ADDRESS_DEVICE = "IP_ADDRESS_DEVICE";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SalesMan_Items_Balance = "SalesMan_Items_Balance";
 
@@ -196,8 +300,17 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CustomerPrices = "CustomerPrices";
 
     private static final String ItemNumber = "ItemNumber";
+
+
     private static final String CustomerNumber = "CustomerNumber";
     private static final String Price = "Price";
+    private static final String DISCOUNT_CUSTOMER = "DISCOUNT_CUSTOMER";
+    private static final String ItemNo_ = "ItemNo_";
+    private static final String Other_Discount   = "Other_Discount";
+    private static final String FromDate         = "FromDate";
+    private static final String ToDate          = "ToDate";
+    private static final String ListNo          = "ListNo";
+    private static final String ListType        = "ListType";
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -212,6 +325,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String CHECK_OUT_TIME = "CHECK_OUT_TIME";
     private static final String STATUS = "STATUS";
     private static final String IS_POSTED2 = "IS_POSTED";
+    private static final String REAL_LONGTUD = "REAL_LONGTUD";
+    private static final String REAL_LATITUDE = "REAL_LATITUDE";
+
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String TABLE_SETTING = "SETTING";
@@ -241,6 +357,25 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String HideQty="HideQty";
     private static final String LockCashReport="LockCashReport";
     private static final String salesManName="salesManName";
+    private static final String PreventOrder="PreventOrder";
+    private static final String RequiredNote="RequiredNote";
+    private static final String PreventTotalDiscount="PreventTotalDiscount";
+    private static final String AutomaticCheque="AutomaticCheque";
+    private static final String Tafqit="Tafqit";
+    private static final String  PreventChangPayMeth="PreventChangPayMeth";
+    private static final String ShowCustomerList="ShowCustomerList";
+    private static final String NoReturnInvoice="NoReturnInvoice";
+    private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
+    private static final String SHOW_IMAGE_ITEM="SHOW_IMAGE_ITEM";
+    private static final String APPROVE_ADMIN="APPROVE_ADMIN";
+    private static final String SAVE_ONLY="SAVE_ONLY";
+    private static final String SHOW_QUANTITY_SOLD="SHOW_QUANTITY_SOLD";
+    private static final String READ_OFFER_FROM_ADMIN="READ_OFFER_FROM_ADMIN";
+    private static final String IP_PORT="IP_PORT";
+    private static final String CheckQtyServer="CheckQtyServer";
+    private static final String DontShowTaxOnPrinter="DontShowTaxOnPrinter";
+    private static final String CONO="CONO";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -248,6 +383,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String COMPANY_TEL = "COMPANY_TEL";
     private static final String TAX_NO = "TAX_NO";
     private static final String LOGO = "LOGO";
+    private static final String NOTE = "NOTE";
+
+    private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
+    private static final String LATITUDE_COMPANY  = "LATITUDE_COMPANY";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -287,6 +426,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String COMPANY_NUMBER2 = "COMPANY_NUMBER";
     private static final String ITEM_YEAR = "ITEM_YEAR";
     private static final String IS_POSTED1 = "IS_POSTED";
+    private static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
+    private static final String SERIAL_CODE = "SERIAL_CODE";
+    private static final String VOUCH_DATE = "VOUCH_DATE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String PAYMENTS = "PAYMENTS";
@@ -336,7 +478,8 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_NAME6 = "ITEM_NAME";
     private static final String UNIT_QTY6 = "UNIT_QTY";
     private static final String VOUCHER_DATE6 = "VOUCHER_DATE";
-
+    private static final String CURRENT_QTY = "CURRENT_QTY";
+    private static final String isPostedDetails = "isPostedDetails";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String ADDED_CUSTOMER = "ADDED_CUSTOMER";
 
@@ -347,6 +490,9 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SALESMAN7 = "SALESMAN";
     private static final String SALESMAN_NO7 = "SALESMAN_NO";
     private static final String IS_POSTED7 = "IS_POSTED";
+    private static final String ADRESS_CUSTOMER  = "ADRESS_CUSTOMER";
+    private static final String TELEPHONE        = "TELEPHONE";
+    private static final String CONTACT_PERSON   = "CONTACT_PERSON";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VS_PROMOTION = "VS_PROMOTION";
@@ -370,6 +516,10 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL = "SERIAL";
     private static final String CUSTOMR_NO = "CUSTOMR_NO";
     private static final String CUSUSTOMR_NAME = "CUSUSTOMR_NAME";
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String SalesMenLogIn = "SalesMenLogIn";
+
+    private static final String UserNo_LogIn = "UserNo_LogIn";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -379,7 +529,127 @@ DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+
+        String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+                + ITEM_NAMEA + " TEXT,"
+                + ITEM_OCODE + " TEXT,"
+                + ITEM_NCODE + " TEXT"
+
+               + ")";
+        db.execSQL(CREATE_Item_Switch_TABLE);
+        //***************************************************************************************
+        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY (DATE_LOGIN)"+
+
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //-------------------------------------------------------------------------
+
+
+        String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+                + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO + " TEXT,"
+                + COUNTER_SERIAL + " INTEGER,"
+                + VOUCHER_NO + " INTEGER,"
+                + ITEMNO_SERIAL + " TEXT,"
+                + KIND_VOUCHER + " TEXT,"
+
+                + DATE_VOUCHER + " TEXT,"
+                + STORE_NO_SALESMAN + " INTEGER,"
+                + IS_POSTED_SERIAL + " INTEGER,"
+                + IS_BONUS_SERIAL+" INTEGER"
+                +
+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+        //-------------------------------------------------------------------------
+
+        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO2 + " TEXT,"
+                + COUNTER_SERIAL2 + " INTEGER,"
+                + VOUCHER_NO2 + " INTEGER,"
+                + ITEMNO_SERIAL2 + " TEXT,"
+                + KIND_VOUCHER2 + " TEXT,"
+
+                + DATE_VOUCHER2 + " TEXT,"
+                + STORE_NO_SALESMAN2 + " INTEGER,"
+                + IS_POSTED_SERIAL2 + " INTEGER,"
+                + IS_BONUS_SERIAL2+" INTEGER,"
+                +isItemDelete+ " INTEGER,"
+
+                +dateDelete+" TEXT"+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
+        //-------------------------------------------------------------------------
+
+        try {
+
+
+
+        String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                + StoreNo + " TEXT,"
+                + ITEM_OCODE_M + " TEXT,"
+                + SerialCode + " TEXT,"
+                + Qty_serial + " TEXT"
+
+                +
+
+
+                ")";
+        db.execSQL(CREATE_SERIAL_TABLE);
+        }catch (Exception e){}
+
+
+        //-------------------------------------------------------------------------
+        try {
+
+
+
+            String CREATE_OfferListMaster_TABLE= "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
+
+                    + PO_LIST_NO + " INTEGER,"
+                    + PO_LIST_NAME + " TEXT,"
+                    + PO_LIST_TYPE + " INTEGER,"
+                    + FROM_DATE_master  + " TEXT,"
+                    +TO_DATE_master  +" TEXT"
+                    +
+
+
+                    ")";
+            db.execSQL(CREATE_OfferListMaster_TABLE);
+        }catch (Exception e){}
+
+
+        //-------------------------------------------------------------------------
+        String CREATE_TABLE_PASSWORD_TABLE= "CREATE TABLE IF NOT EXISTS " + PASSWORD_TABLE + "("
+                + PASS_TYPE + " INTEGER,"
+                + PASS_NO + " TEXT"+
+                ")";
+        db.execSQL(CREATE_TABLE_PASSWORD_TABLE);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+
+        String CREATE_TABLE_CUSTOMER_LOCATION= "CREATE TABLE IF NOT EXISTS " + CUSTOMER_LOCATION + "("
+                + CUS_NO + " TEXT,"
+                + LONG + " TEXT,"
+                + LATIT + " TEXT"+
+
+                ")";
+        db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
                 + DATE + " TEXT,"
                 + TRANSFER_NAME + " TEXT,"
                 + DEBTOR + " TEXT,"
@@ -392,7 +662,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                 + ITEMNAME + " TEXT,"
                 + ITEMNO + " INTEGER,"
                 + AMOUNT_QTY + " INTEGER,"
@@ -402,17 +672,16 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
 
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-
-        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE " + CUSTOMER_MASTER + "("
+        String CREATE_TABLE_CUSTOMER_MASTER = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_MASTER + "("
                 + COMPANY_NUMBER0 + " INTEGER,"
-                + CUS_ID + " INTEGER,"
+                + CUS_ID + " TEXT,"
                 + CUS_NAME0 + " TEXT,"
                 + ADDRESS + " TEXT,"
                 + IS_SUSPENDED + " INTEGER,"
@@ -421,11 +690,16 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + SALES_MAN_NO + " TEXT,"
                 + CREDIT_LIMIT + " INTEGER,"
                 + PAY_METHOD0 + " INTEGER,"
-                + CUST_LAT + " TEXT,"
-                + CUST_LONG + " TEXT,"
+                + CUST_LAT + " TEXT not null default '',"
+                + CUST_LONG + " TEXT not null default '',"
                 + MAX_DISCOUNT + " REAL,"
                 +ACCPRC+ " TEXT,"
-                +HIDE_VAL+ " INTEGER"
+                +HIDE_VAL+ " INTEGER,"
+
+                +IS_POST+" INTEGER not null default  0,"
+                +CUS_ID_Text+ " TEXT"
+
+
 
 
                 + ")";
@@ -434,7 +708,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE " + Item_Unit_Details + "("
+        String CREATE_TABLE_Item_Unit_Details = "CREATE TABLE IF NOT EXISTS " + Item_Unit_Details + "("
                 + ComapnyNo + " INTEGER,"
                 + ItemNo + " TEXT,"
                 + UnitID + " TEXT,"
@@ -442,7 +716,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE " + VISIT_RATE + "("
+        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
                 + VISIT_PERPOS + " INTEGER,"
                 + CUSTOMER_REGARDS + " INTEGER,"
                 + CHECK_STORE + " INTEGER,"
@@ -458,7 +732,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Items_Master = "CREATE TABLE " + Items_Master + "("
+        String CREATE_TABLE_Items_Master = "CREATE TABLE IF NOT EXISTS " + Items_Master + "("
                 + ComapnyNo1 + " INTEGER,"
                 + ItemNo1 + " TEXT,"
                 + Name1 + " TEXT,"
@@ -467,25 +741,30 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + IsSuspended1 + " INTEGER,"
                 + ITEM_L1 + " INTEGER,"
                 + ITEM_F_D + " REAL,"
-                + KIND_ITEM + " TEXT"
+                + KIND_ITEM + " TEXT,"
+                + ITEM_HAS_SERIAL + " INTEGER,"
+                 +ITEM_PHOTO + " TEXT"
+
                 + ")";
 
         db.execSQL(CREATE_TABLE_Items_Master);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+        String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                 + KEY_VALUE + " INTEGER"+ ")";
         db.execSQL(CREATE_ACTIVE_KEY);
         //-----------------------------------------------------
 
-        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+        String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
                 + PRINTER_SETTING +" INTEGER ,"
-                + PRINTER_SHAPE + " INTEGER"+ ")";
+                + PRINTER_SHAPE + " INTEGER,"
+                + SHORT_INVOICE + " INTEGER"
+                + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_D = "CREATE TABLE " + Price_List_D + "("
+        String CREATE_TABLE_Price_List_D = "CREATE TABLE IF NOT EXISTS " + Price_List_D + "("
                 + ComapnyNo2 + " INTEGER,"
                 + PrNo2 + " INTEGER,"
                 + ItemNo2 + " TEXT,"
@@ -497,7 +776,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Price_List_M = "CREATE TABLE " + Price_List_M + "("
+        String CREATE_TABLE_Price_List_M = "CREATE TABLE IF NOT EXISTS " + Price_List_M + "("
                 + ComapnyNo3 + " INTEGER,"
                 + PrNo3 + " INTEGER,"
                 + Description3 + " TEXT,"
@@ -506,16 +785,20 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Sales_Team = "CREATE TABLE " + Sales_Team + "("
+        String CREATE_TABLE_Sales_Team = "CREATE TABLE IF NOT EXISTS " + Sales_Team + "("
                 + ComapnyNo4 + " INTEGER,"
                 + SalesManNo4 + " INTEGER,"
                 + SalesManName4 + " TEXT,"
-                + IsSuspended4 + " INTEGER" + ")";
+                + IsSuspended4 + " INTEGER,"
+
+                +IP_ADDRESS_DEVICE+ " TEXT"
+
+                + ")";
         db.execSQL(CREATE_TABLE_Sales_Team);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE " + SalesMan_Items_Balance + "("
+        String CREATE_TABLE_SalesMan_Items_Balance = "CREATE TABLE IF NOT EXISTS " + SalesMan_Items_Balance + "("
                 + ComapnyNo5 + " INTEGER,"
                 + SalesManNo5 + " INTEGER,"
                 + ItemNo5 + " TEXT,"
@@ -524,7 +807,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE " + SalesmanAndStoreLink + "("
+        String CREATE_TABLE_SalesmanAndStoreLink = "CREATE TABLE IF NOT EXISTS " + SalesmanAndStoreLink + "("
                 + ComapnyNo6 + " INTEGER,"
                 + SalesManNo6 + " INTEGER,"
                 + StoreNo6 + " INTEGER" + ")";
@@ -532,23 +815,32 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_Salesmen = "CREATE TABLE " + SalesMen + "("
+        String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
                 + UserName + " TEXT,"
                 + Password + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_Salesmen);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CustomerPrices = "CREATE TABLE " + CustomerPrices + "("
+        String CREATE_TABLE_CustomerPrices = "CREATE TABLE IF NOT EXISTS " + CustomerPrices + "("
                 + ItemNumber + " INTEGER,"
                 + CustomerNumber + " INTEGER,"
-                + Price + " INTEGER" + ")";
+                + Price + " INTEGER,"
+                + DISCOUNT_CUSTOMER + " real,"
+                + ItemNo_ + " TEXT,"
+                + Other_Discount + " TEXT,"
+                + FromDate + " TEXT,"
+                + ToDate + " TEXT,"
+                + ListNo + " TEXT,"
+                + ListType + " TEXT"
+
+                + ")";
         db.execSQL(CREATE_TABLE_CustomerPrices);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_CONTACTS = "CREATE TABLE " + TABLE_TRANSACTIONS + "("
+        String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
                 + SALES_MAN_ID + " INTEGER,"
                 + CUS_CODE + " INTEGER,"
                 + CUS_NAME + " TEXT,"
@@ -557,12 +849,14 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CHECK_OUT_DATE + " TEXT,"
                 + CHECK_OUT_TIME + " TEXT,"
                 + STATUS + " INTEGER,"
-                + IS_POSTED2 + " INTEGER" + ")";
+                + IS_POSTED2 + " INTEGER,"
+                + REAL_LONGTUD+ " TEXT,"
+                + REAL_LATITUDE + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_CONTACTS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SETTING = "CREATE TABLE " + TABLE_SETTING + "("
+        String CREATE_TABLE_SETTING = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTING + "("
                 + TRANS_KIND + " INTEGER,"
                 + SERIAL_NUMBER + " INTEGER,"
                 + IP_ADDRESS + " TEXT,"
@@ -584,26 +878,53 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + AMOUNT_OF_MAX_DISCOUNT + " INTEGER,"
                 + Customer_Authorized + " INTEGER,"
                 + Password_Data + " INTEGER,"
-                + Arabic_Language + " INTEGER,"
+                + Arabic_Language + " INTEGER DEFAULT '1' ,"
                 + HideQty + " INTEGER,"
                 + LockCashReport + " INTEGER,"
-                + salesManName + " TEXT"
+                + salesManName + " TEXT,"
+                + PreventOrder + " INTEGER,"
+                + RequiredNote + " INTEGER,"
+                + PreventTotalDiscount + " INTEGER,"
+                + AutomaticCheque + " INTEGER,"
+                + Tafqit + " INTEGER,"
+                + PreventChangPayMeth + " INTEGER,"
+                + ShowCustomerList + " INTEGER DEFAULT 1 ,"
+                + NoReturnInvoice + " INTEGER,"
+                + WORK_WITH_SERIAL + " INTEGER,"
+                + SHOW_IMAGE_ITEM + " INTEGER,"
+
+                + APPROVE_ADMIN + " INTEGER,"
+                + SAVE_ONLY + " INTEGER,"
+                + SHOW_QUANTITY_SOLD + " INTEGER,"
+                + READ_OFFER_FROM_ADMIN + " INTEGER,"
+                + IP_PORT + " TEXT,"
+                + CheckQtyServer + " INTEGER,"
+                +DontShowTaxOnPrinter + " INTEGER,"
+                +CONO+ " TEXT"
+
 
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE " + COMPANY_INFO + "("
+        String CREATE_TABLE_COMPANY_INFO = "CREATE TABLE IF NOT EXISTS " + COMPANY_INFO + "("
                 + COMPANY_NAME + " TEXT,"
                 + COMPANY_TEL + " INTEGER,"
                 + TAX_NO + " INTEGER,"
-                + LOGO + " BLOB" + ")";
+                + LOGO + " BLOB,"
+                + NOTE + " TEXT,"
+                + LONGTUDE_COMPANY +" REAL,"
+                + LATITUDE_COMPANY +" REAL "
+                + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        try {
 
-        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE " + SALES_VOUCHER_MASTER + "("
+
+
+        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
                 + COMPANY_NUMBER + " INTEGER,"
                 + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
@@ -622,10 +943,15 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CUST_NUMBER + " TEXT,"
                 + VOUCHER_YEAR + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
+        }
+        catch (Exception e)
+        {
+            Log.e("databaseHandler","CREATE_TABLE_SALES_VOUCHER_MASTER");
+        }
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE " + SALES_VOUCHER_DETAILS + "("
+        String CREATE_TABLE_SALES_VOUCHER_DETAILS = "CREATE TABLE IF NOT EXISTS " + SALES_VOUCHER_DETAILS + "("
                 + VOUCHER_NUMBER + " INTEGER,"
                 + VOUCHER_TYPE + " INTEGER,"
                 + ITEM_NUMBER + " TEXT,"
@@ -641,12 +967,20 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + TAX_PERCENT + " INTEGER,"
                 + COMPANY_NUMBER2 + " INTEGER,"
                 + ITEM_YEAR + " TEXT,"
-                + IS_POSTED1 + " INTEGER" + ")";
+                + IS_POSTED1 + " INTEGER,"
+                + ITEM_DESCRIPTION+ " TEXT,"
+                + SERIAL_CODE+ " TEXT,"
+
+                + VOUCH_DATE+ " TEXT"
+
+
+
+        + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS = "CREATE TABLE " + PAYMENTS + "("
+        String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + PAYMENTS + "("
                 + COMPANY_NUMBER3 + " INTEGER,"
                 + VOUCHER_NUMBER3 + " INTEGER,"
                 + PAY_DATE + " INTEGER,"
@@ -662,7 +996,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE " + PAYMENTS_PAPER + "("
+        String CREATE_TABLE_PAYMENTS_PAPER = "CREATE TABLE IF NOT EXISTS " + PAYMENTS_PAPER + "("
                 + COMPANY_NUMBER4 + " INTEGER,"
                 + VOUCHER_NUMBER4 + " INTEGER,"
                 + CHECK_NUMBER + " INTEGER,"
@@ -675,7 +1009,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE " + REQUEST_MASTER + "("
+        String CREATE_TABLE_REQUEST_MASTER = "CREATE TABLE IF NOT EXISTS " + REQUEST_MASTER + "("
                 + COMPANY_NUMBER5 + " INTEGER,"
                 + VOUCHER_NUMBER5 + " INTEGER,"
                 + VOUCHER_DATE5 + " TEXT,"
@@ -687,30 +1021,42 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE " + REQUEST_DETAILS + "("
+        String CREATE_TABLE_REQUEST_DETAILS = "CREATE TABLE IF NOT EXISTS " + REQUEST_DETAILS + "("
                 + COMPANY_NUMBER6 + " INTEGER,"
                 + VOUCHER_NUMBER6 + " INTEGER,"
                 + ITEM_NUMBER6 + " TEXT,"
                 + ITEM_NAME6 + " TEXT,"
                 + UNIT_QTY6 + " INTEGER,"
-                + VOUCHER_DATE5 + " TEXT" + ")";
+                + VOUCHER_DATE5 + " TEXT,"
+                + CURRENT_QTY + " real,"
+                +isPostedDetails+ " INTEGER"
+                + ")";
         db.execSQL(CREATE_TABLE_REQUEST_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE " + ADDED_CUSTOMER + "("
+        String CREATE_TABLE_ADDED_CUSTOMER = "CREATE TABLE IF NOT EXISTS " + ADDED_CUSTOMER + "("
                 + CUST_NAME7 + " TEXT,"
                 + REMARK7 + " TEXT,"
                 + LATITUDE7 + " INTEGER,"
                 + LONGITUDE7 + " INTEGER,"
                 + SALESMAN7 + " TEXT,"
                 + IS_POSTED7 + " INTEGER,"
-                + SALESMAN_NO7 + " TEXT" + ")";
+                + SALESMAN_NO7 + " TEXT,"
+                + ADRESS_CUSTOMER + " TEXT,"
+
+                + TELEPHONE + " TEXT,"
+
+                + CONTACT_PERSON + " TEXT"
+
+
+
+                + ")";
         db.execSQL(CREATE_TABLE_ADDED_CUSTOMER);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE " + VS_PROMOTION + "("
+        String CREATE_TABLE_VS_PROMOTION = "CREATE TABLE IF NOT EXISTS " + VS_PROMOTION + "("
                 + PROMOTION_ID + " INTEGER,"
                 + PROMOTION_TYPE + " INTEGER,"
                 + FROM_DATE + " TEXT,"
@@ -723,7 +1069,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+        String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE IF NOT EXISTS " + SALESMEN_STATIONS + "("
                 + SALESMEN_NO + " TEXT,"
                 + DATE_ + " TEXT,"
                 + LATITUDE + " TEXT,"
@@ -732,25 +1078,40 @@ DatabaseHandler extends SQLiteOpenHelper {
                 + CUSTOMR_NO + " TEXT,"
                 + CUSUSTOMR_NAME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
+        String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+                + UserNo_LogIn + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
     }
+
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS SALESMAN_LOGIN_TABLE ");
+        onCreate(db);
+
         try{
-            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
         }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
+
         try{
             db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
         }catch (Exception e)
@@ -759,6 +1120,151 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
         try{
             db.execSQL("ALTER TABLE SETTING ADD LockCashReport  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD PreventChangPayMeth  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD ShowCustomerList  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD SHOW_QUANTITY_SOLD  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD READ_OFFER_FROM_ADMIN  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD IP_PORT  TEXT NOT NULL DEFAULT ' '");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD DontShowTaxOnPrinter INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD CONO TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+//**************************************End Table setting *************************************************************
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD ITEM_DESCRIPTION  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD HIDE_VAL  TEXT NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -778,25 +1284,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         }
 
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Password_Data INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
-        try{
-            db.execSQL("ALTER TABLE SETTING ADD Customer_Authorized INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
         try{
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  MAX_DISCOUNT  REAL NOT NULL DEFAULT '0'");
 
@@ -916,15 +1404,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
 
         try{
-            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE " + ACCOUNT_REPORT + "("
+            String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE IF NOT EXISTS " + ACCOUNT_REPORT + "("
                     + DATE + " TEXT,"
                     + TRANSFER_NAME + " TEXT,"
                     + DEBTOR + " TEXT,"
@@ -940,7 +1422,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         try{
 
-            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE " + SALESMEN_STATIONS + "("
+            String CREATE_TABLE_SALESMEN_STATIONS = "CREATE TABLE  IF NOT EXISTS " + SALESMEN_STATIONS + "("
                     + SALESMEN_NO + " TEXT,"
                     + DATE_ + " TEXT,"
                     + LATITUDE + " TEXT,"
@@ -958,7 +1440,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         try {
 
 
-            String CREATE_ACTIVE_KEY = "CREATE TABLE " + ACTIVE_KEY + "("
+            String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
                     + KEY_VALUE + " INTEGER"+ ")";
             db.execSQL(CREATE_ACTIVE_KEY);
@@ -970,7 +1452,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         try {
-            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE " + PRINTER_SETTING_TABLE + "("
+            String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS  " + PRINTER_SETTING_TABLE + "("
 
                     + PRINTER_SETTING + " INTEGER"+ ")";
             db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -980,8 +1462,22 @@ DatabaseHandler extends SQLiteOpenHelper {
         catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column PRINTER_SETTING_TABLE");
         }
+
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD PRINTER_SHAPE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD SHORT_INVOICE  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString()+"SHORT_INVOICE");
+        }
+
         try {
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE " + QTY_OFFERS + "("
+        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
                 + PAYMENT_TYPE + " INTEGER"+ ")";
@@ -993,7 +1489,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
 
         try {
-            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE " + ITEMS_QTY_OFFER + "("
+            String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                     + ITEMNAME + " TEXT,"
                     + ITEMNO + " INTEGER,"
                     + AMOUNT_QTY + " INTEGER,"
@@ -1005,7 +1501,341 @@ DatabaseHandler extends SQLiteOpenHelper {
           catch (Exception e) {
                 Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
             }
+        try {
+            String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE " + CUSTOMER_LOCATION + "("
+                    + CUS_NO + " TEXT,"
+                    + LONG + " TEXT,"
+                    + LATIT + " TEXT" +
 
+                    ")";
+            db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
+        }
+        catch (Exception e) {
+            Log.e("onUpgrade*****", "CREATE_TABLE_CUSTOMER_LOCATION");
+        }
+
+        try{
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD NOTE  TEXT NOT NULL DEFAULT ''");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+
+
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  SERIAL_CODE  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  VOUCH_DATE  TEXT NOT NULL DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+            db.execSQL("alter table CUSTOMER_MASTER ADD COLUMN CUS_ID_Text TEXT NOT NULL DEFAULT '' ");
+            db.execSQL("update CUSTOMER_MASTER set CUS_ID_Text = CUS_ID ");
+//            db.execSQL("update CUSTOMER_MASTER set CUS_ID = '' ");
+            //update CUSTOMER_MASTER set new_CUS_ID = CUS_ID;
+            //update CUSTOMER_MASTER set CUS_ID = '';
+
+        } catch (Exception e) {
+
+        }
+        try {
+            String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+                    + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + SERIAL_CODE_NO + " TEXT,"
+                    + COUNTER_SERIAL + " INTEGER,"
+                    + VOUCHER_NO + " INTEGER,"
+                    + ITEMNO_SERIAL + " TEXT,"
+
+                    + KIND_VOUCHER + " TEXT,"
+
+                    + DATE_VOUCHER + " TEXT,"
+                    + STORE_NO_SALESMAN + " INTEGER,"
+                    + IS_POSTED_SERIAL + " INTEGER,"+
+                    IS_BONUS_SERIAL+" INTEGER"+
+
+                    ")";
+            db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
+        }
+        catch (Exception e) {
+
+            Log.e("SERIAL_ITEMS_TABLE",""+e.getMessage());
+            }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_POSTED_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  IS_BONUS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //********************************************* End SERIAL_ITEMS_TABLE ****************************************************
+        try{
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_HAS_SERIAL  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE Items_Master ADD  ITEM_PHOTO  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //******************************** Added Customer ****************************************
+        try{
+
+
+
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  ADRESS_CUSTOMER  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  TELEPHONE  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE ADDED_CUSTOMER ADD  CONTACT_PERSON  TEXT  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        //
+//*********************************** TABLE LOGIN *************************************
+        //+ KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT
+        String CREATE_SALESMAN_LOGIN_TABLE= " CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+                + DATE_LOGIN + " TEXT,"
+                + TIME_LOGIN + " TEXT,"
+                + TIME_LOGOUT + " TEXT,"
+                + LONGTUDE2 + " REAL,"
+                + LATITUDE2 + " REAL,"
+                + SALESMAN_NO + " TEXT,"
+                + IS_POSTED_LOGIN + " INTEGER,"
+                +"  PRIMARY KEY ( DATE_LOGIN)"+
+
+                ")";
+        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
+        //****************************************************************************
+        try{
+
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LONGTUDE_COMPANY  REAL  DEFAULT 0.0 ");
+            db.execSQL("ALTER TABLE COMPANY_INFO ADD  LATITUDE_COMPANY  REAL  DEFAULT 0.0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        //*****************************************************************************
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  DISCOUNT_CUSTOMER  REAL  DEFAULT 0.0 ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ItemNo_  TEXT  DEFAULT '' ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE CustomerPrices ADD  Other_Discount  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  FromDate  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ToDate  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ListNo  TEXT  DEFAULT '' ");
+            db.execSQL("ALTER TABLE CustomerPrices ADD  ListType  TEXT  DEFAULT '' ");
+
+
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+
+            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LONGTUD  TEXT  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE TRANSACTIONS ADD  REAL_LATITUDE  TEXT  DEFAULT '0' ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try {
+
+            String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+                    + ITEM_NAMEA + " TEXT,"
+                    + ITEM_OCODE + " TEXT,"
+                    + ITEM_NCODE + " TEXT"
+
+                    + ")";
+            db.execSQL(CREATE_Item_Switch_TABLE);
+        }catch (Exception e){}
+        //-------------------------------------------------------------------------
+
+        try {
+
+            String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+
+                    + StoreNo + " TEXT,"
+                    + ITEM_OCODE_M + " TEXT,"
+                    + SerialCode + " TEXT,"
+                    + Qty_serial + " TEXT"
+
+                    +
+                    ")";
+            db.execSQL(CREATE_SERIAL_TABLE);
+        }catch (Exception e){}
+        //***************************************************************
+        try {
+
+
+
+            String CREATE_OfferListMaster_TABLE= "CREATE TABLE IF NOT EXISTS " + price_offer_list_master + "("
+
+                    + PO_LIST_NO + " INTEGER,"
+                    + PO_LIST_NAME + " TEXT,"
+                    + PO_LIST_TYPE + " INTEGER,"
+                    + FROM_DATE_master  + " TEXT,"
+                    +TO_DATE_master  +" TEXT"
+                    +
+
+
+                    ")";
+            db.execSQL(CREATE_OfferListMaster_TABLE);
+        }catch (Exception e){}
+        try{
+
+            db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  CURRENT_QTY  REAL  DEFAULT '0' ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+
+            db.execSQL("ALTER TABLE REQUEST_DETAILS ADD  isPostedDetails  INTEGER  DEFAULT 0 ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+                + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + SERIAL_CODE_NO2 + " TEXT,"
+                + COUNTER_SERIAL2 + " INTEGER,"
+                + VOUCHER_NO2 + " INTEGER,"
+                + ITEMNO_SERIAL2 + " TEXT,"
+                + KIND_VOUCHER2 + " TEXT,"
+
+                + DATE_VOUCHER2 + " TEXT,"
+                + STORE_NO_SALESMAN2 + " INTEGER,"
+                + IS_POSTED_SERIAL2 + " INTEGER,"
+                + IS_BONUS_SERIAL2+" INTEGER,"
+                +isItemDelete+ " INTEGER,"
+
+                +dateDelete+" TEXT" +
+
+        ")";
+        db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
+
+
+        try{
+
+            String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+                    + UserNo_LogIn + " TEXT" + ")";
+            db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+
+            db.execSQL("ALTER TABLE Sales_Team ADD  IP_ADDRESS_DEVICE  TEXT  DEFAULT '' ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
+
+    }
+
+
+
+    public void addItemSwitch(List<ItemSwitch> itemSwitch)
+    {
+        db = this.getReadableDatabase();
+        db.beginTransaction();
+        Log.e("addItemSwitch", "" + itemSwitch.size());
+
+        for (int i = 0; i < itemSwitch.size(); i++) {
+            try {
+                db = this.getReadableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(ITEM_NAMEA, itemSwitch.get(i).getItem_NAMEA());
+                values.put(ITEM_OCODE, itemSwitch.get(i).getItem_OCODE());
+                values.put(ITEM_NCODE, itemSwitch.get(i).getItem_NCODE());
+                db.insertWithOnConflict(Item_Switch, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+
+
+            } catch (Exception e) {
+                Log.e("DBAccount_Report", "" + e.getMessage());
+
+            }
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
 
     }
     public void addAccount_report(Account_Report account_report)
@@ -1029,6 +1859,26 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void addCustomerLocation(CustomerLocation customerLocation)
+    {
+        try {
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+
+            values.put(CUS_NO, customerLocation.getCUS_NO());
+            values.put(LONG,customerLocation.getLONG());
+            values.put(LATIT,customerLocation.getLATIT());
+
+            db.insert(CUSTOMER_LOCATION, null, values);
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("DBAccount_Report",""+e.getMessage());
+
+        }
+
+    }
+
     public void add_Items_Qty_Offer(ItemsQtyOffer itemsQtyOffer)
     {
         try {
@@ -1042,6 +1892,132 @@ DatabaseHandler extends SQLiteOpenHelper {
             values.put(DISCOUNT, itemsQtyOffer.getDiscount_value());
             db.insert(ITEMS_QTY_OFFER, null, values);
             db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+    public void add_Serial(serialModel serialModelItem)
+    {
+        try {
+
+
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(SERIAL_CODE_NO, serialModelItem.getSerialCode());
+            values.put(COUNTER_SERIAL, serialModelItem.getCounterSerial());
+            values.put(VOUCHER_NO, serialModelItem.getVoucherNo());
+            values.put(ITEMNO_SERIAL, serialModelItem.getItemNo());
+            values.put(DATE_VOUCHER, serialModelItem.getDateVoucher());
+            values.put(KIND_VOUCHER, serialModelItem.getKindVoucher());
+            values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
+            values.put(IS_POSTED_SERIAL, "0");
+            values.put(IS_BONUS_SERIAL, serialModelItem.getIsBonus());
+            db.insert(SERIAL_ITEMS_TABLE, null, values);
+            Log.e("add_Serial",""+serialModelItem.getSerialCode());
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+    public void add_SerialBackup(serialModel serialModelItem,int flag)
+    {
+        try {
+
+            Log.e("listMasterSerialFor","add_SerialBackup="+serialModelItem.getSerialCode());
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(SERIAL_CODE_NO2, serialModelItem.getSerialCode());
+            values.put(COUNTER_SERIAL2, serialModelItem.getCounterSerial());
+            values.put(VOUCHER_NO2, serialModelItem.getVoucherNo());
+            values.put(ITEMNO_SERIAL2, serialModelItem.getItemNo());
+            values.put(DATE_VOUCHER2, serialModelItem.getDateVoucher());
+            values.put(KIND_VOUCHER2, serialModelItem.getKindVoucher());
+            values.put(STORE_NO_SALESMAN2, serialModelItem.getStoreNo());
+            values.put(IS_POSTED_SERIAL2, "0");
+            values.put(IS_BONUS_SERIAL2, serialModelItem.getIsBonus());
+            if(flag==1)
+            {
+                values.put(isItemDelete, "1");
+            }
+            else {
+                values.put(isItemDelete, serialModelItem.getIsDeleted());
+            }
+
+            values.put(dateDelete, serialModelItem.getDateDelete());
+
+
+
+            db.insert(SERIAL_ITEMS_TABLE_backup, null, values);
+            Log.e("add_Serial",""+serialModelItem.getSerialCode());
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+
+    public void add_SerialMasteItems(List<serialModel> serialModelItem)
+    {
+
+        try {
+            db = this.getReadableDatabase();
+            db.beginTransaction();
+
+            for (int i = 0; i < serialModelItem.size(); i++) {
+                ContentValues values = new ContentValues();
+                values.put(StoreNo, serialModelItem.get(i).getStoreNo());
+
+                values.put( ITEM_OCODE_M , serialModelItem.get(i).getItemNo());
+
+                values.put(SerialCode, serialModelItem.get(i).getSerialCode());
+                values.put(Qty_serial, serialModelItem.get(i).getQty());
+
+
+                db.insertWithOnConflict(SerialItemMaster, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
+        catch (Exception e){
+            Log.e("Dbhandler_addItemQOf",""+e.getMessage());
+
+        }
+
+    }
+    public void add_OfferListMaster(List<OfferListMaster> offerListMasters)
+    {
+
+        try {
+            db = this.getReadableDatabase();
+            db.beginTransaction();
+
+            for (int i = 0; i < offerListMasters.size(); i++) {
+                ContentValues values = new ContentValues();
+                values.put(PO_LIST_NO, offerListMasters.get(i).getPO_LIST_NO());
+
+                values.put( PO_LIST_NAME , offerListMasters.get(i).getPO_LIST_NAME());
+
+                values.put(PO_LIST_TYPE, offerListMasters.get(i).getPO_LIST_TYPE());
+                values.put(FROM_DATE_master, offerListMasters.get(i).getFROM_DATE());
+                values.put(TO_DATE_master, offerListMasters.get(i).getTO_DATE());
+
+
+                db.insertWithOnConflict(price_offer_list_master, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
         }
         catch (Exception e){
             Log.e("Dbhandler_addItemQOf",""+e.getMessage());
@@ -1080,63 +2056,92 @@ DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PRINTER_SETTING,printer.getPrinterName());
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
+        values.put(SHORT_INVOICE,printer.getShortInvoice());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(List<Customer> customer) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(COMPANY_NUMBER0, customer.getCompanyNumber());
-        values.put(CUS_ID, customer.getCustId());
-        values.put(CUS_NAME0, customer.getCustName());
-        values.put(ADDRESS, customer.getAddress());
-        values.put(IS_SUSPENDED, customer.getIsSuspended());
-        values.put(PRICE_LIST_ID, customer.getPriceListId());
-        values.put(CASH_CREDIT, customer.getCashCredit());
-        values.put(SALES_MAN_NO, customer.getSalesManNumber());
-        values.put(CREDIT_LIMIT, customer.getCreditLimit());
-        values.put(PAY_METHOD0, customer.getPayMethod());
-        values.put(CUST_LAT, customer.getCustLat());
-        values.put(CUST_LONG, customer.getCustLong());
-        values.put(MAX_DISCOUNT, customer.getMax_discount());
-        values.put(ACCPRC, customer.getACCPRC());
-        values.put(HIDE_VAL, customer.getHide_val());
-        db.insert(CUSTOMER_MASTER, null, values);
-        db.close();
+        for (int i = 0; i < customer.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(COMPANY_NUMBER0, customer.get(i).getCompanyNumber());
+            values.put(CUS_ID, customer.get(i).getCustId());
+            values.put(CUS_NAME0, customer.get(i).getCustName());
+            values.put(ADDRESS, customer.get(i).getAddress());
+            values.put(IS_SUSPENDED, customer.get(i).getIsSuspended());
+            values.put(PRICE_LIST_ID, customer.get(i).getPriceListId());
+            values.put(CASH_CREDIT, customer.get(i).getCashCredit());
+            values.put(SALES_MAN_NO, customer.get(i).getSalesManNumber());
+            values.put(CREDIT_LIMIT, customer.get(i).getCreditLimit());
+            values.put(PAY_METHOD0, customer.get(i).getPayMethod());
+            values.put(CUST_LAT, customer.get(i).getCustLat());
+            values.put(CUST_LONG, customer.get(i).getCustLong());
+            values.put(MAX_DISCOUNT, customer.get(i).getMax_discount());
+            values.put(ACCPRC, customer.get(i).getACCPRC());
+            values.put(HIDE_VAL, customer.get(i).getHide_val());
+            values.put(IS_POST, 0);
+            values.put(CUS_ID_Text, customer.get(i).getCustomerIdText());
+            db.insertWithOnConflict(CUSTOMER_MASTER, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
     }
 
-    public void addItem_Unit_Details(ItemUnitDetails item) {
+    public void addItem_Unit_Details(List<ItemUnitDetails> item) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(ComapnyNo, item.getCompanyNo());
-        values.put(ItemNo, item.getItemNo());
-        values.put(UnitID, item.getUnitId());
-        values.put(ConvRate, item.getConvRate());
+        db.beginTransaction();
 
-        db.insert(Item_Unit_Details, null, values);
-        db.close();
+        for (int i = 0; i < item.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(ComapnyNo, item.get(i).getCompanyNo());
+            values.put(ItemNo, item.get(i).getItemNo());
+            values.put(UnitID, item.get(i).getUnitId());
+            values.put(ConvRate, item.get(i).getConvRate());
+            db.insertWithOnConflict(Item_Unit_Details, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+        }
+//        db.close();
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
-    public void addItemsMaster(ItemsMaster item) {
+    public void addItemsMaster(List<ItemsMaster> item) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+//        db.beginTransaction();
+        db.beginTransaction();
 
-        values.put(ComapnyNo1, item.getCompanyNo());
-        values.put(ItemNo1, item.getItemNo());
-        values.put(Name1, item.getName());
-        values.put(CateogryID1, item.getCategoryId());
-        values.put(Barcode1, item.getBarcode());
-        values.put(IsSuspended1, item.getIsSuspended());
-        values.put(ITEM_L1, item.getItemL());
-        values.put(ITEM_F_D, item.getPosPrice());
-        values.put(KIND_ITEM,item.getKind_item());
+        for (int i = 0; i < item.size(); i++) {
+            ContentValues values = new ContentValues();
 
+            values.put(ComapnyNo1, item.get(i).getCompanyNo());
+            values.put(ItemNo1, item.get(i).getItemNo());
+            values.put(Name1, item.get(i).getName());
+            values.put(CateogryID1, item.get(i).getCategoryId());
+            values.put(Barcode1, item.get(i).getBarcode());
+            values.put(IsSuspended1, item.get(i).getIsSuspended());
+            values.put(ITEM_L1, item.get(i).getItemL());
+            values.put(ITEM_F_D, item.get(i).getPosPrice());
+            values.put(KIND_ITEM, item.get(i).getKind_item());
 
-        db.insert(Items_Master, null, values);
-        db.close();
+//        if(ITEM_HAS_SERIAL)
+            values.put(ITEM_HAS_SERIAL, item.get(i).getItemHasSerial());
+            values.put(ITEM_PHOTO, item.get(i).getPhotoItem());
+
+            db.insertWithOnConflict(Items_Master, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
     //----------------------------------------------------
     public void addVisitRate(VisitRate visitRate) {
@@ -1168,33 +2173,46 @@ DatabaseHandler extends SQLiteOpenHelper {
     }
     //----------------------------------------------------
 
-    public void addPrice_List_D(PriceListD price) {
+    public void addPrice_List_D(List<PriceListD> price) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(ComapnyNo2, price.getCompanyNo());
-        values.put(PrNo2, price.getPrNo());
-        values.put(ItemNo2, price.getItemNo());
-        values.put(UnitID2, price.getUnitId());
-        values.put(Price2, price.getPrice());
-        values.put(TaxPerc2, price.getTaxPerc());
-        values.put(MinSalePrice2, price.getMinSalePrice());
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
 
-        db.insert(Price_List_D, null, values);
-        db.close();
+            values.put(ComapnyNo2, price.get(i).getCompanyNo());
+            values.put(PrNo2, price.get(i).getPrNo());
+            values.put(ItemNo2, price.get(i).getItemNo());
+            values.put(UnitID2, price.get(i).getUnitId());
+            values.put(Price2, price.get(i).getPrice());
+            values.put(TaxPerc2, price.get(i).getTaxPerc());
+            values.put(MinSalePrice2, price.get(i).getMinSalePrice());
+            db.insertWithOnConflict(Price_List_D, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
-    public void addPrice_List_M(PriceListM price) {
+    public void addPrice_List_M(List<PriceListM> price) {
         db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+        db.beginTransaction();
 
-        values.put(ComapnyNo3, price.getCompanyNo());
-        values.put(PrNo3, price.getPrNo());
-        values.put(Description3, price.getDescribtion());
-        values.put(IsSuspended3, price.getIsSuspended());
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
 
-        db.insert(Price_List_M, null, values);
-        db.close();
+            values.put(ComapnyNo3, price.get(i).getCompanyNo());
+            values.put(PrNo3, price.get(i).getPrNo());
+            values.put(Description3, price.get(i).getDescribtion());
+            values.put(IsSuspended3, price.get(i).getIsSuspended());
+            db.insertWithOnConflict(Price_List_M, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//            db.insert(, null, values);
+        }
+//        db.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public void addSales_Team(SalesTeam salesTeam) {
@@ -1205,22 +2223,31 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SalesManNo4, salesTeam.getSalesManNo());
         values.put(SalesManName4, salesTeam.getSalesManName());
         values.put(IsSuspended4, salesTeam.getIsSuspended());
-
+        values.put(IP_ADDRESS_DEVICE, salesTeam.getIpAddressDevice());
         db.insert(Sales_Team, null, values);
         db.close();
     }
 
-    public void addSalesMan_Items_Balance(SalesManItemsBalance balance) {
-        db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
+    public void addSalesMan_Items_Balance(List<SalesManItemsBalance > balance) {
+//        db = this.getReadableDatabase();
+//        db.beginTransaction();
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
 
-        values.put(ComapnyNo5, balance.getCompanyNo());
-        values.put(SalesManNo5, balance.getSalesManNo());
-        values.put(ItemNo5, balance.getItemNo());
-        values.put(Qty5, balance.getQty());
+        for (int i = 0; i < balance.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(ComapnyNo5, balance.get(i).getCompanyNo());
+            values.put(SalesManNo5, balance.get(i).getSalesManNo());
+            values.put(ItemNo5, balance.get(i).getItemNo());
+            values.put(Qty5, balance.get(i).getQty());
+            db.insertWithOnConflict(SalesMan_Items_Balance, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        }
 
-        db.insert(SalesMan_Items_Balance, null, values);
-        db.close();
+//        db.insert(SalesMan_Items_Balance, null, values);
+//
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
     public void addSalesmanAndStoreLink(SalesManAndStoreLink store) {
@@ -1245,17 +2272,66 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.insert(SalesMen, null, values);
         db.close();
     }
+//    public void addItemUniteTable(List<ItemUnit> itemUnits) {
+//
+//        SQLiteDatabase Idb = this.getReadableDatabase();
+//        Idb.beginTransaction();
+//
+//        for (int i = 0; i < itemUnits.size(); i++) {
+//            ContentValues values = new ContentValues();
+////            values.put(ITEM_O_CODE5, itemUnits.get(i).getItemOCode());
+////            values.put(ITEM_BARCODE5, itemUnits.get(i).getItemBarcode());
+////            values.put(SALE_PRICE5, itemUnits.get(i).getSalePrice());
+////            values.put(ITEM_U5, convertToEnglish( itemUnits.get(i).getItemU()));
+////            values.put(U_QTY5,  convertToEnglish(""+itemUnits.get(i).getUQty()));
+////            values.put(U_SERIAL5,  convertToEnglish(""+itemUnits.get(i).getuSerial()));
+////            values.put(CALC_QTY5,  convertToEnglish(""+itemUnits.get(i).getCalcQty()));
+////            values.put(WHOLE_SALE_PRC5, itemUnits.get(i).getWholeSalePrc());
+////            values.put(PURCHASE_PRICE5, itemUnits.get(i).getPurchasePrc());
+////            values.put(PCLASS1, itemUnits.get(i).getPclAss1());
+////            values.put(PCLASS2, itemUnits.get(i).getPclAss2());
+////            values.put(PCLASS3, itemUnits.get(i).getPclAss3());
+////            values.put(IN_DATE5, itemUnits.get(i).getInDate());
+////            values.put(UNIT_NAME5, itemUnits.get(i).getUnitName());
+////            values.put(ORG_SALEPRICE, itemUnits.get(i).getOrgSalePrice());
+////            values.put(OLD_SALE_PRICE,  convertToEnglish(itemUnits.get(i).getOldSalePrice()));
+////            values.put(UPDATE_DATE,  itemUnits.get(i).getUpdateDate());
+//
+//            Idb.insertWithOnConflict(ITEM_UNITS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+//
+//        }
+//
+//        Idb.setTransactionSuccessful();
+//        Idb.endTransaction();
+////        Idb.close();
+//    }
 
-    public void addCustomerPrice(CustomerPrice price) {
-        db = this.getReadableDatabase();
-        ContentValues values = new ContentValues();
 
-        values.put(ItemNumber, price.getItemNumber());
-        values.put(CustomerNumber, price.getCustomerNumber());
-        values.put(Price, price.getPrice());
+    public void addCustomerPrice(List<CustomerPrice> price) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
 
-        db.insert(CustomerPrices, null, values);
-        db.close();
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
+
+            values.put(ItemNumber, 0);
+            values.put(CustomerNumber, price.get(i).getCustomerNumber());
+            values.put(Price, price.get(i).getPrice());
+            values.put(DISCOUNT_CUSTOMER, price.get(i).getDiscount());
+            values.put(ItemNo_, price.get(i).getItemNumber());
+            values.put(Other_Discount, price.get(i).getOther_Discount());
+            values.put(FromDate, price.get(i).getFromDate());
+            values.put(ToDate, price.get(i).getToDate());
+            values.put(ListNo, price.get(i).getListNo());
+            values.put(ListType, price.get(i).getListType());
+
+            db.insertWithOnConflict(CustomerPrices, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
     }
 
     public void addTransaction(Transaction transaction) {
@@ -1271,18 +2347,41 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CHECK_OUT_TIME, transaction.getCheckOutTime());
         values.put(STATUS, transaction.getStatus());
         values.put(IS_POSTED2, transaction.getIsPosted());
+        values.put(REAL_LONGTUD, transaction.getLongtude());
+        values.put(REAL_LATITUDE, transaction.getLatitud());
+
 
         db.insert(TABLE_TRANSACTIONS, null, values);
         db.close();
     }
+    public void addlogin(Transaction transaction) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DATE_LOGIN, transaction.getCheckInDate());
+        values.put(TIME_LOGIN, transaction.getCheckInTime());
+        values.put(LONGTUDE2,  transaction.getLongtude());
+        values.put(LATITUDE2,  transaction.getLatitud());
+
+        values.put(SALESMAN_NO, transaction.getSalesManId());
+
+
+        values.put(IS_POSTED_LOGIN, 0);
+
+        db.insert(SALESMAN_LOGIN_LOGHistory, null, values);
+        db.close();
+    }
+
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
                            int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
-                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name) {
+                           int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
+                           int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,int dontShowTax,String cono) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
+        //,String ipPort
         values.put(TRANS_KIND, transKind);
         values.put(SERIAL_NUMBER, serialNumber);
         values.put(IP_ADDRESS, ipAddress);
@@ -1308,11 +2407,89 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(HideQty,hideQty);
         values.put(LockCashReport,lock_cashreport);
         values.put(salesManName,salesman_name);
+        values.put(PreventOrder,preventOrder);
+        values.put(RequiredNote,requiNote);
+        values.put(PreventTotalDiscount,preventDiscTotal);
+        values.put(AutomaticCheque,automaticCheque);
+        values.put(Tafqit,tafqit);
+        values.put(PreventChangPayMeth,preventChangPayMeth);
+        values.put(ShowCustomerList,showCustomer);
+        values.put(NoReturnInvoice,noReturnInvoi);
+        values.put(WORK_WITH_SERIAL,Work_serialNo);
+        values.put(SHOW_IMAGE_ITEM,itemPhoto);
+        values.put(APPROVE_ADMIN,approveAddmin);
+        values.put(SAVE_ONLY,saveOnly);
+        Log.e("showSolidQty",""+showSolidQty);
+        values.put(SHOW_QUANTITY_SOLD,showSolidQty);
+        values.put(READ_OFFER_FROM_ADMIN,offerFromAdmin);
+        values.put(IP_PORT,ipPort);
+        values.put(  CheckQtyServer,checkServer);
+        values.put(  DontShowTaxOnPrinter,dontShowTax);
+        values.put(  CONO,cono);
+
+
+        db.insert(TABLE_SETTING, null, values);
+        db.close();
+    }
+    public void addIPSetting(int transKind,int serialNo,String ipAddress,String ipPort,String compaNO) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        //,String ipPort
+        int defaultValue=0;
+
+        values.put(TRANS_KIND, transKind);
+        values.put(SERIAL_NUMBER, serialNo);
+        values.put(IP_ADDRESS, ipAddress);
+        values.put(TAX_CALC_KIND, defaultValue);
+        values.put(PRICE_BYCUSTOMER, defaultValue);
+        values.put(USE_WEIGHT_CASE, defaultValue);
+        values.put(ALLOAW_MINUS, defaultValue);
+        values.put(NUMBER_OF_COPIES, 1);
+        values.put(SALESMAN_CUSTOMERS, defaultValue);
+        values.put(MIN_SALE_PRICE, defaultValue);
+        values.put(PRINT_METHOD, defaultValue);
+        values.put(CAN_CHANGE_PRICE, defaultValue);
+        values.put(ALLOW_OUT_OF_RANGE, defaultValue);
+        values.put(READ_DISCOUNT_FROM_OFFERS, defaultValue);
+        values.put(WORK_ONLINE, defaultValue);
+        values.put(PAYMETHOD_CHECK, defaultValue);
+        values.put(BONUS_NOT_ALLOWED,defaultValue);//16
+        values.put(NO_OFFERS_FOR_CREDIT_INVOICE,defaultValue);
+        values.put(AMOUNT_OF_MAX_DISCOUNT,defaultValue);
+        values.put(Customer_Authorized,defaultValue);
+        values.put(Password_Data,defaultValue);
+        values.put(Arabic_Language,1);
+        values.put(HideQty,defaultValue);
+        values.put(LockCashReport,defaultValue);
+        values.put(salesManName,"");
+        values.put(PreventOrder,defaultValue);
+        values.put(RequiredNote,defaultValue);
+        values.put(PreventTotalDiscount,defaultValue);
+        values.put(AutomaticCheque,defaultValue);
+        values.put(Tafqit,defaultValue);
+        values.put(PreventChangPayMeth,defaultValue);
+        values.put(ShowCustomerList,1);
+        values.put(NoReturnInvoice,defaultValue);
+        values.put(WORK_WITH_SERIAL,defaultValue);
+        values.put(SHOW_IMAGE_ITEM,defaultValue);
+        values.put(APPROVE_ADMIN,defaultValue);
+        values.put(SAVE_ONLY,defaultValue);
+        values.put(SHOW_QUANTITY_SOLD,defaultValue);
+        values.put(READ_OFFER_FROM_ADMIN,defaultValue);
+        values.put(IP_PORT,ipPort);
+        values.put(CheckQtyServer,defaultValue);
+        values.put(DontShowTaxOnPrinter,defaultValue);
+        values.put(CONO,compaNO);
+
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo) {
+
+
+
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1327,12 +2504,17 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(COMPANY_TEL, companyTel);
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
+        values.put(NOTE, note);
+        values.put(LONGTUDE_COMPANY,longtude);
+        values.put(LATITUDE_COMPANY,latitude);
+
 
         db.insert(COMPANY_INFO, null, values);
         db.close();
     }
 
     public void addVoucher(Voucher voucher) {
+
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -1353,9 +2535,20 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(CUST_NAME, voucher.getCustName());
         values.put(CUST_NUMBER, voucher.getCustNumber());
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
+        try {
 
-        db.insert(SALES_VOUCHER_MASTER, null, values);
-        db.close();
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+        }
+        catch ( Exception e)
+        {
+            int vouch=voucher.getVoucherNumber();
+            values.put(VOUCHER_NUMBER, (vouch++));
+            db.insert(SALES_VOUCHER_MASTER, null, values);
+            db.close();
+            Log.e("DBException","addVoucher");
+        }
+
     }
 
     public void addItem(Item item) {
@@ -1378,6 +2571,30 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(COMPANY_NUMBER2, item.getCompanyNumber());
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
+        values.put(ITEM_DESCRIPTION, item.getDescription());
+
+        try {
+            if(item.getSerialCode()==null)
+            {
+                values.put(SERIAL_CODE, "0");
+            }
+            else {   values.put(SERIAL_CODE, item.getSerialCode());}
+
+
+            if(item.getVouchDate()!=null || !item.getVouchDate().equals(""))
+            values.put(VOUCH_DATE, item.getVouchDate());
+            else
+                values.put(VOUCH_DATE,"");
+        }
+        catch ( Exception e)
+        {
+            values.put(VOUCH_DATE,"");
+        }
+
+
+
+        // Log.e("addItem",""+item.getDescription());
+        //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
         db.close();
@@ -1400,6 +2617,17 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(PAY_YEAR, payment.getYear());
 
         db.insert(PAYMENTS, null, values);
+        db.close();
+    }
+
+    public void addUserNO(String  USER_NO) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(UserNo_LogIn,USER_NO);
+
+
+        db.insert(SalesMenLogIn, null, values);
         db.close();
     }
 
@@ -1446,6 +2674,10 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(ITEM_NAME6, item.getItemName());
         values.put(UNIT_QTY6, item.getQty());
         values.put(VOUCHER_DATE6, item.getDate());
+        values.put(CURRENT_QTY, item.getCurrentQty());
+        values.put(isPostedDetails, 0);
+        Log.e("CURRENT_QTY",""+CURRENT_QTY);
+
 
         db.insert(REQUEST_DETAILS, null, values);
         db.close();
@@ -1462,6 +2694,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(SALESMAN7, customer.getSalesMan());
         values.put(SALESMAN_NO7, customer.getSalesmanNo());
         values.put(IS_POSTED7, customer.getIsPosted());
+        values.put(ADRESS_CUSTOMER, customer.getADRESS_CUSTOMER());
+        values.put(TELEPHONE, customer.getTELEPHONE());
+        values.put(CONTACT_PERSON, customer.getCONTACT_PERSON());
+
+
+
+
 
         db.insert(ADDED_CUSTOMER, null, values);
         db.close();
@@ -1600,6 +2839,24 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 setting.setLock_cashreport(Integer.parseInt(cursor.getString(23)));
                 setting.setSalesMan_name(cursor.getString(24));
+                setting.setPriventOrder(Integer.parseInt(cursor.getString(25)));//for test
+                setting.setRequiNote(Integer.parseInt(cursor.getString(26)));
+                setting.setPreventTotalDisc(Integer.parseInt(cursor.getString(27)));
+                setting.setAutomaticCheque(Integer.parseInt(cursor.getString(28)));
+                setting.setTafqit(Integer.parseInt(cursor.getString(29)));
+                setting.setPreventChangPayMeth(Integer.parseInt(cursor.getString(30)));
+                setting.setShowCustomerList(Integer.parseInt(cursor.getString(31)));
+                setting.setNoReturnInvoice(Integer.parseInt(cursor.getString(32)));
+                setting.setWork_serialNo(Integer.parseInt(cursor.getString(33)));
+                setting.setShowItemImage((cursor.getInt(34)));
+                setting.setApproveAdmin((cursor.getInt(35)));
+                setting.setSaveOnly((cursor.getInt(36)));
+                setting.setShow_quantity_sold((cursor.getInt(37)));
+                setting.setReadOfferFromAdmin((cursor.getInt(38)));
+                setting.setIpPort((cursor.getString(39)));
+                setting.setQtyServer((cursor.getInt(40)));
+                setting.setDontShowtax((cursor.getInt(41)));
+                setting.setCoNo((cursor.getString(42)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -1624,19 +2881,116 @@ DatabaseHandler extends SQLiteOpenHelper {
                 else
                     info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
+                info.setNoteForPrint(cursor.getString(4));
+                info.setLongtudeCompany(cursor.getDouble(5));
+                info.setLatitudeCompany(cursor.getDouble(6));
                 infos.add(info);
             } while (cursor.moveToNext());
         }
         return infos;
     }
+    public List<serialModel> getAllSerialItems() {
+        List<serialModel> infos = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                serialModel info = new serialModel();
+                info.setSerialCode(cursor.getString(1));
+                info.setCounterSerial(Integer.parseInt(cursor.getString(2)));
+                info.setVoucherNo((cursor.getString(3)));
+                info.setItemNo(cursor.getString(4));
+                info.setKindVoucher(cursor.getString(5));
+                info.setDateVoucher(cursor.getString(6));
+                info.setStoreNo(cursor.getString(7));
+                info.setIsPosted(cursor.getString(8));
+                info.setIsBonus(cursor.getString(9));
+
+                infos.add(info);
+
+            } while (cursor.moveToNext());
+            Log.e("getAllSerialItems",""+infos.size());
+        }
+        return infos;
+    }
+
+    public List<CustomerLocation> getCustomerLocation() {
+        List<CustomerLocation> infos = new ArrayList<>();
+        String selectQuery = "select  DISTINCT  CUS_ID , CUST_LAT ,CUST_LONG ,IS_POST from CUSTOMER_MASTER";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                CustomerLocation info = new CustomerLocation();
+                info.setCUS_NO(cursor.getString(0));
+                info.setLATIT((cursor.getString(1)));
+                info.setLONG((cursor.getString(2)));
+                info.setIsPost((cursor.getInt(3)));
+
+                infos.add(info);
+            } while (cursor.moveToNext());
+        }
+        return infos;
+    }
+//    public void addCustomerLocation(CustomerLocation customerLocation)
+//    {
+//        try {
+//            db = this.getReadableDatabase();
+//            ContentValues values = new ContentValues();
+//
+//            values.put(CUS_NO, customerLocation.getCUS_NO());
+//            values.put(LONG,customerLocation.getLONG());
+//            values.put(LATIT,customerLocation.getLATIT());
+//
+//            db.insert(CUSTOMER_LOCATION, null, values);
+//            db.close();
+//        }
+//        catch (Exception e){
+//            Log.e("DBAccount_Report",""+e.getMessage());
+//
+//        }
+//
+//    }
 
     public int getMaxSerialNumber(int voucherType) {
         String selectQuery = "SELECT  SERIAL_NUMBER FROM " + TABLE_SETTING + " WHERE TRANS_KIND = " + voucherType;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
+        int maxVoucher=0;
+        try {
+            cursor.moveToFirst();
 
-        int maxVoucher = Integer.parseInt(cursor.getString(0));
+             maxVoucher = Integer.parseInt(cursor.getString(0));
+        }
+        catch (Exception e){maxVoucher=0;}
+
+
+        return maxVoucher;
+
+    }
+    public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
+        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+        String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '"+voucherType+"' ),-1)" ;
+        db = this.getWritableDatabase();
+        int maxVoucher=0;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            cursor.moveToFirst();
+
+
+             maxVoucher = Integer.parseInt(cursor.getString(0));
+            if(maxVoucher==-1)
+            {
+                maxVoucher=getMaxSerialNumber(voucherType);
+                Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
+            }
+            Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
+        }catch (Exception e){maxVoucher=0;}
+
         return maxVoucher;
 
     }
@@ -1702,6 +3056,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 transaction.setCheckOutTime(cursor.getString(6));
                 transaction.setStatus(Integer.parseInt(cursor.getString(7)));
                 transaction.setIsPosted(Integer.parseInt(cursor.getString(8)));
+                transaction.setLongtude(Double.parseDouble(cursor.getString(9)));
+                transaction.setLatitud(Double.parseDouble(cursor.getString(10)));
 
                 // Adding transaction to list
                 transactionList.add(transaction);
@@ -1710,6 +3066,49 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return transactionList;
     }
+    //*******************************************************************
+    public List<Transaction> getLoginSalesman() {
+        List<Transaction> transactionList = new ArrayList<Transaction>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + SALESMAN_LOGIN_LOGHistory;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Transaction transaction = new Transaction();
+
+                transaction.setCheckInDate(cursor.getString(0));
+                transaction.setCheckInTime(cursor.getString(1));
+                // checkout time
+                transaction.setLongtude(cursor.getDouble(3));
+                transaction.setLatitud(cursor.getDouble(4));
+                transaction.setSalesManId(Integer.parseInt(cursor.getString(5)));
+                transaction.setIsPosted(Integer.parseInt(cursor.getString(6)));
+
+
+                // Adding transaction to list
+                transactionList.add(transaction);
+            } while (cursor.moveToNext());
+        }
+
+        return transactionList;
+    }
+    //*******************************************************************
+    /*//    String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE " + SALESMAN_LOGIN_TABLE + "("
+//            + KEY_LOGIN + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+//            + DATE_LOGIN + " TEXT,"
+//            + TIME_LOGIN + " TEXT,"
+//            + TIME_LOGOUT + " TEXT,"
+//            + LONGTUDE2 + " REAL,"
+//            + LATITUDE2 + " REAL,"
+//            + SALESMAN_NO + " TEXT,"
+//            + IS_POSTED_LOGIN + " INTEGER"+
+//
+//            ")";
+//        db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);*/
 
     public List<SalesMan> getAllSalesMen() {
         List<SalesMan> salesMen = new ArrayList<>();
@@ -1730,6 +3129,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 // Adding transaction to list
                 salesMen.add(salesMan);
+                Log.e("getAllSalesMen",""+salesMen.size());
             } while (cursor.moveToNext());
         }
         return salesMen;
@@ -1748,7 +3148,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Customer customer = new Customer();
 
-                customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                customer.setCompanyNumber(cursor.getString(0));
                 customer.setCustId(cursor.getString(1));
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
@@ -1757,12 +3157,14 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Double.parseDouble(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt((cursor.getString(9))));
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 customer.setMax_discount(Double.parseDouble(cursor.getString(12)));
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
-
+//                customer.setCustId(cursor.getString(16));// for test talley
+                // 16 column isPosted
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1801,7 +3203,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<Customer> getCustomersBySalesMan(String salesMan) {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER + " where SALES_MAN_NO = '" + salesMan + "'";
+        String selectQuery = "SELECT  * FROM " + CUSTOMER_MASTER + " where CAST(SALES_MAN_NO as integer) = '" + salesMan + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1811,8 +3213,9 @@ DatabaseHandler extends SQLiteOpenHelper {
             do {
                 Customer customer = new Customer();
 
-                customer.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
-                customer.setCustId(cursor.getString(1));
+                customer.setCompanyNumber(cursor.getString(0));
+                customer.setCustId(cursor.getString(1));// test talley
+
                 customer.setCustName(cursor.getString(2));
                 customer.setAddress(cursor.getString(3));
                 customer.setIsSuspended(Integer.parseInt(cursor.getString(4)));
@@ -1820,6 +3223,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setCashCredit(Integer.parseInt(cursor.getString(6)));
                 customer.setSalesManNumber(cursor.getString(7));
                 customer.setCreditLimit(Integer.parseInt(cursor.getString(8)));
+                customer.setPayMethod(Integer.parseInt(cursor.getString(9)));
+
                 customer.setCustLat(cursor.getString(10));
                 customer.setCustLong(cursor.getString(11));
                 try {
@@ -1830,6 +3235,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 }
                 customer.setACCPRC(cursor.getString(13));
                 customer.setHide_val(cursor.getInt(14));
+//                customer.setCustId(cursor.getString(16));// test talley
                 // Adding transaction to list
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -1985,7 +3391,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 ItemsMaster itemsMaster = new ItemsMaster();
-                itemsMaster.setCompanyNo(Integer.parseInt(cursor.getString(0)));
+                itemsMaster.setCompanyNo(cursor.getString(0));
                 itemsMaster.setItemNo(cursor.getString(1));
                 itemsMaster.setName(cursor.getString(2));
                 itemsMaster.setCategoryId(cursor.getString(3));
@@ -2005,7 +3411,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
                 " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
-                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE " +
+                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE , D.ITEM_DESCRIPTION ,D.SERIAL_CODE " +
                 "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
                 "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
 
@@ -2020,7 +3426,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
                 item.setVoucherType(Integer.parseInt(cursor.getString(1)));
                 item.setItemNo(cursor.getString(2));
-                Log.e("cursorItemNo",""+cursor.getString(2));
+               // Log.e("cursorItemNo",""+cursor.getString(2));
                 item.setItemName(cursor.getString(3));
                 item.setUnit(cursor.getString(4));
                 item.setQty(Float.parseFloat(cursor.getString(5)));
@@ -2042,6 +3448,9 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setYear(cursor.getString(14));
                 item.setIsPosted(Integer.parseInt(cursor.getString(15)));
                 item.setDate(cursor.getString(16));
+                item.setDescreption(cursor.getString(17));
+                item.setSerialCode(cursor.getString(18));
+//                Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list
                 items.add(item);
@@ -2096,15 +3505,24 @@ DatabaseHandler extends SQLiteOpenHelper {
     return  items_inventory;
     }
 
-    public List<Item> getAllJsonItems(String rate ) {
+    public List<Item> getAllJsonItems(String rate,int baseList ) {// price from price list d
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         String salesMan = Login.salesMan;
+        String priceListBase="";
 //        String cusNo="5";
+        if(baseList==0)
+        {priceListBase="0";
+
+        }
+        else {
+            priceListBase=rate;
+        }
+
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC , M.ITEM_HAS_SERIAL , M.ITEM_PHOTO \n" +
                 "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
-                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
+                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+priceListBase+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan +"'";
 
         Log.e("***" , selectQuery);
         db = this.getWritableDatabase();
@@ -2115,6 +3533,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
@@ -2128,6 +3547,44 @@ DatabaseHandler extends SQLiteOpenHelper {
 
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
+                try {
+
+
+                if(cursor.getString(12)==null)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                }
+                else {
+                    item.setItemHasSerial(cursor.getString(12));
+                }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
+                }
+
+
+                try {
+
+
+                if(cursor.getString(13)==null) {
+                    item.setItemPhoto(null);
+
+                }
+                else {
+                    itemBitmap = StringToBitMap(cursor.getString(13));
+                    item.setItemPhoto(itemBitmap);
+                }
+                }
+                catch (Exception e)
+                {
+                    item.setItemPhoto(null);
+                }
+
+//                Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
 
                 // Adding transaction to list
                 items.add(item);
@@ -2136,8 +3593,18 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
-
-    public List<Item> getAllJsonItems2(String rate)
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }
+        catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+    public List<Item> getAllJsonItems2(String rate)// from customer prices
     {
 
         List<Item> items = new ArrayList<>();
@@ -2146,9 +3613,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         String priceItem="";
         String custNum = CustomerListShow.Customer_Account;
         String salesMan = Login.salesMan;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC  \n" +
+        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE  ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , C.DISCOUNT_CUSTOMER \n" +
                 "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
-                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNumber and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
+                "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNo_ and P.PrNo ='"+rate+"'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
                 "   and C.CustomerNumber = '" + custNum + "'";
 
         Log.e("***" , selectQuery);
@@ -2161,6 +3628,7 @@ DatabaseHandler extends SQLiteOpenHelper {
             Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
+                Bitmap  itemBitmap=null;
 
                 item.setItemNo(cursor.getString(0));
                 String itno=cursor.getString(0);
@@ -2181,9 +3649,56 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemL(Double.parseDouble(cursor.getString(8)));
                 item.setPosPrice(Double.parseDouble(cursor.getString(9)));
                 item.setKind_item(cursor.getString(10));
+//                item.setp(cursor.getString(10));
+                try {
+
+
+                    if(cursor.getString(12)==null)
+                    {
+                        item.setItemHasSerial("0");
+                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                    }
+                    else {
+                        item.setItemHasSerial(cursor.getString(12));
+                    }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
+                }
+//                item.setItemPhoto(cursor.getString(13));
                 // Adding transaction to list
+                try {
+                    if(!cursor.getString(13).equals("")) {
+
+                        itemBitmap = StringToBitMap(cursor.getString(13));
+                        item.setItemPhoto(itemBitmap);
+                    }
+                    else {
+                        item.setItemPhoto(null);
+                    }
+                }
+
+                catch (Exception e)
+                {
+                    item.setItemPhoto(null);
+                }
+                try {
+                    item.setDiscountCustomer(cursor.getDouble(14));
+
+                }
+                catch (Exception e)
+                {
+                    item.setDiscountCustomer(0.0);
+                }
+
+
+
                 items.add(item);
             } while (cursor.moveToNext());
+
         }
         else{
 //           items= getAllJsonItems(rate);
@@ -2192,7 +3707,135 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         return items;
     }
-    public List<Item> getAllJsonItemsStock( ) {
+
+    //************************************Read prices from Admin price List master***********************************************
+    public List<Item> getAllItemsPriceFromAdmin(String rate,String typeList,int payMethod,String dateCurent)// from customer prices
+    {
+
+        List<Item> items = new ArrayList<>();
+        // Select All Query
+        String PriceListId = CustomerListShow.PriceListId;
+        String priceItem="";
+        String custNum = CustomerListShow.Customer_Account;
+        String salesMan = Login.salesMan;
+        String selectQuery="";
+        if(typeList.equals("0")) // regular list
+        {
+            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE  ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , C.DISCOUNT_CUSTOMER , C.Other_Discount\n" +
+                    "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
+                    "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNo_ and P.PrNo ='0'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
+                    "   and C.CustomerNumber = '" + custNum + "'and ListType='0' and '"+dateCurent+"' BETWEEN C.FromDate and C.ToDate";
+            //and ListType='0'
+        }
+        else {
+            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,C.PRICE  ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D,M.KIND_ITEM, cusMaster.ACCPRC ,M.ITEM_HAS_SERIAL , M.ITEM_PHOTO , C.DISCOUNT_CUSTOMER , C.Other_Discount\n" +
+                    "   from Items_Master M , SalesMan_Items_Balance S , CustomerPrices C ,CUSTOMER_MASTER cusMaster,  Price_List_D P\n" +
+                    "   where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and M.ItemNo = C.ItemNo_ and P.PrNo ='0'  and cusMaster.ACCPRC = '"+rate+"' and S.SalesManNo = '" + salesMan + "'" +
+                    "   and C.CustomerNumber = '" + custNum + "'and ListNo='"+typeList+"'";
+        }
+
+//        and ListNo='"+rate+"'
+
+        Log.e("***" , selectQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            do {
+                Item item = new Item();
+                Bitmap  itemBitmap=null;
+
+                item.setItemNo(cursor.getString(0));
+                String itno=cursor.getString(0);
+                item.setItemName(cursor.getString(1));
+                item.setCategory(cursor.getString(2));
+                item.setQty(Float.parseFloat(cursor.getString(3)));
+                if(Float.parseFloat(cursor.getString(4))== 0){
+                    priceItem= getPriceforItem(itno,rate);
+                    item.setPrice(Float.parseFloat(priceItem));
+
+                }
+                else{
+                    item.setPrice(Float.parseFloat(cursor.getString(4)));
+                }
+                item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
+                item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
+                item.setBarcode(cursor.getString(7));
+                item.setItemL(Double.parseDouble(cursor.getString(8)));
+                item.setPosPrice(Double.parseDouble(cursor.getString(9)));
+                item.setKind_item(cursor.getString(10));
+//                item.setp(cursor.getString(10));
+                try {
+
+
+                    if(cursor.getString(12)==null)
+                    {
+                        item.setItemHasSerial("0");
+                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                    }
+                    else {
+                        item.setItemHasSerial(cursor.getString(12));
+                    }
+                }catch (Exception e)
+                {
+                    item.setItemHasSerial("0");
+
+                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+e.getMessage());
+
+                }
+//                item.setItemPhoto(cursor.getString(13));
+                // Adding transaction to list
+                try {
+                    if(!cursor.getString(13).equals("")) {
+
+                        itemBitmap = StringToBitMap(cursor.getString(13));
+                        item.setItemPhoto(itemBitmap);
+                    }
+                    else {
+                        item.setItemPhoto(null);
+                    }
+                }
+
+                catch (Exception e)
+                {
+                    item.setItemPhoto(null);
+                }
+                try {
+                    if(payMethod==1)
+                    {
+                        item.setDiscountCustomer(cursor.getDouble(14));
+                    }
+                    else {
+                        item.setDiscountCustomer(cursor.getDouble(15));
+                    }
+
+
+                    Log.e("setDiscountCustomer",""+cursor.getDouble(14));
+                }
+                catch (Exception e)
+                {
+                    item.setDiscountCustomer(0.0);
+                }
+
+
+
+                items.add(item);
+            } while (cursor.moveToNext());
+
+        }
+        else{
+//           items= getAllJsonItems(rate);
+//           Log.e("not_pricesincustomerprices",""+items.size());
+        }
+
+        return items;
+    }
+    //***********************************************************************************
+
+    public List<Item> getAllJsonItemsStock(int flag ) {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         String salesMan = Login.salesMan;
@@ -2215,7 +3858,16 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
                 item.setCategory(cursor.getString(2));
-                item.setQty(Float.parseFloat(cursor.getString(3)));
+                if(flag==0)
+                {
+                    item.setQty(0);
+
+                }
+                else {
+                    item.setQty(Float.parseFloat(cursor.getString(3)));
+
+                }
+                item.setCurrentQty(Float.parseFloat(cursor.getString(3)));
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
                 item.setMinSalePrice(Double.parseDouble(cursor.getString(6)));
@@ -2238,7 +3890,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String selectQuery ="SELECT DISTINCT   listItemNo.ItemNo \n"+
       " FROM Items_Master listItemNo \n " +
             "    EXCEPT \n" +
-       " select    cast( ItemNumber as text)"+
+       " select    cast( ItemNo_ as text)"+
        " from CustomerPrices  where CustomerNumber = '"+customerId+"' ";
 
 
@@ -2265,7 +3917,7 @@ DatabaseHandler extends SQLiteOpenHelper {
         String custNum = CustomerListShow.Customer_Account;
         String selectQuery ="  select DISTINCT  C.ItemNumber\n" +
                 "        FROM  CustomerPrices C\n" +
-                "        where  CustomerNumber= '"+custNum+"' and ItemNumber= '"+itemNo+"'";
+                "        where  CustomerNumber= '"+custNum+"' and ItemNo_= '"+itemNo+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2450,17 +4102,19 @@ DatabaseHandler extends SQLiteOpenHelper {
             String selectQuery = "select DISTINCT KIND_ITEM from Items_Master";
             db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
-            Log.e("DB_Exception","cursor"+cursor.getCount());
 
             // looping through all rows and adding to list
             if (cursor.moveToFirst()) {
                 do {
                     if(cursor.getString(0)== "null")
                     { kind_items.add("**");}
+                    else {
+                        kind_items.add(cursor.getString(0));
 
-                    kind_items.add(cursor.getString(0));
+                        Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
+                    }
 
-                    Log.e("DB_Exception","kind_items"+cursor.getString(0));
+
                 } while (cursor.moveToNext());
             }
         }catch (Exception e)
@@ -2579,6 +4233,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 PrinterSetting printerSetting=new PrinterSetting();
                 printerSetting.setPrinterName(cursor.getInt(0));
                 printerSetting.setPrinterShape(cursor.getInt(1));
+                printerSetting.setShortInvoice(cursor.getInt(2));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -2676,7 +4331,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<Payment> getAllPaymentsPaper() {
 
         List<Payment> paymentsList = new ArrayList<Payment>();
-        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER;
+        String selectQuery = "SELECT  * FROM " + PAYMENTS_PAPER ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2779,6 +4434,30 @@ DatabaseHandler extends SQLiteOpenHelper {
         return vouchers;
     }
 
+
+    public String getAllUserNo() {
+
+        // Select All Query
+        String userNO="";
+
+        String selectQuery = "SELECT * FROM " + SalesMenLogIn;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+              userNO= cursor.getString(0);
+
+
+            } while (cursor.moveToNext());
+        }
+
+        return userNO;
+    }
+
     public List<Item> getAllStockRequestItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -2798,6 +4477,8 @@ DatabaseHandler extends SQLiteOpenHelper {
                 item.setItemName(cursor.getString(3));
                 item.setQty(Integer.parseInt(cursor.getString(4)));
                 item.setDate(cursor.getString(5));
+                item.setCurrentQty(cursor.getDouble(6));
+                item.setIsPosted(cursor.getInt(7));
 
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2835,7 +4516,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     public List<AddedCustomer> getAllAddedCustomer() {
         List<AddedCustomer> customers = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER;
+        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER+ " where IS_POSTED = '" + 0  + "'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2852,6 +4533,11 @@ DatabaseHandler extends SQLiteOpenHelper {
                 customer.setSalesMan(cursor.getString(4));
                 customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
                 customer.setSalesmanNo(cursor.getString(6));
+                customer.setADRESS_CUSTOMER(cursor.getString(7));
+                customer.setTELEPHONE(cursor.getString(8));
+                customer.setCONTACT_PERSON(cursor.getString(9));
+
+
 
                 customers.add(customer);
             } while (cursor.moveToNext());
@@ -2862,7 +4548,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     public List<Offers> getAllOffers() {
         List<Offers> offers = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + VS_PROMOTION;
+        String selectQuery = "SELECT * FROM " + VS_PROMOTION    ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2872,7 +4558,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offer.setPromotionID(Integer.parseInt(cursor.getString(0)));
                 offer.setPromotionType(Integer.parseInt(cursor.getString(1)));
                 offer.setFromDate(cursor.getString(2));
-                offer.setToDate(cursor.getString(3));
+                offer.setToDate(cursor.getString(3));//*************
                 offer.setItemNo(cursor.getString(4));
                 offer.setItemQty(Double.parseDouble(cursor.getString(5)));
                 offer.setBonusQty(Double.parseDouble(cursor.getString(6)));
@@ -2881,6 +4567,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 offers.add(offer);
             } while (cursor.moveToNext());
         }
+
 
         return offers;
     }
@@ -2969,7 +4656,21 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(STATUS, 1);
 
         // updating row
+
         db.update(TABLE_TRANSACTIONS, values, CUS_CODE + "=" + cusCode + " AND " + STATUS + "=" + 0, null);
+    }
+
+
+    public void updateTransactionLocationReal(String cusCode, String longitude, String latiud ,String cheackoutTime,String chechInDate) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(REAL_LONGTUD, longitude);
+        values.put(REAL_LATITUDE, latiud);
+
+        // updating row
+
+        db.update(TABLE_TRANSACTIONS, values, CUS_CODE + "= '" + cusCode + "' AND " + STATUS + "= '" + 1 +"' AND "+ IS_POSTED +"= 0 AND " + CHECK_OUT_TIME +"= '"+cheackoutTime +"' and "+CHECK_IN_DATE +"= '"+chechInDate +"'", null);
     }
 
     public void updateVoucher() {
@@ -2978,6 +4679,20 @@ DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(IS_POSTED, 1);
         db.update(SALES_VOUCHER_MASTER, values, IS_POSTED + "=" + 0, null);
+    }
+    public void updateRequestStockMaster() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED5, 1);
+        db.update(REQUEST_MASTER, values, IS_POSTED5 + "=" + 0, null);
+    }
+    public void updateRequestStockDetail() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(isPostedDetails, 1);
+        db.update(REQUEST_DETAILS, values, isPostedDetails + "=" + 0, null);
     }
 
     public void updateVoucherDetails() {
@@ -3027,6 +4742,20 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(IS_POSTED, 1);
         db.update(ADDED_CUSTOMER, values, IS_POSTED + "=" + 0, null);
     }
+    public void updateCustomersMaster() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POST, 1);
+        db.update(CUSTOMER_MASTER, values, IS_POST + "=" + 0, null);
+    }
+    public void updateSerialTableIsposted() {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_POSTED_SERIAL, 1);
+        db.update(SERIAL_ITEMS_TABLE, values, IS_POSTED_SERIAL + "=" + 0, null);
+    }
 
     public void updateTransactions() {
         db = this.getWritableDatabase();
@@ -3036,13 +4765,13 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.update(TABLE_TRANSACTIONS, values, IS_POSTED + "=" + 0, null);
     }
 
-    public void updateCustomersMaster(String lat , String lon , int custId) {
+    public void updateCustomersMaster(String lat , String lon , String custId) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(CUST_LAT, lat);
         values.put(CUST_LONG, lon);
-        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custId, null);
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + custId + "'", null);
     }
 
 
@@ -3088,6 +4817,29 @@ DatabaseHandler extends SQLiteOpenHelper {
         values.put(Qty5, existQty);
         db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesMan + " and " + ItemNo5 + " = " + itemNo, null);
     }
+
+    public void deletSerialItems_byVoucherNo(int vouch_no ) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where VOUCHER_NO =" +vouch_no);
+        db.close();
+    }
+
+    public void deletAllSalesLogIn() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SalesMenLogIn);
+        db.close();
+    }
+
+    public void deletSerialItems_byItemNo(String item_no ) {
+        //delete from SERIAL_ITEMS_TABLE where ITEMNO_SERIAL=1003
+        //+ "= '" + custNo + "'"
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE+" where ITEMNO_SERIAL =" +item_no);
+        db.close();
+    }
+
+
+
     public void deletAcountReport() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + ACCOUNT_REPORT);
@@ -3115,6 +4867,22 @@ DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + CUSTOMER_MASTER);
         db.close();
     }
+    public void deleteAllItemsSwitch() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + Item_Switch);
+        db.close();
+    }
+    public void deleteAllItemsSerialMaster() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SerialItemMaster );
+        db.close();
+    }
+    public void deleteOfferMaster() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + price_offer_list_master );
+        db.close();
+    }
+
 
 
 
@@ -3263,8 +5031,79 @@ DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(CASH_CREDIT, CashCredit);
         values.put(CREDIT_LIMIT, CriditLimit);
-        db.update(CUSTOMER_MASTER, values, CUS_ID + "=" + custNo, null);
+
+        db.update(CUSTOMER_MASTER, values, CUS_ID    + "= '" + custNo + "'" , null);
     }
+
+
+    // update SERIAL_ITEMS_TABLE set KIND_VOUCHER=30 where  VOUCHER_NO=4
+
+    public void updatevoucherKindInSerialTable( int kindVoucher,int voucherNo,int storeNo ) {
+        db = this.getWritableDatabase();
+        Log.e("updateVOUCHERNO",""+kindVoucher);
+        ContentValues values = new ContentValues();
+        values.put(KIND_VOUCHER, kindVoucher);
+
+
+        db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + " = '" + voucherNo + "'" , null);
+
+
+//        values.put(, serialModelItem.getStoreNo());
+
+    }
+    public void updateitemDeletedInSerialTable_Backup( String itemNo,String voucherNo ) {
+        db = this.getWritableDatabase();
+        String dateTime="";
+        dateTime=getCurentTimeDate(1);
+        dateTime=dateTime+getCurentTimeDate(2);
+        Log.e("updateVOUCHERNO",""+itemNo);
+        ContentValues values = new ContentValues();
+        values.put(isItemDelete, "1");
+        values.put(dateDelete, dateTime);
+        if(itemNo.equals(""))
+        {
+            db.update(SERIAL_ITEMS_TABLE_backup, values, VOUCHER_NO2    + " = '" + voucherNo + "'"   , null);
+
+        }
+        else {
+            db.update(SERIAL_ITEMS_TABLE_backup, values, VOUCHER_NO2    + " = '" + voucherNo + "' and ITEMNO_SERIAL2='"+itemNo+"'"   , null);
+
+        }
+
+
+//        values.put(, serialModelItem.getStoreNo());
+
+    }
+    public String getCurentTimeDate(int flag){
+        String dateCurent,timeCurrent,dateTime="";
+        Date currentTimeAndDate;
+        SimpleDateFormat dateFormat, timeformat;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        if(flag==1)// return date
+        {
+
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateCurent = dateFormat.format(currentTimeAndDate);
+            dateTime=convertToEnglish(dateCurent);
+
+        }
+        else {
+            if(flag==2)// return time
+            {
+                timeformat = new SimpleDateFormat("hh:mm:ss");
+                dateCurent = timeformat.format(currentTimeAndDate);
+                dateTime=convertToEnglish(dateCurent);
+            }
+        }
+        return dateTime;
+
+    }
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        return newValue;
+    }
+
+
 
     List<Item> vouchersales;
     public void updateSalesManItemBalance(String salesmanNo,String itemNo,double qty) {
@@ -3276,12 +5115,9 @@ DatabaseHandler extends SQLiteOpenHelper {
         unposted_sales=( getAllItems_bySalesman_No(itemNo,504,salesmanNo));
         unposted__return= ( getAllItems_bySalesman_No(itemNo,506,salesmanNo));
 
-        Log.e("un",""+unposted_sales+"unretrt\t"+unposted__return);
-
             double newQty=(qty-unposted_sales )+unposted__return;
-            Log.e("newqty",""+newQty);
 
-            values.put(Qty5, newQty);
+                        values.put(Qty5, newQty);
             db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
 
         }
@@ -3297,7 +5133,6 @@ DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
-            Log.i("DatabaseHandler", "************************" + selectQuery);
             do {
                 // Adding transaction to list
                total_qty=Integer.parseInt(cursor.getString(0));
@@ -3433,7 +5268,7 @@ DatabaseHandler extends SQLiteOpenHelper {
                 "WHERE\n" +
                 "S.SalesManNo =  CAST(ifnull(C.SALES_MAN_NO,0) as INTEGER)\n" +
                 "AND\n" +
-                "CUS_ID = '"+custId+"'";
+                "CUS_ID_Text = '"+custId+"'";
         String customr_Name="";
 
         db = this.getWritableDatabase();
@@ -3451,6 +5286,60 @@ DatabaseHandler extends SQLiteOpenHelper {
         return  customr_Name;
 
     }
+    public String getSalesmanName_fromSalesTeam() {
+        String name="";
+        if(!Login.salesMan.equals(""))
+        {
+            String selectQuery ="select S.salesManName \n" +
+                    "from Sales_Team S WHERE  S.SalesManNo ='"+Login.salesMan+"' ";
+
+
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    name=cursor.getString(0);
+
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+
+
+        return  name;
+
+    }
+
+    public String getIpAddresDevice_fromSalesTeam() {
+        String name="";
+        if(!Login.salesMan.equals(""))
+        {
+            String selectQuery ="select S.IP_ADDRESS_DEVICE \n" +
+                    "from Sales_Team S WHERE  S.SalesManNo ='"+Login.salesMan+"' ";
+
+
+            db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    name=cursor.getString(0);
+
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+
+
+        return  name;
+
+    }
+
+
+
 
     public int getLastVoucherNo(int vouchType) {
         int voucNo = 0;
@@ -3490,11 +5379,11 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public int getHideValuForCustomer(int customerId) {
+    public int getHideValuForCustomer(String customerId) {
         int HideVal = 0;
         String selectQuery = "select HIDE_VAL\n" +
                 "        from CUSTOMER_MASTER\n" +
-                "        where CUSTOMER_MASTER.CUS_ID = '" + customerId + "'";
+                "        where CUSTOMER_MASTER.CUS_ID_Text = '" + customerId + "'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3510,5 +5399,466 @@ DatabaseHandler extends SQLiteOpenHelper {
         return HideVal;
 
     }
+    public int getCountItemsMaster() {
+        int count = 0;
+        String selectQuery = "SELECT COUNT(*) FROM Items_Master";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
+        if (cursor.moveToFirst()) {
+
+            count = cursor.getInt(0);
+            Log.e("count=", "" + count + "\t");
+
+        }
+        return count;
+
+    }
+
+
+    public int checkVoucherNo(int voucherNumber,int voucherType) {
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+        int count = 0;
+        String selectQuery = "select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '"+voucherNumber+"' and VOUCHER_TYPE = '"+voucherType+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+            count = cursor.getInt(0);
+            Log.e("count=", "checkVoucherNo+\t" + count + "\t");
+
+        }
+        return count;
+    }
+
+    public void updateCustomerMasterLocation(String customer_account, String LATIT, String LONGT) {
+        Log.e("updateCustomerMaster",""+customer_account+"\t"+LATIT+"\t"+LONGT);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(CUST_LAT, LATIT);
+        values.put(CUST_LONG, LONGT);
+
+
+        // updating row
+        db.update(CUSTOMER_MASTER, values, CUS_ID + "= '" + customer_account + "'", null);
+
+
+    }
+
+    public boolean isCustomerMaster_posted() {
+        String selectQuery = "SELECT count() FROM " + CUSTOMER_MASTER + " where  IS_POST = 0 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int x = cursor.getInt(0);
+            Log.e("isCustomerMaster_posted", "" + x);
+            if (x > 0) {
+                return false;
+
+
+            } else
+                return true;
+        }
+        return true;
+    }
+//  select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
+    public String isSerialCodeExist(String serialCode) {
+//  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+    String count = "not",isPaid="";
+    String itemNo="",itemNoExist="";
+    itemNo=itemNoSelected;
+
+
+//    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
+        String selectQuery = "select SerialCode,ITEM_OCODE_M from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"'";
+
+
+    db = this.getWritableDatabase();
+    Cursor cursor = db.rawQuery(selectQuery, null);
+
+    if (cursor.moveToFirst()) {
+
+        count = cursor.getString(0);
+        itemNoExist = cursor.getString(1);
+    }
+        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t"+itemNoExist);
+        if(cursor != null)
+        {
+            cursor.close();
+            cursor=null;
+            db.close();
+        }
+        if(itemNoExist.equals(itemNo))
+        {
+            count="not";
+        }
+        else {
+            count=itemNoExist;
+        }
+
+//        if(!count.equals("not"))// exist in DataBase
+//        {
+//
+//                count="not";
+//
+//        }
+//        else {
+//            Log.e("itemNoExist",""+itemNoExist);
+//            count=itemNoExist;}
+    return count;
 }
+
+
+
+
+    public String getItemNameBonus(String bonusItemNo) {
+        String name = "";
+//        select  Name from  Items_Master where ItemNo= 6934177700484
+        String selectQuery = " select  Name from  Items_Master where ItemNo='"+bonusItemNo+"' ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            name = cursor.getString(0);
+
+        }
+        Log.e("getItemNameBonus", "getItemNameBonus+\t" + name + "\t");
+
+        return name;
+    }
+
+    public CompanyInfo getCompanyLocation() {
+       CompanyInfo infoLocation=new CompanyInfo();
+
+//        LATITUDE_COMPANY LONGTUDE_COMPANY COMPANY_INFO
+        String selectQuery = " select  LONGTUDE_COMPANY , LATITUDE_COMPANY from  COMPANY_INFO ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            infoLocation.setLongtudeCompany( cursor.getDouble(0));
+            infoLocation.setLatitudeCompany( cursor.getDouble(1));
+            Log.e("setLongtudeCompany", "getItemNameBonus+\t" + infoLocation.getLatitudeCompany() + "\t");
+
+        }
+
+
+        return infoLocation;
+    }
+    public Transaction getLastVisitInfo(String customerId,String salesManId) {
+        Transaction infoVisit=new Transaction();
+
+        String selectQuery = "select * from TRANSACTIONS WHERE CUS_CODE ='"+customerId+"' and SALES_MAN_ID ='"+salesManId+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToLast()) {
+            try {
+               if( cursor.moveToPrevious())
+               {
+                   infoVisit.setCheckInDate( cursor.getString(3));
+                   infoVisit.setCheckInTime( cursor.getString(4));
+                   Log.e("infoVisit", "infoVisit+\t" + infoVisit.getCheckInDate() + "\t");
+               }
+            }
+            catch ( Exception e)
+            {Log.e("infoVisit", "Exception+\t\t");}
+
+
+        }
+
+
+        return infoVisit;
+    }
+
+    public ArrayList<Bitmap> getItemsImage() {
+        ArrayList<Bitmap> listPhoto = new ArrayList<Bitmap>();
+
+        String selectQuery = "select ITEM_PHOTO   from  Items_Master";
+
+        Log.e("***" , selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            do {
+
+                Bitmap  itemBitmap=null;
+
+                if(!cursor.getString(0).equals("")) {
+
+                    itemBitmap = StringToBitMap(cursor.getString(0));
+
+                    listPhoto.add(itemBitmap);
+                }
+                else {
+                    listPhoto.add(null);
+                }
+
+
+                Log.e("listPhoto",""+listPhoto.size());
+
+            } while (cursor.moveToNext());
+        }
+
+        return listPhoto;
+
+    }
+
+    public void updatecompanyInfo(double latitudeCheckIn, double longtudeCheckIn) {
+
+        Log.e("updatecompanyInfo",""+latitudeCheckIn+"\t"+LATIT+"\t"+longtudeCheckIn);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(LATITUDE_COMPANY, latitudeCheckIn);
+
+        values.put(LONGTUDE_COMPANY, longtudeCheckIn);
+
+
+        // updating row
+        db.update(COMPANY_INFO, values, null, null);
+
+    }
+
+    public String  getItemNoForBarcode(String barcodeValue) {
+//        select ITEM_OCODE from Item_Switch where ITEM_NCODE='6008165344933'
+        String itemNo="";
+
+        String selectQuery = "select ITEM_OCODE from Item_Switch where ITEM_NCODE ='"+barcodeValue+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+        if (cursor.moveToFirst()) {
+
+
+                    itemNo=cursor.getString(0);
+
+                    Log.e("itemNo", "getItemNoForBarcode+\t" + itemNo+ "\t");
+
+            }
+
+
+
+        }
+        catch ( Exception e)
+        {itemNo="";
+            Log.e("infoVisit", "Exception+\t\t");}
+        if(cursor != null)
+            cursor.close();
+
+
+        return itemNo;
+    }
+    //******************************************************************
+    public String isSerialCodePaied(String serialCode) {
+       // ***********************************
+//        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
+        String valueSer = "not",voucherKind="",voucherNo="",voucherDate="";
+        String selectQuery = "select SERIAL_CODE_NO ,KIND_VOUCHER ,VOUCHER_NO,DATE_VOUCHER from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='"+serialCode+"' ";
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                valueSer = cursor.getString(0);
+                voucherKind=cursor.getString(1);
+                voucherNo=cursor.getString(2);
+                voucherDate=cursor.getString(3);
+
+            }
+        }
+        catch (Exception e){
+            valueSer = "not";
+        }
+
+        if(!valueSer.equals("not")){// exist in DB
+            valueSer=voucherNo+"&"+voucherDate;
+
+        }
+        Log.e("isSerialCodePaied", "isSerialCodePaied+\t" + valueSer + "\t");
+        if(voucherKind.equals("506"))// returned serial
+        {
+            valueSer = "not";
+        }
+        return valueSer;
+    }
+
+    public List<Offers> getAllOffersFromCustomerPrices() {
+        List<Offers> offers = new ArrayList<>();
+        String customerNo=CustomerListShow.Customer_Account;
+        String selectQuery = "select FromDate,ToDate,DISCOUNT_CUSTOMER,Other_Discount,ItemNo_  from CustomerPrices WHERE CustomerNumber='"+customerNo+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Offers offer = new Offers();
+                offer.setPromotionID(1);
+                offer.setPromotionType(1);
+                offer.setItemQty(1);
+                offer.setBonusItemNo("");
+
+                offer.setFromDate(cursor.getString(0));
+                offer.setToDate(cursor.getString(1));//*************
+                offer.setBonusQty(Double.parseDouble(cursor.getString(2)));
+                offer.setOtherDiscount(cursor.getString(3));
+                Log.e("otherDis",""+offer.getOtherDiscount()+"\t"+offer.getBonusQty());
+                if(!cursor.getString(3).equals("0"))
+                {
+                    double otherDis=Double.parseDouble(offer.getOtherDiscount());
+                    Log.e("otherDis1",""+otherDis);
+                   offer.setBonusQty(offer.getBonusQty()+otherDis);
+                }
+                Log.e("otherDis2",""+offer.getBonusQty());
+                offer.setItemNo(cursor.getString(4));
+
+
+
+                offers.add(offer);
+            } while (cursor.moveToNext());
+        }
+
+
+        return offers;
+    }
+
+    public String getItemNoForSerial(String barcodeValue) {
+        String itemNo="";
+        String selectQuery = "select ITEM_OCODE_M from SerialItemMaster where SerialCode ='"+barcodeValue+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                itemNo=cursor.getString(0);
+
+            }
+        }
+        catch ( Exception e)
+        {itemNo="";
+           }
+        if(cursor != null)
+            cursor.close();
+
+
+        return itemNo;
+    }
+    public  String getSolidQtyForItem(String itemNo){
+       // SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER=7022001657 and IS_POSTED='0'
+        String soiledQty="";
+        String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                soiledQty=cursor.getString(0);
+
+            }
+        }
+        catch ( Exception e)
+        {soiledQty="0";
+        }
+        if(cursor != null)
+            cursor.close();
+
+        return soiledQty;
+    }
+    public  String getPriceListNoMaster(String date){
+        // select PO_LIST_NO AS PO_LIST_NO from price_offer_list_master where PO_LIST_TYPE ='0' and '26/01/2021' BETWEEN FROM_DATE_master and TO_DATE_master
+        String soiledQty="";
+        String customerNo=CustomerListShow.Customer_Account;
+        //select List_No from customer_prices where  CUSTOMER_NO='1110010002' and '02/02/2021' between FROM_DATE and TO_DATE;
+        String selectQuery = "select ListNo  from CustomerPrices where CustomerNumber ='"+customerNo+"' and '"+date+"' BETWEEN FromDate and ToDate";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToLast()) {
+                soiledQty=cursor.getString(0);
+
+            }
+        }
+        catch ( Exception e)
+        {Log.e("Exception","getPriceListNoMaster"+e.getMessage());
+        }
+        if(cursor != null)
+            cursor.close();
+        Log.e("PO_LIST_NO","getPriceListNoMaster"+soiledQty);
+
+        return soiledQty;
+    }
+    //******************************************************
+
+    public  ArrayList<OfferListMaster> getPriceOfferActive(String date){
+        // select PO_LIST_NAME ,PO_LIST_NO  from price_offer_list_master where PO_LIST_TYPE ='2' and '02/02/2021' between FROM_DATE and TO_DATE;
+
+        //select PO_LIST_NAME,PO_LIST_NO from price_offer_list_master where PO_LIST_NO in( select DISTINCT ListNo from CustomerPrices where ListType=2 and CustomerNumber = 1110010038   and '03/02/2021' BETWEEN FromDate and ToDate)
+       String customerNo=CustomerListShow.Customer_Account;
+        ArrayList<OfferListMaster> offersList=new ArrayList<>();
+        String selectQuery = "select PO_LIST_NAME ,PO_LIST_NO  from price_offer_list_master  where PO_LIST_NO in( select DISTINCT ListNo from CustomerPrices where ListType=2 and CustomerNumber ='"+customerNo+"'   and '"+date+"' BETWEEN FromDate and ToDate)";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    OfferListMaster offers = new OfferListMaster();
+                    offers.setPO_LIST_NAME(cursor.getString(0));
+                    offers.setPO_LIST_NO(cursor.getInt(1));
+                    offersList.add(offers);
+
+                }
+
+            while (cursor.moveToNext());
+            }
+        }
+        catch ( Exception e)
+        {Log.e("Exception","getPriceListNoMaster"+e.getMessage());
+        }
+        if(cursor != null)
+            cursor.close();
+
+
+        return offersList;
+    }
+
+    public void updateIpSetting(String ipAddress, String ipPort,String cono) {
+
+        Log.e("updateIpSetting",""+ipAddress+"\t"+ipPort+"\t"+ipPort);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IP_ADDRESS, ipAddress);
+        if(!ipPort.equals("")){
+            values.put(IP_PORT, ipPort);
+            values.put(CONO, cono);
+
+        }
+
+
+        // updating row
+        db.update(TABLE_SETTING, values, null, null);
+    }
+
+    public void updatIpDevice(String ipDevice) {
+        Log.e("updateIpSetting",""+ipDevice);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(IP_ADDRESS_DEVICE, ipDevice);
+        db.update(Sales_Team, values, null, null);
+    }
+
+    public void deleteExcept(String salesMan) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //db.execSQL("delete from " + ITEMS_QTY_OFFER);
+        db.execSQL("DELETE from SerialItemMaster where StoreNo<>"+salesMan);
+        db.execSQL("DELETE from SalesMan_Items_Balance where SalesManNo<>"+salesMan);
+        db.close();
+    }
+}
+

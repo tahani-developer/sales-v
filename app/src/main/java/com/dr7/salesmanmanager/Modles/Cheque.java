@@ -10,6 +10,9 @@ public class Cheque {
     private int chequeSerial;
     private float chequeValue;
 
+    public Cheque() {
+    }
+
     public Cheque(String chequeNo, String bankName, String chequeDate, int chequeSerial, float chequeValue) {
         this.chequeNo = chequeNo;
         this.bankName = bankName;

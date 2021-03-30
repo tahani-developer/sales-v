@@ -8,15 +8,35 @@ public class CompanyInfo {
     private int companyTel;
     private int taxNo;
     private Bitmap logo;
+    private String noteForPrint;
+    private  double longtudeCompany;
+    private  double latitudeCompany;
+
+    public double getLongtudeCompany() {
+        return longtudeCompany;
+    }
+
+    public void setLongtudeCompany(double longtudeCompany) {
+        this.longtudeCompany = longtudeCompany;
+    }
+
+    public double getLatitudeCompany() {
+        return latitudeCompany;
+    }
+
+    public void setLatitudeCompany(double latitudeCompany) {
+        this.latitudeCompany = latitudeCompany;
+    }
 
     public CompanyInfo() {
     }
 
-    public CompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo) {
+    public CompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo, String noteForPrint) {
         this.companyName = companyName;
         this.companyTel = companyTel;
         this.taxNo = taxNo;
         this.logo = logo;
+        this.noteForPrint = noteForPrint;
     }
 
     public String getCompanyName() {
@@ -53,5 +73,17 @@ public class CompanyInfo {
 
     public void setLogo(Bitmap logo) {
         this.logo = logo;
+    }
+
+    public int getCompanyTel() {
+        return companyTel;
+    }
+
+    public String getNoteForPrint() {
+        return noteForPrint;
+    }
+
+    public void setNoteForPrint(String noteForPrint) {
+        this.noteForPrint = noteForPrint;
     }
 }

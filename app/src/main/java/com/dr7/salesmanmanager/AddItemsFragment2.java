@@ -6,26 +6,23 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -36,54 +33,86 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter;
 import com.google.zxing.common.StringUtils;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
+
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
+import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
+import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
+import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
+import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.payMethod;
+import static com.dr7.salesmanmanager.SalesInvoice.priceListTypeVoucher;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class AddItemsFragment2 extends DialogFragment {
     public static  List<Item> jsonItemsList;
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
-    private static List<Item> List;
+    public static List<Item> List;
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     Context context;
 
-    public static final int REQUEST_Camera = 1;
+
+    public  String voucherDate="";
+    public static final int REQUEST_Camera_Barcode = 1;
     private Item item;
     Button addToListButton, doneButton;
     SearchView search;
    public static EditText barcode;
+   public  TextView clearBarcode;
     ImageView barcodebtn;
     private ArrayList<String> itemsList;
 //    public static  List<Item> jsonItemsList;
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
+    TextView emptyView;
     ListView verticalList;
     public  static   int total_items_quantity=0;
     private float descPerc;
@@ -99,7 +128,8 @@ public class AddItemsFragment2 extends DialogFragment {
     String upper="";
     int size_firstlist=0;
      public   static String s="";
-
+    SimpleDateFormat df, df2;
+    Date currentTimeAndDate;
     private static DatabaseHandler mDbHandler;
 
     public AddItemsInterface getListener() {
@@ -117,10 +147,13 @@ public class AddItemsFragment2 extends DialogFragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+//        new LocaleAppUtils().changeLayot(context);
+//        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDbHandler = new DatabaseHandler(getActivity());
 
 //        jsonItemsList = new ArrayList<>();
@@ -128,16 +161,57 @@ public class AddItemsFragment2 extends DialogFragment {
 //        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
+
+
+//        voucherDate = convertToEnglish(voucherDate);
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
 
+//        getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+        getDialog().getWindow().clearFlags(WindowManager.LayoutParams. SOFT_INPUT_ADJUST_PAN);
+
         int size_firstlist=0;
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
+
+        LinearLayout add_item = view.findViewById(R.id.add_item);
+        try {
+            if (languagelocalApp.equals("ar")) {
+                add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en"))
+                {
+                    add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e)
+        {
+            add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
-        fillListItemJson();
+        try {
+            if(!Login.salesMan.equals(""))
+            {
+                fillListItemJson();
+            }
+            else {
+                AddItemsFragment2.this.dismiss();
+                Intent i=new Intent(getActivity(),Login.class);
+                startActivity(i);
+            }
+        }catch (Exception e)
+        {
+            Log.e("Exception","getItems"+e.getMessage());
+
+        }
+
+
 
 //        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
 //
@@ -168,8 +242,14 @@ public class AddItemsFragment2 extends DialogFragment {
         //    test
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
+        emptyView = (TextView) view.findViewById(R.id.empty_view);
+
+// ...
+
+
+
         recyclerView.setLayoutManager(linearLayoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
 
         final Spinner categorySpinner = view.findViewById(R.id.cat);
@@ -212,10 +292,10 @@ public class AddItemsFragment2 extends DialogFragment {
                         if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(j));
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 }
 
@@ -224,7 +304,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter);
             }
         });
@@ -239,17 +319,17 @@ public class AddItemsFragment2 extends DialogFragment {
                         if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(k));
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter);
 
             }
@@ -271,14 +351,13 @@ public class AddItemsFragment2 extends DialogFragment {
                 //FILTER AS YOU TYPE
 //                adapter.getFilter().filter(query);
 
+
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
                     int [] countResult=new int[arrOfStr.length];
 
 
                     ArrayList<Item> filteredList = new ArrayList<>();
-
-//                    "jkgb".matches()
 
                     boolean isFound=false;
                     for(int i=0;i<jsonItemsList.size();i++){
@@ -304,13 +383,13 @@ public class AddItemsFragment2 extends DialogFragment {
 
                     }
 
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
 
 
 
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 }
                 return false;
@@ -318,68 +397,110 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         //***************************************************************************************
         barcode=(EditText)view.findViewById(R.id.barcode);
-//        barcode.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                barcode.setText("");
-////                 Intent i=new Intent(getActivity(),ScanActivity.class);
-////                 startActivity(i);
-//            }
-//        });
+        clearBarcode=(TextView) view.findViewById(R.id.clearBarcode);
+        clearBarcode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                barcode.setText("");
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+                        recyclerView.setAdapter(adapter);
+
+            }
+        });
         barcodebtn=(ImageView)view.findViewById(R.id.searchBarcode);
         barcodebtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                 s=barcode.getText().toString();
-                if(!s.equals("")) {
-                    searchByBarcodeNo(s + "");
-                }
-                else{
+//                 s=barcode.getText().toString();
+//                if(!s.equals("")) {
+//                    searchByBarcodeNo(s + "");
+//                }
+//                else{
                     if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera);
+                        ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
                         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
                         {//just for first time
                             Log.e("requestresult" ,"PERMISSION_GRANTED");
                             Intent i=new Intent(getActivity(),ScanActivity.class);
+                            i.putExtra("key","1");
                             startActivity(i);
                             searchByBarcodeNo(s + "");
                         }
                     } else {
                         Intent i=new Intent(getActivity(),ScanActivity.class);
+                        i.putExtra("key","1");
                         startActivity(i);
                         searchByBarcodeNo(s + "");
                     }
 
 
-                }
+//                }
 
             }
         });
-        barcode.setOnTouchListener(new View.OnTouchListener() {
+        barcode.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-//                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
-//                {
-//                    // your action here
-//                    return true;
-//                }
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
-                    {   barcode.setText("");
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
-                        recyclerView.setAdapter(adapter);
-                        return true;
+            }
 
-                    }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(""))
+                {
+                    Log.e("afterTextChanged",""+s.toString());
+
+                        searchByBarcodeNo(s + "");
 
                 }
-                return false;
+            }
+        });
+//        barcode.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                final int DRAWABLE_LEFT = 0;
+//                final int DRAWABLE_TOP = 1;
+//                final int DRAWABLE_RIGHT = 2;
+//                final int DRAWABLE_BOTTOM = 3;
+//
+////                if(event.getRawX() <= (barcode.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width()))
+////                {
+////                    // your action here
+////                    return true;
+////                }
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    if (event.getRawX() >= (barcode.getRight() - barcode.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width()))
+//                    {   barcode.setText("");
+//                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+//                        recyclerView.setAdapter(adapter);
+//                        return true;
+//
+//                    }
+//
+//                }
+//                return false;
+//            }
+//        });
+        barcode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                if (hasFocus) {
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                } else {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(barcode.getWindowToken(), 0);
+                }
+//
             }
         });
 
@@ -402,19 +523,51 @@ public class AddItemsFragment2 extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         float count=0;
+                        addItemImgButton2.setEnabled(true);
 
 //                        total_items_quantity -= List.size();
 //                        totalQty_textView.setText("+"+0);
 //                        total_items_quantity=0;
-                        for(int j=0;j<List.size();j++)
+                        for(int h=0;h<List.size();h++)
                         {
-                            count+=List.get(j).getQty();
+
+                            updateListSerialBukupDeleted( List.get(h).getItemNo(),voucherNumberTextView.getText().toString());
                         }
+
+                        if(listSerialTotal.size()!=0)
+                        {
+                            for(int k=0;k<listSerialTotal.size();k++)
+                            {
+                                for(int j=0;j<List.size();j++)
+                                {
+                                    count+=List.get(j).getQty();
+                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo()))
+                                    {
+
+                                        listSerialTotal.remove(k);
+                                        k--;
+                                    }
+                                }
+                            }
+                        }
+                        else {
+                            for(int j=0;j<List.size();j++)
+                            {
+                                count+=List.get(j).getQty();
+                            }
+
+                        }
+
+
 //                        Log.e("count",""+count);
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
                         total_items_quantity-=count;
                         totalQty_textView.setText(total_items_quantity+"");
                         List.clear();
+                       int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
+//                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
+
+
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
                         AddItemsFragment2.this.dismiss();
 
@@ -430,8 +583,17 @@ public class AddItemsFragment2 extends DialogFragment {
         done.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.addItemsToList(List);
-                AddItemsFragment2.this.dismiss();
+                try {
+                    listener.addItemsToList(List);
+                    addItemImgButton2.setEnabled(true);
+                    AddItemsFragment2.this.dismiss();
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(getActivity(), "Re Select Items Please", Toast.LENGTH_SHORT).show();
+                    Log.e("AddItemException",""+e.getMessage());
+                }
+
           }
         });
         return view;
@@ -481,50 +643,74 @@ public class AddItemsFragment2 extends DialogFragment {
 //            super.onActivityResult(requestCode, resultCode, data);
 //        }
 //    }
+    private void updateListSerialBukupDeleted(String itemNoSelected, String vouch) {
+//        for(int j=0;j<listMasterSerialForBuckup.size();j++)
+//        {
+        mDbHandler.updateitemDeletedInSerialTable_Backup(itemNoSelected,vouch);
+//        }
+    }
    public  void searchByBarcodeNo(String barcodeValue) {
+       Log.e("searchByBarcodeNo",""+barcodeValue);
+       String itemNo="";
+       try {
+            itemNo=mDbHandler.getItemNoForBarcode(barcodeValue);
+            if(itemNo.equals(""))
+            {
+                itemNo=mDbHandler.getItemNoForSerial(barcodeValue);
+            }
+       }catch (Exception e)
+       {
+           itemNo="";
+       }
+
         if(!barcodeValue.equals(""))
         {
                 ArrayList<Item> filteredList = new ArrayList<>();
                 for (int k = 0; k < jsonItemsList.size(); k++) {
-                    if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
+                    if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())){
                         filteredList.add(jsonItemsList.get(k));
+                        break;
+
+                    }
+                    else
+                    {
+
+                        if(!itemNo.equals(""))
+                        {
+                        if(itemNo.equals(jsonItemsList.get(k).getItemNo())){
+
+                            filteredList.add(jsonItemsList.get(k));
+                            break;
+                        }
+                        }
+
+
                     }
                 }
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, getActivity());
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList,AddItemsFragment2.this);
                 recyclerView.setAdapter(adapter);
-                Log.e("filteredList=","" + filteredList.size());
                 if(filteredList.size()==0)
                 {
-                    Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+//                  Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+
                 }
 
 
 
         } else {
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, getActivity());
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
             recyclerView.setAdapter(adapter);
 
 
         }
+
     }
-    /*//        int no = 0;
-//
-//        if (!barcodeValue.equals("cancelled")) {
-//            for (int k = 0; k < bundles.size(); k++) {
-//                if ((bundles.get(k).getBundleNo()).equals(Bundul)) {
-//                    no = k;
-//                    items.setSelection(no);
-//                    items.requestFocusFromTouch();
-//                    items.setSelection(no);
-//
-//                    break;
-//                }
-//            }
-//
-//        } else {
-//            ItemsListAdapter adapter = new ItemsListAdapter(LoadingOrder.this, bundles);
-//            items.setAdapter(adapter);
-//        }*/
 
     public void setListener(AddItemsInterface listener) {
         this.listener = listener;
@@ -540,27 +726,53 @@ public class AddItemsFragment2 extends DialogFragment {
 //
 //    }
 
-    private void fillListItemJson() {
+    private void fillListItemJson() {// test
         String s = "";
-
         jsonItemsList = new ArrayList<>();
         jsonItemsList2 = new ArrayList<>();
         jsonItemsList_intermidiate = new ArrayList<>();
-        String rate_customer = mDbHandler.getRateOfCustomer();  // customer rate to display price of this customer
+        String dateCurent=getCurentTimeDate(1);
+        String rate_customer = mDbHandler.getRateOfCustomer();
+        if(rate_customer.equals(""))
+        {
+            rate_customer="0";
+
+        }
+        Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
-            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
-            Log.e("jsonItemsList", "zero"+jsonItemsList.size());
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
+           // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
         else {
             List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
 
-            jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);//from customers pricess
+            //from customers pricess
+
+            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+            {
+                if(priceListTypeVoucher!=0)
+                {
+                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+listOfferNo,payMethod,dateCurent);
+                    Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
+                }
+                else {// regular list
 
 
+                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+priceListTypeVoucher,payMethod,dateCurent);
+                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,0); // from price list d
+                }
+
+
+            }
+            else {
+                jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
+            }
             size_firstlist = jsonItemsList2.size();
-            if (size_firstlist != 0) {
+            Log.e("size_firstlist",""+size_firstlist);
+            if (size_firstlist != 0&&priceListTypeVoucher!=1) {
                 size_customerpriceslist = size_firstlist;
 
                 for (int k = 0; k < size_firstlist; k++) {
@@ -568,7 +780,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 }
                 //****************************************************************************************
 
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer); // from price list d
+
 
 
                 for (int i = 0; i < jsonItemsList.size(); i++) {
@@ -586,11 +798,18 @@ public class AddItemsFragment2 extends DialogFragment {
                 }
 
                 jsonItemsList = jsonItemsList_intermidiate;
+                Log.e("jsonItemsList",""+jsonItemsList.size());
 
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
 
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer);
+                if(priceListTypeVoucher!=0)
+                {
+                    jsonItemsList=jsonItemsList2;
+                }else {
+                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
+                }
+
             }
 
 //            Collections.sort(jsonItemsList<itemNoList>);
@@ -598,23 +817,37 @@ public class AddItemsFragment2 extends DialogFragment {
         }
     }
 
+
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
-                           String category, String posPrice,CheckBox useWeight, Context context) {
-
+                           String category, String posPrice, CheckBox useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial) {
+        boolean itemInlocalList=false;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         boolean existItem = false;
-        for(int i = 0 ; i< obj.getItemsList().size() ; i++){
-            Log.e("***" , obj.getItemsList().get(i).getItemNo() + " " + itemNumber);
-            if(obj.getItemsList().get(i).getItemNo().equals(itemNumber)){
-                existItem = true;
-                break;
+        float previousePrice=0,curentPrice=0;
+        try {
+             curentPrice=Float.parseFloat(price.trim());
+        }catch (Exception e){curentPrice=0;}
+
+
+
+
+            for(int i = 0 ; i< obj.getItemsList().size() ; i++){
+                if(obj.getItemsList().get(i).getItemNo().equals(itemNumber)){
+                    previousePrice=obj.getItemsList().get(i).getPrice();
+                    existItem = true;
+                    break;
+                }
             }
-        }
-        if(existItem) {
-            Toast toast = Toast.makeText(context, "This item has been added before !", Toast.LENGTH_LONG);
+       // Log.e("canChangePrice",""+canChangePrice+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
+
+        if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
+            Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 180);
             ViewGroup group = (ViewGroup) toast.getView();
             TextView messageTextView = (TextView) group.getChildAt(0);
@@ -623,13 +856,16 @@ public class AddItemsFragment2 extends DialogFragment {
 
             return false;
         }
-//        else {
+
 
             item = new Item();
             item.setItemNo(itemNumber);
             item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
             item.setCategory(category);
+            item.setDescreption(descriptRemark);
+//            item.setSerialCode(serialNo);
+//            Log.e("addItem","\t"+serialNo);
 // test new order
             try {
                 item.setUnit(unit);
@@ -642,7 +878,17 @@ public class AddItemsFragment2 extends DialogFragment {
 //                    item.setQty(Float.parseFloat(qty));
 //                }
 
-                item.setQty(Float.parseFloat(qty));
+                Log.e("unit",""+unit);
+                int unitInt=0;
+                try{
+                     unitInt=Integer.parseInt(unit);
+                }
+                catch (Exception e)
+                {
+                    unitInt=1;
+                }
+                item.setQty(Float.parseFloat(qty)*unitInt);
+                item.setItemHasSerial(hasSerial+"");
 
                 item.setPrice(Float.parseFloat(price.trim()));
                 if (bonus == "")
@@ -665,9 +911,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-                item.setDiscType(1);
+                item.setDiscType(1);// error for discount promotion // percent discount
             } else {
-                item.setDiscType(0);
+                item.setDiscType(0);// value Discount
             }
 
             try {
@@ -733,12 +979,32 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
                 List.add(item);
-                Toast toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.succsesful), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 180);
                 ViewGroup group = (ViewGroup) toast.getView();
                 TextView messageTextView = (TextView) group.getChildAt(0);
                 messageTextView.setTextSize(15);
                 toast.show();
+                String storeNo=Login.salesMan;
+                voucherDate=convertToEnglish(voucherDate);
+            if(item.getItemHasSerial().equals("1"))
+            {
+//                Log.e("itemSerialList",""+itemSerialList.size()+itemSerialList.get(0).getSerialCode());
+                for(int i=0;i<itemSerialList.size();i++)
+                {
+                    itemSerialList.get(i).setItemNo(itemNumber);
+                    itemSerialList.get(i).setDateVoucher(voucherDate);
+                    itemSerialList.get(i).setKindVoucher(voucherType+"");
+                    itemSerialList.get(i).setVoucherNo(voucherNumberTextView.getText().toString());
+                    itemSerialList.get(i).setStoreNo(storeNo);
+                    itemSerialList.get(i).setIsDeleted("0");
+                    itemSerialList.get(i).setDateDelete(voucherDate);
+                    listSerialTotal.add( itemSerialList.get(i));
+
+                }
+
+
+            }
 
 
             return true;
@@ -753,26 +1019,113 @@ public class AddItemsFragment2 extends DialogFragment {
             return false;
         }
     }
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case REQUEST_Camera: {
-//
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    Log.e("requestresult" ,"REQUEST_Camera");
-//                    Intent i=new Intent(getActivity(),ScanActivity.class);
-//                    startActivity(i);
-//                    searchByBarcodeNo(s + "");
-//                } else {
-//                    Toast.makeText(getActivity(), "check permission Camera ", Toast.LENGTH_SHORT).show();
-//
-//                }
-//                return;
-//            }
-//        }
-//        }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e("onDestroy","================");
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
+//        mDbHandler.deletSerialItems_byVoucherNo(vouch);
+        Log.e("onStop","================"+voucherNumberTextView.getText().toString());
+    }
+
+    public  void readB(){
+        Log.e("barcode_099", "in");
+        Log.e("currentUpdate",""+"readB");
+       // openIntegratorLandScapeActivity();
+
+       // openSannActivity();
+
+       // openSmallActivity();
+            //*********************************************************
+        openSmallScanerTextView();
+        //**************************************************************
+//        public void scanToolbar(View view) {
+//            new IntentIntegrator(getActivity()).setCaptureActivity(ToolbarCaptureActivity.class).initiateScan();
+//        }
+
+    }
+   public String getCurentTimeDate(int flag){
+       String dateCurent,timeCurrent,dateTime="";
+       Date currentTimeAndDate;
+       SimpleDateFormat dateFormat, timeformat;
+       currentTimeAndDate = Calendar.getInstance().getTime();
+       if(flag==1)// return date
+       {
+
+           dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+           dateCurent = dateFormat.format(currentTimeAndDate);
+           dateTime=convertToEnglish(dateCurent);
+
+       }
+       else {
+           if(flag==2)// return time
+           {
+               timeformat = new SimpleDateFormat("hh:mm:ss");
+               dateCurent = timeformat.format(currentTimeAndDate);
+               dateTime=convertToEnglish(dateCurent);
+           }
+       }
+       return dateTime;
+
+   }
+
+    private void openIntegratorLandScapeActivity() {
+        IntentIntegrator intentIntegrator = new IntentIntegrator(getActivity());
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        intentIntegrator.setDesiredBarcodeFormats(intentIntegrator.ALL_CODE_TYPES);
+        intentIntegrator.setBeepEnabled(false);
+        intentIntegrator.setCameraId(0);
+        intentIntegrator.setOrientationLocked(false);
+        intentIntegrator.setPrompt("SCAN");
+
+        intentIntegrator.setBarcodeImageEnabled(false);
+        intentIntegrator.initiateScan();
+    }
+
+    private void openSannActivity() {
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            {//just for first time
+                Log.e("requestresult" ,"PERMISSION_GRANTED");
+                Intent i=new Intent(getActivity(),ScanActivity.class);
+                i.putExtra("key","3");
+                startActivity(i);
+
+            }
+        } else {
+            Intent i=new Intent(getActivity(),ScanActivity.class);
+            i.putExtra("key","3");
+            startActivity(i);
+
+        }
+    }
+
+    private void openSmallActivity() {
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+    }
+
+    public void openSmallScanerTextView() {
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+
+    }
+
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
+    }
+
 
 
 

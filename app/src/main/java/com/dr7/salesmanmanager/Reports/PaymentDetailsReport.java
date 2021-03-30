@@ -1,9 +1,15 @@
 package com.dr7.salesmanmanager.Reports;
 
 import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -12,14 +18,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,22 +45,46 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class PaymentDetailsReport extends AppCompatActivity {
 
     List<Payment> payments;
+    List<Payment> payments_filtered;
     private EditText from_date, to_date;
     private TableLayout TablePaymentsDetailsReport;
     private Spinner paymentKindSpinner;
     private Button preview;
     Calendar myCalendar;
     int payMethod;
-
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(PaymentDetailsReport.this);
         setContentView(R.layout.payment_details_report);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
 
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        inflateBoomMenu();
         payments = new ArrayList<Payment>();
+        payments_filtered=new ArrayList<>();
         DatabaseHandler obj = new DatabaseHandler(PaymentDetailsReport.this);
         payments = obj.getAllPayments();
 
@@ -116,23 +156,25 @@ public class PaymentDetailsReport extends AppCompatActivity {
                 clear();
                 for (int n = 0; n < payments.size(); n++) {
                     if (filters(n)) {
+                        payments_filtered.add(payments.get(n));
                         TableRow row = new TableRow(PaymentDetailsReport.this);
                         row.setPadding(5, 10, 5, 10);
 
                         if (n % 2 == 0)
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer7));
                         else
-                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer5));
+                            row.setBackgroundColor(ContextCompat.getColor(PaymentDetailsReport.this, R.color.layer4));
 
                         for (int i = 0; i < 7; i++) {
 
-                            String[] record = {payments.get(n).getVoucherNumber() + "",
-                                    payments.get(n).getPayDate(),
-                                    payments.get(n).getCustName() + "",
-                                    payments.get(n).getAmount() + "",
-                                    payments.get(n).getRemark(),
-                                    payments.get(n).getSaleManNumber() + "",
-                                    payments.get(n).getPayMethod() + ""};
+                            String[] record = {
+                                    payments.get(n).getVoucherNumber() + "",
+                                    payments.get(n).getPayDate()       ,
+                                    payments.get(n).getCustName()             + "",
+                                    payments.get(n).getAmount()              + "",
+                                    payments.get(n).getRemark()               ,
+                                    payments.get(n).getSaleManNumber()     + "",
+                                    payments.get(n).getPayMethod()           + ""};
 
                             switch (record[6]) {
                                 case "0":
@@ -155,6 +197,8 @@ public class PaymentDetailsReport extends AppCompatActivity {
                             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                             textView.setLayoutParams(lp2);
 
+//                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 40, 1f);
+//                            textView.setLayoutParams(lp2);
                             row.addView(textView);
                         }
                         TablePaymentsDetailsReport.addView(row);
@@ -182,8 +226,71 @@ public class PaymentDetailsReport extends AppCompatActivity {
         };
         return date;
     }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        if(payments_filtered.size()!=0) {
+            exportToExcel.createExcelFile(PaymentDetailsReport.this, "PaymentsReport.xls", 5, payments_filtered);
+
+        }
+        else {
+            exportToExcel.createExcelFile(PaymentDetailsReport.this, "PaymentsReport.xls", 5, payments);
+
+
+        }
+    }
+    public  void exportToPdf(){
+
+        PdfConverter pdf =new PdfConverter(PaymentDetailsReport.this);
+        if(payments_filtered.size()!=0)
+        {
+            pdf.exportListToPdf(payments_filtered,"PaymentsReport",from_date.getText().toString(),5);
+        }
+        else {pdf.exportListToPdf(payments,"PaymentsReport",from_date.getText().toString(),5);
+
+        }
+
+
+    }
 
     public void clear() {
+        payments_filtered.clear();
         int childCount = TablePaymentsDetailsReport.getChildCount();
         // Remove all rows except the first one
         if (childCount > 1) {

@@ -4,8 +4,13 @@ import android.graphics.Color;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.print.PrintHelper;
 
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.google.android.gms.maps.CameraUpdateFactory;

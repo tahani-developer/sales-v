@@ -12,14 +12,23 @@
             android:id="@+id/nav_reports"
             android:icon="@drawable/ic_date_range_black_24dp"
             android:title="@string/app_reports" />
+        <item
+            android:id="@+id/nav_stock"
+            android:icon="@drawable/ic_store_black_24dp"
+            android:title="@string/app_request" />
 <!--        <item-->
 <!--            android:id="@+id/nav_Arabiclanguage"-->
 <!--            android:icon="@drawable/ic_date_range_black_24dp"-->
 <!--            android:title="@string/arabic_language" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_sign_out"-->
+<!--            android:icon="@drawable/ic_lock_outline_black_24dp"-->
+<!--            -->
+<!--            android:title="@string/app_sign_out" />-->
         <item
-            android:id="@+id/nav_sign_out"
+            android:id="@+id/nav_unCollectedchecked"
             android:icon="@drawable/ic_lock_outline_black_24dp"
-            android:title="@string/app_sign_out" />
+            android:title="@string/unCollectedCheques" />
 
         <item
             android:id="@+id/sales_man_map"
@@ -42,7 +51,7 @@
                 android:title="@string/app_imp_data" />
             <item
                 android:id="@+id/nav_refreshdata"
-                android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
+                android:icon="@drawable/ic_refresh_white_24dp"
                 android:title="@string/app_refresh_data" />
             <item
                 android:id="@+id/nav_exp_data"
@@ -52,6 +61,10 @@
                 android:id="@+id/nav_clear_local"
                 android:icon="@drawable/ic_clear_all_black_24dp"
                 android:title="@string/app_clear_local" />
+            <item
+                android:id="@+id/nav_backup_data"
+                android:icon="@drawable/ic_backup_black_24dp"
+                android:title="@string/backupData" />
 
         </menu>
     </item>

@@ -8,55 +8,60 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class SalesManItemsBalance {
 
-    private int companyNo;
-    private String salesManNo;
-    private String itemNo;
-    private double qty;
+    private String ComapnyNo;
+    private String SalesManNo;
+    private String ItemNo;
+    private double Qty;
 
     public SalesManItemsBalance(){
 
     }
-
-    public SalesManItemsBalance(int companyNo, String salesManNo, String itemNo, double qty) {
-        this.companyNo = companyNo;
-        this.salesManNo = salesManNo;
-        this.itemNo = itemNo;
-        this.qty = qty;
+    List<SalesManItemsBalance>CASHREPORT;
+    public List<SalesManItemsBalance> getSalesItemBalance() {
+        return CASHREPORT;
     }
 
-    public int getCompanyNo() {
-        return companyNo;
+    public SalesManItemsBalance(String companyNo, String salesManNo, String itemNo, double qty) {
+        this.ComapnyNo = companyNo;
+        this.SalesManNo = salesManNo;
+        this.ItemNo = itemNo;
+        this.Qty = qty;
     }
 
-    public void setCompanyNo(int companyNo) {
-        this.companyNo = companyNo;
+    public String getCompanyNo() {
+        return ComapnyNo;
+    }
+
+    public void setCompanyNo(String companyNo) {
+        this.ComapnyNo = companyNo;
     }
 
     public String getSalesManNo() {
-        return salesManNo;
+        return SalesManNo;
     }
 
     public void setSalesManNo(String salesManNo) {
-        this.salesManNo = salesManNo;
+        this.SalesManNo = salesManNo;
     }
 
     public String getItemNo() {
-        return itemNo;
+        return ItemNo;
     }
 
     public void setItemNo(String itemNo) {
-        this.itemNo = itemNo;
+        this.ItemNo = itemNo;
     }
 
     public double getQty() {
-        return qty;
+        return Qty;
     }
 
     public void setQty(double qty) {
-        this.qty = qty;
+        this.Qty = qty;
     }
     Date currentTimeAndDate = Calendar.getInstance().getTime();
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -77,9 +82,9 @@ public class SalesManItemsBalance {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("VANCODE", salesManNo);
-            obj.put("ITEMCODE", itemNo);
-            obj.put("LOADQTY", qty);
+            obj.put("VANCODE", SalesManNo);
+            obj.put("ITEMCODE", ItemNo);
+            obj.put("LOADQTY", Qty);
             obj.put("LOADDATE",today);
         } catch (JSONException e) {
             Log.e("TagSalesmanBalance" , "JSONException");

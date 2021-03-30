@@ -2,40 +2,53 @@ package com.dr7.salesmanmanager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+//import android.support.annotation.Nullable;
+//import android.support.annotation.RequiresApi;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.NavigationView;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.view.GravityCompat;
+//import android.support.v4.widget.DrawerLayout;
+//import android.support.v7.app.ActionBarDrawerToggle;
+//import android.support.v7.app.AlertDialog;
+//import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.widget.Toolbar;
+import android.speech.RecognizerIntent;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -49,45 +62,105 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
-import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.Timer;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
+import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
-
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final String TAG = "MainActivity";
     public static int menuItemState;
-    static public TextView mainTextView;
+    String typeImport="";
+    int  approveAdmin=-1,workOnLine=-1;
+    public  static  EditText passwordFromAdmin, password ;
+    static public TextView mainTextView,timeTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     private DatabaseHandler mDbHandler;
-    LocationManager locationManager;
+     public   LocationManager locationManager;
     LocationListener locationListener;
-    double latitude, longitude;
-    boolean isPosted = true;
+
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationRequest mLocationRequest;
+
+
+    public  static  double latitude_main, longitude_main;
+    boolean isPosted = true,isPostedCustomerMaster=true;
 
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
+    boolean getLocationComp=false;
     ImageView logo;
     Calendar myCalendar;
     Bitmap visitPic = null;
@@ -101,12 +174,50 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     int sum_chech_export_lists=0;
-     public static String languagelocalApp="";
+    static public Date currentTimeAndDate;
+    static public SimpleDateFormat df, df2;
+    static public String curentDate, curentTime;
+
      DrawerLayout drawer_layout;
+    private static final int REQUEST_LOCATION_PERMISSION = 3;
+    private FusedLocationProviderClient fusedLocationClient;
+    public  static CustomerLocation customerLocation_main;
+    public  static Location location_main;
+    public  int first=0,isClickLocation=0;
+    public  static  double latitudeCheckIn=0,longtudeCheckIn=0;
+    LinearLayout checkInCheckOutLinear;
+    public  static int time=30;
+    Timer timer;
+    LocationPermissionRequest locationPermissionRequest;
+    Transaction transactionRealTime;
+    boolean customerCheckInOk=false;
+
+    List<Settings>settingsList;
+    int NoLocationAsk=0;
+
+    public  static TextView masterControlLoc;
+
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
+        if(!CustomerListShow.Customer_Name.contains("No Customer"))
+        {
+            setTimeText();
+        }
+
     }
+
+    private static void setTimeText() {
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        df2 = new SimpleDateFormat("hh:mm:ss");
+        curentTime=df2.format(currentTimeAndDate);
+        timeTextView.setText(curentTime);
+        df= new SimpleDateFormat("dd/MM/yyyy");
+        curentDate = df.format(currentTimeAndDate);
+
+
+    }
+
 
     @Override
     public void showCustomersList() {
@@ -128,30 +239,119 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(MainActivity.this);
+
+//        finish();
+//        startActivity(getIntent());
+
         setContentView(R.layout.activity_main);
+        checkInCheckOutLinear=findViewById(R.id.checkInCheckOutLinear);
+        timeTextView=findViewById(R.id.timeTextView);
+        Log.e("curentTimeMain",""+curentTime);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            checkInCheckOutLinear.setVisibility(View.GONE);
+            //Do some stuff
+        }
+        else {
+            checkInCheckOutLinear.setVisibility(View.VISIBLE);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mDbHandler = new DatabaseHandler(MainActivity.this);
         drawer_layout=findViewById(R.id.drawer_layout);
-        if(languagelocalApp.equals("ar"))
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        first=1;
+        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+        TextView textTimer = (TextView)findViewById(R.id.timerTextView);
+        masterControlLoc=findViewById(R.id.masterControlLoc);
+
+        settingsList= mDbHandler.getAllSettings();
+        try {
+            approveAdmin=settingsList.get(0).getApproveAdmin();
+        }catch (Exception e){
+            approveAdmin=0;
+        }
+
+        if(approveAdmin==1) {
+            boolean locCheck = locationPermissionRequest.checkLocationPermission();
+
+            Log.e("LocationIn", "Main1" + locCheck);
+
+        }
+
+
+        masterControlLoc.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(masterControlLoc.getText().toString().equals("2")) {
+//                    locationOPen();
+                    masterControlLoc.setText("0");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        isClickLocation=1;
+        try {
+            if(mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1)
+            {
+//                if(isNetworkAvailable())
+//                {
+//                    getlocationForCheckIn();
+//                }
+//                else {
+//                    Toast.makeText(this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+//                }
+
+
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
         {
             drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        else{
-            if(languagelocalApp.equals("en"))
-            {
-                drawer_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            }
 
-        }
         tvresult = (TextView) findViewById(R.id.tvresult);
 
         Button btn = (Button) findViewById(R.id.btn);
+
+//        requestLocationUpdates();
+
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,29 +368,35 @@ public class MainActivity extends AppCompatActivity
         settext2();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
-        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
-        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
-        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
-        {
-            checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
-            checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
-        }
+//        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
+//        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
+//        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
+//        {
+//            checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+//            checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+//        }
 
         checkInLinearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
-                    if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
-                        checknum = 1;
-                        menuItemState = 1;
-                        openSelectCustDialog();
-                    } else {
-                        Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
-                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+                    customerCheckInOk=true;
+//                  checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in));
+
+                    if(approveAdmin==1) {
+                        boolean locCheck = locationPermissionRequest.checkLocationPermission();
+
+                        Log.e("LocationIn", "GoToMain" + locCheck);
+                        if (locCheck) {
+                            customerCheckInDialog();
+                        }else{
+                           // customerCheckInDialog();
+                        }
+                    }else {
+                        customerCheckInDialog();
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
+//                    checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_in_hover));
                 }
                 return true;
             }
@@ -200,31 +406,40 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
+//                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
                     if (!CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
                         openCustCheckOut();
                     } else {
                         Toast.makeText(MainActivity.this, "No Customer Selected !", Toast.LENGTH_SHORT).show();
-                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+//                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
                     }
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out_hover));
+//                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out_hover));
                 }
                 return true;
             }
         });
 
-        mDbHandler = new DatabaseHandler(MainActivity.this);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                openAddCustomerDialog();
 
-//                mDbHandler.updateSalesManItemBalance("1","1144",100);
+                try {
+
+//                   String priceListNo= mDbHandler.getPriceListNoMaster(convertToEnglish(curentDate));
+//                   Log.e("curentDate",""+curentDate+"\t"+priceListNo);
+                    openAddCustomerDialog();
+                }
+                catch (Exception e)
+                {
+
+                    Toast.makeText(MainActivity.this, "Check Location permission", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -240,6 +455,83 @@ public class MainActivity extends AppCompatActivity
         navUsername.setText(Login.salesMan);
         navigationView.setNavigationItemSelectedListener(this);
         menuItemState = 0;
+//        locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+//        locationPermissionRequest.timerLocation();
+
+
+
+    }
+
+    private void openReadBarcode() {
+        IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+            integrator.setOrientationLocked(false);
+            integrator.setCaptureActivity(SmallCaptureActivity.class);
+            integrator.initiateScan();
+//        new IntentIntegrator(MainActivity.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+    }
+
+    void customerCheckInDialog(){
+        if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
+            checknum = 1;
+            menuItemState = 1;
+            openSelectCustDialog();
+        } else {
+            Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
+//                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
+        }
+    }
+
+    public  void getlocationForCheckIn() {
+
+
+
+            LocationListener locationListener;
+
+            locationManager = (LocationManager)this.getSystemService(LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+                ActivityCompat.requestPermissions(this, new String[]
+                        {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+
+            }
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    latitudeCheckIn=0;longtudeCheckIn=0;
+                    latitudeCheckIn  = location.getLatitude();
+                    longtudeCheckIn = location.getLongitude();
+                    Log.e("onLocationChanged",""+latitudeCheckIn+""+longtudeCheckIn);
+
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+                    Log.e("onStatusChanged",""+provider.toString()+status+"\t extras"+extras.toString());
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+                    Log.e("onProviderEnabled",""+provider.toString());
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+                    Log.e("onProviderDisabled",""+provider.toString());
+
+                }
+            };
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);//test
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+            catch (Exception e)
+            {
+                Log.e("locationManager",""+e.getMessage());
+            }
+
+
 
     }
 
@@ -250,9 +542,44 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+//            locationPermissionRequest.closeLocation();
+            finish();
         }
     }
-
+    public static boolean textContainsArabic(String text) {
+        for (char charac : text.toCharArray()) {
+            if (Character.UnicodeBlock.of(charac) == Character.UnicodeBlock.ARABIC) {
+                return true;
+            }
+        }
+        return false;
+    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (mFusedLocationClient != null) {
+//            requestLocationUpdates();
+//        }
+//    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (mFusedLocationClient != null) {
+//            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+//        }
+//    }
+    public void requestLocationUpdates() {
+        Log.e("requestLocationUpdates","");
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(120000); // two minute interval
+        mLocationRequest.setFastestInterval(120000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -271,13 +598,7 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             openPasswordDialog(1);
-//        } else if (id == R.id.action_cust_check_in) {
-//            checknum = 1;
-//            menuItemState = 1;
-//            openSelectCustDialog();
-//
-//        } else if (id == R.id.action_cust_check_out) {
-//            openCustCheckOut();
+//            openPasswordDialog(10);// from admin
 
         } else if (id == R.id.action_print_voucher) {
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
@@ -287,9 +608,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, PrintPayment.class);
             startActivity(intent);
 
-//        } else if (id == R.id.action_add_cust) {
-//            openAddCustomerDialog();
-
         } else if (id == R.id.action_company_info) {
             openPasswordDialog(2);
 
@@ -298,11 +616,393 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.printerSetting) {
             openPasswordDialog(4);
         }
+        else if (id == R.id.saveLocation) {
+            try {
+                if(isNetworkAvailable())
+                {
+
+                    if( !CustomerListShow.Customer_Name.equals("No Customer Selected !"))
+                    {
+                        saveCurrentLocation();
+                    }
+                    else {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                .show();
+                    }
+
+                }
+                else {
+                    Log.e("isNetworkAvailable","NOT");
+                    Toast.makeText(this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         return super.
 
                 onOptionsItemSelected(item);
     }
+
+
+
+    public void saveCurrentLocation() throws InterruptedException {
+        first=2;
+        isClickLocation=2;
+//        requestSingleUpdate();
+        Log.e("saveCurrentLocation",""+isClickLocation);
+        getlocattTest();
+//        if(CustomerListShow.Customer_Account.equals(""))
+//        {
+//            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                    .setTitleText(getResources().getString(R.string.warning_message))
+//                    .setContentText(getResources().getString(R.string.pleaseSelectUser))
+//                    .show();
+//
+//        } else {
+//
+//
+//            if(isNetworkAvailable()){
+//                String latitude = CustomerListShow.latitude;
+//                final String longitude = CustomerListShow.longtude;
+//
+//                if(!latitude.equals("")&&!longitude.equals("")){
+//
+//                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                            .setTitleText(getResources().getString(R.string.warning_message))
+//                            .setContentText(getResources().getString(R.string.customerHaveLocation))
+//                            .show();
+//                }
+//                else {
+//                    locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+//
+//                        ActivityCompat.requestPermissions(this, new String[]
+//                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+//                    }
+//
+//
+//                    locationListener = new LocationListener() {
+//                        @Override
+//                        public void onLocationChanged(Location location) {
+//                            latitude_main = location.getLatitude();
+//                            longitude_main = location.getLongitude();
+//                            customerLocation_main = new CustomerLocation();
+//                                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+//                                        customerLocation_main.setLONG(longitude_main + "");
+//                                        customerLocation_main.setLATIT(latitude_main + "");
+//                                        mDbHandler.addCustomerLocation(customerLocation_main);
+//
+//                            mDbHandler.addCustomerLocation(customerLocation_main);
+//                                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+//                                        CustomerListShow.latitude=latitude_main+"";
+//                                        CustomerListShow.longtude=longitude_main+"";
+//                                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                                .setTitleText(getResources().getString(R.string.succsesful))
+//                                                .setContentText(getResources().getString(R.string.LocationSaved))
+//                                                .show();
+//                            Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+////                            Toast.makeText(MainActivity.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onProviderEnabled(String provider) {
+//                        }
+//
+//                        @Override
+//                        public void onProviderDisabled(String provider) {
+//
+//                        }
+//                    };
+//
+//
+//                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+//                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+//
+//
+//
+//
+//
+//                    //****************************************************************
+////                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//
+//
+//                  locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+//
+//                        ActivityCompat.requestPermissions(this, new String[]
+//                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+//                    }
+////                    Thread.sleep(1000);
+//
+//
+//                    /////////////////////////////////////////**********************************
+////                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
+////                    fusedLocationClient.getLastLocation()
+////                            .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+////                                @Override
+////                                public void onSuccess(Location location) {
+////                                    // Got last known location. In some rare situations this can be null.
+////                                    if (location != null) {
+////                                        location_main=new Location(location);
+////                                        latitude_main = location.getLatitude();
+////                                        longitude_main = location.getLongitude();
+////                                        location_main.setLatitude(latitude_main);
+////                                        location_main.setLongitude(longitude_main);
+////                                        customerLocation_main = new CustomerLocation();
+////                                        customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+////                                        customerLocation_main.setLONG(longitude_main + "");
+////                                        customerLocation_main.setLATIT(latitude_main + "");
+////                                        mDbHandler.addCustomerLocation(customerLocation_main);
+////                                        mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account,latitude_main+"",longitude_main+"");
+////                                        CustomerListShow.latitude=latitude_main+"";
+////                                        CustomerListShow.longtude=longitude_main+"";
+////                                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+////                                                .setTitleText(getResources().getString(R.string.succsesful))
+////                                                .setContentText(getResources().getString(R.string.LocationSaved))
+////                                                .show();
+////                                        Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+////                                        Toast.makeText(MainActivity.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+////                                    }
+////                                    // Logic to handle location object
+////
+////                                }
+////                            });
+//                }
+//            }
+//            else {
+//                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.enternetConnection))
+//                        .show();
+//            }
+//
+//
+//        }// END ELSE
+
+    }//end
+
+    private void getlocattTest() {
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+//
+                    }
+        if (mFusedLocationClient != null) {
+            Log.e("mFusedLocationClient","");
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+            requestLocationUpdates();
+        }
+        else {
+            Log.e("mFusedLocationClient",""+mFusedLocationClient);
+        }
+
+    }
+    LocationCallback mLocationCallback = new LocationCallback(){
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            Log.e("onLocationResult",""+locationResult);
+            Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
+            if(getLocationComp)
+            {
+                for (Location location : locationResult.getLocations()) {
+                    Log.e("MainActivity", "getLocationComp: " + location.getLatitude() + " " + location.getLongitude());
+                    if (mDbHandler.getAllCompanyInfo().size() != 0) {
+                        if (mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany() == 0) {
+                            latitude_main = location.getLatitude();
+                            longitude_main = location.getLongitude();
+
+                            Log.e("updatecompanyInfo", "" + mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+                            mDbHandler.updatecompanyInfo(latitude_main, longitude_main);
+                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText(getResources().getString(R.string.succsesful))
+                                    .setContentText(getResources().getString(R.string.LocationSaved))
+                                    .show();
+
+
+                        }
+                    }
+                    else{
+
+                    }
+
+
+
+
+                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+                }
+                getLocationComp=false;
+            }
+            else {
+                if(CustomerListShow.Customer_Account.equals("")&& isClickLocation == 2)
+                {
+                    if(first!=1)
+                    {
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getResources().getString(R.string.warning_message))
+                                .setContentText(getResources().getString(R.string.pleaseSelectUser))
+                                .show();
+                    }
+
+
+                } else {
+
+
+                    if(isNetworkAvailable()){
+                        String latitude="",  longitude="" ;
+                        try {
+                            latitude = CustomerListShow.latitude;
+                            longitude = CustomerListShow.longtude;
+                            Log.e("latitude",""+latitude+longitude);
+                        }
+                        catch (Exception e)
+                        {
+                            latitude="";
+                            longitude="";
+
+                        }
+                        Log.e("latitude",""+latitude+longitude);
+
+
+                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
+                        {
+
+                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(getResources().getString(R.string.warning_message))
+                                    .setContentText(getResources().getString(R.string.customerHaveLocation))
+                                    .show();
+                        }
+                        else {
+                            if (isClickLocation == 2) {
+                                for (Location location : locationResult.getLocations()) {
+                                    Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                                    latitude_main = location.getLatitude();
+                                    longitude_main = location.getLongitude();
+                                    customerLocation_main = new CustomerLocation();
+                                    customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
+                                    customerLocation_main.setLONG(longitude_main + "");
+                                    customerLocation_main.setLATIT(latitude_main + "");
+
+                                    mDbHandler.addCustomerLocation(customerLocation_main);
+                                    mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
+                                    CustomerListShow.latitude = latitude_main + "";
+                                    CustomerListShow.longtude = longitude_main + "";
+//                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                            .setTitleText(getResources().getString(R.string.succsesful))
+//                                            .setContentText(getResources().getString(R.string.LocationSaved))
+//                                            .show();
+
+
+                                    Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
+
+
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+//            else {
+//                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText(getResources().getString(R.string.warning_message))
+//                        .setContentText(getResources().getString(R.string.enternetConnection))
+//                        .show();
+//            }
+
+
+                }// END ELSE
+                isClickLocation=1;
+            }
+
+
+        };
+
+    };
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+
+                    try {
+                        saveCurrentLocation();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "check permission location ", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Location", "granted");
+                    Log.e("LocationIn","GoToMain 1");
+                    if(customerCheckInOk){
+                        customerCheckInDialog();
+                        customerCheckInOk=false;
+                    }
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(MainActivity                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  .this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        Log.e("Location", "granted updates");
+                        Log.e("LocationIn","GoToMain 2");
+
+                    }
+
+                } else {
+                    Log.e("LocationIn","GoToMain 3");
+                    Log.e("Location", "Deny");
+                    // permission, denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+//                    NoLocationAsk++;
+//                    if(NoLocationAsk!=1) {
+//                        locationPermissionRequest.checkLocationPermission();
+//                    }
+                }
+                break;
+            }
+        }
+    }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -329,6 +1029,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_activities) {
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, Activities.class);
             startActivity(intent);
 
@@ -337,7 +1038,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_exp_data) {
-
+//            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to post data ? This will take few minutes !")
@@ -357,7 +1058,11 @@ public class MainActivity extends AppCompatActivity
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            obj.startExportDatabase();
+                                try {
+                                    obj.startExportDatabase();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
                             }
 
@@ -372,10 +1077,12 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.customers_location) {
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
 
         } else if (id == R.id.sales_man_map) {
+//            locationPermissionRequest.closeLocation();
             Intent intent = new Intent(this, SalesmanMap.class);
             startActivity(intent);
 
@@ -392,6 +1099,9 @@ public class MainActivity extends AppCompatActivity
 
 
         else if (id == R.id.nav_imp_data) {
+            Log.e("nav_imp_data","nav_imp_data");
+         //   locationPermissionRequest.closeLocation();
+//            locationPermissionRequest.closeLocation();
             new AlertDialog.Builder(this)
                     .setTitle("Confirm Update")
                     .setMessage("Are you sure you want to update data ? This will take few minutes !")
@@ -402,24 +1112,49 @@ public class MainActivity extends AppCompatActivity
                                 if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                     openPasswordDialog(5);
                                 } else {
+                                    if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
+                                    {
+                                        isPostedCustomerMaster=mDbHandler.isCustomerMaster_posted();
+                                    }
+                                    else {isPostedCustomerMaster=true;}
+
 
                                     isPosted=mDbHandler.isAllVoucher_posted();
-                                    if(isPosted==true)
+                                    if(isPostedCustomerMaster)
                                     {
-                                        ImportJason obj = new ImportJason(MainActivity.this);
-                                        obj.startParsing();
-                                    }
-                                    else{
-                                        Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+                                        if(isPosted==true)
+                                        {
+                                            Log.e("getAllSettings",""+mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin());
+                                            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+                                            {
+                                                ImportJason obj = new ImportJason(MainActivity.this);
+//                                                obj.getPriceFromAdmin();
+                                                obj.startParsing("");
+                                            }
+                                            else {
+                                                ImportJason obj = new ImportJason(MainActivity.this);
+                                                obj.startParsing("");
+                                            }
+
+                                        }
+                                        else{
+                                            Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
 
 
+                                        }
                                     }
+                                    else {
+                                        Toast.makeText(MainActivity.this,R.string.failImpo_export_dataCustomerMaster , Toast.LENGTH_SHORT).show();
+
+                                    }
+
 
 
                                 }
                             }catch (Exception e)
                             {
                                 Toast.makeText(MainActivity.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+                                Log.e("ExceptionMain",""+e.getMessage());
                             }
 
 
@@ -431,6 +1166,7 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         } else if (id == R.id.nav_refreshdata) {
+//            locationPermissionRequest.closeLocation();
 //            new AlertDialog.Builder(this)
 //                    .setTitle("Confirm Update")
 //                    .setMessage("Are you sure you want to refresh data ? This will take few minutes !")
@@ -438,31 +1174,121 @@ public class MainActivity extends AppCompatActivity
 //                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 //                        public void onClick(DialogInterface dialog, int whichButton) {
 
-            RefreshData obj = new RefreshData(MainActivity.this);
-            obj.startParsing();
+            try {
+                RefreshData obj = new RefreshData(MainActivity.this);
+                obj.startParsing();
+            }
+            catch (Exception e)
+            {
+                Log.e("RefreshData",""+e.getMessage());
+            }
+
             //obj.storeInDatabase();
 
 //                        }
 //                    })
 //                    .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.nav_sign_out) {
-//            Intent intent = new Intent(this, CPCL2Menu.class);
-//            startActivity(intent);
-
-        } else if (id == R.id.nav_clear_local) {
-
+        }
+        //        else if (id == R.id.nav_sign_out) {
+////            locationPermissionRequest.closeLocation();
+////            Intent intent = new Intent(this, CPCL2Menu.class);
+////            startActivity(intent);
+//
+//        }
+        else if (id == R.id.nav_clear_local) {
+//            locationPermissionRequest.closeLocation();
             mDbHandler.deleteAllPostedData();
+        }
+        else if (id == R.id.nav_unCollectedchecked) {
+          //  locationPermissionRequest.closeLocation();
+            finish();
+          Intent in=new Intent(MainActivity.this,UnCollectedData.class);
+          in.putExtra("type","1");
+          startActivity(in);
+            Log.e("nav_unCollectedchecked","nav_unCollectedchecked");
+
 
         }
 
+
+        else if (id == R.id.nav_backup_data) {
+//            locationPermissionRequest.closeLocation();
+
+            try {
+                verifyStoragePermissions(MainActivity.this);
+                copyFile();
+            }
+            catch (Exception e)
+            {verifyStoragePermissions(MainActivity.this);
+
+
+                Toast.makeText(this, ""+getResources().getString(R.string.backup_failed), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        else if (id == R.id.nav_stock) {
+//            locationPermissionRequest.closeLocation();
+           finish();
+           Intent i=new Intent(MainActivity.this,Stock_Activity.class);
+           startActivity(i);
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+//
+//      if(getTypeImport().equals("1"))
+//    {
+////                                               ImportJason obj = new ImportJason(MainActivity.this);
+////                                               obj.setFlagImport();
+//    }
+//                                           else {
+//        ImportJason obj = new ImportJason(MainActivity.this);
+//        obj.startParsing();
+//    }
+
+    private String getTypeImport() {
+         typeImport="0";
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.itemImportfromadmin));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                typeImport="1";
+            }
+        }).setCancelButton(getResources().getString(R.string.no), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                typeImport="2";
+            }
+        })
+
+                .show();
+        return  typeImport;
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
     private void openSelectCustDialog() {
-        CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment();
+        CustomerCheckInFragment customerCheckInFragment = new CustomerCheckInFragment(MainActivity.this);
         customerCheckInFragment.setCancelable(false);
         customerCheckInFragment.setListener(this);
         customerCheckInFragment.show(getFragmentManager(), "");
@@ -503,33 +1329,61 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openAddCustomerDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.add_customer_dialog);
         dialog.setCanceledOnTouchOutside(true);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
 
         Window window = dialog.getWindow();
 
 
         final EditText addCus = (EditText) dialog.findViewById(R.id.custEditText);
         final EditText remark = (EditText) dialog.findViewById(R.id.remarkEditText);
+        final EditText address = (EditText) dialog.findViewById(R.id.addressEditText);
+        final EditText telephone = (EditText) dialog.findViewById(R.id.phoneEditText);
+        final EditText contactPerson = (EditText) dialog.findViewById(R.id.person_contactEditText);
+
         Button done = (Button) dialog.findViewById(R.id.doneButton);
+         RadioGroup paymentTermRadioGroup=dialog.findViewById(R.id.paymentTermRadioGroup);
+         LinearLayout   linear = dialog.findViewById(R.id.linear);
+        try {
+            if (languagelocalApp.equals("ar")) {
+                linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            } else {
+                if (languagelocalApp.equals("en")) {
+                    linear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            linear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);}
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
+
             ActivityCompat.requestPermissions(this, new String[]
                     {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            dialog.dismiss();
         }
 
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                latitude = location.getLatitude();
-                longitude = location.getLongitude();
+                latitude_main = location.getLatitude();
+                longitude_main = location.getLongitude();
             }
 
             @Override
@@ -554,16 +1408,161 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
+                    int payMethod=0;
                     mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude, longitude, Login.salesMan, 0, Login.salesManNo));
-                    dialog.dismiss();
+                            latitude_main, longitude_main, Login.salesMan, Login.salesMan,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
+                  dialog.dismiss();
+//                    String customerId=getCustomerId();
+//                    if(!customerId.equals(""))
+//                    {
+//                       int idRadioGroup= paymentTermRadioGroup.getCheckedRadioButtonId();
+//                       if(idRadioGroup==R.id.cashRadioButton)
+//                       {
+//                           payMethod=1;
+//                       }
+//                       else {    payMethod=0;
+//                       }
+//                        mDbHandler.addCustomer(new Customer(123,customerId,addCus.getText().toString(),address.getText().toString(),0,"0",0,"1",0,payMethod,latitude_main+"",longitude_main+"",0.0,"0",0,0,customerId+""));
+//                        dialog.dismiss();
+//                    }
+
                 } else
+                {
+                    addCus.setError(getResources().getString(R.string.reqired_filled));
                     Toast.makeText(MainActivity.this, "Please add customer name", Toast.LENGTH_SHORT).show();
+
+                }
+
             }
         });
 
+
         dialog.show();
     }
+    public static <T> boolean hasDuplicate(Iterable<T> all) {
+        Set<T> set = new HashSet<T>();
+        // Set#add returns false if the set does not change, which
+        // indicates that a duplicate element has been added.
+        for (T each: all) if (!set.add(each)) return true;
+        return false;
+    }
+//    public static <T> boolean hasDuplicateSerial(Iterable<serialModel> all) {
+//        Set<String> set = new HashSet<>();
+//        // Set#add returns false if the set does not change, which
+//        // indicates that a duplicate element has been added.
+//        for (serialModel each: all) if (!set.add(each.getSerialCode())) return true;
+//        return false;
+//    }
+
+
+    private String getCustomerId() {
+        String custId="120120120";
+        new JSONTask_getCustomerId().execute();
+
+        return  custId;
+    }
+    private class JSONTask_getCustomerId extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+
+                String link = "";
+                String data = URLEncoder.encode("_ID", "UTF-8") + "=" +
+                        URLEncoder.encode(String.valueOf('3'), "UTF-8");
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                wr.write(data);
+                wr.flush();
+                reader = new BufferedReader(new
+                        InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                // Read Server Response
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                String finalJson = sb.toString();
+                Log.e("finalJson*********", finalJson);
+
+                JSONObject parentObject = new JSONObject(finalJson);
+//                try {
+//
+//                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS_BALANCE");
+//                    customerList.clear();
+//                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
+//                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+//                        Customer Customer = new Customer();
+//                        Customer.setCustId(finalObject.getString("CUSTID"));
+//                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+//                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+//                        customerList.add(Customer);
+//                    }
+//                } catch (Exception e) {
+//                    Log.e("Refresh_data", "" + e.getMessage().toString());
+//                }
+
+
+
+            } catch (MalformedURLException e) {
+                Log.e("Refresh_data", "********ex1");
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e("Refresh_data", e.getMessage().toString());
+                e.printStackTrace();
+
+            } catch (JSONException e) {
+                Log.e("Refresh_data", "********ex3  " + e.toString());
+                e.printStackTrace();
+            } finally {
+                Log.e("Refresh_data", "********finally");
+                if (connection != null) {
+                    Log.e("Refresh_data", "********ex4");
+                    // connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "";
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+//            progressDialog.dismiss();
+
+            if (result != null) {
+//                storeInDatabase();
+            } else {
+                Toast.makeText(MainActivity.this, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     public void openCustCheckOut() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
@@ -574,16 +1573,42 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i) {
                 checknum = 0;
                 CustomerListShow.Customer_Name = "No Customer Selected !";
+                CustomerListShow.longtude="";
+                CustomerListShow.latitude="";
+                CustomerListShow.Customer_Account="0";
                 settext2();
                 menuItemState = 0;
+                setTimeText();
 
-                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
-                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
+//                checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in));
+//                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
 
                 CustomerCheckInFragment obj = new CustomerCheckInFragment();
                 obj.editCheckOutTimeAndDate();
+                List<Settings> settings = mDbHandler.getAllSettings();
+                if (settings.size() != 0) {
+                    workOnLine= settings.get(0).getWorkOnline();
+                    Log.e("workOnLine",""+workOnLine);
+                }
+                if(workOnLine==1) {
+                    ExportJason objJson = null;
+                    try {
+                        objJson = new ExportJason(MainActivity.this);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        objJson.startExportDatabase();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                openVisitRateDialog();
+                }
+
+
+
+
+               // openVisitRateDialog();  stopped just for new customer
             }
         });
         builder.setNegativeButton(getResources().getString(R.string.app_no), null);
@@ -738,14 +1763,42 @@ public class MainActivity extends AppCompatActivity
         });
         dialog.show();
     }
-
+    boolean validPassowrdSetting=false;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openPasswordDialog(final int flag) {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.password_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        validPassowrdSetting=false;
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        passwordFromAdmin=dialog.findViewById(R.id.passwordFromAdmin);
 
-        final EditText password = (EditText) dialog.findViewById(R.id.editText1);
+        passwordFromAdmin.setText("");
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        password = (EditText) dialog.findViewById(R.id.editText1);
+
         Button okButton = (Button) dialog.findViewById(R.id.button1);
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
         final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
@@ -764,52 +1817,87 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (password.getText().toString().equals("301190")) {
-                    dialog.dismiss();
+                if(flag == 10)
+                {
 
-                    if (flag == 1) {
+//                   if( password.getText().toString().equals("2021m$003"))
+                    if(passwordFromAdmin.getText().toString().equals("")) {
+                        getPassword();
+                    }
+                        if( (password.getText().toString().trim().equals(passwordFromAdmin.getText().toString()))&&(!password.getText().toString().equals("")))
+                    {
+                        dialog.dismiss();
                         openSetting alert = new openSetting();
                         alert.showDialog(MainActivity.this, "Error de conexión al servidor");
-                    } else if (flag == 2)
-                        openCompanyInfoDialog();
-
-                    else if (flag == 3) {
-                        openDeExportDialog();
-                    } else if (flag == 4) {
-                        openPrintSetting();
                     }
-                    else if (flag == 5) {
-
-                        isPosted=mDbHandler.isAllVoucher_posted();
-                        if(isPosted==true)
-                        {
-                            ImportJason obj = new ImportJason(MainActivity.this);
-                            obj.startParsing();
-                        }
-                        else{
-
-                            Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
-
-
-                        }
-
+                    else {
+                        password.setError(getResources().getString(R.string.invalidPassword));
                     }
-                    else if (flag == 6) {
-                        ExportJason obj = null;
-                        try {
-                            obj = new ExportJason(MainActivity.this);
 
-                            obj.startExportDatabase();
+
+
+
+                }
+                else {
+
+                    if (password.getText().toString().equals("303090")&&flag != 10) {
+                        dialog.dismiss();
+
+                        if (flag == 1) {
+                            openSetting alert = new openSetting();
+                            alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+                        } else if (flag == 2)
+                            openCompanyInfoDialog();
+
+                        else if (flag == 3) {
+                            openDeExportDialog();
+                        } else if (flag == 4) {
+                            openPrintSetting();
                         }
-                        catch (JSONException e) {
-                            Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
-                            e.printStackTrace();
+                        else if (flag == 5) {
+
+                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
+                            {
+                                isPostedCustomerMaster=mDbHandler.isCustomerMaster_posted();
+                            }
+                            else {isPostedCustomerMaster=true;}
+
+
+                            isPosted=mDbHandler.isAllVoucher_posted();
+                            if(isPostedCustomerMaster)
+                            {
+                                if(isPosted==true)
+                                {
+                                    ImportJason obj = new ImportJason(MainActivity.this);
+                                    obj.startParsing("");
+                                }
+                                else{
+                                    Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this,R.string.failImpo_export_dataCustomerMaster , Toast.LENGTH_SHORT).show();
+
+                            }
 
                         }
+                        else if (flag == 6) {
+                            ExportJason obj = null;
+                            try {
+                                obj = new ExportJason(MainActivity.this);
 
-                    }
-                } else
-                    Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
+                                obj.startExportDatabase();
+                            } catch (JSONException e) {
+                                Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+                                e.printStackTrace();
+
+                            }
+
+                        }
+                    } else
+                        Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -821,60 +1909,261 @@ public class MainActivity extends AppCompatActivity
         });
         dialog.show();
     }
+    private void getPassword() {
+        ExportJason exportData = null;
+        try {
+            exportData = new ExportJason(MainActivity.this);
+            exportData.getPassowrdSetting();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+    }
     public class openSetting {
+        boolean validSerial = false, validReturn = false, validOrder = false;
+        EditText linkEditText,ip_withPort, cono,numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit, salesmanNmae;
+        RadioGroup taxCalc, printMethod;
+        CheckBox checkBox, checkBox2;
+        RadioButton bluetooth, wifi, exclude, include;
+        CheckBox allowMinus, salesManCustomersOnly, minSalePrice, allowOutOfRange;
+        CheckBox checkBox_canChangePrice, readDiscount, workOnline, paymetod_check, bonusNotAlowed, noOfferForCredit, customerAuthor,
+                passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
+                showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
+                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox;
+        Dialog dialog;
+        LinearLayout linearSetting;
+        TextView editIp;
 
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
         @SuppressLint("SetTextI18n")
         public void showDialog(Activity activity, String msg) {
-            final Dialog dialog = new Dialog(activity);
+            dialog = new Dialog(activity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(true);
             dialog.setContentView(R.layout.fragment_setting);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
 
-            final EditText linkEditText = (EditText) dialog.findViewById(R.id.link);
-            final EditText numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
-            final EditText invoicEditText = (EditText) dialog.findViewById(R.id.invoice_serial);
-            final EditText returnEditText = (EditText) dialog.findViewById(R.id.return_serial);
-            final EditText orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
-            final EditText paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
-            final EditText paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
-            final EditText salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
-            final RadioGroup taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
+            lp.gravity = Gravity.CENTER;
+            lp.windowAnimations = R.style.DialogAnimation;
+            dialog.getWindow().setAttributes(lp);
+            linearSetting = (LinearLayout) dialog.findViewById(R.id.linearSetting);
+            try {
+                if (languagelocalApp.equals("ar")) {
+                    linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                } else {
+                    if (languagelocalApp.equals("en")) {
+                        linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                    }
 
-            final CheckBox checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
-            final CheckBox checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
-            final RadioGroup printMethod = (RadioGroup) dialog.findViewById(R.id.printMethod);
-            final RadioButton bluetooth = (RadioButton) dialog.findViewById(R.id.bluetoothRadioButton);
-            final RadioButton wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
-            final CheckBox allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
-            final CheckBox salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
-            final CheckBox minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
-            final CheckBox allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
-            final RadioButton exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
-            final RadioButton include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
-            final CheckBox checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
-            final CheckBox readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
-            final CheckBox workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
-            final CheckBox paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
-            final CheckBox bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
-            final CheckBox noOfferForCredit = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
-            final CheckBox customerAuthor = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
-            final CheckBox passowrdData_checkbox = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
-            final CheckBox arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
-            final CheckBox hideQty_checkbox = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
-            final CheckBox lockcash_checkbox = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
+                }
+            }
+            catch (Exception e){
+                linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+
+            editIp= (TextView) dialog.findViewById(R.id.editIp);
+            ip_withPort= (EditText) dialog.findViewById(R.id.ip_withPort);
+            cono= (EditText) dialog.findViewById(R.id.cono);
+
+            linkEditText = (EditText) dialog.findViewById(R.id.link);
+            numOfCopy = (EditText) dialog.findViewById(R.id.num_of_copy);
+            invoicEditText = (EditText) dialog.findViewById(R.id.invoice_serial);
+            returnEditText = (EditText) dialog.findViewById(R.id.return_serial);
+            orderEditText = (EditText) dialog.findViewById(R.id.order_serial);
+            paymentEditTextCash = (EditText) dialog.findViewById(R.id.payments_serial_cash);
+            paymentEditTextCheque = (EditText) dialog.findViewById(R.id.payments_serial_cheque);
+            paymentEditTextCredit = (EditText) dialog.findViewById(R.id.payments_serial_creditCard);
+            salesmanNmae = (EditText) dialog.findViewById(R.id.salesman_name_text);
+            taxCalc = (RadioGroup) dialog.findViewById(R.id.taxTalc);
+
+            checkBox = (CheckBox) dialog.findViewById(R.id.price_by_cust);
+            checkBox2 = (CheckBox) dialog.findViewById(R.id.use_weight_case);
+            printMethod = (RadioGroup) dialog.findViewById(R.id.printMethod);
+            bluetooth = (RadioButton) dialog.findViewById(R.id.bluetoothRadioButton);
+            wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
+            allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
+            salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
+            minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
+            allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
+            exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
+            include = (RadioButton) dialog.findViewById(R.id.includeRadioButton);
+            checkBox_canChangePrice = (CheckBox) dialog.findViewById(R.id.can_change_price);
+            readDiscount = (CheckBox) dialog.findViewById(R.id.read_discount);
+            workOnline = (CheckBox) dialog.findViewById(R.id.work_online);
+             paymetod_check = (CheckBox) dialog.findViewById(R.id.checkBox_paymethod_check);
+             bonusNotAlowed = (CheckBox) dialog.findViewById(R.id.checkBox_bonus_notallowed);
+             noOfferForCredit        = (CheckBox) dialog.findViewById(R.id.checkBox_NoOffer_forCredit);
+             customerAuthor          = (CheckBox) dialog.findViewById(R.id.CustomerAuthorize_checkbox);
+             passowrdData_checkbox   = (CheckBox) dialog.findViewById(R.id.PassowrdData_checkbox);
+             arabicLanguage_checkbox = (CheckBox) dialog.findViewById(R.id.ArabicLanguage_checkbox);
+             hideQty_checkbox     = (CheckBox) dialog.findViewById(R.id.hideQty_checkbox);
+             lockcash_checkbox    = (CheckBox) dialog.findViewById(R.id.lockcash_checkbox);
+             preventNew_checkbox   = (CheckBox) dialog.findViewById(R.id.preventNewOrder_checkbox);
+             note_checkbox         = (CheckBox) dialog.findViewById(R.id.note_checkbox);
+             ttotalDisc_checkbox   = (CheckBox) dialog.findViewById(R.id.preventtotalDisc_checkbox);
+             automaticCheck_checkbox   = (CheckBox) dialog.findViewById(R.id.automatic_cheque_checkbox);
+             tafqit_checkbox            = (CheckBox) dialog.findViewById(R.id.tafqit_checkbox);
+             preventChange_checkbox     = (CheckBox) dialog.findViewById(R.id.preventChangePay_checkbox);
+             showCustomerList_checkbox = (CheckBox) dialog.findViewById(R.id.showCustomerList_checkbox);
+             noReturn_checkbox            = (CheckBox) dialog.findViewById(R.id.noReturn_checkbox);
+             workSerial_checkbox         = (CheckBox) dialog.findViewById(R.id.workSerial_checkbox);
+             showItemImage_checkbox        = (CheckBox) dialog.findViewById(R.id.showItemImage_checkbox);
+            approveAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.approveAdmin_checkbox);
+            asaveOnly_checkbox= (CheckBox) dialog.findViewById(R.id.asaveOnly_checkbox);
+            showSolidQty_checkbox= (CheckBox) dialog.findViewById(R.id.showSolidQty_checkbox);
+            offerFromAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.offerFromAdmin_checkbox);
+            checkQtyServer= (CheckBox) dialog.findViewById(R.id.qtyFromServer_checkbox);
+            dontShowTax_checkbox= (CheckBox) dialog.findViewById(R.id.dontShowTax_checkbox);
+            FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
+            okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveSetting();
+                }
+            });
+
             Button okButton = (Button) dialog.findViewById(R.id.okBut);
             Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
 
+            salesmanNmae.setEnabled(false);
+            getSalesManName();
+            invoicEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!charSequence.toString().equals("")) {
+                        int vouchNo=Integer.parseInt(charSequence.toString());
+
+                        int validateVoucherNo = mDbHandler.checkVoucherNo(vouchNo+1,504);
+                        Log.e("onTextChanged",""+validateVoucherNo);
+                        if(validateVoucherNo != 0)
+                        {
+                            invoicEditText.setError("Duplicated Voucher No");
+                            validSerial=false;
+                        }
+                        else {invoicEditText.setError(null);
+                            validSerial=true;}
+//
+
+                    }
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            returnEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!charSequence.toString().equals("")) {
+                        int vouchNo=Integer.parseInt(charSequence.toString());
+
+                        int validateVoucherNo = mDbHandler.checkVoucherNo(vouchNo+1,506);
+                        Log.e("onTextChanged",""+validateVoucherNo);
+                        if(validateVoucherNo != 0)
+                        {
+                            returnEditText.setError("Duplicated Voucher No");
+                            validReturn=false;
+                        }
+                        else {
+                            returnEditText.setError(null);
+                        validReturn=true;
+                        }
+//
+
+                    }
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            orderEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if (!charSequence.toString().equals("")) {
+                        int vouchNo=Integer.parseInt(charSequence.toString());
+
+                        int validateVoucherNo = mDbHandler.checkVoucherNo(vouchNo+1,508);
+                        Log.e("onTextChanged",""+validateVoucherNo);
+                        if(validateVoucherNo != 0)
+                        {
+                            orderEditText.setError("Duplicated Voucher No");
+                            validOrder=false;
+                        }
+                        else {
+                            orderEditText.setError(null);
+                            validOrder=true;}
+//
+
+                    }
+
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
             if (mDbHandler.getAllSettings().size() != 0) {
                 linkEditText.setText("" + mDbHandler.getAllSettings().get(0).getIpAddress());
+                try {
+                    ip_withPort.setText("" + mDbHandler.getAllSettings().get(0).getIpPort());
+                    cono.setText("" + mDbHandler.getAllSettings().get(0).getCoNo());
+                }
+                catch (Exception e){}
+
+                linkEditText.setClickable(false);
+                linkEditText.setEnabled(false);
+                linkEditText.setAlpha(0.5f);
                 numOfCopy.setText("" + mDbHandler.getAllSettings().get(0).getNumOfCopy());
-                invoicEditText.setText("" + (mDbHandler.getMaxSerialNumber(504) + 1));
-                returnEditText.setText("" + (mDbHandler.getMaxSerialNumber(506) + 1));
-                orderEditText.setText("" + (mDbHandler.getMaxSerialNumber(508) + 1));
+                invoicEditText.setText("" + (mDbHandler.getMaxSerialNumberFromVoucherMaster(504) + 1));
+                returnEditText.setText("" + (mDbHandler.getMaxSerialNumberFromVoucherMaster(506) + 1));
+                orderEditText.setText("" + (mDbHandler.getMaxSerialNumberFromVoucherMaster(508) + 1));
+
                 paymentEditTextCash.setText("" + (mDbHandler.getMaxSerialNumber(1) + 1));//test
                 paymentEditTextCheque.setText("" + (mDbHandler.getMaxSerialNumber(4) + 1));
-                salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
+                try {
+                    paymentEditTextCredit.setText("" + (mDbHandler.getMaxSerialNumber(2) + 1));
+                }
+                catch (Exception e)
+                {
+                    paymentEditTextCredit.setText("");
+
+                }
+//                try {
+//                    salesmanNmae.setText(mDbHandler.getAllSettings().get(0).getSalesMan_name()+"");
+//                }
+//                catch (Exception e)
+//                {
+//
+//                }
+
+
 
                 if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0)
                     bluetooth.setChecked(true);
@@ -921,38 +2210,138 @@ public class MainActivity extends AppCompatActivity
                     customerAuthor.setChecked(true);
                 if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1)
                     passowrdData_checkbox.setChecked(true);
-                if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1) {
+                if (mDbHandler.getAllSettings().get(0).getArabic_language() == 1)
+                {
                     arabicLanguage_checkbox.setChecked(true);
-                    languagelocalApp="ar";
+                    languagelocalApp= "ar";
+                    LocaleAppUtils.setLocale(new Locale("ar"));
+                    LocaleAppUtils.setConfigChange(MainActivity.this);
                 }
                 else{
-                    languagelocalApp="en";
+                    if(mDbHandler.getAllSettings().get(0).getArabic_language() == 0)
+                    {
+                        languagelocalApp= "en";
+                        arabicLanguage_checkbox.setChecked(false);
+                        LocaleAppUtils.setLocale(new Locale("en"));
+                        LocaleAppUtils.setConfigChange(MainActivity.this);
+                    }
+
                 }
+
                 if (mDbHandler.getAllSettings().get(0).getHide_qty() == 1) {
                     hideQty_checkbox.setChecked(true);
                 }
                 if (mDbHandler.getAllSettings().get(0).getLock_cashreport() == 1) {
                     lockcash_checkbox.setChecked(true);
                 }
+                if (mDbHandler.getAllSettings().get(0).getPriventOrder() == 1) {
+                    preventNew_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getRequiNote() == 1) {
+                    note_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 1) {
+                    ttotalDisc_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getAutomaticCheque() == 1) {
+                    automaticCheck_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getTafqit() == 1) {
+                    tafqit_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getPreventChangPayMeth() == 1) {
+                    preventChange_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getShowCustomerList() == 1) {
+                    showCustomerList_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getNoReturnInvoice() == 1) {
+                    noReturn_checkbox.setChecked(true);
+                }
+                if (mDbHandler.getAllSettings().get(0).getWork_serialNo() == 1) {
+                    workSerial_checkbox.setChecked(true);
+                }
+
+                if (mDbHandler.getAllSettings().get(0).getShowItemImage() == 1) {
+                    showItemImage_checkbox.setChecked(true);
+                }
+                else {
+                    showItemImage_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getApproveAdmin() == 1) {
+                    approveAdmin_checkbox.setChecked(true);
+                }
+                else {
+                    approveAdmin_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 1) {
+                    asaveOnly_checkbox.setChecked(true);
+                }
+                else {
+                    asaveOnly_checkbox.setChecked(false);
+                }
+
+                if (mDbHandler.getAllSettings().get(0).getShow_quantity_sold() == 1) {
+                    showSolidQty_checkbox.setChecked(true);
+                }
+                else {
+                    showSolidQty_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin() == 1) {
+                    offerFromAdmin_checkbox.setChecked(true);
+                }
+                else {
+                    offerFromAdmin_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getQtyServer() == 1) {
+                    checkQtyServer.setChecked(true);
+                }
+                else {
+                    checkQtyServer.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getDontShowtax() == 1) {
+                    dontShowTax_checkbox.setChecked(true);
+                }
+                else {
+                    dontShowTax_checkbox.setChecked(false);
+                }
+                if (mDbHandler.getAllSettings().get(0).getWorkOnline() == 1) {
+                    workOnline.setChecked(true);
+                }
+                else {
+                    workOnline.setChecked(false);
+                }
 
 
 
 
-
-//                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1)
-//                    noOfferForCredit.setChecked(true);
-
-
+            }else {
+                arabicLanguage_checkbox.setChecked(true);
+                LocaleAppUtils.setLocale(new Locale("ar"));
+                languagelocalApp="ar";
+                showCustomerList_checkbox.setChecked(true);
+                editIp.setVisibility(View.INVISIBLE);
             }
+            editIp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPasswordDialog();
+
+
+                }
+            });
+
             arabicLanguage_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                    if( arabicLanguage_checkbox.isChecked())
                    {
+
                         LocaleAppUtils.setLocale(new Locale("ar"));
                        languagelocalApp="ar";
                     }
-                   else {    LocaleAppUtils.setLocale(new Locale("en"));
+                   else {
+                       LocaleAppUtils.setLocale(new Locale("en"));
                              languagelocalApp="en";
                    }
 
@@ -962,72 +2351,20 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (noOfferForCredit.isChecked()) {
-                        Log.e("noOfferForCredit", "yes");
                         openMaxDiscount();
                     }
                 }
             });
 
-            okButton.setOnClickListener(new View.OnClickListener() {
+            okButton.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
                 public void onClick(View v) {
-                    LocaleAppUtils.setConfigChange(MainActivity.this);
-                    finish();
-                    startActivity(getIntent());
-                    settext2();
 
-                    if (!(linkEditText.getText().toString().equals(""))) {
-                        if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
-                                !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("") && !paymentEditTextCheque.getText().toString().equals("")) {
-
-                            if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
-                                String link = linkEditText.getText().toString().trim();
-                                int numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
-                                int invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
-                                int return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
-                                int order = Integer.parseInt(orderEditText.getText().toString()) - 1;
-                                int paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
-                                int paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
-
-                                int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
-                                int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
-                                int priceByCust = checkBox.isChecked() ? 1 : 0;
-                                int useWeightCase = checkBox2.isChecked() ? 1 : 0;
-                                int alowMinus = allowMinus.isChecked() ? 1 : 0;
-                                int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
-                                int minSalePric = minSalePrice.isChecked() ? 1 : 0;
-                                int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
-                                int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
-                                int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
-                                int workOnlin = workOnline.isChecked() ? 1 : 0;
-                                int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
-                                int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
-                                int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
-                                int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
-                                int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
-                                int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
-                                int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
-                                int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
-                                String salesmanname=salesmanNmae.getText().toString();
-
-                                mDbHandler.deleteAllSettings();
-
-                                mDbHandler.addSetting(link, taxKind, 504, invoice, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 506, return1, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 508, order, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 1, paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-                                mDbHandler.addSetting(link, taxKind, 4, paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname);
-
-                                dialog.dismiss();
-                            } else
-                                Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
-                        }
-
-                    } else {
-                        Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
-                    }
+//                    LocaleAppUtils.setConfigChange(MainActivity.this);
+//                    finish();
+//                    startActivity(getIntent());
+     saveSetting();
 
 
                 }
@@ -1037,35 +2374,251 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
+
                 }
             });
             dialog.show();
+            //  else
+            //                               {
+            //                             }
 
+        }
+
+        private void getSalesManName() {
+            String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+            if(salesName.equals(""))
+            {
+                salesmanNmae.setEnabled(true);
+            }
+            else {
+                salesmanNmae.setEnabled(false);
+                salesmanNmae.setText(salesName);
+            }
+
+
+        }
+
+        private void showPasswordDialog() {
+            final EditText editText = new EditText(MainActivity.this);
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+            sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+            sweetMessage .setConfirmText("Ok");
+            sweetMessage.setCanceledOnTouchOutside(true);
+            sweetMessage.setCustomView(editText);
+            sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    if(editText.getText().toString().equals("2021000"))
+                    {
+                        linkEditText.setAlpha(1f);
+                        linkEditText.setEnabled(true);
+                        linkEditText.requestFocus();
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                    else {
+                        editText.setError("Incorrect");
+                    }
+                }
+            })
+
+                    .show();
+        }
+
+        private void saveSetting() {
+            settext2();
+            int numOfCopys=0,invoice=0,return1=0,order=0,paymentCash=0,paymentCheque=0,paymentCredit=0;
+
+            if (!(linkEditText.getText().toString().equals(""))) {
+                if ((!numOfCopy.getText().toString().equals("")) && !invoicEditText.getText().toString().equals("") && !returnEditText.getText().toString().equals("") &&
+                        !orderEditText.getText().toString().equals("") && !paymentEditTextCash.getText().toString().equals("")
+                        && !paymentEditTextCheque.getText().toString().equals("")
+                        && !paymentEditTextCredit.getText().toString().equals("")) {
+
+//                           if(validSerial&&validOrder&&validReturn)
+//                           {
+                    if (Integer.parseInt(numOfCopy.getText().toString()) < 5) {
+                        String link = linkEditText.getText().toString().trim();
+                        String linkIp = ip_withPort.getText().toString().trim();
+                        String conoText = cono.getText().toString().trim();
+                        try {
+                            numOfCopys = Integer.parseInt(numOfCopy.getText().toString());
+                            invoice = Integer.parseInt(invoicEditText.getText().toString()) - 1;
+                            return1 = Integer.parseInt(returnEditText.getText().toString()) - 1;
+                            order = Integer.parseInt(orderEditText.getText().toString()) - 1;
+                            paymentCash = Integer.parseInt(paymentEditTextCash.getText().toString()) - 1;
+                            paymentCheque = Integer.parseInt(paymentEditTextCheque.getText().toString()) - 1;
+                            paymentCredit = Integer.parseInt(paymentEditTextCredit.getText().toString()) - 1;
+                        }
+                        catch (Exception e)
+                        {
+                            Toast.makeText(MainActivity.this, "Invalid Input Number", Toast.LENGTH_SHORT).show();
+                            Log.e("SettingException",""+e.getMessage());
+
+                        }
+
+
+                        int taxKind = taxCalc.getCheckedRadioButtonId() == R.id.excludeRadioButton ? 0 : 1;
+                        int pprintMethod = printMethod.getCheckedRadioButtonId() == R.id.bluetoothRadioButton ? 0 : 1;
+                        int priceByCust = checkBox.isChecked() ? 1 : 0;
+                        int useWeightCase = checkBox2.isChecked() ? 1 : 0;
+                        int alowMinus = allowMinus.isChecked() ? 1 : 0;
+                        int salesManCustomers = salesManCustomersOnly.isChecked() ? 1 : 0;
+                        int minSalePric = minSalePrice.isChecked() ? 1 : 0;
+                        int alowOutOfRange = allowOutOfRange.isChecked() ? 1 : 0;
+                        int canChangPrice = checkBox_canChangePrice.isChecked() ? 1 : 0;
+                        int readDiscountFromoffer = readDiscount.isChecked() ? 1 : 0;
+                        int workOnlin = workOnline.isChecked() ? 1 : 0;
+                        int paymethodCheck = paymetod_check.isChecked() ? 1 : 0;
+                        int bonusNotalow = bonusNotAlowed.isChecked() ? 1 : 0;
+                        int noOffer_Credit = noOfferForCredit.isChecked() ? 1 : 0;
+                        int Customerauthorized = customerAuthor.isChecked() ? 1 : 0;
+                        int passordData = passowrdData_checkbox.isChecked() ? 1 : 0;
+                        int arabicLanguage = arabicLanguage_checkbox.isChecked() ? 1 : 0;
+                        int hideqty = hideQty_checkbox.isChecked() ? 1 : 0;
+                        int lockcashReport = lockcash_checkbox.isChecked() ? 1 : 0;
+                        int preventOrder = preventNew_checkbox.isChecked() ? 1 : 0;
+                        int requiredNote = note_checkbox.isChecked() ? 1 : 0;
+                        int totalDiscPrevent = ttotalDisc_checkbox.isChecked() ? 1 : 0;
+                        int automaticCheque = automaticCheck_checkbox.isChecked() ? 1 : 0;
+                        int tafqitCheckbox = tafqit_checkbox.isChecked() ? 1 : 0;
+                        int preventChangPay = preventChange_checkbox.isChecked() ? 1 : 0;
+                        int showCustlist = showCustomerList_checkbox.isChecked() ? 1 : 0;
+                        int noReturnInvoice = noReturn_checkbox.isChecked() ? 1 : 0;
+
+                        int workSerial = workSerial_checkbox.isChecked() ? 1 : 0;
+                        int showImage=showItemImage_checkbox.isChecked()?1:0;
+                        int approveAdm=approveAdmin_checkbox.isChecked()?1:0;
+                        int saveOnly=asaveOnly_checkbox.isChecked()?1:0;
+                        int showsolidQty= showSolidQty_checkbox.isChecked()?1:0;
+                        int offerAdmin= offerFromAdmin_checkbox.isChecked()?1:0;
+                        int qtyServer=checkQtyServer.isChecked()?1:0;
+
+                        int showTax=dontShowTax_checkbox.isChecked()?1:0;
+
+                        Log.e("showsolidQty",""+showsolidQty);
+
+
+                        String salesmanname=salesmanNmae.getText().toString();
+                        Log.e("salesmanname",""+salesmanname);
+                        mDbHandler.deleteAllSettings();
+                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText);
+
+
+                        finish();
+//                        locationPermissionRequest.closeLocation();
+                        startActivity(getIntent());
+                        dialog.dismiss();
+
+                            stopService(new Intent(MainActivity.this, MyServices.class));
+
+                            startService(new Intent(MainActivity.this, MyServices.class));
+
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "Number of copies must be maximum 4 !", Toast.LENGTH_SHORT).show();
+
+                    }
+//                           }
+//                           else {
+//                               Toast.makeText(MainActivity.this, "Invalid Serial Number", Toast.LENGTH_SHORT).show();
+//                           }
+
+
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Please enter All Enformation Filed", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            else {
+                Toast.makeText(MainActivity.this, "Please enter IP address", Toast.LENGTH_SHORT).show();
+                linkEditText.setError("Required");
+            }
         }
 
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("SetTextI18n")
     public void openCompanyInfoDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.company_info_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
 
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearCompany);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        getLocationComp=false;
         final EditText name = (EditText) dialog.findViewById(R.id.com_name);
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
         final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
+        final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
+        final  TextView savecompanyLocation=(TextView) dialog.findViewById(R.id.savecompanyLocation);
+        savecompanyLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(isNetworkAvailable())
+                    {
+                        getLocationComp=true;
+                        saveCurrentLocation();
+                    }
+                    else {
+                        Log.e("isNetworkAvailable","NOT");
+                        Toast.makeText(MainActivity.this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         logo = (ImageView) dialog.findViewById(R.id.logo);
 
         Button okButton = (Button) dialog.findViewById(R.id.okBut);
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelBut);
-
         if (mDbHandler.getAllCompanyInfo().size() != 0) {
             name.setText("" + mDbHandler.getAllCompanyInfo().get(0).getCompanyName());
             tel.setText("" + mDbHandler.getAllCompanyInfo().get(0).getcompanyTel());
             tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
-            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+//            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+            logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+            noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
         }
+
+
 
         logo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1113,15 +2666,44 @@ public class MainActivity extends AppCompatActivity
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals("")) {
+                if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals(""))
+                {
                     String comName = name.getText().toString().trim();
-                    int comTel = Integer.parseInt(tel.getText().toString());
-                    int taxNo = Integer.parseInt(tax.getText().toString());
+                    int comTel = 0, taxNo = 0;
+                    try {
+                        comTel = Integer.parseInt(tel.getText().toString());
+                        taxNo = Integer.parseInt(tax.getText().toString());
+                        String companyNote = noteInvoice.getText().toString();
 
-                    mDbHandler.deleteAllCompanyInfo();
-                    mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic);
+                        mDbHandler.deleteAllCompanyInfo();
 
-                    dialog.dismiss();
+                        Log.e("getlocationForCheckIn",""+longitude_main+latitudeCheckIn);
+                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0);
+                        try {
+                            if(isNetworkAvailable())
+                            {
+                                getLocationComp=true;
+                                saveCurrentLocation();
+                            }
+                            else {
+                                Log.e("isNetworkAvailable","NOT");
+                                Toast.makeText(MainActivity.this, ""+getResources().getString(R.string.enternetConnection), Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    } catch (NumberFormatException e) {
+                        if (comTel == 0) {
+                            tel.setError("Invalid No");
+                        }
+                        if (taxNo == 0) {
+                            tax.setError("Invalid Tax");
+                        }
+                    }
+
+
                 } else
                     Toast.makeText(MainActivity.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
             }
@@ -1137,19 +2719,64 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void saveCurentLocation() throws InterruptedException {
+        Log.e("updatecompanyInfo_1",""+latitudeCheckIn+longtudeCheckIn);
+        getlocationForCheckIn();
+        Thread.sleep(2000);
+        Log.e("updatecompanyInfo_2",""+latitudeCheckIn+longtudeCheckIn);
+        if(latitudeCheckIn!=0 &&longtudeCheckIn!=0)
+        {
+            if(mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany()== 0.0)
+            {
+                Log.e("updatecompanyInfo",""+mDbHandler.getAllCompanyInfo().get(0).getLatitudeCompany());
+                mDbHandler.updatecompanyInfo(latitudeCheckIn,longtudeCheckIn );
+
+            }
+        }
+
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openPrintSetting() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.printer_setting);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
 
-        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name;
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
+        final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
+        CheckBox short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
         lk32 = (RadioButton) dialog.findViewById(R.id.LK32);
         qs = (RadioButton) dialog.findViewById(R.id.QS);
-
+        innerPrinter= (RadioButton) dialog.findViewById(R.id.innerPrinter);
         dotMatrix=(RadioButton) dialog.findViewById(R.id.dotMatrix);
         MTPPrinter=(RadioButton) dialog.findViewById(R.id.MTP);
         Button save = (Button) dialog.findViewById(R.id.save);
@@ -1177,6 +2804,10 @@ if(printer.size()!=0) {
         case 5:
             MTPPrinter.setChecked(true);
             break;
+        case 6:
+            innerPrinter.setChecked(true);
+            break;
+
 
     }
 
@@ -1188,9 +2819,16 @@ if(printer.size()!=0) {
             large_name.setChecked(true);
             break;
     }
+    Log.e("addPrinterSeting",""+printer.get(0).getShortInvoice());
+    if(printer.get(0).getShortInvoice()==0)
+    {
+        short_Invoice.setChecked(false);
+    }
+    else { short_Invoice.setChecked(true);}
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
+    short_Invoice.setChecked(false);
 }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -1230,6 +2868,21 @@ if(printer.size()!=0) {
                 mDbHandler.addPrinterSeting(printerSetting);
                 Log.e("click ", "mtp");
             }
+                else if (innerPrinter.isChecked()) {
+                    printerSetting.setPrinterName(6);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                    Log.e("click ", "mtp");
+                }
+                if(short_Invoice.isChecked())
+                {
+                    printerSetting.setShortInvoice(1);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                }
+                else {
+                    printerSetting.setShortInvoice(0);
+                    mDbHandler.addPrinterSeting(printerSetting);
+                }
+                Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
 dialog.dismiss();
             }
 
@@ -1242,11 +2895,36 @@ dialog.dismiss();
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void openDeExportDialog() {
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.de_export_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        LinearLayout mainLinear=dialog.findViewById(R.id.mainLinear);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
 
         final EditText from_date = (EditText) dialog.findViewById(R.id.from_date);
         final EditText to_date = (EditText) dialog.findViewById(R.id.to_date);
@@ -1255,8 +2933,8 @@ dialog.dismiss();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
-        from_date.setText(today);
-        to_date.setText(today);
+        from_date.setText(convertToEnglish(today));
+        to_date.setText(convertToEnglish(today));
 
         myCalendar = Calendar.getInstance();
         from_date.setOnClickListener(new View.OnClickListener() {
@@ -1354,10 +3032,15 @@ dialog.dismiss();
         editText.setText(sdf.format(myCalendar.getTime()));
     }
 
+    public void locationOPen(){
+//        LocationPermissionRequest locationPermissionRequest=new LocationPermissionRequest(MainActivity.this);
+//        locationPermissionRequest.timerLocation();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.e("startVoiceInput2","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -1378,6 +3061,58 @@ dialog.dismiss();
                 visitPic = extras.getParcelable("data");
                 visitPicture.setImageDrawable(new BitmapDrawable(getResources(), visitPic));
             }
+        }
+        //************************************************************
+        if(requestCode== REQ_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && null != data) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                customerNameTextView.setText(result.get(0));
+                Log.e("startVoiceInput2","result="+result);
+            }
+
+        }
+
+        //************************************************************
+        Log.e("MainActivity", ""+requestCode);
+//        if (requestCode == 0x0000c0de) {
+        IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (Result != null) {
+            if (Result.getContents() == null) {
+                Log.e("MainActivity", "cancelled scan");
+                Toast.makeText(MainActivity.this, "cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Log.e("MainActivity", "" + Result.getContents());
+//                    Toast.makeText(this, "Scan ___" + Result.getContents(), Toast.LENGTH_SHORT).show();
+//                TostMesage(getResources().getString(R.string.scan)+Result.getContents());
+//                barCodTextTemp.setText(Result.getContents() + "");
+//                openEditerCheck();
+
+                String serialBarcode = Result.getContents();
+
+
+            }
+        }
+
+        switch (requestCode) {
+            case 10001:
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    // All required changes were successfully made
+                    Toast.makeText(this, "true", Toast.LENGTH_SHORT).show();
+
+                    openDialog=true;
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // The user was asked to change settings, but chose not to
+                    Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
+
+                    openDialog=false;
+                    break;
+                default:
+                    break;
+            }
+                break;
         }
     }
 
@@ -1451,5 +3186,89 @@ dialog.dismiss();
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+    @TargetApi(16)
+    public void requestSingleUpdate() {
+        // TODO: Comment-out this line.
+        // Looper.prepare();
 
+        Log.e("requestSingleUpdate",""+android.os.Build.VERSION.SDK_INT);
+        // only works with SDK Version 23 or higher
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // permission is not granted
+                Log.e("SiSoLocProvider", "Permission not granted.");
+                return;
+            } else {
+                Log.e("SiSoLocProvider", "Permission granted.");
+            }
+        } else {
+            Log.e("SiSoLocProvider", "SDK < 23, checking permissions should not be necessary");
+        }
+
+        final long startTime = System.currentTimeMillis();
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                // TODO: These lines of code will run on UI thread.
+                if ((locationResult.getLastLocation() != null) && (System.currentTimeMillis() <= startTime + 30 * 1000)) {
+                    Log.e("LOCATION: " , locationResult.getLastLocation().getLatitude() + "|" + locationResult.getLastLocation().getLongitude());
+                    Log.e("ACCURACY: " , ""+locationResult.getLastLocation().getAccuracy());
+                    mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                } else {
+                    Log.e("LastKnownNull? :: " ,""+ (locationResult.getLastLocation() == null));
+                    Log.e("Time over? :: " ,""+ (System.currentTimeMillis() > startTime + 30 * 1000));
+                }
+
+                // TODO: After receiving location result, remove the listener.
+                mFusedLocationClient.removeLocationUpdates(this);
+            }
+        };
+
+        LocationRequest req = new LocationRequest();
+        req.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        req.setFastestInterval(2000);
+        req.setInterval(2000);
+        // Receive location result on UI thread.
+        mFusedLocationClient.requestLocationUpdates(req, mLocationCallback, Looper.getMainLooper());
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void copyFile()
+    {
+        try
+        {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File data = Environment.getDataDirectory();
+            boolean isPresent = true;
+            if (!sd.canWrite())
+            {
+                isPresent= sd.mkdir();
+
+            }
+
+
+
+                String backupDBPath = "VanSalesDatabase_backup";
+
+                File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+                File backupDB = new File(sd, backupDBPath);
+
+                if (currentDB.exists()&&isPresent) {
+                    FileChannel src = new FileInputStream(currentDB).getChannel();
+                    FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Toast.makeText(MainActivity.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    Toast.makeText(MainActivity.this, "Backup Failed", Toast.LENGTH_SHORT).show();
+                }
+            isPresent=false;
+
+
+        }
+        catch (Exception e) {
+            Log.e("Settings Backup", e.getMessage());
+        }
+    }
 }

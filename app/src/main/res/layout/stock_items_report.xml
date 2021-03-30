@@ -2,16 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/stock_request_items_report"
-        android:textColor="@color/text_view_color"
+        android:textColor="@color/colorblue_dark"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -19,13 +30,13 @@
         android:id="@+id/row2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
         android:orientation="horizontal"
-        android:layout_marginLeft="25dp">
+        android:layout_marginLeft="5dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
@@ -35,7 +46,8 @@
 
         <EditText
             android:id="@+id/from_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -47,7 +59,8 @@
             android:focusable="false"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="30dp"
@@ -59,7 +72,8 @@
 
         <EditText
             android:id="@+id/to_date"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="5dp"
@@ -72,10 +86,11 @@
 
         <Button
             android:id="@+id/preview"
-            android:layout_width="130dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textColor="@color/layer5"
-            android:background="@color/red_background"
+            android:background="@drawable/done_button"
             android:layout_marginLeft="60dp"
             android:layout_marginStart="60dp"
             android:text="@string/preview" />
@@ -84,9 +99,10 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:background="@color/layer2"
-        android:layout_margin="20dp"
+        android:layout_height="match_parent"
+        android:background="@color/layer6"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
         >
 
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -97,7 +113,7 @@
             android:background="@color/layer5">
 
             <TableRow
-                android:background="@color/layer3"
+                android:background="@color/colorblue_dark"
                 android:padding="10dp">
 
                 <TextView
@@ -106,7 +122,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_number"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -115,7 +131,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/item_name"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
 
                 <TextView
@@ -124,7 +140,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/unit_qty"
-                    android:textColor="@color/text_view_color"
+                    android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
 
@@ -133,14 +149,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
         android:gravity="center"
         android:layout_gravity="center"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="5dp">
 
 
 
@@ -162,9 +179,20 @@
             android:layout_height="wrap_content"
             android:paddingLeft="30dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="15sp"
             android:textStyle="bold" />
 
     </LinearLayout>
+        </LinearLayout>
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_normalColor="@color/colorblue1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:bmb_draggable="true"
+            />
+    </RelativeLayout>
 </LinearLayout>

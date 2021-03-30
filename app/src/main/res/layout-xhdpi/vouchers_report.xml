@@ -2,17 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layer1"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:layoutDirection="locale"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/vouchers_report"
-        android:textColor="@color/text_view_color"
-        android:textSize="15sp"
+        android:textColor="@color/colorblue_dark"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -91,7 +102,7 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="5dp"
             android:gravity="center_vertical"
-            android:background="@color/layer5"
+            android:background="@drawable/back_border_edit"
             android:textColor="@color/done_button"
             android:textSize="15sp"
             android:inputType="number"/>
@@ -100,7 +111,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:textColor="@color/layer5"
-            android:background="@color/red_background"
+            android:background="@drawable/done_button"
             android:layout_margin="5dp"
 
             android:text="@string/preview" />
@@ -121,7 +132,7 @@
             android:id="@+id/transKindRadioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/layer1"
+
             android:orientation="horizontal"
             android:paddingLeft="5dp"
             android:paddingRight="5dp">
@@ -131,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/by_voucher_kind"
-                android:textColor="@color/second_color"
+                android:textColor="@color/colorblue1"
                 android:textSize="12dp"
                 android:textStyle="bold" />
 
@@ -173,7 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:background="@color/layer1"
+
             android:orientation="horizontal"
             android:paddingLeft="5dp"
             android:paddingRight="5dp">
@@ -183,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/by_payment_Term"
-                android:textColor="@color/second_color"
+                android:textColor="@color/colorblue1"
                 android:textSize="12dp"
                 android:textStyle="bold" />
 
@@ -414,7 +425,7 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -426,7 +437,7 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -438,9 +449,20 @@
             android:layout_weight="1"
             android:paddingLeft="15dp"
             android:text="@string/app_zero"
-            android:textColor="@color/amountColor"
+            android:textColor="@color/colorblue1"
             android:textSize="12sp"
             android:textStyle="bold" />
 
     </LinearLayout>
+</LinearLayout>
+<com.nightonke.boommenu.BoomMenuButton
+android:id="@+id/bmb"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+app:bmb_normalColor="@color/colorblue1"
+android:layout_alignParentRight="true"
+android:layout_alignParentBottom="true"
+app:bmb_draggable="true"
+    />
+    </RelativeLayout>
 </LinearLayout>

@@ -2,7 +2,7 @@ package com.dr7.salesmanmanager.Modles;
 
 public class PriceListM {
 
-    private int companyNo;
+    private String companyNo;
     private int prNo;
     private String describtion;
     private int isSuspended;
@@ -11,18 +11,18 @@ public class PriceListM {
 
     }
 
-    public PriceListM(int companyNo, int prNo, String describtion, int isSuspended) {
+    public PriceListM(String companyNo, int prNo, String describtion, int isSuspended) {
         this.companyNo = companyNo;
         this.prNo = prNo;
         this.describtion = describtion;
         this.isSuspended = isSuspended;
     }
 
-    public int getCompanyNo() {
+    public String getCompanyNo() {
         return companyNo;
     }
 
-    public void setCompanyNo(int companyNo) {
+    public void setCompanyNo(String companyNo) {
         this.companyNo = companyNo;
     }
 

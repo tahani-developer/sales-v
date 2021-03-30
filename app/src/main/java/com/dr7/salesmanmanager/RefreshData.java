@@ -52,8 +52,8 @@ public class RefreshData {
         if (settings.size() != 0) {
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
-            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-
+//            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
+            new JSONTask().execute(URL_TO_HIT);
 
 
 
@@ -256,7 +256,7 @@ public class RefreshData {
                     for (int i = 0; i < parentArrayItemQty.length(); i++) {
                         JSONObject finalObject = parentArrayItemQty.getJSONObject(i);
                         SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
-                        salesManItemsBalance.setCompanyNo(finalObject.getInt("ComapnyNo"));
+                        salesManItemsBalance.setCompanyNo(finalObject.getString("ComapnyNo"));
                         salesManItemsBalance.setSalesManNo(finalObject.getString("SalesManNo"));
                         salesManItemsBalance.setItemNo(finalObject.getString("ItemNo"));
                         salesManItemsBalance.setQty(finalObject.getDouble("Qty"));

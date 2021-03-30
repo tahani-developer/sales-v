@@ -3,9 +3,15 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v4.content.ContextCompat;
+////import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -14,6 +20,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -21,9 +28,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Item;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -33,6 +49,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class VouchersReport extends AppCompatActivity {
 
@@ -50,13 +68,35 @@ public class VouchersReport extends AppCompatActivity {
     int voucherType = 504;
 
     double subTotal = 0 , tax = 0 , netSales = 0;
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(VouchersReport.this);
         setContentView(R.layout.vouchers_report);
+       LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         decimalFormat = new DecimalFormat("##.000");
+        inflateBoomMenu();
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
@@ -141,10 +181,10 @@ public class VouchersReport extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(VouchersReport.this);
-                            row.setPadding(5, 10, 5, 10);
+                            row.setPadding(5, 5, 5, 5);
 
                             if (n % 2 == 0)
-                                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer4));
+                                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
 
@@ -183,9 +223,11 @@ public class VouchersReport extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(VouchersReport.this);
                                     textView.setText(getResources().getString(R.string.show));
-                                    textView.setTextSize(12);
-                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
-                                    textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.colorAccent));
+
+                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorblue_dark));
+                                    textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.white));
+                                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                    textView.setLayoutParams(lp3);
                                     textView.setGravity(Gravity.CENTER);
 
                                     textView.setOnClickListener(new View.OnClickListener() {
@@ -195,9 +237,6 @@ public class VouchersReport extends AppCompatActivity {
                                             voucherInfoDialog(Integer.parseInt(textView.getText().toString()) , voucherType);
                                         }
                                     });
-
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(40, 30, 0.2f);
-                                    textView.setLayoutParams(lp2);
                                     row.addView(textView);
                                 }
                             }
@@ -220,22 +259,69 @@ public class VouchersReport extends AppCompatActivity {
             }
         });
 
-        preview.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-                }
-                return false;
-            }
-        });
+//        preview.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
+//                } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
+//                }
+//                return false;
+//            }
+//        });
 
     }
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
+    }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(VouchersReport.this,"VouchersReport.xls",3,vouchers);
+
+    }
+    public  void exportToPdf(){
+        Log.e("exportToPdf",""+vouchers.size());
+        PdfConverter pdf =new PdfConverter(VouchersReport.this);
+        pdf.exportListToPdf(vouchers,"VouchersReport",from_date.getText().toString(),3);
     }
 
     public void voucherInfoDialog(int voucherNumber , int voucherType) {
@@ -245,7 +331,7 @@ public class VouchersReport extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog2);
         Window window = dialog.getWindow();
-        window.setLayout(800, 400);
+//        window.setLayout(800, 400);
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 
@@ -256,7 +342,7 @@ public class VouchersReport extends AppCompatActivity {
                 row.setPadding(5, 10, 5, 10);
 
                 if (k % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer4));
+                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
                 else
                     row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
 
@@ -279,7 +365,7 @@ public class VouchersReport extends AppCompatActivity {
                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(200, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                     textView.setLayoutParams(lp2);
                     row.addView(textView);
                 }
@@ -350,15 +436,15 @@ public class VouchersReport extends AppCompatActivity {
         String fromDate = from_date.getText().toString().trim();
         String toDate = to_date.getText().toString();
 
-        int companyNumber = vouchers.get(n).getCompanyNumber() ;
+        String customerNumber = vouchers.get(n).getCustNumber() ;
         String date = vouchers.get(n).getVoucherDate() ;
         int vType = vouchers.get(n).getVoucherType() ;
         int pMethod = vouchers.get(n).getPayMethod() ;
 
         try {
             if (!cust_number.getText().toString().equals("")) {
-                int textCompanyNumber = Integer.parseInt(cust_number.getText().toString());
-                if ((companyNumber == textCompanyNumber) &&
+                String textCompanyNumber =cust_number.getText().toString();
+                if ((customerNumber.contains(textCompanyNumber) )&&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
                         vType == voucherType && pMethod == payMethod)

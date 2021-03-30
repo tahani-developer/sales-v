@@ -15,10 +15,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.RequiresApi;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -33,16 +40,26 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.BluetoothConnectMenu;
 import com.dr7.salesmanmanager.DatabaseHandler;
+import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.Login;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.PrintPic;
 import com.dr7.salesmanmanager.PrinterCommands;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.bMITP;
 import com.ganesh.intermecarabic.Arabic864;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -61,6 +78,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.ReceiptVoucher.savebitmap;
 
 //import com.dr7.salesmanmanager.Pos;
@@ -74,11 +92,12 @@ public class CashReport  extends AppCompatActivity {
     PrintPic printPic;
     boolean isFinishPrint=false;
     byte[] printIm;
+    List<String> listCashRepost;
     TextView cash_sal, credit_sale, total_sale;
-    TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext;
+    TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext,creditCard;
     List<Voucher> voucher;
-     public static double cash = 0, credit = 0, total = 0;
-    public static double cashPayment=0,creditPayment=0,net=0,total_cash=0;
+     public static double cash = 0, credit = 0, total = 0, T_cash=0,T_credit=0;
+    public static double cashPayment=0,creditPayment=0,net=0,total_cash=0,creditCardPayment=0;
     int paymethod=0;
     private DecimalFormat decimalFormat;
     BluetoothAdapter mBluetoothAdapter;
@@ -97,14 +116,35 @@ public class CashReport  extends AppCompatActivity {
     private ImageView pic;
     CompanyInfo companyInfo;
     List<Item> vouchersales;
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
 
+    ConstraintLayout mailLayout;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new LocaleAppUtils().changeLayot(CashReport.this);
         setContentView(R.layout.cash_report);
+        mailLayout = (ConstraintLayout)findViewById(R.id.mailLayout);
+
+        try {
+            if (languagelocalApp.equals("ar"))
+            {
+                mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else
+            {
+                if (languagelocalApp.equals("en")) {
+                    mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch (Exception e){
+            mailLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         try {
             closeBT();
         } catch (IOException e) {
@@ -114,7 +154,7 @@ public class CashReport  extends AppCompatActivity {
         decimalFormat = new DecimalFormat("##.000");
         payments = new ArrayList<Payment>();
         vouchersales=new ArrayList<Item>();
-
+        inflateBoomMenu();
 
         try {
             obj = new DatabaseHandler(CashReport.this);
@@ -133,6 +173,7 @@ public class CashReport  extends AppCompatActivity {
         cash_paymenttext = (TextView) findViewById(R.id.text_cash_PaymentReport);
         creditPaymenttext = (TextView) findViewById(R.id.text_cheque_paymentReport);
         nettext = (TextView) findViewById(R.id.text_net_paymentReport);
+        creditCard = (TextView) findViewById(R.id.text_credit);
         total_cashtext=(TextView) findViewById(R.id.text_total_cash);
         pic=(ImageView)findViewById(R.id.pic_reportCash);
          companyInfo=new CompanyInfo();
@@ -141,8 +182,9 @@ public class CashReport  extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clear();
+
                 if (!date.getText().toString().equals("")) {
+                    clear();
                     cash = 0;      credit = 0;   total = 0;
                     returnCridet=0;returnCash=0;
                     for (int n = 0; n < voucher.size(); n++) {
@@ -174,13 +216,13 @@ public class CashReport  extends AppCompatActivity {
                     }
 
                     total = cash + credit-returnCash-returnCridet;
-                    double T_cash=cash-returnCash;
-                    double T_credit=credit-returnCridet;
+                     T_cash=cash-returnCash;
+                     T_credit=credit-returnCridet;
                     cash_sal.setText(convertToEnglish(decimalFormat.format(T_cash ))+ "");
                     credit_sale.setText(convertToEnglish(decimalFormat.format(T_credit ))+ "");
                     total_sale.setText(convertToEnglish(decimalFormat.format(total)));
                     //  clearPayment();
-                    cashPayment=0;creditPayment=0;net=0;total_cash=0;
+                    cashPayment=0;creditPayment=0;net=0;total_cash=0;creditCardPayment=0;
                     for (int i = 0; i < payments.size(); i++) {
                         if (filters_payment(i)) {
 
@@ -191,6 +233,10 @@ public class CashReport  extends AppCompatActivity {
                                     case 1:
                                         cashPayment+=payments.get(i).getAmount();
                                         break;
+                                    case 2:
+                                        creditCardPayment+=payments.get(i).getAmount();
+                                        break;
+
                                 }
                             }
                         }
@@ -199,6 +245,7 @@ public class CashReport  extends AppCompatActivity {
                     creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
                     total_cash=net+cash-returnCash;
+                    creditCard.setText(convertToEnglish(decimalFormat.format(creditCardPayment))+"");
                     total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
                     }
 
@@ -207,17 +254,6 @@ public class CashReport  extends AppCompatActivity {
             }
         });
 
-//        preview.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent event) {
-//                if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.done_button));
-//                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    preview.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer5));
-//                }
-//                return false;
-//            }
-//        });
         //******************************date*****************************************
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -275,7 +311,7 @@ public class CashReport  extends AppCompatActivity {
 //                                        }
 //                                                             lk32.setChecked(true);
 
-                                        convertLayoutToImage();
+//                                        convertLayoutToImage();
 
                                         Intent O1= new Intent(CashReport.this, bMITP.class);
                                         O1.putExtra("printKey", "3");
@@ -296,7 +332,8 @@ public class CashReport  extends AppCompatActivity {
                                         printTally();
                                         break;
                                     case 5:
-                                        convertLayoutToImage();
+                                    case 6:
+//                                        convertLayoutToImage();
                                         Intent O= new Intent(CashReport.this, bMITP.class);
                                         O.putExtra("printKey", "3");
                                         startActivity(O);
@@ -330,7 +367,53 @@ public class CashReport  extends AppCompatActivity {
             }
         });
     }
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index)
+                            {
+                                case 0:
+                                    exportToPdf();
+
+                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
+    }
+    private void exportToEx() {
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(CashReport.this,"CashReport.xls",8,voucher);
+
+    }
+    public  void exportToPdf(){
+
+        PdfConverter pdf =new PdfConverter(CashReport.this);
+        pdf.exportListToPdf(voucher,"CashReport",date.getText().toString(),8);
+    }
 
     void findBT() {
         try {
@@ -684,6 +767,8 @@ public class CashReport  extends AppCompatActivity {
     }
 
     private void clear() {
+        T_cash=0;
+        T_credit=0;
     }
     void sendData2() throws IOException {
         try {
@@ -710,19 +795,21 @@ public class CashReport  extends AppCompatActivity {
 
                     printCustom(companyInfo.getCompanyName() + "     \n     ", 1, 0);
                     printCustom("\n الرقم الضريبي  " + companyInfo.getTaxNo() + " : " + " \n ", 1, 0);
+                    printCustom("  اسم المندوب  : " + obj.getAllSettings().get(0).getSalesMan_name() + "     \n     ", 1, 0);
+                    printCustom(" رقم المستودع  : " + Login.salesManNo + "     \n     ", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
                     printCustom("التاريخ :       " + date.getText() + " : " + " \n ", 1, 0);
-                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash-returnCash) ))+ " : " + " \n ", 1, 0);
-                    printCustom("المبيعات ذمم   " +convertToEnglish(decimalFormat.format( (credit-returnCridet) ))+ " : " + " \n ", 1, 0);
+                    printCustom("المبيعات نقدا " + convertToEnglish(decimalFormat.format((cash - returnCash))) + " : " + " \n ", 1, 0);
+                    printCustom("المبيعات ذمم   " + convertToEnglish(decimalFormat.format((credit - returnCridet))) + " : " + " \n ", 1, 0);
                     printCustom("إجمالي المبيعات   " + convertToEnglish(decimalFormat.format(total)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment ))+ " : " + " \n ", 1, 0);
-                    printCustom("الدفع شيك   " +convertToEnglish(decimalFormat.format( creditPayment ))+ " : " + " \n ", 1, 0);
+                    printCustom("الدفع نقدا " + convertToEnglish(decimalFormat.format(cashPayment)) + " : " + " \n ", 1, 0);
+                    printCustom("الدفع شيك   " + convertToEnglish(decimalFormat.format(creditPayment)) + " : " + " \n ", 1, 0);
                     printCustom("الاجمالي   " + convertToEnglish(decimalFormat.format(net)) + " : " + " \n ", 1, 0);
                     printCustom("\n", 1, 0);
                     printCustom("------------------------------------------" + " \n ", 1, 0);
-                    printCustom("اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash ))+ " : " + " \n ", 1, 0);
+                    printCustom("اجمالي المقبوضات   " + convertToEnglish(decimalFormat.format(total_cash)) + " : " + " \n ", 1, 0);
 
 
                 }
@@ -843,7 +930,11 @@ public class CashReport  extends AppCompatActivity {
                             "المبيعات نقدا: " +convertToEnglish(decimalFormat.format( (cash-returnCash))) + "\n" +
                             "----------------------------------------------" + "\n" +
                             "هاتف : " + companyInfo.getcompanyTel() + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n" +
+                            "  اسم المندوب  : "+   obj.getAllSettings().get(0).getSalesMan_name()  + "\n           " +
+                            " رقم المستودع  : "+  Login.salesManNo + "\n           " +
+
                             "                          "+   companyInfo.getCompanyName() + "\n           " +
+
                             "       " + "\n" +
                             "       ";
 
