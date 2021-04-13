@@ -1268,7 +1268,7 @@ public class ReceiptVoucher extends Fragment {
         Double amount = Double.parseDouble(amountEditText.getText().toString());
         String remark = remarkEditText.getText().toString();
         try {
-             salesMan = Integer.parseInt(Login.salesMan);
+             salesMan = Integer.parseInt(mDbHandler.getAllUserNo().toString().trim());
         }
         catch (Exception e)
         {

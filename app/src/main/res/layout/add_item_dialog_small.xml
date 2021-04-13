@@ -554,6 +554,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_weight="3"
+            android:inputType="text"
+            android:lines="1"
 
             android:textSize="12sp" />
 

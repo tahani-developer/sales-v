@@ -99,6 +99,7 @@
             android:name=".Activities"
             android:configChanges="locale"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize" /> <!-- android:windowSoftInputMode="stateHidden" -->
         <activity

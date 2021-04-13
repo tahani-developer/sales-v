@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.dr7.salesmanmanager.ExportJason.CONO;
+
 public class Payment {
 
 
@@ -190,6 +192,26 @@ public class Payment {
         }
         return obj;
     }
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("COMAPNYNO", CONO);
+            obj.put("VOUNO", voucherNumber);
+            obj.put("PAYMENTDATE", payDate);
+            obj.put("CUSTOMERNO", custNumber);
+            obj.put("AMOUNT", amount);
+            obj.put("NOTES", remark);
+            obj.put("SALESMANNO", saleManNumber);
+            obj.put("ISPOSTED", isPosted);
+            obj.put("PAYKIND", payMethod);
+            obj.put("VOUYEAR", "2021");
+
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 
     public JSONObject getJSONObject2() {
         JSONObject obj = new JSONObject();
@@ -202,6 +224,24 @@ public class Payment {
             obj.put("amount", amount);
             obj.put("isPosted", isPosted);
             obj.put("payYear", year);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
+    public JSONObject getJSONObject2Delphi() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("COMAPNYNO", CONO);
+            obj.put("VOUNO", voucherNumber);
+            obj.put("CHECKNO", checkNumber);
+            obj.put("BANK", bank);
+            obj.put("DUEDATE", dueDate);
+            obj.put("CHECKAMOUNT", amount);
+            obj.put("ISPOSTED", isPosted);
+            obj.put("VOUYEAR", year);
+            obj.put("BRANCH", "1");
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

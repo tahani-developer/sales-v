@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+import static com.dr7.salesmanmanager.ExportJason.CONO;
+
 /**
  * Created by mohd darras on 29/12/2017.
  */
@@ -454,6 +456,38 @@ public class Item implements Serializable {
             obj.put("SERIAL_CODE", serialCode);
             obj.put("VoucherDate",date);
             obj.put("currentQty",currentQty);
+//            obj.put("ITEMHASSERIAL", itemHasSerial);
+
+
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("VOUCHERNO", voucherNumber+"");
+            obj.put("VOUCHERTYPE", voucherType+"");
+            obj.put("ITEMNO", itemNo);
+            obj.put("UNIT", unit);
+            obj.put("QTY", qty);
+            obj.put("UNITPRICE", price);
+            obj.put("BONUS", bonus);
+            obj.put("ITEMDISCOUNTVALUE", disc);
+            obj.put("ITEMDISCOUNTPRC", discPerc);
+            obj.put("VOUCHERDISCOUNT", voucherDiscount);
+            obj.put("TAXVALUE", taxValue);
+            obj.put("TAXPERCENT", taxPercent);
+            obj.put("COMAPNYNO", CONO+"");
+            obj.put("ISPOSTED", "0");
+            obj.put("VOUCHERYEAR", year);
+            obj.put("ITEM_DESCRITION", description);
+            obj.put("SERIAL_CODE", serialCode);
+            obj.put("ITEM_SERIAL_CODE", "");
+//            obj.put("VoucherDate",date);
+//            obj.put("currentQty",currentQty);
 //            obj.put("ITEMHASSERIAL", itemHasSerial);
 
 

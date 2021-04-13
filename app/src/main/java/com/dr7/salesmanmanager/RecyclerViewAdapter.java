@@ -77,6 +77,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.size_customerpriceslist;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -135,22 +136,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static TextView serialValue;
     int discountPerVal=0,showSolidQty=0;
     int vouch,kindVoucher=504;
-    ImportJason importJason;
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
         this.context = context;
-        for (int i = 0; i <= items.size(); i++) {
-            isClicked.add(0);
-        }
         cont = context.getActivity();
+        try {
+            for (int i = 0; i <= items.size(); i++) {//******************
+                isClicked.add(0);
+            }
+        }catch (Exception e){
+            Toast.makeText(cont, "Items Empty", Toast.LENGTH_SHORT).show();
+        }
+
+
          vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
         kindVoucher=voucherType;
         MHandler = new DatabaseHandler(cont);
         settingPriceCus = MHandler.getAllSettings().get(0).getPriceByCust();
         showItemImageSetting = MHandler.getAllSettings().get(0).getShowItemImage();
         localItemNumber = new ArrayList<>();
-        importJason=new ImportJason(cont);
 //        this.listBitmap=listItemImage;
 
     }
@@ -284,29 +289,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
                                                                mainRequestLinear.setVisibility(View.VISIBLE);
                                                                serialValue= dialog.findViewById(R.id.serialValue);
-                                                               serialValue.addTextChangedListener(new TextWatcher() {
-                                                                   @Override
-                                                                   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                                                   }
-
-                                                                   @Override
-                                                                   public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                                                   }
-
-                                                                   @Override
-                                                                   public void afterTextChanged(Editable s) {
-                                                                       if(!s.toString().equals(""))
-                                                                       {
-                                                                           barcodeValue=s.toString();
-                                                                           serialValue_Model.setText(s.toString());
+                                                               try {
+                                                                   serialValue.addTextChangedListener(new TextWatcher() {
+                                                                       @Override
+                                                                       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                                                                        }
 
+                                                                       @Override
+                                                                       public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                                                                   }
-                                                               });
+                                                                       }
+
+                                                                       @Override
+                                                                       public void afterTextChanged(Editable s) {
+                                                                           if(!s.toString().equals(""))
+                                                                           {
+                                                                               barcodeValue=s.toString().trim();
+                                                                               serialValue_Model.setText(s.toString().trim());
+
+                                                                           }
+
+
+                                                                       }
+                                                                   });
+                                                               }
+                                                               catch ( Exception e){}
+
                                                                mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
                                                                bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
                                                                bonusLinearLayout.setVisibility(View.GONE);
@@ -340,43 +349,48 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            } catch (Exception e) {
                                                                                qtySerial = Integer.parseInt(unitQty.getText().toString());
                                                                            }
-
-
-                                                                           counterSerial = qtySerial;
-                                                                           if (qtySerial != 0) {
-                                                                               flag = 1;
-                                                                               addToList.setEnabled(true);
-                                                                               addToList.setVisibility(View.VISIBLE);
+                                                                           if(qtySerial<=100){
+                                                                               counterSerial = qtySerial;
+                                                                               if (qtySerial != 0) {
+                                                                                   flag = 1;
+                                                                                   addToList.setEnabled(true);
+                                                                                   addToList.setVisibility(View.VISIBLE);
 //                                            counterSerial++;
 //                                            unitQty.setText(counterSerial+"");
-                                                                               final LinearLayoutManager layoutManager;
-                                                                               layoutManager = new LinearLayoutManager(view.getContext());
+                                                                                   final LinearLayoutManager layoutManager;
+                                                                                   layoutManager = new LinearLayoutManager(view.getContext());
 //                                            layoutManager.setOrientation(VERTICAL);
 
-                                                                               for (int i = 1; i <= qtySerial; i++) {
-                                                                                   serial = new serialModel();
-                                                                                   serial.setCounterSerial(i);
-                                                                                   serial.setSerialCode("");
-                                                                                   serial.setIsBonus("0");
-                                                                                   serial.setIsDeleted("0");
-                                                                                   serial.setVoucherNo(vouch+"");
-                                                                                   serial.setKindVoucher(kindVoucher+"");
-                                                                                   serial.setStoreNo(Login.salesMan);
-                                                                                   serial.setDateVoucher(voucherDate);
-                                                                                   serial.setItemNo(itemNoSelected);
-                                                                                   serialListitems.add(serial);
+                                                                                   for (int i = 1; i <= qtySerial; i++) {
+                                                                                       serial = new serialModel();
+                                                                                       serial.setCounterSerial(i);
+                                                                                       serial.setSerialCode("");
+                                                                                       serial.setIsBonus("0");
+                                                                                       serial.setIsDeleted("0");
+                                                                                       serial.setVoucherNo(vouch+"");
+                                                                                       serial.setKindVoucher(kindVoucher+"");
+                                                                                       serial.setStoreNo(Login.salesMan);
+                                                                                       serial.setDateVoucher(voucherDate);
+                                                                                       serial.setItemNo(itemNoSelected);
+                                                                                       serialListitems.add(serial);
 
+                                                                                   }
+
+
+                                                                                   serial_No_recyclerView.setLayoutManager(layoutManager);
+
+                                                                                   serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+                                                                                   unitQty.setEnabled(false);
+                                                                                   generateSerial.setEnabled(false);
+                                                                               } else {
+                                                                                   unitQty.setError("Invalid Zero");
                                                                                }
-
-
-                                                                               serial_No_recyclerView.setLayoutManager(layoutManager);
-
-                                                                               serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(), context));
-                                                                               unitQty.setEnabled(false);
-                                                                               generateSerial.setEnabled(false);
-                                                                           } else {
-                                                                               unitQty.setError("Invalid Zero");
+                                                                           }else {
+                                                                               unitQty.setError("Invalid");
                                                                            }
+
+
+
                                                                        }
 
 
@@ -459,7 +473,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            }
 
 
-                                                                           serial_No_recyclerView.setAdapter(new Serial_Adapter(listitems_adapter, view.getContext(), context));
+                                                                           serial_No_recyclerView.setAdapter(new Serial_Adapter(listitems_adapter, cont));
 
                                                                        } else {
                                                                            new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
@@ -520,7 +534,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                        serial_No_recyclerView.setLayoutManager(layoutManager);
 
-                                                                       serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(), context));
+                                                                       serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems,cont));
 //
 
                                                                    }
@@ -615,7 +629,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                serial_No_recyclerView.setLayoutManager(layoutManager);
 
-                                                               serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, view.getContext(), context));
+                                                               serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
 //
 
                                                            }
@@ -1276,7 +1290,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    .setContentText(view.getContext().getString(R.string.thereIsduplicatedSerial))
                                                                                    .show();
 
-                                                                       }else {
+                                                                       }
+                                                                       else if(countInvalidSerial==1000){
+                                                                           new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                                                   .setTitleText(context.getString(R.string.warning_message))
+                                                                                   .setContentText(context.getString(R.string.duplicate)+"\t"+context.getResources().getString(R.string.inThisVoucher))
+
+                                                                                   .show();
+                                                                       }
+
+                                                                       else {
                                                                            new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
                                                                                    .setTitleText(view.getContext().getString(R.string.warning_message))
                                                                                    .setContentText(view.getContext().getString(R.string.itemadedbefor))
@@ -1396,13 +1419,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         int counter = 0;
         for (int i = 0; i < serialListitems.size(); i++) {
             listSerialValue.add(serialListitems.get(i).getSerialCode());
-            if (serialListitems.get(i).getSerialCode().equals("")) {
+            if (serialListitems.get(i).getSerialCode().equals("")) {// for empty serial
                 counter = -1;
 
                 return counter;
             }
 
-            if (!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not")) {
+            if (!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not")&&voucherType==504&&!((MHandler.getLastTransactionOfSerial(serialListitems.get(i).getSerialCode().trim()).equals("506"))&&voucherType==504 )){// serial not valid
 //                if(MHandler.isSerialCodePaied(serialListitems.get(i).getSerialCode()).equals("not"))
 //                {
                     counter++;
@@ -1424,8 +1447,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
             }
+            if(listSerialTotal.size()!=0){
+                for(int j=0;j<listSerialTotal.size();j++)
+                {
+                    if(listSerialTotal.get(j).getSerialCode().equals(serialListitems.get(i).getSerialCode()))
+                    {
+                        counter=1000;
+                    }
+
+                }
+            }
 
         }
+
 
         if(hasDuplicate(listSerialValue)){counter=100;}
 

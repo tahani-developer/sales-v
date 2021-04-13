@@ -18,6 +18,15 @@ public class serialModel {
     private  String qty;
     private  String isDeleted;
     private  String dateDelete;
+    private  float priceItem;
+
+    public float getPriceItem() {
+        return priceItem;
+    }
+
+    public void setPriceItem(float priceItem) {
+        this.priceItem = priceItem;
+    }
 
     public String getIsDeleted() {
         return isDeleted;
@@ -130,6 +139,26 @@ public class serialModel {
         try {
 
             obj.put("SERIAL_CODE", serialCode);
+            obj.put("QTY", "1");
+            obj.put("STORENO", storeNo);// store
+            obj.put("VSERIAL", counterSerial);
+            obj.put("VHFNO", voucherNo);
+            obj.put("ITEMNO", itemNo);
+            obj.put("TRNSDATE", dateVoucher);
+            obj.put("TRANSKIND", kindVoucher);
+            obj.put("ISPOSTED", "0");
+
+
+        } catch (JSONException e) {
+            Log.e("TagserialModel" , "JSONException"+e.getMessage());
+        }
+        return obj;
+    }
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("SERIAL_CODE", serialCode.trim());
             obj.put("QTY", "1");
             obj.put("STORENO", storeNo);// store
             obj.put("VSERIAL", counterSerial);

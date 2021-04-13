@@ -45,6 +45,15 @@ public class Settings {
     private  int qtyServer;
     private  int dontShowtax;
     private  String coNo;
+    private  int continusReading;
+
+    public int getContinusReading() {
+        return continusReading;
+    }
+
+    public void setContinusReading(int continusReading) {
+        this.continusReading = continusReading;
+    }
 
     public String getCoNo() {
         return coNo;

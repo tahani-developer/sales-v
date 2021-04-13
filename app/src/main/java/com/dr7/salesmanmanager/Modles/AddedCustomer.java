@@ -131,4 +131,21 @@ public class AddedCustomer {
         }
         return obj;
     }
+
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("CUSTOMERNAME", custName);
+            obj.put("REMARK", remark);
+            obj.put("LATITUDE", latitude);
+            obj.put("LONGITUDE", longtitude);
+            obj.put("SALESMAN", salesMan);
+            obj.put("ISPOSTED", isPosted);
+            obj.put("SALESMANNO", salesmanNo);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 }

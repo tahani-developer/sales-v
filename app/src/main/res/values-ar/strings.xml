@@ -341,6 +341,7 @@
     رجاء أدخل اعدادات البرنامج لاتمام العملية
     </string>
     <string name="warning_message"> تحذير </string>
+    <string name="emptyList">قائمة فارغة</string>
     <string name="not_authoriz">     عفوا , رصيد العميل غير كافي ... </string>
     <string name="change_qty">تعديل الكمية</string>
     <string name="failImpo_export_data">
@@ -499,5 +500,10 @@
     <string name="forItemNo">السيريال للمادة رقم </string>
     <string name="forVoucherNo">للفاتورة رقم </string>
     <string name="inThisVoucher">في هذه الفاتورة</string>
+    <string name="emptyTable">جدول فارغ أعد استيراد البيانات</string>
+    <string name="UpdateQty">تعديل الكمية</string>
+    <string name="Delete">حذف مادة</string>
+    <string name="ClearAll">حذف كل المواد</string>
+    <string name="continousReadingBarcod">قراءة باركود متواصلة</string>
 
 </resources>

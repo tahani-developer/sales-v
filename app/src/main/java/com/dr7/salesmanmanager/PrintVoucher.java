@@ -172,7 +172,10 @@ public class PrintVoucher extends AppCompatActivity {
         obj = new DatabaseHandler(PrintVoucher.this);
         vouchers = obj.getAllVouchers();
         items = obj.getAllItems();
-        companeyinfo = obj.getAllCompanyInfo();
+        try {
+            companeyinfo = obj.getAllCompanyInfo();
+        }catch(Exception e){}
+
         bluetoothSetup();
 
         TableTransactionsReport = (TableLayout) findViewById(R.id.TableTransactionsReport);

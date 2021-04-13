@@ -383,8 +383,10 @@ public class ImportJason extends AppCompatActivity {
 //                            .show();
 //
 //            }
-          //  new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
-            getDataVolley(salesNo);
+            new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
+//            new JSONTask(userNo).execute(URL_TO_HIT);
+          //  getDataVolley(salesNo);
+
 
 
         }
@@ -675,6 +677,7 @@ public class ImportJason extends AppCompatActivity {
                     try {
                         JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
                         salesManItemsBalanceList.clear();
+                        Log.e("salesManItemsB",""+parentArraySalesMan_Items_Balance);
                         getDataProgress.setTitle("SalesMan_Items_Balance");
                         for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
                             JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
@@ -686,7 +689,9 @@ public class ImportJason extends AppCompatActivity {
                             item.setQty(finalObject.getDouble("QTY"));
 
                             salesManItemsBalanceList.add(item);
+                            Log.e("salesManItemsB",""+finalObject);
                         }
+
 
                     }
                     catch ( Exception e)
@@ -1083,7 +1088,7 @@ public class ImportJason extends AppCompatActivity {
 //                    buffer.append(line);
 //                    break;
 //                }
-                URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+                URL_TO_HIT = "http://" + ipAddress.trim() + "/VANSALES_WEB_SERVICE/index.php";
 
                 String link = URL_TO_HIT;
                 URL url = new URL(link);
@@ -1863,23 +1868,23 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-//                try {
-//                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
-//                    itemUnitDetailsList.clear();
-//                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-//                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
-//
-//                        ItemUnitDetails item = new ItemUnitDetails();
-//                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-//                        item.setItemNo(finalObject.getString("ITEMNO"));
-//                        item.setUnitId(finalObject.getString("UNITID"));
-//                        item.setConvRate(finalObject.getDouble("CONVRATE"));
-//
-//                        itemUnitDetailsList.add(item);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("Import Data", e.getMessage().toString());
-//                }
+                try {
+                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+                    itemUnitDetailsList.clear();
+                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+
+                        ItemUnitDetails item = new ItemUnitDetails();
+                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        item.setItemNo(finalObject.getString("ITEMNO"));
+                        item.setUnitId(finalObject.getString("UNITID"));
+                        item.setConvRate(finalObject.getDouble("CONVRATE"));
+
+                        itemUnitDetailsList.add(item);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
 
                 try {
                     JSONArray parentArrayItem_Serial_Details = parentObject.getJSONArray("ITEMS_SERIALs");
@@ -2038,16 +2043,30 @@ public class ImportJason extends AppCompatActivity {
                     Log.e("Import Data", e.getMessage().toString());
                 }
                 try {
+
                     JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
                     salesManItemsBalanceList.clear();
+
                     for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
                         JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
-
+                        Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
+                        String qty="";
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
                         item.setSalesManNo(finalObject.getString("STOCK_CODE"));
                         item.setItemNo(finalObject.getString("ItemOCode"));
-                        item.setQty(finalObject.getDouble("QTY"));
+
+                            qty=finalObject.getString("QTY");
+                     try {
+                         double qtydoubl=Double.parseDouble(qty);
+                         item.setQty(qtydoubl);
+
+                     }
+                     catch (Exception e){
+                         item.setQty(0);
+                         Log.e("Exception",""+qty);
+                     }
+//                        item.setQty(finalObject.getDouble("QTY"));
 
                         salesManItemsBalanceList.add(item);
                     }
@@ -2055,7 +2074,7 @@ public class ImportJason extends AppCompatActivity {
                 }
                 catch ( Exception e)
                 {
-                    Log.e("Exception","Gson"+e.getMessage());
+                    Log.e("Exception","GsonSalesMan_Items_Balance"+e.getMessage());
                 }
 
                 try {

@@ -123,9 +123,9 @@ public class Login extends AppCompatActivity {
     LocationRequest mLocationRequest;
     public LocationManager locationManager;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
-    Date currentTimeAndDate;
-    SimpleDateFormat df, df2;
-    String curentDate, curentTime;
+    public static Date currentTimeAndDate;
+    public static  SimpleDateFormat df, df2;
+    public static  String curentDate, curentTime;
     public static Location location_main;
     LinearLayout mainlayout;
     String provider;
@@ -452,7 +452,7 @@ public class Login extends AppCompatActivity {
         loginText = (TextView) findViewById(R.id.logInTextView);
         currentTimeAndDate = Calendar.getInstance().getTime();
         Log.e("currentTimeAndDate", "" + currentTimeAndDate);
-        df = new SimpleDateFormat("dd/MM/yyyy");
+        df = new SimpleDateFormat("dd-MM-yyyy");
         curentDate = df.format(currentTimeAndDate);
         curentDate = convertToEnglish(curentDate);
         Log.e("curentDate", "" + curentDate);
