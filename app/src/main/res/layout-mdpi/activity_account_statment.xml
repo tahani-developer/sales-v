@@ -145,14 +145,14 @@
         android:layout_weight="1.5"
         android:orientation="vertical"
         android:layout_width="match_parent">
-        <HorizontalScrollView
-            android:id="@+id/HorizontalScrollView01"
-            android:layout_width="match_parent"
-            android:fillViewport="true"
-            android:scrollbars="horizontal"
-            android:layout_height="match_parent"
+<!--        <HorizontalScrollView-->
+<!--            android:id="@+id/HorizontalScrollView01"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:fillViewport="true"-->
+<!--            android:scrollbars="horizontal"-->
+<!--            android:layout_height="match_parent"-->
 
-            >
+<!--            >-->
 
     <LinearLayout
         android:layout_height="match_parent"
@@ -343,7 +343,7 @@
 <!--        </LinearLayout>-->
     </RelativeLayout>
     </LinearLayout>
-        </HorizontalScrollView>
+<!--        </HorizontalScrollView>-->
 
 
     </LinearLayout>

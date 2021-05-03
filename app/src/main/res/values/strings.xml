@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 75</string>
+    <string name="version"> V 84</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -300,6 +300,8 @@
     <string name="error_companey_info">   please enter company information for print </string>
     <string name="fill_setting">Please enter setting app</string>
     <string name="warning_message">Warning Message</string>
+    <string name="emptyList">Empty List</string>
+    emptyList
     <string name="Confirm">Confirm</string>
 
     <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
@@ -452,6 +454,11 @@
     <string name="forItemNo">Serial For Item No</string>
     <string name="forVoucherNo">For Voucher No</string>
     <string name="inThisVoucher">In This Voucher</string>
+    <string name="emptyTable">Empty Table</string>
+    <string name="UpdateQty">Update Qty</string>
+    <string name="Delete">Delete item</string>
+    <string name="ClearAll">Clear All</string>
+    <string name="continousReadingBarcod">Continous Reading Barcod</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -462,8 +469,9 @@
         <item>Clear All</item>
     </string-array>
     <string-array name="list_items_dialog_SERIAL">
-        <item>Delete</item>
-        <item>Clear All</item>
+        <item>@string/UpdateQty</item>
+        <item>@string/Delete</item>
+        <item>@string/ClearAll</item>
     </string-array>
 
     <string-array name="banks_list">

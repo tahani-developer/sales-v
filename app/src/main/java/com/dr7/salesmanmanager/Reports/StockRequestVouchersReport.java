@@ -107,6 +107,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
         String today = df.format(currentTimeAndDate);
         from_date.setText(today);
         to_date.setText(today);
+        inflateBoomMenu();
 
         myCalendar = Calendar.getInstance();
 

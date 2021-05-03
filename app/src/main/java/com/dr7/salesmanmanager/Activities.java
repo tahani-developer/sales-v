@@ -55,6 +55,7 @@ import static com.dr7.salesmanmanager.MainActivity.curentTime;
 import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
+import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
@@ -95,6 +96,7 @@ public class Activities extends AppCompatActivity implements
     TextView switchLayout;
     public static TextView totalBalance_text,lastVisit_textView;
     public  static  LocationPermissionRequest locationPermissionRequestAc;
+    public  GeneralMethod generalMethod;
 // LocationPermissionRequest locationPermissionRequest;
 
     @Override 
@@ -192,6 +194,7 @@ public class Activities extends AppCompatActivity implements
         mainlayout = (LinearLayout)findViewById(R.id.mainlyout);
         totalBalance_text=findViewById(R.id.totalBalance_text);
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
+        generalMethod=new GeneralMethod(Activities.this);
         fillLastVisit();
         fiiltotalBalance();
 //        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
@@ -326,9 +329,10 @@ public class Activities extends AppCompatActivity implements
     private String getLastVaisit() {
         String visit="";
         transaction=new Transaction();
+
         if(!CustomerListShow.Customer_Account.equals(""))
         {
-            transaction=databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account,Login.salesMan);
+            transaction=databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account,generalMethod.getSalesManLogin().trim());
             if(transaction.getCheckInDate()!=null)
             {
                 visit=transaction.getCheckInDate()+"\t\t"+transaction.getCheckInTime();
@@ -810,6 +814,7 @@ public class Activities extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.e("MainActivity", ""+requestCode);
+        String serialBarcode="";
 //        if (requestCode == 0x0000c0de) {
         IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (Result != null) {
@@ -820,87 +825,134 @@ public class Activities extends AppCompatActivity implements
 
                 Log.e("Activities1", "onActivityResult" + Result.getContents());
 
-
-                String serialBarcode = Result.getContents();
-                String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode+"");
-                if((ItemNo.equals("not")))
-                {
-                    if((databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==504)||
-                            (!databaseHandler.isSerialCodePaied(serialBarcode+"").equals("not")&&voucherType==506))
-                    {
-                        serialValue.setText(serialBarcode);
-                    }
-                    else {
-                        if (voucherType == 506) {
-                            new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText(Activities.this.getString(R.string.warning_message))
-                                    .setContentText(Activities.this.getString(R.string.serialIsNotPaied) + "\t" + serialBarcode)
-                                    .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            openSmallScanerTextView();
-                                            sweetAlertDialog.dismissWithAnimation();
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            try {
-                                String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode+"");
-                                String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
-                                voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
-
-                                new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                                        .setContentText(Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode+ "\t"+Activities.this.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+Activities.this.getString(R.string.voucher_date)+"\t"+voucherDate)
-                                        .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                openSmallScanerTextView();
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .show();
-                            }catch (Exception e){
-                                Toast.makeText(Activities.this, ""+Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode, Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-                    }
-
+                try {
+                    serialBarcode = Result.getContents();
+                }
+                catch (Exception e){
+                    serialBarcode="";
+                    Toast.makeText(Activities.this, "Error1"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
-                else {
+
+                 try {
+                     String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode.trim()+"");
+                     if(voucherType==504)
+                     {
+                         if((ItemNo.equals("not")||databaseHandler.getLastTransactionOfSerial(serialBarcode.trim()).equals("506")))
+                         {
+                             if((databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==504)||
+                                     (!databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==506))
+                             {
+                                 if(checkInTotalList(serialBarcode.trim()+""))
+                                 {
+                                     serialValue.setText(serialBarcode.toString().trim());
+                                 }
+                                 else {
+                                     new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                             .setTitleText(Activities.this.getString(R.string.warning_message))
+                                             .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+Activities.this.getResources().getString(R.string.inThisVoucher))
+
+                                             .show();
+
+                                 }
+                             }
+                             else {
+                                     try {
+                                         String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode.trim()+"");
+                                         String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                                         voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
+
+                                         new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                                 .setContentText(Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode+ "\t"+Activities.this.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+Activities.this.getString(R.string.voucher_date)+"\t"+voucherDate)
+                                                 .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                                     @Override
+                                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                         openSmallScanerTextView();
+                                                         sweetAlertDialog.dismissWithAnimation();
+                                                     }
+                                                 })
+                                                 .show();
+                                     }catch (Exception e){
+                                         Toast.makeText(Activities.this, ""+Activities.this.getString(R.string.duplicate) +"\t"+serialBarcode, Toast.LENGTH_SHORT).show();
+                                     }
 
 
-                    if(!ItemNo.equals("")){
-                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText(Activities.this.getString(R.string.warning_message))
-                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Activities.this.getString(R.string.forItemNo)+ItemNo)
-                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        openSmallScanerTextView();
-                                        sweetAlertDialog.dismissWithAnimation();
-                                    }
-                                })
-                                .show();
-                    }else {
-                        new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText(Activities.this.getString(R.string.warning_message))
-                                .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
-                                .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                             }
 
-                                        openSmallScanerTextView();
-                                        sweetAlertDialog.dismissWithAnimation();
 
-                                    }
-                                })
-                                .show();
+                         }
+                         else {
 
-                    }
 
-                }
+                             if(!ItemNo.equals("")){
+                                 new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                         .setTitleText(Activities.this.getString(R.string.warning_message))
+                                         .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Activities.this.getString(R.string.forItemNo)+ItemNo)
+                                         .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                             @Override
+                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                 openSmallScanerTextView();
+                                                 sweetAlertDialog.dismissWithAnimation();
+                                             }
+                                         })
+                                         .show();
+                             }else {
+                                 new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                         .setTitleText(Activities.this.getString(R.string.warning_message))
+                                         .setContentText(Activities.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
+                                         .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                             @Override
+                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                                 openSmallScanerTextView();
+                                                 sweetAlertDialog.dismissWithAnimation();
+
+                                             }
+                                         })
+                                         .show();
+
+                             }
+
+                         }
+                     }
+                     else {// vouchertype=506
+                         if( (!databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==506))
+                         {
+                             if(checkInTotalList(serialBarcode.trim()+""))
+                             {
+                                 serialValue.setText(serialBarcode.toString().trim());
+                             }
+                             else {
+                                 new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                         .setTitleText(Activities.this.getString(R.string.warning_message))
+                                         .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+Activities.this.getResources().getString(R.string.inThisVoucher))
+
+                                         .show();
+
+                             }
+                         }
+                         else {
+                             new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                     .setTitleText(Activities.this.getString(R.string.warning_message))
+                                     .setContentText(Activities.this.getString(R.string.serialIsNotPaied) + "\t" + serialBarcode)
+                                     .setConfirmButton(Activities.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                         @Override
+                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                             openSmallScanerTextView();
+                                             sweetAlertDialog.dismissWithAnimation();
+                                         }
+                                     })
+                                     .show();
+                         }
+
+                     }
+
+
+
+                 }catch (Exception e){
+                     Toast.makeText(Activities.this, "Error2"+e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                 }
 
 
 
@@ -935,6 +987,29 @@ public class Activities extends AppCompatActivity implements
         }
 
     }
+
+    private boolean checkInTotalList(String s) {
+        boolean existInTotal=false;
+        if(listSerialTotal.size()!=0){
+            Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
+                for(int j=0;j<listSerialTotal.size();j++)
+                {
+                    if(listSerialTotal.get(j).getSerialCode().equals(s.toString().trim()))
+                    {
+                        return  false;
+                    }
+
+                }
+
+//
+//                if(listSerialTotal.indexOf(s.toString().trim())!=-1)
+//                {
+//
+//                }
+        }
+        return  true;
+    }
+
     public void openSmallScanerTextView() {
         new IntentIntegrator(Activities.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 

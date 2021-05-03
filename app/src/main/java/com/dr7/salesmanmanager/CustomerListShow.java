@@ -320,7 +320,7 @@ public class CustomerListShow extends DialogFragment {
                     URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
                     if (isInternetAccessed()) {
                         try {
-                          //  new JSONTask().execute(URL_TO_HIT);
+//                            new JSONTask().execute(URL_TO_HIT);
                             new JSONTaskDelphi().execute(URL_TO_HIT);
 
                         }

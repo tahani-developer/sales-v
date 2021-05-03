@@ -7,6 +7,9 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
+
+import static com.dr7.salesmanmanager.ExportJason.CONO;
 
 public class Voucher {
 
@@ -236,6 +239,36 @@ public class Voucher {
             obj.put("custNumber", custNumber);
             obj.put("voucherYear", voucherYear);
             obj.put("totalQty", totalQty);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        String voucherDateFormet="";
+        //"JSN":[{"COMAPNYNO":290,"VOUCHERYEAR":"2021","VOUCHERNO":"1212","VOUCHERTYPE":"3","VOUCHERDATE":"24/03/2020",
+          //      "SALESMANNO":"5","CUSTOMERNO":"123456","VOUCHERDISCOUNT":"50",
+            //    "VOUCHERDISCOUNTPERCENT":"10","NOTES":"AAAAAA","CACR":"1","ISPOSTED":"0","PAYMETHOD":"1","NETSALES":"150.720"}]}
+        try {
+            obj.put("COMAPNYNO", CONO);
+            obj.put("VOUCHERNO", voucherNumber);
+            obj.put("VOUCHERTYPE", voucherType);
+
+            obj.put("VOUCHERDATE", VoucherDate);
+            obj.put("SALESMANNO", saleManNumber);
+            obj.put("VOUCHERDISCOUNT", voucherDiscount);
+            obj.put("VOUCHERDISCOUNTPERCENT", voucherDiscountPercent);
+            obj.put("NOTES", remark);
+            obj.put("CACR", payMethod);
+            obj.put("ISPOSTED", "0");
+            obj.put("NETSALES", netSales);
+            obj.put("CUSTOMERNO", custNumber);
+            obj.put("VOUCHERYEAR", voucherYear);
+
+            obj.put("PAYMETHOD", payMethod);
+
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

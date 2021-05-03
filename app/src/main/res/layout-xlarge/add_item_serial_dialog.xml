@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLinearAddItem"
-    android:layout_width="450dp"
+    android:layout_width="320dp"
     android:layout_height="450dp"
-    android:background="@color/layer7"
-    android:layoutDirection="locale"
-    android:minWidth="450dp"
+    android:minWidth="320dp"
     android:minHeight="450dp"
+    android:id="@+id/mainLinearAddItem"
+    android:layoutDirection="locale"
+    android:background="@color/layer7"
     android:orientation="vertical"
-    android:padding="20dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="5.5"
-        android:layout_margin="5dp"
+    android:padding="5dp">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/checkState"
-            android:visibility="gone"
-            android:layout_weight="1"
-            android:text="@string/request_state"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"/>
 
         <EditText
             android:id="@+id/item_serial"
@@ -37,7 +25,7 @@
             android:layout_margin="5dp"
             android:text="000"
             android:textColor="@color/radio_group"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:visibility="gone" />
 
         <TextView
@@ -50,12 +38,12 @@
             android:layout_weight="1"
             android:text="000"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
+            android:layout_margin="5dp"
 
             android:background="@color/colorblue1"
             android:orientation="vertical" />
@@ -70,148 +58,26 @@
             android:gravity="center"
             android:text="test"
             android:textColor="@color/colorblue_dark"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:background="@color/text_view_color"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingLeft="10dp">
+        android:paddingLeft="10dp"
+        >
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:layout_weight="5.3"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="5dp"
-        android:paddingLeft="5dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:text="@string/app_unit"
-            android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/unit"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginVertical="9dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="16sp" />
-
-
-        <TextView
-            android:id="@+id/textQty"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-
-            android:text="@string/weight"
-            android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/unitQty"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/back_border_edit"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:textSize="16sp"
-
-            android:imeOptions="actionNext"
-            android:inputType="numberDecimal" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearWeight"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="5.3"
         android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="5dp"
-        android:paddingLeft="5dp">
-
-        <TextView
-            android:id="@+id/textview_wieght"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:text="@string/unit_qty"
-            android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/unitWeight"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:imeOptions="actionNext"
-            android:background="@drawable/back_border_edit"
-            android:gravity="center"
-            android:inputType="numberDecimal" />
-
-        <CheckBox
-            android:id="@+id/use_weight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textSize="16sp"
-            android:checked="true"
-
-            android:gravity="center"
-            android:text="@string/use_weight"
-            android:textColor="@color/text_view_color" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@color/layer3"
-        android:orientation="horizontal"
-        android:paddingStart="10dp"
-        android:paddingLeft="10dp">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_height="match_parent"
-
-        android:layout_weight="5.3"
-        android:layout_marginTop="5dp"
+        android:layout_weight="5"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
@@ -219,14 +85,110 @@
         >
 
         <TextView
-            android:id="@+id/pricee"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/app_unit"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/unit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="9dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@color/layer2"
+            android:gravity="center"
+            android:padding="3dp"
+            android:visibility="gone" />
+
+
+        <TextView
+            android:id="@+id/textQty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+
+            android:layout_weight="1.5"
+            android:textStyle="bold"
+
+            android:text="@string/weight"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/unitQty"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/back_border_edit"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal" />
+        <TextView
+            android:id="@+id/generateSerial"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+
+            android:textStyle="bold"
+            android:drawablePadding="5dp"
+            android:layout_gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_add_circle_outline_blue_24dp"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal"
+            android:drawableLeft="@drawable/ic_arrow_right_24dp"
+            android:drawableRight="@drawable/ic_add_circle_outline_blue_24dp" />
+        <EditText
+            android:id="@+id/un2012542"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.2"
+            android:enabled="false"
+
+            android:gravity="center"
+            android:visibility="gone"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
+
+        <TextView
+            android:id="@+id/pricee"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
 
             android:text="@string/app_price"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/price"
@@ -238,80 +200,161 @@
             android:inputType="numberDecimal"
             android:text="0"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp" />
-
-
-
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/_linear_switch"
+        android:id="@+id/linearWeight"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="5.3"
-        android:background="@drawable/back_border_shape"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
         android:orientation="horizontal"
-
-        android:visibility="visible">
-
-
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
 
         <TextView
-            android:id="@+id/discount_text"
+            android:id="@+id/textview_wieght"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/back_border_dark"
-            android:gravity="center"
+            android:layout_height="wrap_content"
 
-
-            android:text="@string/app_disc"
-            android:textColor="@color/white"
+            android:text="@string/unit_qty"
+            android:textColor="@color/text_view_color"
             android:textSize="12sp" />
-        <TextView
-            android:id="@+id/bonext"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="@color/layer7"
 
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-        <TextView
-            android:id="@+id/bonuss_text"
+        <EditText
+            android:id="@+id/unitWeight"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+
+            android:inputType="numberDecimal"
+            />
+
+        <CheckBox
+            android:id="@+id/use_weight"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+
+            android:text="@string/use_weight"
+            android:checked="true"
+            android:textColor="@color/text_view_color" />
+
+    </LinearLayout>
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="1dp"-->
+    <!--        android:layout_marginTop="5dp"-->
+    <!--        android:background="@color/layer3"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:paddingStart="10dp"-->
+    <!--        android:paddingLeft="10dp">-->
+
+    <!--    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp">
+
+        <LinearLayout
+            android:id="@+id/_linear_switch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+
+            android:layout_weight="5.3"
             android:background="@drawable/back_border_shape"
-            android:text="@string/app_bonus"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
+            <TextView
+                android:id="@+id/checkState"
+                android:visibility="gone"
+                android:layout_weight="1"
+                android:text="@string/request_state"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+
+
+            <TextView
+                android:id="@+id/discount_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/back_border_dark"
+                android:gravity="center"
+
+
+                android:text="@string/app_disc"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/bonext"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@color/layer7"
+
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/bonuss_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/back_border_shape"
+                android:text="@string/app_bonus"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/discount_linear"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="5.3"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5"
+        android:visibility="visible"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
-        android:visibility="visible"
+
         >
 
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-
+            android:gravity="center_vertical"
             android:text="@string/app_disc"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/discount"
@@ -320,38 +363,42 @@
             android:layout_weight="1"
             android:background="@drawable/back_border_edit"
             android:gravity="center"
+            android:imeOptions="actionDone"
             android:inputType="numberDecimal"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
         <RadioGroup
             android:id="@+id/discTypeRadioGroup"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="7dp"
             android:layout_weight="2"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/discValueRadioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:checked="true"
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp" />
+                android:textSize="10sp" />
 
             <RadioButton
                 android:id="@+id/discPercRadioButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center"
                 android:text="@string/app_disc_type2"
                 android:textColor="@color/text_view_color"
-                android:textSize="16sp" />
-
+                android:textSize="10sp" />
 
         </RadioGroup>
 
@@ -359,64 +406,62 @@
     <LinearLayout
         android:id="@+id/linear_bonus"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="5.3"
 
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_weight="5"
+        android:visibility="gone"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
-        android:visibility="gone"
+
         >
 
         <TextView
             android:id="@+id/bonuss"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
             android:text="@string/app_bonus"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/bonus"
             android:layout_width="0dp"
             android:layout_height="match_parent"
 
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@drawable/back_border_edit"
             android:gravity="center"
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/layer3"
         android:orientation="horizontal"
         android:paddingStart="10dp"
-        android:paddingLeft="10dp">
-
-    </LinearLayout>
+        android:paddingLeft="10dp"></LinearLayout>
 
     <LinearLayout
         android:id="@+id/discribtionItem_linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-
-        android:layout_weight="5.3"
+        android:layout_weight="5.5"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="0dp"
@@ -425,7 +470,7 @@
 
             android:text="@string/remark"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
         <EditText
             android:id="@+id/item_note"
@@ -434,15 +479,49 @@
             android:layout_margin="5dp"
             android:layout_weight="3"
 
-            android:textSize="16sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/serialNo_linear"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="center"-->
+    <!--        android:visibility="gone"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:paddingStart="5dp"-->
+    <!--        android:paddingLeft="5dp">-->
+    <!--        <TextView-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:layout_height="wrap_content"-->
+
+    <!--            android:text="@string/SerialNo"-->
+    <!--            android:textColor="@color/text_view_color"-->
+    <!--           android:textSize="12sp" />-->
+
+    <!--        <EditText-->
+    <!--            android:id="@+id/Serial_No"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_weight="3"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_margin="5dp"-->
+
+    <!--           android:textSize="12sp" />-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/serialScan"-->
+    <!--            android:layout_height="40dp"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:src="@drawable/search_btn"-->
+    <!--            android:layout_weight="1"/>-->
+
+    <!--    </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/mainRequestLinear"
         android:layout_height="match_parent"
-        android:visibility="visible"
         android:layout_margin="5dp"
+        android:visibility="gone"
         android:orientation="vertical"
         android:layout_weight="5">
         <LinearLayout
@@ -471,6 +550,8 @@
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/refresh2"
+
+                android:drawableLeft="@drawable/ic_done_black_24dp"
                 />
         </LinearLayout>
 
@@ -499,8 +580,9 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:visibility="visible"
+            android:visibility="gone"
             android:src="@drawable/ic_done_blue_24dp"
+
             android:drawableLeft="@drawable/ic_done_black_24dp"
             />
         <ImageView
@@ -509,6 +591,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+
             android:layout_weight="1"
             android:visibility="gone"
             android:src="@drawable/ic_block_red_24dp"
@@ -528,80 +611,106 @@
             android:drawableLeft="@drawable/ic_done_black_24dp"
             />
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/serialNo_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_weight="5.2"
+
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:text="@string/SerialNo"
             android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/Serial_No"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="3"
-            android:inputType="text"
-            android:lines="1"
-
-            android:textSize="16sp" />
-        <EditText
-            android:id="@+id/serial_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="3"
-
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/serialScan"
             android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:src="@drawable/search_btn" />
+            android:padding="2dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_playlist_add_black_24dp" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5.2"
+            android:id="@+id/serialValue"
+            android:visibility="gone"
+
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/serialScanBunos"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_local_offer_black_24dp" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+
+        android:id="@+id/serial_No_recyclerView"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3.5"
+        android:background="@drawable/background_container"
+        android:elevation="5dp"
+        android:layout_margin="3dp"
+        android:textSize="10sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:layout_weight="5"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="2dp">
 
         <Button
             android:id="@+id/addToList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="7dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@drawable/done_button"
+            android:elevation="10dp"
             android:text="@string/save"
             android:textColor="@color/layer7"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/cancel0000"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
             android:layout_weight="1"
-
             android:background="@color/cancel_button"
+
+            android:elevation="10dp"
             android:text="@string/app_cancel"
             android:textColor="@color/layer5"
             android:textStyle="bold"
@@ -610,14 +719,23 @@
         <Button
             android:id="@+id/cancelAdd"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="7dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
             android:layout_weight="1"
             android:background="@drawable/cancel_button"
+            android:elevation="10dp"
             android:text="@string/app_cancel"
             android:textColor="@color/layer7"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
+    <!--<EditText-->
+    <!--android:id="@+id/Serial_No"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="3"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:textSize="14sp" />-->

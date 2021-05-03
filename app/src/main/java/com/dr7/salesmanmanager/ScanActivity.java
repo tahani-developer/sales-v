@@ -64,19 +64,19 @@ public class ScanActivity extends AppCompatActivity
             // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
             if(type.equals("2"))
             {
-                Serial_No.setText(rawResult.getText());
-                item_serial.setText(rawResult.getText());
-                Log.e("RESULT",""+rawResult.getText());
+                Serial_No.setText(rawResult.getText().toString().trim());
+                item_serial.setText(rawResult.getText().toString().trim());
+                Log.e("RESULT",""+rawResult.getText().toString().trim());
             }
             else {
                 if(type.equals("3"))
                 {
 //                    Serial_No.setText(rawResult.getText());
-                    serialValue.setText(rawResult.getText());
+                    serialValue.setText(rawResult.getText().toString().trim());
                 }
                 else if(type.equals("1"))
                 {
-                    AddItemsFragment2.barcode.setText(""+rawResult.getText());
+                    AddItemsFragment2.barcode.setText(""+rawResult.getText().toString().trim());
                     Log.e("RESULT",""+rawResult.getText());
                 }
 

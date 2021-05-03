@@ -32,6 +32,8 @@
             android:layout_weight="5.2"
             android:id="@+id/serialValue"
             android:visibility="gone"
+            android:inputType="text"
+            android:lines="1"
 
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"

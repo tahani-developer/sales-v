@@ -132,13 +132,15 @@ public class Transaction {
             obj.put("SALES_MAN_ID", salesManId);
             obj.put("CUS_CODE", cusCode);
             obj.put("CUS_NAME", cusName);
-            obj.put("CHECK_IN_DATE", checkInDate);
-            obj.put("CHECK_IN_TIME", checkInTime);
-            obj.put("CHECK_OUT_DATE", checkOutDate);
-            obj.put("CHECK_OUT_TIME", checkOutTime);
+            obj.put("CHECK_IN_DATE2", checkInDate);
+            obj.put("CHECK_IN_TIME2", checkInTime);
+            obj.put("CHECK_OUT_DATE2", checkOutDate);
+            obj.put("CHECK_OUT_TIME2", checkOutTime);
             obj.put("STATUS", status);
-            obj.put("LONG_CHECK_OUT_LOCATION", longtude);
-            obj.put("LATI_CHECK_OUT_LOCATION", latitud);
+
+            obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
+            obj.put("REAL_LATITUED_CHECHOUT", latitud);
+            obj.put("EXPORTED", "0");
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
