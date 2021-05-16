@@ -1486,7 +1486,7 @@ public class BluetoothConnectMenu extends Activity {
         linearView.buildDrawingCache();
         Bitmap bit =linearView.getDrawingCache();
 
-        dialogs.show();
+       // dialogs.show();
 
 //        linearView.setDrawingCacheEnabled(true);
 //        linearView.buildDrawingCache();

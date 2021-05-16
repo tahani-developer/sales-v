@@ -136,6 +136,7 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
+    public  static final int typaImport=1;//0---- mySql   1-----IIs
 
 
 
@@ -153,7 +154,6 @@ public class Login extends AppCompatActivity {
         getIpAddressForDevice();
         validLocation();
         try {
-            Log.e("languagelocalApp", "" + languagelocalApp);
 
             if (mDHandler.getAllSettings().size() != 0) {
                 if (mDHandler.getAllSettings().get(0).getArabic_language() == 1) {

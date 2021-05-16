@@ -505,5 +505,6 @@
     <string name="Delete">حذف مادة</string>
     <string name="ClearAll">حذف كل المواد</string>
     <string name="continousReadingBarcod">قراءة باركود متواصلة</string>
+    <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
 
 </resources>

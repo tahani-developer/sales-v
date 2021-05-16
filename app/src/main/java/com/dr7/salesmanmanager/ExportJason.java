@@ -76,6 +76,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
@@ -294,7 +295,18 @@ public class ExportJason extends AppCompatActivity {
 
 
     }
-    void startExport()throws JSONException {
+    public  void startExport() throws JSONException {
+        if(typaImport==0)//mysql
+        {
+            startExportDatabase();
+        }
+        else if(typaImport==1)
+        {
+            startExportDelPhi();
+        }
+
+    }
+    void startExportDelPhi()throws JSONException {
         headerDll="/Falcons/VAN.dll";
 //        headerDll="";
 //        startExportDatabase();

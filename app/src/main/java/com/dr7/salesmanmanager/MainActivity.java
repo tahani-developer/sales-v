@@ -2695,11 +2695,13 @@ public class MainActivity extends AppCompatActivity
                         String companyNote = noteInvoice.getText().toString();
 
                         mDbHandler.deleteAllCompanyInfo();
-                        Log.e("itemBitmapPic","getByteCount1="+itemBitmapPic.getByteCount());
+                        if(itemBitmapPic!=null)
+                        {
+                            itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
+                        }
 
-                        itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
-                        Log.e("itemBitmapPic","getByteCount2="+itemBitmapPic.getByteCount());
-                        Log.e("getlocationForCheckIn",""+longitude_main+latitudeCheckIn);
+
+
                         mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0);
                         try {
                             if(isNetworkAvailable())
@@ -2810,7 +2812,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
-        CheckBox short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        CheckBox short_Invoice,dontPrintHeader;
+
+        short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
@@ -2865,6 +2870,10 @@ if(printer.size()!=0) {
         short_Invoice.setChecked(false);
     }
     else { short_Invoice.setChecked(true);}
+    if(printer.get(0).getDontPrintHeader()==0){
+        dontPrintHeader.setChecked(false);
+    }
+    else dontPrintHeader.setChecked(true);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -2885,43 +2894,54 @@ if(printer.size()!=0) {
 
                 if (lk30.isChecked()) {
                     printerSetting.setPrinterName(0);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk30");
                 } else if (lk31.isChecked()) {
                     printerSetting.setPrinterName(1);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk31");
                 } else if (lk32.isChecked()) {
                     printerSetting.setPrinterName(2);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk32");
                 } else if (qs.isChecked()) {
                     printerSetting.setPrinterName(3);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "qs");
                 }else if (dotMatrix.isChecked()) {
                     printerSetting.setPrinterName(4);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "dotMatrix");
                 }else if (MTPPrinter.isChecked()) {
                 printerSetting.setPrinterName(5);
-                mDbHandler.addPrinterSeting(printerSetting);
+
                 Log.e("click ", "mtp");
             }
                 else if (innerPrinter.isChecked()) {
                     printerSetting.setPrinterName(6);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "mtp");
                 }
                 if(short_Invoice.isChecked())
                 {
                     printerSetting.setShortInvoice(1);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                 }
                 else {
                     printerSetting.setShortInvoice(0);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                 }
+                if(dontPrintHeader.isChecked())
+                {
+                    printerSetting.setDontPrintHeader(1);
+
+                }
+                else {
+                    printerSetting.setDontPrintHeader(0);
+
+                }
+
+                mDbHandler.addPrinterSeting(printerSetting);
                 Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
 dialog.dismiss();
             }

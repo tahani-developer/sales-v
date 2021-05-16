@@ -160,7 +160,7 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
-    int typeRequest = 0, haveResult = 0, approveAdmin = 0;
+    int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0;
     int counterSerial;
     LinearLayout mainRequestLinear_serial;
     LinearLayout resultLinear;
@@ -1568,7 +1568,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
         maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
-        readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
+        //readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
         priceListNo=(TextView) view.findViewById(R.id.priceListNo);
         linearRegulerOfferList=(LinearLayout) view.findViewById(R.id.linearRegulerOfferList);
         if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
@@ -3014,7 +3014,7 @@ public class SalesInvoice extends Fragment {
         LinearLayout   bonusLinearLayout,_linear_switch,discount_linear,linear_bonus,mainRequestLinear,mainLinearAddItem;
        listTemporarySerial=new ArrayList<>();
         listTemporarySerial=getserialForItem(itemNo,priceUpdated);
-        counterSerial=listTemporarySerial.size();
+
         itemNoSelected=itemNo;
         Log.e("listTemporarySerial4",""+listTemporarySerial.size());
 
@@ -3093,11 +3093,12 @@ public class SalesInvoice extends Fragment {
         item_name.setText(items.get(position).getItemName());
 
         price.setText((items.get(position).getPrice()+""));
-        unitQtyEdit.setText(listTemporarySerial.size()+"");
+       countNormalQty= getNumberOfNormalQty(listTemporarySerial);
+        unitQtyEdit.setText(countNormalQty+"");
         textQty.setText(context.getResources().getString(R.string.qty));
         unitQtyEdit.setEnabled(false);
         unitQtyEdit.setAlpha(0.8f);
-
+        counterSerial=countNormalQty;
         _linear_switch.setVisibility(View.GONE);
         
 
@@ -3138,6 +3139,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View view) {
                 if(verifyNotEmpty(listTemporarySerial)){
+                    countNormalQty= getNumberOfNormalQty(listTemporarySerial);
                     if( updateListSerialTotal(listTemporarySerial,position,priceUpdated))
                     {   editOpen=false;
                         dialog.dismiss();}
@@ -3189,7 +3191,7 @@ public class SalesInvoice extends Fragment {
                 serial.setItemNo(itemNo);
                 serial.setPriceItem(items.get(position).getPrice());
                 listTemporarySerial.add(serial);
-                unitQtyEdit.setText(listTemporarySerial.size() + "");
+                unitQtyEdit.setText(counterSerial + "");
 
 
 
@@ -3265,6 +3267,18 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    private int getNumberOfNormalQty(ArrayList<serialModel> listTemporarySerial) {
+        int qty=0;
+        for(int i=0;i<listTemporarySerial.size();i++)
+        {
+            if(listTemporarySerial.get(i).getIsBonus().equals("0"))
+            {
+                qty++;
+            }
+        }
+        return  qty;
+    }
+
     private boolean verifyNotEmpty(ArrayList<serialModel> listTemporarySerial) {
         for(int i=0;i<listTemporarySerial.size();i++)
         {
@@ -3281,14 +3295,17 @@ public class SalesInvoice extends Fragment {
     private boolean updateListSerialTotal(ArrayList<serialModel> listTemporarySerial,int position,float price) {
         if(listTemporarySerial.size()!=0)
         {
+            countBunosQty=listTemporarySerial.size()-countNormalQty;
             deleteFromListMasterSerial(listTemporarySerial.get(0).getItemNo(),price);
             addForListMasterSerial(listTemporarySerial);
-            updateQtyInItemsList(listTemporarySerial.size(),position);
+            updateQtyInItemsList(countNormalQty,countBunosQty,position);
             for(int k=0;k<listMasterSerialForBuckup.size();k++)
             {
                 mDbHandler.add_SerialBackup(listMasterSerialForBuckup.get(k),0);
             }
-            updateQtyBasket();
+            updateQtyBasket();// check item amount
+            updateAmount(position);
+            calculateTotals();
          return  true;
         }
         else {// empty List
@@ -3303,18 +3320,27 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    private void updateAmount(int position) {
+        if (items.get(position).getDiscType() == 0)
+            items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+        else
+            items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+    }
+
     public void updateQtyBasket() {
         float qty=0;
         total_items_quantity=0;
         for(int i=0;i<items.size();i++){
             qty+=items.get(i).getQty();
         }
+
         addQtyTotal(qty);
     }
 
-    private void updateQtyInItemsList(int size, int position) {
+    private void updateQtyInItemsList(int size,int bunos, int position) {
         items.get(position).setQty(size);
         //itemsListAdapter.setItemsList(items);
+        items.get(position).setBonus(bunos);
         itemsListAdapter.notifyDataSetChanged();
     }
 

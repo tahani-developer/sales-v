@@ -289,7 +289,7 @@ private void updateLabel(EditText editText){
 public class ViewHolder extends RecyclerView.ViewHolder {
     TextView textView_counterNo,errorSerial;
 
-    public   EditText editTextSerialCode;
+    public   TextView editTextSerialCode;
     Spinner spinner_bank;
     ImageView deletItem,scanBarcode,editBarcode;
     LinearLayout serialNo_linear;
@@ -694,9 +694,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 //                    }
 //
 //                    else {
-                        if(validSerial(editText.getText().toString()))
+                        if(validSerial(editText.getText().toString().trim()))
                         {
-                            editTextSerialCode.setText(editText.getText().toString());
+                            editTextSerialCode.setText(editText.getText().toString().trim());
                             sweetAlertDialog.dismissWithAnimation();
 
                         }
@@ -730,7 +730,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             for(int h=0;h<list.size();h++)
             {
 
-                if(list.get(h).getSerialCode().equals(serialValue))
+                if(list.get(h).getSerialCode().equals(serialValue.trim()))
                 {
                     isFoundSerial=true;
                 }

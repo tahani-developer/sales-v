@@ -6,6 +6,15 @@ public class PrinterSetting {
     private int printerName;
     private int printerShape;
     private int shortInvoice;
+    private int dontPrintHeader;
+
+    public int getDontPrintHeader() {
+        return dontPrintHeader;
+    }
+
+    public void setDontPrintHeader(int dontPrintHeader) {
+        this.dontPrintHeader = dontPrintHeader;
+    }
 
     public int getShortInvoice() {
         return shortInvoice;

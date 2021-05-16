@@ -62,6 +62,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.ExportJason.CONO;
 import static com.dr7.salesmanmanager.ExportJason.SalesManLogin;
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 
 public class DeExportJason extends AppCompatActivity {
@@ -118,7 +119,11 @@ public class DeExportJason extends AppCompatActivity {
                 jsonArrayItems.put(items.get(i).getJSONObject());
             }
 
-            exportSalesVoucherM();
+            if(typaImport==1)//IIs
+            {
+                exportSalesVoucherM();
+            }
+
 
                 Log.e("export****", "");
 
@@ -135,7 +140,12 @@ public class DeExportJason extends AppCompatActivity {
             for (int i = 0; i < paymentsPaper.size(); i++) {
                 jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
             }
-            exportPayment();
+            if(typaImport==1)//IIs
+            {
+                exportPayment();
+
+            }
+
 
         } else {
 
@@ -171,17 +181,23 @@ public class DeExportJason extends AppCompatActivity {
             for (int i = 0; i < addedCustomer.size(); i++) {
                 jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
             }
-            exportSalesVoucherM();
-            exportPayment();
+            if(typaImport==1)//IIs
+            {
+                exportSalesVoucherM();
+                exportPayment();
+            }
 //                for (int i = 0; i < serialModelList.size(); i++)
 //                {
 //                    jsonArraySerial.put(serialModelList.get(i).getJSONObject());
 //
 //                }
         }
+        if(typaImport==0)//mysql
+        {
+            new DeExportJason.JSONTask().execute();
 
+        }
 
-        //  new DeExportJason.JSONTask().execute();
 
 
     }

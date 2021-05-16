@@ -94,6 +94,7 @@ import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.previousIp;
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -383,9 +384,16 @@ public class ImportJason extends AppCompatActivity {
 //                            .show();
 //
 //            }
-            new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
-//            new JSONTask(userNo).execute(URL_TO_HIT);
-          //  getDataVolley(salesNo);
+            if(typaImport==0)//mysql
+            {
+             new JSONTask(userNo).execute(URL_TO_HIT);
+            }else if(typaImport==1)
+            {
+                new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
+            }
+
+
+
 
 
 
