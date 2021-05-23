@@ -128,6 +128,7 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
@@ -599,8 +600,14 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            openPasswordDialog(1);
-//            openPasswordDialog(10);// from admin
+            if(typaImport==0)// my sql ----> exist admin
+            {
+                            openPasswordDialog(10);// from admin
+            }else {
+                openPasswordDialog(1);
+            }
+
+
 
         } else if (id == R.id.action_print_voucher) {
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);

@@ -138,6 +138,7 @@ public class Login extends AppCompatActivity {
     FloatingActionButton setting_floatingBtn;
     public  static final int typaImport=1;//0---- mySql   1-----IIs
 
+    public  static final int rawahneh=1;
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -463,6 +464,10 @@ public class Login extends AppCompatActivity {
         Log.e("curentTime", "" + curentTime);
         mainlayout = (LinearLayout) findViewById(R.id.mainlayout);
         setting_floatingBtn=findViewById(R.id.setting_floatingBtn);
+        if(typaImport==0)
+        {
+            setting_floatingBtn.setVisibility(View.GONE);
+        }
         logo = (CircleImageView) findViewById(R.id.imageView3);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
 

@@ -1006,7 +1006,7 @@ try {
             }
 //        }
 
-
+        Log.e("setDisc1",""+item.getDisc());
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();

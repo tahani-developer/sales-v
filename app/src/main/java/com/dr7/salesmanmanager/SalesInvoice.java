@@ -200,7 +200,7 @@ public class SalesInvoice extends Fragment {
     static int index;
     public static List<Payment> payment_unposted;
     public static List<Voucher> sales_voucher_unposted;
-    public List<QtyOffers> list_discount_offers;
+    public List<QtyOffers> list_discount_offers;// offer by pay method
     public List<ItemsQtyOffer> itemsQtyOfferList;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou, unposted_payment, unposted_voucher;
     public ListView itemsListView;
@@ -3613,15 +3613,15 @@ public class SalesInvoice extends Fragment {
                 disc_items_value = 0;
 
                 if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+
                     for (int b = 0; b < items.size(); b++) {
-
-
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
                             disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
                                 disount_totalnew = 0;
                                 items.get(b).setDisc(disount_totalnew);
+                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
                                 itemsListView.setAdapter(itemsListAdapter);
 
                             }
@@ -3667,13 +3667,13 @@ public class SalesInvoice extends Fragment {
                         }
                     }
                 }
+
             }
 //            }
             //**********************************************************************************************************************************************
 
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
-            Log.e("disc_items_total ", " " + disc_items_total);
 
 
             if (discount_oofers_total_cash > 0)
@@ -3684,7 +3684,6 @@ public class SalesInvoice extends Fragment {
 
             try {
                 totalDiscount += sum_discount;
-                Log.e("totalDiscount", "" + totalDiscount);
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -3735,7 +3734,7 @@ public class SalesInvoice extends Fragment {
             } catch (Exception e) {
                 limit_offer = 0;
             }
-            Log.e("limit_offer", "" + limit_offer);
+
             for (int i = 0; i < items.size(); i++) {
                 discount_oofers_total_cash = 0;
                 discount_oofers_total_credit = 0;
@@ -3748,11 +3747,12 @@ public class SalesInvoice extends Fragment {
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
                             disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
-                            Log.e("disc_items_value ", " " + disc_items_value);
+
 
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
                                 disount_totalnew = 0;
                                 items.get(b).setDisc(disount_totalnew);
+                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
                                 itemsListView.setAdapter(itemsListAdapter);
 
                             }
@@ -3864,7 +3864,6 @@ public class SalesInvoice extends Fragment {
 
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
-            Log.e("disc_items_total ", " " + disc_items_total);
 
 
             if (discount_oofers_total_cash > 0)
@@ -3982,10 +3981,10 @@ public class SalesInvoice extends Fragment {
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
             for (int i = 0; i < offers_ItemsQtyOffer.size(); i++) {
-                Log.e("log2 ", date + "  " + offers_ItemsQtyOffer.get(i).getFromDate() + " " + offers_ItemsQtyOffer.get(i).getToDate());
                 if (itemNo.equals(offers_ItemsQtyOffer.get(i).getItem_no()) &&
                         (formatDate(date).after(formatDate(offers_ItemsQtyOffer.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers_ItemsQtyOffer.get(i).getFromDate()))) &&
                         (formatDate(date).before(formatDate(offers_ItemsQtyOffer.get(i).getToDate())) || formatDate(date).equals(offers_ItemsQtyOffer.get(i).getToDate()))) {
+                    Log.e("log2Trueee", date + "  " + offers_ItemsQtyOffer.get(i).getFromDate() + " " + offers_ItemsQtyOffer.get(i).getToDate());
 
                     return true;
                 }

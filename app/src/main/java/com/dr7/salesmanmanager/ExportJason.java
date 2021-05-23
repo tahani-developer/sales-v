@@ -76,6 +76,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.password;
@@ -307,8 +308,8 @@ public class ExportJason extends AppCompatActivity {
 
     }
     void startExportDelPhi()throws JSONException {
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+//        headerDll="/Falcons/VAN.dll";
+        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();
 //        savePayment();
@@ -2183,5 +2184,95 @@ public class ExportJason extends AppCompatActivity {
         mHandler.updateSerialTableIsposted();
         mHandler.updateRequestStockMaster();
         mHandler.updateRequestStockDetail();
+        if(rawahneh==1)
+        {
+
+            new JSONTaskEXPORT_STOCK().execute();
+        }
+    }
+    private class JSONTaskEXPORT_STOCK extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                //http://localhost:8082/EXPORTTOSTOCK?CONO=295&STRNO=4
+                String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTTOSTOCK";
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                Log.e("tag_link", "ExportData -->" + link);
+                Log.e("tag_data", "ExportData -->" + data);
+
+////
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "ExportData -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            Log.e("onPostExecute","EXPORT_STOCK"+result);
+
+            if (result != null && !result.equals("")) {
+//                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
+
+            } else {
+//                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

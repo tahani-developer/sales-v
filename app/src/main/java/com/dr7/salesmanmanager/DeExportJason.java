@@ -604,7 +604,7 @@ public class DeExportJason extends AppCompatActivity {
 
 
 
-                    Log.e("URL_TO_HIT",""+URL_TO_HIT);
+                   Log.e("URL_TO_HIT",""+URL_TO_HIT);
                 }
             } catch (Exception e) {
                 //progressDialog.dismiss();
@@ -615,8 +615,7 @@ public class DeExportJason extends AppCompatActivity {
             String ipAddress = "";
             Log.e("tagexPORT", "JsonResponse");
 
-            try {
-                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+            try {                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
 
             } catch (Exception e) {
 
