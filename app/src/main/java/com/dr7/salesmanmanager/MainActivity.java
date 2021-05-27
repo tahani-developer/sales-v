@@ -602,7 +602,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             if(typaImport==0)// my sql ----> exist admin
             {
-                            openPasswordDialog(10);// from admin
+                openPasswordDialog(1);
+//                            openPasswordDialog(10);// from admin
             }else {
                 openPasswordDialog(1);
             }
@@ -1086,17 +1087,19 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.customers_location) {
-//            locationPermissionRequest.closeLocation();
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.sales_man_map) {
-//            locationPermissionRequest.closeLocation();
-            Intent intent = new Intent(this, SalesmanMap.class);
-            startActivity(intent);
-
         }
+//        else
+//            if (id == R.id.customers_location) {
+////            locationPermissionRequest.closeLocation();
+//            Intent intent = new Intent(this, MapsActivity.class);
+//            startActivity(intent);
+//
+//        } else if (id == R.id.sales_man_map) {
+////            locationPermissionRequest.closeLocation();
+//            Intent intent = new Intent(this, SalesmanMap.class);
+//            startActivity(intent);
+//
+//        }
 
 //                else{
 //
@@ -1208,7 +1211,9 @@ public class MainActivity extends AppCompatActivity
 //        }
         else if (id == R.id.nav_clear_local) {
 //            locationPermissionRequest.closeLocation();
-            mDbHandler.deleteAllPostedData();
+
+            passwordDataClearDialog();
+
         }
         else if (id == R.id.nav_unCollectedchecked) {
           //  locationPermissionRequest.closeLocation();
@@ -1248,6 +1253,32 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void passwordDataClearDialog() {
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+                    mDbHandler.deleteAllPostedData();
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+                else {
+                    editText.setError("Incorrect");
+                }
+            }
+        })
+
+                .show();
     }
 //
 //      if(getTypeImport().equals("1"))
@@ -1927,6 +1958,7 @@ public class MainActivity extends AppCompatActivity
             exportData = new ExportJason(MainActivity.this);
             exportData.getPassowrdSetting();
         } catch (JSONException e) {
+            passwordFromAdmin.setText("2021000");
             e.printStackTrace();
         }
 

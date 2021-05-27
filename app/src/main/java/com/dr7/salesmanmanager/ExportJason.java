@@ -308,8 +308,8 @@ public class ExportJason extends AppCompatActivity {
 
     }
     void startExportDelPhi()throws JSONException {
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();
 //        savePayment();

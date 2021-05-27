@@ -46,6 +46,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
 import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
 import static com.dr7.salesmanmanager.SalesInvoice.editOpen;
+import static com.dr7.salesmanmanager.SalesInvoice.ipValue;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.minusQtyTotal;
@@ -296,20 +297,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder(View itemView) {
         super(itemView);
-
         textView_counterNo = itemView.findViewById(R.id.counter_ser);
         errorSerial=itemView.findViewById(R.id.errorSerial);
         editTextSerialCode = itemView.findViewById(R.id.Serial_No);
         serialNo_linear=itemView.findViewById(R.id.serialNo_linear);
-        if(contiusReading==1)
+        if(ipValue.toString().trim().contains("46.185.208.4"))
         {
             editTextSerialCode.setEnabled(false);
         }
         else {
             editTextSerialCode.setEnabled(true);
         }
-//
-
         scanBarcode = itemView.findViewById(R.id.scanBarcode);
         deletItem = itemView.findViewById(R.id.deletItem);
         editBarcode= itemView.findViewById(R.id.editBarcode);

@@ -142,8 +142,8 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin= mHandler.getAllUserNo();
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
         Log.e("SalesManLogin",""+SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();

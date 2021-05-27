@@ -217,9 +217,9 @@
     <string name="unit_qty">العدد</string>
     <string name="total_sold_qty">مجموع الكمية المباعة</string>
     <string name="total_sold_qty2">الكمية المباعة</string>
-    <string name="total_bonus_qty">مجموع الكمية المجانية</string>
+    <string name="total_bonus_qty">المجاني</string>
     <string name="total_bonus_qty2">الكمية المجانية</string>
-    <string name="total_sales_noTax">مجموع المبيعات(بدون ضريبة)</string>
+    <string name="total_sales_noTax"> المبيعات(بدون ضريبة)</string>
     <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
     <string name="items">المواد</string>
     <string name="print">طباعة</string>
@@ -506,5 +506,6 @@
     <string name="ClearAll">حذف كل المواد</string>
     <string name="continousReadingBarcod">قراءة باركود متواصلة</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
+    <string name="doYouWantClearData">هل تريد مسح كل البيانات التي تم تصديرها؟؟</string>
 
 </resources>

@@ -183,6 +183,7 @@ public class SalesInvoice extends Fragment {
     LinearLayout linearRegulerOfferList;
     public  static int canChangePrice=0;
     ArrayList<serialModel>listTemporarySerial;
+    public  static  String ipValue="";
 
 
     //    public static  List<Item> jsonItemsList;
@@ -523,24 +524,35 @@ public class SalesInvoice extends Fragment {
         if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 0) {// first checking of cash
             credit.setChecked(true);
             payMethod = 0;
-            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
-            if (CustomerListShow.paymentTerm == 1)// second check from customer table
-            {
-                cash.setChecked(true);
-                payMethod = 1;
-
-
-            } else {
-                credit.setChecked(true);
-                payMethod = 0;
-
-            }
+//            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
+//            if (CustomerListShow.paymentTerm == 1)// second check from customer table
+//            {
+//                cash.setChecked(true);
+//                payMethod = 1;
+//
+//
+//            } else {
+//                credit.setChecked(true);
+//                payMethod = 0;
+//
+//            }
             Log.e("getPaymethodCheck",""+payMethod);
 
         } else {
 
             cash.setChecked(true);
             payMethod = 1;
+//            if (CustomerListShow.paymentTerm == 1)// second check from customer table
+//            {
+//                cash.setChecked(true);
+//                payMethod = 1;
+//
+//
+//            } else {
+//                credit.setChecked(true);
+//                payMethod = 0;
+//
+//            }
 
 
         }
@@ -735,7 +747,7 @@ public class SalesInvoice extends Fragment {
 
         }
 
-
+        ipValue=mDbHandler.getAllSettings().get(0).getIpAddress();
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         String vn = voucherNumber + "";
