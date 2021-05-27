@@ -33,6 +33,8 @@
     <string name="app_sign_in_visit">Customer Check In</string>
     <string name="app_sign_out_visit">Customer Check Out</string>
 
+    <string name="serialcode"> Serial Code</string>
+    <string name="kindvoucher">Kind Voucher</string>
     <string name="app_select_cust">Select Customer</string>
     <string name="app_enter_cust_code">Enter Customer Code</string>
     <string name="app_Confirm">Confirm</string>
@@ -426,6 +428,8 @@
     <string name="solidQty">Solid Qty</string>
     <string name="readOfferFromAdmin">Offer and price From Admin</string>
     <string name="itemImportfromadmin">Import price from Admin?</string>
+    <string name="serialreport">Serial Report</string>
+
     <string name="no">No</string>
     <string name="invalidPassword">Invalid Password</string>
     <string name="Reguler_Offer">Reguler / Offer</string>

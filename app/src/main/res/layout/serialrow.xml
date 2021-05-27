@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/SE_voucherdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="voucher_date"
+
+                android:textColor="@color/colorblue_dark"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+
+
+            <TextView
+                android:id="@+id/SE_vocherkind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="kindvoucher"
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold" />
+
+
+
+
+            <TextView
+                android:id="@+id/SE__serialcode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_weight=".8"
+                android:gravity="right"
+                android:text="serialcode"
+
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold" />
+
+
+
+            <TextView
+                android:id="@+id/SE__itemnum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_weight=".8"
+                android:gravity="center"
+                android:text="item_number"
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold" />
+
+
+
+            <TextView
+        android:id="@+id/SE_vochernum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="voucherNo"
+        android:textColor="@color/colorblue_dark"
+        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/SE_exportexcel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:elevation="2dp"
+            android:gravity="center"
+            android:inputType="text"
+            android:padding="3dp"
+            android:drawableEnd="@drawable/ic_scan_black_24dp"
+            android:textSize="14sp"
+            android:drawableRight="@drawable/ic_scan_black_24dp" />
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

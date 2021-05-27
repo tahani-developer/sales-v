@@ -42,7 +42,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class Reports extends AppCompatActivity {
 
 
-    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,return_report;
+    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,return_report,serial_report;
 
     DatabaseHandler MHandler;
     LinearLayout inventory_layout,mainLayout;
@@ -87,9 +87,11 @@ public class Reports extends AppCompatActivity {
         transactions_report = (LinearLayout) findViewById(R.id.transactions_report);
         return_report = (LinearLayout) findViewById(R.id.return_report);
         Inventory_report = (LinearLayout) findViewById(R.id.inventory_report);
+        serial_report = (LinearLayout) findViewById(R.id.serial_report);
         stock_request_report = (LinearLayout) findViewById(R.id.stock_request_report);
         cash_reoprt = (LinearLayout) findViewById(R.id.cash_report);
         customer_log_report.setOnClickListener(onClickListener);
+        serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
         transactions_report.setOnClickListener(onClickListener);
         return_report.setOnClickListener(onClickListener);
@@ -109,6 +111,7 @@ public class Reports extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
+
                 case R.id.customer_log_report:
                     Intent intent1 = new Intent(Reports.this, CustomerLogReport.class);
                     startActivity(intent1);
@@ -132,6 +135,12 @@ public class Reports extends AppCompatActivity {
                     Intent intent5 = new Intent(Reports.this, InventoryReport.class);
                     startActivity(intent5);
                     break ;
+
+                case R.id.serial_report:
+                {Intent intent = new Intent(Reports.this, SerialReport.class);
+                    startActivity(intent);
+                    break ;}
+
                 case R.id.cash_report:
                     if(settings.size()!=0){
                         if(MHandler.getAllSettings().get(0).getLock_cashreport()==1) {

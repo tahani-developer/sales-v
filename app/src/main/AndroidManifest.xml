@@ -16,16 +16,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Reports.SerialReport"></activity>
+        <activity android:name=".Reports.SerialReport"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".UnCollectedData"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
-
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Stock_Activity"
             android:label="@string/app_request"
             android:windowSoftInputMode="stateHidden" />
-
         <activity android:name=".CustomScannerActivity" />
         <activity
             android:name=".AccountStatment"
@@ -185,7 +185,6 @@
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
