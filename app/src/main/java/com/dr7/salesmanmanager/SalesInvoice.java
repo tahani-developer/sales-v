@@ -160,7 +160,7 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
-    int typeRequest = 0, haveResult = 0, approveAdmin = 0;
+    int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0;
     int counterSerial;
     LinearLayout mainRequestLinear_serial;
     LinearLayout resultLinear;
@@ -183,6 +183,7 @@ public class SalesInvoice extends Fragment {
     LinearLayout linearRegulerOfferList;
     public  static int canChangePrice=0;
     ArrayList<serialModel>listTemporarySerial;
+    public  static  String ipValue="";
 
 
     //    public static  List<Item> jsonItemsList;
@@ -200,7 +201,7 @@ public class SalesInvoice extends Fragment {
     static int index;
     public static List<Payment> payment_unposted;
     public static List<Voucher> sales_voucher_unposted;
-    public List<QtyOffers> list_discount_offers;
+    public List<QtyOffers> list_discount_offers;// offer by pay method
     public List<ItemsQtyOffer> itemsQtyOfferList;
     double max_cridit, available_balance, account_balance, cash_cridit, unposted_sales_vou, unposted_payment, unposted_voucher;
     public ListView itemsListView;
@@ -523,24 +524,35 @@ public class SalesInvoice extends Fragment {
         if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 0) {// first checking of cash
             credit.setChecked(true);
             payMethod = 0;
-            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
-            if (CustomerListShow.paymentTerm == 1)// second check from customer table
-            {
-                cash.setChecked(true);
-                payMethod = 1;
-
-
-            } else {
-                credit.setChecked(true);
-                payMethod = 0;
-
-            }
+//            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
+//            if (CustomerListShow.paymentTerm == 1)// second check from customer table
+//            {
+//                cash.setChecked(true);
+//                payMethod = 1;
+//
+//
+//            } else {
+//                credit.setChecked(true);
+//                payMethod = 0;
+//
+//            }
             Log.e("getPaymethodCheck",""+payMethod);
 
         } else {
 
             cash.setChecked(true);
             payMethod = 1;
+//            if (CustomerListShow.paymentTerm == 1)// second check from customer table
+//            {
+//                cash.setChecked(true);
+//                payMethod = 1;
+//
+//
+//            } else {
+//                credit.setChecked(true);
+//                payMethod = 0;
+//
+//            }
 
 
         }
@@ -735,7 +747,7 @@ public class SalesInvoice extends Fragment {
 
         }
 
-
+        ipValue=mDbHandler.getAllSettings().get(0).getIpAddress();
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         String vn = voucherNumber + "";
@@ -1568,7 +1580,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView = (TextView) view.findViewById(R.id.netSalesTextView1);
         maxDiscount = (ImageButton) view.findViewById(R.id.max_disc);// the max discount for this customer
         maxDiscount.setVisibility(View.GONE);
-        readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
+        //readNewDiscount=(CheckBox) view.findViewById(R.id.readNewDiscount);
         priceListNo=(TextView) view.findViewById(R.id.priceListNo);
         linearRegulerOfferList=(LinearLayout) view.findViewById(R.id.linearRegulerOfferList);
         if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
@@ -3014,7 +3026,7 @@ public class SalesInvoice extends Fragment {
         LinearLayout   bonusLinearLayout,_linear_switch,discount_linear,linear_bonus,mainRequestLinear,mainLinearAddItem;
        listTemporarySerial=new ArrayList<>();
         listTemporarySerial=getserialForItem(itemNo,priceUpdated);
-        counterSerial=listTemporarySerial.size();
+
         itemNoSelected=itemNo;
         Log.e("listTemporarySerial4",""+listTemporarySerial.size());
 
@@ -3093,11 +3105,12 @@ public class SalesInvoice extends Fragment {
         item_name.setText(items.get(position).getItemName());
 
         price.setText((items.get(position).getPrice()+""));
-        unitQtyEdit.setText(listTemporarySerial.size()+"");
+       countNormalQty= getNumberOfNormalQty(listTemporarySerial);
+        unitQtyEdit.setText(countNormalQty+"");
         textQty.setText(context.getResources().getString(R.string.qty));
         unitQtyEdit.setEnabled(false);
         unitQtyEdit.setAlpha(0.8f);
-
+        counterSerial=countNormalQty;
         _linear_switch.setVisibility(View.GONE);
         
 
@@ -3138,6 +3151,7 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View view) {
                 if(verifyNotEmpty(listTemporarySerial)){
+                    countNormalQty= getNumberOfNormalQty(listTemporarySerial);
                     if( updateListSerialTotal(listTemporarySerial,position,priceUpdated))
                     {   editOpen=false;
                         dialog.dismiss();}
@@ -3189,7 +3203,7 @@ public class SalesInvoice extends Fragment {
                 serial.setItemNo(itemNo);
                 serial.setPriceItem(items.get(position).getPrice());
                 listTemporarySerial.add(serial);
-                unitQtyEdit.setText(listTemporarySerial.size() + "");
+                unitQtyEdit.setText(counterSerial + "");
 
 
 
@@ -3265,6 +3279,18 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    private int getNumberOfNormalQty(ArrayList<serialModel> listTemporarySerial) {
+        int qty=0;
+        for(int i=0;i<listTemporarySerial.size();i++)
+        {
+            if(listTemporarySerial.get(i).getIsBonus().equals("0"))
+            {
+                qty++;
+            }
+        }
+        return  qty;
+    }
+
     private boolean verifyNotEmpty(ArrayList<serialModel> listTemporarySerial) {
         for(int i=0;i<listTemporarySerial.size();i++)
         {
@@ -3281,14 +3307,17 @@ public class SalesInvoice extends Fragment {
     private boolean updateListSerialTotal(ArrayList<serialModel> listTemporarySerial,int position,float price) {
         if(listTemporarySerial.size()!=0)
         {
+            countBunosQty=listTemporarySerial.size()-countNormalQty;
             deleteFromListMasterSerial(listTemporarySerial.get(0).getItemNo(),price);
             addForListMasterSerial(listTemporarySerial);
-            updateQtyInItemsList(listTemporarySerial.size(),position);
+            updateQtyInItemsList(countNormalQty,countBunosQty,position);
             for(int k=0;k<listMasterSerialForBuckup.size();k++)
             {
                 mDbHandler.add_SerialBackup(listMasterSerialForBuckup.get(k),0);
             }
-            updateQtyBasket();
+            updateQtyBasket();// check item amount
+            updateAmount(position);
+            calculateTotals();
          return  true;
         }
         else {// empty List
@@ -3303,18 +3332,27 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    private void updateAmount(int position) {
+        if (items.get(position).getDiscType() == 0)
+            items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+        else
+            items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+    }
+
     public void updateQtyBasket() {
         float qty=0;
         total_items_quantity=0;
         for(int i=0;i<items.size();i++){
             qty+=items.get(i).getQty();
         }
+
         addQtyTotal(qty);
     }
 
-    private void updateQtyInItemsList(int size, int position) {
+    private void updateQtyInItemsList(int size,int bunos, int position) {
         items.get(position).setQty(size);
         //itemsListAdapter.setItemsList(items);
+        items.get(position).setBonus(bunos);
         itemsListAdapter.notifyDataSetChanged();
     }
 
@@ -3587,15 +3625,15 @@ public class SalesInvoice extends Fragment {
                 disc_items_value = 0;
 
                 if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+
                     for (int b = 0; b < items.size(); b++) {
-
-
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
                             disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
                                 disount_totalnew = 0;
                                 items.get(b).setDisc(disount_totalnew);
+                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
                                 itemsListView.setAdapter(itemsListAdapter);
 
                             }
@@ -3641,13 +3679,13 @@ public class SalesInvoice extends Fragment {
                         }
                     }
                 }
+
             }
 //            }
             //**********************************************************************************************************************************************
 
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
-            Log.e("disc_items_total ", " " + disc_items_total);
 
 
             if (discount_oofers_total_cash > 0)
@@ -3658,7 +3696,6 @@ public class SalesInvoice extends Fragment {
 
             try {
                 totalDiscount += sum_discount;
-                Log.e("totalDiscount", "" + totalDiscount);
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
@@ -3709,7 +3746,7 @@ public class SalesInvoice extends Fragment {
             } catch (Exception e) {
                 limit_offer = 0;
             }
-            Log.e("limit_offer", "" + limit_offer);
+
             for (int i = 0; i < items.size(); i++) {
                 discount_oofers_total_cash = 0;
                 discount_oofers_total_credit = 0;
@@ -3722,11 +3759,12 @@ public class SalesInvoice extends Fragment {
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
                             disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
-                            Log.e("disc_items_value ", " " + disc_items_value);
+
 
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
                                 disount_totalnew = 0;
                                 items.get(b).setDisc(disount_totalnew);
+                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
                                 itemsListView.setAdapter(itemsListAdapter);
 
                             }
@@ -3838,7 +3876,6 @@ public class SalesInvoice extends Fragment {
 
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
-            Log.e("disc_items_total ", " " + disc_items_total);
 
 
             if (discount_oofers_total_cash > 0)
@@ -3956,10 +3993,10 @@ public class SalesInvoice extends Fragment {
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
             for (int i = 0; i < offers_ItemsQtyOffer.size(); i++) {
-                Log.e("log2 ", date + "  " + offers_ItemsQtyOffer.get(i).getFromDate() + " " + offers_ItemsQtyOffer.get(i).getToDate());
                 if (itemNo.equals(offers_ItemsQtyOffer.get(i).getItem_no()) &&
                         (formatDate(date).after(formatDate(offers_ItemsQtyOffer.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers_ItemsQtyOffer.get(i).getFromDate()))) &&
                         (formatDate(date).before(formatDate(offers_ItemsQtyOffer.get(i).getToDate())) || formatDate(date).equals(offers_ItemsQtyOffer.get(i).getToDate()))) {
+                    Log.e("log2Trueee", date + "  " + offers_ItemsQtyOffer.get(i).getFromDate() + " " + offers_ItemsQtyOffer.get(i).getToDate());
 
                     return true;
                 }

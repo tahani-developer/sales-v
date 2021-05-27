@@ -826,7 +826,7 @@ public class Activities extends AppCompatActivity implements
                 Log.e("Activities1", "onActivityResult" + Result.getContents());
 
                 try {
-                    serialBarcode = Result.getContents();
+                    serialBarcode = Result.getContents().trim();
                 }
                 catch (Exception e){
                     serialBarcode="";
@@ -835,15 +835,15 @@ public class Activities extends AppCompatActivity implements
                 }
 
                  try {
-                     String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode.trim()+"");
+                     String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode.trim());
                      if(voucherType==504)
                      {
                          if((ItemNo.equals("not")||databaseHandler.getLastTransactionOfSerial(serialBarcode.trim()).equals("506")))
                          {
-                             if((databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==504)||
-                                     (!databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==506))
+                             if((databaseHandler.isSerialCodePaied(serialBarcode.trim()).equals("not")&&voucherType==504)||
+                                     (!databaseHandler.isSerialCodePaied(serialBarcode.trim()).equals("not")&&voucherType==506))
                              {
-                                 if(checkInTotalList(serialBarcode.trim()+""))
+                                 if(checkInTotalList(serialBarcode.trim()))
                                  {
                                      serialValue.setText(serialBarcode.toString().trim());
                                  }
@@ -858,7 +858,7 @@ public class Activities extends AppCompatActivity implements
                              }
                              else {
                                      try {
-                                         String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode.trim()+"");
+                                         String voucherNo=databaseHandler.isSerialCodePaied(serialBarcode.trim());
                                          String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
                                          voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
 
@@ -916,9 +916,9 @@ public class Activities extends AppCompatActivity implements
                          }
                      }
                      else {// vouchertype=506
-                         if( (!databaseHandler.isSerialCodePaied(serialBarcode.trim()+"").equals("not")&&voucherType==506))
+                         if( (!databaseHandler.isSerialCodePaied(serialBarcode.trim()).equals("not")&&voucherType==506))
                          {
-                             if(checkInTotalList(serialBarcode.trim()+""))
+                             if(checkInTotalList(serialBarcode.trim()))
                              {
                                  serialValue.setText(serialBarcode.toString().trim());
                              }
@@ -991,7 +991,7 @@ public class Activities extends AppCompatActivity implements
     private boolean checkInTotalList(String s) {
         boolean existInTotal=false;
         if(listSerialTotal.size()!=0){
-            Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
+           // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
                 for(int j=0;j<listSerialTotal.size();j++)
                 {
                     if(listSerialTotal.get(j).getSerialCode().equals(s.toString().trim()))

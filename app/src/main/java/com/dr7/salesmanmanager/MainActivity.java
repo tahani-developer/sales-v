@@ -128,6 +128,7 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
@@ -599,8 +600,15 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            openPasswordDialog(1);
-//            openPasswordDialog(10);// from admin
+            if(typaImport==0)// my sql ----> exist admin
+            {
+                openPasswordDialog(1);
+//                            openPasswordDialog(10);// from admin
+            }else {
+                openPasswordDialog(1);
+            }
+
+
 
         } else if (id == R.id.action_print_voucher) {
             Intent intent = new Intent(MainActivity.this, PrintVoucher.class);
@@ -1079,17 +1087,19 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setNegativeButton("Cancel", null).show();
 
-        } else if (id == R.id.customers_location) {
-//            locationPermissionRequest.closeLocation();
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.sales_man_map) {
-//            locationPermissionRequest.closeLocation();
-            Intent intent = new Intent(this, SalesmanMap.class);
-            startActivity(intent);
-
         }
+//        else
+//            if (id == R.id.customers_location) {
+////            locationPermissionRequest.closeLocation();
+//            Intent intent = new Intent(this, MapsActivity.class);
+//            startActivity(intent);
+//
+//        } else if (id == R.id.sales_man_map) {
+////            locationPermissionRequest.closeLocation();
+//            Intent intent = new Intent(this, SalesmanMap.class);
+//            startActivity(intent);
+//
+//        }
 
 //                else{
 //
@@ -1201,7 +1211,9 @@ public class MainActivity extends AppCompatActivity
 //        }
         else if (id == R.id.nav_clear_local) {
 //            locationPermissionRequest.closeLocation();
-            mDbHandler.deleteAllPostedData();
+
+            passwordDataClearDialog();
+
         }
         else if (id == R.id.nav_unCollectedchecked) {
           //  locationPermissionRequest.closeLocation();
@@ -1241,6 +1253,32 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void passwordDataClearDialog() {
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+                    mDbHandler.deleteAllPostedData();
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+                else {
+                    editText.setError("Incorrect");
+                }
+            }
+        })
+
+                .show();
     }
 //
 //      if(getTypeImport().equals("1"))
@@ -1920,6 +1958,7 @@ public class MainActivity extends AppCompatActivity
             exportData = new ExportJason(MainActivity.this);
             exportData.getPassowrdSetting();
         } catch (JSONException e) {
+            passwordFromAdmin.setText("2021000");
             e.printStackTrace();
         }
 
@@ -2695,11 +2734,13 @@ public class MainActivity extends AppCompatActivity
                         String companyNote = noteInvoice.getText().toString();
 
                         mDbHandler.deleteAllCompanyInfo();
-                        Log.e("itemBitmapPic","getByteCount1="+itemBitmapPic.getByteCount());
+                        if(itemBitmapPic!=null)
+                        {
+                            itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
+                        }
 
-                        itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
-                        Log.e("itemBitmapPic","getByteCount2="+itemBitmapPic.getByteCount());
-                        Log.e("getlocationForCheckIn",""+longitude_main+latitudeCheckIn);
+
+
                         mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0);
                         try {
                             if(isNetworkAvailable())
@@ -2810,7 +2851,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
-        CheckBox short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        CheckBox short_Invoice,dontPrintHeader;
+
+        short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
 
@@ -2865,6 +2909,10 @@ if(printer.size()!=0) {
         short_Invoice.setChecked(false);
     }
     else { short_Invoice.setChecked(true);}
+    if(printer.get(0).getDontPrintHeader()==0){
+        dontPrintHeader.setChecked(false);
+    }
+    else dontPrintHeader.setChecked(true);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -2885,43 +2933,54 @@ if(printer.size()!=0) {
 
                 if (lk30.isChecked()) {
                     printerSetting.setPrinterName(0);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk30");
                 } else if (lk31.isChecked()) {
                     printerSetting.setPrinterName(1);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk31");
                 } else if (lk32.isChecked()) {
                     printerSetting.setPrinterName(2);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "lk32");
                 } else if (qs.isChecked()) {
                     printerSetting.setPrinterName(3);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "qs");
                 }else if (dotMatrix.isChecked()) {
                     printerSetting.setPrinterName(4);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "dotMatrix");
                 }else if (MTPPrinter.isChecked()) {
                 printerSetting.setPrinterName(5);
-                mDbHandler.addPrinterSeting(printerSetting);
+
                 Log.e("click ", "mtp");
             }
                 else if (innerPrinter.isChecked()) {
                     printerSetting.setPrinterName(6);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                     Log.e("click ", "mtp");
                 }
                 if(short_Invoice.isChecked())
                 {
                     printerSetting.setShortInvoice(1);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                 }
                 else {
                     printerSetting.setShortInvoice(0);
-                    mDbHandler.addPrinterSeting(printerSetting);
+
                 }
+                if(dontPrintHeader.isChecked())
+                {
+                    printerSetting.setDontPrintHeader(1);
+
+                }
+                else {
+                    printerSetting.setDontPrintHeader(0);
+
+                }
+
+                mDbHandler.addPrinterSeting(printerSetting);
                 Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
 dialog.dismiss();
             }

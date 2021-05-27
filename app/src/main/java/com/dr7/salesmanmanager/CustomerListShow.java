@@ -72,6 +72,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.typaImport;
 
 public class CustomerListShow extends DialogFragment {
     private String URL_TO_HIT = "";
@@ -320,8 +321,17 @@ public class CustomerListShow extends DialogFragment {
                     URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
                     if (isInternetAccessed()) {
                         try {
-//                            new JSONTask().execute(URL_TO_HIT);
-                            new JSONTaskDelphi().execute(URL_TO_HIT);
+                            if(typaImport==0)//mysql
+                            {
+                                new JSONTask().execute(URL_TO_HIT);
+                            }else {
+                                if(typaImport==1)//IIOs
+                                {
+                                    new JSONTaskDelphi().execute(URL_TO_HIT);
+                                }
+                            }
+//
+
 
                         }
                         catch (Exception e)

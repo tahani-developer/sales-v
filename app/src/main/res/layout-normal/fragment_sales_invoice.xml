@@ -121,7 +121,7 @@
                         android:text="@string/save"
                         android:gravity="top|center"
                         android:textColor="@color/colorblue1"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
 
@@ -296,7 +296,7 @@
                                 android:layout_marginLeft="1dp"
                                 android:text="@string/app_credit"
                                 android:textColor="@color/text_view_color"
-                                android:textSize="10sp" />
+                                android:textSize="12sp" />
 
                             <RadioButton
                                 android:id="@+id/cashRadioButton"
@@ -306,7 +306,7 @@
                                 android:checked="true"
                                 android:text="@string/app_cash"
                                 android:textColor="@color/text_view_color"
-                                android:textSize="10sp" />
+                                android:textSize="12sp" />
                         </RadioGroup>
 
                         <LinearLayout
@@ -359,7 +359,7 @@
                                     android:checked="true"
                                     android:text="@string/app_sales_inv2"
                                     android:textColor="@color/text_view_color"
-                                    android:textSize="9sp" />
+                                    android:textSize="10sp" />
 
                                 <RadioButton
                                     android:id="@+id/retSalesRadioButton"
@@ -369,7 +369,7 @@
                                     android:checked="false"
                                     android:text="@string/app_ret_inv2"
                                     android:textColor="@color/text_view_color"
-                                    android:textSize="9sp" />
+                                    android:textSize="10sp" />
 
 
                             <RadioButton
@@ -380,7 +380,7 @@
                                 android:checked="false"
                                 android:text="@string/app_cust_order2"
                                 android:textColor="@color/text_view_color"
-                                android:textSize="9sp" />
+                                android:textSize="10sp" />
 
                         </RadioGroup>
                         </LinearLayout>
@@ -420,8 +420,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="2.5"
-                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1.8"
+                        android:layout_marginBottom="1dp"
                         android:background="@drawable/back_border_edit"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -442,42 +442,44 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="3dp"
-                            android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/row5uil"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:visibility="invisible"
-                        android:layout_marginBottom="5dp"
-                        android:background="@drawable/back_border_edit"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/app_remark"
+                            android:maxLines="2"
+                            android:inputType="text"
                             android:textColor="@color/text_view_color"
-                            android:textSize="12sp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/remarkEditTeiouxt"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="3dp"
-                            android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/row5uil"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_weight="2"-->
+<!--                        android:visibility="invisible"-->
+<!--                        android:layout_marginBottom="5dp"-->
+<!--                        android:background="@drawable/back_border_edit"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="@string/app_remark"-->
+<!--                            android:textColor="@color/text_view_color"-->
+<!--                            android:textSize="12sp"-->
+<!--                            android:layout_marginRight="5dp"-->
+<!--                            android:layout_marginLeft="5dp"-->
+<!--                            android:textStyle="bold" />-->
+
+<!--                        <EditText-->
+<!--                            android:id="@+id/remarkEditTeiouxt"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_marginLeft="3dp"-->
+<!--                            android:textColor="@color/colorblue_dark"-->
+<!--                            android:textSize="12sp" />-->
+
+<!--                    </LinearLayout>-->
                 </LinearLayout>
                 </ScrollView>
 
@@ -603,7 +605,7 @@
             <!--            android:gravity="center_vertical"-->
             <!--            android:text=""-->
             <!--            android:textColor="@color/colorPrimaryDark"-->
-            <!--            android:textSize="10sp" />-->
+            <!--            android:textSize="12sp" />-->
             <!--        </LinearLayout>-->
             <!--        <LinearLayout-->
             <!--            android:layout_height="wrap_content"-->
@@ -635,7 +637,7 @@
             <!--            android:text=""-->
             <!--            android:gravity="center_vertical"-->
             <!--            android:textColor="@color/colorPrimaryDark"-->
-            <!--            android:textSize="10sp" />-->
+            <!--            android:textSize="12sp" />-->
             <!--        </LinearLayout>-->
 
             <!--&lt;!&ndash;        <ImageButton&ndash;&gt;-->
@@ -679,7 +681,7 @@
                     android:visibility="gone"
                     android:text="@string/app_item_no"
                     android:textColor="@color/text_view_color"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -718,7 +720,7 @@
                     android:visibility="gone"
                     android:text="@string/app_bonus"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -728,7 +730,7 @@
                     android:text="@string/app_line_disc"
                     android:visibility="gone"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
 
@@ -770,7 +772,16 @@
                     <ListView
                         android:id="@+id/itemsListView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"/>
+                    <TextView
+
+                        android:layout_height="match_parent"
+                        android:text="@string/emptyList"
+                        android:visibility="invisible"
+                        android:background="@color/yelow"
+                        android:layout_weight="12"
+                        android:layout_width="match_parent"/>
 
 
                 </LinearLayout>
@@ -799,7 +810,7 @@
                             android:layout_weight="1"
                             android:text="@string/app_sub_total"
                             android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -810,7 +821,7 @@
 
                             android:text="@string/app_zero"
                             android:textColor="@color/amountColor"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="0.000" />
 
@@ -829,7 +840,7 @@
                             android:layout_weight="1"
                             android:text="@string/app_disc"
                             android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="@string/app_disc" />
 
@@ -841,7 +852,7 @@
 
                             android:text="@string/app_zero"
                             android:textColor="@color/amountColor"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="0.000" />
                     </LinearLayout>
@@ -859,7 +870,7 @@
                             android:layout_weight="1"
                             android:text="@string/app_tax"
                             android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="@string/app_tax" />
 
@@ -870,7 +881,7 @@
                             android:layout_weight="1"
                             android:text="@string/app_zero"
                             android:textColor="@color/amountColor"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="0.000" />
 
@@ -888,7 +899,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/app_net_sales"
                             android:textColor="@color/colorblue_dark"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -897,7 +908,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/app_zero"
                             android:textColor="@color/amountColor"
-                            android:textSize="10sp"
+                            android:textSize="12sp"
                             android:textStyle="bold"
                             tools:text="0.000" />
                     </LinearLayout>

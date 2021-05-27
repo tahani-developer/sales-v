@@ -61,6 +61,14 @@
             android:layout_weight="1"
             android:text="Large Name" />
     </RadioGroup>
+    <CheckBox
+        android:id="@+id/dontPrintheader_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="@string/dontShowHeader"
+        android:textColor="@color/text_view_color"
+        android:textSize="14sp" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

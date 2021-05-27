@@ -134,6 +134,7 @@ public class AddItemsFragment extends DialogFragment {
                             item.setDiscPerc("0%");
                         }
 
+                        Log.e("setDisc1",""+item.getDisc());
                         try {
                             if (item.getDiscType() == 0) {
                                 item.setAmount(item.getQty() * item.getPrice() - item.getDisc());

@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
@@ -70,6 +71,7 @@ public class VouchersReport extends AppCompatActivity {
     double subTotal = 0 , tax = 0 , netSales = 0;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
 
+    GeneralMethod generalMethod;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -97,6 +99,7 @@ public class VouchersReport extends AppCompatActivity {
         }
         decimalFormat = new DecimalFormat("##.000");
         inflateBoomMenu();
+        generalMethod=new GeneralMethod(VouchersReport.this);
 
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
@@ -355,13 +358,14 @@ public class VouchersReport extends AppCompatActivity {
                             ""};
 
                     double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
-                    record[4] = calTotalSales + "";
+                    record[4] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales ));
 
                     TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                     row.setLayoutParams(lp);
 
                     TextView textView = new TextView(VouchersReport.this);
                     textView.setText(record[i]);
+                    textView.setTextSize(12);
                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 

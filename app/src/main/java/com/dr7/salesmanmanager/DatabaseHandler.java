@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 138;
+    private static final int DATABASE_VERSION = 139;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -186,6 +186,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SETTING ="PRINTER_SETTING";
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
     private static final String SHORT_INVOICE ="SHORT_INVOICE";
+    private static final String DONT_PRINT_HEADER ="DONT_PRINT_HEADER";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -760,7 +761,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
                 + PRINTER_SETTING +" INTEGER ,"
                 + PRINTER_SHAPE + " INTEGER,"
-                + SHORT_INVOICE + " INTEGER"
+                + SHORT_INVOICE + " INTEGER,"
+                + DONT_PRINT_HEADER + " INTEGER"
+
                 + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1484,6 +1487,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString()+"SHORT_INVOICE");
         }
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD DONT_PRINT_HEADER  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
+        }
 
         try {
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
@@ -2066,6 +2075,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(PRINTER_SETTING,printer.getPrinterName());
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
         values.put(SHORT_INVOICE,printer.getShortInvoice());
+        values.put(DONT_PRINT_HEADER,printer.getDontPrintHeader());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -4270,6 +4280,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 printerSetting.setPrinterName(cursor.getInt(0));
                 printerSetting.setPrinterShape(cursor.getInt(1));
                 printerSetting.setShortInvoice(cursor.getInt(2));
+                printerSetting.setDontPrintHeader(cursor.getInt(3));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
