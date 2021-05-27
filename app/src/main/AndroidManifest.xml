@@ -5,36 +5,6 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
-
-    <supports-screens
-        android:anyDensity="true"
-        android:compatibleWidthLimitDp="800"
-        android:largeScreens="true"
-        android:largestWidthLimitDp="1200"
-        android:normalScreens="true"
-        android:requiresSmallestWidthDp="800"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="true" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -46,25 +16,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".UnCollectedData"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-        </activity>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.dr7.salesmanmanager.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
-        </provider>
+        <activity android:name=".Reports.SerialReport"></activity>
+        <activity
+            android:name=".UnCollectedData"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
 
         <activity
             android:name=".Stock_Activity"
             android:label="@string/app_request"
             android:windowSoftInputMode="stateHidden" />
+
         <activity android:name=".CustomScannerActivity" />
         <activity
             android:name=".AccountStatment"
@@ -72,13 +33,12 @@
         <activity android:name=".SmallCaptureActivity" />
         <activity
             android:name=".ScanActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Reports.AccountReport"
             android:label="@string/title_activity_main"
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".Splashscreen" />
         <activity android:name=".bluetoothprinter" />
         <activity
@@ -101,12 +61,12 @@
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize" /> <!-- android:windowSoftInputMode="stateHidden" -->
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".PrintVoucher"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustNothing" />
+            android:windowSoftInputMode="adjustNothing" /> <!-- android:windowSoftInputMode="stateHidden" -->
         <activity
             android:name=".Reports.Reports"
             android:configChanges="locale"
@@ -165,15 +125,15 @@
             android:name=".BluetoothConnectMenu"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
-            android:theme="@android:style/Theme.Dialog" /> <!-- <activity -->
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- <activity -->
         <!-- android:name=".CPCL2Menu" -->
         <!-- android:label="@string/title_activity_main" -->
         <!-- android:screenOrientation="landscape" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SalesmanMap"
             android:label="@string/title_activity_main"
@@ -188,22 +148,60 @@
             android:excludeFromRecents="true"
             android:label="@string/title_activity_main"
             android:theme="@android:style/Theme.Dialog" />
-
-
-        <!-- defining the service class here -->
-        <!--            android:launchMode="singleTask"-->
-        <service android:name=".MyServices"
-            android:foregroundServiceType="location"
-            android:enabled="true"
-            android:process=":MyServicesSalesMan"
-            android:finishOnTaskLaunch="true"
-            android:stopWithTask="false"/>
-
-        <activity android:name=".noThingNotifi" />
-
+        <activity android:name=".noThingNotifi" /> <!-- defining the service class here -->
+        <!-- android:launchMode="singleTask" -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.dr7.salesmanmanager.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <service
+            android:name=".MyServices"
+            android:enabled="true"
+            android:finishOnTaskLaunch="true"
+            android:foregroundServiceType="location"
+            android:process=":MyServicesSalesMan"
+            android:stopWithTask="false" />
     </application>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:compatibleWidthLimitDp="800"
+        android:largeScreens="true"
+        android:largestWidthLimitDp="1200"
+        android:normalScreens="true"
+        android:requiresSmallestWidthDp="800"
+        android:resizeable="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
 
 </manifest>
