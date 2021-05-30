@@ -509,5 +509,6 @@
     <string name="doYouWantClearData">هل تريد مسح كل البيانات التي تم تصديرها؟؟</string>
     <string name="kindvoucher">نوع االفاتورة</string>
     <string name="serialcode">السيريال كود</string>
+    <string name="search1">ابحث بواسطة السيريال كود أو رقم الفاتورة أو رقم المادة</string>
 
 </resources>

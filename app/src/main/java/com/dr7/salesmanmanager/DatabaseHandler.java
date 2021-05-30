@@ -5963,9 +5963,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<serialModel> getalllserialitems() {
         Log.e("getalllserialitems","getalllserialitems");
         List<serialModel> seriallistList = new ArrayList<>();
-        String Date_Vocher=getCurentTimeDate(1);
-        //String Date_Vocher="14/02/2021";
-        String selectQuery = "select DATE_VOUCHER,KIND_VOUCHER,SERIAL_CODE_NO,ITEMNO_SERIAL,VOUCHER_NO  from SERIAL_ITEMS_TABLE WHERE DATE_VOUCHER='"+Date_Vocher+"'";
+       // String Date_Vocher=getCurentTimeDate(1);
+       // String Date_Vocher="14/02/2021";
+        //        String selectQuery = "select DATE_VOUCHER,KIND_VOUCHER,SERIAL_CODE_NO,ITEMNO_SERIAL,VOUCHER_NO  from SERIAL_ITEMS_TABLE WHERE DATE_VOUCHER='"+Date_Vocher+"'";
+        String selectQuery = "select DATE_VOUCHER,KIND_VOUCHER,SERIAL_CODE_NO,ITEMNO_SERIAL,VOUCHER_NO  from SERIAL_ITEMS_TABLE";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 

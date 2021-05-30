@@ -429,7 +429,7 @@
     <string name="readOfferFromAdmin">Offer and price From Admin</string>
     <string name="itemImportfromadmin">Import price from Admin?</string>
     <string name="serialreport">Serial Report</string>
-
+    <string name="search1">search by serial code or itemNo or voucherNo</string>
     <string name="no">No</string>
     <string name="invalidPassword">Invalid Password</string>
     <string name="Reguler_Offer">Reguler / Offer</string>

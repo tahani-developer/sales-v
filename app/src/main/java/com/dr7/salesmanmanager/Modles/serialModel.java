@@ -5,6 +5,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 public class serialModel {
     private String  serialCode;
     private  int  counterSerial;
