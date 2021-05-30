@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
@@ -42,6 +43,7 @@ public class SerialReport extends AppCompatActivity {
     TextView searchicon;
     EditText searchedit;
     public EditText date;
+    TableRow tableRow;
 Button button;
     private Button preview;
     Calendar myCalendar;
@@ -63,9 +65,14 @@ Button button;
             if(allseriallist.get(i).getDateVoucher().equals( Date_Vocher))
             todayseariallist.add(allseriallist.get(i));
         }
-        fillAdapterData(todayseariallist);
 
 
+        if(todayseariallist.size()==0)tableRow.setVisibility(View.GONE);
+        else
+        { fillAdapterData(todayseariallist);
+
+            tableRow.setVisibility(View.VISIBLE);
+        }
 
 
 
@@ -104,9 +111,16 @@ Button button;
                     if (date.getText().toString().equals(allseriallist.get(i).getDateVoucher()))
                     datesearchlist.add(allseriallist.get(i));
                 }
-                fillAdapterData(datesearchlist);
+               if( allseriallist.size()!=0 ) {
+                   tableRow.setVisibility(View.VISIBLE);
+                   fillAdapterData(datesearchlist);
+               }
+                else
+                  {tableRow.setVisibility(View.GONE);}
+
                 }
         });
+        searchicon.setVisibility(View.INVISIBLE);
         searchicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -153,7 +167,11 @@ Button button;
 
 
     }
-        fillAdapterData(searchlist);}
+        if(allseriallist.size()>0){fillAdapterData(searchlist);
+        tableRow.setVisibility(View.VISIBLE);}
+    else
+        { tableRow.setVisibility(View.GONE);}
+    }
 
     private void init() {
         databaseHandler=new DatabaseHandler(SerialReport.this);
@@ -163,7 +181,7 @@ Button button;
         searchicon=findViewById(R.id.Search);
         date=findViewById(R.id.SE_date);
         preview=findViewById(R.id.SE_preview);
-
+tableRow=findViewById(R.id.serialtable);
 
         searchedit.addTextChangedListener(new TextWatcher() {
             @Override

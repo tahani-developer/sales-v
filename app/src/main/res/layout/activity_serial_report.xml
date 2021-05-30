@@ -111,6 +111,7 @@
                 android:layout_margin="2dp"
                 android:layout_gravity="center"
                 android:gravity="center"
+                    android:id="@+id/serialtable"
                 android:background="@color/colorblue_dark"
                 android:padding="2dp">
 
