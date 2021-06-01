@@ -119,10 +119,14 @@ public class ExportJason extends AppCompatActivity {
     public ExportJason(Context context) throws JSONException {
         this.context = context;
         this.mHandler = new DatabaseHandler(context);
-        ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
-        ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
+        if(mHandler.getAllSettings().size() != 0) {
+            ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+            ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
+            CONO=mHandler.getAllSettings().get(0).getCoNo();
+        }
+
         this.requestQueue = Volley.newRequestQueue(context);
-        CONO=mHandler.getAllSettings().get(0).getCoNo();
+
         SalesManLogin= mHandler.getAllUserNo();
         fillIpAddressWithPort();
     }
@@ -308,8 +312,8 @@ public class ExportJason extends AppCompatActivity {
 
     }
     void startExportDelPhi()throws JSONException {
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+//        headerDll="/Falcons/VAN.dll";
+        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();
 //        savePayment();
@@ -1759,7 +1763,21 @@ public class ExportJason extends AppCompatActivity {
 
 
     public void getPassowrdSetting() {
-        new JSONTask_getPassword().execute();
+        try {
+            new JSONTask_getPassword().execute();
+        }
+        catch (Exception e)
+        {
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    password.setError(null);
+                    passwordFromAdmin.setText("2021000");
+                    Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
     }
     private class JSONTask_getPassword extends AsyncTask<String, String, String> {
 
@@ -1790,7 +1808,14 @@ public class ExportJason extends AppCompatActivity {
             }
             catch (Exception e)
             {
-                passwordFromAdmin.setText("2021000");
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
+
+                    }
+                });
             }
             try {
 
@@ -1852,9 +1877,15 @@ public class ExportJason extends AppCompatActivity {
                 return null;
             } catch (Exception e) {
                 e.printStackTrace();
-                password.setError(null);
-                passwordFromAdmin.setText("2021000");
-//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
                 return null;
             }
         }

@@ -157,7 +157,7 @@ public class Payment {
     }
 
     public int getPayMethod() {
-        return payMethod;
+        return payMethod;//0= credit  1=cash 2=credit card
     }
 
     public void setPayMethod(int payMethod) {

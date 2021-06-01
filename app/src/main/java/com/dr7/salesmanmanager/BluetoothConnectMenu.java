@@ -924,6 +924,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
@@ -991,6 +992,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
         qtyTypeText.setText(typeQty+"");
         salesName.setText(obj.getAllSettings().get(0).getSalesMan_name());
@@ -1056,6 +1058,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
@@ -1124,6 +1127,7 @@ public class BluetoothConnectMenu extends Activity {
         textView_amount.setText( payforBank.getAmount()+"");
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
 
         if(obj.getAllSettings().get(0).getTafqit()==1&&valueCheckHidPrice!=1 )
@@ -1365,6 +1369,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
 
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
@@ -1590,6 +1595,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
 
         tel.setText("" + companyInfo.getcompanyTel());
+        if(companyInfo.getTaxNo()!=0)
         taxNo.setText("" + companyInfo.getTaxNo());
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
