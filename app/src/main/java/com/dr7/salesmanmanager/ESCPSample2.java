@@ -1961,7 +1961,7 @@ public class ESCPSample2
 			Log.e("payforBank 0000 ==>",""+payforBank.getPayMethod());
 		}
 		String salesmaname=obj.getSalesmanName();
-		
+
 		int nLineWidth = 550;
 		try {
 
