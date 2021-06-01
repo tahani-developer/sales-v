@@ -1733,6 +1733,7 @@ public class SalesInvoice extends Fragment {
                             salesMan, discountValue, discountPerc, remark, payMethod,
                             0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
                             CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
+                   ///  1 add time
                     if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
 
                         if (customer_is_authrized()) {

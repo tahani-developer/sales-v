@@ -2536,6 +2536,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void addVoucher(Voucher voucher) {
+        // 2 add time
 
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
