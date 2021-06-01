@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+    RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
     public static int menuItemState;
     String typeImport="";
@@ -255,6 +256,8 @@ public class MainActivity extends AppCompatActivity
 //        startActivity(getIntent());
 
         setContentView(R.layout.activity_main);
+
+        radioGroup=findViewById(R.id.radioGrp);
         checkInCheckOutLinear=findViewById(R.id.checkInCheckOutLinear);
         timeTextView=findViewById(R.id.timeTextView);
         Log.e("curentTimeMain",""+curentTime);
@@ -2749,9 +2752,13 @@ public class MainActivity extends AppCompatActivity
                             itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
                         }
 
-
-
-                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0);
+                      int position;
+                       int selectedId =   radioGroup.getCheckedRadioButtonId();
+                        if(selectedId==2131230897)
+                             position=0;
+                                     else
+                                         position=1;
+                        mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position);
                         try {
                             if(isNetworkAvailable())
                             {

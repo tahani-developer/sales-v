@@ -18,6 +18,9 @@
     <string name="app_daily_sales_d">التقرير المفصل للمبيعات اليومية</string>
     <string name="app_stock_onhand">تقرير المخزون في اليد</string>
     <string name="app_cust_log_rep">تقرير تسجيل دخول العملاء</string>
+    <string name="noteposition">موقع الملاحظة</string>
+    <string name="top">في الأعلى</string>
+    <string name="Bottom">في الأسفل</string>
     <string name="app_receipt">سند قبض</string>
 <!--    <string name="title_activity_main">الأتصال بالبلوتوث </string>-->
     <string name="credit_value">بطاقة ائتمانية</string>

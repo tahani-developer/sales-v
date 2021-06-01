@@ -389,7 +389,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
     private static final String LATITUDE_COMPANY  = "LATITUDE_COMPANY";
-
+    private static final String NOTEPOSITION  = "NOTEPOSITION";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
 
@@ -410,7 +410,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CUST_NAME = "CUST_NAME";
     private static final String CUST_NUMBER = "CUST_NUMBER";
     private static final String VOUCHER_YEAR = "VOUCHER_YEAR";
-
+    private static final String VOUCHER_time="VOUCHER_time";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_DETAILS = "SALES_VOUCHER_DETAILS";
 
@@ -1824,7 +1824,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
 
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  VOUCHER_time  TEXT  DEFAULT '' ");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
 
@@ -2511,7 +2517,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude) {
+    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude,int position) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2529,13 +2535,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(NOTE, note);
         values.put(LONGTUDE_COMPANY,longtude);
         values.put(LATITUDE_COMPANY,latitude);
-
+        values.put(NOTEPOSITION,position);
 
         db.insert(COMPANY_INFO, null, values);
         db.close();
     }
 
     public void addVoucher(Voucher voucher) {
+        // 2 add time
 
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -2557,6 +2564,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CUST_NAME, voucher.getCustName());
         values.put(CUST_NUMBER, voucher.getCustNumber());
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
+        values.put(VOUCHER_time, voucher.getTime());
         try {
 
             db.insert(SALES_VOUCHER_MASTER, null, values);
