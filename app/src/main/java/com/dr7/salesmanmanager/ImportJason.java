@@ -1240,6 +1240,7 @@ public class ImportJason extends AppCompatActivity {
                         item.setItemNo(finalObject.getString("ItemNo"));
                         item.setUnitId(finalObject.getString("UnitID"));
                         item.setConvRate(finalObject.getDouble("ConvRate"));
+                        item.setConvRate(finalObject.getDouble("ConvRate"));
 
                         itemUnitDetailsList.add(item);
                     }

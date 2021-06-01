@@ -32,6 +32,15 @@ public class Voucher {
     private int isPosted;
     private double totalQty;
     private int voucherYear;
+    private String time;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     // Empty constructor
     public Voucher() {
@@ -41,7 +50,7 @@ public class Voucher {
     public Voucher(int companyNumber, int voucherNumber, int voucherType, String VoucherDate, int saleManNumber,
                    double voucherDiscount, double voucherDiscountPercent, String remark, int payMethod, int isPosted ,
                    double totalVoucherDiscount , double subTotal ,double tax , double netSales , String custName ,
-                   String custNumber , int voucherYear) {
+                   String custNumber , int voucherYear, String Time) {
         this.companyNumber = companyNumber;
         this.voucherNumber = voucherNumber;
         this.voucherType = voucherType;
@@ -59,6 +68,7 @@ public class Voucher {
         this.custName = custName;
         this.custNumber = custNumber;
         this.voucherYear = voucherYear;
+        this.time=Time;
     }
 
     public Voucher(int companyNumber, int voucherNumber, String VoucherDate, int saleManNumber,

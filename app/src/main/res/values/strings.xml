@@ -16,6 +16,9 @@
     <string name="app_imp_data">Import Data</string>
     <string name="app_refresh_data">Refresh Data</string>
     <string name="app_exp_data">Export Data</string>
+    <string name="noteposition">note position</string>
+    <string name="top">Top</string>
+    <string name="Bottom">Bottom</string>
     <string name="app_clear_local">Clear Local Data</string>
     <string name="app_cash_report">Cash Report</string>
     <string name="app_daily_sales_s">Daily Sales Summary Report</string>

@@ -160,6 +160,8 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
+    SimpleDateFormat dateFormat, timeformat;
+    String dateCurent="",timevocher;
     int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0;
     int counterSerial;
     LinearLayout mainRequestLinear_serial;
@@ -1729,11 +1731,18 @@ public class SalesInvoice extends Fragment {
                     String remark = " " + remarkEditText.getText().toString();
                     salesMan = Integer.parseInt(Login.salesMan);
 
+                    ///  1 add time
+
+                    timevocher=getCurentTimeDate(2);
+
+
+
+
                     voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
                             salesMan, discountValue, discountPerc, remark, payMethod,
                             0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear));
-                   ///  1 add time
+                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear),timevocher);
+
                     if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
 
                         if (customer_is_authrized()) {
