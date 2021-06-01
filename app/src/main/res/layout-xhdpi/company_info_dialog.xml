@@ -41,13 +41,12 @@
 
         >
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
 
             >
 
@@ -72,24 +71,25 @@
                 android:id="@+id/com_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginEnd="5dp"
+                android:layout_margin="5dp"
+
                 android:background="@drawable/back_border_edit"
-                android:layout_marginRight="5dp"
+
                 android:text=""
                 android:textColor="@color/text_view_color"
                />
 
-        </TableRow>
+        </LinearLayout>
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
 
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
 
             >
 
@@ -107,24 +107,23 @@
                 android:id="@+id/com_tel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginEnd="5dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/back_border_edit"
                 android:inputType="number"
 
                 android:textColor="@color/text_view_color"
-                android:layout_marginRight="5dp" />
+               />
 
-        </TableRow>
+      </LinearLayout>
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_weight="2"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             >
 
             <TextView
@@ -142,24 +141,23 @@
                 android:id="@+id/tax_no"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+
                 android:gravity="center"
-                android:layout_marginRight="5dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/back_border_edit"
                 android:inputType="number"
 
                 android:textColor="@color/text_view_color" />
 
-        </TableRow>
+        </LinearLayout>
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_weight="1.5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             >
 
             <TextView
@@ -177,15 +175,17 @@
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
                 android:gravity="center"
+                android:text="yfgkuykiugjfjhfghfhvuygjhbyyfghvjyufghvbyfhvftghvg"
+                android:maxLines="3"
+                android:textSize="14sp"
                 android:background="@drawable/back_border_edit"
                 android:padding="5dp"
                 android:textColor="@color/text_view_color" />
 
-        </TableRow>
+        </LinearLayout>
 
 
 

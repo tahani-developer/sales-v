@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 //import android.support.annotation.Nullable;
@@ -128,6 +129,7 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 
@@ -600,10 +602,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            if(typaImport==0)// my sql ----> exist admin
+            if(passwordSettingAdmin==1)// 1 ----> exist admin
             {
-                openPasswordDialog(1);
-//                            openPasswordDialog(10);// from admin
+
+                            openPasswordDialog(10);// from admin
             }else {
                 openPasswordDialog(1);
             }
@@ -1958,8 +1960,13 @@ public class MainActivity extends AppCompatActivity
             exportData = new ExportJason(MainActivity.this);
             exportData.getPassowrdSetting();
         } catch (JSONException e) {
-            passwordFromAdmin.setText("2021000");
-            e.printStackTrace();
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                    password.setError(null);
+                    passwordFromAdmin.setText("2021000");
+                }
+            });
         }
 
     }
@@ -2670,6 +2677,9 @@ public class MainActivity extends AppCompatActivity
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
+            }
+            else {
+                tax.setText(0+"");
             }
         }catch ( Exception e){
 

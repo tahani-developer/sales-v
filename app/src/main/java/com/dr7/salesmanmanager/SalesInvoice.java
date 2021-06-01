@@ -3630,18 +3630,24 @@ public class SalesInvoice extends Fragment {
                     for (int b = 0; b < items.size(); b++) {
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
-                            disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
-                            if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
-                                disount_totalnew = 0;
-                                items.get(b).setDisc(disount_totalnew);
-                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
-                                itemsListView.setAdapter(itemsListAdapter);
 
+                            if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
+//                                disount_totalnew = 0;
+//                                items.get(b).setDisc(disount_totalnew);
+//                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
+//                                itemsListView.setAdapter(itemsListAdapter);
+
+                            }
+                            else {
+                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
+
+                                Log.e("disc_items_value","222="+disc_items_value);
                             }
 
 
 //
                         }
+
                     }
 
 
@@ -3759,17 +3765,39 @@ public class SalesInvoice extends Fragment {
 
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
-                            disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
 
 
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
-                                disount_totalnew = 0;
-                                items.get(b).setDisc(disount_totalnew);
-                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
-                                itemsListView.setAdapter(itemsListAdapter);
+//                                disount_totalnew = 0;
+//                                items.get(b).setDisc(disount_totalnew);
+//                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
+//                                itemsListView.setAdapter(itemsListAdapter);
 
                             }
+                            else {// zero descount for this item
+                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
 
+                                Log.e("disc_items_value","else="+disc_items_value);
+                            }
+
+
+                        }
+                        else{
+                            if(items.get(b).getDisc()==0)
+                            {
+                                totalQty=items.get(b).getQty();
+                                if(payMethod==1)
+                                {discount_oofers_total_cash = getCashCreditOffer(totalQty,list_discount_offers,payMethod);
+                                }
+                                else {
+                                    discount_oofers_total_credit= getCashCreditOffer(totalQty,list_discount_offers,payMethod);
+                                }
+
+
+
+                                Log.e("disc_items_value","else22="+disc_items_value);
+
+                            }
 
                         }
 
@@ -3964,6 +3992,33 @@ public class SalesInvoice extends Fragment {
         totalDiscount = 0.0;
         sum_discount = 0;
 
+
+    }
+
+    private double getCashCreditOffer(double totalQty, List<QtyOffers> list_discount_offers, int payMethod) {
+        Log.e("disc_items_value","else22=totalQty"+totalQty);
+       // discount_oofers_total_cash=0,discount_oofers_total_credit=0;
+        for (int j = 0; j < list_discount_offers.size(); j++) {
+//                            totalDiscount=0;
+            if (payMethod == 1) {
+                if (list_discount_offers.get(j).getPaymentType() == 1) {
+                    if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                        discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+//                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
+                    }
+                }
+            } else {
+                if (list_discount_offers.get(j).getPaymentType() == 0) {
+                    if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                        discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
+                    }
+                }
+            }
+        }
+        if(payMethod==1)
+        {
+            return discount_oofers_total_cash;
+        }else return discount_oofers_total_credit;
 
     }
 
