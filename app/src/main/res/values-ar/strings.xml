@@ -200,7 +200,7 @@
     <string name="sub_total">المجموع الجزئي</string>
     <string name="tax">الضريبة</string>
     <string name="net_sales">الصافي</string>
-
+    <string name="serialreport">تقرير السيريال</string>
     <string name="pay_date">تاريخ البيع</string>
     <string name="check_number">رقم الشيك</string>
     <string name="check_date">تاريخ الشيك</string>
@@ -507,5 +507,8 @@
     <string name="continousReadingBarcod">قراءة باركود متواصلة</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">هل تريد مسح كل البيانات التي تم تصديرها؟؟</string>
+    <string name="kindvoucher">نوع االفاتورة</string>
+    <string name="serialcode">السيريال كود</string>
+    <string name="search1">ابحث بواسطة السيريال كود أو رقم الفاتورة أو رقم المادة</string>
 
 </resources>
