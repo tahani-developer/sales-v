@@ -1832,6 +1832,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+
+
+        try{
+            db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NOTEPOSITION  TEXT  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
     }
 
 

@@ -159,7 +159,8 @@ public class MainActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
 
-
+  public String text;
+    int position=0;
     public  static  double latitude_main, longitude_main;
     boolean isPosted = true,isPostedCustomerMaster=true;
 
@@ -2622,6 +2623,35 @@ public class MainActivity extends AppCompatActivity
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(dialog.getWindow().getAttributes());
 
+
+
+        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGrp);
+        RadioButton R1 =  dialog.findViewById(R.id.radioTop);
+        RadioButton R2 =  dialog.findViewById(R.id.radioBottom);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup,
+                                         int radioButtonID) {
+                switch(radioButtonID) {
+                    case R.id.radioTop:
+                        position=0;
+                        break;
+                    case R.id.radioBottom:
+                        position=1;
+                        break;
+
+                }
+            }
+        });
+
+
+
+
+
+
+
+
         lp.gravity = Gravity.CENTER;
         lp.windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setAttributes(lp);
@@ -2752,12 +2782,9 @@ public class MainActivity extends AppCompatActivity
                             itemBitmapPic = getResizedBitmap(itemBitmapPic, 150, 150);
                         }
 
-                      int position;
-                       int selectedId =   radioGroup.getCheckedRadioButtonId();
-                        if(selectedId==2131230897)
-                             position=0;
-                                     else
-                                         position=1;
+
+
+
                         mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position);
                         try {
                             if(isNetworkAvailable())
