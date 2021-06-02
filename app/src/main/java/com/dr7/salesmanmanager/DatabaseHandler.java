@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 139;
+    private static final int DATABASE_VERSION = 140;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -946,7 +946,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + NET_SALES + " INTEGER,"
                 + CUST_NAME + " TEXT,"
                 + CUST_NUMBER + " TEXT,"
-                + VOUCHER_YEAR + " INTEGER " + ")";
+                + VOUCHER_YEAR + " INTEGER,"
+                + VOUCHER_time + " TEXT "
+                + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
         }
         catch (Exception e)
@@ -3336,7 +3338,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
-
+                Voucher.setTime(cursor.getString(17));
                 // Adding transaction to list
                 vouchers.add(Voucher);
             } while (cursor.moveToNext());
@@ -3376,6 +3378,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
+                Voucher.setTime(cursor.getString(17));
 
                 // Adding transaction to list
                 vouchers.add(Voucher);
@@ -3418,7 +3421,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 Voucher.setCustName(cursor.getString(14));
                 Voucher.setCustNumber(cursor.getString(15));
                 Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
-
+                Voucher.setTime(cursor.getString(17));
                 // Adding transaction to list
 
             } while (cursor.moveToNext());
@@ -5316,8 +5319,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
 
-    public String getSalesmanName() {
-        String custId=CustomerListShow.Customer_Account;
+    public String getSalesmanName(String cust) {
+        Log.e("getSalesmanName",""+cust);
+        String custId=cust+"";
         String selectQuery ="select S.salesManName \n" +
                 "from Sales_Team S, CUSTOMER_MASTER C \n" +
                 "WHERE\n" +
