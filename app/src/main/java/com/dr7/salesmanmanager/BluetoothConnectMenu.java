@@ -1037,7 +1037,7 @@ public class BluetoothConnectMenu extends Activity {
         paytype = (TextView) dialog_Header.findViewById(R.id.paytype);
         store= (TextView) dialog_Header.findViewById(R.id.store);
         salesName = (TextView) dialog_Header.findViewById(R.id.salesman_name);
-        String salesmaname=obj.getSalesmanName();
+        String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
         salesName.setText(salesmaname);
         String voucherTyp = "";
         switch (voucher.getVoucherType()) {
@@ -1559,7 +1559,7 @@ public class BluetoothConnectMenu extends Activity {
         textW = (TextView) dialogs.findViewById(R.id.wa1);
         store= (TextView) dialogs.findViewById(R.id.store);
         total_qty_text= (TextView) dialogs.findViewById(R.id.total_qty);
-        String salesmaname=obj.getSalesmanName();
+        String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
         salesName.setText(salesmaname);
         // to hide price in voucher
         if (valueCheckHidPrice == 1) {
@@ -1793,7 +1793,7 @@ public class BluetoothConnectMenu extends Activity {
         else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
-        String salesmaname=obj.getSalesmanName();
+        String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
         salesName.setText(salesmaname);
         note.setText(voucher.getRemark());
 

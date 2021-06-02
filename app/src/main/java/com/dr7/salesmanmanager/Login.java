@@ -465,10 +465,10 @@ public class Login extends AppCompatActivity {
         Log.e("curentTime", "" + curentTime);
         mainlayout = (LinearLayout) findViewById(R.id.mainlayout);
         setting_floatingBtn=findViewById(R.id.setting_floatingBtn);
-        if(typaImport==0)
-        {
-            setting_floatingBtn.setVisibility(View.GONE);
-        }
+//        if(typaImport==0)
+//        {
+//            setting_floatingBtn.setVisibility(View.GONE);
+//        }
         logo = (CircleImageView) findViewById(R.id.imageView3);
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
 

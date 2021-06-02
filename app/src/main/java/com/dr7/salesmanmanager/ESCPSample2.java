@@ -986,8 +986,6 @@ public class ESCPSample2
 				if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
 				{}else {
 					posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-                    posPtr.printAndroidFont(null,true,"رقم الفاتورة : " + voucherforPrint.getVoucherNumber()+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-
 				}
 				//posPtr.printAndroidFont(null,true," الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				//posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1006,9 +1004,11 @@ public class ESCPSample2
 
 					}
 
-                    posPtr.printAndroidFont(null, true, "رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "    " + "          التاريخ: " + voucherforPrint.getVoucherDate() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+                    posPtr.printAndroidFont(null, true,  " التاريخ: " + voucherforPrint.getVoucherDate() + "      الوقت :"+voucherforPrint.getTime()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
                 }
+				posPtr.printAndroidFont(null, true, "رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			}
@@ -1443,7 +1443,8 @@ public class ESCPSample2
 					voucherTyp = "New Order";
 					break;
 			}
-			String salesmaname=obj.getSalesmanName();
+
+			String salesmaname=obj.getSalesmanName(voucherforPrint.getCustNumber());
 
 
 			posPtr.setAsync(false);
@@ -1960,8 +1961,8 @@ public class ESCPSample2
 			Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
 			Log.e("payforBank 0000 ==>",""+payforBank.getPayMethod());
 		}
-		String salesmaname=obj.getSalesmanName();
-		
+		String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
+
 		int nLineWidth = 550;
 		try {
 
@@ -2106,7 +2107,7 @@ public class ESCPSample2
 				}
 			}
 
-			String salesmaname=obj.getSalesmanName();
+			String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
 			if(salesmaname.equals("")){
 				salesmaname=obj.getSalesmanName_fromSalesTeam();
 			}
