@@ -139,6 +139,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
+            android:visibility="gone"
 
             android:textStyle="bold"
             android:drawablePadding="5dp"
@@ -382,7 +383,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:checked="true"
+
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
                 android:textSize="10sp" />
@@ -622,10 +623,12 @@
         android:paddingLeft="5dp"
         android:visibility="visible">
 
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5.2"
+            android:layout_weight="4"
+            android:visibility="visible"
 
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
@@ -642,12 +645,16 @@
             android:layout_weight="2.5"
             android:gravity="center"
             android:src="@drawable/ic_playlist_add_black_24dp" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5.2"
+            android:layout_weight="6"
             android:id="@+id/serialValue"
-            android:visibility="gone"
+            android:visibility="visible"
+            android:inputType="text"
+            android:lines="1"
+            android:background="@drawable/back_border_edit"
 
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
@@ -655,7 +662,6 @@
             android:textColor="@color/text_view_color"
             android:textSize="12sp"
             android:textStyle="bold" />
-
         <ImageView
             android:id="@+id/serialScanBunos"
             android:layout_width="0dp"

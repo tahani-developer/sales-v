@@ -2626,8 +2626,8 @@ public class MainActivity extends AppCompatActivity
 
 
         RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGrp);
-        RadioButton R1 =  dialog.findViewById(R.id.radioTop);
-        RadioButton R2 =  dialog.findViewById(R.id.radioBottom);
+        RadioButton radioTop =  dialog.findViewById(R.id.radioTop);
+        RadioButton radioBottom =  dialog.findViewById(R.id.radioBottom);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -2710,6 +2710,14 @@ public class MainActivity extends AppCompatActivity
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
+                if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
+                {
+                    radioBottom.setChecked(true);
+                }
+                else {
+                    radioTop.setChecked(true);
+                }
+
             }
             else {
                 tax.setText(0+"");

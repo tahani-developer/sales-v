@@ -892,12 +892,14 @@ public class ESCPSample2
 
 
 	}
-	int  printerType=5,dontshowTax=0;
+	int  printerType=5,dontshowTax=0; String notePosition="0";
 	public void printMultilingualFontEsc3(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
 
 		int dontShowHeader=0;
 		try {
 			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
+            notePosition=obj.getAllCompanyInfo().get(0).getNotePosition();
+            Log.e("notePosition","=="+notePosition);
 
 			if (printerSettings.size() != 0) {
 				printerType = printerSettings.get(0).getPrinterName();
@@ -1026,7 +1028,7 @@ public class ESCPSample2
 
 			if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
 			{}else {
-				if (dontshowTax == 0) {
+				if (dontshowTax == 0 && (notePosition.equals("0"))) {
 					posPtr.printAndroidFont(null, true,  companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				}
@@ -1171,10 +1173,15 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null, true, "استلمت : " + getArabicString(voucherforPrint.getNetSales() + "")/* + "\n" */, nLineWidth, 26, alignment);
 
 			}
-			posPtr.printAndroidFont(null, true, "المستلم : ________________ " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(null, true, "التوقيع : __________" + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
-			posPtr.lineFeed(4);
+			posPtr.printAndroidFont(null, true, "المستلم : ________________ " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
+			posPtr.printAndroidFont(null, true, "التوقيع : ________________ " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
+		if(notePosition.equals("1")){
+            posPtr.printAndroidFont(null, true,  companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+
+        }
+            posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+            posPtr.lineFeed(4);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

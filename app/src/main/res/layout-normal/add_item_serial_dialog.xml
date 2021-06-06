@@ -114,7 +114,7 @@ android:layout_margin="5dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
 
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:textStyle="bold"
 
             android:text="@string/weight"
@@ -129,6 +129,7 @@ android:layout_margin="5dp"
             android:layout_weight="1"
             android:enabled="true"
             android:textStyle="bold"
+
             android:textSize="12sp"
             android:gravity="center"
             android:imeOptions="actionNext"
@@ -137,6 +138,7 @@ android:layout_margin="5dp"
         <TextView
             android:id="@+id/generateSerial"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
 
@@ -382,7 +384,7 @@ android:layout_margin="5dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:checked="true"
+
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
                 android:textSize="10sp" />
@@ -394,6 +396,7 @@ android:layout_margin="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:layout_weight="1"
+
                 android:checked="true"
                 android:gravity="center"
                 android:text="@string/app_disc_type2"
@@ -622,10 +625,12 @@ android:layout_margin="5dp"
         android:paddingLeft="5dp"
         android:visibility="visible">
 
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5.2"
+            android:layout_weight="4"
+            android:visibility="visible"
 
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
@@ -642,14 +647,16 @@ android:layout_margin="5dp"
             android:layout_weight="2.5"
             android:gravity="center"
             android:src="@drawable/ic_playlist_add_black_24dp" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5.2"
+            android:layout_weight="6"
             android:id="@+id/serialValue"
-            android:visibility="gone"
+            android:visibility="visible"
             android:inputType="text"
             android:lines="1"
+            android:background="@drawable/back_border_edit"
 
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
@@ -657,11 +664,11 @@ android:layout_margin="5dp"
             android:textColor="@color/text_view_color"
             android:textSize="12sp"
             android:textStyle="bold" />
-
         <ImageView
             android:id="@+id/serialScanBunos"
             android:layout_width="0dp"
             android:padding="5dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_weight="2.5"
             android:gravity="center"

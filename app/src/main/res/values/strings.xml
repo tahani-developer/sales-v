@@ -365,7 +365,7 @@
     <string name="LocationSaved">Location Saved</string>
     <string name="enternetConnection">Check Internet Connection</string>
     <string name="failImpo_export_dataCustomerMaster">Please Export data in Customer master before import new data</string>
-    <string name="SerialNo">Serial No</string>
+    <string name="SerialNo">Serial</string>
     <string name="workSerial">Work With Serial</string>
     <string name="AreYouSuretodelete">Are You Sure to delete ?</string>
     <string name="backupData">Backup Data</string>
@@ -468,6 +468,7 @@
     <string name="continousReadingBarcod">Continous Reading Barcod</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">Do You Want Clear  exported Data??</string>
+    <string name="exportAllEx">Export All To Excel</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

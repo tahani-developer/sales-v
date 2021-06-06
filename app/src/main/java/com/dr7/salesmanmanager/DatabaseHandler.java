@@ -67,7 +67,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 140;
+    private static final int DATABASE_VERSION = 141;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -920,7 +920,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + LOGO + " BLOB,"
                 + NOTE + " TEXT,"
                 + LONGTUDE_COMPANY +" REAL,"
-                + LATITUDE_COMPANY +" REAL "
+                + LATITUDE_COMPANY +" REAL,"
+                + NOTEPOSITION +" TEXT "
                 + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
@@ -2929,6 +2930,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 info.setNoteForPrint(cursor.getString(4));
                 info.setLongtudeCompany(cursor.getDouble(5));
                 info.setLatitudeCompany(cursor.getDouble(6));
+                info.setNotePosition(cursor.getString(7));
                 infos.add(info);
             } while (cursor.moveToNext());
         }
