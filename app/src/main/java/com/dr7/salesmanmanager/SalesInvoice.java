@@ -2817,7 +2817,7 @@ public class SalesInvoice extends Fragment {
                                 switch (i) {
                                     case 0://update  qty
 
-                                        showDialogSerial(getContext(),position,itemNoForDelete,priceCurrentItem);
+                                        showDialogSerial(getActivity().getBaseContext(),position,itemNoForDelete,priceCurrentItem);
                                         break;
                                     case 1:// delete item
                                         //copyListSerial.clear();
@@ -3041,7 +3041,6 @@ public class SalesInvoice extends Fragment {
         listTemporarySerial=getserialForItem(itemNo,priceUpdated);
         discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
         discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
-        radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
 
 
         itemNoSelected=itemNo;
@@ -3121,6 +3120,7 @@ public class SalesInvoice extends Fragment {
         item_number.setText(items.get(position).getItemNo()+"");
 
         item_name.setText(items.get(position).getItemName());
+       // discValueRadioButton.setChecked(true);
 //        discPercRadioButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -3134,41 +3134,24 @@ public class SalesInvoice extends Fragment {
 //            }
 //        });
         if(items.get(position).getDiscType()==1)// percent
-        {        Log.e("discount************","1"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
+        {
+            Log.e("discountP************","1 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
 
             discount.setText(items.get(position).getDiscPerc()+"");
-            //radioDiscountSerial.setEnabled(true);
-            radioDiscountSerial.clearCheck();
-//            discPercRadioButton.setSelected(true);
-           // discPercRadioButton.setChecked(true);
-//            radioDiscountSerial.check(R.id.discPercRadioButton);
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                public void run() {
-                    discPercRadioButton.setChecked(true);
-                }
-            });
+            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+radioDiscountSerial.check(R.id.discPercRadioButton);
+//            discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
+//               discPercRadioButton.setChecked(true);
+
         }
         else {
-            Log.e("discount************","2"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
-
-           // radioDiscountSerial.setEnabled(true);
+            Log.e("discountV************","2 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
             discount.setText(items.get(position).getDisc()+"");
-           //discValueRadioButton.setChecked(true);
-//            discValueRadioButton.setSelected(true);
-//            radioDiscountSerial.check(R.id.discValueRadioButton);
-//
-//
-//            discValueRadioButton.performClick();
-            radioDiscountSerial.clearCheck();
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                public void run() {
-                    discValueRadioButton.setChecked(true);
-                   // discPercRadioButton.setSelected(false);
-                }
-            });
+            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+            radioDiscountSerial.check(R.id.discValueRadioButton);
 
+//            discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
+//           discValueRadioButton.setChecked(true);
 
         }
 
@@ -3342,7 +3325,7 @@ public class SalesInvoice extends Fragment {
         });
 
 
-
+       // discValueRadioButton.setSelected(true);
         dialog.show();
 
 
@@ -3406,11 +3389,16 @@ public class SalesInvoice extends Fragment {
 
         try {
 
+            Log.e("discPercRadioButton","position 11  "+(radioDiscountSerial.getCheckedRadioButtonId()==R.id.discPercRadioButton));
+            Log.e("discValcRadioButton","position 122  "+(radioDiscountSerial.getCheckedRadioButtonId()==R.id.discValueRadioButton));
+            //radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
 
-            if (discPercRadioButton.isChecked()) {
+            if (radioDiscountSerial.getCheckedRadioButtonId()==R.id.discPercRadioButton) {
                 items.get(position).setDiscType(1);// error for discount promotion // percent discount
+                Log.e("discPercRadioButton","position 1");
             } else {
                 items.get(position).setDiscType(0);// value Discount
+                Log.e("discPercRadioButton","position 0");
             }
 
 
