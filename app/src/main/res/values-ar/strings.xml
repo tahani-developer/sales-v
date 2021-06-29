@@ -514,5 +514,11 @@
     <string name="serialcode">السيريال</string>
     <string name="search1">ابحث بواسطة السيريال كود أو رقم الفاتورة أو رقم المادة</string>
     <string name="exportAllEx">تصدير لاكسل</string>
+    <string name="lastVoucherNumber">رقم اخر فاتورة هل تريد تغيير الرقم التسلسلي ؟</string>
+    <string name="thereisUnExportingData">يوجد داتا يجب تصديرها !!!</string>
+    <string name="toChangeSerialVoucherNumberExportData">لتغيير الرقم التسلسلي للفواتير قم بتصدير البيانات اولا</string>
+    <string name="noTax">معفى</string>
+    <string name="shelf_inventory">جرد الرف</string>
+    <string name="totalDiscount">خصم كلي للكاش</string>
 
 </resources>

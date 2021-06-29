@@ -70,6 +70,7 @@ import static com.dr7.salesmanmanager.Reports.InventoryReport.itemsInventoryPrin
 import static com.dr7.salesmanmanager.Reports.InventoryReport.typeQty;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 
+import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.valueCheckHidPrice;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
@@ -967,7 +968,7 @@ public class ESCPSample2
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			if(companyInfo.getLogo()!=null) {
 				try {
-					if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
+					if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1||(dontShowHeader==1&&noTax==0))
 					{}else {
 						posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 200);
 					}
@@ -978,18 +979,23 @@ public class ESCPSample2
 
 				Log.e("12222print","pyyy");
 			}
-			if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
+			if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1||(dontShowHeader==1&&noTax==0))
 			{}else {
 				posPtr.printAndroidFont(null,true,companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			}
 			if(printerType==6)
 			{
-				if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
+				if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1||(dontShowHeader==1&&noTax==0))
 				{}else {
 					posPtr.printAndroidFont(null,true,"هاتف : " + companyInfo.getcompanyTel()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
+					if(companyInfo.getTaxNo()!=0)
+						posPtr.printAndroidFont(null,true," الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+					posPtr.printAndroidFont(null, true, "رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
 				}
-				//posPtr.printAndroidFont(null,true," الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+
 				//posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null,true,   voucherforPrint.getVoucherDate() +"\t\t"+getCurentTimeDate(2)+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 //				posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -997,7 +1003,7 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null,true,line + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			} else {
-				if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
+				if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1||(dontShowHeader==1&&noTax==0))
 				{}else {
 					if(companyInfo.getTaxNo()!=0)
 					posPtr.printAndroidFont(null, true, "هاتف : " + companyInfo.getcompanyTel() + "    " + "    الرقم الضريبي : " + companyInfo.getTaxNo() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1026,7 +1032,7 @@ public class ESCPSample2
 			//posPtr.printAndroidFont(null, true, "نوع الفاتورة : " + voucherTyp + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			//posPtr.printAndroidFont(null, true, "طريقة الدفع  : " + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
-			if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1)
+			if(dontShowHeader==1&&voucherforPrint.getPayMethod()==1||(dontShowHeader==1&&noTax==0))
 			{}else {
 				if (dontshowTax == 0 && (notePosition.equals("0"))) {
 					posPtr.printAndroidFont(null, true,  companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);

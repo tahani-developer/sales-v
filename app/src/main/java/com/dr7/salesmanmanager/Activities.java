@@ -56,6 +56,8 @@ import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.serialValueUpdated;
+import static com.dr7.salesmanmanager.SalesInvoice.updatedSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
@@ -845,7 +847,13 @@ public class Activities extends AppCompatActivity implements
                              {
                                  if(checkInTotalList(serialBarcode.trim()))
                                  {
-                                     serialValue.setText(serialBarcode.toString().trim());
+                                     if(updatedSerial==1)
+                                     {
+                                         serialValueUpdated.setText(serialBarcode.toString().trim());
+                                     }else {
+                                         serialValue.setText(serialBarcode.toString().trim());
+                                     }
+
                                  }
                                  else {
                                      new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
@@ -920,7 +928,13 @@ public class Activities extends AppCompatActivity implements
                          {
                              if(checkInTotalList(serialBarcode.trim()))
                              {
-                                 serialValue.setText(serialBarcode.toString().trim());
+
+                                 if(updatedSerial==1)
+                                 {
+                                     serialValueUpdated.setText(serialBarcode.toString().trim());
+                                 }else {
+                                     serialValue.setText(serialBarcode.toString().trim());
+                                 }
                              }
                              else {
                                  new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)

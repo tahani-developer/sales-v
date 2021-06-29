@@ -16,17 +16,20 @@ import android.os.Build;
 import android.os.Handler;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -112,6 +115,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static int flag = 0, counterSerial = 0, counterBonus = 0;
     RecyclerView serial_No_recyclerView;
     public static ArrayList<serialModel> serialListitems = new ArrayList<>();
+
     LinearLayoutManager layoutManager;
 
     List<String>listSerialValue=new ArrayList<>();
@@ -135,12 +139,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     LinearLayout resultLinear;
     LinearLayout mainLinear;
     ImageView acceptDiscount, rejectDiscount;
-    public static TextView serialValue;
+    public static EditText serialValue;
     public  static  int numberBarcodsScanner=0;
     int discountPerVal=0,showSolidQty=0;
+    int useWeight=0;
     public  int sunmiDevice=0,dontShowTax=0,contiusReading=0;
 
     int vouch,kindVoucher=504;
+    ImageView addEditBarcode;
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
@@ -296,38 +302,74 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                dialog.setContentView(R.layout.add_item_serial_dialog);
 
+
                                                                mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                                                                checkStateResult = dialog.findViewById(R.id.checkStateResult);
                                                                rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
                                                                mainRequestLinear.setVisibility(View.VISIBLE);
+                                                               unitQty = dialog.findViewById(R.id.unitQty);
+                                                               unitQty.setEnabled(false);
                                                                serialValue= dialog.findViewById(R.id.serialValue);
-                                                               try {
-                                                                   serialValue.addTextChangedListener(new TextWatcher() {
-                                                                       @Override
-                                                                       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                                                       }
-
-                                                                       @Override
-                                                                       public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                                                                       }
-
-                                                                       @Override
-                                                                       public void afterTextChanged(Editable s) {
-                                                                           if(!s.toString().equals(""))
-                                                                           {
-                                                                               barcodeValue=s.toString().trim();
+                                                               if(contiusReading==0) {
+                                                                   serialValue.requestFocus();
+                                                                   serialValue.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                                                                                             @Override
+                                                                                                             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                                                                                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                                                                                                                         || actionId == EditorInfo.IME_NULL) {
+                                                                                                                     if (!serialValue.getText().toString().equals("")) {
+                                                                                                                         barcodeValue = serialValue.getText().toString().trim();
 //                                                                               serialValue_Model.setText(s.toString().trim());
-                                                                               updateValue(barcodeValue,serialListitems);
+                                                                                                                         updateValue(barcodeValue, serialListitems);
+                                                                                                                         new Handler().post(new Runnable() {
+                                                                                                                             @Override
+                                                                                                                             public void run() {
+
+                                                                                                                                 serialValue.requestFocus();
+
+                                                                                                                             }
+                                                                                                                         });
+
+
+                                                                                                                     }
+
+                                                                                                                 }
+                                                                                                                 return false;
+                                                                                                                    }
+
+                                                                                                                }
+
+                                                                   );
+                                                               }else {
+                                                                   try {
+                                                                       serialValue.addTextChangedListener(new TextWatcher() {
+                                                                           @Override
+                                                                           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                                                                            }
 
+                                                                           @Override
+                                                                           public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                                                                       }
-                                                                   });
+                                                                           }
+
+                                                                           @Override
+                                                                           public void afterTextChanged(Editable s) {
+                                                                               if(!s.toString().equals(""))
+                                                                               {
+                                                                                   barcodeValue=s.toString().trim();
+//                                                                               serialValue_Model.setText(s.toString().trim());
+                                                                                   updateValue(barcodeValue,serialListitems);
+
+                                                                               }
+
+
+                                                                           }
+                                                                       });
+                                                                   }
+                                                                   catch ( Exception e){}
                                                                }
-                                                               catch ( Exception e){}
+
 
                                                                mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
                                                                bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
@@ -348,6 +390,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                unitWeightLinearLayout.setVisibility(View.GONE);
                                                                item_serial = dialog.findViewById(R.id.item_serial);
                                                                final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
+                                                               serialScanBunos.setVisibility(View.GONE);
                                                                TextView generateSerial = (TextView) dialog.findViewById(R.id.generateSerial);
 
                                                                generateSerial.setOnClickListener(new View.OnClickListener() {
@@ -552,6 +595,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                    }
                                                                });
+                                                               addEditBarcode= dialog.findViewById(R.id.addEditBarcode);
+                                                               addEditBarcode.setOnClickListener(new View.OnClickListener() {
+                                                                   @Override
+                                                                   public void onClick(View view) {
+                                                                       openeditDialog();
+                                                                   }
+                                                               });
+
+
                                                            } else {
                                                                current_itemHasSerial = 0;
                                                                dialog.setContentView(R.layout.add_item_dialog_small);
@@ -597,10 +649,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        final TextView textQty = dialog.findViewById(R.id.textQty);
                                                        unitQty = dialog.findViewById(R.id.unitQty);
                                                        final EditText unitWeight = dialog.findViewById(R.id.unitWeight);
-                                                       final CheckBox useWeight = dialog.findViewById(R.id.use_weight);
+                                                       final CheckBox useWeightValue = dialog.findViewById(R.id.use_weight);
+
+
                                                        bonus = dialog.findViewById(R.id.bonus);
                                                        final EditText discount = dialog.findViewById(R.id.discount);
                                                        final RadioGroup radioGroup = dialog.findViewById(R.id.discTypeRadioGroup);
+                                                       radioGroup.setVisibility(View.VISIBLE);
                                                        final LinearLayout discountLinearLayout = dialog.findViewById(R.id.discount_linear);
                                                        final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
                                                        bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
@@ -1032,7 +1087,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                            unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                                                            textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
-                                                           useWeight.setChecked(false);
+                                                          // useWeight.setChecked(false);
                                                        } else
                                                            unitQty.setText("" + items.get(position).getItemL());
 
@@ -1099,6 +1154,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        else {
 
                                                                                            String unitValue;
+                                                                                           Log.e("useWeightValue",""+useWeightValue.isChecked());
+                                                                                          if(useWeightValue.isChecked())
+                                                                                          {
+                                                                                              useWeight=1 ;
+                                                                                          }else {useWeight=0;}
                                                                                            currentKey="";
                                                                                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                                                                unitValue = unit.getSelectedItem().toString();
@@ -1198,7 +1258,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                else {
                                                                                                    unitValue = unitWeight.getText().toString();
 //                                        String qtyValue = "" + (Double.parseDouble(unitWeight.getText().toString()) * Double.parseDouble(unitQty.getText().toString()));
-                                                                                                   String qty = (useWeight.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
+                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) ) : unitQty.getText().toString());
+//                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
 
                                                                                                    Log.e("here**", "" + position);
                                                                                                    if (position > -1) {
@@ -1366,18 +1427,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             unitQty.setEnabled(false);
                numberBarcodsScanner++;
                serialValue.setText("");
-            serial_No_recyclerView.setLayoutManager(layoutManager);
-//
-          serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+
+               Log.e("contiusReading",""+contiusReading);
                if(contiusReading==1) {
                    openSmallScanerTextView();
+               }else {
+                   serialValue.requestFocus();
+                   Log.e("contiusReading","HandlerElse");
+//                   new Handler().post(new Runnable() {
+//                       @Override
+//                       public void run() {
+//                           Log.e("contiusReading","Handler");
+//                           serialValue.requestFocus();
+//
+//                       }
+//                   });
+
                }
+            serial_No_recyclerView.setLayoutManager(layoutManager);
+//
+            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
            }
            else {
                serialValue.setError("invalid");
-               serial_No_recyclerView.setLayoutManager(layoutManager);
+               if(serialListitems.size()!=0)
+               {
+                   serial_No_recyclerView.setLayoutManager(layoutManager);
 
-               serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+                   serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+               }
+
                unitQty.setEnabled(false);
 
 
@@ -1497,6 +1576,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             if(contiusReading==1) {
                                                 openSmallScanerTextView();
+                                            }else {
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        serialValue.setText("");
+                                                        serialValue.requestFocus();
+
+                                                    }
+                                                });
                                             }
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
@@ -1540,6 +1628,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                 if(contiusReading==1) {
                                                     openSmallScanerTextView();
+                                                }else {
+                                                    new Handler().post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            serialValue.setText("");
+                                                            serialValue.requestFocus();
+
+                                                        }
+                                                    });
                                                 }
                                                 sweetAlertDialog.dismissWithAnimation();
                                             }
@@ -1559,6 +1656,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                 if(contiusReading==1) {
                                                     openSmallScanerTextView();
+                                                }else {
+                                                    new Handler().post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            serialValue.setText("");
+                                                            serialValue.requestFocus();
+
+                                                        }
+                                                    });
                                                 }
                                                 sweetAlertDialog.dismissWithAnimation();
                                             }
@@ -1583,6 +1689,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             if(contiusReading==1) {
                                                 openSmallScanerTextView();
+                                            }else {
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        serialValue.setText("");
+                                                        serialValue.requestFocus();
+
+                                                    }
+                                                });
                                             }
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
@@ -1598,6 +1713,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
                                             if(contiusReading==1) {
                                                 openSmallScanerTextView();
+                                            }else {
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        serialValue.setText("");
+                                                        serialValue.requestFocus();
+
+                                                    }
+                                                });
                                             }
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
@@ -1632,6 +1756,41 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
+    }
+    private void openeditDialog() {
+        final EditText editText = new EditText(cont);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(cont, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(cont.getResources().getString(R.string.enter_serial));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(!editText.getText().toString().equals(""))
+                {
+//                    if(sunmiDevice!=1)
+//                    {
+//                        editTextSerialCode.setText(editText.getText().toString());
+//                        sweetAlertDialog.dismissWithAnimation();
+//                    }
+//
+//                    else {
+                 serialValue.setText(editText.getText().toString().trim());
+                        sweetAlertDialog.dismissWithAnimation();
+
+
+
+                }
+                else {
+                    editText.setError(context.getResources().getString(R.string.reqired_filled));
+                }
+            }
+        })
+
+                .show();
     }
 
     private boolean validQty(float qtyCurrent, double qtyRequired) {

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static androidx.core.os.HandlerCompat.postDelayed;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class SerialReport extends AppCompatActivity {
@@ -50,6 +52,7 @@ public class SerialReport extends AppCompatActivity {
 Button button;
     private Button preview;
     Calendar myCalendar;
+    HorizontalScrollView HorizontalScrollView01;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -119,6 +122,11 @@ Button button;
                 search();
             }
         });
+//        HorizontalScrollView01.post(new Runnable() {
+//            public void run() {
+//                HorizontalScrollView01.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+//            }
+//        });
     }
 
     private void filterDate(String date_vocher) {
@@ -186,6 +194,7 @@ Button button;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void init() {
         databaseHandler=new DatabaseHandler(SerialReport.this);
+        HorizontalScrollView01=findViewById(R.id.HorizontalScrollView01);
         LinearLayout linearMain=findViewById(R.id.linearMain);
         try{
             if(languagelocalApp.equals("ar"))

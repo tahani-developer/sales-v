@@ -173,6 +173,7 @@ android:layout_margin="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
+        android:id="@+id/linearPrice"
         android:layout_weight="5"
         android:gravity="center"
         android:orientation="horizontal"
@@ -375,6 +376,7 @@ android:layout_margin="5dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="7dp"
             android:layout_weight="2"
+
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -642,13 +644,13 @@ android:layout_margin="5dp"
         <ImageView
             android:id="@+id/serialScan"
             android:layout_width="0dp"
-            android:padding="2dp"
+            android:padding="5dp"
             android:layout_height="match_parent"
             android:layout_weight="2.5"
             android:gravity="center"
-            android:src="@drawable/ic_playlist_add_black_24dp" />
+            android:src="@drawable/ic_search_black_24dp" />
 
-        <TextView
+        <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="6"
@@ -664,6 +666,14 @@ android:layout_margin="5dp"
             android:textColor="@color/text_view_color"
             android:textSize="12sp"
             android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/addEditBarcode"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_create_black_24dp" />
         <ImageView
             android:id="@+id/serialScanBunos"
             android:layout_width="0dp"

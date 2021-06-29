@@ -46,6 +46,24 @@ public class Settings {
     private  int dontShowtax;
     private  String coNo;
     private  int continusReading;
+    private  int activeTotalDiscount;
+    private  double valueOfTotalDiscount;
+
+    public int getActiveTotalDiscount() {
+        return activeTotalDiscount;
+    }
+
+    public void setActiveTotalDiscount(int activeTotalDiscount) {
+        this.activeTotalDiscount = activeTotalDiscount;
+    }
+
+    public double getValueOfTotalDiscount() {
+        return valueOfTotalDiscount;
+    }
+
+    public void setValueOfTotalDiscount(double valueOfTotalDiscount) {
+        this.valueOfTotalDiscount = valueOfTotalDiscount;
+    }
 
     public int getContinusReading() {
         return continusReading;

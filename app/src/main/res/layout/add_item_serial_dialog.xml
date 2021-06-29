@@ -90,6 +90,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
         android:layout_weight="5.3"
+        android:id="@+id/linearPrice"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="5dp"
@@ -355,6 +356,7 @@
         <RadioGroup
             android:id="@+id/discTypeRadioGroup"
             android:layout_width="0dp"
+
             android:layout_height="match_parent"
             android:layout_marginLeft="7dp"
             android:layout_weight="2"
@@ -756,7 +758,14 @@
             android:layout_weight="2.5"
             android:gravity="center"
             android:src="@drawable/ic_playlist_add_black_24dp" />
-
+        <ImageView
+            android:id="@+id/addEditBarcode"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_create_black_24dp" />
         <ImageView
             android:id="@+id/serialScanBunos"
             android:layout_width="0dp"

@@ -40,21 +40,25 @@ import android.os.Handler;
 //import android.support.v7.widget.RecyclerView;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -137,6 +141,7 @@ import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
+import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
 import static com.dr7.salesmanmanager.Serial_Adapter.serialValue_Model;
 
 import android.location.LocationManager;
@@ -153,6 +158,7 @@ import com.google.android.gms.location.LocationServices;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
@@ -161,14 +167,18 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
+    RecyclerView serial_No_recyclerView;
+    public static int noTax=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
-    int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0;
+    public static  int updatedSerial=0;
+    int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0,contiusReading=0;
     int counterSerial;
+
     LinearLayout mainRequestLinear_serial;
     LinearLayout resultLinear;
     LinearLayout mainLinear;
-    public  TextView serialValue;
+    public static  TextView serialValueUpdated;
     RecyclerView recyclerView;
     public  static TextView checkState_LimitCredit,    checkStateResult,voucherValueText;
     private EditText discValueEditText,noteEditText;
@@ -218,7 +228,7 @@ public class SalesInvoice extends Fragment {
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
-    private EditText remarkEditText;
+    private EditText remarkEditText,valueTotalDiscount;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
     public double totalDiscount = 0, discount_oofers_total_cash = 0, discount_oofers_total_credit = 0, sum_discount = 0, disc_items_value = 0, disc_items_total = 0;
@@ -303,7 +313,7 @@ public class SalesInvoice extends Fragment {
     double limit_offer = 0;
     ImageButton maxDiscount;
     int voucherNo = 0, itemCountTable;
-    CheckBox check_HidePrice;
+    CheckBox check_HidePrice,totalDiscount_checkbox;;
     public static int valueCheckHidPrice = 0;
     LinearLayout mainlayout;
     double curentLatitude, curentLongitude;
@@ -323,6 +333,7 @@ public class SalesInvoice extends Fragment {
     public static EditText unitQtyEdit;
     public static  boolean editOpen=false;
 
+    public  CheckBox notIncludeTax;
     Transaction transaction;
     public SalesInvoice() {
         // Required empty public constructor
@@ -423,8 +434,26 @@ public class SalesInvoice extends Fragment {
 
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
-
+        totalDiscount_checkbox= (CheckBox)view. findViewById(R.id.totalDiscount_checkbox);
+        totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                calculateTotals();
+            }
+        });
+        valueTotalDiscount= (EditText) view.findViewById(R.id.valueTotalDiscount);
+        valueTotalDiscount.setEnabled(false);
         settingsList= mDbHandler.getAllSettings();
+        notIncludeTax=view.findViewById(R.id.notIncludeTax);
+        notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                calculateTotals();
+            }
+        });
+
+
+
 
         itemCountTable = mDbHandler.getCountItemsMaster();
         listItemImage=new ArrayList<>();
@@ -528,18 +557,18 @@ public class SalesInvoice extends Fragment {
         if (mDbHandler.getAllSettings().get(0).getPaymethodCheck() == 0) {// first checking of cash
             credit.setChecked(true);
             payMethod = 0;
-//            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
-//            if (CustomerListShow.paymentTerm == 1)// second check from customer table
-//            {
-//                cash.setChecked(true);
-//                payMethod = 1;
-//
-//
-//            } else {
-//                credit.setChecked(true);
-//                payMethod = 0;
-//
-//            }
+            Log.e("CustomerListShow", "" + CustomerListShow.paymentTerm);
+            if (CustomerListShow.paymentTerm == 1)// second check from customer table
+            {
+                cash.setChecked(true);
+                payMethod = 1;
+
+
+            } else {
+                credit.setChecked(true);
+                payMethod = 0;
+
+            }
             Log.e("getPaymethodCheck",""+payMethod);
 
         } else {
@@ -3032,6 +3061,7 @@ public class SalesInvoice extends Fragment {
         dialog.setContentView(R.layout.add_item_serial_dialog);
 
         EditText  bonus,price;
+        updatedSerial=1;
 
         editOpen=true;
 
@@ -3042,11 +3072,10 @@ public class SalesInvoice extends Fragment {
         discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
         discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
         radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+        radioDiscountSerial.setVisibility(View.VISIBLE);
 
-
+        //radioDiscountSerial.setEnabled(false);
         itemNoSelected=itemNo;
-        Log.e("listTemporarySerial4",""+listTemporarySerial.size());
-
 
 
         //**********************************************
@@ -3055,16 +3084,22 @@ public class SalesInvoice extends Fragment {
         dialog.setContentView(R.layout.add_item_serial_dialog);
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(context);
-        RecyclerView serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
+        ImageView addEditBarcode;
+         serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
         serial_No_recyclerView.setLayoutManager(layoutManager);
         if(listTemporarySerial.size()!=0)
         {
             serial_No_recyclerView.setAdapter(new Serial_Adapter(listTemporarySerial, context));
         }
 
-
         mainRequestLinear_serial = dialog.findViewById(R.id.mainRequestLinear);
         mainLinearAddItem= dialog.findViewById(R.id.mainLinearAddItem);
+        if(mDbHandler.getAllSettings().get(0).getContinusReading()==1)
+        {
+
+            contiusReading=1;
+            Log.e("contiusReading","update==="+contiusReading);
+        }
 
         try {
             if (languagelocalApp.equals("ar")) {
@@ -3087,6 +3122,8 @@ public class SalesInvoice extends Fragment {
         unitQtyEdit= dialog.findViewById(R.id.unitQty);
         discount_linear= dialog.findViewById(R.id.discount_linear);
         linear_bonus= dialog.findViewById(R.id.linear_bonus);
+        addEditBarcode= dialog.findViewById(R.id.addEditBarcode);
+
         discount= dialog.findViewById(R.id.discount);
         item_number= dialog.findViewById(R.id.item_number);
         item_name= dialog.findViewById(R.id.item_name);
@@ -3097,7 +3134,7 @@ public class SalesInvoice extends Fragment {
         checkStateResult = dialog.findViewById(R.id.checkStateResult);
         rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
         mainRequestLinear_serial.setVisibility(View.VISIBLE);
-        serialValue= dialog.findViewById(R.id.serialValue);
+        serialValueUpdated= dialog.findViewById(R.id.serialValue);
         mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
         bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
         Button addToList = dialog.findViewById(R.id.addToList);
@@ -3106,13 +3143,32 @@ public class SalesInvoice extends Fragment {
             @Override
             public void onClick(View view) {
                 editOpen=false;
+                updatedSerial=0;
                 updateQtyBasket();
                 dialog.dismiss();
+
             }
         });
         bonus = dialog.findViewById(R.id.bonus);
 
+        if(items.get(position).getDiscType()==1)// percent
+        {
+            Log.e("discountP************","1 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
 
+            discount.setText(items.get(position).getDiscPerc()+"");
+            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+            radioDiscountSerial.check(R.id.discPercRadioButton);
+
+
+        }
+        else {
+            Log.e("discountV************","2 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
+            discount.setText(items.get(position).getDisc()+"");
+            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+            radioDiscountSerial.check(R.id.discValueRadioButton);
+
+
+        }
         mainRequestLinear.setVisibility(View.GONE);
        // discount_linear.setVisibility(View.GONE);
 
@@ -3121,59 +3177,6 @@ public class SalesInvoice extends Fragment {
         item_number.setText(items.get(position).getItemNo()+"");
 
         item_name.setText(items.get(position).getItemName());
-//        discPercRadioButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                discPercRadioButton.setSelected(true);
-//            }
-//        });
-//        discValueRadioButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                discValueRadioButton.setSelected(true);
-//            }
-//        });
-        if(items.get(position).getDiscType()==1)// percent
-        {        Log.e("discount************","1"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
-
-            discount.setText(items.get(position).getDiscPerc()+"");
-            //radioDiscountSerial.setEnabled(true);
-            radioDiscountSerial.clearCheck();
-//            discPercRadioButton.setSelected(true);
-           // discPercRadioButton.setChecked(true);
-//            radioDiscountSerial.check(R.id.discPercRadioButton);
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                public void run() {
-                    discPercRadioButton.setChecked(true);
-                }
-            });
-        }
-        else {
-            Log.e("discount************","2"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
-
-           // radioDiscountSerial.setEnabled(true);
-            discount.setText(items.get(position).getDisc()+"");
-           //discValueRadioButton.setChecked(true);
-//            discValueRadioButton.setSelected(true);
-//            radioDiscountSerial.check(R.id.discValueRadioButton);
-//
-//
-//            discValueRadioButton.performClick();
-            radioDiscountSerial.clearCheck();
-            Handler h = new Handler(Looper.getMainLooper());
-            h.post(new Runnable() {
-                public void run() {
-                    discValueRadioButton.setChecked(true);
-                   // discPercRadioButton.setSelected(false);
-                }
-            });
-
-
-        }
-
-        Log.e("discount************","3"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
-
         price.setText((items.get(position).getPrice()+""));
        countNormalQty= getNumberOfNormalQty(listTemporarySerial);
         unitQtyEdit.setText(countNormalQty+"");
@@ -3182,31 +3185,105 @@ public class SalesInvoice extends Fragment {
         unitQtyEdit.setAlpha(0.8f);
         counterSerial=countNormalQty;
         _linear_switch.setVisibility(View.GONE);
-        
 
-        serialValue.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if(contiusReading==0) {
 
-            }
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    serialValueUpdated.requestFocus();
 
-            }
+                }
+            });
+            serialValueUpdated.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                            || actionId == EditorInfo.IME_NULL) {
+                        if (!serialValueUpdated.getText().toString().equals("")) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(!s.toString().equals(""))
-                {
-                    barcodeValue=s.toString().trim();
-                    serialValue_Model.setText(s.toString().trim());
+                                Log.e("listTemporarySerial5",""+listTemporarySerial.size());
+                                Log.e("afterTextChanged","serialValueUpdated"+serialValueUpdated.getText().toString());
+                                barcodeValue=serialValueUpdated.getText().toString().trim();
+                                if(validbarcodeValue(barcodeValue,listTemporarySerial,(counterSerial-1)))
+                                {
+
+                                    addToList.setVisibility(View.VISIBLE);
+                                    addToList.setEnabled(true);
+                                    unitQtyEdit.setEnabled(false);
+                                    // flag = 1;
+                                    Log.e("itemNo",""+itemNo+"\t"+position);
+                                    fillSerial(context ,itemNo,position);
+
+                                }
+                                else {
+                                    new Handler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            serialValueUpdated.setText("");
+                                            serialValueUpdated.setError("invalid");
+                                            serialValueUpdated.requestFocus();
+
+                                        }
+                                    });
+
+                                }
+                                // serialValue_Model.setText(s.toString().trim());
+
+
+                        }
+
+                    }
+                    return false;
+                }
+
+                                                         }
+
+            );
+        }else {
+            serialValueUpdated.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                 }
 
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
-        });
+                }
+
+                @SuppressLint("WrongConstant")
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if(!s.toString().equals(""))
+                    {
+                        Log.e("listTemporarySerial5",""+listTemporarySerial.size());
+                        Log.e("afterTextChanged","serialValueUpdated"+serialValueUpdated.getText().toString());
+                        barcodeValue=s.toString().trim();
+                        if(validbarcodeValue(barcodeValue,listTemporarySerial,(counterSerial-1)))
+                        {
+                            addToList.setVisibility(View.VISIBLE);
+                            addToList.setEnabled(true);
+                            unitQtyEdit.setEnabled(false);
+                            // flag = 1;
+                            fillSerial(context ,itemNo,position);
+                        }
+                        else {
+                            serialValueUpdated.setError("invalid");
+                        }
+                        // serialValue_Model.setText(s.toString().trim());
+
+                    }
+
+
+                }
+            });
+        }
+
+
+
 
         bonusLinearLayout.setVisibility(View.GONE);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -3224,6 +3301,7 @@ public class SalesInvoice extends Fragment {
                     countNormalQty= getNumberOfNormalQty(listTemporarySerial);
                     if( updateListSerialTotal(listTemporarySerial,position,priceUpdated, discount.getText().toString()))
                     {   editOpen=false;
+                        updatedSerial=0;
                         dialog.dismiss();}
                 }else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -3247,40 +3325,7 @@ public class SalesInvoice extends Fragment {
             @SuppressLint("WrongConstant")
             @Override
             public void onClick(View v) {
-                Log.e("listTemporarySerial5",""+listTemporarySerial.size());
-                //                            context.readB();
-                addToList.setVisibility(View.VISIBLE);
-                addToList.setEnabled(true);
-                unitQtyEdit.setEnabled(false);
-               // flag = 1;
-                counterSerial++;
-
-                //addQtyTotal(1);
-                final LinearLayoutManager layoutManager;
-                layoutManager = new LinearLayoutManager(context);
-                layoutManager.setOrientation(VERTICAL);
-
-                serial = new serialModel();
-                serial.setCounterSerial(counterSerial);
-                serial.setSerialCode("");
-                serial.setIsBonus("0");
-                serial.setIsDeleted("0");
-                Log.e("voucherNo",""+voucherNumber);
-                serial.setVoucherNo(voucherNumber+"");
-                serial.setKindVoucher(voucherType+"");
-                serial.setStoreNo(Login.salesMan);
-                serial.setDateVoucher(voucherDate);
-                serial.setItemNo(itemNo);
-                serial.setPriceItem(items.get(position).getPrice());
-                listTemporarySerial.add(serial);
-                unitQtyEdit.setText(counterSerial + "");
-
-
-
-                serial_No_recyclerView.setLayoutManager(layoutManager);
-
-                serial_No_recyclerView.setAdapter(new Serial_Adapter(listTemporarySerial, context));
-                Log.e("listTemporarySerial6",""+listTemporarySerial.size());
+                openSmallScanerTextView();
 //
 
             }
@@ -3342,13 +3387,251 @@ public class SalesInvoice extends Fragment {
         });
 
 
-
+        addEditBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openeditDialog();
+            }
+        });
         dialog.show();
 
 
 
     }
 
+    private void fillSerial(Context context ,String itemNo,int position) {
+        counterSerial++;
+        serial = new serialModel();
+        serial.setCounterSerial(counterSerial);
+        serial.setSerialCode(barcodeValue);
+        serial.setIsBonus("0");
+        serial.setIsDeleted("0");
+        Log.e("voucherNo",""+voucherNumber);
+        serial.setVoucherNo(voucherNumber+"");
+        serial.setKindVoucher(voucherType+"");
+        serial.setStoreNo(Login.salesMan);
+        serial.setDateVoucher(voucherDate);
+        serial.setItemNo(itemNo);
+        serial.setPriceItem(items.get(position).getPrice());
+        listTemporarySerial.add(serial);
+        unitQtyEdit.setText(counterSerial + "");
+        serialValueUpdated.setText("");
+        if(contiusReading==0)
+        {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    serialValueUpdated.setText("");
+                    serialValueUpdated.requestFocus();
+
+                }
+            });
+
+        }
+
+
+
+        //addQtyTotal(1);
+        final LinearLayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(context);
+        layoutManager.setOrientation(VERTICAL);
+
+
+
+
+
+        serial_No_recyclerView.setLayoutManager(layoutManager);
+
+        serial_No_recyclerView.setAdapter(new Serial_Adapter(listTemporarySerial, context));
+        Log.e("listTemporarySerial6",""+listTemporarySerial.size());
+    }
+
+    public void openSmallScanerTextView() {
+
+        new IntentIntegrator(getActivity()).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+
+
+
+    }
+    private void openeditDialog() {
+        final EditText editText = new EditText(getActivity());
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getActivity().getResources().getString(R.string.enter_serial));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(!editText.getText().toString().equals(""))
+                {
+                    serialValueUpdated.setText(editText.getText().toString().trim());
+                    sweetAlertDialog.dismissWithAnimation();
+
+
+
+                }
+                else {
+                    editText.setError(getActivity().getResources().getString(R.string.reqired_filled));
+                }
+            }
+        })
+
+                .show();
+    }
+    private boolean validbarcodeValue(String barcode,ArrayList<serialModel> serialListitems,int numberBarcodsScanner) {
+        String data =barcode.toString().trim();
+       // Log.e("updateListCheque", "afterTextChanged" +"position\t"+numberBarcodsScanner+data+"\tdontValidate="+barcode);
+        try {
+
+            if(data.toString().trim().length()!=0)
+            {
+                if(data.toString().trim().equals("error"))
+                {
+
+                }
+                else {
+                    isFoundSerial=false;
+
+                    for(int h=0;h<serialListitems.size();h++)
+                    {
+
+                        if(serialListitems.get(h).getSerialCode().equals(data))
+                        {
+                            isFoundSerial=true;
+                            break;
+                        }
+                    }
+                    if(isFoundSerial==true)
+                    {// FOUND  IN CURRENT LIST
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getActivity().getString(R.string.warning_message))
+                                .setContentText(getActivity().getString(R.string.duplicate)+"\t"+getActivity().getResources().getString(R.string.inThisVoucher))
+                                .setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                        Toast.makeText(getActivity(), getActivity().getResources().getString(R.string.duplicate)+"\t"+getActivity().getResources().getString(R.string.inThisVoucher), Toast.LENGTH_SHORT).show();
+
+                        return  false;
+                    }
+                }
+
+
+                //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
+//            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
+                if (mDbHandler.isSerialCodeExist(data).equals("not")||voucherType==506||mDbHandler.getLastTransactionOfSerial(data.trim()).equals("506")) {
+                    if((mDbHandler.isSerialCodePaied(data+"").equals("not")&&voucherType==504)||
+                            (!mDbHandler.isSerialCodePaied(data+"").equals("not")&&voucherType==506))
+                    {
+                        errorData = false;
+
+//                         serialListitems.get(numberBarcodsScanner).setSerialCode(data);
+//                          listMasterSerialForBuckup.get(numberBarcodsScanner).setSerialCode(data);
+//                            currentUpdate = position;
+//
+//                            isClicked.set(position, 0);
+//                            isClicked.set(position + 1, 1);
+
+                        // notifyDataSetChanged();
+
+                        return true;
+
+                    }
+                    else {// duplicated
+                        if(voucherType==506)
+                        {
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText(getActivity().getString(R.string.warning_message))
+                                    .setContentText(getActivity().getString(R.string.serialIsNotPaied))
+                                    .setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else {
+                            String voucherNo=mDbHandler.isSerialCodePaied(data+"");
+                            String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
+                            voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
+
+                            Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + voucherNo+"\t"+voucherDate);
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                    .setContentText(getActivity().getString(R.string.duplicate) +"\t"+data+ "\t"+getActivity().getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+getActivity().getString(R.string.voucher_date)+"\t"+voucherDate)
+                                    .setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        }
+
+
+                        return  false;
+                    }
+
+                } else {
+                    errorData = true;
+                    // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+                    String ItemNo=mDbHandler.isSerialCodeExist(data+"");
+                    if(!ItemNo.equals("")){
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getActivity().getString(R.string.warning_message))
+                                .setContentText(getActivity().getString(R.string.invalidSerial)+"\t"+data+"\t"+getActivity().getString(R.string.forItemNo)+ItemNo)
+                                .setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(getActivity().getString(R.string.warning_message))
+                                .setContentText(getActivity().getString(R.string.invalidSerial)+"\t"+data)
+                                .setConfirmButton(getActivity().getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+
+
+
+                    return false;
+
+
+                }
+            }
+
+            else {
+                return  false;
+//                    updateListCheque(position, "");
+//                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
+            }
+
+
+        }catch (Exception e){
+            return  false;
+        }
+
+    }
     private int getNumberOfNormalQty(ArrayList<serialModel> listTemporarySerial) {
         int qty=0;
         for(int i=0;i<listTemporarySerial.size();i++)
@@ -3404,25 +3687,40 @@ public class SalesInvoice extends Fragment {
 
     private void updateAmount(int position,String discount) {
 
+        float discountOld=0,percentOld=0,discountNew=0;
         try {
+            discountNew=Float.parseFloat(discount);
 
+            Log.e("discPercRadioButton","position 11  "+(radioDiscountSerial.getCheckedRadioButtonId()==R.id.discPercRadioButton));
+            Log.e("discValcRadioButton","position 122  "+(radioDiscountSerial.getCheckedRadioButtonId()==R.id.discValueRadioButton));
+            //radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
 
-            if (discPercRadioButton.isChecked()) {
+            if (radioDiscountSerial.getCheckedRadioButtonId()==R.id.discPercRadioButton) {
                 items.get(position).setDiscType(1);// error for discount promotion // percent discount
+                Log.e("discPercRadioButton","position 1");
             } else {
                 items.get(position).setDiscType(0);// value Discount
+                Log.e("discPercRadioButton","position 0");
             }
 
 
-            if (items.get(position).getDiscType() == 0) {
-                items.get(position).setDisc(Float.parseFloat(discount.trim()));
-                items.get(position).setDiscPerc((items.get(position).getQty() * items.get(position).getPrice() *
-                        (Float.parseFloat(discount.trim()) / 100)) + "");
+//            if (discPercRadioButton.isChecked()) {
+//                items.get(position).setDiscType(1);// error for discount promotion // percent discount
+//            } else {
+//                items.get(position).setDiscType(0);// value Discount
+//            }
 
-            } else {
-                items.get(position).setDiscPerc(Float.parseFloat(discount.trim()) + "");
-                items.get(position).setDisc(items.get(position).getQty() * items.get(position).getPrice() *
-                        (Float.parseFloat(discount.trim())) / 100);
+            if (items.get(position).getDiscType() == 0) {// value
+
+                items.get(position).setDisc((discountNew));
+                items.get(position).setDiscPerc( items.get(position).getQty()*items.get(position).getPrice()*(discountNew/100)+"");
+            } else {// percent
+                percentOld=Float.parseFloat(items.get(position).getDiscPerc());
+                items.get(position).setDiscPerc(discountNew+"");
+                items.get(position).setDisc(items.get(position).getQty()*items.get(position).getPrice()*(discountNew/100));
+
+
+
             }
         }catch (Exception e){
 
@@ -3439,9 +3737,10 @@ public class SalesInvoice extends Fragment {
         }
 
         else{
-            items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - Float.parseFloat(items.get(position).getDiscPerc().replaceAll("[%:,]", "")));
+            items.get(position).setAmount((items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc()));
 
         }
+        itemsListAdapter.notifyDataSetChanged();
     }
 
     public void updateQtyBasket() {
@@ -3470,7 +3769,7 @@ public class SalesInvoice extends Fragment {
     }
 
     private void deleteFromListMasterSerial(String itemNo,float price) {
-        Log.e("listSerialTotalbefore","delete1"+listSerialTotal.size());
+
         for(int i=0;i<listSerialTotal.size();i++)
         {
             if((listSerialTotal.get(i).getItemNo().equals(itemNo))&&(listSerialTotal.get(i).getPriceItem()==price))
@@ -3479,7 +3778,7 @@ public class SalesInvoice extends Fragment {
                 i--;
             }
         }
-        Log.e("listSerialTotalbeafter","delete2"+listSerialTotal.size());
+
 
     }
 
@@ -3690,7 +3989,13 @@ public class SalesInvoice extends Fragment {
     }
 
     public void calculateTotals() {
-        Log.e("TOTAL", "" + total_items_quantity);
+        Log.e("TOTAL", "noTax==" + notIncludeTax.isChecked());
+        if(notIncludeTax.isChecked())
+        {
+            noTax=0;
+
+        }else {noTax=1;}
+        Log.e("TOTAL", "noTax2==" +noTax);
 //        discTextView.setText("0.0");
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
@@ -3844,7 +4149,10 @@ public class SalesInvoice extends Fragment {
                 items.get(i).setTaxValue(itemTax);
                 totalTaxValue = totalTaxValue + itemTax;
             }
+            totalDiscount+=getTotalDiscSetting(netTotal);
 
+
+            Log.e("TOTAL", "noTax2totalTaxValue==" +totalTaxValue);
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue;
 //              netTotal = netTotal + subTotal -sum_discount + totalTaxValue;
 
@@ -3946,65 +4254,6 @@ public class SalesInvoice extends Fragment {
                 }
             }
 
-            //**********************************************************************************************************************************************
-
-
-            // ******************************Items Qty Offer By special qty***********************************
-//                try {
-//                    limit_offer = itemsQtyOfferList.get(0).getItemQty();
-//                } catch (Exception e) {
-//                    Log.e("limit_offer", "empty");
-//                }
-//                if (totalQty >= limit_offer && limit_offer != 0) {//10
-//                    for (int b = 0; b < items.size(); b++) {
-//                        for (int k = 0; k < itemsQtyOfferList.size(); k++) {
-//
-//                            {
-//                                if (checkOffers_no(items.get(b).getItemNo())) {
-//                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())) {
-////
-//
-//                                        disc_items_value += items.get(b).getQty() * itemsQtyOfferList.get(k).getDiscount_value();
-//                                        if (items.get(b).getDisc() != 0) {
-//                                            disount_totalnew = 0;
-//                                            items.get(b).setDisc(disount_totalnew);
-//                                            itemsListView.setAdapter(itemsListAdapter);
-//
-//                                        }
-//
-//
-//                                    }
-//
-//
-//                                    Log.e("disc_items_value ", " " + disc_items_value);
-//                                }
-//
-//                            }
-//                            Log.e("checkOffers", "false");
-//                        }
-//                    }
-//                }
-//
-//                else {// total qty less than  special qty offer (10)
-//                    for (int j = 0; j < list_discount_offers.size(); j++) {
-////                            totalDiscount=0;
-//                        if (payMethod == 1) {
-//                            if (list_discount_offers.get(j).getPaymentType() == 1) {
-//                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
-//                                    discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
-////                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
-//                                }
-//                            }
-//                        } else {
-//                            if (list_discount_offers.get(j).getPaymentType() == 0) {
-//                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
-//                                    discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                }
 //
 
             disc_items_total += disc_items_value;
@@ -4076,13 +4325,29 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue = totalTaxValue + itemTax;
             }
 
+//            totalDiscount+=getTotalDiscSetting(netTotal);
+            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
+            totalDiscount+=getTotalDiscSetting(netTotal);
+
+            netTotal=netTotal-getTotalDiscSetting(netTotal);
 
         }
 
 
-        subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
-        taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+
+        if(noTax==0)
+        {
+            totalTaxValue=0;
+            taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+            subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+        }else
+        {
+            taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+            subTotalTextView.setText(String.valueOf(decimalFormat.format(subTotal)));
+        }
+
+
 
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(discTextView.getText().toString()))));
         discTextView.setText(String.valueOf(decimalFormat.format(Double.parseDouble(totalDiscount + ""))));
@@ -4097,6 +4362,38 @@ public class SalesInvoice extends Fragment {
         sum_discount = 0;
 
 
+    }
+
+    private double getTotalDiscSetting(double totalVoucher) {
+        double discTot=0;
+        if(payMethod==1)
+        {
+            if(totalDiscount_checkbox.isChecked())
+            {
+                if(!valueTotalDiscount.getText().toString().equals(""))
+                {
+                    discTot=Double.parseDouble(valueTotalDiscount.getText().toString().trim());
+                    if(discTot!=0)
+                    {
+                        discTot=totalVoucher*(discTot/100);
+                    }
+                }  return discTot;
+            }
+
+//            if(mDbHandler.getAllSettings().get(0).getActiveTotalDiscount()==1)
+//            {
+//                Log.e("getTotalDiscSetting",""+mDbHandler.getAllSettings().get(0).getValueOfTotalDiscount()+"\t"+totalVoucher);
+//                if(mDbHandler.getAllSettings().get(0).getValueOfTotalDiscount()!=0)
+//                {
+//                    discTot=totalVoucher*(mDbHandler.getAllSettings().get(0).getValueOfTotalDiscount()/100);
+//                }
+//                Log.e("getTotalDiscSetting","discTot= "+discTot);
+//
+//                return discTot;
+//            }
+        }
+
+        return 0;
     }
 
     private double getCashCreditOffer(double totalQty, List<QtyOffers> list_discount_offers, int payMethod) {

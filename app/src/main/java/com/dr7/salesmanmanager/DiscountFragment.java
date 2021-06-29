@@ -255,9 +255,8 @@ public class DiscountFragment extends DialogFragment {
         discTypeRadioGroup = (RadioGroup) view.findViewById(R.id.discTypeRadioGroup);
         discPercent = (RadioButton) view.findViewById(R.id.percentRadioButton);
 
+
         valueRadioButton= (RadioButton) view.findViewById(R.id.valueRadioButton);
-        valueRadioButton.setEnabled(true);
-        discPercent.setEnabled(true);
         discValueEditText = (EditText) view.findViewById(R.id.discEditText);
         noteEditText=(EditText) view.findViewById(R.id.noteEditText);
         requestDiscount = view.findViewById(R.id.requestDiscount);

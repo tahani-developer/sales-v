@@ -1,12 +1,17 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.dr7.salesmanmanager.Modles.Item;
@@ -77,63 +82,84 @@ public class ExportToExcel {
             e.printStackTrace();
         }
 
-        switch (report) {
-
-            case 1:
-                workbook = customerLogReport(workbook, (List<Transaction>) list);
-                break;
-
-            case 2:
-                workbook = inventoryReport(workbook, (List<inventoryReportItem>) list);
-                break;
-            case 3:
-                workbook = voucherReport(workbook, (List<Voucher>) list);
-                break;
-            case 4:
-                workbook = itemsReport(workbook, (List<Item>) list);
-                break;
-            case 5:
-                workbook = paymentReport(workbook, (List<Payment>) list);
-                break;
-            case 6:
-                workbook = items_StockReport(workbook, (List<Item>) list);
-                break;
-            case 7:
-                workbook = voucherStockReport(workbook, (List<Voucher>) list);
-                break;
-            case 8:
-                workbook = cashReport(workbook, (List<Voucher>) list);
-                break;
-            case 9:
-                workbook = SerialListReport(workbook, (List<serialModel>) list);
-                break;
-            case 10:
-                workbook = unCollectedReport(workbook, (List<Payment>) list);
-                break;
-            case 11:
-                workbook = SerialitemListReport(workbook, (List<serialModel>) list);
-                break;
-
-
-        }
-
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSalesExcelReport/";
-        file = new File(directory_path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        String targetPdf = directory_path + fileName;
-        File path = new File(targetPdf);
-
-        Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", path);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.setDataAndType(uri, "application/vnd.ms-excel");//intent.setDataAndType(Uri.fromFile(path), "application/pdf");
         try {
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, "Excel program needed!", Toast.LENGTH_SHORT).show();
+            switch (report) {
+
+                case 1:
+                    workbook = customerLogReport(workbook, (List<Transaction>) list);
+                    break;
+
+                case 2:
+                    workbook = inventoryReport(workbook, (List<inventoryReportItem>) list);
+                    break;
+                case 3:
+                    workbook = voucherReport(workbook, (List<Voucher>) list);
+                    break;
+                case 4:
+                    workbook = itemsReport(workbook, (List<Item>) list);
+                    break;
+                case 5:
+                    workbook = paymentReport(workbook, (List<Payment>) list);
+                    break;
+                case 6:
+                    workbook = items_StockReport(workbook, (List<Item>) list);
+                    break;
+                case 7:
+                    workbook = voucherStockReport(workbook, (List<Voucher>) list);
+                    break;
+                case 8:
+                    workbook = cashReport(workbook, (List<Voucher>) list);
+                    break;
+                case 9:
+                    workbook = SerialListReport(workbook, (List<serialModel>) list);
+                    break;
+                case 10:
+                    workbook = unCollectedReport(workbook, (List<Payment>) list);
+                    break;
+                case 11:
+                    workbook = SerialitemListReport(workbook, (List<serialModel>) list);
+                    break;
+
+
+            }
+            }catch (Exception e) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+
+                Log.v("", "Permission is granted");
+            } else {
+
+                Log.v("", "Permission is revoked");
+                ActivityCompat.requestPermissions(
+                        (Activity) context,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+            }
         }
+    }
+
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSalesExcelReport/";
+            file = new File(directory_path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            String targetPdf = directory_path + fileName;
+            File path = new File(targetPdf);
+
+            Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", path);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(uri, "application/vnd.ms-excel");//intent.setDataAndType(Uri.fromFile(path), "application/pdf");
+            try {
+                context.startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(context, "Excel program needed!", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){}
+
     }
 
     //********************************************************************
@@ -229,6 +255,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             workbook.write();
             try {
                 workbook.close();
@@ -272,6 +299,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -324,6 +352,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -367,6 +396,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -443,6 +473,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -486,6 +517,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -526,6 +558,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -572,6 +605,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -615,6 +649,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {
@@ -659,6 +694,7 @@ public class ExportToExcel {
                 e.printStackTrace();
             }
             workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
             try {
                 workbook.close();
             } catch (WriteException e) {

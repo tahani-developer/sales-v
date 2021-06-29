@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
@@ -57,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
@@ -67,12 +69,24 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 141;
+    private static final int DATABASE_VERSION = 144;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  INVENTORY_SHELF  = "INVENTORY_SHELF";
+
+    private static final String  TRANS_NO         = "TRANS_NO";
+    private static final String  ITEM_NO          = "ITEM_NO";
+    private static final String  SERIAL_NO        = "SERIAL_NO";
+    private static final String  QTY_ITEM          = "QTY_ITEM";
+    private static final String  TRANS_DATE        ="TRANS_DATE";
+    private static final String  CUSTOMER_NO      ="CUSTOMER_NO";
+    private static final String  SALESMAN_NUMBER   ="SALESMAN_NUMBER";
+    private static final String  VOUCHER_NUMBER_INVENTORY   ="VOUCHER_NUMBER_INVENTORY";
+
     //----------------------------------------------------------------------
     private static final String  price_offer_list_master  = "price_offer_list_master";
 
@@ -377,6 +391,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String DontShowTaxOnPrinter="DontShowTaxOnPrinter";
     private static final String CONO="CONO";
     private static final String ContinusReading="ContinusReading";
+    private static final String ActiveTotalDisc="ActiveTotalDisc";
+    private static final String ValueTotalDisc="ValueTotalDisc";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -903,9 +919,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + READ_OFFER_FROM_ADMIN + " INTEGER,"
                 + IP_PORT + " TEXT,"
                 + CheckQtyServer + " INTEGER,"
-                +DontShowTaxOnPrinter + " INTEGER,"
-                +CONO+ " TEXT,"
-                +ContinusReading+" INTEGER"
+                + DontShowTaxOnPrinter + " INTEGER,"
+                + CONO + " TEXT,"
+                + ContinusReading + " INTEGER,"
+
+                + ActiveTotalDisc + " INTEGER,"
+
+
+                + ValueTotalDisc + " REAL "
 
 
                 + ")";
@@ -1091,6 +1112,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
                 + UserNo_LogIn + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
+        try {
+            String CREATE_TABLE_INVENTORY_SHELF = "CREATE TABLE IF NOT EXISTS " + INVENTORY_SHELF + "("
+                    + TRANS_NO + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + ITEM_NO + " TEXT,"
+                    + SERIAL_NO + " TEXT,"
+                    + QTY_ITEM + " INTEGER,"
+                    + TRANS_DATE + " TEXT,"
+                    + CUSTOMER_NO + " TEXT,"
+                    + SALESMAN_NUMBER + " TEXT,"
+                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER"
+                    + ")";
+            db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
+
+        }catch (Exception e){}
     }
 
 
@@ -1264,6 +1299,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try
         {
             db.execSQL("ALTER TABLE SETTING ADD ContinusReading INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD ActiveTotalDisc INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try
+        {
+            db.execSQL("ALTER TABLE SETTING ADD ValueTotalDisc REAL NOT NULL DEFAULT '0'");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -1844,8 +1893,58 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
+            String CREATE_TABLE_INVENTORY_SHELF = "CREATE TABLE IF NOT EXISTS " + INVENTORY_SHELF + "("
+                    + TRANS_NO + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + ITEM_NO + " TEXT,"
+                    + SERIAL_NO + " TEXT,"
+                    + QTY_ITEM + " INTEGER,"
+                    + TRANS_DATE + " TEXT,"
+                    + CUSTOMER_NO + " TEXT,"
+                    + SALESMAN_NUMBER + " TEXT,"
+
+                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER"
+
+                    + ")";
+            db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
+
+        }catch (Exception e){}
+
+        try{
+            db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   VOUCHER_NUMBER_INVENTORY  INTEGER  DEFAULT '' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
+    public void add_inventoryShelf(InventoryShelf inventoryShelf)
+    {
+        try {
+
+
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(ITEM_NO, inventoryShelf.getITEM_NO().trim());
+            values.put(SERIAL_NO, inventoryShelf.getSERIAL_NO());
+            values.put(QTY_ITEM, inventoryShelf.getQTY_ITEM());
+            values.put(TRANS_DATE, inventoryShelf.getTRANS_DATE());
+            values.put(CUSTOMER_NO, inventoryShelf.getCUSTOMER_NO());
+            values.put(SALESMAN_NUMBER, inventoryShelf.getSALESMAN_NUMBER());
+            values.put(VOUCHER_NUMBER_INVENTORY, inventoryShelf.getVoucherNo());
+            db.insert(INVENTORY_SHELF, null, values);
+            Log.e("add_Serial",""+inventoryShelf.getSERIAL_NO());
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("add_inventoryShelf",""+e.getMessage());
+
+        }
+
+    }
+
 
 
 
@@ -2415,7 +2514,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
-                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,int dontShowTax,String cono,int contireading) {
+                           int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
+                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -2466,6 +2566,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(  CONO,cono);
         values.put(  ContinusReading,contireading);
 
+        values.put(  ActiveTotalDisc,activeTotDisc);
+        Log.e("valueDisc","addSetting"+valueDisc);
+        values.put(  ValueTotalDisc,valueDisc);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -2521,7 +2624,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(DontShowTaxOnPrinter,defaultValue);
         values.put(CONO,compaNO);
         values.put(ContinusReading,defaultValue);
-
+        values.put(  ActiveTotalDisc,defaultValue);
+        values.put(  ValueTotalDisc,defaultValue);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -2901,6 +3005,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setDontShowtax((cursor.getInt(41)));
                 setting.setCoNo((cursor.getString(42)));
                 setting.setContinusReading((cursor.getInt(43)));
+                setting.setActiveTotalDiscount((cursor.getInt(44)));
+                setting.setValueOfTotalDiscount((cursor.getDouble(45)));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -3908,11 +4014,23 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         String salesMan = getAllUserNo();
+        String selectQuery="";
 //        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        String selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
-                "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
-                "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+        if(flag==2)// just items has serial
+        {
+
+           selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"' and M.ITEM_HAS_SERIAL='"+1+"'";
+            //+"' and M.ITEM_HAS_SERIAL='"+1+"'"
+
+        }else {
+            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+        }
+
 
         Log.e("***" , selectQuery);
         db = this.getWritableDatabase();
@@ -3927,7 +4045,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
                 item.setCategory(cursor.getString(2));
-                if(flag==0)
+                if(flag==0||flag==2)
                 {
                     item.setQty(0);
 
@@ -5053,6 +5171,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     public void deleteAllPostedData() {
         SQLiteDatabase db = this.getWritableDatabase();
+//        db.execSQL("delete from " + SALES_VOUCHER_MASTER );
+//        db.execSQL("delete from " + SALES_VOUCHER_DETAILS );
+//        db.execSQL("delete from " + PAYMENTS );
+//        db.execSQL("delete from " + PAYMENTS_PAPER);
+
         db.execSQL("delete from " + SALES_VOUCHER_MASTER + " where IS_POSTED = '1' ");
         db.execSQL("delete from " + SALES_VOUCHER_DETAILS + " where IS_POSTED = '1' ");
         db.execSQL("delete from " + PAYMENTS + " where IS_POSTED = '1' ");
@@ -5539,7 +5662,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
     String count = "not",isPaid="";
     String itemNo="",itemNoExist="",serialCode="";
-    itemNo=itemNoSelected;
+    if(itemNoSelected.equals(""))
+    {itemNo=itemNoStock;}
+    else {
+        itemNo=itemNoSelected;
+    }
+
+
     serialCode=serial.trim();
     String salesNo=getAllUserNo();
 
@@ -5787,7 +5916,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
 
-        Log.e("getLastTransactionOfSerial", "isSerialCodePaied+\t" + voucherKind + "\t");
+       // Log.e("getLastTransactio", "isSerialCodePaied+\t" + voucherKind + "\t");
 
         return voucherKind;
     }
@@ -6011,6 +6140,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         return seriallistList;
+    }
+
+    public int getmaxSerialInventoryShelf() {
+
+        String selectQuery = "SELECT  MAX(VOUCHER_NUMBER_INVENTORY) FROM " + INVENTORY_SHELF;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getString(0) == null) {
+            return 0;
+        } else {
+            int maxVoucher = Integer.parseInt(cursor.getString(0));
+            return maxVoucher;
+        }
     }
 }
 

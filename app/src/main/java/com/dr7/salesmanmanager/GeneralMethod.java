@@ -4,6 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class GeneralMethod {
     Context  context;
@@ -16,7 +19,30 @@ public class GeneralMethod {
         databaseHandler=new DatabaseHandler(context);
         decimalFormat = new DecimalFormat("00.000");
     }
+    public String getCurentTimeDate(int flag){
+        String dateCurent,timeCurrent,dateTime="";
+        Date currentTimeAndDate;
+        SimpleDateFormat dateFormat, timeformat;
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        if(flag==1)// return date
+        {
 
+            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            dateCurent = dateFormat.format(currentTimeAndDate);
+            dateTime=convertToEnglish(dateCurent);
+
+        }
+        else {
+            if(flag==2)// return time
+            {
+                timeformat = new SimpleDateFormat("hh:mm:ss");
+                dateCurent = timeformat.format(currentTimeAndDate);
+                dateTime=convertToEnglish(dateCurent);
+            }
+        }
+        return dateTime;
+
+    }
     public  String getSalesManLogin(){
         return  databaseHandler.getAllUserNo();
     }

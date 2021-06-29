@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 97</string>
+    <string name="version"> V 100.5</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -469,6 +469,12 @@
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">Do You Want Clear  exported Data??</string>
     <string name="exportAllEx">Export All To Excel</string>
+    <string name="lastVoucherNumber">Last Voucher Number Do you want To Change serial voucher ?</string>
+    <string name="thereisUnExportingData">There is Un Exporting Data !!!</string>
+    <string name="toChangeSerialVoucherNumberExportData">To Change Serial Voucher Number Export Data</string>
+    <string name="noTax">No Tax</string>
+    <string name="shelf_inventory">Shelf Inventory</string>
+    <string name="totalDiscount">Total Cash Discount</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
