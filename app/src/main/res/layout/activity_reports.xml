@@ -471,7 +471,7 @@
                         android:layout_width="match_parent"
                         android:layout_weight="5"
                         android:layout_height="60dp"
-                        android:src="@drawable/add_items"
+                        android:src="@drawable/scan_barcode"
                         />
 
                     <TextView

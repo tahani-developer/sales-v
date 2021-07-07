@@ -11,6 +11,15 @@ public class CompanyInfo {
     private String noteForPrint;
     private  double longtudeCompany;
     private  double latitudeCompany;
+    private  String notePosition;
+
+    public String getNotePosition() {
+        return notePosition;
+    }
+
+    public void setNotePosition(String notePosition) {
+        this.notePosition = notePosition;
+    }
 
     public double getLongtudeCompany() {
         return longtudeCompany;

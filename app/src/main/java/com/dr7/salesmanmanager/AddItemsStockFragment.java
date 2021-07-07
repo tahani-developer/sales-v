@@ -45,6 +45,7 @@ import static com.dr7.salesmanmanager.StockRequest.addItemImgButton;
 import static com.dr7.salesmanmanager.StockRequest.items;
 import static com.dr7.salesmanmanager.StockRequest.itemsRequiredList;
 import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
+import static com.dr7.salesmanmanager.Stock_Activity.intentData;
 
 
 public class AddItemsStockFragment extends DialogFragment {
@@ -62,6 +63,9 @@ public class AddItemsStockFragment extends DialogFragment {
     ImageView barcodebtn;
     CompanyInfo companyInfo;
     DecimalFormat threeDForm;
+    TextView textViewItemNum,textViewUnit_qty;
+    DatabaseHandler mHandler;
+
 
 
     public AddItemsInterface getListener() {
@@ -93,7 +97,7 @@ public class AddItemsStockFragment extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.add_items_stock_dialog, container, false);
         addItemImgButton.setEnabled(true);
-        DatabaseHandler mHandler = new DatabaseHandler(getActivity());
+         mHandler = new DatabaseHandler(getActivity());
         threeDForm = new DecimalFormat("00.00");
 //        String rate_customer=mHandler.getRateOfCustomer();
 //        Log.e("rate addItem",""+rate_customer);
@@ -104,6 +108,12 @@ public class AddItemsStockFragment extends DialogFragment {
         jsonItemsList = new ArrayList<>();
         companyInfo = new CompanyInfo();
         jsonItemsList=itemsRequiredList;
+        textViewItemNum=view.findViewById(R.id.textViewItemNum);
+        textViewUnit_qty=view.findViewById(R.id.textViewUnit_qty);
+        if(intentData.equals("read"))
+        {textViewItemNum.setVisibility(View.GONE);
+            textViewUnit_qty.setVisibility(View.GONE);
+        }
        // jsonItemsList = mHandler.getAllJsonItemsStock(1);
 
 
@@ -299,7 +309,7 @@ public class AddItemsStockFragment extends DialogFragment {
                 }
                 else{
                     Intent i=new Intent(getActivity(),ScanActivity.class);
-                    i.putExtra("key","1");
+                    i.putExtra("key","4");
                     startActivity(i);
                     searchByBarcodeNo(s + "");
 
@@ -357,31 +367,92 @@ public class AddItemsStockFragment extends DialogFragment {
         }
     }
 
-    public  void searchByBarcodeNo(String barcodeValue) {
-        if(!barcodeValue.equals(""))
-        {
-            ArrayList<Item> filteredList = new ArrayList<>();
-            for (int k = 0; k < jsonItemsList.size(); k++) {
-                if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
-                    filteredList.add(jsonItemsList.get(k));
-                }
-            }
-            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
-            recyclerView.setAdapter(adapter);
-            Log.e("filteredList=","" + filteredList.size());
-            if(filteredList.size()==0)
+//    public  void searchByBarcodeNo(String barcodeValue) {
+//        if(!barcodeValue.equals(""))
+//        {
+//
+//
+//            ArrayList<Item> filteredList = new ArrayList<>();
+//            for (int k = 0; k < jsonItemsList.size(); k++) {
+//                if (jsonItemsList.get(k).getItemNo().equals(barcodeValue)){
+//                    filteredList.add(jsonItemsList.get(k));
+//                }
+//            }
+//            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
+//            recyclerView.setAdapter(adapter);
+//            Log.e("filteredList=","" + filteredList.size());
+//            if(filteredList.size()==0)
+//            {
+//                Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+//            }
+//
+//
+//
+//        } else {
+//            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
+//            recyclerView.setAdapter(adapter);
+//
+//
+//        }
+//    }
+    public  void searchByBarcodeNo(String barcode) {
+        String itemNo="",barcodeValue="";
+        barcodeValue=barcode.trim();
+        try {
+            itemNo=mHandler.getItemNoForBarcode(barcodeValue);
+            if(itemNo.equals(""))
             {
-                Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                itemNo=mHandler.getItemNoForSerial(barcodeValue);
+            }
+            Log.e("searchByBarcodeNo",""+itemNo);
+        }catch (Exception e)
+        {
+            itemNo="";
+        }
+        try {
+
+
+            if (!barcodeValue.equals("")) {
+                ArrayList<Item> filteredList = new ArrayList<>();
+                for (int k = 0; k < jsonItemsList.size(); k++) {
+                    if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())) {
+                        filteredList.add(jsonItemsList.get(k));
+                        break;
+
+                    } else {
+
+                        if (!itemNo.equals("")) {
+                            if (itemNo.equals(jsonItemsList.get(k).getItemNo())) {
+
+                                filteredList.add(jsonItemsList.get(k));
+                                break;
+                            }
+                        }
+
+
+                    }
+                }
+                // Log.e("searchByBarcodeNo","size"+filteredList.size());
+                StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(filteredList, getActivity());
+                recyclerView.setAdapter(adapter);
+                Log.e("filteredList=","" + filteredList.size());
+                if(filteredList.size()==0)
+                {
+                    Toast.makeText(getActivity(), barcodeValue+"\tNot Found", Toast.LENGTH_LONG).show();
+                }
+
+
+
+            } else {
+                StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
+                recyclerView.setAdapter(adapter);
+
+
             }
 
 
+        }catch (Exception e){}
 
-        } else {
-            StockRecyclerViewAdapter adapter = new StockRecyclerViewAdapter(jsonItemsList, getActivity());
-            recyclerView.setAdapter(adapter);
-
-
-        }
     }
 
     public void setListener(AddItemsInterface listener) {
@@ -433,12 +504,6 @@ public class AddItemsStockFragment extends DialogFragment {
             Log.e("Add new item error", e.getMessage().toString());
         }
 
-//
-//        if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
-//            item.setDiscType(1);
-//        } else {
-//            item.setDiscType(0);
-//        }
 
         try {
             if (item.getDiscType() == 0) {

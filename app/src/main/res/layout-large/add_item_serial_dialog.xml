@@ -137,6 +137,7 @@
         <TextView
             android:id="@+id/generateSerial"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
 
@@ -173,6 +174,7 @@
         android:layout_marginTop="5dp"
         android:layout_weight="5"
         android:gravity="center"
+        android:id="@+id/linearPrice"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
@@ -372,6 +374,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="7dp"
+
             android:layout_weight="2"
             android:gravity="center"
             android:orientation="horizontal">
@@ -382,7 +385,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:checked="true"
+
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
                 android:textSize="10sp" />
@@ -394,6 +397,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="7dp"
                 android:layout_weight="1"
+
                 android:checked="true"
                 android:gravity="center"
                 android:text="@string/app_disc_type2"
@@ -637,33 +641,39 @@
         <ImageView
             android:id="@+id/serialScan"
             android:layout_width="0dp"
-            android:padding="2dp"
+            android:padding="5dp"
             android:layout_height="match_parent"
             android:layout_weight="2.5"
             android:gravity="center"
-            android:src="@drawable/ic_playlist_add_black_24dp" />
+            android:src="@drawable/app_search" />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="5.2"
+            android:layout_weight="6"
             android:id="@+id/serialValue"
-            android:visibility="gone"
+            android:background="@drawable/back_border_edit"
+            android:visibility="visible"
             android:inputType="text"
             android:lines="1"
-
-
-
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
-
             android:textColor="@color/text_view_color"
             android:textSize="12sp"
             android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/addEditBarcode"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.5"
+            android:gravity="center"
+            android:src="@drawable/ic_create_black_24dp" />
 
         <ImageView
             android:id="@+id/serialScanBunos"
             android:layout_width="0dp"
             android:padding="5dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_weight="2.5"
             android:gravity="center"

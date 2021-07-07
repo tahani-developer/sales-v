@@ -605,7 +605,46 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content">
+                        <CheckBox
+                            android:id="@+id/totalDiscount_checkbox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
 
+                            android:layout_weight="1"
+                            android:text="@string/totalDiscount"
+                            android:textColor="@color/text_view_color"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            />
+                        <EditText
+                            android:id="@+id/valueTotalDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:background="@drawable/back_border_edit"
+                            android:inputType="numberDecimal"
+
+                            android:textColor="@color/text_view_color" />
+                        <TextView
+                            android:id="@+id/va"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2.5"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:textSize="16sp"
+
+
+                            android:text="%"
+                            android:textColor="@color/text_view_color" />
+                    </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

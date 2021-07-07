@@ -138,8 +138,8 @@ public class Login extends AppCompatActivity {
     FloatingActionButton setting_floatingBtn;
     public  static final int typaImport=0;//0---- mySql   1-----IIs
 
-    public  static final int rawahneh=0;
-    public  static final int passwordSettingAdmin=1;//0 ---> static password   1 ----->password from admin
+    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static final int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)

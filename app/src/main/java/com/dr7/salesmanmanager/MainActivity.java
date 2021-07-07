@@ -1094,6 +1094,13 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         }
+//        else if (id == R.id.shelf_inventory) {
+//            finish();
+//            Intent i=new Intent(MainActivity.this,Stock_Activity.class);
+//            i.putExtra("serial","read");
+//            startActivity(i);
+//
+//        }
 //        else
 //            if (id == R.id.customers_location) {
 ////            locationPermissionRequest.closeLocation();
@@ -1220,6 +1227,7 @@ public class MainActivity extends AppCompatActivity
 
             passwordDataClearDialog();
 
+
         }
         else if (id == R.id.nav_unCollectedchecked) {
           //  locationPermissionRequest.closeLocation();
@@ -1253,6 +1261,7 @@ public class MainActivity extends AppCompatActivity
 //            locationPermissionRequest.closeLocation();
            finish();
            Intent i=new Intent(MainActivity.this,Stock_Activity.class);
+            i.putExtra("serial","stock");
            startActivity(i);
 
         }
@@ -1277,6 +1286,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     mDbHandler.deleteAllPostedData();
                     sweetAlertDialog.dismissWithAnimation();
+                    openEditSettingSerialVoucher();
                 }
                 else {
                     editText.setError("Incorrect");
@@ -1285,6 +1295,67 @@ public class MainActivity extends AppCompatActivity
         })
 
                 .show();
+    }
+    int lastVoucherNo=0;
+    private void openEditSettingSerialVoucher() {
+        isPosted=true;
+        lastVoucherNo = mDbHandler.getMaxSerialNumber(504);
+      //  isPosted = mDbHandler.isAllVoucher_posted();
+        Log.e("openEditSettingSerial", "" + lastVoucherNo);
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setText(lastVoucherNo + "");
+        if (isPosted == false) {
+            editText.setEnabled(false);
+            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText(getResources().getString(R.string.warning_message))
+                    .setContentText(getResources().getString(R.string.toChangeSerialVoucherNumberExportData))
+                    .show();
+        } else {
+
+
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        SweetAlertDialog sweetMessage = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.lastVoucherNumber));
+        sweetMessage.setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if (!editText.getText().toString().equals("")) {
+                    if (isPosted == false) {
+                        sweetAlertDialog.dismissWithAnimation();
+                        Toast.makeText(MainActivity.this, "" + getResources().getString(R.string.thereisUnExportingData), Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (editText.getText().toString().trim().equals(lastVoucherNo + "")) {
+                            sweetAlertDialog.dismissWithAnimation();
+
+                        } else {
+                            try {
+                                lastVoucherNo = Integer.parseInt(editText.getText().toString().trim());
+                                mDbHandler.setMaxSerialNumber(504, lastVoucherNo);
+                                Log.e("openEditSettingSerial", "" + lastVoucherNo);
+                                sweetAlertDialog.dismissWithAnimation();
+                            } catch (Exception e) {
+                                editText.setError("invalid");
+                            }
+
+
+                        }
+
+                    }
+
+                } else {
+                    editText.setError("*Required");
+                }
+
+            }
+        })
+
+                .show();
+    }
+
     }
 //
 //      if(getTypeImport().equals("1"))
@@ -1976,7 +2047,7 @@ public class MainActivity extends AppCompatActivity
     }
     public class openSetting {
         boolean validSerial = false, validReturn = false, validOrder = false;
-        EditText linkEditText,ip_withPort, cono,numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit, salesmanNmae;
+        EditText linkEditText,ip_withPort, cono,numOfCopy, invoicEditText, returnEditText, orderEditText, paymentEditTextCash, paymentEditTextCheque, paymentEditTextCredit, salesmanNmae,valueTotalDiscount;
         RadioGroup taxCalc, printMethod;
         CheckBox checkBox, checkBox2;
         RadioButton bluetooth, wifi, exclude, include;
@@ -1984,7 +2055,8 @@ public class MainActivity extends AppCompatActivity
         CheckBox checkBox_canChangePrice, readDiscount, workOnline, paymetod_check, bonusNotAlowed, noOfferForCredit, customerAuthor,
                 passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
                 showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
-                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox,continousReading_checkbox;
+                showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox
+                ,continousReading_checkbox,totalDiscount_checkbox;
         Dialog dialog;
         LinearLayout linearSetting;
         TextView editIp;
@@ -2017,6 +2089,8 @@ public class MainActivity extends AppCompatActivity
                 linearSetting.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             }
             continousReading_checkbox= (CheckBox) dialog.findViewById(R.id.continousReading_checkbox);
+            totalDiscount_checkbox= (CheckBox) dialog.findViewById(R.id.totalDiscount_checkbox);
+            valueTotalDiscount= (EditText) dialog.findViewById(R.id.valueTotalDiscount);
             editIp= (TextView) dialog.findViewById(R.id.editIp);
             ip_withPort= (EditText) dialog.findViewById(R.id.ip_withPort);
             cono= (EditText) dialog.findViewById(R.id.cono);
@@ -2373,6 +2447,15 @@ public class MainActivity extends AppCompatActivity
                     continousReading_checkbox.setChecked(false);
                 }
 
+                if (mDbHandler.getAllSettings().get(0).getActiveTotalDiscount() == 1) {
+                    totalDiscount_checkbox.setChecked(true);
+                    valueTotalDiscount.setText(mDbHandler.getAllSettings().get(0).getValueOfTotalDiscount()+"");
+                }
+                else {
+                    totalDiscount_checkbox.setChecked(false);
+                    valueTotalDiscount.setText(mDbHandler.getAllSettings().get(0).getValueOfTotalDiscount()+"");
+                }
+
 
 
 
@@ -2557,6 +2640,15 @@ public class MainActivity extends AppCompatActivity
                         int offerAdmin= offerFromAdmin_checkbox.isChecked()?1:0;
                         int qtyServer=checkQtyServer.isChecked()?1:0;
                         int continousReading=continousReading_checkbox.isChecked()?1:0;
+                        int activeTotalDisc=totalDiscount_checkbox.isChecked()?1:0;
+                        double valueOfTotDisc=0;
+                        try {
+                            valueOfTotDisc=Double.parseDouble(valueTotalDiscount.getText().toString().trim());
+                        }catch (Exception e){
+                            valueOfTotDisc=0;
+                        }
+
+                        Log.e("valueOfTotDisc","addSetting00"+valueOfTotDisc);
 
 
                         int showTax=dontShowTax_checkbox.isChecked()?1:0;
@@ -2567,12 +2659,12 @@ public class MainActivity extends AppCompatActivity
                         String salesmanname=salesmanNmae.getText().toString();
                         Log.e("salesmanname",""+salesmanname);
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
-                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
-                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
-                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
-                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading);
+                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
+                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
+                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
+                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
+                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc);
 
 
                         finish();
@@ -2626,8 +2718,8 @@ public class MainActivity extends AppCompatActivity
 
 
         RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.radioGrp);
-        RadioButton R1 =  dialog.findViewById(R.id.radioTop);
-        RadioButton R2 =  dialog.findViewById(R.id.radioBottom);
+        RadioButton radioTop =  dialog.findViewById(R.id.radioTop);
+        RadioButton radioBottom =  dialog.findViewById(R.id.radioBottom);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -2710,6 +2802,14 @@ public class MainActivity extends AppCompatActivity
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
+                if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
+                {
+                    radioBottom.setChecked(true);
+                }
+                else {
+                    radioTop.setChecked(true);
+                }
+
             }
             else {
                 tax.setText(0+"");

@@ -110,6 +110,7 @@ public class ExportJason extends AppCompatActivity {
     private RequestQueue requestQueue;
     public static String CONO="",SalesManLogin;
     SweetAlertDialog pdVoucher=null;
+    SweetAlertDialog pdStosk=null;
 
     boolean isPosted = true;
 //    getCustomerLocation
@@ -312,8 +313,8 @@ public class ExportJason extends AppCompatActivity {
 
     }
     void startExportDelPhi()throws JSONException {
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();
 //        savePayment();
@@ -2226,8 +2227,15 @@ public class ExportJason extends AppCompatActivity {
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
 
+
         @Override
         protected void onPreExecute() {
+
+            pdStosk = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdStosk.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdStosk.setTitleText(" Export Stock ");
+            pdStosk.setCancelable(false);
+            pdStosk.show();
             super.onPreExecute();
         }
 
@@ -2295,7 +2303,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-
+            pdStosk.dismissWithAnimation();
             Log.e("onPostExecute","EXPORT_STOCK"+result);
 
             if (result != null && !result.equals("")) {

@@ -223,7 +223,8 @@
 
                     android:checked="true"
                     android:text="@string/top"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    />
 
                 <RadioButton
                     android:id="@+id/radioBottom"

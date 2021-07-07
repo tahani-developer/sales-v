@@ -336,7 +336,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:checked="true"
+
                 android:text="@string/app_disc_type1"
                 android:textColor="@color/text_view_color"
                 android:textSize="16sp" />
@@ -346,7 +346,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-
+                android:checked="true"
                 android:layout_marginLeft="7dp"
                 android:text="@string/app_disc_type2"
                 android:textColor="@color/text_view_color"

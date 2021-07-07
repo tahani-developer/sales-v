@@ -117,17 +117,13 @@ public class AddItemsFragment2 extends DialogFragment {
     TextView emptyView;
     ListView verticalList;
     public  static   float total_items_quantity=0;
+
     private float descPerc;
     boolean added = false;
     double  flagBonus=0,amountBonus=0;
     private static String smokeGA = "دخان";
     private static String smokeGE = "SMOKE";
     final String result="";
-    int indexfirstpeces=0;
-    String  firstString="";
-    String secondString="";
-    String lower="";
-    String upper="";
     int size_firstlist=0;
      public   static String s="";
     SimpleDateFormat df, df2;
@@ -851,13 +847,14 @@ try {
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
-                           String category, String posPrice, CheckBox useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial) {
+                           String category, String posPrice, int useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial) {
         boolean itemInlocalList=false;
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
         voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
+        Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
         try {
@@ -932,7 +929,11 @@ try {
                 {
                     unitInt=1;
                 }
+                if(useWeight==1)
                 item.setQty(Float.parseFloat(qty)*unitInt);
+                else {
+                    item.setQty(Float.parseFloat(qty));
+                }
                 item.setItemHasSerial(hasSerial+"");
 
                 item.setPrice(Float.parseFloat(price.trim()));

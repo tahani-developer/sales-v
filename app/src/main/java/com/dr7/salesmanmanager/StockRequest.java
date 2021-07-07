@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
+import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -55,6 +56,10 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
+
+import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.serialListitems_stock;
+import static com.dr7.salesmanmanager.Stock_Activity.intentData;
 
 
 /**
@@ -66,7 +71,7 @@ public class StockRequest extends Fragment {
     public static ImageButton addItemImgButton, newImgBtn ;
     FloatingActionButton SaveData;
     private EditText remarkEditText;
-    private TextView voucherNumberTextView;
+    public static TextView voucherNumberTextView;
     public static TextView totalQty;
     public  static  List<Item> items;
     public ItemsListStockAdapter itemsListAdapter;
@@ -85,6 +90,9 @@ public class StockRequest extends Fragment {
     DecimalFormat threeDForm;
     double curentQ=0;
     public  static TextView clearData;
+    public  static  String voucherDate="";
+    public  static  GeneralMethod generalMethod;
+    public  static  ArrayList<InventoryShelf> listSerialInventory=new ArrayList<>();
 
     public List<Item> getItemsStockList() {
         return this.items;
@@ -111,6 +119,7 @@ public class StockRequest extends Fragment {
         mDbHandler = new DatabaseHandler(getActivity());
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         itemCountTable=mDbHandler.getCountItemsMaster();
+        generalMethod=new GeneralMethod(getActivity());
 
 
         threeDForm = new DecimalFormat("00.00");
@@ -137,8 +146,17 @@ public class StockRequest extends Fragment {
         String rate_customer = mDbHandler.getRateOfCustomer();
         companyInfo = new CompanyInfo();
 //        jsonItemsList = mDbHandler.getAllJsonItemsStock();
-        voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
+        if(intentData.equals("read"))
+        {
+            voucherNumber=mDbHandler.getmaxSerialInventoryShelf()+1;
+        }else {
+            voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
+        }
+
         addItemImgButton = (ImageButton) view.findViewById(R.id.addItemImgButton);
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        voucherDate = df.format(currentTimeAndDate);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (FloatingActionButton) view.findViewById(R.id.saveInvoiceData);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
@@ -206,7 +224,14 @@ public class StockRequest extends Fragment {
             }
         });
 
-        itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
+
+//        if(intentData.equals("read"))
+//        {itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
+//        }
+//        else {
+//            itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
+//        }
+        itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
         items = new ArrayList<>();
         listItemStock = new ArrayList<>();
         itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
@@ -250,47 +275,62 @@ public class StockRequest extends Fragment {
                         else {
 
                             String remark = " " + remarkEditText.getText().toString();
-
-                            Date currentTimeAndDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                            String voucherDate = df.format(currentTimeAndDate);
-
-                            if (mDbHandler.getMaxVoucherStockNumber() == voucherNumber) { // if we clicked on save twice
-                                mDbHandler.deleteVoucher(voucherNumber);
-                            }
-
                             int salesMan = Integer.parseInt(Login.salesMan);
 
                             double total = Double.parseDouble(totalQty.getText().toString());
-                            voucherStock = new Voucher(0, voucherNumber, convertToEnglish(voucherDate),
-                                    salesMan, remark, total, 0);
-//                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
-//                                    salesMan, remark, total, 0));
-                            mDbHandler.addRequestVoucher(voucherStock);
+                            SaveData.setEnabled(false);
+                            if(intentData.equals("read")){// add to inventory
 
-
-                            for (int i = 0; i < items.size(); i++) {
-                                String cureQty=convertToEnglish(threeDForm.format(items.get(i).getCurrentQty()));
-                                curentQ=Double.parseDouble(cureQty);
-                                mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
-                                        items.get(i).getItemName(), items.get(i).getQty(), convertToEnglish(voucherDate),curentQ));
-                            }
-                            try {
-                                if(mDbHandler.getAllSettings().get(0).getSaveOnly()!=1)
-                                {  printStock();}
-                                else {
-                                    clearLayoutData();
-                                    clearItemsList();
-                                    new SweetAlertDialog(view.getContext(), SweetAlertDialog.SUCCESS_TYPE)
-                                            .setTitleText(view.getContext().getString(R.string.saveSuccessfuly))
-                                            .show();
+                                for(int i=0;i<listSerialInventory.size();i++)
+                                {
+                                    Log.e("listSerialInventory",""+listSerialInventory.size()+"\tgetSERIAL_NO="+listSerialInventory.get(i).getSERIAL_NO());
+                                    mDbHandler.add_inventoryShelf(listSerialInventory.get(i));
                                 }
 
+
+                            }else {// add to stock
+
+                                if (mDbHandler.getMaxVoucherStockNumber() == voucherNumber) { // if we clicked on save twice
+                                    mDbHandler.deleteVoucher(voucherNumber);
+                                }
+
+
+                                voucherStock = new Voucher(0, voucherNumber, convertToEnglish(voucherDate),
+                                        salesMan, remark, total, 0);
+//                            mDbHandler.addRequestVoucher(new Voucher(0, voucherNumber, voucherDate,
+//                                    salesMan, remark, total, 0));
+                                mDbHandler.addRequestVoucher(voucherStock);
+
+
+                                for (int i = 0; i < items.size(); i++) {
+                                    String cureQty = convertToEnglish(threeDForm.format(items.get(i).getCurrentQty()));
+                                    curentQ = Double.parseDouble(cureQty);
+                                    mDbHandler.addRequestItems(new Item(0, voucherNumber, items.get(i).getItemNo(),
+                                            items.get(i).getItemName(), items.get(i).getQty(), convertToEnglish(voucherDate), curentQ));
+                                }
                             }
-                            catch (Exception e)
-                            {
-                                clearLayoutData();
-                            }
+                                try {
+                                    if((mDbHandler.getAllSettings().get(0).getSaveOnly()!=1)&&(!intentData.equals("read")))
+                                    {  printStock();}
+                                    else {
+                                        clearLayoutData();
+                                        clearItemsList();
+                                        SaveData.setEnabled(true);
+                                        new SweetAlertDialog(view.getContext(), SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText(view.getContext().getString(R.string.saveSuccessfuly))
+                                                .show();
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+                                    clearLayoutData();
+                                }
+
+
+
+
+
 
                         }
 

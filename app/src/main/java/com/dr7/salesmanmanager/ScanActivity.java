@@ -79,6 +79,11 @@ public class ScanActivity extends AppCompatActivity
                     AddItemsFragment2.barcode.setText(""+rawResult.getText().toString().trim());
                     Log.e("RESULT",""+rawResult.getText());
                 }
+                else if(type.equals("4"))
+                {
+                    AddItemsStockFragment.barcode.setText(""+rawResult.getText().toString().trim());
+                    Log.e("RESULT",""+rawResult.getText());
+                }
 
             }
 

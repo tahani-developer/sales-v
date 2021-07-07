@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -32,6 +34,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static androidx.core.os.HandlerCompat.postDelayed;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
+
 public class SerialReport extends AppCompatActivity {
     RecyclerView recyclerView;
    public static List<serialModel> allseriallist =new ArrayList<>();
@@ -42,11 +47,12 @@ public class SerialReport extends AppCompatActivity {
     public static SerialReportAdpter adapter;
     TextView searchicon;
     EditText searchedit;
-    public EditText date;
+    public TextView date;
     TableRow tableRow;
 Button button;
     private Button preview;
     Calendar myCalendar;
+    HorizontalScrollView HorizontalScrollView01;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -60,19 +66,8 @@ Button button;
 
 
         String Date_Vocher=getCurentTimeDate(1);
-        // String Date_Vocher="14/02/2021";
-        for (int i = 0; i < allseriallist.size(); i++) {
-            if(allseriallist.get(i).getDateVoucher().equals( Date_Vocher))
-            todayseariallist.add(allseriallist.get(i));
-        }
+        filterDate(Date_Vocher);
 
-
-        if(todayseariallist.size()==0)tableRow.setVisibility(View.GONE);
-        else
-        { fillAdapterData(todayseariallist);
-
-            tableRow.setVisibility(View.VISIBLE);
-        }
 
 
 
@@ -127,7 +122,30 @@ Button button;
                 search();
             }
         });
+//        HorizontalScrollView01.post(new Runnable() {
+//            public void run() {
+//                HorizontalScrollView01.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+//            }
+//        });
     }
+
+    private void filterDate(String date_vocher) {
+        todayseariallist.clear();
+        // String Date_Vocher="14/02/2021";
+        for (int i = 0; i < allseriallist.size(); i++) {
+            if(allseriallist.get(i).getDateVoucher().trim().equals(date_vocher.trim()))
+                todayseariallist.add(allseriallist.get(i));
+        }
+
+
+        if(todayseariallist.size()==0)tableRow.setVisibility(View.GONE);
+        else
+        { fillAdapterData(todayseariallist);
+
+            tableRow.setVisibility(View.VISIBLE);
+        }
+    }
+
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -156,9 +174,9 @@ Button button;
         String searchED=convertToEnglish(searchedit.getText().toString().trim());
 
         for (int i = 0; i < allseriallist.size(); i++) {
-            if (searchED.startsWith(allseriallist.get(i).getVoucherNo())
-            || searchED.startsWith(allseriallist.get(i).getItemNo())
-            ||searchED.startsWith(allseriallist.get(i).getSerialCode())
+            if ((allseriallist.get(i).getVoucherNo().startsWith(searchED))
+            || (allseriallist.get(i).getItemNo().startsWith(searchED))
+            ||(allseriallist.get(i).getSerialCode().startsWith(searchED))
 //                    ||searchED.contains(allseriallist.get(i).getVoucherNo())
 //                    || searchED.contains(allseriallist.get(i).getItemNo())
 //                    ||searchED.contains(allseriallist.get(i).getSerialCode())
@@ -167,14 +185,34 @@ Button button;
 
 
     }
-        if(allseriallist.size()>0){fillAdapterData(searchlist);
+        if(searchlist.size()>0){fillAdapterData(searchlist);
         tableRow.setVisibility(View.VISIBLE);}
     else
         { tableRow.setVisibility(View.GONE);}
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void init() {
         databaseHandler=new DatabaseHandler(SerialReport.this);
+        HorizontalScrollView01=findViewById(R.id.HorizontalScrollView01);
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         button=findViewById(R.id.export);
         recyclerView=findViewById(R.id.SErecyclerView_report);
         searchedit=findViewById(R.id.search_edt);
@@ -182,6 +220,7 @@ Button button;
         date=findViewById(R.id.SE_date);
         preview=findViewById(R.id.SE_preview);
 tableRow=findViewById(R.id.serialtable);
+
 
         searchedit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -201,9 +240,13 @@ tableRow=findViewById(R.id.serialtable);
             if( !searchedit.getText().toString().trim().equals(""))search();
             else
             {
+                if(!date.getText().toString().equals(""))
+                {
+                    filterDate(date.getText().toString());
 
-                fillAdapterData(todayseariallist);
-                adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
+                }
+
             }
              /*   if(editable.equals(""))
                 {

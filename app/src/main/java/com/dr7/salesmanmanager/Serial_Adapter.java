@@ -44,6 +44,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterBonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterSerial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
+import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.unitQtyStock;
 import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
 import static com.dr7.salesmanmanager.SalesInvoice.editOpen;
 import static com.dr7.salesmanmanager.SalesInvoice.ipValue;
@@ -70,14 +71,32 @@ public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHold
     public  int currentUpdate=-1;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     public  int sunmiDevice=0,dontShowTax=0,contiusReading=0;
+    public  int flagStock=0;
 
 
     public Serial_Adapter(List<serialModel> chequeList, Context context) {
 
+        Log.e("Serial_Adapter",""+context);
         this.context = context;
         this.list = chequeList;
-        listMasterSerialForBuckup.clear();
-        listMasterSerialForBuckup.addAll(chequeList);
+        if ( context instanceof Stock_Activity ) {
+// do something
+            flagStock=1;
+        }
+        else {
+
+        }
+
+//        if((Stock_Activity)context)
+//        {
+//
+//        }
+        if(flagStock==0)
+        {
+            listMasterSerialForBuckup.clear();
+            listMasterSerialForBuckup.addAll(chequeList);
+        }
+
         databaseHandler = new DatabaseHandler(context);
         //this.contextAddItem = contextadd;
         for (int i = 0; i <= chequeList.size(); i++) {
@@ -225,7 +244,13 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
                                     unitQtyEdit.setText(counterSerial+"");
                                 }
                                 else {
-                                    unitQty.setText(""+counterSerial);
+                                    if(flagStock==0) {
+                                        unitQty.setText(""+counterSerial);
+                                    }
+                                    else {
+                                        unitQtyStock.setText(""+counterSerial);
+                                    }
+
                                 }
                                 Log.e("onClick","list"+i+list.size()+"\t"+counterSerial);
                             }
@@ -236,7 +261,9 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
                                     bonus.setText(""+counterBonus);
                                 }
                             }
-                            listMasterSerialForBuckup.get(i).setIsDeleted("1");
+                            if(flagStock==0) {
+                                listMasterSerialForBuckup.get(i).setIsDeleted("1");
+                            }
                             list.remove(i);
                             Log.e("onClick","list"+i+list.size()+"\t"+counterSerial);
 
@@ -860,6 +887,7 @@ try {
 
         if(dontValidate==1){
             list.get(position).setSerialCode(data.trim());
+            if(flagStock==0)
             listMasterSerialForBuckup.get(position).setSerialCode(data.trim());
             currentUpdate = position;
 
@@ -878,6 +906,7 @@ try {
             {
                // Log.e("errorSerial2", "afterTextChanged" +"position\t"+data);
                 list.get(position).setSerialCode("");
+                if(flagStock==0)
                 listMasterSerialForBuckup.get(position).setIsDeleted("1");
 
                // isFoundSerial=true;
@@ -928,7 +957,8 @@ try {
                 errorData = false;
 
                 list.get(position).setSerialCode(data);
-                listMasterSerialForBuckup.get(position).setSerialCode(data);
+                    if(flagStock==0)
+                        listMasterSerialForBuckup.get(position).setSerialCode(data);
                 currentUpdate = position;
 
                 isClicked.set(position, 0);
