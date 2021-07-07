@@ -61,7 +61,8 @@ public class ExportToExcel {
         this.context = context;
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() + "/VanSalesExcelReport");
-
+        Log.e("sdCard",sdCard.canRead()+"" );
+        Log.e("directory:",directory.canRead()+"+directory.exists:" +directory.exists());
         if (!directory.isDirectory()) {//create directory if not exist
             directory.mkdirs();
         }
@@ -123,6 +124,7 @@ public class ExportToExcel {
         if (!file.exists()) {
             file.mkdirs();
         }
+        Log.e("filepath",directory_path);
         String targetPdf = directory_path + fileName;
         File path = new File(targetPdf);
 
