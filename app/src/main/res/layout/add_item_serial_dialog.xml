@@ -721,7 +721,7 @@
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
         android:visibility="visible">
-        <TextView
+        <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5.2"

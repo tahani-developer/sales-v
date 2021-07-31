@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 //import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 
@@ -69,7 +70,7 @@ public class StockRequest extends Fragment {
 
     public ListView itemsListView;
     public static ImageButton addItemImgButton, newImgBtn ;
-    FloatingActionButton SaveData;
+    FloatingActionButton SaveData,deletAllData;
     private EditText remarkEditText;
     public static TextView voucherNumberTextView;
     public static TextView totalQty;
@@ -93,6 +94,7 @@ public class StockRequest extends Fragment {
     public  static  String voucherDate="";
     public  static  GeneralMethod generalMethod;
     public  static  ArrayList<InventoryShelf> listSerialInventory=new ArrayList<>();
+    public  static  List<String> itemsNoList=new ArrayList<>();
 
     public List<Item> getItemsStockList() {
         return this.items;
@@ -159,6 +161,7 @@ public class StockRequest extends Fragment {
         voucherDate = df.format(currentTimeAndDate);
         newImgBtn = (ImageButton) view.findViewById(R.id.newImgBtn);
         SaveData = (FloatingActionButton) view.findViewById(R.id.saveInvoiceData);
+        deletAllData=(FloatingActionButton) view.findViewById(R.id.deletAllData);
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
         totalQty = (TextView) view.findViewById(R.id.total_qty);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumberTextView);
@@ -256,7 +259,14 @@ public class StockRequest extends Fragment {
                 builder.create().show();
             }
         });
+        deletAllData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openClearDialog();
 
+
+            }
+        });
         SaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -345,6 +355,30 @@ public class StockRequest extends Fragment {
 
         return view;
     }
+
+    private void openClearDialog() {
+
+
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.ClearAll));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                clearItemsList();
+                clearLayoutData();
+
+                sweetMessage.dismissWithAnimation();
+            }
+        })
+
+                .show();
+    }
+
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
@@ -538,8 +572,12 @@ public class StockRequest extends Fragment {
         remarkEditText.setText(" ");
 
         //calculateTotals();
-
-        voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
+        if(intentData.equals("read"))
+        {
+            voucherNumber=mDbHandler.getmaxSerialInventoryShelf()+1;
+        }else {
+            voucherNumber = mDbHandler.getMaxVoucherStockNumber() + 1;
+        }
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
         totalQty.setText("00.00");
@@ -547,13 +585,26 @@ public class StockRequest extends Fragment {
     }
 
     public void clearItemsList() {
-        items.clear();
+       // items.clear();
+        itemsNoList.clear();
+        items=new ArrayList<>();
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
-        for(int i=0;i<itemsRequiredList.size();i++)
-        {
-            itemsRequiredList.get(i).setQty(0);
-        }
+//        for(int i=0;i<itemsRequiredList.size();i++)
+//        {
+//            itemsRequiredList.get(i).setQty(0);
+//            itemsRequiredList.get(i).setCurrentQty(0);
+//        }
+
+
+        try {
+            itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
+
+            listItemStock = new ArrayList<>();
+            listSerialInventory.clear();
+            serialListitems_stock.clear();
+
+        }catch (Exception e){Log.e("serialListitems_stock","Exception+clear");}
 
     }
 

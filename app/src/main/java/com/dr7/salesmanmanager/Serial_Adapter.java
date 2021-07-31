@@ -220,7 +220,13 @@ public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i){
         viewHolder.textView_counterNo.setTextColor(context.getResources().getColor(R.color.text_view_color));
 
     }
+    if(flagStock==1)
+    {
+        viewHolder.deletItem.setVisibility(View.GONE);
+        viewHolder.editBarcode.setVisibility(View.GONE);
+        viewHolder.editTextSerialCode.setEnabled(false);
 
+    }
         viewHolder.deletItem.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {

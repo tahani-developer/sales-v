@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
@@ -87,7 +88,8 @@ public class ExportJason extends AppCompatActivity {
     public Context context;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
-            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial,jsonArrayStockRequestMaster;
+            jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial,
+            jsonArrayStockRequestMaster,jsonArrayInventory;
     DatabaseHandler mHandler;
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
@@ -104,6 +106,7 @@ public class ExportJason extends AppCompatActivity {
     public  static  List<Item> stockRequestListList=new ArrayList<>();
     public  static  List<CustomerLocation> customerLocationList=new ArrayList<>();
     public  static  List<serialModel> serialModelList=new ArrayList<>();
+    public  static  List<InventoryShelf> shelflList=new ArrayList<>();
     int  approveAdmin=-1,workOnLine=-1;
     SweetAlertDialog getDataProgress;
     private JsonObjectRequest exportVouMasterRequest;
@@ -313,8 +316,8 @@ public class ExportJason extends AppCompatActivity {
 
     }
     void startExportDelPhi()throws JSONException {
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+//        headerDll="/Falcons/VAN.dll";
+        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();
 //        savePayment();
@@ -673,7 +676,7 @@ public class ExportJason extends AppCompatActivity {
                     mHandler.updateCustomersMaster();
                     mHandler.updateSerialTableIsposted();
                     mHandler.updateRequestStockMaster();
-                    mHandler.updateRequestStockDetail();
+                    mHandler.updateInventoryShelf();
                     getData();
                     Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
                     Log.e("tag", "****Success");
@@ -1698,6 +1701,10 @@ public class ExportJason extends AppCompatActivity {
         getTransactionTables();
         new  JSONTask_TransactionDelphi().execute();
     }
+    public void exportInventorySh(){
+        getInventoryShelfTables();
+        new  JSONTask_InventoryShelfDelphi().execute();
+    }
 
     private void getVouchersDetail() {
         items = mHandler.getAllItems();
@@ -1756,6 +1763,30 @@ public class ExportJason extends AppCompatActivity {
         try {
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArraySerial);
+            Log.e("getSerialetail",""+vouchersObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getInventoryShelfTables() {
+        try {
+            shelflList = mHandler.getAllINVENTORY_SHELF();
+            Log.e("shelflList",""+shelflList);
+            jsonArrayInventory = new JSONArray();
+            for (int i = 0; i < shelflList.size(); i++)
+            {
+
+                jsonArrayInventory.put(shelflList.get(i).getJSONObjectDelphi());
+
+            }
+            Log.e("jsonArraySerial",""+jsonArrayInventory.getJSONObject(0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            vouchersObject=new JSONObject();
+            vouchersObject.put("JSN",jsonArrayInventory);
             Log.e("getSerialetail",""+vouchersObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -2193,6 +2224,106 @@ public class ExportJason extends AppCompatActivity {
 //            progressDialog.dismiss();
             Log.e("onPostExecuteTrans",""+result);
             pdVoucher.setTitle("Export Transaction");
+
+            if (result != null && !result.equals("")) {
+//                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
+                exportInventorySh();
+
+            } else {
+
+//                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private class JSONTask_InventoryShelfDelphi extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+        SweetAlertDialog pdItem=null;
+        public  String salesNo="",finalJson;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            //  URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/ExportSALES_VOUCHER_D?CONO="+CONO.trim()+"&JSONSTR="+vouchersObject.toString().trim();
+
+            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTDROPPRICE";
+
+            String ipAddress = "",JsonResponse="";
+            Log.e("tagexPORT", "JsonResponseEXPORTDROPPRICE");
+
+            try {
+                ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
+
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(ExportJason.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                try {
+                    request.setURI(new URI(URL_TO_HIT));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("JsonResponse", "ExporVoucher" + JsonResponse);
+
+
+
+                //*******************************************
+
+
+            } catch (Exception e) {
+            }
+            return JsonResponse;
+
+
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+//            progressDialog.dismiss();
+            Log.e("onPostExecuteTrans",""+result);
+            pdVoucher.setTitle("Export Transaction");
             pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
@@ -2204,7 +2335,6 @@ public class ExportJason extends AppCompatActivity {
             }
         }
     }
-
     private void updatePosted() {
         mHandler.updateVoucher();
         mHandler.updateVoucherDetails();
@@ -2216,6 +2346,7 @@ public class ExportJason extends AppCompatActivity {
         mHandler.updateSerialTableIsposted();
         mHandler.updateRequestStockMaster();
         mHandler.updateRequestStockDetail();
+        mHandler.updateInventoryShelf();
         if(rawahneh==1)
         {
 

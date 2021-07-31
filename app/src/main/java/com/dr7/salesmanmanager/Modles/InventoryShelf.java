@@ -1,14 +1,29 @@
 package com.dr7.salesmanmanager.Modles;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class InventoryShelf {
-  private String ITEM_NO;
+    private  int transNo;
+
+
+
+    private String ITEM_NO;
     private String SERIAL_NO;
     private int  QTY_ITEM;
     private String TRANS_DATE;
     private String CUSTOMER_NO;
     private String  SALESMAN_NUMBER;
     private  int voucherNo;
+    public int getTransNo() {
+        return transNo;
+    }
 
+    public void setTransNo(int transNo) {
+        this.transNo = transNo;
+    }
     public int getVoucherNo() {
         return voucherNo;
     }
@@ -67,4 +82,25 @@ public class InventoryShelf {
     public void setSALESMAN_NUMBER(String SALESMAN_NUMBER) {
         this.SALESMAN_NUMBER = SALESMAN_NUMBER;
     }
-}
+
+    public JSONObject getJSONObjectDelphi() {
+            JSONObject obj = new JSONObject();
+            try {
+                obj.put("TRANS_NO", transNo);
+                obj.put("ITEM_NO", ITEM_NO);
+                obj.put("SERIAL_NO", SERIAL_NO);
+                obj.put("QTY_ITEM", QTY_ITEM);
+                obj.put("TRANS_DATE", TRANS_DATE);
+                obj.put("CUSTOMER_NO", CUSTOMER_NO);
+                obj.put("SALESMAN_NUMBER", SALESMAN_NUMBER);
+                obj.put("SALESMAN_NUMBER", SALESMAN_NUMBER);
+                obj.put("VOUCHER_NUMBER_INVENTORY", voucherNo);
+
+            } catch (JSONException e) {
+                Log.e("Tag" , "JSONException");
+            }
+            return obj;
+        }
+
+    }
+

@@ -506,7 +506,7 @@
     <string name="emptyTable">جدول فارغ أعد استيراد البيانات</string>
     <string name="UpdateQty">تعديل الكمية</string>
     <string name="Delete">حذف مادة</string>
-    <string name="ClearAll">حذف كل المواد</string>
+    <string name="ClearAll">حذف كل المواد??</string>
     <string name="continousReadingBarcod">قراءة باركود متواصلة</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">هل تريد مسح كل البيانات التي تم تصديرها؟؟</string>
@@ -520,5 +520,7 @@
     <string name="noTax">معفى</string>
     <string name="shelf_inventory">جرد الرف</string>
     <string name="totalDiscount">خصم كلي للكاش</string>
+    <string name="deffirentPrice">سعر مختلف عن</string>
+    <string name="failImportMaxExportData">قم بتصدير البيانات اولا لتحديث اخر رقم للفاتورة</string>
 
 </resources>

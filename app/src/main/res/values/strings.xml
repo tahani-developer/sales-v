@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.5</string>
+    <string name="version"> V 100.12</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -464,7 +464,7 @@
     <string name="emptyTable">Empty Table</string>
     <string name="UpdateQty">Update Qty</string>
     <string name="Delete">Delete item</string>
-    <string name="ClearAll">Clear All</string>
+    <string name="ClearAll">Clear All ??</string>
     <string name="continousReadingBarcod">Continous Reading Barcod</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">Do You Want Clear  exported Data??</string>
@@ -475,6 +475,8 @@
     <string name="noTax">No Tax</string>
     <string name="shelf_inventory">Shelf Inventory</string>
     <string name="totalDiscount">Total Cash Discount</string>
+    <string name="deffirentPrice">Deffirent Price</string>
+    <string name="failImportMaxExportData">Faill Import MaxVoucher  Export Data</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

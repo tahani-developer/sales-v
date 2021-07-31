@@ -595,6 +595,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
 //                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+                        SalesInvoice.updateQtyBasket();
                         AddItemsFragment2.this.dismiss();
 
 
@@ -612,6 +613,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 try {
                     listener.addItemsToList(List);
                     addItemImgButton2.setEnabled(true);
+                    SalesInvoice.updateQtyBasket();
                     AddItemsFragment2.this.dismiss();
                 }
                 catch (Exception e)
@@ -854,6 +856,7 @@ try {
         voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
+        int unitInt=0;float priceItem=0;
         Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
@@ -888,16 +891,20 @@ try {
 
        // Log.e("canChangePrice",""+canChangePrice+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
 
-        if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
-            Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(15);
-            toast.show();
+        if(!price.equals("0"))
+        {
+            if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
+                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 180);
+                ViewGroup group = (ViewGroup) toast.getView();
+                TextView messageTextView = (TextView) group.getChildAt(0);
+                messageTextView.setTextSize(15);
+                toast.show();
 
-            return false;
+                return false;
+            }
         }
+
 
 
             item = new Item();
@@ -921,7 +928,12 @@ try {
 //                }
 
                 Log.e("unit",""+unit);
-                int unitInt=0;
+
+                try {
+                    priceItem=Float.parseFloat(price.trim());
+                }catch (Exception e){
+                    priceItem=0;
+                }
                 try{
                      unitInt=Integer.parseInt(unit);
                 }
@@ -929,6 +941,7 @@ try {
                 {
                     unitInt=1;
                 }
+                Log.e("qty","="+qty+"\tunitInt="+unitInt);
                 if(useWeight==1)
                 item.setQty(Float.parseFloat(qty)*unitInt);
                 else {
@@ -936,7 +949,9 @@ try {
                 }
                 item.setItemHasSerial(hasSerial+"");
 
-                item.setPrice(Float.parseFloat(price.trim()));
+
+                Log.e("qty","="+item.getQty());
+                item.setPrice(priceItem);
                 if (bonus == "")
                     item.setBonus(Float.parseFloat("0.0"));
                 else
@@ -1007,8 +1022,8 @@ try {
             }
 //        }
 
-        Log.e("setDisc1",""+item.getDisc());
-        if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
+        Log.e("setDisc1",""+item.getDiscType());
+        if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ||(item.getItemName().equals("(bonus)"))) {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();
                 total_items_quantity -= flagBonus;
@@ -1046,6 +1061,7 @@ try {
                     itemSerialList.get(i).setIsDeleted("0");
                     itemSerialList.get(i).setDateDelete(voucherDate);
                     itemSerialList.get(i).setPriceItem(curentPrice);
+                    itemSerialList.get(i).setPriceItem(priceItem);
                     listSerialTotal.add( itemSerialList.get(i));
 
                 }

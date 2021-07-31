@@ -43,6 +43,7 @@ import java.util.List;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
 import static com.dr7.salesmanmanager.StockRequest.addItemImgButton;
 import static com.dr7.salesmanmanager.StockRequest.items;
+import static com.dr7.salesmanmanager.StockRequest.itemsNoList;
 import static com.dr7.salesmanmanager.StockRequest.itemsRequiredList;
 import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
 import static com.dr7.salesmanmanager.Stock_Activity.intentData;
@@ -208,38 +209,39 @@ public class AddItemsStockFragment extends DialogFragment {
         cancel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
-                builder2.setCancelable(false);
-                builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
-                builder2.setIcon(android.R.drawable.ic_dialog_alert);
-                builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        float count=0;
+                AddItemsStockFragment.this.dismiss();
+//                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+//                builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+//                builder2.setCancelable(false);
+//                builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
+//                builder2.setIcon(android.R.drawable.ic_dialog_alert);
+//                builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
 //
-////                        total_items_quantity -= List.size();
-////                        totalQty_textView.setText("+"+0);
-////                        total_items_quantity=0;
-//                        for(int j=0;j<List.size();j++)
-//                        {
-//                            count+=List.get(j).getQty();
-//                        }
-////                        Log.e("count",""+count);
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+////                        float count=0;
+////
+//////                        total_items_quantity -= List.size();
+//////                        totalQty_textView.setText("+"+0);
+//////                        total_items_quantity=0;
+////                        for(int j=0;j<List.size();j++)
+////                        {
+////                            count+=List.get(j).getQty();
+////                        }
+//////                        Log.e("count",""+count);
+//////                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+////                        total_items_quantity-=count;
+////                        totalQty_textView.setText(total_items_quantity+"");
+//                      //  List.clear();
 ////                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
-//                        total_items_quantity-=count;
-//                        totalQty_textView.setText(total_items_quantity+"");
-                        List.clear();
-//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
-                        AddItemsStockFragment.this.dismiss();
-
-
-                    }
-                });
-
-                builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
-                builder2.create().show();
+//                        AddItemsStockFragment.this.dismiss();
+//
+//
+//                    }
+//                });
+//
+//                builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+//                builder2.create().show();
             }
         });
 
@@ -360,6 +362,7 @@ public class AddItemsStockFragment extends DialogFragment {
     private void addItemsList() {
         for(int i=0;i<itemsRequiredList.size();i++)
         {
+            if(itemsRequiredList.get(i).getQty()!=0)
             addItem(itemsRequiredList.get(i).getItemNo(), itemsRequiredList.get(i).getItemName(),
                     "0","1", (itemsRequiredList.get(i).getQty()+""),
                     "1"+itemsRequiredList.get(i).getPrice(),
@@ -549,6 +552,7 @@ public class AddItemsStockFragment extends DialogFragment {
             if(found==false)
             {
                 List.add(item);
+                itemsNoList.add(item.getItemNo());
                 /// toast = Toast.makeText(context, "Added Successfully", Toast.LENGTH_SHORT);
             }
 

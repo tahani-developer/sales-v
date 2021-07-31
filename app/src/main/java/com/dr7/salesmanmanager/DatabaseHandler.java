@@ -58,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
@@ -69,12 +70,20 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 144;
+    private static final int DATABASE_VERSION = 147;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  VoucherSerialize  = "VoucherSerialize";
+
+    private static final String  VoucherSales_no   = "VoucherSales_no";
+    private static final String  VoucherReturn_no   = "VoucherReturn_no";
+    private static final String  VoucherNewOrder_no   = "VoucherNewOrder_no";
+
+
     //----------------------------------------------------------------------
     private static final String  INVENTORY_SHELF  = "INVENTORY_SHELF";
 
@@ -86,6 +95,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  CUSTOMER_NO      ="CUSTOMER_NO";
     private static final String  SALESMAN_NUMBER   ="SALESMAN_NUMBER";
     private static final String  VOUCHER_NUMBER_INVENTORY   ="VOUCHER_NUMBER_INVENTORY";
+    private static final String  IsPosted          = "IsPosted";
 
     //----------------------------------------------------------------------
     private static final String  price_offer_list_master  = "price_offer_list_master";
@@ -137,6 +147,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String  STORE_NO_SALESMAN="STORE_NO_SALESMAN";
     private static final String  IS_POSTED_SERIAL="IS_POSTED_SERIAL";
     private static final String  IS_BONUS_SERIAL="IS_BONUS_SERIAL";
+    private static final String  Price_ITEM="Price_ITEM";
     //----------------------------------------------------------------------
     //----------------------------------------------------------------------
     private static final String SERIAL_ITEMS_TABLE_backup  = "SERIAL_ITEMS_TABLE_backup";
@@ -582,7 +593,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + DATE_VOUCHER + " TEXT,"
                 + STORE_NO_SALESMAN + " INTEGER,"
                 + IS_POSTED_SERIAL + " INTEGER,"
-                + IS_BONUS_SERIAL+" INTEGER"
+                + IS_BONUS_SERIAL+" INTEGER,"
+                + Price_ITEM+" real "
                 +
 
 
@@ -1121,11 +1133,24 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + TRANS_DATE + " TEXT,"
                     + CUSTOMER_NO + " TEXT,"
                     + SALESMAN_NUMBER + " TEXT,"
-                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER"
+                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER,"
+                    +IsPosted+ " INTEGER "
                     + ")";
             db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
 
         }catch (Exception e){}
+        try {
+            String CREATE_TABLE_VoucherSerialize = "CREATE TABLE IF NOT EXISTS " + VoucherSerialize + "("
+                    + VoucherSales_no + " INTEGER,"
+                    + VoucherReturn_no + " INTEGER,"
+                    + VoucherNewOrder_no + " INTEGER"
+                    + ")";
+            db.execSQL(CREATE_TABLE_VoucherSerialize);
+
+        }catch (Exception e){}
+
+
+
     }
 
 
@@ -1638,7 +1663,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + DATE_VOUCHER + " TEXT,"
                     + STORE_NO_SALESMAN + " INTEGER,"
                     + IS_POSTED_SERIAL + " INTEGER,"+
-                    IS_BONUS_SERIAL+" INTEGER"+
+                    IS_BONUS_SERIAL+" INTEGER,"+
+                     Price_ITEM +" real "+
 
                     ")";
             db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
@@ -1903,10 +1929,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + CUSTOMER_NO + " TEXT,"
                     + SALESMAN_NUMBER + " TEXT,"
 
-                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER"
+                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER,"
+                    +IsPosted+ " INTEGER "
 
                     + ")";
             db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
+
+        }catch (Exception e){}
+        try {
+            String CREATE_TABLE_VoucherSerialize = "CREATE TABLE IF NOT EXISTS " + VoucherSerialize + "("
+                    + VoucherSales_no + " INTEGER,"
+                    + VoucherReturn_no + " INTEGER,"
+                    + VoucherNewOrder_no + " INTEGER"
+                    + ")";
+            db.execSQL(CREATE_TABLE_VoucherSerialize);
 
         }catch (Exception e){}
 
@@ -1917,14 +1953,27 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE  INVENTORY_SHELF ADD   IsPosted  INTEGER  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE  SERIAL_ITEMS_TABLE ADD   Price_ITEM  real  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
     }
     public void add_inventoryShelf(InventoryShelf inventoryShelf)
     {
         try {
-
-
-
             db = this.getReadableDatabase();
             ContentValues values = new ContentValues();
             values.put(ITEM_NO, inventoryShelf.getITEM_NO().trim());
@@ -1934,6 +1983,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             values.put(CUSTOMER_NO, inventoryShelf.getCUSTOMER_NO());
             values.put(SALESMAN_NUMBER, inventoryShelf.getSALESMAN_NUMBER());
             values.put(VOUCHER_NUMBER_INVENTORY, inventoryShelf.getVoucherNo());
+            values.put(IsPosted, 0);
             db.insert(INVENTORY_SHELF, null, values);
             Log.e("add_Serial",""+inventoryShelf.getSERIAL_NO());
             db.close();
@@ -1944,8 +1994,89 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
     }
+    public void addSerialVoucherNo( long saleVoucher,long retVoucher,long order) {
+        long curentMaxVoucher=getMaxFromVoucherMaster(504);
+        Log.e("getMaxSerialNumber", "FromSetting" + curentMaxVoucher+"\t"+saleVoucher);
+        if (curentMaxVoucher > saleVoucher) {
+        } else {
 
 
+        try {
+            deleteFromVoucherSerialize();
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(VoucherSales_no, saleVoucher);
+            values.put(VoucherReturn_no, retVoucher);
+            values.put(VoucherNewOrder_no, order);
+
+            db.insert(VoucherSerialize, null, values);
+            Log.e("VoucherSerialize", "VoucherSerialize");
+            db.close();
+        } catch (Exception e) {
+            Log.e("VoucherSerialize", "" + e.getMessage());
+
+        }
+    }
+
+    }
+
+    private void deleteFromVoucherSerialize() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + VoucherSerialize);
+        db.close();
+    }
+
+    public void updateVoucherNo( long saleVoucher,int type,int flag)
+    {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        if(flag==0)//update return type from import
+        {
+            long curentMaxVoucher=getMaxFromVoucherMaster(506);
+            Log.e("getMaxSerialNumber", "updateVoucherNo" + curentMaxVoucher+"\t"+saleVoucher);
+            if (curentMaxVoucher > saleVoucher) {// dont change
+            } else {
+                if(type==506)
+                {
+                    try {
+                        values.put(VoucherReturn_no,saleVoucher);
+                        db.update(VoucherSerialize, values, null, null);
+
+                        Log.e("VoucherSerialize","VoucherSerialize");
+                        db.close();
+                    }catch (Exception e){
+                        Log.e("VoucherSerialize","Exception=VoucherReturn_no"+e.getMessage());
+                    }
+
+                }
+
+            }
+        }else {
+            try {
+                Log.e("updateVoucherNo",""+saleVoucher+"\t="+type);
+
+
+                if(type==504)
+                    values.put(VoucherSales_no, saleVoucher);
+                if(type==506)
+                    values.put(VoucherReturn_no,saleVoucher);
+                if(type==508)
+                    values.put(VoucherNewOrder_no,saleVoucher);
+
+                db.update(VoucherSerialize, values, null, null);
+
+                Log.e("VoucherSerialize","VoucherSerialize");
+                db.close();
+            }
+            catch (Exception e){
+                Log.e("VoucherSerialize",""+e.getMessage());
+
+            }
+        }
+
+
+
+    }
 
 
     public void addItemSwitch(List<ItemSwitch> itemSwitch)
@@ -2052,6 +2183,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             values.put(STORE_NO_SALESMAN, serialModelItem.getStoreNo());
             values.put(IS_POSTED_SERIAL, "0");
             values.put(IS_BONUS_SERIAL, serialModelItem.getIsBonus());
+            values.put(Price_ITEM, serialModelItem.getPriceItem());
             db.insert(SERIAL_ITEMS_TABLE, null, values);
             Log.e("add_Serial",""+serialModelItem.getSerialCode());
             db.close();
@@ -3081,7 +3213,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 info.setStoreNo(cursor.getString(7));
                 info.setIsPosted(cursor.getString(8));
                 info.setIsBonus(cursor.getString(9));
-
+                info.setPriceItem(cursor.getFloat(10));
                 infos.add(info);
 
             } while (cursor.moveToNext());
@@ -3147,28 +3279,85 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
     public int getMaxSerialNumberFromVoucherMaster(int voucherType) {
-        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
-        String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '"+voucherType+"' ),-1)" ;
-        db = this.getWritableDatabase();
+        int maxVoucher = 0;
+        if (typaImport == 1)//iis
+        {
+            maxVoucher=getMaxSerialNumberFromSerlizeTable(voucherType);
+            Log.e("maxVoucher**","=="+maxVoucher);
+            if(maxVoucher!=0)
+            {
+                return maxVoucher;
+            }else {
+                 maxVoucher=getMaxFromVoucherMaster( voucherType);
+                return maxVoucher;
+            }
+
+
+
+        } else {// for sql import
+
+            maxVoucher=getMaxFromVoucherMaster( voucherType);
+            return maxVoucher;
+
+    }
+
+    }
+
+    private int getMaxFromVoucherMaster(int voucherType) {
+
         int maxVoucher=0;
+        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+        String selectQuery = "SELECT IFNULL((select max(VOUCHER_NUMBER) FROM " + SALES_VOUCHER_MASTER + " WHERE VOUCHER_TYPE = '" + voucherType + "' ),-1)";
+        db = this.getWritableDatabase();
+        maxVoucher = 0;
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
             cursor.moveToFirst();
 
 
-             maxVoucher = Integer.parseInt(cursor.getString(0));
-            if(maxVoucher==-1)
-            {
-                maxVoucher=getMaxSerialNumber(voucherType);
-                Log.e("getMaxSerialNumber","FromSetting"+maxVoucher);
+            maxVoucher = Integer.parseInt(cursor.getString(0));
+            if (maxVoucher == -1) {
+                maxVoucher = getMaxSerialNumber(voucherType);
+                Log.e("getMaxSerialNumber", "FromSetting" + maxVoucher);
             }
-            Log.e("getMaxSerialNumber","FromVoucherMaster"+maxVoucher);
-        }catch (Exception e){maxVoucher=0;}
+            Log.e("getMaxSerialNumber", "FromVoucherMaster" + maxVoucher);
+        } catch (Exception e) {
+            maxVoucher = 0;
+        }
 
         return maxVoucher;
 
+
     }
 
+    public int getMaxSerialNumberFromSerlizeTable(int voucherType) {
+    //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+    String selectQuery = "SELECT * FROM " + VoucherSerialize  ;
+    db = this.getWritableDatabase();
+    int maxVoucher=0;
+    Cursor cursor = db.rawQuery(selectQuery, null);
+    try {
+        cursor.moveToFirst();
+        if(voucherType==504)
+        {
+            maxVoucher = Integer.parseInt(cursor.getString(0));
+        }
+        if(voucherType==506)
+        {
+            maxVoucher = Integer.parseInt(cursor.getString(1));
+        }
+        if(voucherType==508)
+        {
+            maxVoucher = Integer.parseInt(cursor.getString(2));
+        }
+
+
+        Log.e("getFromSerlizeTable","maxVoucher"+maxVoucher);
+    }catch (Exception e){maxVoucher=0;}
+
+    return maxVoucher;
+
+}
     // hello
     public void setMaxSerialNumber(int voucherType, int newSerial) {
         db = this.getWritableDatabase();
@@ -4675,6 +4864,43 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return items;
     }
 
+    public List<InventoryShelf> getAllINVENTORY_SHELF() {
+        List<InventoryShelf> items = new ArrayList<InventoryShelf>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + INVENTORY_SHELF +" where IsPosted ='0'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                InventoryShelf inventoryShelf=new InventoryShelf();
+                inventoryShelf.setTransNo((cursor.getInt(0)));
+
+                inventoryShelf.setITEM_NO((cursor.getString(1))+"");
+                inventoryShelf.setSERIAL_NO((cursor.getString(2))+"");
+
+                inventoryShelf.setQTY_ITEM(cursor.getInt(3));
+                inventoryShelf.setTRANS_DATE(cursor.getString(4));
+                inventoryShelf.setCUSTOMER_NO(cursor.getString(5));
+                inventoryShelf.setSALESMAN_NUMBER(cursor.getString(6));
+                inventoryShelf.setVoucherNo(cursor.getInt(7));
+
+
+                items.add(inventoryShelf);
+            } while (cursor.moveToNext());
+        }
+
+        return items;
+    }
+
+
+
+
+
+
+
     public List<Item> getStockRequestItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -4881,6 +5107,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         values.put(isPostedDetails, 1);
         db.update(REQUEST_DETAILS, values, isPostedDetails + "=" + 0, null);
+    }
+    public void updateInventoryShelf() {
+        Log.e("updateInventoryShelf","updateInventoryShelf");
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IsPosted, 1);
+        db.update(INVENTORY_SHELF, values, IsPosted + "=" + 0, null);
     }
 
     public void updateVoucherDetails() {
@@ -5231,19 +5465,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     // update SERIAL_ITEMS_TABLE set KIND_VOUCHER=30 where  VOUCHER_NO=4
 
-    public void updatevoucherKindInSerialTable( int kindVoucher,int voucherNo,int storeNo ) {
-        db = this.getWritableDatabase();
-        Log.e("updateVOUCHERNO",""+kindVoucher);
-        ContentValues values = new ContentValues();
-        values.put(KIND_VOUCHER, kindVoucher);
 
-
-        db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO    + " = '" + voucherNo + "'" , null);
-
-
-//        values.put(, serialModelItem.getStoreNo());
-
-    }
     public void updateitemDeletedInSerialTable_Backup( String itemNo,String voucherNo ) {
         db = this.getWritableDatabase();
         String dateTime="";
@@ -6154,6 +6376,24 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             int maxVoucher = Integer.parseInt(cursor.getString(0));
             return maxVoucher;
         }
+    }
+
+    public double getpreviusePriceSale(String barcode ) {
+//select Price_ITEM from  where SERIAL_CODE_NO=355020112920508
+        Log.e("getpreviusePriceSale","barcode"+barcode);
+        String selectQuery = "SELECT  Price_ITEM FROM SERIAL_ITEMS_TABLE where SERIAL_CODE_NO= "+barcode;
+        double price=0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getString(0) == null) {
+            return 0;
+        } else {
+            price = (cursor.getDouble(0));
+            Log.e("cursor.getDouble","pr="+price);
+            return price;
+        }
+
     }
 }
 

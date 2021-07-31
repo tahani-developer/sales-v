@@ -1063,17 +1063,21 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int whichButton) {
 
 
-                            Log.e("sumExport",""+sum_chech_export_lists);
-                            if(mDbHandler.getAllSettings().get(0).getPassowrd_data()==1) {
+                            Log.e("sumExport", "" + sum_chech_export_lists);
+                            if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                 openPasswordDialog(6);
-                            }
-                            else{
+                            } else {
+                                isPosted = mDbHandler.isAllVoucher_posted();
+                                Log.e("isPostedExport","1"+isPosted);
+                                if (!isPosted) {
+
+                                    Log.e("isPostedExport","2"+isPosted);
                                 ExportJason obj = null;
-                            try {
-                                obj = new ExportJason(MainActivity.this);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    obj = new ExportJason(MainActivity.this);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 try {
 //                                    obj.startExportDatabase();
                                     obj.startExport();
@@ -1082,10 +1086,12 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                             }
+                                else {
+                                    Toast.makeText(MainActivity.this, getResources().getString(R.string.saveSuccessfuly), Toast.LENGTH_SHORT).show();
+                                }
 
 
-
-
+                        }
 
                             //obj.storeInDatabase();
 
@@ -1094,13 +1100,31 @@ public class MainActivity extends AppCompatActivity
                     .setNegativeButton("Cancel", null).show();
 
         }
-//        else if (id == R.id.shelf_inventory) {
-//            finish();
-//            Intent i=new Intent(MainActivity.this,Stock_Activity.class);
-//            i.putExtra("serial","read");
-//            startActivity(i);
-//
-//        }
+        else if (id == R.id.shelf_inventory) {
+            if(!CustomerListShow.Customer_Account.equals(""))
+            {
+                finish();
+                Intent i=new Intent(MainActivity.this,Stock_Activity.class);
+                i.putExtra("serial","read");
+                startActivity(i);
+            }else {
+                SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE);
+
+                sweetMessage.setTitleText(getResources().getString(R.string.app_select_customer));
+                sweetMessage .setConfirmText("Ok");
+                sweetMessage.setCanceledOnTouchOutside(true);
+                sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetMessage.dismissWithAnimation();
+                    }
+                })
+
+                        .show();
+            }
+
+
+        }
 //        else
 //            if (id == R.id.customers_location) {
 ////            locationPermissionRequest.closeLocation();
@@ -1335,6 +1359,7 @@ public class MainActivity extends AppCompatActivity
                             try {
                                 lastVoucherNo = Integer.parseInt(editText.getText().toString().trim());
                                 mDbHandler.setMaxSerialNumber(504, lastVoucherNo);
+                                mDbHandler.updateVoucherNo(lastVoucherNo,504,1);
                                 Log.e("openEditSettingSerial", "" + lastVoucherNo);
                                 sweetAlertDialog.dismissWithAnimation();
                             } catch (Exception e) {
@@ -1709,18 +1734,32 @@ public class MainActivity extends AppCompatActivity
                     Log.e("workOnLine",""+workOnLine);
                 }
                 if(workOnLine==1) {
-                    ExportJason objJson = null;
-                    try {
-                        objJson = new ExportJason(MainActivity.this);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
+
+                    isPosted = mDbHandler.isAllVoucher_posted();
+                    Log.e("isPostedExport","1"+isPosted);
+                    if (!isPosted) {
+
+                        Log.e("isPostedExport","2"+isPosted);
+                        ExportJason objJson = null;
+                        try {
+                            objJson = new ExportJason(MainActivity.this);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
 //                        objJson.startExportDatabase();
-                        objJson.startExport();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            objJson.startExport();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
+                    else {
+                        Toast.makeText(MainActivity.this, getResources().getString(R.string.saveSuccessfuly), Toast.LENGTH_SHORT).show();
+                    }
+
+
+
 
                 }
 

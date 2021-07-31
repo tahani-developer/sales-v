@@ -137,6 +137,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
@@ -263,7 +264,7 @@ public class SalesInvoice extends Fragment {
 
     public  static TextView finishPrint;
     bluetoothprinter object;
-
+   public static  EditText  price_serial_edit;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -525,7 +526,10 @@ public class SalesInvoice extends Fragment {
 
         itemsList = new ArrayList<>();
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
+//        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+
 
         String vn2 = voucherNumber + "";
         voucherNumberTextView.setText(vn2);
@@ -2570,6 +2574,7 @@ public class SalesInvoice extends Fragment {
 
         }
         mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
+        mDbHandler.updateVoucherNo(voucherNumber,voucherType,2);
         getTimeAndDate();
 
 
@@ -2924,8 +2929,9 @@ public class SalesInvoice extends Fragment {
                                         total_items_quantity -= items.get(position).getQty();
                                         totalQty_textView.setText("+" + total_items_quantity);
 
+                                        removeItem(position);
 
-                                        items.remove(position);
+                                       // items.remove(position);
 
 
                                         itemsListView.setAdapter(itemsListAdapter);
@@ -2995,8 +3001,27 @@ public class SalesInvoice extends Fragment {
 
                                                                         disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
                                                                         items.get(position).setDisc(disount_totalnew);
+                                                                        double bonus_calc = 0;
+                                                                        Log.e("getPromotionType()", "2====" + appliedOffer.getBonusQty()+"\tgetPromotionType+"+offer.get(0).getPromotionType());
+
+                                                                        if (offer.get(0).getPromotionType() == 0) {
+                                                                            if (OfferCakeShop == 0) {
+                                                                                bonus_calc = ((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
+
+                                                                            } else {
+                                                                                bonus_calc = appliedOffer.getBonusQty();
+                                                                            }
+                                                                             Log.e("bonus_calc=", "added1" + bonus_calc+"\tposition="+position);
+                                                                            if((position+1 )!= items.size())
+                                                                            {
+                                                                                if(items.get(position+1).getItemName().equals("(bonus)"))
+                                                                            {
+                                                                                items.get(position+1).setQty(Float.parseFloat(bonus_calc+""));
+                                                                            }}
 
 
+
+                                                                        }
                                                                     }
                                                                 }
 
@@ -3052,6 +3077,29 @@ public class SalesInvoice extends Fragment {
 
                 }
             };
+
+    private void removeItem(int position) {
+      //  Log.e("removeItem",""+position+"\t"+items.size());
+        if(items.size()>1)
+        {
+            if(position+1!=items.size())// not last element
+            {
+                if(items.get(position+1).getItemName().equals("(bonus)"))
+                {
+                    items.remove(position);
+                    Log.e("removeItem","1="+items.size());
+
+                   // items.remove(position);
+                    //Log.e("removeItem","2="+items.size());
+                }
+
+            }
+
+        }
+        items.remove(position);
+
+    }
+
     boolean isFoundSerial=false; serialModel serial;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void showDialogSerial(Context context, int position, String itemNo, float priceUpdated) {
@@ -3060,12 +3108,13 @@ public class SalesInvoice extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.add_item_serial_dialog);
 
-        EditText  bonus,price;
+
         updatedSerial=1;
 
         editOpen=true;
 
         TextView item_number,item_name,discount;
+        EditText  bonus;
         LinearLayout   bonusLinearLayout,_linear_switch,discount_linear,linear_bonus,mainRequestLinear,mainLinearAddItem;
        listTemporarySerial=new ArrayList<>();
         listTemporarySerial=getserialForItem(itemNo,priceUpdated);
@@ -3127,9 +3176,9 @@ public class SalesInvoice extends Fragment {
         discount= dialog.findViewById(R.id.discount);
         item_number= dialog.findViewById(R.id.item_number);
         item_name= dialog.findViewById(R.id.item_name);
-        price= dialog.findViewById(R.id.price);
-        price.setEnabled(false);
-        price.setAlpha(0.8f);
+        price_serial_edit= dialog.findViewById(R.id.price);
+        price_serial_edit.setEnabled(false);
+        price_serial_edit.setAlpha(0.8f);
         _linear_switch= dialog.findViewById(R.id._linear_switch);
         checkStateResult = dialog.findViewById(R.id.checkStateResult);
         rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -3177,7 +3226,7 @@ public class SalesInvoice extends Fragment {
         item_number.setText(items.get(position).getItemNo()+"");
 
         item_name.setText(items.get(position).getItemName());
-        price.setText((items.get(position).getPrice()+""));
+        price_serial_edit.setText((items.get(position).getPrice()+""));
        countNormalQty= getNumberOfNormalQty(listTemporarySerial);
         unitQtyEdit.setText(countNormalQty+"");
         textQty.setText(context.getResources().getString(R.string.qty));
@@ -3743,7 +3792,7 @@ public class SalesInvoice extends Fragment {
         itemsListAdapter.notifyDataSetChanged();
     }
 
-    public void updateQtyBasket() {
+    public static void updateQtyBasket() {
         float qty=0;
         total_items_quantity=0;
         for(int i=0;i<items.size();i++){
