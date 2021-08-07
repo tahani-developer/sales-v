@@ -124,6 +124,7 @@ import java.util.Timer;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.CustomerCheckInFragment.settext1;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
@@ -209,6 +210,7 @@ public class MainActivity extends AppCompatActivity
         if(!CustomerListShow.Customer_Name.contains("No Customer"))
         {
             setTimeText();
+            settext1();
         }
 
     }
@@ -1067,7 +1069,7 @@ public class MainActivity extends AppCompatActivity
                             if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                 openPasswordDialog(6);
                             } else {
-                                isPosted = mDbHandler.isAllVoucher_posted();
+                                isPosted = mDbHandler.isAllposted();
                                 Log.e("isPostedExport","1"+isPosted);
                                 if (!isPosted) {
 
@@ -1735,7 +1737,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 if(workOnLine==1) {
 
-                    isPosted = mDbHandler.isAllVoucher_posted();
+                    isPosted = mDbHandler.isAllposted();
                     Log.e("isPostedExport","1"+isPosted);
                     if (!isPosted) {
 

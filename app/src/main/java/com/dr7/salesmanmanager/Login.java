@@ -892,7 +892,7 @@ public class Login extends AppCompatActivity {
             mainIntent();
 
         }
-            mainIntent();
+           // mainIntent();
         }
         else {//mysql
             mainIntent();

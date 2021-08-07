@@ -5593,21 +5593,83 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //    }
 
      public boolean isAllVoucher_posted() {
-         String selectQuery = "SELECT * FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
-         db = this.getWritableDatabase();
-         Cursor cursor = db.rawQuery(selectQuery, null);
-         if (cursor.moveToFirst()) {
-             int x = cursor.getInt(0);
-             if (x >= 0) {
-                 Log.e("selectQuery", "" + selectQuery);
-                 return false;
+        String selectQuery = "SELECT * FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int x = cursor.getInt(0);
+            if (x >= 0) {
+                Log.e("selectQuery", "" + selectQuery);
+                return false;
 
 
-             } else
-                 return true;
-         }
-         return true;
-     }
+            } else
+                return true;
+        }
+        return true;
+    }
+    public boolean isAllposted() {
+        int x =0;
+        //select count(*) from SALES_VOUCHER_MASTER where IS_POSTED=0;
+        String selectQuery = "SELECT count(*) FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int y = cursor.getInt(0);
+            if (y >= 0) {
+                x++;
+                Log.e("selectQuery", "y" + y);
+            }
+        }
+
+        //********************************************************
+         selectQuery = "SELECT count(*) FROM " + PAYMENTS + " where  IS_POSTED = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor2 = db.rawQuery(selectQuery, null);
+        if (cursor2.moveToFirst()) {
+            int y = cursor2.getInt(0);
+            if (y >= 0) {
+                x++;
+                Log.e("selectQuery", "y2" + y);
+            }
+        }
+
+        selectQuery = "SELECT count(*) FROM " + ADDED_CUSTOMER + " where  IS_POSTED = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor3 = db.rawQuery(selectQuery, null);
+        if (cursor3.moveToFirst()) {
+            int y = cursor3.getInt(0);
+            if (y >= 0) {
+                x++;
+                Log.e("selectQuery", "y3Added" + y);
+            }
+        }
+
+        selectQuery = "SELECT count(*) FROM " + INVENTORY_SHELF + " where  IsPosted = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor4 = db.rawQuery(selectQuery, null);
+        if (cursor4.moveToFirst()) {
+            int y = cursor4.getInt(0);
+            if (y >= 0) {
+                x++;
+                Log.e("selectQuery", "y4Added" + y);
+            }
+        }
+
+
+
+
+        Log.e("selectQuery", "x==" + x);
+        if(x>0)
+        {
+            return false;
+        }
+        return true;
+    }
 
     public double getMinOfferQty(double total) {
         String selectQuery = "SELECT MAX (AMOUNT_QTY) FROM " + ITEMS_QTY_OFFER+

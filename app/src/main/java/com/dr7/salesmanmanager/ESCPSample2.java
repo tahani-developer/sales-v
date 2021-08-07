@@ -940,9 +940,11 @@ public class ESCPSample2
 		}
 		else {
 			nLineWidth=550;
-			headerVoucher=" السلعة            " + "العدد " + "\t\t" + "السعر "+"\t\t"+"الخصم " + "\t\t" + "المجموع" + "\n" ;
+//			headerVoucher=" السلعة            " + "العدد " + "\t\t" + "السعر "+"\t\t"+"الخصم " + "\t\t" + "المجموع" + "\n" ;
+			headerVoucher= " العدد    " + "\t\t" + "  السعر "+"\t\t"+"     الخصم     " + "\t\t" + "       المجموع " + "\n" ;
 			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
 			line="--------------------------------------------------------------------------------";
+//			line="---------------------------------------------------------------";
 		}
 
 
@@ -1054,7 +1056,7 @@ public class ESCPSample2
 
 			if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
 				total_Qty = 0;
-				posPtr.printAndroidFont(null, true,  "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" + "سعر الوحدة"+ "\t\t\t" + "الضريبة" + "\t\t\t" + "المجموع" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+				posPtr.printAndroidFont(null, true,  "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" + "السعر"+ "\t\t" + "الضريبة" + "\t\t" + "المجموع" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			//	posPtr.printAndroidFont(null, true, " السلعة   " + "العدد" + "\t\t\t" + "الوزن" + "\t\t\t" + "سعر الوحدة" + "\t\t\t" + "المجموع" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1087,9 +1089,9 @@ public class ESCPSample2
 						}
 						space="";
 
-						posPtr.printAndroidFont(null, true,itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+						posPtr.printAndroidFont(null, true,itemforPrint.get(i).getItemName() + "\n", nLineWidth, 23, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
-						posPtr.printAndroidFont(null, true,convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\t\t" + itemforPrint.get(i).getTaxPercent() + "\t\t\t" + itemforPrint.get(i).getPrice() + "\t\t\t" + itemforPrint.get(i).getQty() + "\t\t\t" + itemforPrint.get(i).getUnit() + "\t\t\t" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+						posPtr.printAndroidFont(null, true,convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))) + "\t\t" +convertToEnglish(decimalFormat.format(Double.valueOf( itemforPrint.get(i).getTaxPercent()))) + "\t\t" + convertToEnglish(decimalFormat.format( Double.valueOf(itemforPrint.get(i).getPrice()))) + "\t\t" +convertToEnglish(decimalFormat.format( Double.valueOf( itemforPrint.get(i).getQty()))) + "\t\t" + convertToEnglish(decimalFormat.format(Double.valueOf( itemforPrint.get(i).getUnit()))) + "\t\t" + "\n", nLineWidth, 23, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
 
 					}
@@ -1174,7 +1176,7 @@ public class ESCPSample2
 					posPtr.printAndroidFont(null, true, "الضريبة  : " + voucherforPrint.getTax() + "\n", nLineWidth, 26, alignment);
 
 				}
-				posPtr.printAndroidFont(null, true, "  اجمالي الخصم   : " + convertToEnglish(decimalFormat.format((voucherforPrint.getTotalVoucherDiscount()+itemDiscount) ))+ "\n", nLineWidth, 26, alignment);
+				posPtr.printAndroidFont(null, true, "اجمالي الخصم   : " + convertToEnglish(decimalFormat.format((voucherforPrint.getTotalVoucherDiscount()+itemDiscount) ))+ "\n", nLineWidth, 26, alignment);
 					//posPtr.printAndroidFont(null, true, " خصم سطري    : " + convertToEnglish(decimalFormat.format(itemDiscount)) + "\n", nLineWidth, 26, alignment);
 					//posPtr.printAndroidFont(null, true, " خصم كلي    : " + voucherforPrint.getTotalVoucherDiscount()  + "\n", nLineWidth, 26, alignment);
 

@@ -153,8 +153,8 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin= mHandler.getAllUserNo();
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
         Log.e("SalesManLogin",""+SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
@@ -655,6 +655,7 @@ public class ImportJason extends AppCompatActivity {
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
+                        getDataProgress.dismissWithAnimation();
 
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
                     }
@@ -664,6 +665,7 @@ public class ImportJason extends AppCompatActivity {
                 return null;
             } catch (Exception e) {
                 e.printStackTrace();
+                getDataProgress.dismissWithAnimation();
                 Log.e("Exception", "" + e.getMessage());
                 return null;
             }
@@ -724,6 +726,9 @@ public class ImportJason extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }else {
+                            getDataProgress.dismissWithAnimation();
+                            goMainText.setText("main");
                         }
 
                     }
@@ -2816,7 +2821,7 @@ public class ImportJason extends AppCompatActivity {
                         ipAddress=ipAddress.substring(0,ind);
                     }
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetAllTheCheques?ACCNO="+custId+"&ACCNO="+CONO;
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetAllTheCheques?ACCNO="+custId+"&CONO="+CONO;
                 }
             } catch (Exception e) {
                 pdPayments.dismissWithAnimation();
@@ -2977,8 +2982,9 @@ public class ImportJason extends AppCompatActivity {
                         int ind=ipAddress.indexOf(":");
                         ipAddress=ipAddress.substring(0,ind);
                     }
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+"&ACCNO="+CONO;
+                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+"&CONO="+CONO;
                 }
+                Log.e("urlAccount",""+URL_TO_HIT.toString());
             } catch (Exception e) {
                 pdValidation.dismissWithAnimation();
             }
