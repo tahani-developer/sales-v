@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.SerialReportAdpter;
@@ -53,6 +54,7 @@ Button button;
     private Button preview;
     Calendar myCalendar;
     HorizontalScrollView HorizontalScrollView01;
+    GeneralMethod generalMethod;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -65,7 +67,7 @@ Button button;
 
 
 
-        String Date_Vocher=getCurentTimeDate(1);
+        String Date_Vocher=generalMethod.getCurentTimeDate(1);
         filterDate(Date_Vocher);
 
 
@@ -196,6 +198,7 @@ Button button;
         databaseHandler=new DatabaseHandler(SerialReport.this);
         HorizontalScrollView01=findViewById(R.id.HorizontalScrollView01);
         LinearLayout linearMain=findViewById(R.id.linearMain);
+        generalMethod=new GeneralMethod(SerialReport.this);
         try{
             if(languagelocalApp.equals("ar"))
             {
@@ -280,28 +283,5 @@ tableRow=findViewById(R.id.serialtable);
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
-    public String getCurentTimeDate(int flag){
-        String dateCurent,timeCurrent,dateTime="";
-        Date currentTimeAndDate;
-        SimpleDateFormat dateFormat, timeformat;
-        currentTimeAndDate = Calendar.getInstance().getTime();
-        if(flag==1)// return date
-        {
 
-            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            dateCurent = dateFormat.format(currentTimeAndDate);
-            dateTime=convertToEnglish(dateCurent);
-
-        }
-        else {
-            if(flag==2)// return time
-            {
-                timeformat = new SimpleDateFormat("hh:mm:ss");
-                dateCurent = timeformat.format(currentTimeAndDate);
-                dateTime=convertToEnglish(dateCurent);
-            }
-        }
-        return dateTime;
-
-    }
 }

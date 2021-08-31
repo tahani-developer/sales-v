@@ -25,6 +25,7 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
     private List<serialModel> serialrowlist=new ArrayList<>();
     Context context;
     View linearLayout;
+    int shelfReport=0;
 
     public SerialReportAdpter(List<serialModel> list, Context context) {
         this.list = list;
@@ -41,7 +42,18 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
     @Override
     public void onBindViewHolder(@NonNull SerialReportViewHolder holder, int position) {
         holder.voucherdate.setText(list.get(position).getDateVoucher());
-        holder.vouchertype.setText(String.valueOf(list.get(position).getKindVoucher()));
+        Log.e("onBindViewHolder",""+list.get(position).getKindVoucher());
+        if(list.get(position).getKindVoucher()!=null)
+        {
+            holder.vouchertype.setText(String.valueOf(list.get(position).getKindVoucher()));
+        }
+
+        else {
+            holder.vouchertype.setText(String.valueOf(list.get(position).getCustomerNo()));
+            shelfReport=1;
+
+           // holder.vouchertype.setVisibility(View.GONE);
+        }
         holder.serialcode.setText(String.valueOf(list.get(position).getSerialCode()));
         holder.itemnum.setText(String.valueOf(list.get(position).getItemNo()));
         holder.vouchernum.setText(String.valueOf(list.get(position).getVoucherNo()));
@@ -52,6 +64,11 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
         }
         holder.export.setTag(position);
 
+        if(shelfReport==1)
+        {
+        holder.export.setVisibility(View.INVISIBLE);
+
+        }
 
     }
 

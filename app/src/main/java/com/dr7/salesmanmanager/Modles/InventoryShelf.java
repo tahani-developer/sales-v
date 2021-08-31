@@ -89,12 +89,11 @@ public class InventoryShelf {
                 obj.put("TRANS_NO", transNo);
                 obj.put("ITEM_NO", ITEM_NO);
                 obj.put("SERIAL_NO", SERIAL_NO);
-                obj.put("QTY_ITEM", QTY_ITEM);
+                obj.put("QTY_ITEM", QTY_ITEM+"");
                 obj.put("TRANS_DATE", TRANS_DATE);
                 obj.put("CUSTOMER_NO", CUSTOMER_NO);
                 obj.put("SALESMAN_NUMBER", SALESMAN_NUMBER);
-                obj.put("SALESMAN_NUMBER", SALESMAN_NUMBER);
-                obj.put("VOUCHER_NUMBER_INVENTORY", voucherNo);
+                obj.put("VOUCHER_NUMBER_INVENTORY", voucherNo+"");
 
             } catch (JSONException e) {
                 Log.e("Tag" , "JSONException");

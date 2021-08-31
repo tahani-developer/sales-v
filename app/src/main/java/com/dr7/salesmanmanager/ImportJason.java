@@ -102,6 +102,7 @@ import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
 import static com.dr7.salesmanmanager.Login.goMainText;
+import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
@@ -160,7 +161,15 @@ public class ImportJason extends AppCompatActivity {
             ipAddress = settings.get(0).getIpAddress();
             ipWithPort=settings.get(0).getIpPort();
             Log.e("ipWithPort",""+ipWithPort);
-            userNo= mHandler.getAllUserNo();
+            if(makeOrders==1)
+            {
+
+                userNo=  mHandler.getAllSettings().get(0).getStoreNo();
+                Log.e("userNo","getAllSettings=="+userNo);
+            }else{
+                userNo= mHandler.getAllUserNo();
+            }
+
             CONO=mHandler.getAllSettings().get(0).getCoNo();
         }
         else {
@@ -411,7 +420,17 @@ public class ImportJason extends AppCompatActivity {
              new JSONTask(userNo).execute(URL_TO_HIT);
             }else if(typaImport==1)
             {
-                new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
+                if(makeOrders==1)
+                {// store Number from setting
+                    if(!userNo.equals(""))
+                    new JSONTaskDelphi(userNo).execute(URL_TO_HIT);
+                    else {
+                        new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
+                    }
+                }else{
+                    new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
+                }
+
             }
 
 
@@ -626,7 +645,8 @@ public class ImportJason extends AppCompatActivity {
                 request.setURI(new URI(URL_TO_HIT));
                 HttpResponse response = client.execute(request);
                 BufferedReader in = new BufferedReader(new
-                        InputStreamReader(response.getEntity().getContent()));
+                        InputStreamReader(response.getEntity().getContent())
+                );
 
                 StringBuffer sb = new StringBuffer("");
                 String line = "";
@@ -943,6 +963,7 @@ public class ImportJason extends AppCompatActivity {
 
                 String link = URL_TO_HIT;
                 URL url = new URL(link);
+                Log.e("import_mySql",URL_TO_HIT);
 
                 //*************************************
                 HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
@@ -2652,6 +2673,7 @@ public class ImportJason extends AppCompatActivity {
             pdValidation.setCancelable(false);
             pdValidation.show();
             String do_ = "my";
+
 
         }
 

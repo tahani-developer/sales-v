@@ -114,7 +114,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    android:src="@drawable/specialred"
+                    android:src="@drawable/ic_photo_red_24dp"
                     android:text="Test Item"
                     android:visibility="gone"
                     app:civ_border_color="@color/colorPrimaryDark" />

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Reports.InventoryReport;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -50,7 +51,7 @@ public class AccountStatment extends AppCompatActivity {
      String customerId="";
      TextView name,lastVisitDateTime;
      DatabaseHandler databaseHandler;
-    int[] listImageIcone=new int[]{R.drawable.ic_playlist_add_black_24dp};
+    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
     Transaction transaction;
     @SuppressLint("WrongConstant")
     @Override
@@ -136,8 +137,8 @@ public class AccountStatment extends AppCompatActivity {
         BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.SimpleCircle);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_1);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_1);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
 //        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
 
 
@@ -153,14 +154,12 @@ public class AccountStatment extends AppCompatActivity {
                             switch (index)
                             {
                                 case 0:
-                                    finish();
-                                   Intent i=new Intent(AccountStatment.this,Activities.class);
-                                   startActivity(i);
+                                    exportToPdf();
 
                                     break;
-//                                case 1:
-//                                    exportToEx();
-//                                    break;
+                                case 1:
+                                    exportToEx();
+                                    break;
 
 
                             }
@@ -170,6 +169,17 @@ public class AccountStatment extends AppCompatActivity {
 
 
         }
+    }
+    private void exportToEx() {
+        Log.e("exportToEx",""+listCustomerInfo.size());
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(AccountStatment.this,"AccountStatment.xls",12,listCustomerInfo);
+
+    }
+    public  void exportToPdf(){
+
+        PdfConverter pdf =new PdfConverter(AccountStatment.this);
+        pdf.exportListToPdf(listCustomerInfo,getResources().getString(R.string.AccountStatment),"21/12/2020",10);
     }
     @SuppressLint("WrongConstant")
     private void initialView() {

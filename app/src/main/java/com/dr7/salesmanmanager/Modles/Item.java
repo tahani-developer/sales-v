@@ -63,16 +63,16 @@ public class Item implements Serializable {
         this.discountCustomer = discountCustomer;
     }
 
-    public Bitmap getItemPhoto() {
+    public String getItemPhoto() {
         return itemPhoto;
     }
 
-    public void setItemPhoto(Bitmap itemPhoto) {
+    public void setItemPhoto(String itemPhoto) {
         this.itemPhoto = itemPhoto;
     }
 
-    private Bitmap itemPhoto;
-
+//    private Bitmap itemPhoto;
+    private String itemPhoto;
 //    public String getItemPhoto() {
 //        return itemPhoto;
 //    }

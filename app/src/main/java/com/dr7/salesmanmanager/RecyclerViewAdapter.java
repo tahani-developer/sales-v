@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 
@@ -58,6 +59,9 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,7 +95,8 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
 import static com.dr7.salesmanmanager.Serial_Adapter.serialValue_Model;
-import  static  com.dr7.salesmanmanager.Activities.currentKey;
+import static com.dr7.salesmanmanager.Activities.currentKey;
+import static com.itextpdf.text.pdf.PdfName.VIEW;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
@@ -106,6 +111,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     SimpleDateFormat df, df2, formatTime;
     String voucherDate, voucherYear, time;
     CompanyInfo companyInfo;
+    String ipAddress = "";
     boolean added = false, haveCstomerDisc = false, haveChangeCustDisc = false;
     DatabaseHandler MHandler;
     DecimalFormat threeDForm;
@@ -115,18 +121,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static EditText Serial_No, item_serial;
     public static final int REQUEST_Camera_Serial = 22;
     public boolean isFoundSerial = false;
+    SweetAlertDialog pdValidation;
     public static int flag = 0, counterSerial = 0, counterBonus = 0;
     RecyclerView serial_No_recyclerView;
     public static ArrayList<serialModel> serialListitems = new ArrayList<>();
 
     LinearLayoutManager layoutManager;
 
-    List<String>listSerialValue=new ArrayList<>();
+    List<String> listSerialValue = new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty, bonus;
-     LinearLayout   bonusLinearLayout;
+    LinearLayout bonusLinearLayout;
     String discountCustomer = "", updateDiscountValue = "";
-     public  static Button addToList;
+    public static Button addToList;
     public String exist = "";
     public static String curentSerial = "";
     public static String araySerial[];
@@ -143,13 +150,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     LinearLayout mainLinear;
     ImageView acceptDiscount, rejectDiscount;
     public static EditText serialValue;
-    public  static  int numberBarcodsScanner=0;
-    int discountPerVal=0,showSolidQty=0;
-    int useWeight=0;
-    public  int sunmiDevice=0,dontShowTax=0,contiusReading=0;
+    public static int numberBarcodsScanner = 0;
+    int discountPerVal = 0, showSolidQty = 0;
+    int useWeight = 0;
+    public int sunmiDevice = 0, dontShowTax = 0, contiusReading = 0;
 
-    int vouch,kindVoucher=504;
+    int vouch, kindVoucher = 504;
     ImageView addEditBarcode;
+    GeneralMethod generalMethod;
+
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
@@ -159,24 +168,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             for (int i = 0; i <= items.size(); i++) {//******************
                 isClicked.add(0);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(cont, "Items Empty", Toast.LENGTH_SHORT).show();
         }
 
 
-         vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
-        kindVoucher=voucherType;
+        vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
+        kindVoucher = voucherType;
         MHandler = new DatabaseHandler(cont);
         settingPriceCus = MHandler.getAllSettings().get(0).getPriceByCust();
         showItemImageSetting = MHandler.getAllSettings().get(0).getShowItemImage();
         localItemNumber = new ArrayList<>();
-        if(MHandler.getAllSettings().get(0).getContinusReading()==1)
-        {
+        if (MHandler.getAllSettings().get(0).getContinusReading() == 1) {
 
-            contiusReading=1;
-            Log.e("sunmiDevice",""+sunmiDevice);
+            contiusReading = 1;
+            Log.e("sunmiDevice", "" + sunmiDevice);
         }
+        generalMethod = new GeneralMethod(cont);
 //        this.listBitmap=listItemImage;
+        ipAddress = MHandler.getAllSettings().get(0).getIpAddress();
 
     }
 
@@ -226,12 +236,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.imagespecial.setVisibility(View.VISIBLE);
         if (showItemImageSetting == 1) {
-            if (items.get(position).getItemPhoto() != null) {
-//            itemBitmap = StringToBitMap(items.get(position).getItemPhoto());
-                holder.imagespecial.setImageBitmap(items.get(position).getItemPhoto());
-            } else {
-                holder.imagespecial.setImageDrawable(this.context.getResources().getDrawable(R.drawable.specialred));
-            }
+//            if (items.get(position).getItemPhoto() != null) {
+////            itemBitmap = StringToBitMap(items.get(position).getItemPhoto());
+//                holder.imagespecial.setImageBitmap(items.get(position).getItemPhoto());
+//            } else {
+//                holder.imagespecial.setImageDrawable(this.context.getResources().getDrawable(R.drawable.specialred));
+//            }
 
 //
             holder.imagespecial.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +249,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 public void onClick(View v) {
 
 //                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
-                    showImageOfCheck(items.get(position).getItemPhoto());
+                    //   showImageOfCheck(items.get(position).getItemPhoto());
+                    String url = items.get(position).getItemPhoto();
+                    Log.e("url", "imagespecial" + url);
+                    if (url.contains("Products")) {
+                        int index = url.indexOf("P");
+                        url = url.substring(index);
+                    }
+                    Log.e("url", "imagespecial2" + url);
+                    getImage(url);
                 }
             });
         } else {
@@ -252,20 +270,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            holder.price.setText("300");
 //
 //        }else {
-            holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
+        holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
 
 //        }
 
 
 //       *******************************//////////////////////
-        if(showSolidQty==1)
-        {
+        if (showSolidQty == 1) {
             holder.table_solidQty.setVisibility(View.VISIBLE);
             holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(items.get(position).getItemNo()));
 
 
-        }
-        else {
+        } else {
             holder.table_solidQty.setVisibility(View.GONE);
         }
         holder.tax.setText("" + items.get(position).getTaxPercent());
@@ -283,9 +299,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    haveCstomerDisc = false;
                                                    haveChangeCustDisc = false;
                                                    discountCustomer = "";
-                                                   currentKey="";
+                                                   currentKey = "";
                                                    serialListitems = new ArrayList<>();
-                                                   itemNoSelected ="";
+                                                   itemNoSelected = "";
                                                    counterSerial = 0;
                                                    counterBonus = 0;
                                                    getTimeAndDate();
@@ -293,9 +309,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        if (localItemNumber.get(i).equals(items.get(position).getItemNo())) {
 //                                                           if(canChangePrice==0)
 //                                                           {
-                                                               showAlertDialog();
-                                                               itemInlocalList = true;
-                                                               break;
+                                                           showAlertDialog();
+                                                           itemInlocalList = true;
+                                                           break;
 //                                                           }
 
                                                        }
@@ -304,7 +320,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        final Dialog dialog = new Dialog(view.getContext());
                                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                        dialog.setCancelable(false);
-                                                       itemNoSelected=items.get(position).getItemNo();
+                                                       itemNoSelected = items.get(position).getItemNo();
 
                                                        try {
 
@@ -312,7 +328,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                current_itemHasSerial = 1;
 
                                                                dialog.setContentView(R.layout.add_item_serial_dialog);
-                                                               serialValue= dialog.findViewById(R.id.serialValue);
+                                                               serialValue = dialog.findViewById(R.id.serialValue);
 
                                                                mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                                                                checkStateResult = dialog.findViewById(R.id.checkStateResult);
@@ -321,7 +337,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                unitQty = dialog.findViewById(R.id.unitQty);
                                                                unitQty.setEnabled(false);
 
-                                                               if(contiusReading==0) {
+                                                               if (contiusReading == 0) {
                                                                    serialValue.requestFocus();
                                                                    serialValue.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                                                                                                              @Override
@@ -346,12 +362,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                                  }
                                                                                                                  return false;
-                                                                                                                    }
+                                                                                                             }
 
-                                                                                                                }
+                                                                                                         }
 
                                                                    );
-                                                               }else {
+                                                               } else {
                                                                    try {
                                                                        serialValue.addTextChangedListener(new TextWatcher() {
                                                                            @Override
@@ -366,19 +382,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            @Override
                                                                            public void afterTextChanged(Editable s) {
-                                                                               if(!s.toString().equals(""))
-                                                                               {
-                                                                                   barcodeValue=s.toString().trim();
+                                                                               if (!s.toString().equals("")) {
+                                                                                   barcodeValue = s.toString().trim();
 //                                                                               serialValue_Model.setText(s.toString().trim());
-                                                                                   updateValue(barcodeValue,serialListitems);
+                                                                                   updateValue(barcodeValue, serialListitems);
 
                                                                                }
 
 
                                                                            }
                                                                        });
+                                                                   } catch (Exception e) {
                                                                    }
-                                                                   catch ( Exception e){}
                                                                }
 
 
@@ -416,7 +431,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            } catch (Exception e) {
                                                                                qtySerial = Integer.parseInt(unitQty.getText().toString());
                                                                            }
-                                                                           if(qtySerial<=100){
+                                                                           if (qtySerial <= 100) {
                                                                                counterSerial = qtySerial;
                                                                                if (qtySerial != 0) {
                                                                                    flag = 1;
@@ -434,8 +449,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        serial.setSerialCode("");
                                                                                        serial.setIsBonus("0");
                                                                                        serial.setIsDeleted("0");
-                                                                                       serial.setVoucherNo(vouch+"");
-                                                                                       serial.setKindVoucher(kindVoucher+"");
+                                                                                       serial.setVoucherNo(vouch + "");
+                                                                                       serial.setKindVoucher(kindVoucher + "");
                                                                                        serial.setStoreNo(Login.salesMan);
                                                                                        serial.setDateVoucher(voucherDate);
                                                                                        serial.setItemNo(itemNoSelected);
@@ -452,10 +467,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                } else {
                                                                                    unitQty.setError("Invalid Zero");
                                                                                }
-                                                                           }else {
+                                                                           } else {
                                                                                unitQty.setError("Invalid");
                                                                            }
-
 
 
                                                                        }
@@ -509,19 +523,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    serialMod.setSerialCode(araySerial[i]);
                                                                                    if (isbonus.equals("0")) {
                                                                                        serialMod.setCounterSerial(++counterSerial);
-                                                                                       serialMod.setVoucherNo(vouch+"");
-                                                                                       serialMod.setKindVoucher(kindVoucher+"");
+                                                                                       serialMod.setVoucherNo(vouch + "");
+                                                                                       serialMod.setKindVoucher(kindVoucher + "");
                                                                                        serialMod.setStoreNo(Login.salesMan);
                                                                                        serialMod.setDateVoucher(voucherDate);
-                                                                                       serialMod.setKindVoucher(voucherType+"");
+                                                                                       serialMod.setKindVoucher(voucherType + "");
                                                                                        serialMod.setItemNo(itemNoSelected);
                                                                                        unitQty.setText(counterSerial + "");
 
 
                                                                                    } else {
                                                                                        serialMod.setCounterSerial(++counterBonus);
-                                                                                       serialMod.setVoucherNo(vouch+"");
-                                                                                       serialMod.setKindVoucher(kindVoucher+"");
+                                                                                       serialMod.setVoucherNo(vouch + "");
+                                                                                       serialMod.setKindVoucher(kindVoucher + "");
                                                                                        serialMod.setStoreNo(Login.salesMan);
                                                                                        serialMod.setDateVoucher(voucherDate);
                                                                                        serialMod.setItemNo(itemNoSelected);
@@ -594,19 +608,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        serial.setSerialCode("");
                                                                        serial.setIsBonus("1");
                                                                        serial.setIsDeleted("0");
-                                                                       serial.setVoucherNo(vouch+"");
-                                                                       serial.setKindVoucher(kindVoucher+"");
+                                                                       serial.setVoucherNo(vouch + "");
+                                                                       serial.setKindVoucher(kindVoucher + "");
                                                                        serialListitems.add(serial);
 
 
                                                                        serial_No_recyclerView.setLayoutManager(layoutManager);
 
-                                                                       serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems,cont));
+                                                                       serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
 //
 
                                                                    }
                                                                });
-                                                               addEditBarcode= dialog.findViewById(R.id.addEditBarcode);
+                                                               addEditBarcode = dialog.findViewById(R.id.addEditBarcode);
                                                                addEditBarcode.setOnClickListener(new View.OnClickListener() {
                                                                    @Override
                                                                    public void onClick(View view) {
@@ -629,7 +643,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        } catch (Exception e) {
 
                                                        }
-                                                       serialValue= dialog.findViewById(R.id.serialValue);
+                                                       serialValue = dialog.findViewById(R.id.serialValue);
                                                        resultLinear = dialog.findViewById(R.id.resultLinear);
                                                        acceptDiscount = dialog.findViewById(R.id.acceptDiscount);
                                                        rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -657,7 +671,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        final TextView itemNumber = dialog.findViewById(R.id.item_number);
 //                  final TextView categoryTextView =  dialog.findViewById(R.id.item_number);
                                                        final TextView itemName = dialog.findViewById(R.id.item_name);
-                                                        price = dialog.findViewById(R.id.price);
+                                                       price = dialog.findViewById(R.id.price);
                                                        final Spinner unit = dialog.findViewById(R.id.unit);
                                                        final TextView textQty = dialog.findViewById(R.id.textQty);
                                                        unitQty = dialog.findViewById(R.id.unitQty);
@@ -768,27 +782,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                            @Override
                                                            public void afterTextChanged(Editable s) {
-                                                               Log.e("afterTextChanged","haveResult"+s.toString());
+                                                               Log.e("afterTextChanged", "haveResult" + s.toString());
                                                                if (s.toString().equals("0")) {
 
-                                                               } else if( (s.toString().charAt(0)+"").equals("1")) {
-                                                                   Log.e("afterTextChanged","haveResult"+s.toString());
+                                                               } else if ((s.toString().charAt(0) + "").equals("1")) {
+                                                                   Log.e("afterTextChanged", "haveResult" + s.toString());
                                                                    haveResult = 1;
-                                                                   String key=s.toString().substring(1,s.length());
+                                                                   String key = s.toString().substring(1, s.length());
 //                                                                   if(key.equals(currentKey))
 //                                                                   {
-                                                                       resultLinear.setVisibility(View.VISIBLE);
-                                                                       mainRequestLinear.setVisibility(View.GONE);
-                                                                       checkStateResult.setVisibility(View.VISIBLE);
-                                                                       checkStateResult.setText("Accepted Request");
-                                                                       acceptDiscount.setVisibility(View.VISIBLE);
-                                                                       rejectDiscount.setVisibility(View.GONE);
-                                                                       addToList.setEnabled(true);
+                                                                   resultLinear.setVisibility(View.VISIBLE);
+                                                                   mainRequestLinear.setVisibility(View.GONE);
+                                                                   checkStateResult.setVisibility(View.VISIBLE);
+                                                                   checkStateResult.setText("Accepted Request");
+                                                                   acceptDiscount.setVisibility(View.VISIBLE);
+                                                                   rejectDiscount.setVisibility(View.GONE);
+                                                                   addToList.setEnabled(true);
 //                                                                   }
 
 
-
-                                                               } else if ((s.toString().charAt(0)+"").equals("2"))  {
+                                                               } else if ((s.toString().charAt(0) + "").equals("2")) {
                                                                    haveResult = 2;
                                                                    mainRequestLinear.setVisibility(View.GONE);
                                                                    resultLinear.setVisibility(View.VISIBLE);
@@ -802,8 +815,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    bonus.setText("");
                                                                    addToList.setEnabled(true);
                                                                    unitQty.setEnabled(true);
-                                                                   if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
-                                                                   {
+                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
                                                                        price.setEnabled(true);
                                                                    }
 
@@ -885,19 +897,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    public void onClick(View v) {
 
                                                                        String discountText = "";
-                                                                       discountPerVal=0;
+                                                                       discountPerVal = 0;
                                                                        if ((typeRequest == 1 && !discount.getText().toString().equals("")))// discount
                                                                        {
                                                                            Log.e("request", "" + typeRequest);
                                                                            if (!discount.getText().toString().equals("")) {
-                                                                               if(discPercRadioButton.isChecked())
-                                                                               {
-                                                                                   discountPerVal=1;
-                                                                               }
-                                                                               else {
-                                                                                   if(discValueRadioButton.isChecked())
-                                                                                   {
-                                                                                       discountPerVal=2;
+                                                                               if (discPercRadioButton.isChecked()) {
+                                                                                   discountPerVal = 1;
+                                                                               } else {
+                                                                                   if (discValueRadioButton.isChecked()) {
+                                                                                       discountPerVal = 2;
                                                                                    }
                                                                                }
                                                                                if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
@@ -913,9 +922,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                            if (!discountCustomer.equals(discountText)) {
 
                                                                                                try {
-                                                                                                   currentKey="";
+                                                                                                   currentKey = "";
                                                                                                    requestDiscount.setEnabled(false);
-                                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
+                                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                                    addToList.setEnabled(false);
                                                                                                    discount.setEnabled(false);
                                                                                                    unitQty.setEnabled(false);
@@ -940,10 +949,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                    } else {
                                                                                        try {
-                                                                                           getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
+                                                                                           getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                            addToList.setEnabled(false);
                                                                                            discount.setEnabled(false);
-                                                                                           currentKey="";
+                                                                                           currentKey = "";
                                                                                            unitQty.setEnabled(false);
                                                                                            price.setEnabled(false);
                                                                                            requestDiscount.setEnabled(false);
@@ -957,10 +966,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    }
                                                                                } else {
                                                                                    try {
-                                                                                       getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(),unitQty.getText().toString());
+                                                                                       getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                        addToList.setEnabled(false);
                                                                                        discount.setEnabled(false);
-                                                                                       currentKey="";
+                                                                                       currentKey = "";
                                                                                        unitQty.setEnabled(false);
                                                                                        price.setEnabled(false);
                                                                                        requestDiscount.setEnabled(false);
@@ -978,8 +987,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                discount.setError("required");
                                                                                discount.requestFocus();
                                                                                unitQty.setEnabled(true);
-                                                                               if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
-                                                                               {
+                                                                               if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
                                                                                    price.setEnabled(true);
                                                                                }
                                                                            }
@@ -988,12 +996,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            if (!bonus.getText().toString().equals("")) {
                                                                                try {
-                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "2", items.get(position).getPrice() + "", bonus.getText().toString(),unitQty.getText().toString());
+                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "2", items.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
                                                                                    unitQty.setEnabled(false);
                                                                                    price.setEnabled(false);
-                                                                                   currentKey="";
+                                                                                   currentKey = "";
                                                                                    discPercRadioButton.setEnabled(false);
                                                                                    discValueRadioButton.setEnabled(false);
                                                                                    requestDiscount.setEnabled(false);
@@ -1007,8 +1015,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                bonus.setError("required");
                                                                                bonus.requestFocus();
                                                                                unitQty.setEnabled(true);
-                                                                               if(MHandler.getAllSettings().get(0).getCanChangePrice()==1)
-                                                                               {
+                                                                               if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
                                                                                    price.setEnabled(true);
                                                                                }
                                                                            }
@@ -1039,18 +1046,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        @Override
                                                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                                          // int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
+                                                                           // int vouch = Integer.parseInt(voucherNumberTextView.getText().toString());
                                                                            try {
-                                                                               Log.e("cancel3","serialListitemsInCardView"+serialListitems.size());
-                                                                               for(int k=0;k<listMasterSerialForBuckup.size();k++)
-                                                                               {
-                                                                                   MHandler.add_SerialBackup(listMasterSerialForBuckup.get(k),1);
+                                                                               Log.e("cancel3", "serialListitemsInCardView" + serialListitems.size());
+                                                                               for (int k = 0; k < listMasterSerialForBuckup.size(); k++) {
+                                                                                   MHandler.add_SerialBackup(listMasterSerialForBuckup.get(k), 1);
                                                                                }
-                                                                               Log.e("listMasterSerialFor","addToList="+listMasterSerialForBuckup.size());
-                                                                           }catch (Exception e){}
+                                                                               Log.e("listMasterSerialFor", "addToList=" + listMasterSerialForBuckup.size());
+                                                                           } catch (Exception e) {
+                                                                           }
 
                                                                            serialListitems.clear();
-                                                                           Log.e("cancel3",""+serialListitems.size());
+                                                                           Log.e("cancel3", "" + serialListitems.size());
 //                                                                           MHandler.deletSerialItems_byVoucherNo(vouch);
 
                                                                            float count = 0;
@@ -1106,7 +1113,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                            unitWeightLinearLayout.setVisibility(View.GONE);// For Serial
                                                            textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
-                                                          // useWeight.setChecked(false);
+                                                           // useWeight.setChecked(false);
                                                        } else
                                                            unitQty.setText("" + items.get(position).getItemL());
 
@@ -1127,12 +1134,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            public void onClick(View v) {
                                                                holder.cardView.setEnabled(true);
                                                                //listMasterSerialForBuckup.addAll(serialListitems);
-                                                               for(int i=0;i<listMasterSerialForBuckup.size();i++)
-                                                               {
-                                                                   mHandler.add_SerialBackup(listMasterSerialForBuckup.get(i),0);
+                                                               for (int i = 0; i < listMasterSerialForBuckup.size(); i++) {
+                                                                   mHandler.add_SerialBackup(listMasterSerialForBuckup.get(i), 0);
                                                                }
-                                                               Log.e("listMasterSerialFor","addToList="+listMasterSerialForBuckup.size());
-                                                               String qtyText = "", discountText = "", bunosText = "",priceText="";
+                                                               Log.e("listMasterSerialFor", "addToList=" + listMasterSerialForBuckup.size());
+                                                               String qtyText = "", discountText = "", bunosText = "", priceText = "";
                                                                int countInvalidSerial = 0;
                                                                if (serialListitems.size() != 0) {
                                                                    countInvalidSerial = checkSerialDB();
@@ -1141,7 +1147,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                qtyText = unitQty.getText().toString();
                                                                discountText = discount.getText().toString();
                                                                bunosText = bonus.getText().toString();
-                                                               priceText=price.getText().toString();
+                                                               priceText = price.getText().toString();
 
                                                                if (haveCstomerDisc) {
 
@@ -1173,20 +1179,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                        else {
 
                                                                                            String unitValue;
-                                                                                           Log.e("useWeightValue",""+useWeightValue.isChecked());
-                                                                                          if(useWeightValue.isChecked())
-                                                                                          {
-                                                                                              useWeight=1 ;
-                                                                                          }else {useWeight=0;}
-                                                                                           currentKey="";
+                                                                                           Log.e("useWeightValue", "" + useWeightValue.isChecked());
+                                                                                           if (useWeightValue.isChecked()) {
+                                                                                               useWeight = 1;
+                                                                                           } else {
+                                                                                               useWeight = 0;
+                                                                                           }
+                                                                                           currentKey = "";
                                                                                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                                                                unitValue = unit.getSelectedItem().toString();
                                                                                                Log.e("unitValue", "" + unitValue);
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
 //                                                                                                       || mHandler.getAllSettings().get(0).getAllowMinus() == 1
 //                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
-                                                                                               if(validQty(items.get(position).getQty(),Double.parseDouble(unitQty.getText().toString())))
-                                                                                               {
+                                                                                               if (validQty(items.get(position).getQty(), Double.parseDouble(unitQty.getText().toString()))) {
 
                                                                                                    if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
                                                                                                            Double.parseDouble(price.getText().toString()) >= items.get(position).getMinSalePrice())) {
@@ -1209,15 +1215,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                                appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
                                                                                                                if (appliedOffer != null) {
-                                                                                                                   double bonus_calc=0;
-                                                                                                                   Log.e("getPromotionType()","2===="+appliedOffer.getBonusQty());
-                                                                                                                   if(OfferCakeShop==0)
-                                                                                                                   {
+                                                                                                                   double bonus_calc = 0;
+                                                                                                                   Log.e("getPromotionType()", "2====" + appliedOffer.getBonusQty());
+                                                                                                                   if (OfferCakeShop == 0) {
                                                                                                                        bonus_calc = ((int) (Double.parseDouble(unitQty.getText().toString()) / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
 
-                                                                                                                   }
-                                                                                                                   else {
-                                                                                                                       bonus_calc=appliedOffer.getBonusQty();
+                                                                                                                   } else {
+                                                                                                                       bonus_calc = appliedOffer.getBonusQty();
                                                                                                                    }
                                                                                                                    Log.e("bonus_calc=", "added1" + added);
                                                                                                                    Log.e("bonus_calc=", "" + bonus_calc);
@@ -1228,7 +1232,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    Log.e("bonus_calc=", "added2" + added);
                                                                                                                }
                                                                                                            } else {
-                                                                                                               Log.e("getPromotionType",""+offer.get(0).getPromotionType());
+                                                                                                               Log.e("getPromotionType", "" + offer.get(0).getPromotionType());
                                                                                                                //(appliedOffer.getBonusQty()*Double.parseDouble(unitQty.getText().toString()))   //******calculate discount item before 11/9
                                                                                                                double disount_totalnew = 0, unitQty_double = 0;
 
@@ -1268,14 +1272,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                            itemInlocalList = false;
                                                                                                            dialog.dismiss();
                                                                                                        }
-                                                                                                   } else{
+                                                                                                   } else {
                                                                                                        Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
                                                                                                        Log.e("bonus not added ", "" + items.get(position).getMinSalePrice());
                                                                                                        price.setError(view.getResources().getString(R.string.invalidValue));
 
                                                                                                    }
-                                                                                               }
-                                                                                               else{
+                                                                                               } else {
                                                                                                    unitQty.setError(view.getContext().getResources().getString(R.string.insufficientQuantity));
                                                                                                    Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.insufficientQuantity), Toast.LENGTH_LONG).show();
 
@@ -1287,7 +1290,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                else {
                                                                                                    unitValue = unitWeight.getText().toString();
 //                                        String qtyValue = "" + (Double.parseDouble(unitWeight.getText().toString()) * Double.parseDouble(unitQty.getText().toString()));
-                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) ) : unitQty.getText().toString());
+                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString())) : unitQty.getText().toString());
 //                                                                                                   String qty = (useWeightValue.isChecked() ? "" + (Double.parseDouble(unitQty.getText().toString()) * Double.parseDouble(unitValue)) : unitQty.getText().toString());
 
                                                                                                    Log.e("here**", "" + position);
@@ -1312,17 +1315,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                                        appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 0);
                                                                                                                        if (appliedOffer != null)
-                                                                                                                           Log.e("getPromotionType()","1===="+appliedOffer.getBonusQty());
-                                                                                                                           added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
-                                                                                                                                   "0", "1", "" + appliedOffer.getBonusQty(), "0",
-                                                                                                                                   "0", "0", radioGroup
-                                                                                                                                   , items.get(position).getCategory(), items.get(position).getPosPrice() + ""
-                                                                                                                                   , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
+                                                                                                                           Log.e("getPromotionType()", "1====" + appliedOffer.getBonusQty());
+                                                                                                                       added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
+                                                                                                                               "0", "1", "" + appliedOffer.getBonusQty(), "0",
+                                                                                                                               "0", "0", radioGroup
+                                                                                                                               , items.get(position).getCategory(), items.get(position).getPosPrice() + ""
+                                                                                                                               , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial);
 
                                                                                                                    } else {
                                                                                                                        appliedOffer = getAppliedOffer(itemNumber.getText().toString(), qty, 1);
                                                                                                                        if (appliedOffer != null) {
-                                                                                                                           Log.e("appliedOffer","addItem"+appliedOffer.getBonusQty());
+                                                                                                                           Log.e("appliedOffer", "addItem" + appliedOffer.getBonusQty());
                                                                                                                            String priceAfterDiscount = "" + (Double.parseDouble(price.getText().toString()) - appliedOffer.getBonusQty());
                                                                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                                    holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
@@ -1374,10 +1377,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                price.setError(view.getResources().getString(R.string.invalidValue));
                                                                                price.requestFocus();
                                                                            }
-                                                                       } else{
-                                                                           if(TextUtils.isEmpty(qtyText)){ unitQty.setError("*Required");}
+                                                                       } else {
+                                                                           if (TextUtils.isEmpty(qtyText)) {
+                                                                               unitQty.setError("*Required");
+                                                                           }
 
-                                                                           if(TextUtils.isEmpty(priceText)){ price.setError("*Required");}
+                                                                           if (TextUtils.isEmpty(priceText)) {
+                                                                               price.setError("*Required");
+                                                                           }
                                                                        }
 
                                                                    } else {
@@ -1392,23 +1399,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                .setContentText(view.getContext().getString(R.string.reqired_filled))
                                                                                .show();
                                                                    } else {
-                                                                       if(countInvalidSerial==100)
-                                                                       {
+                                                                       if (countInvalidSerial == 100) {
                                                                            new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
                                                                                    .setTitleText(view.getContext().getString(R.string.warning_message))
                                                                                    .setContentText(view.getContext().getString(R.string.thereIsduplicatedSerial))
                                                                                    .show();
 
-                                                                       }
-                                                                       else if(countInvalidSerial==1000){
+                                                                       } else if (countInvalidSerial == 1000) {
                                                                            new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
                                                                                    .setTitleText(context.getString(R.string.warning_message))
-                                                                                   .setContentText(context.getString(R.string.duplicate)+"\t"+context.getResources().getString(R.string.inThisVoucher))
+                                                                                   .setContentText(context.getString(R.string.duplicate) + "\t" + context.getResources().getString(R.string.inThisVoucher))
 
                                                                                    .show();
-                                                                       }
-
-                                                                       else {
+                                                                       } else {
                                                                            new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
                                                                                    .setTitleText(view.getContext().getString(R.string.warning_message))
                                                                                    .setContentText(view.getContext().getString(R.string.itemadedbefor))
@@ -1425,7 +1428,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        });
                                                        dialog.show();
 
-                                                   }else {
+                                                   } else {
 //                                                       new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
 //                                                               .setTitleText(view.getContext().getString(R.string.warning_message))
 //                                                               .setContentText(view.getContext().getString(R.string.itemadedbefor))
@@ -1438,12 +1441,73 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
+    private void getImage(String urlImage) {
+        pdValidation = new SweetAlertDialog(cont, SweetAlertDialog.PROGRESS_TYPE);
+        pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pdValidation.setTitleText(context.getResources().getString(R.string.process));
+        pdValidation.setCancelable(false);
+        pdValidation.show();
+
+        //  http://46.185.138.63//falcons/Products%20Photo%202021/Be%20Clean/4-Be%20Clean%20Foam%20Hand%20Sanitizer.jpg
+        //  http://46.185.138.63//falcons/ProductsPhoto2021/BeClean/4-BeCleanFoamHandSanitizer.jpg
+        Log.e("getImage", "yyyy");
+        new SendHttpRequestTask(urlImage).execute();
+
+
+    }
+
+    private class SendHttpRequestTask extends AsyncTask<String, Void, Bitmap> {
+        String imgUrl = "";
+
+        SendHttpRequestTask(String url) {
+            this.imgUrl = url;
+
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                String urlStr = "http://" + ipAddress.trim() + "//FALCONS/" + imgUrl.trim();
+                Log.e("urlTask", "" + urlStr);
+
+//                URL url = new URL("http://46.185.138.63//falcons/Products%20Photo%202021/Be%20Clean/4-Be%20Clean%20Foam%20Hand%20Sanitizer.jpg");
+                URL url = new URL(urlStr);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                Log.e("myBitmap", "" + myBitmap.toString());
+                return myBitmap;
+            } catch (Exception e) {
+                Log.d("TAG", e.getMessage());
+                pdValidation.dismissWithAnimation();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+//            ImageView imageView = (ImageView) findViewById(ID OF YOUR IMAGE VIEW);
+//            imageView.setImageBitmap(result);
+            pdValidation.dismissWithAnimation();
+            if (result != null)
+                showImageOfCheck(result);
+            else {
+                new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText(cont.getResources().getString(R.string.warning_message))
+                        .setContentText(cont.getResources().getString(R.string.imageNotFound))
+                        .show();
+            }
+        }
+    }
+
     @SuppressLint("WrongConstant")
     private void updateValue(String barcodeValue, ArrayList<serialModel> serialListitems) {
-       // Log.e("updateValue","barcodeValue="+barcodeValue+"\tlist"+serialListitems.size()+"\tcounter"+numberBarcodsScanner);
+        // Log.e("updateValue","barcodeValue="+barcodeValue+"\tlist"+serialListitems.size()+"\tcounter"+numberBarcodsScanner);
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(cont);
-       layoutManager.setOrientation(VERTICAL);
+        layoutManager.setOrientation(VERTICAL);
         if ((validbarcodeValue(barcodeValue, serialListitems))) {
             addSerialToList(barcodeValue, serialListitems);
             serialValue.setError(null);
@@ -1455,15 +1519,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             unitQty.setText(counterSerial + "");
 
             unitQty.setEnabled(false);
-               numberBarcodsScanner++;
-               serialValue.setText("");
+            numberBarcodsScanner++;
+            serialValue.setText("");
 
-               Log.e("contiusReading",""+contiusReading);
-               if(contiusReading==1) {
-                   openSmallScanerTextView();
-               }else {
-                   serialValue.requestFocus();
-                   Log.e("contiusReading","HandlerElse");
+            Log.e("contiusReading", "" + contiusReading);
+            if (contiusReading == 1) {
+                openSmallScanerTextView();
+            } else {
+                serialValue.requestFocus();
+                Log.e("contiusReading", "HandlerElse");
 //                   new Handler().post(new Runnable() {
 //                       @Override
 //                       public void run() {
@@ -1473,24 +1537,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                       }
 //                   });
 
-               }
+            }
             serial_No_recyclerView.setLayoutManager(layoutManager);
 //
             serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
-           }
-           else {
-               serialValue.setError("invalid");
-               if(serialListitems.size()!=0)
-               {
-                   serial_No_recyclerView.setLayoutManager(layoutManager);
+        } else {
+            serialValue.setError("invalid");
+            if (serialListitems.size() != 0) {
+                serial_No_recyclerView.setLayoutManager(layoutManager);
 
-                   serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
-               }
+                serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
+            }
 
-               unitQty.setEnabled(false);
+            unitQty.setEnabled(false);
 
 
-           }
+        }
 //        }
 //        if(validbarcodeValue(barcodeValue,serialListitems))
 //        {
@@ -1517,209 +1579,151 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private void addSerialToList(String barcodeValue, ArrayList<serialModel> serialListitems) {
-
-        int qtySerial = 0;
-
-//        if (!unitQty.getText().toString().equals("") && serialListitems.size() == 0) {
-//            try {
-//                qtySerial = (int) Double.parseDouble(unitQty.getText().toString());
-//            } catch (Exception e) {
-//                qtySerial = Integer.parseInt(unitQty.getText().toString());
-//            }
-//            if (qtySerial <= 100) {
-//                counterSerial = qtySerial;
-//                if (qtySerial != 0) {
-//                    flag = 1;
-                    addToList.setEnabled(true);
-                    addToList.setVisibility(View.VISIBLE);
-//                                            counterSerial++;
-//                                            unitQty.setText(counterSerial+"");
+        String previusPrice = "0";
+        float prcFloat = 0;
+        String prc = "";
+        if (voucherType == 506) {
+            previusPrice = MHandler.getpreviusePriceSale(barcodeValue);
+            prcFloat = Float.parseFloat(previusPrice);
+            if(prcFloat!=0 && contiusReading==0)
+            price.setText(previusPrice);
 
 
-//                    for (int i = 1; i <= qtySerial; i++) {
-                        serial = new serialModel();
-                        serial.setCounterSerial(numberBarcodsScanner);
-                        serial.setSerialCode(barcodeValue.trim());
-                        serial.setIsBonus("0");
-                        serial.setIsDeleted("0");
-                        serial.setVoucherNo(vouch + "");
-                        serial.setKindVoucher(kindVoucher + "");
-                        serial.setStoreNo(Login.salesMan);
-                        serial.setDateVoucher(voucherDate);
-                        serial.setItemNo(itemNoSelected);
-                        serialListitems.add(serial);
+            prc = generalMethod.convertToEnglish(generalMethod.getDecimalFormat(prcFloat));
 
-//                    }
+        }
 
+        //  Log.e("addSerialToList","previusPrice="+previusPrice);
 
-//                    serial_No_recyclerView.setLayoutManager(layoutManager);
-//
-//                    serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
-                    unitQty.setEnabled(false);
-                   // generateSerial.setEnabled(false);
-//                } else {
-//                    unitQty.setError("Invalid Zero");
-//                }
-//            } else {
-//                unitQty.setError("Invalid");
-//            }
+        addToList.setEnabled(true);
+        addToList.setVisibility(View.VISIBLE);
+        serial = new serialModel();
+        serial.setCounterSerial(numberBarcodsScanner);
+        serial.setSerialCode(barcodeValue.trim());
+        serial.setIsBonus("0");
+        serial.setIsDeleted("0");
+        serial.setVoucherNo(vouch + "");
+        serial.setKindVoucher(kindVoucher + "");
+        serial.setStoreNo(Login.salesMan);
+        serial.setDateVoucher(voucherDate);
+        serial.setItemNo(itemNoSelected);
+        serial.setPriceItemSales(prc);
+        serialListitems.add(serial);
 
-//        }
+        unitQty.setEnabled(false);
+
     }
 
-    private boolean validbarcodeValue(String barcode,ArrayList<serialModel> serialListitems) {
-        String data =barcode.toString().trim();
-        Log.e("updateListCheque", "afterTextChanged" +"position\t"+numberBarcodsScanner+data+"\tdontValidate="+barcode);
+    private boolean validbarcodeValue(String barcode, ArrayList<serialModel> serialListitems) {
+        String data = barcode.toString().trim();
+        Log.e("updateListCheque", "afterTextChanged" + "position\t" + numberBarcodsScanner + data + "\tdontValidate=" + barcode);
         try {
 
-                if(data.toString().trim().length()!=0)
-                {
-                    if(data.toString().trim().equals("error"))
-                    {
-                        // Log.e("errorSerial2", "afterTextChanged" +"position\t"+data);
-                        serialListitems.get(numberBarcodsScanner).setSerialCode("");
-                        listMasterSerialForBuckup.get(numberBarcodsScanner).setIsDeleted("1");
+            if (data.toString().trim().length() != 0) {
+                if (data.toString().trim().equals("error")) {
+                    // Log.e("errorSerial2", "afterTextChanged" +"position\t"+data);
+                    serialListitems.get(numberBarcodsScanner).setSerialCode("");
+                    listMasterSerialForBuckup.get(numberBarcodsScanner).setIsDeleted("1");
 
-                        // isFoundSerial=true;
+                    // isFoundSerial=true;
+
+                    return false;
+                } else {
+                    isFoundSerial = false;
+
+                    for (int h = 0; h < serialListitems.size(); h++) {
+
+                        if (serialListitems.get(h).getSerialCode().equals(data)) {
+                            isFoundSerial = true;
+                            break;
+                        }
+                    }
+                    if (isFoundSerial == true) {// FOUND  IN CURRENT LIST
+                        new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(cont.getString(R.string.warning_message))
+                                .setContentText(cont.getString(R.string.duplicate) + "\t" + cont.getResources().getString(R.string.inThisVoucher))
+                                .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        if (contiusReading == 1) {
+                                            openSmallScanerTextView();
+                                        } else {
+                                            new Handler().post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    serialValue.setText("");
+                                                    serialValue.requestFocus();
+
+                                                }
+                                            });
+                                        }
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                        Toast.makeText(cont, cont.getResources().getString(R.string.duplicate) + "\t" + cont.getResources().getString(R.string.inThisVoucher), Toast.LENGTH_SHORT).show();
 
                         return false;
                     }
-                    else {
-                        isFoundSerial=false;
-
-                        for(int h=0;h<serialListitems.size();h++)
-                        {
-
-                            if(serialListitems.get(h).getSerialCode().equals(data))
-                            {
-                                isFoundSerial=true;
-                                break;
-                            }
-                        }
-                        if(isFoundSerial==true)
-                        {// FOUND  IN CURRENT LIST
-                            new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText(cont.getString(R.string.warning_message))
-                                    .setContentText(cont.getString(R.string.duplicate)+"\t"+cont.getResources().getString(R.string.inThisVoucher))
-                                    .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            if(contiusReading==1) {
-                                                openSmallScanerTextView();
-                                            }else {
-                                                new Handler().post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        serialValue.setText("");
-                                                        serialValue.requestFocus();
-
-                                                    }
-                                                });
-                                            }
-                                            sweetAlertDialog.dismissWithAnimation();
-                                        }
-                                    })
-                                    .show();
-                            Toast.makeText(cont, cont.getResources().getString(R.string.duplicate)+"\t"+cont.getResources().getString(R.string.inThisVoucher), Toast.LENGTH_SHORT).show();
-
-                            return  false;
-                        }
-                    }
+                }
 
 
-                    //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
+                //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
 //            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
-                    if (MHandler.isSerialCodeExist(data).equals("not")||voucherType==506||MHandler.getLastTransactionOfSerial(data.trim()).equals("506")) {
-                        if((MHandler.isSerialCodePaied(data+"").equals("not")&&voucherType==504)||
-                                (!MHandler.isSerialCodePaied(data+"").equals("not")&&voucherType==506))
-                        {
-                            errorData = false;
+                if (MHandler.isSerialCodeExist(data).equals("not") || voucherType == 506 || MHandler.getLastTransactionOfSerial(data.trim()).equals("506")) {
+                    if ((MHandler.isSerialCodePaied(data + "").equals("not") && voucherType == 504) ||
+                            (!MHandler.isSerialCodePaied(data + "").equals("not") && voucherType == 506)) {
+                        errorData = false;
 
-                           // serialListitems.get(numberBarcodsScanner).setSerialCode(data);test
-                          //  listMasterSerialForBuckup.get(numberBarcodsScanner).setSerialCode(data);test
+                        // serialListitems.get(numberBarcodsScanner).setSerialCode(data);test
+                        //  listMasterSerialForBuckup.get(numberBarcodsScanner).setSerialCode(data);test
 //                            currentUpdate = position;
 //
 //                            isClicked.set(position, 0);
 //                            isClicked.set(position + 1, 1);
 
-                           // notifyDataSetChanged();
+                        // notifyDataSetChanged();
 
-                            return true;
+                        return true;
 
-                        }
-                        else {// duplicated
-                            if(voucherType==506)
-                            {
-                                new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText(cont.getString(R.string.warning_message))
-                                        .setContentText(cont.getString(R.string.serialIsNotPaied))
-                                        .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                if(contiusReading==1) {
-                                                    openSmallScanerTextView();
-                                                }else {
-                                                    new Handler().post(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            serialValue.setText("");
-                                                            serialValue.requestFocus();
-
-                                                        }
-                                                    });
-                                                }
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .show();
-                            }
-                            else {
-                                String voucherNo=MHandler.isSerialCodePaied(data+"");
-                                String voucherDate=voucherNo.substring(voucherNo.indexOf("&")+1);
-                                voucherNo=voucherNo.substring(0,voucherNo.indexOf("&"));
-
-                                Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + voucherNo+"\t"+voucherDate);
-                                new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
-                                        .setContentText(context.getString(R.string.duplicate) +"\t"+data+ "\t"+cont.getString(R.string.forVoucherNo)+"\t" +voucherNo+"\n"+context.getString(R.string.voucher_date)+"\t"+voucherDate)
-                                        .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                if(contiusReading==1) {
-                                                    openSmallScanerTextView();
-                                                }else {
-                                                    new Handler().post(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            serialValue.setText("");
-                                                            serialValue.requestFocus();
-
-                                                        }
-                                                    });
-                                                }
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .show();
-                            }
-
-
-                            return  false;
-                        }
-
-                    } else {
-                        errorData = true;
-                        // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
-                        String ItemNo=MHandler.isSerialCodeExist(data+"");
-                        if(!ItemNo.equals("")){
+                    } else {// duplicated
+                        if (voucherType == 506) {
                             new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
                                     .setTitleText(cont.getString(R.string.warning_message))
-                                    .setContentText(cont.getString(R.string.invalidSerial)+"\t"+data+"\t"+cont.getString(R.string.forItemNo)+ItemNo)
+                                    .setContentText(cont.getString(R.string.serialIsNotPaied))
                                     .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            if(contiusReading==1) {
+                                            if (contiusReading == 1) {
                                                 openSmallScanerTextView();
-                                            }else {
+                                            } else {
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        serialValue.setText("");
+                                                        serialValue.requestFocus();
+
+                                                    }
+                                                });
+                                            }
+                                            sweetAlertDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            String voucherNo = MHandler.isSerialCodePaied(data + "");
+                            String voucherDate = voucherNo.substring(voucherNo.indexOf("&") + 1);
+                            voucherNo = voucherNo.substring(0, voucherNo.indexOf("&"));
+
+                            Log.e("Activities3", "onActivityResult+false+isSerialCodePaied" + voucherNo + "\t" + voucherDate);
+                            new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                                    .setContentText(context.getString(R.string.duplicate) + "\t" + data + "\t" + cont.getString(R.string.forVoucherNo) + "\t" + voucherNo + "\n" + context.getString(R.string.voucher_date) + "\t" + voucherDate)
+                                    .setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            if (contiusReading == 1) {
+                                                openSmallScanerTextView();
+                                            } else {
                                                 new Handler().post(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -1734,48 +1738,77 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     })
                                     .show();
                         }
-                        else {
-                            new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText(cont.getString(R.string.warning_message))
-                                    .setContentText(cont.getString(R.string.invalidSerial)+"\t"+data)
-                                    .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            if(contiusReading==1) {
-                                                openSmallScanerTextView();
-                                            }else {
-                                                new Handler().post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        serialValue.setText("");
-                                                        serialValue.requestFocus();
-
-                                                    }
-                                                });
-                                            }
-                                            sweetAlertDialog.dismissWithAnimation();
-                                        }
-                                    })
-                                    .show();
-                        }
-
 
 
                         return false;
-
-
                     }
-                }
 
-                else {
-                    return  true;
+                } else {
+                    errorData = true;
+                    // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
+                    String ItemNo = MHandler.isSerialCodeExist(data + "");
+                    if (!ItemNo.equals("")) {
+                        new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(cont.getString(R.string.warning_message))
+                                .setContentText(cont.getString(R.string.invalidSerial) + "\t" + data + "\t" + cont.getString(R.string.forItemNo) + ItemNo)
+                                .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        if (contiusReading == 1) {
+                                            openSmallScanerTextView();
+                                        } else {
+                                            new Handler().post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    serialValue.setText("");
+                                                    serialValue.requestFocus();
+
+                                                }
+                                            });
+                                        }
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(cont.getString(R.string.warning_message))
+                                .setContentText(cont.getString(R.string.invalidSerial) + "\t" + data)
+                                .setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        if (contiusReading == 1) {
+                                            openSmallScanerTextView();
+                                        } else {
+                                            new Handler().post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    serialValue.setText("");
+                                                    serialValue.requestFocus();
+
+                                                }
+                                            });
+                                        }
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+
+
+                    return false;
+
+
+                }
+            } else {
+                return true;
 //                    updateListCheque(position, "");
 //                    Log.e("positionnMPTY", "afterTextChanged" +"errorData\t"+errorData);
-                }
+            }
 
 
-        }catch (Exception e){
-            return  false;
+        } catch (Exception e) {
+            return false;
         }
 
     }
@@ -1785,22 +1818,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         new IntentIntegrator((Activity) cont).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
 
 
-
     }
+
     private void openeditDialog() {
         final EditText editText = new EditText(cont);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
-        SweetAlertDialog sweetMessage= new SweetAlertDialog(cont, SweetAlertDialog.NORMAL_TYPE);
+        SweetAlertDialog sweetMessage = new SweetAlertDialog(cont, SweetAlertDialog.NORMAL_TYPE);
 
         sweetMessage.setTitleText(cont.getResources().getString(R.string.enter_serial));
-        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setConfirmText("Ok");
         sweetMessage.setCanceledOnTouchOutside(true);
         sweetMessage.setCustomView(editText);
         sweetMessage.setConfirmButton(cont.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if(!editText.getText().toString().equals(""))
-                {
+                if (!editText.getText().toString().equals("")) {
 //                    if(sunmiDevice!=1)
 //                    {
 //                        editTextSerialCode.setText(editText.getText().toString());
@@ -1808,13 +1840,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                    }
 //
 //                    else {
-                 serialValue.setText(editText.getText().toString().trim());
-                        sweetAlertDialog.dismissWithAnimation();
+                    serialValue.setText(editText.getText().toString().trim());
+                    sweetAlertDialog.dismissWithAnimation();
 
 
-
-                }
-                else {
+                } else {
                     editText.setError(context.getResources().getString(R.string.reqired_filled));
                 }
             }
@@ -1824,10 +1854,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private boolean validQty(float qtyCurrent, double qtyRequired) {
-        Log.e("validQty","qtyCurrent="+qtyCurrent+"\tqtyRequired="+qtyRequired);
-        if( MHandler.getAllSettings().get(0).getAllowMinus() == 1
-                || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
-        {return true;}
+        Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
+        if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
+                || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
+            return true;
+        }
 //        if(MHandler.getAllSettings().get(0).getQtyServer()==1)
 //        {
 //            qtyCurrent=importJason.getAvailableQty(itemNoSelected);
@@ -1839,10 +1870,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            return  true;
 //        }
 //        else {
-            if (qtyCurrent >= qtyRequired)
-            {
-                return  true;
-            }
+        if (qtyCurrent >= qtyRequired) {
+            return true;
+        }
 //        }
 
 
@@ -1851,15 +1881,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    private void getDataForDiscountTotal(String itemName, String type, String price, String amount,String qty) {
-        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price+amount);
-        double priceValue=0,amountValue=0,totalValue=0;
+    private void getDataForDiscountTotal(String itemName, String type, String price, String amount, String qty) {
+        Log.e("getDataForDiscountTotal", "" + itemName + "type" + type + price + amount);
+        double priceValue = 0, amountValue = 0, totalValue = 0;
         try {
-            priceValue=Double.parseDouble(price);
-            amountValue=Double.parseDouble(qty);
-            totalValue=priceValue*amountValue;
-        }
-        catch (Exception e){
+            priceValue = Double.parseDouble(price);
+            amountValue = Double.parseDouble(qty);
+            totalValue = priceValue * amountValue;
+        } catch (Exception e) {
 
         }
         discountRequest = new RequestAdmin();
@@ -1876,12 +1905,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         discountRequest.setVoucher_no(voucherNumberTextView.getText().toString() + "");
 
         discountRequest.setKey_validation("");
-        if(type.equals("0"))
-        {
+        if (type.equals("0")) {
 
-            discountRequest.setNote(discountPerVal+itemName);
-        }
-        else {
+            discountRequest.setNote(discountPerVal + itemName);
+        } else {
             discountRequest.setNote(itemName);
         }
 
@@ -1909,7 +1936,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private int checkSerialDB() {
-        listSerialValue =new ArrayList<>();
+        listSerialValue = new ArrayList<>();
         int counter = 0;
         for (int i = 0; i < serialListitems.size(); i++) {
             listSerialValue.add(serialListitems.get(i).getSerialCode());
@@ -1919,21 +1946,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 return counter;
             }
 
-            if (!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not")&&voucherType==504&&!((MHandler.getLastTransactionOfSerial(serialListitems.get(i).getSerialCode().trim()).equals("506"))&&voucherType==504 )){// serial not valid
+            if (!MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()).equals("not") && voucherType == 504 && !((MHandler.getLastTransactionOfSerial(serialListitems.get(i).getSerialCode().trim()).equals("506")) && voucherType == 504)) {// serial not valid
 //                if(MHandler.isSerialCodePaied(serialListitems.get(i).getSerialCode()).equals("not"))
 //                {
-                    counter++;
-                String ItemNo=MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode()+"");
+                counter++;
+                String ItemNo = MHandler.isSerialCodeExist(serialListitems.get(i).getSerialCode() + "");
 
-                if(!ItemNo.equals("")){
+                if (!ItemNo.equals("")) {
                     new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(cont.getString(R.string.warning_message))
-                            .setContentText(cont.getString(R.string.invalidSerial)+"\t"+serialListitems.get(i).getSerialCode()+"\t"+cont.getString(R.string.forItemNo)+ItemNo)
+                            .setContentText(cont.getString(R.string.invalidSerial) + "\t" + serialListitems.get(i).getSerialCode() + "\t" + cont.getString(R.string.forItemNo) + ItemNo)
                             .show();
-                }else {
+                } else {
                     new SweetAlertDialog(cont, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(cont.getString(R.string.warning_message))
-                            .setContentText(cont.getString(R.string.invalidSerial)+"\t"+serialListitems.get(i).getSerialCode())
+                            .setContentText(cont.getString(R.string.invalidSerial) + "\t" + serialListitems.get(i).getSerialCode())
                             .show();
 
                 }
@@ -1941,12 +1968,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
             }
-            if(listSerialTotal.size()!=0){
-                for(int j=0;j<listSerialTotal.size();j++)
-                {
-                    if(listSerialTotal.get(j).getSerialCode().equals(serialListitems.get(i).getSerialCode()))
-                    {
-                        counter=1000;
+            if (listSerialTotal.size() != 0) {
+                for (int j = 0; j < listSerialTotal.size(); j++) {
+                    if (listSerialTotal.get(j).getSerialCode().equals(serialListitems.get(i).getSerialCode())) {
+                        counter = 1000;
                     }
 
                 }
@@ -1955,31 +1980,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
 
-        if(hasDuplicate(listSerialValue)){counter=100;}
+        if (hasDuplicate(listSerialValue)) {
+            counter = 100;
+        }
 
         return counter;
 
     }
+
     public static <T> boolean hasDuplicate(Iterable<T> all) {
         Set<T> set = new HashSet<T>();
         // Set#add returns false if the set does not change, which
         // indicates that a duplicate element has been added.
-        for (T each: all) if (!set.add(each)) return true;
+        for (T each : all) if (!set.add(each)) return true;
         return false;
     }
+
     public void showImageOfCheck(Bitmap bitmap) {
         final Dialog dialog = new Dialog(context.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.show_image);
         photoDetail = (PhotoView) dialog.findViewById(R.id.image_check);
+        TextView close = (TextView) dialog.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
         final ImageView imageView = (ImageView) dialog.findViewById(R.id.image_check);
         photoDetail.setImageBitmap(bitmap);
         dialog.show();
     }
 
     private void showAlertDialog() {
-        Log.e("showAlertDialog","truuuuu");
+        Log.e("showAlertDialog", "truuuuu");
         AlertDialog.Builder builder = new AlertDialog.Builder(cont);
         builder.setTitle(R.string.app_alert);
         builder.setCancelable(true);
@@ -2006,17 +2042,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             date = convertToEnglish(date);
 
             offers = MHandler.getAllOffers();
-            if(MHandler.getAllSettings().get(0).getReadOfferFromAdmin()==0)
-            {
+            if (MHandler.getAllSettings().get(0).getReadOfferFromAdmin() == 0) {
                 offers = MHandler.getAllOffers();
-                Log.e("checkOffers1",""+offers.size());
-            }
-            else {
+                Log.e("checkOffers1", "" + offers.size());
+            } else {
                 offers = MHandler.getAllOffersFromCustomerPrices();
-                Log.e("checkOffers2",""+offers.size());
+                Log.e("checkOffers2", "" + offers.size());
             }
-
-
 
 
             for (int i = 0; i < offers.size(); i++) {
@@ -2027,7 +2059,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     offer = offers.get(i);
                     Offers.add(offer);
-                    Log.e("Offers",""+Offers.size()+"\t"+Offers.get(0).getBonusQty());
+                    Log.e("Offers", "" + Offers.size() + "\t" + Offers.get(0).getBonusQty());
 
                 }
             }
@@ -2040,7 +2072,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private Offers getAppliedOffer(String itemNo, String qty, int flag) {
 
-        Log.e("getAppliedOffer",""+itemNo+"\t"+qty);
+        Log.e("getAppliedOffer", "" + itemNo + "\t" + qty);
         double qtyy = Double.parseDouble(qty);
         List<Offers> offer = checkOffers(itemNo);
 
@@ -2055,11 +2087,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (qtyy >= itemQtys.get(i))
                 iq = itemQtys.get(i);
         }
-        Log.e("getAppliedOffer","iq"+iq);
+        Log.e("getAppliedOffer", "iq" + iq);
         for (int i = 0; i < offer.size(); i++) {
             if (iq == offer.get(i).getItemQty())
-                Log.e("getAppliedOffer","return"+offer.get(i));
-                return offer.get(i);
+                Log.e("getAppliedOffer", "return" + offer.get(i));
+            return offer.get(i);
         }
 
         return null;
@@ -2138,8 +2170,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         LinearLayout linearLayout;
         CardView cardView;
-        TableRow row_qty,table_solidQty;
-        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice,textViewTax,textViewsolidQty;
+        TableRow row_qty, table_solidQty;
+        TextView itemNumber, itemName, tradeMark, category, unitQty, price, tax, barcode, posprice, textViewTax, textViewsolidQty;
         ImageView imagespecial;
 
 
@@ -2157,12 +2189,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             barcode = itemView.findViewById(R.id.textViewBarcode);
             posprice = itemView.findViewById(R.id.textViewPosPrice);
             row_qty = itemView.findViewById(R.id.row_qty);
-            table_solidQty= itemView.findViewById(R.id.table_solidQty);
-            textViewsolidQty= itemView.findViewById(R.id.textViewsolidQty);
+            table_solidQty = itemView.findViewById(R.id.table_solidQty);
+            textViewsolidQty = itemView.findViewById(R.id.textViewsolidQty);
             imagespecial = itemView.findViewById(R.id.imagespecial);
             threeDForm = new DecimalFormat("00.000");
-            textViewTax= itemView.findViewById(R.id.textTitleTax);
-            showSolidQty=MHandler.getAllSettings().get(0).getShow_quantity_sold();
+            textViewTax = itemView.findViewById(R.id.textTitleTax);
+            showSolidQty = MHandler.getAllSettings().get(0).getShow_quantity_sold();
         }
     }
 

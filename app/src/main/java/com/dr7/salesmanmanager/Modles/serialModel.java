@@ -21,6 +21,24 @@ public class serialModel {
     private  String isDeleted;
     private  String dateDelete;
     private  float priceItem;
+    private  String priceItemSales;
+    private  String customerNo;
+
+    public String getCustomerNo() {
+        return customerNo;
+    }
+
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
+    }
+
+    public String getPriceItemSales() {
+        return priceItemSales;
+    }
+
+    public void setPriceItemSales(String priceItemSales) {
+        this.priceItemSales = priceItemSales;
+    }
 
     public float getPriceItem() {
         return priceItem;

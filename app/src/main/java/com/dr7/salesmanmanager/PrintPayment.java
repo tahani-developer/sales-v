@@ -299,14 +299,8 @@ public class PrintPayment extends AppCompatActivity {
                                                                 break;
                                                             case 1:
 
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
-                                                                    openBT(pay, 1);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
 //                                                             lk31.setChecked(true);
-                                                                break;
+
                                                             case 2:
 
 //                                                                try {
@@ -314,27 +308,20 @@ public class PrintPayment extends AppCompatActivity {
 //                                                                    openBT(pay, 2);
 //                                                                } catch (IOException e) {
 //                                                                    e.printStackTrace();
-//                                                                }
-
-                                                                paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
-                                                                pay1 = pay;
-                                                                convertLayoutToImage(pay);
-                                                                Intent O = new Intent(PrintPayment.this, bMITP.class);
-                                                                O.putExtra("printKey", "4");
-                                                                startActivity(O);
-                                                                Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
+//
 
 
 //                                                             lk32.setChecked(true);
-                                                                break;
                                                             case 3:
 
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()));
-                                                                    openBT(pay, 3);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
+                                                                paymentPrinter = obj.getRequestedPaymentsPaper(Integer.parseInt(textView.getText().toString()));
+                                                                pay1 = pay;
+//                                                                convertLayoutToImage(pay);
+                                                                Intent O12 = new Intent(PrintPayment.this, bMITP.class);
+                                                                O12.putExtra("printKey", "4");
+                                                                startActivity(O12);
+                                                                Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+
 //                                                             qs.setChecked(true);
                                                                 break;
 

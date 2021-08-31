@@ -188,20 +188,21 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:text="@string/voucherNo"
 
                 android:textColor="@color/white"
-                android:textSize="12sp"
+
                 android:textStyle="bold" />
 
         <TextView
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@color/colorblue1"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
 
@@ -212,6 +213,7 @@
 
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textSize="14sp"
                 android:text="@string/transName"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -219,9 +221,9 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@color/colorblue1"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
 
@@ -231,17 +233,19 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:text="@string/date_voucher"
+
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         <TextView
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@color/colorblue1"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
             <TextView
@@ -250,6 +254,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:text="@string/debit"
                 android:textColor="@color/white"
@@ -258,9 +263,9 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@color/colorblue1"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
             <TextView
@@ -270,6 +275,7 @@
 
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textSize="14sp"
                 android:text="@string/credit"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -277,9 +283,9 @@
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             android:background="@color/colorblue1"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
             <TextView
@@ -288,6 +294,7 @@
                 android:layout_height="match_parent"
 
                 android:layout_weight="1"
+                android:textSize="14sp"
                 android:gravity="center"
                 android:text="@string/balance"
                 android:textColor="@color/white"

@@ -143,7 +143,7 @@ public class Login extends AppCompatActivity {
 
     public  static final int rawahneh=1;// 1= EXPORT STOCK TABLES
     public  static final int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
-
+    public  static final int makeOrders=0;// 1= just orders app
 
     public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -863,19 +863,19 @@ public class Login extends AppCompatActivity {
 
         mDHandler.deletAllSalesLogIn();
         mDHandler.addUserNO(Login.salesMan);
-        try {
-            if(!Login.salesMan.equals("1"))
-            {
-                if(Integer.parseInt(Login.salesMan)!=1)
-                {
-                    mDHandler.deleteExcept(Login.salesMan);
-                }
-
-            }
-
-        }catch (Exception e){
-            Log.e("deleteExcept",""+Login.salesMan);
-        }
+//        try {
+//            if(!Login.salesMan.equals("1"))
+//            {
+//                if(Integer.parseInt(Login.salesMan)!=1)
+//                {
+//                    mDHandler.deleteExcept(Login.salesMan);
+//                }
+//
+//            }
+//
+//        }catch (Exception e){
+//            Log.e("deleteExcept",""+Login.salesMan);
+//        }
         try {
             salesManInt=Integer.parseInt(salesMan);
         }catch (Exception e){

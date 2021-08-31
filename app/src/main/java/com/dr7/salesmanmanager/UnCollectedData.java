@@ -42,7 +42,9 @@ public class UnCollectedData extends AppCompatActivity {
     ArrayList<Payment> paymentArrayList;
     TableLayout tableCheckData;
     int position = 0;
+    double totalAmount=0;
     int[] listImageIcone=new int[]{R.drawable.pdf_,R.drawable.excel_e};
+    GeneralMethod generalMethod;
 
     String type="0";
     @Override
@@ -58,6 +60,7 @@ public class UnCollectedData extends AppCompatActivity {
 
     private void initialView() {
         paymentArrayList = new ArrayList<>();
+        generalMethod=new GeneralMethod(UnCollectedData.this);
 
         tableCheckData = (TableLayout) findViewById(R.id.TableCheckData);
         recivedAmount_text = findViewById(R.id.recivedAmount_text);
@@ -78,7 +81,7 @@ public class UnCollectedData extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals("")) {
                     if (s.toString().equals("yes")) {
-                        recivedAmount_text.setText(unCollectlList.get(0).getRECVD().toString());
+                      //  recivedAmount_text.setText(unCollectlList.get(0).getRECVD().toString());
                         paidAmountText.setText(unCollectlList.get(0).getPAIDAMT().toString());
                     }
                     if (s.toString().equals("payment")) {
@@ -184,11 +187,13 @@ public class UnCollectedData extends AppCompatActivity {
 
     private void fillTable() {
         TableRow row = null;
+        totalAmount=0;
 
         for (int n = 0; n < paymentArrayList.size(); n++) {
             row = new TableRow(this);
             row.setPadding(5, 10, 5, 10);
 
+            totalAmount+=paymentArrayList.get(n).getAmount();
             if (n % 2 == 0)
                 row.setBackgroundColor(ContextCompat.getColor(this, R.color.layer3));
             else
@@ -214,5 +219,6 @@ public class UnCollectedData extends AppCompatActivity {
             }
             tableCheckData.addView(row);
         }
+        recivedAmount_text.setText(generalMethod.convertToEnglish(generalMethod.getDecimalFormat(totalAmount)+""));
     }
 }

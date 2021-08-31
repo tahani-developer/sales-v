@@ -42,6 +42,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.bonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterBonus;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.counterSerial;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.price;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.unitQty;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.unitQtyStock;
@@ -51,7 +52,9 @@ import static com.dr7.salesmanmanager.SalesInvoice.ipValue;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.minusQtyTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.price_serial_edit;
 import static com.dr7.salesmanmanager.SalesInvoice.unitQtyEdit;
+import static com.dr7.salesmanmanager.SalesInvoice.updatedSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
 public class Serial_Adapter extends RecyclerView.Adapter<Serial_Adapter.ViewHolder>{
@@ -521,6 +524,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                                         else {
                                             isUpdate= updateListCheque(position, editTextSerialCode.getText().toString().trim(),0);
                                         }
+
+
 //                                    isUpdate= updateListCheque(, ,0);
 
 
@@ -577,16 +582,26 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
 
                                 int position = (int) editTextSerialCode.getTag();
-                                boolean isUpdate = true;
+                                boolean isUpdate = true;String previusPrice="0";
                                 if (s.toString().trim().length() != 0) {
                                     if (!list.get(position).getSerialCode().equals(s.toString().trim())) {
                                         Log.e("positionnMPTY1", "afterTextChanged" + "position\t" + position);
 
-                                        if (checkQtyServer == 0) {
-                                            isUpdate = updateListCheque(position, s.toString().trim(), 0);
-                                        } else {
-                                            isUpdate = updateListCheque(position, s.toString().trim(), 0);
-                                        }
+//                                            if(checkPrice(s.toString().trim()))
+//                                            {
+//
+//                                                isUpdate = updateListCheque(position, s.toString().trim(), 0);
+//
+//
+//
+//                                            }
+//
+//                                        }else {
+//                                            isUpdate = updateListCheque(position, s.toString().trim(), 0);
+//                                        }
+                                        isUpdate = updateListCheque(position, s.toString().trim(), 0);
+
+
 
                                     }
 
@@ -760,6 +775,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
+
 
     private boolean validSerial(String serialValue) {
 

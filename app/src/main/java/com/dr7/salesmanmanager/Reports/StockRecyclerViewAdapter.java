@@ -168,7 +168,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                                 dialog.dismiss();
                             }
                         });
-                        itemNoStock = items.get(holder.getAdapterPosition()).getItemNo();
+                        itemNoStock = items.get(holder.getAdapterPosition()).getItemNo().toString().trim();
                         serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
                         final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
                         serialScanBunos.setVisibility(View.GONE);
@@ -256,7 +256,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
     }
 
     private boolean notExistInTotalList(String itemNo) {
-        Log.e("notExistInTotalList","itemNo="+itemsNoList.size());
+        Log.e("notExistInTotalList","itemNosize="+itemsNoList.size());
         for(int i=0;i<itemsNoList.size();i++)
         {
 
@@ -285,14 +285,14 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 if(!editText.getText().toString().equals(""))
                 {
 
-                    if(validbarcodeValue(editText.getText().toString().trim(),serialListitems_stock))
-                    {
+//                    if(validbarcodeValue(editText.getText().toString().trim(),serialListitems_stock))
+//                    {
                         serialValueStock.setText(editText.getText().toString().trim());
                         sweetAlertDialog.dismissWithAnimation();
 
-                    }
-                    else {editText.setError(context.getResources().getString(R.string.invalidSerial));
-                        editText.setText("");}
+//                    }
+//                    else {editText.setError(context.getResources().getString(R.string.invalidSerial));
+//                        editText.setText("");}
 
 //                    }
 
@@ -406,7 +406,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(VERTICAL);
-        if ((validbarcodeValue(barcodeValue, serialListitems))) {
+//        if ((validbarcodeValue(barcodeValue, serialListitems))) {
             addSerialToList(barcodeValue, serialListitems);
 
             openSmallScanerTextView();
@@ -426,16 +426,16 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 //
 //                openSmallScanerTextView();
 
-        }
-        else {
-            serialValueStock.setError("invalid");
-            serial_No_recyclerView.setLayoutManager(layoutManager);
-
-            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
-            unitQtyStock.setEnabled(false);
-
-
-        }
+//        }
+//        else {
+//            serialValueStock.setError("invalid");
+//            serial_No_recyclerView.setLayoutManager(layoutManager);
+//
+//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
+//            unitQtyStock.setEnabled(false);
+//
+//
+//        }
 //        }
 //        if(validbarcodeValue(barcodeValue,serialListitems))
 //        {
@@ -547,13 +547,15 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
                 //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
 //            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
-                if (mDbHandler.isSerialCodeExist(data).equals("not")) {
+                String ItemNo = mDbHandler.isSerialCodeExist(data.trim() + "");
+                if(ItemNo.trim().equals("not"))
+                {
 
 
                 } else {
                     errorData = true;
                     // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
-                    String ItemNo = mDbHandler.isSerialCodeExist(data + "");
+                  //  String ItemNo = mDbHandler.isSerialCodeExist(data + "");
                     if (!ItemNo.equals("")) {
                         new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                                 .setTitleText(context.getString(R.string.warning_message))

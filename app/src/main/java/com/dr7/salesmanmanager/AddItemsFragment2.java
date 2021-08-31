@@ -99,6 +99,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     Context context;
+    GeneralMethod generalMethod;
 
 
     public  String voucherDate="";
@@ -142,6 +143,7 @@ public class AddItemsFragment2 extends DialogFragment {
     private AddItemsInterface listener;
 
     public AddItemsFragment2() {
+        generalMethod=new GeneralMethod(context);
         // Required empty public constructor
     }
 
@@ -550,27 +552,28 @@ public class AddItemsFragment2 extends DialogFragment {
                         float count=0;
                         addItemImgButton2.setEnabled(true);
 
-//                        total_items_quantity -= List.size();
-//                        totalQty_textView.setText("+"+0);
-//                        total_items_quantity=0;
                         for(int h=0;h<List.size();h++)
                         {
 
                             updateListSerialBukupDeleted( List.get(h).getItemNo(),voucherNumberTextView.getText().toString());
                         }
+                        int listSize=listSerialTotal.size();
 
                         if(listSerialTotal.size()!=0)
                         {
-                            for(int k=0;k<listSerialTotal.size();k++)
+                            for(int j=0;j<List.size();j++)
+
                             {
-                                for(int j=0;j<List.size();j++)
+                                int k=0;
+                                while (k<listSerialTotal.size())
                                 {
                                     count+=List.get(j).getQty();
-                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo()))
+                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo())&&(listSerialTotal.get(k).getPriceItem()==List.get(j).getPrice()))// CRASH IT
                                     {
-
                                         listSerialTotal.remove(k);
-                                        k--;
+                                    }
+                                    else {
+                                        k++;
                                     }
                                 }
                             }
@@ -583,18 +586,8 @@ public class AddItemsFragment2 extends DialogFragment {
 
                         }
 
-
-//                        Log.e("count",""+count);
-//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
-//                        total_items_quantity-=count;
-//                        totalQty_textView.setText(total_items_quantity+"");
                         minusQtyTotal(count);
                         List.clear();
-                       int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
-//                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
-
-
-//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
                         SalesInvoice.updateQtyBasket();
                         AddItemsFragment2.this.dismiss();
 
@@ -1062,6 +1055,23 @@ try {
                     itemSerialList.get(i).setDateDelete(voucherDate);
                     itemSerialList.get(i).setPriceItem(curentPrice);
                     itemSerialList.get(i).setPriceItem(priceItem);
+
+
+                    if(voucherType!=506) {
+                        try {
+
+
+                        float netPriceItem = ((item.getQty() * item.getPrice()) - item.getDisc()) / item.getQty();
+
+                        String prc = generalMethod.convertToEnglish(generalMethod.getDecimalFormat(netPriceItem));
+                       // float prcFloat = Float.parseFloat(prc);
+                        Log.e("itemSerialList", "item" + item.getQty() + "\tprice=" + item.getPrice() + "\tgetDisc=" + item.getDisc() + "\ttotal=" + prc);
+                        itemSerialList.get(i).setPriceItemSales(prc);
+                    }catch (Exception e){
+
+                        }
+                    }
+
                     listSerialTotal.add( itemSerialList.get(i));
 
                 }

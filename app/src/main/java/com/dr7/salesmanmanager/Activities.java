@@ -927,10 +927,15 @@ public class Activities extends AppCompatActivity implements
                          }
                      }
                      else {// vouchertype=506
+                         String customerVoucher=databaseHandler.getCustomerForSerial(serialBarcode.trim());
                          if( (!databaseHandler.isSerialCodePaied(serialBarcode.trim()).equals("not")&&voucherType==506))
                          {
+                             if(checkCustomer(customerVoucher)){
+
+
                              if(checkPrice(serialBarcode.trim()))
                              {
+
                                  if(checkInTotalList(serialBarcode.trim()))
                                  {
 
@@ -959,6 +964,15 @@ public class Activities extends AppCompatActivity implements
                                  new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
                                          .setTitleText(Activities.this.getString(R.string.warning_message))
                                          .setContentText(Activities.this.getString(R.string.deffirentPrice)+"\t"+price.getText().toString())
+
+                                         .show();
+                             }
+                             }
+                             else {
+                                 Log.e("checkPrice", "false");
+                                 new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                         .setTitleText(Activities.this.getString(R.string.warning_message))
+                                         .setContentText(Activities.this.getString(R.string.defferentCustomer) + "\t" + customerVoucher)
 
                                          .show();
                              }
@@ -1021,8 +1035,25 @@ public class Activities extends AppCompatActivity implements
 
     }
 
+    private boolean checkCustomer(String customerVoucher) {
+        Log.e("checkCustomer","= "+customerVoucher+"\tCustomer_Name= "+CustomerListShow.Customer_Name);
+        if(customerVoucher.length()!=0)
+        {
+            if(CustomerListShow.Customer_Name.trim().equals(customerVoucher.trim()))
+                return  true;
+
+        }
+        return  false;
+    }
+
     private boolean checkPrice(String barcode) {
-       double previusPrice= databaseHandler.getpreviusePriceSale(barcode);
+        double previusPrice_doub=0;
+        String previusPrice= databaseHandler.getpreviusePriceSale(barcode);
+        try{
+            previusPrice_doub= Double.parseDouble(previusPrice);
+        }catch (Exception e){
+
+        }
 
 //        Log.e("previusPrice1","updatedSerial="+updatedSerial);
         if(updatedSerial==0)// from adapter recycler
@@ -1030,6 +1061,7 @@ public class Activities extends AppCompatActivity implements
 
             if(serialListitems.size()==0)
             {
+                if(previusPrice_doub!=0)
                 price.setText(previusPrice+"");
 
                 return true;
@@ -1042,7 +1074,7 @@ public class Activities extends AppCompatActivity implements
                 }catch (Exception e){
                     curentPrc=0;
                 }
-                if(previusPrice==curentPrc)
+                if(previusPrice_doub==curentPrc)
                     return  true;
             }
 
@@ -1065,7 +1097,7 @@ public class Activities extends AppCompatActivity implements
                 }catch (Exception e){
                     curentPrc=0;
                 }
-                if(previusPrice==curentPrc)
+                if(previusPrice_doub==curentPrc)
                     return  true;
 //            }
         }

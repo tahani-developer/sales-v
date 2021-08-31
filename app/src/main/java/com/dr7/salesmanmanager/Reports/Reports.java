@@ -42,7 +42,8 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class Reports extends AppCompatActivity {
 
 
-    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,return_report,serial_report;
+    LinearLayout customer_log_report,transactions_report,stock_request_report,Inventory_report,cash_reoprt,
+            return_report,serial_report,shelf_inventory_report;
 
     DatabaseHandler MHandler;
     LinearLayout inventory_layout,mainLayout;
@@ -90,6 +91,8 @@ public class Reports extends AppCompatActivity {
         serial_report = (LinearLayout) findViewById(R.id.serial_report);
         stock_request_report = (LinearLayout) findViewById(R.id.stock_request_report);
         cash_reoprt = (LinearLayout) findViewById(R.id.cash_report);
+        shelf_inventory_report=findViewById(R.id.shelf_inventory_report);
+        shelf_inventory_report.setOnClickListener(onClickListener);
         customer_log_report.setOnClickListener(onClickListener);
         serial_report.setOnClickListener(onClickListener);
         cash_reoprt.setOnClickListener(onClickListener);
@@ -158,6 +161,10 @@ public class Reports extends AppCompatActivity {
                         startActivity(intent6);
                     }
                     break ;
+                case R.id.shelf_inventory_report:
+                    Intent intent8 = new Intent(Reports.this, ShelfInventoeryReport.class);
+                    startActivity(intent8);
+                    break;
             }
 
         }

@@ -148,7 +148,7 @@
 
                     android:gravity="center"
                     android:id="@+id/serialtable"
-                    android:background="@color/colorblue_dark"
+                    android:background="@drawable/back_border_shape"
                     android:padding="2dp">
 
 

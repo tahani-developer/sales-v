@@ -228,13 +228,13 @@ public class StockRequest extends Fragment {
         });
 
 
-//        if(intentData.equals("read"))
-//        {itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
-//        }
-//        else {
-//            itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
-//        }
-        itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
+        if(intentData.equals("read"))
+        {itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
+        }
+        else {
+            itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
+        }
+//        itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
         items = new ArrayList<>();
         listItemStock = new ArrayList<>();
         itemsListView = (ListView) view.findViewById(R.id.itemsListViewFragment);
