@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.27</string>
+    <string name="version"> V 100.35</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -481,6 +481,7 @@
     <string name="storeNumber">Store Number</string>
     <string name="defferentCustomer">This Serial For Different Customer</string>
     <string name="shelf_inventory_report">Shelf   Inventory Report</string>
+    <string name="itemUnit">Item Unit</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

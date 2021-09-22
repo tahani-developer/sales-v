@@ -745,7 +745,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 break;
 
                             case 4:
-                                textView.setText(items.get(j).getUnit());
+                                textView.setText(items.get(j).getQty()+"");
                                 textView.setLayoutParams(lp2);
                                 break;
 

@@ -471,6 +471,14 @@ public boolean filters(int n) {
 
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Payment pay) {
+         convertLayoutToImage(pay);
+//        PrintHelper photoPrinter = new PrintHelper(PrintPayment.this);
+//        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//        linearLayout.setDrawingCacheEnabled(true);
+//        bitmap = linearLayout.getDrawingCache();
+//        photoPrinter.printBitmap("invoice.jpg", testB);
+
+
 //        final Dialog dialog = new Dialog(PrintPayment.this);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        dialog.setCancelable(true);
@@ -1233,6 +1241,11 @@ public boolean filters(int n) {
         linearView.setDrawingCacheEnabled(true);
         linearView.buildDrawingCache();
         Bitmap bit =linearView.getDrawingCache();
+        PrintHelper photoPrinter = new PrintHelper(PrintPayment.this);
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        linearView.setDrawingCacheEnabled(true);
+        bitmap = linearView.getDrawingCache();
+        photoPrinter.printBitmap("pay.jpg", bitmap);
         return bit;// creates bitmap and returns the same
     }
 

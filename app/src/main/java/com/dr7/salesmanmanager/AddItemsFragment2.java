@@ -130,6 +130,7 @@ public class AddItemsFragment2 extends DialogFragment {
     SimpleDateFormat df, df2;
     Date currentTimeAndDate;
     String userNo="";
+    int itemUnit=0;
     private static DatabaseHandler mDbHandler;
 
     public AddItemsInterface getListener() {
@@ -607,6 +608,7 @@ public class AddItemsFragment2 extends DialogFragment {
                     listener.addItemsToList(List);
                     addItemImgButton2.setEnabled(true);
                     SalesInvoice.updateQtyBasket();
+
                     AddItemsFragment2.this.dismiss();
                 }
                 catch (Exception e)
@@ -754,6 +756,7 @@ try {
         jsonItemsList_intermidiate = new ArrayList<>();
         String dateCurent=getCurentTimeDate(1);
         String rate_customer = mDbHandler.getRateOfCustomer();
+        itemUnit=mDbHandler.getAllSettings().get(0).getItemUnit();
         if(rate_customer.equals(""))
         {
             rate_customer="0";
@@ -850,7 +853,7 @@ try {
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         int unitInt=0;float priceItem=0;
-        Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
+       // Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
         try {
@@ -920,10 +923,11 @@ try {
 //                    item.setQty(Float.parseFloat(qty));
 //                }
 
-                Log.e("unit",""+unit);
+
 
                 try {
                     priceItem=Float.parseFloat(price.trim());
+
                 }catch (Exception e){
                     priceItem=0;
                 }
@@ -934,17 +938,38 @@ try {
                 {
                     unitInt=1;
                 }
-                Log.e("qty","="+qty+"\tunitInt="+unitInt);
-                if(useWeight==1)
-                item.setQty(Float.parseFloat(qty)*unitInt);
-                else {
-                    item.setQty(Float.parseFloat(qty));
+
+
+                //***************************************************
+                if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
+                {
+                    int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+                    item.setQty(Float.parseFloat(qty)*itemUnit);
+                  //  Log.e("priceItem","="+item.getQty()+"\titemUnit="+itemUnit);
+                    if(itemUnit!=1)
+                    {
+                        float priceUnitItem=priceItem/itemUnit;
+                        item.setPrice(priceUnitItem);
+
+                    }
+                    else {
+                        item.setPrice(priceItem);
+                    }
+                }else {
+
+                    if(useWeight==1)
+                        item.setQty(Float.parseFloat(qty)*unitInt);
+                    else {
+                        item.setQty(Float.parseFloat(qty));
+                    }
+                    item.setPrice(priceItem);
                 }
+                //***************************************************
+
+
                 item.setItemHasSerial(hasSerial+"");
 
 
-                Log.e("qty","="+item.getQty());
-                item.setPrice(priceItem);
                 if (bonus == "")
                     item.setBonus(Float.parseFloat("0.0"));
                 else
@@ -966,25 +991,29 @@ try {
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
                 item.setDiscType(1);// error for discount promotion // percent discount
+                Log.e("setDiscType", "percent");
             } else {
                 item.setDiscType(0);// value Discount
+                Log.e("setDiscType", "value");
             }
-
+        Log.e("setDiscType", item.getDiscType()+"");
             try {
                 if (item.getDiscType() == 0) {
-                    item.setDisc(Float.parseFloat(discount.trim()));
+                    item.setDisc(Float.parseFloat(discount.trim()));// for Qasion offer * Qty
                     item.setDiscPerc((item.getQty() * item.getPrice() *
                             (Float.parseFloat(discount.trim()) / 100)) + "");
 
                 } else {
                     item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
-                    item.setDisc(item.getQty() * item.getPrice() *
-                            (Float.parseFloat(discount.trim())) / 100);
+                    item.setDisc((item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim())) / 100));
                 }
+                Log.e("setDiscType", item.getDisc()+"\tperc="+item.getDiscPerc());
                 descPerc = ((item.getQty() * item.getPrice() *
                         (Float.parseFloat(discount.trim()) / 100)));
 
-
+                Log.e("setDiscType22", item.getDisc()+"");
+                Log.e("setDiscType223", item.getDiscType()+"");
             } catch (NumberFormatException e) {
                 item.setDisc(0);
                 item.setDiscPerc("0");

@@ -49,6 +49,15 @@ public class Settings {
     private  int activeTotalDiscount;
     private  double valueOfTotalDiscount;
     private  String storeNo;
+    private  int itemUnit;
+
+    public int getItemUnit() {
+        return itemUnit;
+    }
+
+    public void setItemUnit(int itemUnit) {
+        this.itemUnit = itemUnit;
+    }
 
     public String getStoreNo() {
         return storeNo;

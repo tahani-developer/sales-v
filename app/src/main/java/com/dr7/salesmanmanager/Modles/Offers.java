@@ -10,6 +10,15 @@ public class Offers {
     private double bonusQty;
     private String bonusItemNo;
     private String otherDiscount;
+    private int discountItemType;
+
+    public int getDiscountItemType() {
+        return discountItemType;
+    }
+
+    public void setDiscountItemType(int discountItemType) {
+        this.discountItemType = discountItemType;
+    }
 
     public String getOtherDiscount() {
         return otherDiscount;

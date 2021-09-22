@@ -68,16 +68,7 @@ public class ShelfInventoeryReport extends AppCompatActivity {
         this.setTitle(""+getResources().getString(R.string.shelf_inventory_report));
         Log.e("SerialReport","activity_shelf_inventoery_report");
         allShelflist =databaseHandler.getAllINVENTORY_SHELF_REPORT();
-        Log.e("SerialReport","allShelflist"+allShelflist.size());
         fillAdapterData(allShelflist);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                exportToEx();
-            }
-        });
-
-
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
@@ -94,8 +85,6 @@ public class ShelfInventoeryReport extends AppCompatActivity {
     private void search() {
         searchlist.clear();
         String searchED=generalMethod.convertToEnglish(searchedit.getText().toString().trim());
-
-        Log.e("search",""+searchED);
         for (int i = 0; i < allShelflist.size(); i++) {
             if ((allShelflist.get(i).getVoucherNo().contains(searchED))
                     || (allShelflist.get(i).getItemNo().contains(searchED))
@@ -110,7 +99,6 @@ public class ShelfInventoeryReport extends AppCompatActivity {
         else
         { tableRow.setVisibility(View.GONE);}
 
-        Log.e("SerialReport","searchlist"+searchlist.size());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -169,8 +157,6 @@ public class ShelfInventoeryReport extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
-                Log.e("searchedit",editable+"");
                 if( !searchedit.getText().toString().trim().equals(""))search();
                 else
                 {

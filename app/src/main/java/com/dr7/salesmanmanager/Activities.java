@@ -201,7 +201,7 @@ public class Activities extends AppCompatActivity implements
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
         generalMethod=new GeneralMethod(Activities.this);
         fillLastVisit();
-        fiiltotalBalance();
+//        fiiltotalBalance();
 //        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
 //        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
         linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
@@ -939,6 +939,7 @@ public class Activities extends AppCompatActivity implements
                                  if(checkInTotalList(serialBarcode.trim()))
                                  {
 
+                                     updatePaymentTypeForVoucher(serialBarcode.trim());
                                      if(updatedSerial==1)
                                      {
                                          serialValueUpdated.setText(serialBarcode.toString().trim());
@@ -997,6 +998,7 @@ public class Activities extends AppCompatActivity implements
 
 
                  }catch (Exception e){
+                     Log.e("","");
                      Toast.makeText(Activities.this, "Error2"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                  }
@@ -1033,6 +1035,16 @@ public class Activities extends AppCompatActivity implements
                 break;
         }
 
+    }
+
+    private void updatePaymentTypeForVoucher(String barcodeStr) {
+        int payType=databaseHandler.getPayTypeForVoucher(barcodeStr);
+       // SalesInvoice salesInvoice =new SalesInvoice();
+        Log.e("updatePaymentTypeFor",""+salesInvoice.payMethod+"\t pay2"+payType);
+        SalesInvoice.payMethod=payType;
+        SalesInvoice.refreshPayMethod(payType);
+      //  salesInvoice.refreshPayMethod(payType);
+        Log.e("updatePaymentTypeFor",""+SalesInvoice.payMethod);
     }
 
     private boolean checkCustomer(String customerVoucher) {

@@ -78,6 +78,16 @@
         android:textColor="@color/colorblue_dark"
         android:textStyle="bold" />
         <TextView
+            android:id="@+id/SE_customerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="CustomerNmae"
+            android:textColor="@color/colorblue_dark"
+            android:textStyle="bold" />
+        <TextView
             android:id="@+id/SE_exportexcel"
             android:layout_width="match_parent"
             android:layout_height="20dp"

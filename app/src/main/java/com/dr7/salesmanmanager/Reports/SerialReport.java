@@ -41,9 +41,9 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class SerialReport extends AppCompatActivity {
     RecyclerView recyclerView;
    public static List<serialModel> allseriallist =new ArrayList<>();
-    private List<serialModel> todayseariallist=new ArrayList<>();
+
     private List<serialModel> searchlist=new ArrayList<>();
-    private List<serialModel> datesearchlist=new ArrayList<>();
+
     DatabaseHandler databaseHandler;
     public static SerialReportAdpter adapter;
     TextView searchicon;
@@ -102,15 +102,15 @@ Button button;
 
             @Override
             public void onClick(View view) {
-                datesearchlist.clear();
+                searchlist.clear();
 
                 for (int i = 0; i < allseriallist.size(); i++) {
                     if (date.getText().toString().equals(allseriallist.get(i).getDateVoucher()))
-                    datesearchlist.add(allseriallist.get(i));
+                        searchlist.add(allseriallist.get(i));
                 }
                if( allseriallist.size()!=0 ) {
                    tableRow.setVisibility(View.VISIBLE);
-                   fillAdapterData(datesearchlist);
+                   fillAdapterData(searchlist);
                }
                 else
                   {tableRow.setVisibility(View.GONE);}
@@ -132,17 +132,17 @@ Button button;
     }
 
     private void filterDate(String date_vocher) {
-        todayseariallist.clear();
+        searchlist.clear();
         // String Date_Vocher="14/02/2021";
         for (int i = 0; i < allseriallist.size(); i++) {
             if(allseriallist.get(i).getDateVoucher().trim().equals(date_vocher.trim()))
-                todayseariallist.add(allseriallist.get(i));
+                searchlist.add(allseriallist.get(i));
         }
 
 
-        if(todayseariallist.size()==0)tableRow.setVisibility(View.GONE);
+        if(searchlist.size()==0)tableRow.setVisibility(View.GONE);
         else
-        { fillAdapterData(todayseariallist);
+        { fillAdapterData(searchlist);
 
             tableRow.setVisibility(View.VISIBLE);
         }
@@ -276,7 +276,12 @@ tableRow=findViewById(R.id.serialtable);
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, todayseariallist);
+        if(searchlist.size()!=0)
+        exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, searchlist);
+        else {
+            exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, allseriallist);
+
+        }
 
     }
     public String convertToEnglish(String value) {

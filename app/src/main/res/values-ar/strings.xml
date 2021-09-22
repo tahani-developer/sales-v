@@ -526,5 +526,6 @@
     <string name="storeNumber">رقم المستودع</string>
     <string name="defferentCustomer"> السيريال مباع لعميل مختلف </string>
     <string name="shelf_inventory_report">تقرير جرد الرف </string>
+    <string name="itemUnit">وحدات المواد</string>
 
 </resources>

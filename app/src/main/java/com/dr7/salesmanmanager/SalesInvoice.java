@@ -229,7 +229,7 @@ public class SalesInvoice extends Fragment {
     public  static CircleImageView addItemImgButton2;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
-    private RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
+    private  static  RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
     private EditText remarkEditText,valueTotalDiscount;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;
@@ -335,6 +335,7 @@ public class SalesInvoice extends Fragment {
     List<Settings>settingsList=new ArrayList<>();
     public static EditText unitQtyEdit;
     public static  boolean editOpen=false;
+    public  String customerTemporiryNmae="";// in ameel naqdi
 
     public  CheckBox notIncludeTax;
     Transaction transaction;
@@ -1028,6 +1029,10 @@ public class SalesInvoice extends Fragment {
             }//end save data
         });
         canChangePrice=mDbHandler.getAllSettings().get(0).getCanChangePrice();
+        if(CustomerListShow.Customer_Name.equals("عميل نقدي"))
+        {
+            credit.setEnabled(false);
+        }
         Log.e("canChangePrice",""+canChangePrice);
 
 
@@ -1339,6 +1344,7 @@ public class SalesInvoice extends Fragment {
                             SaveData.setEnabled(true);
                             save_floatingAction.setEnabled(true);
                         } else {//list is contain data
+
                             if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange()==1) {// validate customer location
                                 if( checkCustomerLocation())
                                 {
@@ -1729,73 +1735,125 @@ public class SalesInvoice extends Fragment {
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void saveData() {
+        Log.e("saveData","Customer_Name="+CustomerListShow.Customer_Name);
+        Log.e("saveData","temporary_Name="+customerTemporiryNmae);
         validCustomerName=false;
         if(CustomerListShow.Customer_Name.equals("عميل نقدي"))
         {
             showCustomerNameDialog();
 
         }else {
-            validCustomerName=true;
+            saveLocalData();
+
 
         }
-        if(validCustomerName||updatedName)
-        {
-            validDiscount=false;
-
-            double discountValue=0;
-            double discountPerc=0;
-            DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
-            discountValue = obj.getDiscountValue();
-            discountPerc = obj.getDiscountPerc();
-
-            double totalDisc = Double.parseDouble(discTextView.getText().toString());
-            double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
-            double tax = 0, netSales = 0;
-            String netsale_txt = "";
-            netsale_txt = netTotalTextView.getText().toString();
-            Log.e("textNt", "" + netsale_txt);
-
-            try {
-                tax = Double.parseDouble(taxTextView.getText().toString());
-                netSales = Double.parseDouble(netTotalTextView.getText().toString());
-
-            } catch (Exception e) {
-                tax = 0;
-                Log.e("tax error E", "" + tax + "   " + taxTextView.getText().toString());
-
-            }
-
-            voucherType=getVoucherTypeCurrent();
-
-            if (netSales != 0 && !Double.isNaN(netSales)) {// test nan
 
 
-                if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
-                    Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
-                    SaveData.setEnabled(true);
-                    save_floatingAction.setEnabled(true);
+    }
 
-                } else {
-                    voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+    private void saveLocalData() {
+        if(!CustomerListShow.Customer_Name.equals("عميل نقدي")){
 
-                    String remark = " " + remarkEditText.getText().toString();
-                    salesMan = Integer.parseInt(Login.salesMan);
+                validDiscount=false;
 
-                    ///  1 add time
+                double discountValue=0;
+                double discountPerc=0;
+                DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
+                discountValue = obj.getDiscountValue();
+                discountPerc = obj.getDiscountPerc();
 
-                    timevocher=getCurentTimeDate(2);
+                double totalDisc = Double.parseDouble(discTextView.getText().toString());
+                double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
+                double tax = 0, netSales = 0;
+                String netsale_txt = "";
+                netsale_txt = netTotalTextView.getText().toString();
+                Log.e("textNt", "" + netsale_txt);
+
+                try {
+                    tax = Double.parseDouble(taxTextView.getText().toString());
+                    netSales = Double.parseDouble(netTotalTextView.getText().toString());
+
+                } catch (Exception e) {
+                    tax = 0;
+                    Log.e("tax error E", "" + tax + "   " + taxTextView.getText().toString());
+
+                }
+
+                voucherType=getVoucherTypeCurrent();
+
+                if (netSales != 0 && !Double.isNaN(netSales)) {// test nan
+
+
+                    if (mDbHandler.getAllSettings().get(0).getNoOffer_for_credit() == 1 && (discountValue / netSales) > mDbHandler.getAllSettings().get(0).getAmountOfMaxDiscount()) {
+                        Toast.makeText(getActivity(), "You have exceeded the upper limit of the discount", Toast.LENGTH_SHORT).show();
+                        SaveData.setEnabled(true);
+                        save_floatingAction.setEnabled(true);
+
+                    } else {
+                        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+
+                        String remark = " " + remarkEditText.getText().toString();
+                        salesMan = Integer.parseInt(Login.salesMan);
+
+                        ///  1 add time
+
+                        timevocher=getCurentTimeDate(2);
 
 
 
 
-                    voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                            salesMan, discountValue, discountPerc, remark, payMethod,
-                            0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                            CustomerListShow.Customer_Account, Integer.parseInt(voucherYear),timevocher);
+                        voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
+                                salesMan, discountValue, discountPerc, remark, payMethod,
+                                0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+                                CustomerListShow.Customer_Account, Integer.parseInt(voucherYear),timevocher);
 
-                    if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
+                        if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
 
-                        if (customer_is_authrized()) {
+                            if (customer_is_authrized()) {
+
+
+                                if (virefyMaxDescount()) {
+                                    if (verifySerialListDosenotDuplicates()) {
+                                        AddVoucher();
+                                        clearLayoutData(0);
+                                    } else {
+                                        SaveData.setEnabled(true);
+                                        save_floatingAction.setEnabled(true);
+                                        new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText(getContext().getString(R.string.warning_message))
+                                                .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
+                                                .show();
+
+                                    }
+
+
+
+                                } else {
+                                    SaveData.setEnabled(true);
+                                    save_floatingAction.setEnabled(true);
+                                    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
+                                    builder.setTitle(getResources().getString(R.string.app_alert));
+                                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+
+                                        }
+                                    });
+
+
+                                    builder.create().show();
+
+
+                                }//end else
+
+                            } else {// customer Not authorize
+                                SaveData.setEnabled(true);
+                                save_floatingAction.setEnabled(true);
+                                reCheck_customerAuthorize();// test
+                            }
+                        } else {// you should not authorize customer account balance
 
 
                             if (virefyMaxDescount()) {
@@ -1811,7 +1869,6 @@ public class SalesInvoice extends Fragment {
                                             .show();
 
                                 }
-
 
 
                             } else {
@@ -1833,72 +1890,30 @@ public class SalesInvoice extends Fragment {
 
 
                             }//end else
-
-                        } else {// customer Not authorize
-                            SaveData.setEnabled(true);
-                            save_floatingAction.setEnabled(true);
-                            reCheck_customerAuthorize();// test
                         }
-                    } else {// you should not authorize customer account balance
-
-
-                        if (virefyMaxDescount()) {
-                            if (verifySerialListDosenotDuplicates()) {
-                                AddVoucher();
-                                clearLayoutData(0);
-                            } else {
-                                SaveData.setEnabled(true);
-                                save_floatingAction.setEnabled(true);
-                                new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText(getContext().getString(R.string.warning_message))
-                                        .setContentText(getContext().getString(R.string.thereIsduplicatedSerial))
-                                        .show();
-
-                            }
-
-
-                        } else {
-                            SaveData.setEnabled(true);
-                            save_floatingAction.setEnabled(true);
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setMessage(getResources().getString(R.string.app_confirm_dialog_exceedDis));
-                            builder.setTitle(getResources().getString(R.string.app_alert));
-                            builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-
-                                }
-                            });
-
-
-                            builder.create().show();
-
-
-                        }//end else
                     }
+                } else {// if tax ==0 or net sales==0 don't save data
+                    SaveData.setEnabled(true);
+                    save_floatingAction.setEnabled(true);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
+                    builder.setTitle(getResources().getString(R.string.warning_message));
+                    builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+
+
+                    });
+                    builder.create().show();
+
                 }
-            } else {// if tax ==0 or net sales==0 don't save data
-                SaveData.setEnabled(true);
-                save_floatingAction.setEnabled(true);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getResources().getString(R.string.zero_value_taxAndNetSales));
-                builder.setTitle(getResources().getString(R.string.warning_message));
-                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-
-
-                });
-                builder.create().show();
-
-            }
-        }else {
 
         }
-
+        else {
+            showCustomerNameDialog();
+        }
     }
 
     private void showCustomerNameDialog() {
@@ -1915,14 +1930,17 @@ public class SalesInvoice extends Fragment {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(!editText.getText().toString().equals(""))
                 {
+                    customerTemporiryNmae="عميل نقدي";
                     CustomerListShow.Customer_Name=editText.getText().toString();
                     validCustomerName=true;
                     updatedName=true;
-                    saveData();
+
+                   saveLocalData();
                     sweetAlertDialog.dismissWithAnimation();
                 }
                 else {
                     validCustomerName=false;
+                    customerTemporiryNmae="";
                     editText.setError("Incorrect");
                 }
             }
@@ -2011,7 +2029,17 @@ public class SalesInvoice extends Fragment {
     }
 
     static Voucher vouchLast;
-
+    public  static void refreshPayMethod(int payMent)
+    {
+        Log.e("refreshPayMethod",""+payMent);
+        if(payMethod==1)
+        {
+            cash.setChecked(true);
+        }
+        else {
+            credit.setChecked(true);
+        }
+    }
     private void printLastVoucher(int voucher_no, Voucher vouchPrint) {
         getTimeAndDate();
         if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
@@ -2553,6 +2581,7 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void AddVoucher() {
+        Log.e("AddVoucher","customerTemporiryNmae="+customerTemporiryNmae);
 //        if (verifySerialListDosenotDuplicates()) {
 
 
@@ -2588,9 +2617,16 @@ public class SalesInvoice extends Fragment {
             }
 
         }
+        if(customerTemporiryNmae.equals("عميل نقدي"))
+        {
+            CustomerListShow.Customer_Name="عميل نقدي" ;
+            customerTemporiryNmae="";
+        }
+
         mDbHandler.setMaxSerialNumber(voucherType, voucherNumber);
         mDbHandler.updateVoucherNo(voucherNumber,voucherType,2);
         getTimeAndDate();
+
 
 
         if (mDbHandler.getAllSettings().get(0).getSaveOnly() == 0) {
@@ -3005,9 +3041,27 @@ public class SalesInvoice extends Fragment {
         Button cancelButton = (Button) dialog.findViewById(R.id.button2);
 
         final RadioGroup discTypeRadioGroup_up= dialog.findViewById(R.id.discTypeRadioGroup_up);
+        int itemUnit=mDbHandler.getUnitForItem(items.get(position).getItemNo());
+        if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
+        {
+            if(itemUnit!=0)
+            qty.setText(items.get(position).getQty()/itemUnit+"");
+            else {
+                qty.setText(items.get(position).getQty()+"");
+            }
 
-        qty.setText(items.get(position).getQty()+"");
-        price_update.setText(items.get(position).getPrice()+"");
+        }else {
+            qty.setText(items.get(position).getQty()+"");
+        }
+        if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
+            if(itemUnit!=0)
+        {  price_update.setText((items.get(position).getPrice()*itemUnit)+"");
+
+        }
+        else {
+            price_update.setText(items.get(position).getPrice()+"");
+        }
+
         if(mDbHandler.getAllSettings().get(0).getCanChangePrice()==0)
         {
             price_update.setEnabled(false);
@@ -3069,16 +3123,50 @@ public class SalesInvoice extends Fragment {
                                 total_items_quantity -= items.get(position).getQty();
 
                                 try {
-                                    items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim()));
-                                    updaQty = Double.parseDouble(qty.getText().toString().trim());
                                     priceValue=Float.parseFloat((price_update.getText().toString().trim()));
-                                    if(priceValue!=0)
+                                    String itemNumber=items.get(position).getItemNo();
+                                    //***************************************************
+                                    if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
                                     {
+                                        int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+
+                                        items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim())*itemUnit);
+
+                                        // Log.e("priceItem","="+item.getQty()+"\titemUnit="+itemUnit);
+                                        if(itemUnit!=1)
+                                        {
+                                            float priceUnitItem=priceValue/itemUnit;
+                                            items.get(position).setPrice(priceUnitItem);
+
+                                        }
+                                        else {
+                                            items.get(position).setPrice(priceValue);
+                                        }
+                                    }else {
+
+//                                        if(useWeight==1)
+//                                            item.setQty(Float.parseFloat(qty)*unitInt);
+//                                        else {
+//
+//                                        }
+                                        items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim()));
                                         items.get(position).setPrice(priceValue);
                                     }
-                                    else {
-                                        price_update.setError("invalid zero");
-                                    }
+                                    //***************************************************
+
+
+
+
+
+                                    updaQty = Double.parseDouble(qty.getText().toString().trim());
+
+//                                    if(priceValue!=0)
+//                                    {
+//                                        items.get(position).setPrice(priceValue);
+//                                    }
+//                                    else {
+//                                        price_update.setError("invalid zero");
+//                                    }
 
 
                                 } catch (Exception e) {
@@ -3572,7 +3660,8 @@ public class SalesInvoice extends Fragment {
 
     }
 
-    private void fillSerial(Context context ,String itemNo,int position) {
+    @SuppressLint("WrongConstant")
+    private void fillSerial(Context context , String itemNo, int position) {
         counterSerial++;
         serial = new serialModel();
         serial.setCounterSerial(counterSerial);
@@ -4647,6 +4736,9 @@ public class SalesInvoice extends Fragment {
 //            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String date = df.format(currentTimeAndDate);
             date = convertToEnglish(date);
+            Log.e("log2Trueee", date + "  " + offers_ItemsQtyOffer.get(0).getFromDate() + " " + offers_ItemsQtyOffer.get(0).getToDate());
+
+
             for (int i = 0; i < offers_ItemsQtyOffer.size(); i++) {
                 if (itemNo.equals(offers_ItemsQtyOffer.get(i).getItem_no()) &&
                         (formatDate(date).after(formatDate(offers_ItemsQtyOffer.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers_ItemsQtyOffer.get(i).getFromDate()))) &&
@@ -5676,7 +5768,7 @@ public class SalesInvoice extends Fragment {
                             break;
 
                         case 4:
-                            textView.setText(itemsList.get(j).getUnit());
+                            textView.setText(itemsList.get(j).getQty()+"");
                             textView.setLayoutParams(lp2);
                             break;
 

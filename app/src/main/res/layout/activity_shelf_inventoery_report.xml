@@ -266,11 +266,25 @@
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:layout_margin="10dp"
                             android:background="@color/colorblue1"
                             android:textSize="12sp"
                             android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/textView_customerName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+
+                            android:layout_weight="1"
+                            android:visibility="gone"
+                            android:gravity="center"
+                            android:text="@string/customer_name"
+
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/SE_exportexcel"
                             android:layout_width="wrap_content"
