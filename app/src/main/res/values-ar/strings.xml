@@ -6,8 +6,8 @@
     <string name="app_dataManagement">ادارة البيانات</string>
     <string name="app_activities">الحركات</string>
     <string name="app_reports">التقارير</string>
-    <string name="app_sales_inv">فاتورة البيع</string>
-    <string name="app_ret_inv">فاتورة المرتجعات</string>
+    <string name="app_sales_inv">فاتورة بيع</string>
+    <string name="app_ret_inv">فاتورة مرتجعات</string>
     <string name="app_cust_order">طلب </string>
     <string name="app_request">طلب المخزون</string>
     <string name="app_imp_data">استيراد البيانات</string>

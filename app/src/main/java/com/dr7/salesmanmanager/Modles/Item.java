@@ -47,6 +47,64 @@ public class Item implements Serializable {
     private  double discountCustomer;
     private  double currentQty;
 
+
+    private String which_unit;
+    private String which_unit_str;
+    private String whichu_qty;
+    private String enter_qty;
+    private String enter_price;
+    private String unit_barcode;
+
+
+
+    public String getWhich_unit() {
+        return which_unit;
+    }
+
+    public void setWhich_unit(String which_unit) {
+        this.which_unit = which_unit;
+    }
+
+    public String getWhich_unit_str() {
+        return which_unit_str;
+    }
+
+    public void setWhich_unit_str(String which_unit_str) {
+        this.which_unit_str = which_unit_str;
+    }
+
+    public String getWhichu_qty() {
+        return whichu_qty;
+    }
+
+    public void setWhichu_qty(String whichu_qty) {
+        this.whichu_qty = whichu_qty;
+    }
+
+    public String getEnter_qty() {
+        return enter_qty;
+    }
+
+    public void setEnter_qty(String enter_qty) {
+        this.enter_qty = enter_qty;
+    }
+
+    public String getEnter_price() {
+        return enter_price;
+    }
+
+    public void setEnter_price(String enter_price) {
+        this.enter_price = enter_price;
+    }
+
+    public String getUnit_barcode() {
+        return unit_barcode;
+    }
+
+    public void setUnit_barcode(String unit_barcode) {
+        this.unit_barcode = unit_barcode;
+    }
+
     public double getCurrentQty() {
         return currentQty;
     }
@@ -167,7 +225,8 @@ public class Item implements Serializable {
     //constructor for sales invoice
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
                 float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
-                float taxPercent,int isPosted,String description, String serial_code) {
+                float taxPercent,int isPosted,String description, String serial_code,String which_unit,String which_unit_str
+    ,String whichu_qty,String enter_qty,String enter_price,String unit_barcode) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -186,6 +245,12 @@ public class Item implements Serializable {
         this.isPosted = isPosted;
         this.description=description;
         this.serialCode=serial_code;
+        this.which_unit=which_unit;
+        this.which_unit_str=which_unit_str;
+        this.whichu_qty=whichu_qty;
+        this.enter_qty=enter_qty;
+        this.enter_price=enter_price;
+        this.unit_barcode=unit_barcode;
     }
 
     //constructor for stock request
@@ -486,9 +551,17 @@ public class Item implements Serializable {
             obj.put("ITEM_DESCRITION", description);
             obj.put("SERIAL_CODE", serialCode);
             obj.put("ITEM_SERIAL_CODE", "");
-//            obj.put("VoucherDate",date);
-//            obj.put("currentQty",currentQty);
-//            obj.put("ITEMHASSERIAL", itemHasSerial);
+
+            obj.put("WHICHUNIT", which_unit);
+            obj.put("WHICHUNITSTR", which_unit_str);
+            obj.put("WHICHUQTY", whichu_qty);
+            obj.put("ENTERQTY", enter_qty);
+            obj.put("ENTERPRICE", enter_price);
+            obj.put("UNITBARCODE", unit_barcode);
+            obj.put("CALCQTY", enter_qty);
+
+
+
 
 
 

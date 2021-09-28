@@ -53,7 +53,7 @@ public class ShelfInventoeryReport extends AppCompatActivity {
     TextView searchicon,clear_text;
     EditText searchedit;
     public TextView date;
-    TableRow tableRow;
+    LinearLayout tableRow;
     Button button;
     private Button preview;
     Calendar myCalendar;
@@ -210,7 +210,7 @@ public class ShelfInventoeryReport extends AppCompatActivity {
     public void fillAdapterData( List<serialModel> serialModels) {
         Log.e("SerialReport2","SerialReport2");
         recyclerView.setLayoutManager(new LinearLayoutManager(ShelfInventoeryReport.this));
-        adapter = new SerialReportAdpter (serialModels,ShelfInventoeryReport.this );
+        adapter = new SerialReportAdpter (serialModels,ShelfInventoeryReport.this,1 );
         recyclerView.setAdapter(adapter);
 
     }

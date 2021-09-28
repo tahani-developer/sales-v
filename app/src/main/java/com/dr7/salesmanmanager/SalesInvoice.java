@@ -1751,6 +1751,7 @@ public class SalesInvoice extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void saveLocalData() {
         if(!CustomerListShow.Customer_Name.equals("عميل نقدي")){
 
@@ -1802,10 +1803,34 @@ public class SalesInvoice extends Fragment {
 
 
 
-                        voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
-                                salesMan, discountValue, discountPerc, remark, payMethod,
-                                0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
-                                CustomerListShow.Customer_Account, Integer.parseInt(voucherYear),timevocher);
+
+
+//                        voucher = new Voucher(0, voucherNumber, voucherType, voucherDate,
+//                                salesMan, discountValue, discountPerc, remark, payMethod,
+//                                0, totalDisc, subTotal, tax, netSales, CustomerListShow.Customer_Name,
+//                                CustomerListShow.Customer_Account, Integer.parseInt(voucherYear),timevocher);
+                        voucher=new Voucher();
+                        voucher.setCompanyNumber(0);
+                        voucher.setVoucherNumber(voucherNumber);
+                        voucher.setVoucherType(voucherType);
+                        voucher.setVoucherDate(voucherDate);
+                        voucher.setSaleManNumber(salesMan);
+                        voucher.setVoucherDiscount(discountValue);
+                        voucher.setVoucherDiscountPercent(discountPerc);
+                        voucher.setRemark(remark);
+                        voucher.setPayMethod(payMethod);
+
+                        voucher.setIsPosted(0);
+                        voucher.setTotalVoucherDiscount(totalDisc);
+                        voucher.setSubTotal(subTotal);
+                        voucher.setTax(tax);
+                        voucher.setNetSales(netSales);
+                        voucher.setCustName(CustomerListShow.Customer_Name);
+                        voucher.setCustNumber(CustomerListShow.Customer_Account);
+                        voucher.setVoucherYear(Integer.parseInt(voucherYear));
+                        voucher.setTime(timevocher);
+
+
 
                         if (mDbHandler.getAllSettings().get(0).getCustomer_authorized() == 1) {
 
@@ -2599,7 +2624,10 @@ public class SalesInvoice extends Fragment {
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
                     items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
-                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(), items.get(i).getSerialCode());
+                    items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(), items.get(i).getSerialCode()
+
+            ,items.get(i).getWhich_unit(),items.get(i).getWhich_unit_str(),items.get(i).getWhichu_qty(),items.get(i).getEnter_qty()
+            ,items.get(i).getEnter_price(),items.get(i).getUnit_barcode());
 
             totalQty_forPrint += items.get(i).getQty();
             itemsList.add(item);

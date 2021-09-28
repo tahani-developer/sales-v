@@ -49,7 +49,7 @@ public class SerialReport extends AppCompatActivity {
     TextView searchicon;
     EditText searchedit;
     public TextView date;
-    TableRow tableRow;
+    LinearLayout tableRow;
 Button button;
     private Button preview;
     Calendar myCalendar;
@@ -270,7 +270,7 @@ tableRow=findViewById(R.id.serialtable);
     public void fillAdapterData( List<serialModel> serialModels) {
         Log.e("SerialReport2","SerialReport2");
         recyclerView.setLayoutManager(new LinearLayoutManager(SerialReport.this));
-        adapter = new SerialReportAdpter (serialModels,SerialReport.this );
+        adapter = new SerialReportAdpter (serialModels,SerialReport.this,0 );
         recyclerView.setAdapter(adapter);
 
     }

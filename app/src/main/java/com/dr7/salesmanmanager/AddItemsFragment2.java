@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -852,7 +853,8 @@ try {
         voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
-        int unitInt=0;float priceItem=0;
+        ItemUnitDetails unitDetail;
+        int unitInt=0;float priceItem=0,qtyFloat=1;
        // Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
@@ -904,26 +906,16 @@ try {
 
 
             item = new Item();
+            unitDetail=new ItemUnitDetails();
+            unitDetail=getItemUnitInfo(itemNumber);
             item.setItemNo(itemNumber);
             item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
             item.setCategory(category);
             item.setDescreption(descriptRemark);
-//            item.setSerialCode(serialNo);
-//            Log.e("addItem","\t"+serialNo);
-// test new order
+
             try {
                 item.setUnit(unit);
-                //****************************
-//                if(voucherType==508)
-//                {
-//                    item.setQty(Float.parseFloat("0.0"));
-//                }
-//                else {
-//                    item.setQty(Float.parseFloat(qty));
-//                }
-
-
 
                 try {
                     priceItem=Float.parseFloat(price.trim());
@@ -937,6 +929,12 @@ try {
                 catch (Exception e)
                 {
                     unitInt=1;
+                }
+                try {
+                   qtyFloat= Float.parseFloat(qty);
+                }catch (Exception e)
+                {
+
                 }
 
 
@@ -955,6 +953,32 @@ try {
                     else {
                         item.setPrice(priceItem);
                     }
+                    Log.e("unitDetail",""+unitDetail.getItemNo());
+                    if(unitDetail.getItemNo()!=null)
+                    {
+                        if(unitDetail.getConvRate()!=1)  // there are units
+                            item.setWhich_unit("1");
+                        else item.setWhich_unit("0");
+
+                        item.setWhich_unit_str(unitDetail.getUnitId());
+                        item.setWhichu_qty(unitDetail.getConvRate()+"");
+                        item.setEnter_qty(qty);
+                        item.setEnter_price((priceItem*qtyFloat)+"");
+                        item.setUnit_barcode(unitDetail.getItemBarcode());
+                    }
+                    else {
+                        Log.e("unitDetail","else");
+                        item.setWhich_unit("0");
+
+                        item.setWhich_unit_str("");
+                        item.setWhichu_qty("");
+                        item.setEnter_qty(qty);
+                        item.setEnter_price((priceItem*qtyFloat)+"");
+                        item.setUnit_barcode("");
+                    }
+
+
+
                 }else {
 
                     if(useWeight==1)
@@ -963,6 +987,16 @@ try {
                         item.setQty(Float.parseFloat(qty));
                     }
                     item.setPrice(priceItem);
+
+
+                    Log.e("unitDetail","else");
+                    item.setWhich_unit("0");
+
+                    item.setWhich_unit_str("");
+                    item.setWhichu_qty("");
+                    item.setEnter_qty(qty);
+                    item.setEnter_price((priceItem*qtyFloat)+"");
+                    item.setUnit_barcode("");
                 }
                 //***************************************************
 
@@ -1061,6 +1095,11 @@ try {
             }
 
 
+
+
+
+
+
                 List.add(item);
                 Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.succsesful), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 180);
@@ -1120,6 +1159,12 @@ try {
             toast.show();
             return false;
         }
+    }
+
+    private ItemUnitDetails getItemUnitInfo(String itemNumber) {
+        ItemUnitDetails item= new ItemUnitDetails();
+        item=mDbHandler.getItemUnitDetails(itemNumber);
+        return  item;
     }
 
     @Override

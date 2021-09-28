@@ -135,7 +135,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
                         final Dialog dialog = new Dialog(view.getContext());
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setCancelable(true);
+                        dialog.setCancelable(false);
                         dialog.setContentView(R.layout.add_item_serial_dialog);
                         Window window = dialog.getWindow();
                         serialListitems_stock = new ArrayList<>();

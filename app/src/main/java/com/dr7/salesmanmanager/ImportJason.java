@@ -1787,49 +1787,22 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-//                try {
+                try {
 //                    //[{"ITEMU":"Test1","ITEMOCODE":"6251088000015","ITEMBARCODE":"123","CALCQTY":"5","SALEPRICE":"10"},
 //                    // {"ITEMU":"Test2","ITEMOCODE":"30100002","ITEMBARCODE":"456","CALCQTY":"3","SALEPRICE":"6"}]
-//                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details2");
-//                    itemUnitDetailsList.clear();
-//                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-//                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
-//
-//                        ItemUnitDetails item = new ItemUnitDetails();
-//                        item.setCompanyNo("");
-//                        item.setItemNo(finalObject.getString("ITEMOCODE"));
-//                        item.setUnitId(finalObject.getString("ITEMU"));
-//                        item.setConvRate(finalObject.getDouble("CALCQTY"));
-//                        try {
-//                            item.setUnitPrice(finalObject.getString("SALEPRICE"));
-//                            item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
-//                        }catch (Exception e){
-//                            item.setUnitPrice("");
-//
-//                            item.setItemBarcode("");
-//                        }
-//
-//
-//                        itemUnitDetailsList.add(item);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("Import Data", e.getMessage().toString());
-//                }
-//**************************************************************************
-                try {
-                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details2");
                     itemUnitDetailsList.clear();
                     for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
                         JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
 
                         ItemUnitDetails item = new ItemUnitDetails();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setItemNo(finalObject.getString("ITEMNO"));
-                        item.setUnitId(finalObject.getString("UNITID"));
-                        item.setConvRate(finalObject.getDouble("CONVRATE"));
+                        item.setCompanyNo("");
+                        item.setItemNo(finalObject.getString("ITEMOCODE"));
+                        item.setUnitId(finalObject.getString("ITEMU"));
+                        item.setConvRate(finalObject.getDouble("CALCQTY"));
                         try {
-                            item.setUnitPrice("");
-                            item.setItemBarcode("");
+                            item.setUnitPrice(finalObject.getString("SALEPRICE"));
+                            item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
                         }catch (Exception e){
                             item.setUnitPrice("");
 
@@ -1842,6 +1815,33 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+//**************************************************************************
+//                try {
+//                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+//                    itemUnitDetailsList.clear();
+//                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+//                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+//
+//                        ItemUnitDetails item = new ItemUnitDetails();
+//                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+//                        item.setItemNo(finalObject.getString("ITEMNO"));
+//                        item.setUnitId(finalObject.getString("UNITID"));
+//                        item.setConvRate(finalObject.getDouble("CONVRATE"));
+//                        try {
+//                            item.setUnitPrice("");
+//                            item.setItemBarcode("");
+//                        }catch (Exception e){
+//                            item.setUnitPrice("");
+//
+//                            item.setItemBarcode("");
+//                        }
+//
+//
+//                        itemUnitDetailsList.add(item);
+//                    }
+//                } catch (JSONException e) {
+//                    Log.e("Import Data", e.getMessage().toString());
+//                }
                 //***************************************************************************
 
 

@@ -27,9 +27,10 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
     View linearLayout;
     int shelfReport=0;
 
-    public SerialReportAdpter(List<serialModel> list, Context context) {
+    public SerialReportAdpter(List<serialModel> list, Context context,int typeReport) {
         this.list = list;
         this.context = context;
+        shelfReport=typeReport;
     }
 
     @NonNull
@@ -45,30 +46,51 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
         Log.e("onBindViewHolder",""+list.get(position).getKindVoucher());
         if(list.get(position).getKindVoucher()!=null)
         {
-            holder.vouchertype.setText(String.valueOf(list.get(position).getKindVoucher()));
+            if(list.get(position).getKindVoucher().equals("504"))
+            {
+                holder.vouchertype.setText(context.getResources().getString(R.string.app_sales_inv));
+            }
+            if(list.get(position).getKindVoucher().equals("506"))
+            {
+                holder.vouchertype.setText(context.getResources().getString(R.string.app_ret_inv));
+            }
+            if(list.get(position).getKindVoucher().equals("508"))
+            {
+                holder.vouchertype.setText(context.getResources().getString(R.string.app_cust_order));
+            }
+
+           // holder.vouchertype.setText(String.valueOf(list.get(position).getKindVoucher()));
         }
 
         else {
-            holder.vouchertype.setText(String.valueOf(list.get(position).getCustomerNo()));
-            shelfReport=1;
 
-           // holder.vouchertype.setVisibility(View.GONE);
+            holder.vouchertype.setVisibility(View.GONE);
+
         }
+        Log.e("getItemNo","no="+list.get(position).getItemNo());
         holder.serialcode.setText(String.valueOf(list.get(position).getSerialCode()));
+        if(list.get(position).getItemNo().trim().length()!=0)
         holder.itemnum.setText(String.valueOf(list.get(position).getItemNo()));
+        else {
+            holder.itemnum.setText("123456");
+            holder.itemnum.setVisibility(View.INVISIBLE);
+        }
         holder.vouchernum.setText(String.valueOf(list.get(position).getVoucherNo()));
-        holder.export.setVisibility(View.INVISIBLE);
-        if(!vocherlist.contains(list.get(position).getVoucherNo())) {
-            holder.export.setVisibility(View.VISIBLE);
-            vocherlist.add(list.get(position).getVoucherNo());
-        }
-        holder.export.setTag(position);
+       // holder.export.setVisibility(View.INVISIBLE);
+//        if(!vocherlist.contains(list.get(position).getVoucherNo())) {
+//            holder.export.setVisibility(View.VISIBLE);
+//            vocherlist.add(list.get(position).getVoucherNo());
+//        }
+//        holder.export.setTag(position);
+//
+//        if(shelfReport==1)
+//        {
+//        holder.export.setVisibility(View.INVISIBLE);
+//
+//        }
+        holder.customerNo.setText(String.valueOf(list.get(position).getCustomerNo()));
+        holder.customerName.setText(String.valueOf(list.get(position).getCustomerName()));
 
-        if(shelfReport==1)
-        {
-        holder.export.setVisibility(View.INVISIBLE);
-
-        }
 
     }
 
@@ -78,25 +100,31 @@ public class SerialReportAdpter extends   RecyclerView.Adapter<SerialReportAdpte
     }
 
     class SerialReportViewHolder extends RecyclerView.ViewHolder {
-        TextView voucherdate, vouchertype, serialcode, itemnum, vouchernum, export;
+        TextView voucherdate, vouchertype, serialcode, itemnum, vouchernum, export,customerNo,customerName;
 
         public SerialReportViewHolder(@NonNull View itemView) {
 
             super(itemView);
             voucherdate = itemView.findViewById(R.id.SE_voucherdate);
             vouchertype = itemView.findViewById(R.id.SE_vocherkind);
+            if(shelfReport==1)
+            {
+                vouchertype.setVisibility(View.GONE);
+            }
             serialcode = itemView.findViewById(R.id.SE__serialcode);
             itemnum = itemView.findViewById(R.id.SE__itemnum);
             vouchernum = itemView.findViewById(R.id.SE_vochernum);
-            export = itemView.findViewById(R.id.SE_exportexcel);
+           // export = itemView.findViewById(R.id.SE_exportexcel);
             linearLayout = itemView.findViewById(R.id.lin);
+            customerNo=itemView.findViewById(R.id.SE_customerNo);
+            customerName=itemView.findViewById(R.id.SE_customerName);
 
-            export.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    exportToEx();
-                }
-            });
+//            export.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    exportToEx();
+//                }
+//            });
 
         }
 
