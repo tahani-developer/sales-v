@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 
+import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -99,6 +100,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     Context context;
+    GeneralMethod generalMethod;
 
 
     public  String voucherDate="";
@@ -129,6 +131,7 @@ public class AddItemsFragment2 extends DialogFragment {
     SimpleDateFormat df, df2;
     Date currentTimeAndDate;
     String userNo="";
+    int itemUnit=0;
     private static DatabaseHandler mDbHandler;
 
     public AddItemsInterface getListener() {
@@ -142,6 +145,7 @@ public class AddItemsFragment2 extends DialogFragment {
     private AddItemsInterface listener;
 
     public AddItemsFragment2() {
+        generalMethod=new GeneralMethod(context);
         // Required empty public constructor
     }
 
@@ -550,27 +554,28 @@ public class AddItemsFragment2 extends DialogFragment {
                         float count=0;
                         addItemImgButton2.setEnabled(true);
 
-//                        total_items_quantity -= List.size();
-//                        totalQty_textView.setText("+"+0);
-//                        total_items_quantity=0;
                         for(int h=0;h<List.size();h++)
                         {
 
                             updateListSerialBukupDeleted( List.get(h).getItemNo(),voucherNumberTextView.getText().toString());
                         }
+                        int listSize=listSerialTotal.size();
 
                         if(listSerialTotal.size()!=0)
                         {
-                            for(int k=0;k<listSerialTotal.size();k++)
+                            for(int j=0;j<List.size();j++)
+
                             {
-                                for(int j=0;j<List.size();j++)
+                                int k=0;
+                                while (k<listSerialTotal.size())
                                 {
                                     count+=List.get(j).getQty();
-                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo()))
+                                    if(listSerialTotal.get(k).getItemNo().equals(List.get(j).getItemNo())&&(listSerialTotal.get(k).getPriceItem()==List.get(j).getPrice()))// CRASH IT
                                     {
-
                                         listSerialTotal.remove(k);
-                                        k--;
+                                    }
+                                    else {
+                                        k++;
                                     }
                                 }
                             }
@@ -583,18 +588,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
                         }
 
-
-//                        Log.e("count",""+count);
-//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
-//                        total_items_quantity-=count;
-//                        totalQty_textView.setText(total_items_quantity+"");
                         minusQtyTotal(count);
                         List.clear();
-                       int vouch=Integer.parseInt(voucherNumberTextView.getText().toString());
-//                        mDbHandler.deletSerialItems_byVoucherNo(vouch);
-
-
-//                        Log.e("totalQty",""+total_items_quantity+"\t listsize="+""+List.size());
+                        SalesInvoice.updateQtyBasket();
                         AddItemsFragment2.this.dismiss();
 
 
@@ -612,6 +608,8 @@ public class AddItemsFragment2 extends DialogFragment {
                 try {
                     listener.addItemsToList(List);
                     addItemImgButton2.setEnabled(true);
+                    SalesInvoice.updateQtyBasket();
+
                     AddItemsFragment2.this.dismiss();
                 }
                 catch (Exception e)
@@ -759,6 +757,7 @@ try {
         jsonItemsList_intermidiate = new ArrayList<>();
         String dateCurent=getCurentTimeDate(1);
         String rate_customer = mDbHandler.getRateOfCustomer();
+        itemUnit=mDbHandler.getAllSettings().get(0).getItemUnit();
         if(rate_customer.equals(""))
         {
             rate_customer="0";
@@ -854,7 +853,9 @@ try {
         voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
-        Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
+        ItemUnitDetails unitDetail;
+        int unitInt=0;float priceItem=0,qtyFloat=1;
+       // Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
         try {
@@ -888,40 +889,40 @@ try {
 
        // Log.e("canChangePrice",""+canChangePrice+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
 
-        if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
-            Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(15);
-            toast.show();
+        if(!price.equals("0"))
+        {
+            if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
+                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 180);
+                ViewGroup group = (ViewGroup) toast.getView();
+                TextView messageTextView = (TextView) group.getChildAt(0);
+                messageTextView.setTextSize(15);
+                toast.show();
 
-            return false;
+                return false;
+            }
         }
 
 
+
             item = new Item();
+            unitDetail=new ItemUnitDetails();
+            unitDetail=getItemUnitInfo(itemNumber);
             item.setItemNo(itemNumber);
             item.setItemName(itemName);
             item.setTax(Float.parseFloat(tax.trim()));
             item.setCategory(category);
             item.setDescreption(descriptRemark);
-//            item.setSerialCode(serialNo);
-//            Log.e("addItem","\t"+serialNo);
-// test new order
+
             try {
                 item.setUnit(unit);
-                //****************************
-//                if(voucherType==508)
-//                {
-//                    item.setQty(Float.parseFloat("0.0"));
-//                }
-//                else {
-//                    item.setQty(Float.parseFloat(qty));
-//                }
 
-                Log.e("unit",""+unit);
-                int unitInt=0;
+                try {
+                    priceItem=Float.parseFloat(price.trim());
+
+                }catch (Exception e){
+                    priceItem=0;
+                }
                 try{
                      unitInt=Integer.parseInt(unit);
                 }
@@ -929,14 +930,80 @@ try {
                 {
                     unitInt=1;
                 }
-                if(useWeight==1)
-                item.setQty(Float.parseFloat(qty)*unitInt);
-                else {
-                    item.setQty(Float.parseFloat(qty));
+                try {
+                   qtyFloat= Float.parseFloat(qty);
+                }catch (Exception e)
+                {
+
                 }
+
+
+                //***************************************************
+                if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
+                {
+                    int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+                    item.setQty(Float.parseFloat(qty)*itemUnit);
+                  //  Log.e("priceItem","="+item.getQty()+"\titemUnit="+itemUnit);
+                    if(itemUnit!=1)
+                    {
+                        float priceUnitItem=priceItem/itemUnit;
+                        item.setPrice(priceUnitItem);
+
+                    }
+                    else {
+                        item.setPrice(priceItem);
+                    }
+                    Log.e("unitDetail",""+unitDetail.getItemNo());
+                    if(unitDetail.getItemNo()!=null)
+                    {
+                        if(unitDetail.getConvRate()!=1)  // there are units
+                            item.setWhich_unit("1");
+                        else item.setWhich_unit("0");
+
+                        item.setWhich_unit_str(unitDetail.getUnitId());
+                        item.setWhichu_qty(unitDetail.getConvRate()+"");
+                        item.setEnter_qty(qty);
+                        item.setEnter_price((priceItem*qtyFloat)+"");
+                        item.setUnit_barcode(unitDetail.getItemBarcode());
+                    }
+                    else {
+                        Log.e("unitDetail","else");
+                        item.setWhich_unit("0");
+
+                        item.setWhich_unit_str("");
+                        item.setWhichu_qty("");
+                        item.setEnter_qty(qty);
+                        item.setEnter_price((priceItem*qtyFloat)+"");
+                        item.setUnit_barcode("");
+                    }
+
+
+
+                }else {
+
+                    if(useWeight==1)
+                        item.setQty(Float.parseFloat(qty)*unitInt);
+                    else {
+                        item.setQty(Float.parseFloat(qty));
+                    }
+                    item.setPrice(priceItem);
+
+
+                    Log.e("unitDetail","else");
+                    item.setWhich_unit("0");
+
+                    item.setWhich_unit_str("");
+                    item.setWhichu_qty("");
+                    item.setEnter_qty(qty);
+                    item.setEnter_price((priceItem*qtyFloat)+"");
+                    item.setUnit_barcode("");
+                }
+                //***************************************************
+
+
                 item.setItemHasSerial(hasSerial+"");
 
-                item.setPrice(Float.parseFloat(price.trim()));
+
                 if (bonus == "")
                     item.setBonus(Float.parseFloat("0.0"));
                 else
@@ -958,25 +1025,29 @@ try {
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
                 item.setDiscType(1);// error for discount promotion // percent discount
+                Log.e("setDiscType", "percent");
             } else {
                 item.setDiscType(0);// value Discount
+                Log.e("setDiscType", "value");
             }
-
+        Log.e("setDiscType", item.getDiscType()+"");
             try {
                 if (item.getDiscType() == 0) {
-                    item.setDisc(Float.parseFloat(discount.trim()));
+                    item.setDisc(Float.parseFloat(discount.trim()));// for Qasion offer * Qty
                     item.setDiscPerc((item.getQty() * item.getPrice() *
                             (Float.parseFloat(discount.trim()) / 100)) + "");
 
                 } else {
                     item.setDiscPerc(Float.parseFloat(discount.trim()) + "");
-                    item.setDisc(item.getQty() * item.getPrice() *
-                            (Float.parseFloat(discount.trim())) / 100);
+                    item.setDisc((item.getQty() * item.getPrice() *
+                            (Float.parseFloat(discount.trim())) / 100));
                 }
+                Log.e("setDiscType", item.getDisc()+"\tperc="+item.getDiscPerc());
                 descPerc = ((item.getQty() * item.getPrice() *
                         (Float.parseFloat(discount.trim()) / 100)));
 
-
+                Log.e("setDiscType22", item.getDisc()+"");
+                Log.e("setDiscType223", item.getDiscType()+"");
             } catch (NumberFormatException e) {
                 item.setDisc(0);
                 item.setDiscPerc("0");
@@ -1007,8 +1078,8 @@ try {
             }
 //        }
 
-        Log.e("setDisc1",""+item.getDisc());
-        if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ) {
+        Log.e("setDisc1",""+item.getDiscType());
+        if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ||(item.getItemName().equals("(bonus)"))) {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();
                 total_items_quantity -= flagBonus;
@@ -1022,6 +1093,11 @@ try {
                 Log.e("setQty", "" + Float.parseFloat(qty));
                 Log.e("total_items_quantity", "" + total_items_quantity);
             }
+
+
+
+
+
 
 
                 List.add(item);
@@ -1046,6 +1122,24 @@ try {
                     itemSerialList.get(i).setIsDeleted("0");
                     itemSerialList.get(i).setDateDelete(voucherDate);
                     itemSerialList.get(i).setPriceItem(curentPrice);
+                    itemSerialList.get(i).setPriceItem(priceItem);
+
+
+                    if(voucherType!=506) {
+                        try {
+
+
+                        float netPriceItem = ((item.getQty() * item.getPrice()) - item.getDisc()) / item.getQty();
+
+                        String prc = generalMethod.convertToEnglish(generalMethod.getDecimalFormat(netPriceItem));
+                       // float prcFloat = Float.parseFloat(prc);
+                        Log.e("itemSerialList", "item" + item.getQty() + "\tprice=" + item.getPrice() + "\tgetDisc=" + item.getDisc() + "\ttotal=" + prc);
+                        itemSerialList.get(i).setPriceItemSales(prc);
+                    }catch (Exception e){
+
+                        }
+                    }
+
                     listSerialTotal.add( itemSerialList.get(i));
 
                 }
@@ -1065,6 +1159,12 @@ try {
             toast.show();
             return false;
         }
+    }
+
+    private ItemUnitDetails getItemUnitInfo(String itemNumber) {
+        ItemUnitDetails item= new ItemUnitDetails();
+        item=mDbHandler.getItemUnitDetails(itemNumber);
+        return  item;
     }
 
     @Override

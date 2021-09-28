@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.Transaction;
@@ -120,6 +121,12 @@ public class ExportToExcel {
                     workbook = SerialitemListReport(workbook, (List<serialModel>) list);
                     break;
 
+                case 12:
+                    workbook = accountStatmentReport(workbook, (List<Account__Statment_Model>) list);
+                    break;
+                case 13:
+                    workbook = shelfInventoryReport(workbook, (List<serialModel>) list);
+                    break;
 
             }
             }catch (Exception e) {
@@ -708,5 +715,101 @@ public class ExportToExcel {
         }
         return workbook;
     }
+    WritableWorkbook accountStatmentReport(WritableWorkbook workbook, List<Account__Statment_Model> list) {
 
+        try {
+            WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
+
+            try {
+               // sheet.mergeCells(0, 0, 6, 0);// col , row, to col , to row
+                sheet.addCell(new Label(2, 0, context.getString(R.string.AccountStatment)+" : \t "+CustomerListShow.Customer_Name)); // column and row
+            //    sheet.mergeCells(0, 1, 6, 1);
+                sheet.addCell(new Label(0, 1, context.getString(R.string.voucherNo))); // column and row
+                sheet.addCell(new Label(1, 1, context.getString(R.string.transName)));
+                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.date_voucher)));
+                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.debit)));
+                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.credit)));
+                sheet.addCell(new Label(5, 1, context.getResources().getString(R.string.balance)));
+
+
+            //    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+
+                for (int i = 0; i < list.size(); i++) {
+                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo() + ""));
+                    sheet.addCell(new Label(1, i + 2, list.get(i).getTranseNmae()));
+                    sheet.addCell(new Label(2, i + 2, list.get(i).getDate_voucher() + ""));
+                    sheet.addCell(new Label(3, i + 2, list.get(i).getDebit()+ ""));
+                    sheet.addCell(new Label(4, i + 2, list.get(i).getCredit()+""));
+
+                    sheet.addCell(new Label(5, i + 2, list.get(i).getBalance()+""));
+
+                 //   sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+
+                }
+
+            } catch (RowsExceededException e) {
+                e.printStackTrace();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+            workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
+            try {
+                workbook.close();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workbook;
+    }
+
+    WritableWorkbook shelfInventoryReport(WritableWorkbook workbook, List<serialModel> list) {
+
+        try {
+            WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
+
+            try {
+                // sheet.mergeCells(0, 0, 6, 0);// col , row, to col , to row
+               // sheet.addCell(new Label(2, 0, context.getString(R.string.shelf_inventory_report)+" : \t "+CustomerListShow.Customer_Name)); // column and row
+                //    sheet.mergeCells(0, 1, 6, 1);
+                sheet.addCell(new Label(0, 1, context.getString(R.string.voucherNo))); // column and row
+                sheet.addCell(new Label(1, 1, context.getString(R.string.item_number)));
+                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.serialcode)));
+                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.customer_number)));
+                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.voucher_date)));
+
+
+
+                //    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+
+                for (int i = 0; i < list.size(); i++) {
+                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo() + ""));
+                    sheet.addCell(new Label(1, i + 2, list.get(i).getItemNo()));
+                    sheet.addCell(new Label(2, i + 2, list.get(i).getSerialCode() + ""));
+                    sheet.addCell(new Label(3, i + 2, list.get(i).getCustomerNo()+ ""));
+                    sheet.addCell(new Label(4, i + 2, list.get(i).getDateVoucher()+""));
+
+                    //   sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+
+                }
+
+            } catch (RowsExceededException e) {
+                e.printStackTrace();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+            workbook.write();
+            Toast.makeText(context, "Exported To Excel ", Toast.LENGTH_SHORT).show();
+            try {
+                workbook.close();
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workbook;
+    }
 }

@@ -147,4 +147,25 @@ public class Transaction {
         }
         return obj;
     }
+    public JSONObject getJSONObject_mySql() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("SALES_MAN_ID", salesManId);
+            obj.put("CUS_CODE", cusCode);
+            obj.put("CUS_NAME", cusName);
+            obj.put("CHECK_IN_DATE", checkInDate);
+            obj.put("CHECK_IN_TIME", checkInTime);
+            obj.put("CHECK_OUT_DATE", checkOutDate);
+            obj.put("CHECK_OUT_TIME", checkOutTime);
+            obj.put("STATUS", status);
+
+            obj.put("REAL_LONGITIUED_CHECHOUT", longtude);
+            obj.put("REAL_LATITUED_CHECHOUT", latitud);
+            obj.put("EXPORTED", "0");
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 }

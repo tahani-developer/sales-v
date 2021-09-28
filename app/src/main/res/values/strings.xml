@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.5</string>
+    <string name="version"> V 100.35</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -444,7 +444,7 @@
     <string name="requiredQty">Required Qty</string>
     <string name="unCollectedCheques">Un Collected Cheques</string>
     <string name="chaequeDate">Date</string>
-    <string name="recivedAmount">Recived Amount</string>
+    <string name="recivedAmount">Required Amount</string>
     <string name="validation">Validation</string>
     <string name="PAIDAMT">Paid Amount</string>
     <string name="action_settings_ip">Settings Ip</string>
@@ -464,7 +464,7 @@
     <string name="emptyTable">Empty Table</string>
     <string name="UpdateQty">Update Qty</string>
     <string name="Delete">Delete item</string>
-    <string name="ClearAll">Clear All</string>
+    <string name="ClearAll">Clear All ??</string>
     <string name="continousReadingBarcod">Continous Reading Barcod</string>
     <string name="dontShowHeader">Dont Print Header(Cash inv)</string>
     <string name="doYouWantClearData">Do You Want Clear  exported Data??</string>
@@ -475,6 +475,13 @@
     <string name="noTax">No Tax</string>
     <string name="shelf_inventory">Shelf Inventory</string>
     <string name="totalDiscount">Total Cash Discount</string>
+    <string name="deffirentPrice">Deffirent Price</string>
+    <string name="failImportMaxExportData">Faill Import MaxVoucher  Export Data</string>
+    <string name="imageNotFound">Image Not Found</string>
+    <string name="storeNumber">Store Number</string>
+    <string name="defferentCustomer">This Serial For Different Customer</string>
+    <string name="shelf_inventory_report">Shelf   Inventory Report</string>
+    <string name="itemUnit">Item Unit</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

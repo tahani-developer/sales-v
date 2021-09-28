@@ -66,12 +66,29 @@
 
                     <EditText
                         android:id="@+id/link"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
                         android:layout_weight="3.5"
-                        android:textSize="14sp"
+                        android:maxLines="1"
                         android:background="@drawable/back_border_edit"
-                        android:textColor="@color/add_button" />
+
+
+                        android:textColor="@color/add_button"
+
+
+
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+
+                        android:layout_marginBottom="1dp"
+
+
+
+                        android:inputType="number"
+                        android:text=""
+                        android:textSize="15sp"
+
+
+
+                        />
                     <TextView
                         android:id="@+id/editIp"
                         android:layout_width="match_parent"
@@ -324,6 +341,45 @@
                                     android:gravity="center"
                                     android:padding="2dp"
                                     android:textColor="@color/add_button" />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/linearStore"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="visible"
+                                android:layout_marginBottom="3dp"
+                                android:layout_weight="1"
+
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="3"
+                                    android:text="@string/storeNumber"
+                                    android:textColor="@color/text_view_color"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <EditText
+                                    android:id="@+id/storNo_text"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2.5"
+
+                                    android:textColor="@color/add_button" />
+                                <TextView
+                                    android:id="@+id/ed30i"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="4.5"
+                                    android:visibility="invisible"
+                                    android:background="@drawable/ic_create_black_24dp"
+
+                                    android:textColor="@color/text_view_color"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
                         </LinearLayout>
@@ -1078,6 +1134,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="1dp"
                                 android:text="@string/continousReadingBarcod"
+                                android:textColor="@color/text_view_color"
+                                android:textSize="14sp" />
+                            <CheckBox
+                                android:id="@+id/itemUnit_checkbox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="@string/itemUnit"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="14sp" />
 

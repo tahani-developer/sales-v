@@ -102,11 +102,14 @@
 
                         android:background="@drawable/back_border_edit"
 
-                        android:lines="1"
+
                         android:text=""
                         android:textColor="@color/colorblue_dark"
 
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+
+
+                        />
                     <TextView
                         android:id="@+id/editIp"
                         android:layout_width="match_parent"
@@ -154,7 +157,11 @@
                         android:text=""
                         android:textColor="@color/colorblue_dark"
 
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+
+
+
+                        />
                     <TextView
                         android:id="@+id/editIp542"
                         android:layout_width="match_parent"

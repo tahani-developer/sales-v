@@ -48,6 +48,24 @@ public class Settings {
     private  int continusReading;
     private  int activeTotalDiscount;
     private  double valueOfTotalDiscount;
+    private  String storeNo;
+    private  int itemUnit;
+
+    public int getItemUnit() {
+        return itemUnit;
+    }
+
+    public void setItemUnit(int itemUnit) {
+        this.itemUnit = itemUnit;
+    }
+
+    public String getStoreNo() {
+        return storeNo;
+    }
+
+    public void setStoreNo(String storeNo) {
+        this.storeNo = storeNo;
+    }
 
     public int getActiveTotalDiscount() {
         return activeTotalDiscount;

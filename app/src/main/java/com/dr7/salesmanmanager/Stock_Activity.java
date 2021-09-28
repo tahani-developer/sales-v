@@ -30,6 +30,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.serialValueUpdated;
 import static com.dr7.salesmanmanager.SalesInvoice.updatedSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
+import static com.dr7.salesmanmanager.StockRequest.listSerialInventory;
 
 public class Stock_Activity extends AppCompatActivity implements    StockRequest.StockInterFace, AddItemsStockFragment.AddItemsInterface {
     private StockRequest stockRequest;
@@ -58,6 +59,10 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
         listMasterSerialForBuckup_stock=new ArrayList<>();
         intentData = getIntent().getStringExtra("serial");
         Log.e("intentData",""+intentData);
+        if(intentData.equals("read"))
+        {
+            this.setTitle("Inventory Shelf");
+        }
         databaseHandler=new DatabaseHandler(Stock_Activity.this);
         displayStockRequest();
     }
@@ -120,75 +125,76 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
                     Toast.makeText(Stock_Activity.this, "Error1"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
+              //  serialValueStock.setText(serialBarcode.toString().trim());
 
-                try {
-                    String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode.trim());
+//                try {
+//                    String ItemNo=databaseHandler.isSerialCodeExist(serialBarcode.trim());
+//
+//                        if(ItemNo.trim().equals("not"))
+//                        {
 
-                        if(ItemNo.equals("not"))
-                        {
-
-//                                if(checkInTotalList(serialBarcode.trim()))
-//                                {
+                                if(checkInTotalList(serialBarcode.trim()))
+                                {
                             Log.e("Stock_Activity", "onActivityResult" +serialBarcode.toString().trim());
                                     serialValueStock.setText(serialBarcode.toString().trim());
 
 
-//                                }
-//                                else {
-//                                    new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
-//                                            .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
-//                                            .setContentText(Stock_Activity.this.getString(R.string.duplicate)+"\t"+Stock_Activity.this.getResources().getString(R.string.inThisVoucher))
+                                }
+                                else {
+                                    new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
+                                            .setContentText(Stock_Activity.this.getString(R.string.duplicate)+"\t"+Stock_Activity.this.getResources().getString(R.string.inThisVoucher))
+
+                                            .show();
+
+                                }
 //
-//                                            .show();
 //
-//                                }
-
-
-
-
-                        }
-                        else {
-
-
-                            if(!ItemNo.equals("")){
-                                new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
-                                        .setContentText(Stock_Activity.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Stock_Activity.this.getString(R.string.forItemNo)+ItemNo)
-                                        .setConfirmButton(Stock_Activity.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                                                openSmallScanerTextView();
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .show();
-                            }else {
-                                new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
-                                        .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
-                                        .setContentText(Stock_Activity.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
-                                        .setConfirmButton(Stock_Activity.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-//                                                openSmallScanerTextView();
-                                                sweetAlertDialog.dismissWithAnimation();
-
-                                            }
-                                        })
-                                        .show();
-
-                            }
-
-                        }
-
-
-
-
-
-                }catch (Exception e){
-                    Toast.makeText(Stock_Activity.this, "Error2"+e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                }
+//
+//
+//                        }
+//                        else {
+//
+//
+//                            if(!ItemNo.equals("")){
+//                                new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
+//                                        .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
+//                                        .setContentText(Stock_Activity.this.getString(R.string.invalidSerial)+"\t"+serialBarcode+"\t"+Stock_Activity.this.getString(R.string.forItemNo)+ItemNo)
+//                                        .setConfirmButton(Stock_Activity.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+//                                            @Override
+//                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+////                                                openSmallScanerTextView();
+//                                                sweetAlertDialog.dismissWithAnimation();
+//                                            }
+//                                        })
+//                                        .show();
+//                            }else {
+//                                new SweetAlertDialog(Stock_Activity.this, SweetAlertDialog.ERROR_TYPE)
+//                                        .setTitleText(Stock_Activity.this.getString(R.string.warning_message))
+//                                        .setContentText(Stock_Activity.this.getString(R.string.invalidSerial)+"\t"+serialBarcode)
+//                                        .setConfirmButton(Stock_Activity.this.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+//                                            @Override
+//                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+//
+////                                                openSmallScanerTextView();
+//                                                sweetAlertDialog.dismissWithAnimation();
+//
+//                                            }
+//                                        })
+//                                        .show();
+//
+//                            }
+//
+//                        }
+//
+//
+//
+//
+//
+//                }catch (Exception e){
+//                    Toast.makeText(Stock_Activity.this, "Error2"+e.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                }
 
 
 
@@ -203,25 +209,25 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
 
     }
-//    private boolean checkInTotalList(String s) {
-//        boolean existInTotal=false;
-//        if(listSerialTotal.size()!=0){
-//            // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
-//            for(int j=0;j<listSerialTotal.size();j++)
-//            {
-//                if(listSerialTotal.get(j).getSerialCode().equals(s.toString().trim()))
+    private boolean checkInTotalList(String s) {
+        boolean existInTotal=false;
+        if(listSerialInventory.size()!=0){
+            // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
+            for(int j=0;j<listSerialInventory.size();j++)
+            {
+                if(listSerialInventory.get(j).getSERIAL_NO().equals(s.toString().trim()))
+                {
+                    return  false;
+                }
+
+            }
+
+//
+//                if(listSerialTotal.indexOf(s.toString().trim())!=-1)
 //                {
-//                    return  false;
+//
 //                }
-//
-//            }
-//
-////
-////                if(listSerialTotal.indexOf(s.toString().trim())!=-1)
-////                {
-////
-////                }
-//        }
-//        return  true;
-//    }
+        }
+        return  true;
+    }
 }

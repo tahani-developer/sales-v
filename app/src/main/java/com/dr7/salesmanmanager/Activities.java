@@ -54,8 +54,11 @@ import static com.dr7.salesmanmanager.MainActivity.curentDate;
 import static com.dr7.salesmanmanager.MainActivity.curentTime;
 import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.price;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.price_serial_edit;
 import static com.dr7.salesmanmanager.SalesInvoice.serialValueUpdated;
 import static com.dr7.salesmanmanager.SalesInvoice.updatedSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
@@ -198,7 +201,7 @@ public class Activities extends AppCompatActivity implements
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
         generalMethod=new GeneralMethod(Activities.this);
         fillLastVisit();
-        fiiltotalBalance();
+//        fiiltotalBalance();
 //        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
 //        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
         linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);
@@ -924,26 +927,57 @@ public class Activities extends AppCompatActivity implements
                          }
                      }
                      else {// vouchertype=506
+                         String customerVoucher=databaseHandler.getCustomerForSerial(serialBarcode.trim());
                          if( (!databaseHandler.isSerialCodePaied(serialBarcode.trim()).equals("not")&&voucherType==506))
                          {
-                             if(checkInTotalList(serialBarcode.trim()))
+                             if(checkCustomer(customerVoucher)){
+
+
+                             if(checkPrice(serialBarcode.trim()))
                              {
 
-                                 if(updatedSerial==1)
+                                 if(checkInTotalList(serialBarcode.trim()))
                                  {
-                                     serialValueUpdated.setText(serialBarcode.toString().trim());
-                                 }else {
-                                     serialValue.setText(serialBarcode.toString().trim());
+
+                                     updatePaymentTypeForVoucher(serialBarcode.trim());
+                                     if(updatedSerial==1)
+                                     {
+                                         serialValueUpdated.setText(serialBarcode.toString().trim());
+                                     }else {
+                                         serialValue.setText(serialBarcode.toString().trim());
+                                     }
                                  }
-                             }
-                             else {
+                                 else {
+                                     new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                             .setTitleText(Activities.this.getString(R.string.warning_message))
+                                             .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+Activities.this.getResources().getString(R.string.inThisVoucher))
+
+                                             .show();
+
+                                 }
+
+
+
+
+                                 Log.e("checkPrice","true");
+                             }else {
+                                 Log.e("checkPrice","false");
                                  new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
                                          .setTitleText(Activities.this.getString(R.string.warning_message))
-                                         .setContentText(Activities.this.getString(R.string.duplicate)+"\t"+Activities.this.getResources().getString(R.string.inThisVoucher))
+                                         .setContentText(Activities.this.getString(R.string.deffirentPrice)+"\t"+price.getText().toString())
 
                                          .show();
-
                              }
+                             }
+                             else {
+                                 Log.e("checkPrice", "false");
+                                 new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
+                                         .setTitleText(Activities.this.getString(R.string.warning_message))
+                                         .setContentText(Activities.this.getString(R.string.defferentCustomer) + "\t" + customerVoucher)
+
+                                         .show();
+                             }
+
                          }
                          else {
                              new SweetAlertDialog(Activities.this, SweetAlertDialog.ERROR_TYPE)
@@ -964,6 +998,7 @@ public class Activities extends AppCompatActivity implements
 
 
                  }catch (Exception e){
+                     Log.e("","");
                      Toast.makeText(Activities.this, "Error2"+e.getMessage(), Toast.LENGTH_SHORT).show();
 
                  }
@@ -1000,6 +1035,87 @@ public class Activities extends AppCompatActivity implements
                 break;
         }
 
+    }
+
+    private void updatePaymentTypeForVoucher(String barcodeStr) {
+        int payType=databaseHandler.getPayTypeForVoucher(barcodeStr);
+       // SalesInvoice salesInvoice =new SalesInvoice();
+        Log.e("updatePaymentTypeFor",""+salesInvoice.payMethod+"\t pay2"+payType);
+        SalesInvoice.payMethod=payType;
+        SalesInvoice.refreshPayMethod(payType);
+      //  salesInvoice.refreshPayMethod(payType);
+        Log.e("updatePaymentTypeFor",""+SalesInvoice.payMethod);
+    }
+
+    private boolean checkCustomer(String customerVoucher) {
+        Log.e("checkCustomer","= "+customerVoucher+"\tCustomer_Name= "+CustomerListShow.Customer_Name);
+        if(customerVoucher.length()!=0)
+        {
+            if(CustomerListShow.Customer_Name.trim().equals(customerVoucher.trim()))
+                return  true;
+
+        }
+        return  false;
+    }
+
+    private boolean checkPrice(String barcode) {
+        double previusPrice_doub=0;
+        String previusPrice= databaseHandler.getpreviusePriceSale(barcode);
+        try{
+            previusPrice_doub= Double.parseDouble(previusPrice);
+        }catch (Exception e){
+
+        }
+
+//        Log.e("previusPrice1","updatedSerial="+updatedSerial);
+        if(updatedSerial==0)// from adapter recycler
+        {
+
+            if(serialListitems.size()==0)
+            {
+                if(previusPrice_doub!=0)
+                price.setText(previusPrice+"");
+
+                return true;
+            }else {
+//                Log.e("previusPrice2",""+price.getText().toString());
+                double curentPrc=0;
+                try{
+                    curentPrc=Double.parseDouble(price.getText().toString().trim());
+
+                }catch (Exception e){
+                    curentPrc=0;
+                }
+                if(previusPrice_doub==curentPrc)
+                    return  true;
+            }
+
+
+
+
+        }else {// from edit serial
+
+//            if(serialListitems.size()==0)
+//            {
+//                price.setText(previusPrice+"");
+//
+//                return true;
+//            }else {
+                Log.e("previusPrice2",""+price_serial_edit.getText().toString());
+                double curentPrc=0;
+                try{
+                    curentPrc=Double.parseDouble(price_serial_edit.getText().toString().trim());
+
+                }catch (Exception e){
+                    curentPrc=0;
+                }
+                if(previusPrice_doub==curentPrc)
+                    return  true;
+//            }
+        }
+
+
+       return  false;
     }
 
     private boolean checkInTotalList(String s) {

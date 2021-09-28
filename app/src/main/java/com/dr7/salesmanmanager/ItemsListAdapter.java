@@ -27,6 +27,7 @@ public class ItemsListAdapter extends BaseAdapter {
     private List<Item> itemList,secondListItems;
     private DecimalFormat decimalFormat;
     int typeScreen=0;//0 landscap
+    DatabaseHandler databaseHandler ;
 
     public ItemsListAdapter(Context context, List<Item> itemList,int type)
     {
@@ -36,6 +37,7 @@ public class ItemsListAdapter extends BaseAdapter {
         decimalFormat = new DecimalFormat("##.000");
         this.typeScreen=type;
         Log.e("typeScreen",""+typeScreen+"\t type"+type);
+        databaseHandler=new DatabaseHandler(context);
     }
 
     public void setItemsList(List<Item> itemList)
@@ -109,8 +111,40 @@ public class ItemsListAdapter extends BaseAdapter {
         itemNoTextView.setText(itemList.get(i).getItemNo());
         itemNoTextView_detail.setText(itemList.get(i).getItemNo());
         itemNameTextView.setText(itemList.get(i).getItemName());
-        qtyTextView.setText(""+itemList.get(i).getQty());
-        priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
+        if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
+        {
+            int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
+            qtyTextView.setText((itemList.get(i).getQty()/itemUnit)+"");
+            Log.e("itemUnit","1="+itemUnit);
+            Log.e("itemUnit","2="+itemList.get(i).getQty()/itemUnit);
+
+        }else {
+            qtyTextView.setText(""+itemList.get(i).getQty());
+        }
+
+        if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
+        {
+            int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
+            String itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim());
+           // Log.e("priceTextView","1="+itemUnitPrice);
+            if(!itemUnitPrice.equals(""))
+            {
+                priceTextView.setText(itemUnitPrice);
+//                priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
+            }else {
+                priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
+            }
+
+
+
+
+
+        }else {
+            priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
+        }
+
+
+
         bonusTextView.setText(String.valueOf(itemList.get(i).getBonus()));
         bonusTextView_detail.setText(String.valueOf(itemList.get(i).getBonus()));
         lineDescTextView.setText(String.valueOf(itemList.get(i).getDisc()));

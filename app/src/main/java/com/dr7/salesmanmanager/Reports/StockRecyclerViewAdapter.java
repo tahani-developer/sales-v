@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Color;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
 import static com.dr7.salesmanmanager.StockRequest.generalMethod;
+import static com.dr7.salesmanmanager.StockRequest.itemsNoList;
 import static com.dr7.salesmanmanager.StockRequest.itemsRequiredList;
 import static com.dr7.salesmanmanager.StockRequest.listSerialInventory;
 import static com.dr7.salesmanmanager.StockRequest.voucherNumber;
@@ -126,108 +128,183 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-
-                    final Dialog dialog = new Dialog(view.getContext());
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialog.setCancelable(true);
-                    dialog.setContentView(R.layout.add_item_serial_dialog);
-                    Window window = dialog.getWindow();
-                    serialListitems_stock = new ArrayList<>();
-                    final TextView textQty = dialog.findViewById(R.id.textQty);
-                    textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
-                    selectedId=position;
-                    Log.e("selectedId",""+selectedId);
-
-                    final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
-                    unitQtyStock = (EditText) dialog.findViewById(R.id.unitQty);
-                    final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
-                    final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
-                    itemName.setText(items.get(position).getItemName());
-                    itemNumber.setText(items.get(position).getItemNo());
-                    final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
-                    final EditText discount = (EditText) dialog.findViewById(R.id.discount);
-                    LinearLayout linearPrice,discount_linear,discribtionItem_linear,_linear_switch;
-                    _linear_switch= dialog.findViewById(R.id._linear_switch);
-                    linearPrice= dialog.findViewById(R.id.linearPrice);
-                    linearPrice.setVisibility(View.GONE);
-                    _linear_switch.setVisibility(View.GONE);
-                    addToList= dialog.findViewById(R.id.addToList);
-                    itemNoStock=items.get(holder.getAdapterPosition()).getItemNo();
-                    serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
-                    final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
-                    serialScanBunos.setVisibility(View.GONE);
-                    discount_linear= dialog.findViewById(R.id.discount_linear);
-                    discount_linear.setVisibility(View.GONE);
-                    discribtionItem_linear= dialog.findViewById(R.id.discribtionItem_linear);
-                    discribtionItem_linear.setVisibility(View.GONE);
-                    final ImageView serialScan = dialog.findViewById(R.id.serialScan);
-                    unitQtyStock.setEnabled(false);
-                    serialScan.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("WrongConstant")
-                        @Override
-                        public void onClick(View v) {
-
-                            openSmallScanerTextView();
+                    String itemNo=items.get(position).getItemNo();
+                    Log.e("notExistInTotalList","itemNo"+itemNo);
+                    if(notExistInTotalList(itemNo)) {
 
 
-                        }
-                    });
-                    serialValueStock= dialog.findViewById(R.id.serialValue);
-                    try {
-                        serialValueStock.addTextChangedListener(new TextWatcher() {
+                        final Dialog dialog = new Dialog(view.getContext());
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setCancelable(false);
+                        dialog.setContentView(R.layout.add_item_serial_dialog);
+                        Window window = dialog.getWindow();
+                        serialListitems_stock = new ArrayList<>();
+                        final TextView textQty = dialog.findViewById(R.id.textQty);
+                        textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
+                        selectedId = position;
+                        counterSerial = 0;
+                        Log.e("selectedId", "" + selectedId);
+
+                        final Spinner unit = (Spinner) dialog.findViewById(R.id.unit);
+                        unitQtyStock = (EditText) dialog.findViewById(R.id.unitQty);
+                        final TextView itemNumber = (TextView) dialog.findViewById(R.id.item_number);
+                        final TextView itemName = (TextView) dialog.findViewById(R.id.item_name);
+                        final ImageView addEditBarcode = (ImageView) dialog.findViewById(R.id.addEditBarcode);
+
+                        itemName.setText(items.get(position).getItemName());
+                        itemNumber.setText(items.get(position).getItemNo());
+                        final EditText bonus = (EditText) dialog.findViewById(R.id.bonus);
+                        final EditText discount = (EditText) dialog.findViewById(R.id.discount);
+                        LinearLayout linearPrice, discount_linear, discribtionItem_linear, _linear_switch;
+                        _linear_switch = dialog.findViewById(R.id._linear_switch);
+                        linearPrice = dialog.findViewById(R.id.linearPrice);
+                        linearPrice.setVisibility(View.GONE);
+                        _linear_switch.setVisibility(View.GONE);
+                        addToList = dialog.findViewById(R.id.addToList);
+                        Button cancelAdd= dialog.findViewById(R.id.cancelAdd);
+                        cancelAdd.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                            public void onClick(View view) {
+                                dialog.dismiss();
                             }
-
+                        });
+                        itemNoStock = items.get(holder.getAdapterPosition()).getItemNo().toString().trim();
+                        serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
+                        final ImageView serialScanBunos = dialog.findViewById(R.id.serialScanBunos);
+                        serialScanBunos.setVisibility(View.GONE);
+                        discount_linear = dialog.findViewById(R.id.discount_linear);
+                        discount_linear.setVisibility(View.GONE);
+                        discribtionItem_linear = dialog.findViewById(R.id.discribtionItem_linear);
+                        discribtionItem_linear.setVisibility(View.GONE);
+                        final ImageView serialScan = dialog.findViewById(R.id.serialScan);
+                        unitQtyStock.setEnabled(false);
+                        serialScan.setOnClickListener(new View.OnClickListener() {
+                            @SuppressLint("WrongConstant")
                             @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            public void onClick(View v) {
 
-                            }
-
-                            @Override
-                            public void afterTextChanged(Editable s) {
-                                if(!s.toString().equals(""))
-                                {
-                                    barcodeValue_inventory=s.toString().trim();
-//                                                                               serialValue_Model.setText(s.toString().trim());
-                                    updateValue(barcodeValue_inventory,serialListitems_stock);
-
-                                }
+                                openSmallScanerTextView();
 
 
                             }
                         });
-                    }
-                    catch ( Exception e){}
+                        addEditBarcode.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                openEditSerial();
+                            }
+                        });
+                        serialValueStock = dialog.findViewById(R.id.serialValue);
+                        try {
+                            serialValueStock.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    addToList.setOnClickListener(new View.OnClickListener() {
-                        @SuppressLint("ResourceAsColor")
-                        @Override
-                        public void onClick(View v) {
+                                }
 
-                            AddItemsStockFragment obj = new AddItemsStockFragment();
-                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
-                                    "1", "1", unitQtyStock.getText().toString(),
-                                    "1"+items.get(holder.getAdapterPosition()).getPrice(),
-                                   "0", "0", view.getContext(),-10);
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                    if (!s.toString().equals("")) {
+                                        barcodeValue_inventory = s.toString().trim();
+//                                                                               serialValue_Model.setText(s.toString().trim());
+                                        updateValue(barcodeValue_inventory, serialListitems_stock);
+
+                                    }
+
+
+                                }
+                            });
+                        } catch (Exception e) {
+                        }
+
+                        addToList.setOnClickListener(new View.OnClickListener() {
+                            @SuppressLint("ResourceAsColor")
+                            @Override
+                            public void onClick(View v) {
+
+                                AddItemsStockFragment obj = new AddItemsStockFragment();
+                                added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
+                                        "1", "1", unitQtyStock.getText().toString(),
+                                        "1" + items.get(holder.getAdapterPosition()).getPrice(),
+                                        "0", "0", view.getContext(), -10);
 //
 //                                if (added) {
 //                                    holder.cardView.setBackgroundColor(context.getResources().getColor(R.color.layer5));
 //                                    isClicked.set(holder.getAdapterPosition() , 1);
 //                                }
-                            dialog.dismiss();
-                        }
+                                dialog.dismiss();
+                            }
 
 
-                    });
-                    dialog.show();
-
-
+                        });
+                        dialog.show();
+                    } else {
+                        Toast.makeText(context, "" + context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             });
+
         }
+
+
+    }
+
+    private boolean notExistInTotalList(String itemNo) {
+        Log.e("notExistInTotalList","itemNosize="+itemsNoList.size());
+        for(int i=0;i<itemsNoList.size();i++)
+        {
+
+            if(itemsNoList.get(i).equals(itemNo))
+            {
+                Log.e("notExistInTotalList","itemNo"+i+"\t"+itemsNoList.get(i));
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private void openEditSerial() {
+        final EditText editText = new EditText(context);
+        editText.setInputType(InputType.TYPE_CLASS_TEXT);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(context.getResources().getString(R.string.enter_serial));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(context.getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(!editText.getText().toString().equals(""))
+                {
+
+//                    if(validbarcodeValue(editText.getText().toString().trim(),serialListitems_stock))
+//                    {
+                        serialValueStock.setText(editText.getText().toString().trim());
+                        sweetAlertDialog.dismissWithAnimation();
+
+//                    }
+//                    else {editText.setError(context.getResources().getString(R.string.invalidSerial));
+//                        editText.setText("");}
+
+//                    }
+
+                }
+                else {
+                    editText.setError(context.getResources().getString(R.string.reqired_filled));
+                }
+            }
+        })
+
+                .show();
+
 
 
     }
@@ -294,28 +371,28 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
         }
 
-        private void updateList(int tagPosition, String qty) {
-            float qt=0;
-            try {
-                qt=Float.parseFloat(qty);
-            }
-            catch (Exception e){qt=0;}
-            float oldQty=0,updateQty=0;
-            oldQty=itemsRequiredList.get(tagPosition).getQty();
-            updateQty=qt;
-            if(oldQty!=updateQty)
-            {
-                itemsRequiredList.get(tagPosition).setQty(qt);
-            }
+
+    }
+    private void updateList(int tagPosition, String qty) {
+        float qt=0;
+        try {
+            qt=Float.parseFloat(qty);
+        }
+        catch (Exception e){qt=0;}
+        float oldQty=0,updateQty=0;
+        oldQty=itemsRequiredList.get(tagPosition).getQty();
+        updateQty=qt;
+        if(oldQty!=updateQty)
+        {
+            itemsRequiredList.get(tagPosition).setQty(qt);
+        }
 
 //            AddItemsStockFragment obj = new AddItemsStockFragment();
 //            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
 //                    "0","1", qty,
 //                    "1"+items.get(tagPosition).getPrice(),
 //                    "0", "0", context,items.get(tagPosition).getCurrentQty());
-        }
     }
-
     public void openSmallScanerTextView() {
 
         new IntentIntegrator((Activity) context).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
@@ -329,8 +406,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(VERTICAL);
-        if ((validbarcodeValue(barcodeValue, serialListitems))) {
+//        if ((validbarcodeValue(barcodeValue, serialListitems))) {
             addSerialToList(barcodeValue, serialListitems);
+
+            openSmallScanerTextView();
             serialValueStock.setError(null);
 //            addToList.setVisibility(View.VISIBLE);
 //            addToList.setEnabled(true);
@@ -347,16 +426,16 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 //
 //                openSmallScanerTextView();
 
-        }
-        else {
-            serialValueStock.setError("invalid");
-            serial_No_recyclerView.setLayoutManager(layoutManager);
-
-            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
-            unitQtyStock.setEnabled(false);
-
-
-        }
+//        }
+//        else {
+//            serialValueStock.setError("invalid");
+//            serial_No_recyclerView.setLayoutManager(layoutManager);
+//
+//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
+//            unitQtyStock.setEnabled(false);
+//
+//
+//        }
 //        }
 //        if(validbarcodeValue(barcodeValue,serialListitems))
 //        {
@@ -468,13 +547,15 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
                 //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
 //            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
-                if (mDbHandler.isSerialCodeExist(data).equals("not")) {
+                String ItemNo = mDbHandler.isSerialCodeExist(data.trim() + "");
+                if(ItemNo.trim().equals("not"))
+                {
 
 
                 } else {
                     errorData = true;
                     // Toast.makeText(context, context.getResources().getString(R.string.invalidSerial), Toast.LENGTH_SHORT).show();
-                    String ItemNo = mDbHandler.isSerialCodeExist(data + "");
+                  //  String ItemNo = mDbHandler.isSerialCodeExist(data + "");
                     if (!ItemNo.equals("")) {
                         new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                                 .setTitleText(context.getString(R.string.warning_message))

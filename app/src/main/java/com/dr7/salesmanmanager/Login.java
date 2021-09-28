@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,8 @@ import android.os.Build;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.CardView;
+import android.os.Environment;
+import android.telecom.TelecomManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -29,6 +32,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,6 +69,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,6 +80,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,6 +119,7 @@ public class Login extends AppCompatActivity {
     EditText ipEditText;
     public  static String userNo="";
     SweetAlertDialog dialogTem, sweetAlertDialog;
+    ImportJason importData;
 
     DatabaseHandler mDHandler;
     String shortUserName = "", fullUserName = "";
@@ -129,19 +138,24 @@ public class Login extends AppCompatActivity {
     public static Location location_main;
     LinearLayout mainlayout;
     String provider;
+    int salesManInt=1;
     public static Timer timer = null;
     LocationPermissionRequest locationPermissionRequest;
    public static String currentIp="",previousIp="";
     String serialNo2="";
-    public  static  TextView checkIpDevice;
+    int approveAdmin=0;
+    public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public  static final int typaImport=0;//0---- mySql   1-----IIs
+    public  static final int typaImport=1;//0---- mySql   1-----IIs
 
-    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static final int rawahneh=1;// 1= EXPORT STOCK TABLES
     public  static final int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
+    public  static final int makeOrders=0;// 1= just orders app
 
-
+    public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
+    public  static  final  int getMaxVoucherServer=0;
+    public  static  final  int offerTalaat=0;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +166,6 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
-
         getIpAddressForDevice();
         validLocation();
         try {
@@ -281,11 +294,56 @@ public class Login extends AppCompatActivity {
         });
       // locationPermissionRequest.timerLocation();
         setting_floatingBtn.setOnClickListener(new OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
+
+
+//                copyFile();
                 showSettingIpDialog();
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void copyFile()
+    {
+        try
+        {
+            File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            File data = Environment.getDataDirectory();
+            boolean isPresent = true;
+            if (!sd.canWrite())
+            {
+                isPresent= sd.mkdir();
+
+            }
+
+
+
+            String backupDBPath = "VanSalesDatabase_backup";
+
+            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+            File backupDB = new File(sd, backupDBPath);
+
+            if (currentDB.exists()&&isPresent) {
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                Toast.makeText(Login.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
+            }else {
+
+                Toast.makeText(Login.this, "Backup Failed", Toast.LENGTH_SHORT).show();
+            }
+            isPresent=false;
+
+
+        }
+        catch (Exception e) {
+            Log.e("Settings Backup", e.getMessage());
+        }
     }
 
     private void showSettingIpDialog() {
@@ -363,8 +421,17 @@ public class Login extends AppCompatActivity {
                         mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
-                    ImportJason importJason=new ImportJason(Login.this);
-                    importJason.startParsing(storeNo_edit.getText().toString());
+                   boolean isPosted=mDHandler.isAllVoucher_posted();
+                   if(isPosted)
+                   {
+                       ImportJason importJason=new ImportJason(Login.this);
+                       importJason.startParsing(storeNo_edit.getText().toString());
+                   }else {
+                       Toast.makeText(Login.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+
+                   }
+
+
                     dialog.dismiss();
                 }
 
@@ -451,6 +518,7 @@ public class Login extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
+        goMainText=findViewById(R.id.goMainText);
         loginText = (TextView) findViewById(R.id.logInTextView);
         currentTimeAndDate = Calendar.getInstance().getTime();
         Log.e("currentTimeAndDate", "" + currentTimeAndDate);
@@ -475,6 +543,48 @@ public class Login extends AppCompatActivity {
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         loginCardView = (CardView) findViewById(R.id.loginCardView);
         userNo= mDHandler.getAllUserNo();
+        importData=new ImportJason(Login.this);
+        goMainText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if(editable.toString().length()!=0)
+                {
+                    if(editable.toString().equals("main"))
+                    {
+                        mainIntent();
+                    }
+                }
+            }
+        });
+//        openApp();
+    }
+
+    private void openApp() {
+//        KeyguardManager mKeyGuardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+//        KeyguardManager.KeyguardLock mLock = mKeyGuardManager.newKeyguardLock("Login");
+//        mLock.disableKeyguard();
+//
+//
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON|
+//                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+//                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+//                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+//        Intent intent = new Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER);
+//        intent.putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME,
+//               Login.this.getPackageName());
+//        startActivity(intent);
     }
 
     private String getIpAddressForDevice() {
@@ -815,7 +925,7 @@ public class Login extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
        List<Settings>settingsList= mDHandler.getAllSettings();
-        int approveAdmin=0;
+         approveAdmin=0;
        try {
             approveAdmin = settingsList.get(0).getApproveAdmin();
        }catch (Exception e){
@@ -825,46 +935,86 @@ public class Login extends AppCompatActivity {
 
         mDHandler.deletAllSalesLogIn();
         mDHandler.addUserNO(Login.salesMan);
+//        try {
+//            if(!Login.salesMan.equals("1"))
+//            {
+//                if(Integer.parseInt(Login.salesMan)!=1)
+//                {
+//                    mDHandler.deleteExcept(Login.salesMan);
+//                }
+//
+//            }
+//
+//        }catch (Exception e){
+//            Log.e("deleteExcept",""+Login.salesMan);
+//        }
         try {
-            if(!Login.salesMan.equals("1"))
-            {
-                if(Integer.parseInt(Login.salesMan)!=1)
-                {
-                    mDHandler.deleteExcept(Login.salesMan);
-                }
-
-            }
-
+            salesManInt=Integer.parseInt(salesMan);
         }catch (Exception e){
-            Log.e("deleteExcept",""+Login.salesMan);
+            salesManInt=1;
+        }
+        if(typaImport==1&&getMaxVoucherServer==1)//iis
+        {
+                    boolean isPosted=mDHandler.isAllVoucher_posted();
+        if(isPosted)
+        {
+            getMaxVoucherFromServer(salesManInt);
+        }else {
+            Toast.makeText(Login.this,R.string.failImportMaxExportData , Toast.LENGTH_SHORT).show();
+            mainIntent();
+
+        }
+           // mainIntent();
+        }
+        else {//mysql
+            mainIntent();
         }
 
+
+
+
+
+
+
+
+
+}
+
+
+
+    private void getMaxVoucherFromServer(int salesManInt) {
+        importData.getMaxVoucherNo();
+    }
+//    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public  void mainIntent(){
 
         if(approveAdmin==1) {
-        boolean locCheck= locationPermissionRequest.checkLocationPermission();
-        boolean isNetworkAvailable=isNetworkAvailable();
-        if(!isNetworkAvailable){
-            Toast.makeText(Login.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
-        }
+            boolean locCheck= locationPermissionRequest.checkLocationPermission();
+            boolean isNetworkAvailable=isNetworkAvailable();
+            if(!isNetworkAvailable){
+                Toast.makeText(Login.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+            }
 
-        Log.e("LocationIn","GoToMain"+locCheck);
-        if(locCheck){
-            Log.e("LocationIn","GoToMain IN "+locCheck);
-            startService(new Intent(Login.this, MyServices.class));
-            Intent main = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(main);
-        }else {
-            Log.e("LocationIn","GoToMain else "+locCheck);
-        }
+            Log.e("LocationIn","GoToMain"+locCheck);
+            if(locCheck){
+                Log.e("LocationIn","GoToMain IN "+locCheck);
+                startService(new Intent(Login.this, MyServices.class));
+                finish();
+                Intent main = new Intent(Login.this, MainActivity.class);
+                startActivity(main);
+            }else {
+                Log.e("LocationIn","GoToMain else "+locCheck);
+            }
 
         }else {
             Log.e("LocationIn","GoToMain no approve" +approveAdmin);
-            Intent main = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(main);
+//            finish();
+            Intent main = new Intent(Login.this, MainActivity.class);
+           startActivity(main);
         }
-}
-//    }
-
+    }
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

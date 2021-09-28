@@ -6,6 +6,24 @@ public class ItemUnitDetails {
     private String itemNo;
     private String unitId;
     private double convRate;
+    private String unitPrice;
+    private String itemBarcode;
+
+    public String getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(String unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public String getItemBarcode() {
+        return itemBarcode;
+    }
+
+    public void setItemBarcode(String itemBarcode) {
+        this.itemBarcode = itemBarcode;
+    }
 
     public ItemUnitDetails (){
 

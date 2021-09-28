@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
+import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.SerialReportAdpter;
@@ -40,19 +41,20 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class SerialReport extends AppCompatActivity {
     RecyclerView recyclerView;
    public static List<serialModel> allseriallist =new ArrayList<>();
-    private List<serialModel> todayseariallist=new ArrayList<>();
+
     private List<serialModel> searchlist=new ArrayList<>();
-    private List<serialModel> datesearchlist=new ArrayList<>();
+
     DatabaseHandler databaseHandler;
     public static SerialReportAdpter adapter;
     TextView searchicon;
     EditText searchedit;
     public TextView date;
-    TableRow tableRow;
+    LinearLayout tableRow;
 Button button;
     private Button preview;
     Calendar myCalendar;
     HorizontalScrollView HorizontalScrollView01;
+    GeneralMethod generalMethod;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -65,7 +67,7 @@ Button button;
 
 
 
-        String Date_Vocher=getCurentTimeDate(1);
+        String Date_Vocher=generalMethod.getCurentTimeDate(1);
         filterDate(Date_Vocher);
 
 
@@ -100,15 +102,15 @@ Button button;
 
             @Override
             public void onClick(View view) {
-                datesearchlist.clear();
+                searchlist.clear();
 
                 for (int i = 0; i < allseriallist.size(); i++) {
                     if (date.getText().toString().equals(allseriallist.get(i).getDateVoucher()))
-                    datesearchlist.add(allseriallist.get(i));
+                        searchlist.add(allseriallist.get(i));
                 }
                if( allseriallist.size()!=0 ) {
                    tableRow.setVisibility(View.VISIBLE);
-                   fillAdapterData(datesearchlist);
+                   fillAdapterData(searchlist);
                }
                 else
                   {tableRow.setVisibility(View.GONE);}
@@ -130,17 +132,17 @@ Button button;
     }
 
     private void filterDate(String date_vocher) {
-        todayseariallist.clear();
+        searchlist.clear();
         // String Date_Vocher="14/02/2021";
         for (int i = 0; i < allseriallist.size(); i++) {
             if(allseriallist.get(i).getDateVoucher().trim().equals(date_vocher.trim()))
-                todayseariallist.add(allseriallist.get(i));
+                searchlist.add(allseriallist.get(i));
         }
 
 
-        if(todayseariallist.size()==0)tableRow.setVisibility(View.GONE);
+        if(searchlist.size()==0)tableRow.setVisibility(View.GONE);
         else
-        { fillAdapterData(todayseariallist);
+        { fillAdapterData(searchlist);
 
             tableRow.setVisibility(View.VISIBLE);
         }
@@ -196,6 +198,7 @@ Button button;
         databaseHandler=new DatabaseHandler(SerialReport.this);
         HorizontalScrollView01=findViewById(R.id.HorizontalScrollView01);
         LinearLayout linearMain=findViewById(R.id.linearMain);
+        generalMethod=new GeneralMethod(SerialReport.this);
         try{
             if(languagelocalApp.equals("ar"))
             {
@@ -267,41 +270,23 @@ tableRow=findViewById(R.id.serialtable);
     public void fillAdapterData( List<serialModel> serialModels) {
         Log.e("SerialReport2","SerialReport2");
         recyclerView.setLayoutManager(new LinearLayoutManager(SerialReport.this));
-        adapter = new SerialReportAdpter (serialModels,SerialReport.this );
+        adapter = new SerialReportAdpter (serialModels,SerialReport.this,0 );
         recyclerView.setAdapter(adapter);
 
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, todayseariallist);
+        if(searchlist.size()!=0)
+        exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, searchlist);
+        else {
+            exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, allseriallist);
+
+        }
 
     }
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
-    public String getCurentTimeDate(int flag){
-        String dateCurent,timeCurrent,dateTime="";
-        Date currentTimeAndDate;
-        SimpleDateFormat dateFormat, timeformat;
-        currentTimeAndDate = Calendar.getInstance().getTime();
-        if(flag==1)// return date
-        {
 
-            dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            dateCurent = dateFormat.format(currentTimeAndDate);
-            dateTime=convertToEnglish(dateCurent);
-
-        }
-        else {
-            if(flag==2)// return time
-            {
-                timeformat = new SimpleDateFormat("hh:mm:ss");
-                dateCurent = timeformat.format(currentTimeAndDate);
-                dateTime=convertToEnglish(dateCurent);
-            }
-        }
-        return dateTime;
-
-    }
 }

@@ -267,6 +267,7 @@
                         android:background="@drawable/back_border_edit"
                         android:orientation="horizontal">
                         <LinearLayout
+                            android:id="@+id/linearPayMethod"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="2dp"
@@ -405,6 +406,7 @@
                                 <LinearLayout
                                     android:orientation="horizontal"
                                     android:layout_height="match_parent"
+                                    android:id="@+id/linearTotalCashDiscount"
                                     android:layout_marginTop="2dp"
                                     android:layout_weight="1.5"
 

@@ -324,14 +324,14 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 break;
                                                             case 1:
 
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
-                                                                    openBT(vouch, 1);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
+//                                                                    openBT(vouch, 1);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
 //                                                             lk31.setChecked(true);
-                                                                break;
+//                                                                break;
                                                             case 2:
 
 //                                                                try {
@@ -342,6 +342,11 @@ public class PrintVoucher extends AppCompatActivity {
 //                                                                }
 //                                                             lk32.setChecked(true);
 
+//
+
+
+//
+                                                            case 3:
                                                                 vouch1 = vouch;
                                                                 voucherPrint=vouch;
                                                                 convertLayoutToImageW();
@@ -349,16 +354,12 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 o.putExtra("printKey", "0");
                                                                 startActivity(o);
 
-
-                                                                break;
-                                                            case 3:
-
-                                                                try {
-                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
-                                                                    openBT(vouch, 3);
-                                                                } catch (IOException e) {
-                                                                    e.printStackTrace();
-                                                                }
+//                                                                try {
+//                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);
+//                                                                    openBT(vouch, 3);
+//                                                                } catch (IOException e) {
+//                                                                    e.printStackTrace();
+//                                                                }
 //                                                             qs.setChecked(true);
                                                                 break;
 
@@ -368,15 +369,6 @@ public class PrintVoucher extends AppCompatActivity {
 
                                                             case 5:
 
-                                                                vouch1 = vouch;
-                                                                voucherPrint=vouch;
-                                                                convertLayoutToImageW();
-                                                                Intent o1 = new Intent(PrintVoucher.this, bMITP.class);
-                                                                o1.putExtra("printKey", "0");
-                                                                startActivity(o1);
-
-
-                                                                break;
                                                             case 6:
 
                                                                 vouch1 = vouch;
@@ -753,7 +745,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 break;
 
                             case 4:
-                                textView.setText(items.get(j).getUnit());
+                                textView.setText(items.get(j).getQty()+"");
                                 textView.setLayoutParams(lp2);
                                 break;
 

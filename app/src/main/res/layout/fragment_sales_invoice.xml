@@ -263,6 +263,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="2dp"
+                            android:id="@+id/linearPayMethod"
                             android:layout_weight="1"
                             android:background="@drawable/back_border_edit"
                             android:orientation="horizontal">
@@ -457,6 +458,7 @@
                             android:orientation="horizontal"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:id="@+id/linearTotalCashDiscount"
                             android:layout_width="match_parent">
                             <CheckBox
                                 android:id="@+id/totalDiscount_checkbox"
