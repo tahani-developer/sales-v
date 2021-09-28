@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-SalesmanManager.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects-SalesmanManager.iml" group="SalesmanManager" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/SalesmanManager.iml" filepath="$PROJECT_DIR$/.idea/modules/SalesmanManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SalesmanManager.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SalesmanManager.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="SalesmanManager/app" />
     </modules>
   </component>
 </project>

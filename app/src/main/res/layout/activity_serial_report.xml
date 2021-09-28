@@ -90,9 +90,6 @@
                     android:inputType="date"
                     android:layout_gravity="center"
                     android:gravity="center"
-
-
-
                     android:textColor="@color/add_button"
                     android:drawableStart="@drawable/ic_date_range_black_24dp"
                     android:textSize="12sp"
