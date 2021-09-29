@@ -324,6 +324,7 @@
     <string name="bonus_not_allowed">عدم اعطاء مجاني</string>
     <string name="date">التاريخ</string>
     <string name="cash_sale">المبيعات نقدا </string>
+    <string name="itemkind">نوع المادة</string>
     <string name="credit_sales">المبيعات ذمم</string>
     <string name="total_sales">اجمالي المبيعات</string>
     <string name="netpayment">الصافي</string>
