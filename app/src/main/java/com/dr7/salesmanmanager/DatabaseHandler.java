@@ -31,6 +31,8 @@ import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
+import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -71,12 +73,28 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 154;
+    private static final int DATABASE_VERSION = 156;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
+    //----------------------------------------------------------------------
+    private static final String  GroupOffer_Item  = "GroupOffer_Item";
+
+    private static final String  Id_serial   = "Id_serial";
+    private static final String  ItemNo_Offer   = "ItemNo_Offer";
+    private static final String  ItemName_Offer   = "ItemName_Offer";
+    private static final String  From_Date_Offer   = "From_Date_Offer";
+    private static final String  To_Date_Offer   = "To_Date_Offer";
+    private static final String  Discount_Offer   = "Discount_Offer";
+    private static final String  Discount_Type_Offer   = "Discount_Type_Offer";
+    private static final String  GroupId_Offer   = "GroupId_Offer";
+    private static final String  Qty_item   = "Qty_item";
+
+
+
+    //----------------------------------------------------------------------
     //----------------------------------------------------------------------
     private static final String  VoucherSerialize  = "VoucherSerialize";
 
@@ -344,6 +362,25 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    private static final String CustomerPricesCurrent = "CustomerPricesCurrent";
+
+    private static final String ItemNumber_ = "ItemNumber_";
+
+
+    private static final String CustomerNumber_ = "CustomerNumber_";
+    private static final String Price_ = "Price_";
+    private static final String DISCOUNT_CUSTOMER_ = "DISCOUNT_CUSTOMER_";
+    private static final String ItemNo_N = "ItemNo_N";
+    private static final String Other_Discount_   = "Other_Discount_";
+    private static final String FromDate_         = "FromDate_";
+    private static final String ToDate_          = "ToDate_";
+    private static final String ListNo_          = "ListNo_";
+    private static final String ListType_        = "ListType_";
+
+    // tables from ORIGINAL
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
     private static final String TABLE_TRANSACTIONS = "TRANSACTIONS";
 
     private static final String SALES_MAN_ID = "SALES_MAN_ID";
@@ -888,6 +925,29 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_CustomerPrices);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+        String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
+                + ItemNumber_ + " INTEGER,"
+                + CustomerNumber_ + " INTEGER,"
+                + Price_ + " INTEGER,"
+                + DISCOUNT_CUSTOMER_ + " real,"
+                + ItemNo_N+ " TEXT,"
+                + Other_Discount_ + " TEXT,"
+                + FromDate_ + " TEXT,"
+                + ToDate_ + " TEXT,"
+                + ListNo_ + " TEXT,"
+                + ListType_ + " TEXT"
+
+                + ")";
+        db.execSQL(CREATE_TABLE_CustomerPrices2);
+
+
+
+
+
+
+
+
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_CONTACTS = "CREATE TABLE IF NOT EXISTS " + TABLE_TRANSACTIONS + "("
@@ -1181,6 +1241,42 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             db.execSQL(CREATE_TABLE_VoucherSerialize);
 
         }catch (Exception e){}
+        try {
+            // GroupOffer_Item  = "GroupOffer_Item";
+            // Id_serial   = "Id_serial";
+            // ItemNo_Offer   = "ItemNo_Offer";
+            // ItemName_Offer   = "ItemName_Offer";
+            // From_Date_Offer   = "From_Date_Offer";
+            // To_Date_Offer   = "To_Date_Offer";
+            // Discount_Offer   = "Discount_Offer";
+            // Discount_Type_Offer   = "Discount_Type_Offer"
+            // GroupId_Offer   = "GroupId_Offer";
+            // Qty_item   = "Qty_item";
+            String CREATE_TABLE_GroupOffer_Item = "CREATE TABLE IF NOT EXISTS " + GroupOffer_Item + "("
+                    + Id_serial + " INTEGER,"
+                    + ItemNo_Offer + " TEXT,"
+                    + ItemName_Offer + " TEXT,"
+                    + From_Date_Offer + " TEXT,"
+
+                    + To_Date_Offer + " TEXT,"
+
+                    + Discount_Offer + " TEXT,"
+
+                    + Discount_Type_Offer + " INTEGER,"
+                    + GroupId_Offer + " INTEGER,"
+
+                    + Qty_item + " TEXT "
+
+
+                    + ")";
+            db.execSQL(CREATE_TABLE_GroupOffer_Item);
+
+
+
+
+        }catch (Exception e){
+
+        }
 
 
 
@@ -2069,7 +2165,81 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            String CREATE_TABLE_CustomerPrices2 = "CREATE TABLE IF NOT EXISTS " + CustomerPricesCurrent + "("
+                    + ItemNumber_ + " INTEGER,"
+                    + CustomerNumber_ + " INTEGER,"
+                    + Price_ + " INTEGER,"
+                    + DISCOUNT_CUSTOMER_ + " real,"
+                    + ItemNo_N+ " TEXT,"
+                    + Other_Discount_ + " TEXT,"
+                    + FromDate_ + " TEXT,"
+                    + ToDate_ + " TEXT,"
+                    + ListNo_ + " TEXT,"
+                    + ListType_ + " TEXT"
 
+                    + ")";
+            db.execSQL(CREATE_TABLE_CustomerPrices2);
+
+
+
+
+
+        }catch (Exception e){
+
+        }
+        try {
+            String CREATE_TABLE_GroupOffer_Item = "CREATE TABLE IF NOT EXISTS " + GroupOffer_Item + "("
+                    + Id_serial + " INTEGER,"
+                    + ItemNo_Offer + " TEXT,"
+                    + ItemName_Offer + " TEXT,"
+                    + From_Date_Offer + " TEXT,"
+
+                    + To_Date_Offer + " TEXT,"
+
+                    + Discount_Offer + " TEXT,"
+
+                    + Discount_Type_Offer + " INTEGER,"
+                    + GroupId_Offer + " INTEGER,"
+
+                    + Qty_item + " TEXT "
+
+
+                    + ")";
+            db.execSQL(CREATE_TABLE_GroupOffer_Item);
+
+        }catch (Exception e){
+
+
+        }
+
+
+
+    }
+    public void add_GroupOffer(OfferGroupModel offerGroup)
+    {
+        try {
+
+            db = this.getReadableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(Id_serial, offerGroup.id_serial.trim());
+            values.put(ItemNo_Offer, offerGroup.ItemNo);
+            values.put(ItemName_Offer, offerGroup.Name);
+            values.put(From_Date_Offer, offerGroup.fromDate);
+            values.put(To_Date_Offer, offerGroup.toDate);
+            values.put(Discount_Offer, offerGroup.discount);
+            values.put(Discount_Type_Offer, offerGroup.discountType);
+            values.put(GroupId_Offer, offerGroup.groupIdOffer);
+            values.put(Qty_item, offerGroup.qtyItem);
+
+            db.insert( GroupOffer_Item, null, values);
+            Log.e("GroupOffer_Item","**=="+offerGroup.Name);
+            db.close();
+        }
+        catch (Exception e){
+            Log.e("GroupOffer_Item",""+e.getMessage());
+
+        }
 
     }
     public void add_inventoryShelf(InventoryShelf inventoryShelf)
@@ -2095,6 +2265,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
     }
+
+
     public void addSerialVoucherNo( long saleVoucher,long retVoucher,long order) {
         long curentMaxVoucher=getMaxFromVoucherMaster(504);
         Log.e("getMaxSerialNumber", "FromSetting" + curentMaxVoucher+"\t"+saleVoucher);
@@ -2714,6 +2886,36 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.endTransaction();
 //        db.close();
     }
+
+    public void addCustomerPrice_current(List<CustomerPrice> price) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.beginTransaction();
+
+        for (int i = 0; i < price.size(); i++) {
+            ContentValues values = new ContentValues();
+
+            values.put(ItemNumber_, 0);
+            values.put(CustomerNumber_, price.get(i).getCustomerNumber());
+            values.put(Price_, price.get(i).getPrice());
+            values.put(DISCOUNT_CUSTOMER_, price.get(i).getDiscount());
+            values.put(ItemNo_N, price.get(i).getItemNumber());
+            values.put(Other_Discount_, price.get(i).getOther_Discount());
+            values.put(FromDate_, price.get(i).getFromDate());
+            values.put(ToDate_, price.get(i).getToDate());
+            values.put(ListNo_, price.get(i).getListNo());
+            values.put(ListType_, price.get(i).getListType());
+
+            db.insertWithOnConflict(CustomerPricesCurrent, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+
+//            db.insert(, null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+//        db.close();
+    }
+
+
+
 
     public void addTransaction(Transaction transaction) {
         db = this.getReadableDatabase();
@@ -4045,7 +4247,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+           // Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
                 Bitmap  itemBitmap=null;
@@ -4123,6 +4325,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<Item> getAllJsonItems2(String rate)// from customer prices
     {
 
+        Log.e("jsonItemsList","getAllJsonItems2");
         List<Item> items = new ArrayList<>();
         // Select All Query
         String PriceListId = CustomerListShow.PriceListId;
@@ -4639,9 +4842,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     if(cursor.getString(0)== "null")
                     { kind_items.add("**");}
                     else {
+                        if(!cursor.getString(0).equals(""))
                         kind_items.add(cursor.getString(0));
+                        else {
+                            kind_items.add("**");
+                        }
 
-                        Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
+                       // Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
                     }
 
 
@@ -5045,6 +5252,39 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 items.add(inventoryShelf);
             } while (cursor.moveToNext());
         }
+
+        return items;
+    }
+    public ArrayList<OfferGroupModel> getAllGroupOffers(String currentDate) {
+        Log.e("getAllGroupOffers","currentDate="+currentDate);
+        ArrayList<OfferGroupModel> items = new ArrayList<OfferGroupModel>();
+        // Select All Query
+//        select * from GroupOffer_Item where '18/10/2021' between From_Date_Offer and To_Date_Offer
+        String selectQuery = "SELECT * FROM " + GroupOffer_Item +" where '"+currentDate+"' between From_Date_Offer and To_Date_Offer";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                OfferGroupModel offer=new OfferGroupModel();
+                offer.ItemNo=(cursor.getString(1));
+                offer.Name=(cursor.getString(2));
+                offer.fromDate=(cursor.getString(3));
+                offer.toDate=(cursor.getString(4));
+                offer.discount=(cursor.getString(5));
+                offer.discountType=(cursor.getInt(6));
+                offer.groupIdOffer=(cursor.getInt(7));
+                offer.qtyItem=(cursor.getString(8));
+
+
+
+
+                items.add(offer);
+            } while (cursor.moveToNext());
+        }
+        Log.e("getAllGroupOffers",""+items.size());
 
         return items;
     }
@@ -5520,6 +5760,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL("delete from " + Price_List_D);
         db.close();
     }
+    public void deletePriceListDCustomerRate(String rateCustomer) {
+        Log.e("rateCustomer",""+rateCustomer);
+        SQLiteDatabase db = this.getWritableDatabase();
+       // delete from Price_List_D where PrNo <> 1
+        db.execSQL("delete from " + Price_List_D +" where PrNo <> '"+rateCustomer+"'");
+        db.close();
+    }
 
     public void deleteAllPriceListM() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -5566,6 +5813,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void deleteAllCustomerPrice() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + CustomerPrices);
+        db.close();
+    }
+
+    public void deleteAllCustomerPrice_Current() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + CustomerPricesCurrent);
         db.close();
     }
 
@@ -6797,5 +7050,82 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return  itemUnit;
     }
+
+    public void addPriceCurrent(String cusCode) {
+        deleteAllCustomerPrice();
+        List<CustomerPrice> listCustomer=new ArrayList<>();
+//        select * from CustomerPrices where CustomerNumber='1110010376'
+        String selectQuery = "select * from CustomerPricesCurrent where CustomerNumber_ ='"+cusCode.trim()+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    CustomerPrice price = new CustomerPrice();
+                    price.setItemNumber(cursor.getString(0));
+                    price.setCustomerNumber(cursor.getInt(1));
+                    price.setPrice(cursor.getDouble(2));
+                    price.setDiscount(cursor.getDouble(3));
+                    listCustomer.add(price);
+
+
+                    Log.e("getUnitForItem","price="+listCustomer.size());
+
+                }while (cursor.moveToNext());
+
+            }
+            if(listCustomer.size()!=0){
+                addCustomerPrice(listCustomer);
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+       // return  listCustomer;
+
+    }
+
+    public void deletOfferGroup() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + GroupOffer_Item );
+        db.close();
+    }
+    public ArrayList<MainGroup_Id_Count> getMainGroup_Id_Count(String currentDate) {
+
+//        +" where '"+currentDate+"' between From_Date_Offer and To_Date_Offer"
+        String selectQuery = "select GroupId_Offer, count (GroupId_Offer) as GroupCount from GroupOffer_Item  where '"+currentDate+"'  between From_Date_Offer and To_Date_Offer group by GroupId_Offer;";
+
+        db = this.getWritableDatabase();
+        ArrayList<MainGroup_Id_Count> listAllGroup=new ArrayList<>();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+                    MainGroup_Id_Count itemUnit=new MainGroup_Id_Count();
+                    itemUnit.idGroup=(cursor.getInt(0));
+                    itemUnit.countGroup=(cursor.getInt(1));
+                    listAllGroup.add(itemUnit);
+
+                    Log.e("getMainGroup_Id_Count","listAllGroup="+listAllGroup.size());
+
+                }while (cursor.moveToNext());
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  listAllGroup;
+    }
+
+    public String getPriceItem_forUser(String itemNo, String rate_customer) {
+        //select DISTINCT  P.Price
+        //  from  Price_List_D P where ItemNo = '0002154' and PrNo=1
+        return  "";
+    }
+
 }
 

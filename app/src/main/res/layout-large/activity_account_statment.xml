@@ -102,7 +102,7 @@
                     android:drawableLeft="@drawable/ic_account_balance_black_b_24dp"
                     android:gravity="center"
                     android:text="@string/last_visit"
-                    android:textColor="@color/colorblue_dark"
+                    android:textColor="@color/colorblue_dark3"
                     android:textSize="16sp"
 
                     android:textStyle="bold" />
@@ -140,7 +140,17 @@
                     android:textColor="@color/colorblue_dark" />
 
             </LinearLayout>
+            <HorizontalScrollView
+                android:id="@+id/HorizontalScrollView01"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:fillViewport="true"
 
+
+                android:layout_margin="2dp"
+
+                >
             <LinearLayout
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -169,7 +179,7 @@
 
                             <TextView
                                 android:id="@+id/textView_voucherNo"
-                                android:layout_width="0dp"
+                                android:layout_width="70dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="2dp"
                                 android:layout_weight="1"
@@ -181,7 +191,7 @@
 
                             <TextView
                                 android:id="@+id/textView_transName"
-                                android:layout_width="0dp"
+                                android:layout_width="70dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="2dp"
                                 android:textColor="@color/white"
@@ -293,6 +303,7 @@
 
 
             </LinearLayout>
+            </HorizontalScrollView>
 
 
             <LinearLayout

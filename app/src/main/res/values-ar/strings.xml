@@ -527,5 +527,8 @@
     <string name="defferentCustomer"> السيريال مباع لعميل مختلف </string>
     <string name="shelf_inventory_report">تقرير جرد الرف </string>
     <string name="itemUnit">وحدات المواد</string>
+    <string name="oneUnit">وحدة</string>
+    <string name="addCusttomerSucssesfuly">تم اضافة العميل بنجاح</string>
+    <string name="refresh_customerData">جاري تحديث قائمة العملاء</string>
 
 </resources>

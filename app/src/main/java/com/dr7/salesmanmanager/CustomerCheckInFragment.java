@@ -264,6 +264,13 @@ public class CustomerCheckInFragment extends DialogFragment {
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
                                         "01/01/19999", "0", 0,0));
 
+                              if(mDbHandler.getAllSettings().get(0).getPriceByCust()==1){
+                                  String rate_customer = mDbHandler.getRateOfCustomer();
+                                  mDbHandler.addPriceCurrent(cusCode);
+                                  mDbHandler.deletePriceListDCustomerRate(rate_customer);
+
+                              }
+
 //                                MainActivity.checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_in_black));
 //                                MainActivity.checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.cus_check_out));
                                 dismiss();

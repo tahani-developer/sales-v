@@ -77,6 +77,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
@@ -340,8 +341,8 @@ public class ExportJason extends AppCompatActivity {
         exportAddedCustomer();
     }
     void startExportDelPhi()throws JSONException {
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();// 1
 //        savePayment();
@@ -815,11 +816,21 @@ public class ExportJason extends AppCompatActivity {
         }
         if(workOnLine==1&&typaImport==1) {
             isPosted=mHandler.isAllVoucher_posted();
+            if(makeOrders==1)
+            {   userNo=  mHandler.getAllSettings().get(0).getStoreNo();}
 
                 if(isPosted==true)
                 {
                     ImportJason obj = new ImportJason(context);
-                    obj.getItemBalance(userNo);
+                    if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                    {
+                        obj.startParsing(userNo);
+
+                    }else {
+                        obj.getItemBalance(userNo);
+                    }
+
+
                 }
                 else{
                     Toast.makeText(context,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
@@ -900,7 +911,7 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                 nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-               // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -946,6 +957,7 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
+                    mHandler.updateVoucher();
                     exportVoucherDetail();// 2
                 }else {
                     pdVoucher.dismissWithAnimation();
@@ -1269,7 +1281,7 @@ public class ExportJason extends AppCompatActivity {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                     nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                    Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
+                  //  Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
 
 
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1318,6 +1330,8 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
                     updateAddedCustomer();// 10
+
+                   // Toast.makeText(context, context.getResources().getString(R.string.addCusttomerSucssesfuly), Toast.LENGTH_SHORT).show();
 
                 }else {
                     if(result.contains("Error in Saving"))
@@ -1455,7 +1469,7 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                 nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                 Log.e("nameValuePairs","Details=JSONSTR"+vouchersObject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1641,7 +1655,7 @@ public class ExportJason extends AppCompatActivity {
 
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
-        mHandler.updateVoucher();
+
         mHandler.updateVoucherDetails();
         Log.e("onPostExecute","updateVoucherExported---3---");
     }

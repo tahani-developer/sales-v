@@ -44,6 +44,7 @@ import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -106,6 +107,8 @@ import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.Methods.convertToEnglish;
+import static com.dr7.salesmanmanager.Methods.getDecimal;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -134,6 +137,7 @@ public class ImportJason extends AppCompatActivity {
     public static List<Offers> offersList = new ArrayList<>();
     public static List<QtyOffers> qtyOffersList = new ArrayList<>();
     public static List<ItemsQtyOffer> itemsQtyOfferList = new ArrayList<>();
+    public static List<OfferGroupModel> groupOfferList = new ArrayList<>();
     public static List<Account_Report> account_reportList = new ArrayList<>();
     public static List<OfferListMaster> offerListMasterArrayList = new ArrayList<>();
     public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
@@ -620,6 +624,7 @@ public class ImportJason extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+            Log.e("doInBackground",""+ipAddress);
             try {
                 if (!ipAddress.equals("")) {
 
@@ -1181,7 +1186,7 @@ public class ImportJason extends AppCompatActivity {
                     }
                     catch (Exception e)
                     {
-                        Log.e("Exception",""+finalObject.getDouble("ItemL"));
+                       // Log.e("Exception",""+finalObject.getDouble("ItemL"));
                         item.setItemL(0.0);
 
                     }
@@ -1199,7 +1204,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                         try {
                             item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
-                            Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
+                           // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
                         } catch (Exception e) {
                         }
                         try {
@@ -1501,6 +1506,31 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+                try {
+                    JSONArray parentArrayItemsQtyOffer = parentObject.getJSONArray("Group_Offer_List");
+                    groupOfferList.clear();
+                    ArrayList<OfferGroupModel> listOffer=new ArrayList<>();
+
+                    for (int i = 0; i < parentArrayItemsQtyOffer.length(); i++) {
+                        JSONObject finalObject = parentArrayItemsQtyOffer.getJSONObject(i);
+
+                        OfferGroupModel acountReport = new OfferGroupModel();
+                        acountReport.id_serial=(finalObject.getString("id_serial"));
+                        acountReport.Name=finalObject.getString("ItemName");
+                        acountReport.ItemNo=finalObject.getString("ItemNo");
+                        acountReport.fromDate=finalObject.getString("From_Date");
+                        acountReport.toDate=finalObject.getString("To_Date");
+                        acountReport.discount=finalObject.getString("Discount");
+                        acountReport.discountType=finalObject.getInt("Discount_Type");
+                        acountReport.groupIdOffer=finalObject.getInt("GroupId");
+                        acountReport.qtyItem=finalObject.getString("qty_item");
+
+                        groupOfferList.add(acountReport);
+                    }
+                    Log.e("groupOfferList","result2="+groupOfferList.size());
+
+
+                }catch (Exception e){}
                 /*
                  *
                  * [{"ITEMNAME":"جلواز أزرق","ITEMNO":"3258170924337","AMOUNTQTY":"20","DISCOUNT":"0.2","FROMDATE":"03\/10\/2019","TODATE":"30\/10\/2019"}]*/
@@ -1787,6 +1817,35 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+
+//**************************************************************************
+                try {
+                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+                    itemUnitDetailsList.clear();
+                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+
+                        ItemUnitDetails item = new ItemUnitDetails();
+                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        item.setItemNo(finalObject.getString("ITEMNO"));
+                        item.setUnitId(finalObject.getString("UNITID"));
+                        item.setConvRate(finalObject.getDouble("CONVRATE"));
+                        try {
+                            item.setUnitPrice("");
+                            item.setItemBarcode("");
+                        }catch (Exception e){
+                            item.setUnitPrice("");
+
+                            item.setItemBarcode("");
+                        }
+
+
+                        itemUnitDetailsList.add(item);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                //***************************************************************************
                 try {
 //                    //[{"ITEMU":"Test1","ITEMOCODE":"6251088000015","ITEMBARCODE":"123","CALCQTY":"5","SALEPRICE":"10"},
 //                    // {"ITEMU":"Test2","ITEMOCODE":"30100002","ITEMBARCODE":"456","CALCQTY":"3","SALEPRICE":"6"}]
@@ -1815,34 +1874,6 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-//**************************************************************************
-//                try {
-//                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
-//                    itemUnitDetailsList.clear();
-//                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-//                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
-//
-//                        ItemUnitDetails item = new ItemUnitDetails();
-//                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-//                        item.setItemNo(finalObject.getString("ITEMNO"));
-//                        item.setUnitId(finalObject.getString("UNITID"));
-//                        item.setConvRate(finalObject.getDouble("CONVRATE"));
-//                        try {
-//                            item.setUnitPrice("");
-//                            item.setItemBarcode("");
-//                        }catch (Exception e){
-//                            item.setUnitPrice("");
-//
-//                            item.setItemBarcode("");
-//                        }
-//
-//
-//                        itemUnitDetailsList.add(item);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("Import Data", e.getMessage().toString());
-//                }
-                //***************************************************************************
 
 
                 try {
@@ -2564,6 +2595,7 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllSalesTeam();
             mHandler.deleteAllSalesmanAndStoreLink();
             mHandler.deleteAllSalesmen();
+            mHandler.deleteAllCustomerPrice_Current();
             mHandler.deleteAllCustomerPrice();
             mHandler.deleteAllOffers();
             mHandler.deleteAllSalesmenStations();
@@ -2573,6 +2605,7 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllItemsSwitch();
             mHandler.deleteAllItemsSerialMaster();
             mHandler.deleteOfferMaster();
+            mHandler.deletOfferGroup();
             try {
                 storeNo=Integer.parseInt(userNo);
             }
@@ -2642,7 +2675,7 @@ public class ImportJason extends AppCompatActivity {
             Log.e("In***" , "inaddSalesmen");
             setText(title_progresspar,"add_Salesmen");
 
-            mHandler.addCustomerPrice(customerPricesList);
+            mHandler.addCustomerPrice_current(customerPricesList);
             setText(title_progresspar,"add_customerPricesList");
 
             mHandler.add_OfferListMaster(offerListMasterArrayList);
@@ -2670,6 +2703,11 @@ public class ImportJason extends AppCompatActivity {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }
             setText(title_progresspar,"add_salesmanStation");
+            for (int i = 0; i < groupOfferList.size(); i++) {
+                mHandler.add_GroupOffer(groupOfferList.get(i));
+            }
+            setText(title_progresspar,"add_GroupOffer");
+
 
             Log.e("In***" , "addSalesmanStation_finish");
 
@@ -3251,7 +3289,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                         else {
                             if(listCustomerInfo.size()!=0)
-                            totalBalance_text.setText(listCustomerInfo.get(listCustomerInfo.size()-1).getBalance()+"");
+                            totalBalance_text.setText(convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size()-1).getBalance())+""));
                         }
 
 
@@ -3756,7 +3794,7 @@ public class ImportJason extends AppCompatActivity {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(context.getResources().getString(R.string.refresh_customerData));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -3793,6 +3831,19 @@ public class ImportJason extends AppCompatActivity {
                         Log.e("URL_TO_HIT","getCustomerList="+URL_TO_HIT);
                     }
                 } catch (Exception e) {
+                    progressDialog.dismiss();
+
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable() {
+                        public void run() {
+                            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("check Connection")
+                                    .show();
+
+
+//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                 }
 
@@ -3930,19 +3981,7 @@ public class ImportJason extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                progressDialog.dismiss();
 
-                Handler h = new Handler(Looper.getMainLooper());
-                h.post(new Runnable() {
-                    public void run() {
-                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("check Connection")
-                                .show();
-
-
-//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
-                    }
-                });
                 try {
                     if (reader != null) {
                         reader.close();
@@ -3963,7 +4002,7 @@ public class ImportJason extends AppCompatActivity {
             if (result != null) {
                 if(result.size()!=0)
                 {
-                    Log.e("result","storeInDatabase_customer="+result.size());
+                   // Log.e("result","storeInDatabase_customer="+result.size());
 
 
                     storeInDatabase_customer();
@@ -3980,7 +4019,7 @@ public class ImportJason extends AppCompatActivity {
         }
     }
     public void storeInDatabase_customer() {
-        Log.e("storeInDatabase_cust",""+customerList.size());
+       // Log.e("storeInDatabase_cust",""+customerList.size());
         if(customerList.size()!=0)
         {
             mHandler.deleteAllCustomers();
@@ -3988,10 +4027,6 @@ public class ImportJason extends AppCompatActivity {
         }
 
 
-
-//        for (int i = 0; i < customerList.size(); i++) {
-
-//        }
     }
     }
 

@@ -5,18 +5,50 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:id="@+id/liner_inventory"
+    android:layout_margin="2dp"
 
     >
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/HorizontalScrollView01"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_weight="1"-->
+
+<!--        android:fillViewport="true"-->
+
+
+<!--        android:layout_margin="2dp"-->
+
+<!--        >-->
+<!--    <TableRow-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:weightSum="7">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+
+<!--            android:layout_margin="5dp"-->
+<!--            android:id="@+id/lin"-->
+<!--            android:orientation="horizontal">-->
+            <TableLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+
+                android:stretchColumns="*">
+            <TableRow
+               >
 
 
     <TextView
         android:id="@+id/voucherNo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:padding="1dp"
-        android:text=""
+        android:maxLines="1"
+        android:text="124510204552"
+        android:scrollbars="vertical"
         android:textSize="13sp"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
@@ -25,65 +57,78 @@
 
     <TextView
         android:id="@+id/transeName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="140dp"
+        android:layout_height="match_parent"
+
         android:gravity="center"
+        android:layout_column="2"
         android:padding="1dp"
         android:textSize="13sp"
-        android:text=""
+
+        android:text="12451020455421202020"
+        android:scrollbars="vertical"
+
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
   />
 
     <TextView
         android:id="@+id/date_transe"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+
         android:gravity="center"
         android:textSize="13sp"
+        android:maxLines="1"
+
+        android:scrollbars="vertical"
         android:padding="1dp"
-        android:text=""
+        android:text="29-09-2021"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
    />
     <TextView
         android:id="@+id/debit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+
         android:gravity="center"
         android:textSize="13sp"
         android:padding="1dp"
-        android:text=""
+        android:text="1245102045"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
        />
     <TextView
         android:id="@+id/credit"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+
         android:gravity="center"
         android:textSize="13sp"
         android:padding="1dp"
-        android:text=""
+        android:text="1245102045"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
       />
     <TextView
         android:id="@+id/balance"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+
         android:gravity="center"
         android:textSize="13sp"
+        android:background="@drawable/back_border_edit"
         android:padding="1dp"
-        android:text=""
+        android:text="1245102045"
         android:textColor="@color/colorPrimary"
         android:textColorLink="@color/colorPrimary"
        />
+            </TableRow>
+            </TableLayout>
+<!--        </LinearLayout>-->
+<!--    </TableRow>-->
+<!--    </HorizontalScrollView>-->
 
 
 </LinearLayout>

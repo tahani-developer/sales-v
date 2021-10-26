@@ -114,9 +114,12 @@ public class ItemsListAdapter extends BaseAdapter {
         if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
         {
             int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
+            if(itemList.get(i).getOneUnitItem().equals("1"))
+                qtyTextView.setText(itemList.get(i).getQty()+"");
+            else
             qtyTextView.setText((itemList.get(i).getQty()/itemUnit)+"");
-            Log.e("itemUnit","1="+itemUnit);
-            Log.e("itemUnit","2="+itemList.get(i).getQty()/itemUnit);
+            //Log.e("itemUnit","1="+itemUnit);
+          //  Log.e("itemUnit","2="+itemList.get(i).getQty()/itemUnit);
 
         }else {
             qtyTextView.setText(""+itemList.get(i).getQty());
@@ -129,7 +132,9 @@ public class ItemsListAdapter extends BaseAdapter {
            // Log.e("priceTextView","1="+itemUnitPrice);
             if(!itemUnitPrice.equals(""))
             {
-                priceTextView.setText(itemUnitPrice);
+                if(itemList.get(i).getOneUnitItem().equals("1"))
+                priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
+                else priceTextView.setText(itemUnitPrice);
 //                priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
             }else {
                 priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));

@@ -49,6 +49,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
+import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.curentDate;
 import static com.dr7.salesmanmanager.MainActivity.curentTime;
@@ -201,7 +202,11 @@ public class Activities extends AppCompatActivity implements
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
         generalMethod=new GeneralMethod(Activities.this);
         fillLastVisit();
-//        fiiltotalBalance();
+        if(getTotalBalanceInActivities==1)
+        {
+                    fiiltotalBalance();
+        }
+
 //        linearMainActivities= (LinearLayout)findViewById(R.id.linearMainActivities);
 //        mainLinearHolder= (LinearLayout)findViewById(R.id.mainLinearHolder);
         linearInvoice= (LinearLayout)findViewById(R.id.linearInvoice);

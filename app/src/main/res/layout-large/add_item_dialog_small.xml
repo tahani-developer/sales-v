@@ -59,7 +59,9 @@
 
             android:background="@color/colorblue1"
             android:orientation="vertical" />
-
+        <ScrollView android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_weight="1">
         <TextView
             android:id="@+id/item_name"
             android:layout_width="match_parent"
@@ -68,9 +70,10 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="test"
+            android:text=""
             android:textColor="@color/colorblue_dark"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
@@ -95,27 +98,6 @@
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:text="@string/app_unit"
-            android:textColor="@color/text_view_color"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/unit"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:layout_marginVertical="9dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="16sp" />
-
 
         <TextView
             android:id="@+id/textQty"
@@ -143,6 +125,41 @@
 
             android:imeOptions="actionNext"
             android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+
+            android:text="@string/app_unit"
+            android:textColor="@color/text_view_color"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/unit"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_marginVertical="9dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:gravity="center"
+            android:textSize="16sp" />
+        <CheckBox
+            android:id="@+id/use_OneUnit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="16sp"
+            android:checked="false"
+
+            android:gravity="center"
+            android:text="@string/oneUnit"
+            android:textColor="@color/text_view_color" />
+
+
 
     </LinearLayout>
 

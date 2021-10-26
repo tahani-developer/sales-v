@@ -817,29 +817,34 @@ public class MainActivity extends AppCompatActivity
 
     private void getlocattTest() {
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+        try {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {// Not granted permission
 
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]
-                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]
+                        {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
 //
-                    }
-        if (mFusedLocationClient != null) {
-            Log.e("mFusedLocationClient","");
-            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-            requestLocationUpdates();
+            }
+            if (mFusedLocationClient != null) {
+                Log.e("mFusedLocationClient","");
+                mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+                requestLocationUpdates();
+            }
+            else {
+                Log.e("mFusedLocationClient",""+mFusedLocationClient);
+            }
+        }catch (Exception e){
+
         }
-        else {
-            Log.e("mFusedLocationClient",""+mFusedLocationClient);
-        }
+
 
     }
     LocationCallback mLocationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult) {
-            Log.e("onLocationResult",""+locationResult);
-            Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
+          //  Log.e("onLocationResult",""+locationResult);
+          //  Log.e("onLocationResultEn",""+convertToEnglish(locationResult+""));
             if(getLocationComp)
             {
                 for (Location location : locationResult.getLocations()) {
@@ -904,7 +909,7 @@ public class MainActivity extends AppCompatActivity
                         Log.e("latitude",""+latitude+longitude);
 
 
-                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2)
+                        if(!latitude.equals("")&&!longitude.equals("")&&isClickLocation==2&&!latitude.equals("0")&&!longitude.equals("0"))
                         {
 
                             new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
@@ -927,10 +932,10 @@ public class MainActivity extends AppCompatActivity
                                     mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
                                     CustomerListShow.latitude = latitude_main + "";
                                     CustomerListShow.longtude = longitude_main + "";
-//                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-//                                            .setTitleText(getResources().getString(R.string.succsesful))
-//                                            .setContentText(getResources().getString(R.string.LocationSaved))
-//                                            .show();
+                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                            .setTitleText(getResources().getString(R.string.succsesful))
+                                            .setContentText(getResources().getString(R.string.LocationSaved))
+                                            .show();
 
 
                                     Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
