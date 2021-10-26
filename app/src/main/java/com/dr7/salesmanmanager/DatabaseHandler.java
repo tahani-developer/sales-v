@@ -4105,6 +4105,61 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return  masters;
     }
+    public List<ItemsMaster> getItemkinds(String KINDITEM) {
+        List<ItemsMaster> mastersItemkinds = new ArrayList<ItemsMaster>();
+        // Select All Query
+      //  String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "' ";
+
+        String selectQuery = "SELECT * FROM " + Items_Master+" where KIND_ITEM = '"+KINDITEM+"' ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+       if (cursor.moveToFirst()) {
+            do {
+                ItemsMaster itemsMaster = new ItemsMaster();
+                itemsMaster.setCompanyNo(cursor.getString(0));
+                itemsMaster.setItemNo(cursor.getString(1));
+                itemsMaster.setName(cursor.getString(2));
+                itemsMaster.setCategoryId(cursor.getString(3));
+                itemsMaster.setBarcode(cursor.getString(4));
+                itemsMaster.setIsSuspended(Integer.parseInt(cursor.getString(5)));
+                itemsMaster.setItemL(Double.parseDouble(cursor.getString(6)));
+                itemsMaster.setKind_item(cursor.getString(8));
+                mastersItemkinds.add(itemsMaster);
+            }
+            while(cursor.moveToNext());
+        }
+        return  mastersItemkinds;
+    }
+    public List<ItemsMaster> getItemMaster2() {
+        List<ItemsMaster> masters = new ArrayList<ItemsMaster>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + Items_Master;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ItemsMaster itemsMaster = new ItemsMaster();
+                itemsMaster.setCompanyNo(cursor.getString(0));
+                itemsMaster.setItemNo(cursor.getString(1));
+                itemsMaster.setName(cursor.getString(2));
+                itemsMaster.setCategoryId(cursor.getString(3));
+                itemsMaster.setBarcode(cursor.getString(4));
+                itemsMaster.setIsSuspended(Integer.parseInt(cursor.getString(5)));
+                itemsMaster.setItemL(Double.parseDouble(cursor.getString(6)));
+                itemsMaster.setKind_item(cursor.getString(8));
+                masters.add(itemsMaster);
+            }
+            while(cursor.moveToNext());
+        }
+        return  masters;
+    }
+
 
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<Item>();

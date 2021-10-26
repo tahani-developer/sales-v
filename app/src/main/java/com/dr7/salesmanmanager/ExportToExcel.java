@@ -67,7 +67,7 @@ public class ExportToExcel {
         this.context = context;
         File sdCard = Environment.getExternalStorageDirectory();
         File directory = new File(sdCard.getAbsolutePath() + "/VanSalesExcelReport");
-
+        Log.e("directory",sdCard.getAbsolutePath()+"");
         if (!directory.isDirectory()) {//create directory if not exist
             directory.mkdirs();
         }
@@ -154,12 +154,15 @@ public class ExportToExcel {
             if (!file.exists()) {
                 file.mkdirs();
             }
+            Log.e("file",directory_path);
             String targetPdf = directory_path + fileName;
             File path = new File(targetPdf);
 
             Uri uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", path);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(uri, "application/vnd.ms-excel");//intent.setDataAndType(Uri.fromFile(path), "application/pdf");
+            Log.e("mmm", intent.getType());
+
             try {
                 context.startActivity(intent);
             } catch (Exception e) {
