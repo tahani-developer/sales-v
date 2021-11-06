@@ -102,6 +102,7 @@ import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
+import static com.dr7.salesmanmanager.Login.dateFromToActive;
 import static com.dr7.salesmanmanager.Login.goMainText;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
@@ -182,33 +183,33 @@ public class ImportJason extends AppCompatActivity {
         counter=0;
     }
 
-    public void getCustomerInfo(int type) {
+    public void getCustomerInfo(int type,String fromDate,String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getCustomerInfo", "*****");
-            new JSONTask_AccountStatment(CustomerListShow.Customer_Account,type).execute();
+            new JSONTask_AccountStatment(CustomerListShow.Customer_Account,type,fromDate,toDate).execute();
           //  new SyncRemark().execute();
         }
 
     }
 
-    public void getUnCollectedCheques() {
+    public void getUnCollectedCheques(String fromDate,String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getUnCollectedCheques", "*****");
-            new JSONTask_UncollectedCheques(CustomerListShow.Customer_Account).execute();
+            new JSONTask_UncollectedCheques(CustomerListShow.Customer_Account,fromDate,toDate).execute();
             //  new SyncRemark().execute();
         }
 
     }
 
-    public void getAllcheques() {
+    public void getAllcheques(String fromDate,String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-            new JSONTask_GetAllCheques(CustomerListShow.Customer_Account).execute();
+            new JSONTask_GetAllCheques(CustomerListShow.Customer_Account,fromDate,toDate).execute();
 
         }
     }
@@ -329,6 +330,7 @@ public class ImportJason extends AppCompatActivity {
 //            if (JsonResponse != null && JsonResponse.contains("REMARKBODY")) {
                 JSONObject result = null;
                 String impo = "";
+                listCustomerInfo = new ArrayList<>();
                 if (JsonResponse != null) {
                     if (JsonResponse.contains("VHFNo")) {
                         // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -340,7 +342,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                             JSONArray requestArray = null;
-                            listCustomerInfo = new ArrayList<>();
+
 
                             requestArray = result.getJSONArray(JsonResponse);
                             Log.e("requestArray", "" + requestArray.length());
@@ -1725,7 +1727,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                     String line = "";
-                    Log.e("finalJson***Import", sb.toString());
+                   // Log.e("finalJson***Import", sb.toString());
 
                     while ((line = in.readLine()) != null) {
                         sb.append(line);
@@ -1747,7 +1749,7 @@ public class ImportJason extends AppCompatActivity {
                    // JsonResponse = sb.toString();
 
                 String finalJson = sb.toString();
-                Log.e("finalJson***Import", finalJson);
+               // Log.e("finalJson***Import", finalJson);
                 String rate_customer = "";
                 String HideVal = "";
                 customerList.clear();
@@ -1791,7 +1793,7 @@ public class ImportJason extends AppCompatActivity {
 
                             }
                         } catch (Exception e) {
-                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                           // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                             Customer.setACCPRC("0");
 
                         }
@@ -1806,7 +1808,7 @@ public class ImportJason extends AppCompatActivity {
                             }
                             Customer.setCustomerIdText(finalObject.getString("CUSTID"));
                         } catch (Exception e) {
-                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                           // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                             Customer.setACCPRC("0");
 
                         }
@@ -1841,6 +1843,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                         itemUnitDetailsList.add(item);
+                        Log.e("itemUnitDetailsList","1"+itemUnitDetailsList.size());
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
@@ -1870,6 +1873,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                         itemUnitDetailsList.add(item);
+                        Log.e("itemUnitDetailsList","2===="+itemUnitDetailsList.size());
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
@@ -1890,7 +1894,7 @@ public class ImportJason extends AppCompatActivity {
 
                         itemSerialList.add(item);
                     }
-                    Log.e("itemSerialList",""+itemSerialList.size());
+                   // Log.e("itemSerialList",""+itemSerialList.size());
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
@@ -1953,7 +1957,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                         try {
                             item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
-                            Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
+                           // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
                         } catch (Exception e) {
                         }
                         try {
@@ -2039,7 +2043,7 @@ public class ImportJason extends AppCompatActivity {
 
                     for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
                         JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
-                        Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
+                       // Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
                         String qty="";
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
@@ -2088,6 +2092,7 @@ public class ImportJason extends AppCompatActivity {
                 try {
 
                     JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
+                    Log.e("parentArrayCustomerPrice",""+parentArrayCustomerPrice.length());
                     customerPricesList.clear();
 
                     for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
@@ -2116,11 +2121,12 @@ public class ImportJason extends AppCompatActivity {
 //                    }
 
                         customerPricesList.add(price);
+                        Log.e("customerPricesList",""+customerPricesList.size());
 
                     }
                 }catch (JSONException e)
                 {
-                    Log.e("Import Data", e.getMessage().toString());
+                    Log.e("ImportcustomerPr", e.getMessage().toString());
                 }
 
 
@@ -2198,7 +2204,7 @@ public class ImportJason extends AppCompatActivity {
                 try
                 {
                     JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
-
+                  //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+parentArrayPrice_List_D.toString());
                     priceListDpList.clear();
                     for (int i = 0; i < parentArrayPrice_List_D.length(); i++) {
                         JSONObject finalObject = parentArrayPrice_List_D.getJSONObject(i);
@@ -2207,9 +2213,16 @@ public class ImportJason extends AppCompatActivity {
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
                         item.setPrNo(finalObject.getInt("PRNO"));
                         item.setItemNo(finalObject.getString("ITEMNO"));
+                       // Log.e("itemUnit","itemno==="+item.getItemNo());
                         item.setUnitId(finalObject.getString("UNITID"));
                         item.setPrice(finalObject.getDouble("PRICE"));
-                        item.setTaxPerc(finalObject.getDouble("TAXPERC"));
+                        try {
+                            item.setTaxPerc(finalObject.getDouble("TAXPERC"));
+                        }catch (Exception e)
+                        {
+                            item.setTaxPerc(0);
+                        }
+
                         try {
                             item.setMinSalePrice(Double.parseDouble(finalObject.getString("MINPRICE")));
                         }
@@ -2219,6 +2232,8 @@ public class ImportJason extends AppCompatActivity {
 
 
                         priceListDpList.add(item);
+                      //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+priceListDpList.size());
+
                     }
 
                 }
@@ -2675,7 +2690,7 @@ public class ImportJason extends AppCompatActivity {
             Log.e("In***" , "inaddSalesmen");
             setText(title_progresspar,"add_Salesmen");
 
-            mHandler.addCustomerPrice_current(customerPricesList);
+            mHandler.addCustomerPrice(customerPricesList);
             setText(title_progresspar,"add_customerPricesList");
 
             mHandler.add_OfferListMaster(offerListMasterArrayList);
@@ -2811,10 +2826,12 @@ public class ImportJason extends AppCompatActivity {
 
     private class JSONTask_UncollectedCheques extends AsyncTask<String, String, String> {
 
-        private String custId = "";
+        private String custId = "",fromD,toD;
 
-        public JSONTask_UncollectedCheques(String customerId) {
+        public JSONTask_UncollectedCheques(String customerId,String fromDate,String toDate) {
             this.custId = customerId;
+            fromD=fromDate;
+            toD=toDate;
         }
 
         @Override
@@ -2847,7 +2864,23 @@ public class ImportJason extends AppCompatActivity {
                     }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetTheUnCollectedCheques?ACCNO="+custId+"&CONO="+CONO;
+                  //  http://localhost:8085/tGetTheUnCollectedChequesWithDate?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=31/12/2021
+
+                    if(dateFromToActive==1)
+                    {
+                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/tGetTheUnCollectedChequesWithDate?ACCNO="+custId
+                                +"&CONO="+CONO+"&FROMDATE="+fromD.trim()+"&TODATE="+toD.trim();
+                        Log.e("URL_TO_HIT","tGetTheUnCollectedChequesWithDate="+URL_TO_HIT);
+
+                    }else {
+                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetTheUnCollectedCheques?ACCNO="+custId+"&CONO="+CONO;
+
+                    }
+
+
+
+
+
                 }
             } catch (Exception e) {
 
@@ -2913,6 +2946,7 @@ public class ImportJason extends AppCompatActivity {
             JSONObject result = null;
             String impo = "";
             pdValidation.dismissWithAnimation();
+            listCustomerInfo = new ArrayList<>();
             if (s != null) {
                 if (s.contains("AccCode")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -2924,7 +2958,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                         JSONArray requestArray = null;
-                        listCustomerInfo = new ArrayList<>();
+
 
                         requestArray =  new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
@@ -2954,7 +2988,12 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                } else
+                    if(s.contains("No Data Found"))
+                    {
+                        resultData.setText("noData");
+                    }
+                    Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }
@@ -2962,10 +3001,12 @@ public class ImportJason extends AppCompatActivity {
     }
     private class JSONTask_GetAllCheques extends AsyncTask<String, String, String> {
 
-        private String custId = "";
+        private String custId = "",fromD,toDat;
 
-        public JSONTask_GetAllCheques(String customerId) {
+        public JSONTask_GetAllCheques(String customerId,String fromDate,String toDate) {
             this.custId = customerId;
+            fromD=fromDate;
+            toDat=toDate;
         }
 
         @Override
@@ -2995,8 +3036,20 @@ public class ImportJason extends AppCompatActivity {
                         int ind=ipAddress.indexOf(":");
                         ipAddress=ipAddress.substring(0,ind);
                     }
+                    if(dateFromToActive==1)
+                    {   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetAllTheChequesWithDate?ACCNO="+custId+
+                            "&CONO="+CONO+"&FROMDATE="+fromD.trim()+"&TODATE="+toDat.trim();
 
+                    }else{
                     URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetAllTheCheques?ACCNO="+custId+"&CONO="+CONO;
+
+                    }
+
+                  //  http://localhost:8085/GetAllTheChequesWithDate?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=01/10/2021
+
+                    Log.e("URL_TO_HIT","GetAllTheChequesWithDate="+URL_TO_HIT);
+
+
                 }
             } catch (Exception e) {
                 pdPayments.dismissWithAnimation();
@@ -3063,6 +3116,7 @@ public class ImportJason extends AppCompatActivity {
             JSONObject result = null;
             String impo = "";
             pdPayments.dismissWithAnimation();
+            paymentChequesList = new ArrayList<>();
             if (s != null) {
                 if (s.contains("VHFNo")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -3075,7 +3129,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                         JSONArray requestArray = null;
-                        paymentChequesList = new ArrayList<>();
+
 
                         requestArray =  new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
@@ -3091,7 +3145,7 @@ public class ImportJason extends AppCompatActivity {
                             //
 
                             requestDetail.setDueDate(infoDetail.get("DueDate").toString());
-                            requestDetail.setBank("Jordan Bank");
+                            requestDetail.setBank(infoDetail.get("PAYEENAME").toString());
                             try {
                                 requestDetail.setAmount(Double.parseDouble(infoDetail.get("CAmount").toString()));
 
@@ -3107,6 +3161,8 @@ public class ImportJason extends AppCompatActivity {
                         if(paymentChequesList.size()!=0)
                         {
                             resultData.setText("payment");
+                        }else {
+                            resultData.setText("noData");
                         }
 
 
@@ -3114,7 +3170,17 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                    getUnCollectedCheques(fromD,toDat);
+                }
+                else{
+                    if(s.contains("No Data Found"))
+                    {
+                        resultData.setText("noData");
+                    }
+                }
+
+
+                    Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }
@@ -3124,10 +3190,14 @@ public class ImportJason extends AppCompatActivity {
 
         private String custId = "";
         private  int type=0;
+        public  String from_Date,to_Date;
 
-        public JSONTask_AccountStatment(String customerId,int typeImpo) {
+        public JSONTask_AccountStatment(String customerId,int typeImpo,String fromDate,String toDate) {
             this.custId = customerId;
             this.type=typeImpo;
+            from_Date=fromDate;
+            to_Date=toDate;
+            Log.e("from_Date","=="+from_Date+"to==="+to_Date);
         }
 
         @Override
@@ -3149,6 +3219,7 @@ public class ImportJason extends AppCompatActivity {
 
                 //+custId
                 headerDll="/Falcons/VAN.dll";
+//                headerDll="";
 
                 if (!ipAddress.equals("")) {
                     //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
@@ -3157,7 +3228,16 @@ public class ImportJason extends AppCompatActivity {
                         int ind=ipAddress.indexOf(":");
                         ipAddress=ipAddress.substring(0,ind);
                     }
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+"&CONO="+CONO;
+//                    URL_TO_HIT="http://92.253.93.250/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=1110010143&CONO=295";
+                   // http://localhost:8085/GetACCOUNTSTATMENT?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=01/10/2021
+                   // custId="1110010062";
+                    if(dateFromToActive==1){
+                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+
+                                "&CONO="+CONO+"&FROMDATE="+from_Date.trim()+"&TODATE="+to_Date.trim();
+                    }else {
+                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+"&CONO="+CONO;
+                    }
+
                 }
                 Log.e("urlAccount",""+URL_TO_HIT.toString());
             } catch (Exception e) {
@@ -3297,7 +3377,18 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                } else
+                {
+                    if(s.contains("No Parameter Found"))
+                    {
+                        if(type==0)
+                        {
+                            getAccountList_text.setText("3");
+                        }
+                    }
+
+                }
+                    Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }

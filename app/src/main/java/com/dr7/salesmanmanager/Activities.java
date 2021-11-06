@@ -95,6 +95,7 @@ public class Activities extends AppCompatActivity implements
     private DecimalFormat decimalFormat;
 
     private boolean isFragmentBlank;
+    String today="";
     boolean canClose;
     ProgressDialog dialog_progress;
     DatabaseHandler databaseHandler;
@@ -201,6 +202,7 @@ public class Activities extends AppCompatActivity implements
         totalBalance_text=findViewById(R.id.totalBalance_text);
         lastVisit_textView=findViewById(R.id.lastVisit_textView);
         generalMethod=new GeneralMethod(Activities.this);
+
         fillLastVisit();
         if(getTotalBalanceInActivities==1)
         {
@@ -303,11 +305,12 @@ public class Activities extends AppCompatActivity implements
 
     private void fiiltotalBalance() {
 
+        today=generalMethod.getCurentTimeDate(1);
 //        if(!totalBalance_text.getText().toString().equals("")){
             if(isNetworkAvailable())
             {
                 ImportJason importJason =new ImportJason(Activities.this);
-                importJason.getCustomerInfo(2);
+                importJason.getCustomerInfo(2,today,today);
             }
 
 //        }

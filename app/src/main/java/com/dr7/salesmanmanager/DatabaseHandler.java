@@ -2890,6 +2890,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void addCustomerPrice_current(List<CustomerPrice> price) {
         SQLiteDatabase db = this.getReadableDatabase();
         db.beginTransaction();
+        Log.e("addCustomerPrice_",""+price.size());
 
         for (int i = 0; i < price.size(); i++) {
             ContentValues values = new ContentValues();
@@ -5311,11 +5312,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return items;
     }
     public ArrayList<OfferGroupModel> getAllGroupOffers(String currentDate) {
-        Log.e("getAllGroupOffers","currentDate="+currentDate);
+        //Log.e("getAllGroupOffers","currentDate="+currentDate);
         ArrayList<OfferGroupModel> items = new ArrayList<OfferGroupModel>();
         // Select All Query
 //        select * from GroupOffer_Item where '18/10/2021' between From_Date_Offer and To_Date_Offer
-        String selectQuery = "SELECT * FROM " + GroupOffer_Item +" where '"+currentDate+"' between From_Date_Offer and To_Date_Offer";
+//        String selectQuery = "SELECT * FROM " + GroupOffer_Item +" where '"+currentDate+"' between From_Date_Offer and To_Date_Offer";
+        String selectQuery = "SELECT * FROM " + GroupOffer_Item ;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

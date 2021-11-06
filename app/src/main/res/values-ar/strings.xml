@@ -487,9 +487,9 @@
     <string name="requiredQty">الكميات المطلوبة</string>
     <string name="unCollectedCheques">شيكات برسم التحصيل</string>
     <string name="chaequeDate">التاريخ</string>
-    <string name="recivedAmount">الكميات المطلوبة</string>
+    <string name="recivedAmount">المبلغ المطلوب</string>
     <string name="validation">جاري التحقق</string>
-    <string name="PAIDAMT">الكميات المدفوعة</string>
+    <string name="PAIDAMT">المبلغ المدفوع</string>
     <string name="action_settings_ip">إعدادات Ip</string>
     <string name="storeNo">رقم المندوب</string>
     <string name="checkQtyServer">التأكد من كميات المستودع الرئيسي</string>

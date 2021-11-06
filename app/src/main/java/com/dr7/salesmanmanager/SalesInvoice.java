@@ -143,6 +143,8 @@ import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
+import static com.dr7.salesmanmanager.Login.offerQasion;
+import static com.dr7.salesmanmanager.Login.offerTalaat;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
@@ -1066,7 +1068,7 @@ public class SalesInvoice extends Fragment {
                     if((items.get(i).getItemNo().trim().equals(listGroup.get(j).ItemNo.trim()))&&
                             (items.get(i).getQty()>=qtyOffer))
                     {
-                        //Log.e("checkGroupOffer","listGroup"+items.get(i).getItemNo()+"\tlistGroup="+listGroup.get(j).ItemNo);
+                        Log.e("checkGroupOffer","listGroup"+items.get(i).getItemNo()+"\tlistGroup="+listGroup.get(j).ItemNo);
                         listGroup.get(j).matchOffer=1;
 
 
@@ -3065,7 +3067,7 @@ public class SalesInvoice extends Fragment {
 
     }
 
-    double updaQty = 0, currentDisc = 0;
+    float updaQty = 0, currentDisc = 0;
     float disount_totalnew = 0;
     Offers appliedOffer = null;
 
@@ -3188,6 +3190,7 @@ public class SalesInvoice extends Fragment {
 
                                         break;
                                     case 1:
+                                        if(!items.get(position).getItemName().equals("(bonus)"))
                                         showDialogUpdateAmountRegular(position);
 //
 
@@ -3273,7 +3276,6 @@ public class SalesInvoice extends Fragment {
         {
 
             discount_update.setText(items.get(position).getDiscPerc()+"");
-            // discTypeRadioGroup_up= dialog.findViewById(R.id.discTypeRadioGroup_up);
             discTypeRadioGroup_up.check(R.id.discPercRadioButton_update);
 
 
@@ -3318,7 +3320,6 @@ public class SalesInvoice extends Fragment {
 
                                         items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim())*itemUnit);
 
-                                        // Log.e("priceItem","="+item.getQty()+"\titemUnit="+itemUnit);
                                         if(itemUnit!=1)
                                         {
                                             float priceUnitItem=priceValue/itemUnit;
@@ -3340,19 +3341,8 @@ public class SalesInvoice extends Fragment {
 
                                     //***************************************************
 
+                                    updaQty = Float.parseFloat(qty.getText().toString().trim());
 
-
-
-
-                                    updaQty = Double.parseDouble(qty.getText().toString().trim());
-
-//                                    if(priceValue!=0)
-//                                    {
-//                                        items.get(position).setPrice(priceValue);
-//                                    }
-//                                    else {
-//                                        price_update.setError("invalid zero");
-//                                    }
 
 
                                 } catch (Exception e) {
@@ -3368,10 +3358,10 @@ public class SalesInvoice extends Fragment {
 
                                         if (discTypeRadioGroup_up.getCheckedRadioButtonId()==R.id.discPercRadioButton_update) {
                                             items.get(position).setDiscType(1);// error for discount promotion // percent discount
-                                            Log.e("discPercRadio_update","position 1");
+
                                         } else {
                                             items.get(position).setDiscType(0);// value Discount
-                                            Log.e("discPercRadio_update","position 0");
+
                                         }
 
                                         if (items.get(position).getDiscType() == 0) {// value
@@ -3392,19 +3382,17 @@ public class SalesInvoice extends Fragment {
 
                                 }
 
-//                                                currentDisc=items.get(position).getDisc();
-//                                                if(items.get(position).getDisc()!=0) {
                                 List<Offers> offer = checkOffers(items.get(position).getItemNo());
                                 if (offer.size() > 0) {
                                     appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
-                                    if (appliedOffer != null) {
+                                    if (!appliedOffer.getItemNo().equals("-1")) {
 
-                                        disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty()) + "");
-                                        items.get(position).setDisc(disount_totalnew);
+
                                         double bonus_calc = 0;
+                                        int discOfferType=0;
                                        // Log.e("getPromotionType()", "2====" + appliedOffer.getBonusQty()+"\tgetPromotionType+"+offer.get(0).getPromotionType());
 
-                                        if (offer.get(0).getPromotionType() == 0) {
+                                        if (offer.get(0).getPromotionType() == 0) {// bunos
                                             if (OfferCakeShop == 0) {
                                                 bonus_calc = ((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty();
 
@@ -3431,28 +3419,63 @@ public class SalesInvoice extends Fragment {
 
 
                                         }
+                                        else {
+                                            // promotion type==1 ++++++>>discount offer
+                                            discOfferType=appliedOffer.getDiscountItemType();
+                                            items.get(position).setDiscType(discOfferType);
+
+                                            if(offerQasion==1){
+                                                disount_totalnew=Float.parseFloat(appliedOffer.getBonusQty()+"")*updaQty;
+
+                                            }
+
+                                            if(offerTalaat==1)
+                                            {
+                                                disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty())+"");
+                                            }
+
+                                        }
                                     }
                                     else {
 //                                        items.get(position+1)
-                                      //  Log.e("appliedOffer","not"+position);
-                                        items.remove(position+1);
+                                        //************ test here  ***********
+                                        if (offer.get(0).getPromotionType() == 0)
+                                        {
+                                            items.get(position).setBonus(0);
+                                            disount_totalnew=0;
+                                            if((position+1 )!= items.size()){
+                                                if(items.get(position+1).getItemName().equals("(bonus)"))
+                                                {
+                                                    items.remove(position+1);
+                                                }
+                                            }
+
+                                        }else {
+                                            disount_totalnew=0;
+                                        }
+
 
                                     }
                                 }
-
+  Log.e("appliedOffer","disount_totalnew"+disount_totalnew);
                                 total_items_quantity += items.get(position).getQty();
                                 totalQty_textView.setText("+" + total_items_quantity);
                                 if (items.get(position).getDiscType() == 0)// value
                                 {
+                                    items.get(position).setDisc(disount_totalnew);
+                                    items.get(position).setDiscPerc((items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100))+"");
                                     items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
 
                                 }
-
                                 else{
+                                    items.get(position).setDiscPerc(disount_totalnew+"");
+                                    items.get(position).setDisc(items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100));
                                     items.get(position).setAmount((items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc()));
 
                                 }
-                                Log.e("updateAmount1=",""+items.get(position).getAmount());
+                              //  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
+                              //  Log.e("updateAmount1=","getDisc="+items.get(position).getDisc());
+                              //  Log.e("updateAmount1=","getDiscPerc="+items.get(position).getDiscPerc());
                                 calculateTotals();
                                 itemsListView.setAdapter(itemsListAdapter);
 
@@ -3484,7 +3507,6 @@ public class SalesInvoice extends Fragment {
     }
 
     private void addItemBonus(int position, String bonusItemNo, double bonus_calc) {
-//        items.add();
         Item item_bonus=new Item();
         item_bonus.setQty(Float.parseFloat(bonus_calc+""));
         item_bonus.setItemNo(bonusItemNo);
@@ -3495,20 +3517,21 @@ public class SalesInvoice extends Fragment {
         item_bonus.setDisc(0);
         item_bonus.setAmount(0);
         item_bonus.setKind_item("");
-        Log.e("addItemBonus", "1"+items.size());
-        items.add(position+1,item_bonus);
-        Log.e("addItemBonus","2"+items.size());
+        item_bonus.setItemHasSerial("0");
+        item_bonus.setBarcode("");
+        item_bonus.setCurrentQty(0);
+        item_bonus.setDate("");
+        item_bonus.setCust("");
+        item_bonus.setDescreption("");
 
-//        obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
-//                "0", "1", "" + bonus_calc, "0",
-//                "0", "0", radioGroup, items.get(position).getCategory(), items.get(position).getPosPrice() + "",
-//                useWeight, view.getContext()
-//                , item_remark.getText().toString(), serialListitems,
-//                current_itemHasSerial,oneUnit);
+
+        item_bonus.setOneUnitItem("0");
+
+        items.add(position+1,item_bonus);
+
     }
 
     private void removeItem(int position) {
-      //  Log.e("removeItem",""+position+"\t"+items.size());
         if(items.size()>1)
         {
             if(position+1!=items.size())// not last element
@@ -3516,10 +3539,7 @@ public class SalesInvoice extends Fragment {
                 if(items.get(position+1).getItemName().equals("(bonus)"))
                 {
                     items.remove(position);
-                    Log.e("removeItem","1="+items.size());
 
-                   // items.remove(position);
-                    //Log.e("removeItem","2="+items.size());
                 }
 
             }
@@ -4371,8 +4391,10 @@ public class SalesInvoice extends Fragment {
                 return offer.get(i);
         }
         }
+        Offers offerEmpty = new Offers();
+        offerEmpty.setItemNo("-1");
 
-        return null;
+        return offerEmpty;
     }
 
     private List<Offers> checkOffers(String itemNo) {
@@ -4390,10 +4412,10 @@ public class SalesInvoice extends Fragment {
 
 
             for (int i = 0; i < offers.size(); i++) {
-                Log.e("log2 ", date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
+             //   Log.e("log2 ", date + "  " + offers.get(i).getFromDate() + " " + offers.get(i).getToDate());
                 if (itemNo.equals(offers.get(i).getItemNo()) &&
                         (formatDate(date).after(formatDate(offers.get(i).getFromDate())) || formatDate(date).equals(formatDate(offers.get(i).getFromDate()))) &&
-                        (formatDate(date).before(formatDate(offers.get(i).getToDate())) || formatDate(date).equals(offers.get(i).getToDate()))) {
+                        (formatDate(date).before(formatDate(offers.get(i).getToDate())) || formatDate(date).equals(formatDate(offers.get(i).getToDate())))) {
 
                     offer = offers.get(i);
                     Offers.add(offer);
@@ -4529,6 +4551,7 @@ public class SalesInvoice extends Fragment {
         double limit_offer = 0;
         //Excluclude tax
         if (mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 0) {
+            Log.e("getTaxClarcKind","==0");
             totalQty = 0.0;
             try {
 
@@ -4668,6 +4691,7 @@ public class SalesInvoice extends Fragment {
 
         } else
             {
+                Log.e("getTaxClarcKind","==1");
             totalQty = 0.0;
             try {
 

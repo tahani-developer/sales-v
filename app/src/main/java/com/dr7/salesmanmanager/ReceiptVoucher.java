@@ -264,7 +264,7 @@ public class ReceiptVoucher extends Fragment {
 //                    .normalImageRes(listImageIcone[i]));
             TextInsideCircleButton.Builder builder = new TextInsideCircleButton.Builder()
                     .normalImageRes(listImageIcone[i])
-                    .textSize(10)
+                    .textSize(8)
                     .normalText(textListButtons[i])
                     .textPadding(new Rect(5, 16, 5, 0))
                     .listener(new OnBMClickListener() {

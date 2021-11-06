@@ -153,10 +153,12 @@ public class Login extends AppCompatActivity {
     public  static final int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static final int makeOrders=0;// 1= just orders app
 
-    public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
+    public  static  final  int OfferCakeShop=1;// if 0 calck offer many times
     public  static  final  int getMaxVoucherServer=1;
     public  static  final  int offerTalaat=0;
+    public  static  final int  offerQasion=1;
     public  static  final  int getTotalBalanceInActivities=1;
+    public  static  final  int dateFromToActive=0;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

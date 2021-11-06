@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -34,11 +35,13 @@ import java.util.ArrayList;
 
 import static com.dr7.salesmanmanager.ImportJason.paymentChequesList;
 import static com.dr7.salesmanmanager.ImportJason.unCollectlList;
+import static com.dr7.salesmanmanager.Login.dateFromToActive;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class UnCollectedData extends AppCompatActivity {
 
-    public TextView recivedAmount_text, paidAmountText;
-    public static TextView resultData;
+    public TextView recivedAmount_text, paidAmountText,getAcc;
+    public static TextView resultData,from_date,to_date;
     ArrayList<Payment> paymentArrayList;
     TableLayout tableCheckData;
     int position = 0;
@@ -47,15 +50,36 @@ public class UnCollectedData extends AppCompatActivity {
     GeneralMethod generalMethod;
 
     String type="0";
+    LinearLayout datLinear;
+    String today="",from="",toDate="";
+    ImportJason importJason;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_un_collected_data);
         type = getIntent().getStringExtra("type");
         initialView();
-        ImportJason importJason = new ImportJason(UnCollectedData.this);
-        importJason.getUnCollectedCheques();
-        importJason.getAllcheques();
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+
+        getDataFromServer();
     }
 
     private void initialView() {
@@ -66,6 +90,28 @@ public class UnCollectedData extends AppCompatActivity {
         recivedAmount_text = findViewById(R.id.recivedAmount_text);
         paidAmountText = findViewById(R.id.paidAmountText);
         resultData = findViewById(R.id.result);
+        from_date = (TextView) findViewById(R.id.from_date);
+        to_date = (TextView) findViewById(R.id.to_date);
+        getAcc=(TextView) findViewById(R.id.getAcc);
+        today=generalMethod.getCurentTimeDate(1);
+        from_date.setText(today);
+        to_date.setText(today);
+        from=from_date.getText().toString().trim();
+        toDate=to_date.getText().toString().trim();
+        Log.e("from_Date","from=="+from+"toDate==="+toDate);
+        importJason = new ImportJason(UnCollectedData.this);
+        from_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalMethod.DateClick(from_date);
+            }
+        });
+        to_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalMethod.DateClick(to_date);
+            }
+        });
         resultData.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,14 +126,23 @@ public class UnCollectedData extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!s.toString().equals("")) {
+                    Log.e("afterTextChanged",""+s.toString());
                     if (s.toString().equals("yes")) {
                       //  recivedAmount_text.setText(unCollectlList.get(0).getRECVD().toString());
                         paidAmountText.setText(unCollectlList.get(0).getPAIDAMT().toString());
                     }
                     if (s.toString().equals("payment")) {
-
+                        paymentArrayList.clear();
                        paymentArrayList= paymentChequesList;
                         fillTable();
+                    }
+                    else {
+                         if (s.toString().equals("noData")){
+                             paymentChequesList.clear();
+                             paymentArrayList.clear();
+                             paidAmountText.setText("0");
+                             fillTable();
+                         }
                     }
                 }
 
@@ -95,7 +150,27 @@ public class UnCollectedData extends AppCompatActivity {
         });
        // getPayment();
         inflateBoomMenu();
+        getAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDataFromServer();
+            }
+        });
+        datLinear=findViewById(R.id.datLinear);
+        if(dateFromToActive==0)
+        {
+            datLinear.setVisibility(View.GONE);
+        }else {
+            datLinear.setVisibility(View.VISIBLE);
+        }
 
+    }
+    private void getDataFromServer() {
+        from=generalMethod.convertToEnglish(from_date.getText().toString().trim());
+        toDate=generalMethod.convertToEnglish(to_date.getText().toString().trim());
+        Log.e("from_Date","from=="+from+"toDate==="+toDate);
+//        importJason.getUnCollectedCheques(from,toDate);
+        importJason.getAllcheques(from,toDate);
     }
     private void inflateBoomMenu() {
         BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
@@ -187,6 +262,7 @@ public class UnCollectedData extends AppCompatActivity {
 
     private void fillTable() {
         TableRow row = null;
+        tableCheckData.removeAllViews();
         totalAmount=0;
 
         for (int n = 0; n < paymentArrayList.size(); n++) {

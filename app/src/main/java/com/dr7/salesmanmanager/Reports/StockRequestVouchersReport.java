@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
@@ -13,11 +14,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -270,7 +274,15 @@ public class StockRequestVouchersReport extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog);
         Window window = dialog.getWindow();
-        window.setLayout(350, 400);
+
+        WindowManager wm = (WindowManager) StockRequestVouchersReport.this.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+
+        window.setLayout(width-50, height/2);
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 

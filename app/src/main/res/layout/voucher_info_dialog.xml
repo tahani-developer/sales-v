@@ -4,9 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="10dp"
+    android:padding="5dp"
     android:orientation="vertical">
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView01"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
 
+        android:fillViewport="true"
+
+
+        android:layout_margin="2dp"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+
+            android:orientation="vertical"
+
+            >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,36 +35,37 @@
       >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/item_number"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/item_name"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+
             android:gravity="center"
             android:text="@string/unit_qty"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </LinearLayout>
 
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:background="@color/layer7"
      android:layout_margin="3dp"
         >
@@ -60,9 +79,11 @@
         </TableLayout>
     </ScrollView>
 
+
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
+        android:visibility="gone"
         android:gravity="center"
         android:layout_gravity="center">
 
@@ -80,4 +101,6 @@
             tools:ignore="TextViewEdits" />
 
     </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
 </LinearLayout>

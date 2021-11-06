@@ -103,11 +103,21 @@
     </LinearLayout>
 
 
+            <HorizontalScrollView
+                android:id="@+id/HorizontalScrollView01"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="1.5"
+                android:fillViewport="true"
 
+
+                android:layout_margin="2dp"
+
+                >
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="370dp"
+        android:layout_height="match_parent"
         android:background="@color/layer6"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
@@ -139,7 +149,7 @@
                     android:padding="5dp"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -150,7 +160,7 @@
 
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -160,7 +170,7 @@
                     android:padding="5dp"/>
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
                     android:gravity="center"
@@ -173,6 +183,7 @@
 
         </TableLayout>
     </ScrollView>
+            </HorizontalScrollView>
         </LinearLayout>
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb"

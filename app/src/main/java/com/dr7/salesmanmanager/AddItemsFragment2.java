@@ -843,7 +843,7 @@ try {
             }
             else {// here 1
                 jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
-                Log.e("jsonItemsList","11111");
+                Log.e("jsonItemsList","11111jsonItemsList2.size()="+jsonItemsList2.size());
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
             }
             size_firstlist = jsonItemsList2.size();
@@ -884,7 +884,7 @@ try {
                     jsonItemsList=jsonItemsList2;
                 }else {
                     Log.e("jsonItemsList","2222");
-                    if(jsonItemsList.size()==0)
+                   // if(jsonItemsList.size()==0)
                     jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
                 }
 
@@ -1088,10 +1088,10 @@ try {
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
                 item.setDiscType(1);// error for discount promotion // percent discount
-                Log.e("setDiscType", "percent");
+
             } else {
                 item.setDiscType(0);// value Discount
-                Log.e("setDiscType", "value");
+
             }
         Log.e("setDiscType", item.getDiscType()+"");
             try {
@@ -1105,12 +1105,10 @@ try {
                     item.setDisc((item.getQty() * item.getPrice() *
                             (Float.parseFloat(discount.trim())) / 100));
                 }
-                Log.e("setDiscType", item.getDisc()+"\tperc="+item.getDiscPerc());
+
                 descPerc = ((item.getQty() * item.getPrice() *
                         (Float.parseFloat(discount.trim()) / 100)));
 
-                Log.e("setDiscType22", item.getDisc()+"");
-                Log.e("setDiscType223", item.getDiscType()+"");
             } catch (NumberFormatException e) {
                 item.setDisc(0);
                 item.setDiscPerc("0");
@@ -1121,40 +1119,35 @@ try {
 
                     itemGroup = item.getCategory();
 
-                /*if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
-                    item.setAmount(item.getQty() * (float)item.getPosPrice()  - item.getDisc());
-                else*/
-
 
                     item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
 
-                    Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
+                  //  Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
                 } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
                     item.setAmount(item.getQty() * item.getPrice() - descPerc);
-                    Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                   // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
                 }
             } catch (NumberFormatException e) {
                 item.setAmount(0);
             }
 //        }
 
-        Log.e("setDisc1",""+item.getDiscType());
+
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ||(item.getItemName().equals("(bonus)"))) {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();
                 total_items_quantity -= flagBonus;
                 Log.e("flagBonus", "" + flagBonus);
-//               ?     amountBonus = items.get(i).getQty();
-//                    totalQty = totalQty - flagBonus;
+
             }
             else {
                 total_items_quantity += item.getQty();
                 totalQty_textView.setText("+ " + total_items_quantity);
-                Log.e("setQty", "" + Float.parseFloat(qty));
-                Log.e("total_items_quantity", "" + total_items_quantity);
+                //Log.e("setQty", "" + Float.parseFloat(qty));
+
             }
 
 
@@ -1196,7 +1189,6 @@ try {
 
                         String prc = generalMethod.convertToEnglish(generalMethod.getDecimalFormat(netPriceItem));
                        // float prcFloat = Float.parseFloat(prc);
-                        Log.e("itemSerialList", "item" + item.getQty() + "\tprice=" + item.getPrice() + "\tgetDisc=" + item.getDisc() + "\ttotal=" + prc);
                         itemSerialList.get(i).setPriceItemSales(prc);
                     }catch (Exception e){
 
