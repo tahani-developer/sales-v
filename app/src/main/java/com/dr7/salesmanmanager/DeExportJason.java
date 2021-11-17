@@ -112,11 +112,19 @@ public class DeExportJason extends AppCompatActivity {
             filterInvoice();
 
             for (int i = 0; i < vouchers.size(); i++) {
-                jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                if(typaImport==1)//IIs
+                {
+                    jsonArrayVouchers.put(vouchers.get(i).getJSONObjectDelphi());
+                }
+                else jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+
             }
 
             for (int i = 0; i < items.size(); i++) {
-                jsonArrayItems.put(items.get(i).getJSONObject());
+                if(typaImport==1)//IIs
+                {
+                    jsonArrayItems.put(items.get(i).getJSONObjectDelphi());
+                }else jsonArrayItems.put(items.get(i).getJSONObject());
             }
 
             if(typaImport==1)//IIs
@@ -134,11 +142,20 @@ public class DeExportJason extends AppCompatActivity {
             filterPayment();
 
             for (int i = 0; i < payments.size(); i++) {
-                jsonArrayPayments.put(payments.get(i).getJSONObject());
+                if(typaImport==1)//IIs
+                     { jsonArrayPayments.put(payments.get(i).getJSONObjectDelphi());}
+                else  jsonArrayPayments.put(payments.get(i).getJSONObject());
+
             }
 
             for (int i = 0; i < paymentsPaper.size(); i++) {
-                jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
+                if(typaImport==1)//IIs
+                {
+                    jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObjectDelphi());
+                }
+                else {
+                    jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
+                }
             }
             if(typaImport==1)//IIs
             {
@@ -161,30 +178,30 @@ public class DeExportJason extends AppCompatActivity {
             filterPayment();
 
             for (int i = 0; i < vouchers.size(); i++) {
-                jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
+                jsonArrayVouchers.put(vouchers.get(i).getJSONObjectDelphi());
             }
 
             for (int i = 0; i < items.size(); i++) {
-                jsonArrayItems.put(items.get(i).getJSONObject());
+                jsonArrayItems.put(items.get(i).getJSONObjectDelphi());
             }
 
             for (int i = 0; i < payments.size(); i++) {
                 payments.get(i).setIsPosted(1);
-                jsonArrayPayments.put(payments.get(i).getJSONObject());
+                jsonArrayPayments.put(payments.get(i).getJSONObjectDelphi());
             }
 
             for (int i = 0; i < paymentsPaper.size(); i++) {
-                jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2());
+                jsonArrayPaymentsPaper.put(paymentsPaper.get(i).getJSONObject2Delphi());
             }
 
             jsonArrayAddedCustomer = new JSONArray();
             for (int i = 0; i < addedCustomer.size(); i++) {
-                jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObject());
+                jsonArrayAddedCustomer.put(addedCustomer.get(i).getJSONObjectDelphi());
             }
             if(typaImport==1)//IIs
             {
                 exportSalesVoucherM();
-                exportPayment();
+               // exportPayment();
             }
 //                for (int i = 0; i < serialModelList.size(); i++)
 //                {
@@ -739,7 +756,7 @@ public class DeExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                 nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -779,12 +796,12 @@ public class DeExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 //            pdItem.dismiss();
-            Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
+           // Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
             pdVoucher.setTitle("Export SALES_VOUCHER_Detail");
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
-//                    Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Saved Successfully", Toast.LENGTH_SHORT).show();
                     saveExpot();
                 }
                 else {
@@ -900,6 +917,7 @@ public class DeExportJason extends AppCompatActivity {
 
             pdVoucher.dismiss();
             if (result != null && !result.equals("")) {
+
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
 
             } else {

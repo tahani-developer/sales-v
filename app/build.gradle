@@ -4,12 +4,13 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.dr7.salesmanmanager"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {

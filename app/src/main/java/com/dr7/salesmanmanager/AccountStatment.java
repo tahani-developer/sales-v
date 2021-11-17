@@ -8,10 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -22,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.dr7.salesmanmanager.Adapters.AccountStatmentAdapter;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Transaction;
-import com.dr7.salesmanmanager.Reports.InventoryReport;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -89,7 +86,7 @@ public class AccountStatment extends AppCompatActivity {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         inflateBoomMenu();
-        getDataFromServer();
+        getDataFromServer(0);
 //        Log.e("customername",""+customername.size());
 
 //        preview_button_account.setOnClickListener(new View.OnClickListener() {
@@ -244,13 +241,13 @@ public class AccountStatment extends AppCompatActivity {
         getAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getDataFromServer();
+                getDataFromServer(1);
 
 
             }
         });
         today=generalMethod.getCurentTimeDate(1);
-        from_date.setText(today);
+//        from_date.setText(today);
         to_date.setText(today);
         from_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,10 +264,17 @@ public class AccountStatment extends AppCompatActivity {
         getLastVaisit();
     }
 
-    private void getDataFromServer() {
-        from=from_date.getText().toString().trim();
-        toDate=to_date.getText().toString().trim();
-        Log.e("from_Date","from=="+from+"toDate==="+toDate);
+    private void getDataFromServer(int flag ) {
+        if(flag==1)// with date
+        {
+            from=from_date.getText().toString().trim();
+            toDate=to_date.getText().toString().trim();
+        }else {
+            from="";
+            toDate="";
+        }
+
+      //  Log.e("from_Date","from=="+from+"toDate==="+toDate);
         ImportJason importJason =new ImportJason(AccountStatment.this);
         importJason.getCustomerInfo(0,from,toDate);
     }

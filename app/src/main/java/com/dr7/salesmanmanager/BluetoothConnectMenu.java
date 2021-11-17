@@ -921,7 +921,7 @@ public class BluetoothConnectMenu extends Activity {
         {
         img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
         if(companyInfo.getTaxNo()!=0)
@@ -989,7 +989,7 @@ public class BluetoothConnectMenu extends Activity {
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
         if(companyInfo.getTaxNo()!=0)
@@ -1055,7 +1055,7 @@ public class BluetoothConnectMenu extends Activity {
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
         compname.setText(companyInfo.getCompanyName());
         tel.setText("" + companyInfo.getcompanyTel());
         if(companyInfo.getTaxNo()!=0)
@@ -1120,7 +1120,7 @@ public class BluetoothConnectMenu extends Activity {
 
         }
         else{
-            img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
+            img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));
 
             Toast.makeText(context, "Upload Company Logo For Print ", Toast.LENGTH_SHORT).show();
         }
@@ -1326,7 +1326,8 @@ public class BluetoothConnectMenu extends Activity {
 
        TextView doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
 
-        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW,total_qty_text,salesName;
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont,
+                textW,total_qty_text,salesName,discountItems;
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
 //
         compname = (TextView) dialogs.findViewById(R.id.compname);
@@ -1341,6 +1342,7 @@ public class BluetoothConnectMenu extends Activity {
         paytype = (TextView) dialogs.findViewById(R.id.paytype);
         total = (TextView) dialogs.findViewById(R.id.total);
         discount = (TextView) dialogs.findViewById(R.id.discount);
+        discountItems= (TextView) dialogs.findViewById(R.id.discountItems);
         tax = (TextView) dialogs.findViewById(R.id.tax);
         ammont = (TextView) dialogs.findViewById(R.id.ammont);
         textW = (TextView) dialogs.findViewById(R.id.wa1);
@@ -1366,7 +1368,7 @@ public class BluetoothConnectMenu extends Activity {
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
 
         tel.setText("" + companyInfo.getcompanyTel());
         if(companyInfo.getTaxNo()!=0)
@@ -1384,6 +1386,7 @@ public class BluetoothConnectMenu extends Activity {
         ammont.setText("" + voucher.getNetSales());
 
        int count=0;
+       float itemsDiscount=0;
 
         if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
             textW.setVisibility(View.GONE);
@@ -1400,6 +1403,7 @@ public class BluetoothConnectMenu extends Activity {
         for (int j = 0; j < items.size(); j++) {
             if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
                 count+=items.get(j).getQty();
+                itemsDiscount+=items.get(j).getDisc();
                 final TableRow row = new TableRow(BluetoothConnectMenu.this);
 
 
@@ -1477,6 +1481,7 @@ public class BluetoothConnectMenu extends Activity {
 
         total_qty_text.setText(count+"");
         Log.e("countItem",""+count);
+        discountItems.setText(convertToEnglish(decimalFormat.format(itemsDiscount))+"");
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
         linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
@@ -1592,7 +1597,7 @@ public class BluetoothConnectMenu extends Activity {
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
 
         tel.setText("" + companyInfo.getcompanyTel());
         if(companyInfo.getTaxNo()!=0)
@@ -1790,7 +1795,7 @@ public class BluetoothConnectMenu extends Activity {
         {
             img.setImageBitmap(companyInfo.getLogo());
         }
-        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));}
+        else{img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));}
         vhNo.setText("" + voucher.getVoucherNumber());
         date.setText(voucher.getVoucherDate());
         String salesmaname=obj.getSalesmanName(voucher.getCustNumber());

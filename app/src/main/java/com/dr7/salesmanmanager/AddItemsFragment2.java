@@ -1016,18 +1016,40 @@ try {
                     else {
                         item.setPrice(priceItem);
                     }
-                    Log.e("unitDetail",""+unitDetail.getItemNo());
+
                     if(unitDetail.getItemNo()!=null)
                     {
-                        if(unitDetail.getConvRate()!=1)  // there are units
+                        Log.e("unitDetail",""+unitDetail.getItemNo());
+                        if(unitDetail.getConvRate()!=1)
+                        {
+                            // there are units
                             item.setWhich_unit("1");
-                        else item.setWhich_unit("0");
+                        }
+                        else
+                        {
+                            item.setWhich_unit("0");
+                        }
+                        if(oneUnit==1)//one unit not
+                        {
+                            float priceUnitItem=priceItem/itemUnit;
+                            Log.e("oneUnit",""+oneUnit+"\tpriceItem="+priceItem+"\tqty="+qty);
+                            item.setWhich_unit("0");
+                            item.setWhich_unit_str("");
+                            item.setWhichu_qty(0+"");
+                            item.setEnter_qty(qty);
+                            item.setEnter_price(priceUnitItem+"");
+                            item.setUnit_barcode(unitDetail.getItemBarcode());
 
-                        item.setWhich_unit_str(unitDetail.getUnitId());
-                        item.setWhichu_qty(unitDetail.getConvRate()+"");
-                        item.setEnter_qty(qty);
-                        item.setEnter_price((priceItem*qtyFloat)+"");
-                        item.setUnit_barcode(unitDetail.getItemBarcode());
+                        }else {
+                            item.setWhich_unit_str(unitDetail.getUnitId());
+                            item.setWhichu_qty(unitDetail.getConvRate()+"");
+                            item.setEnter_qty(qty);
+                            item.setEnter_price((priceItem)+"");
+                            item.setUnit_barcode(unitDetail.getItemBarcode());
+                        }
+
+
+
                     }
                     else {
                         Log.e("unitDetail","else");

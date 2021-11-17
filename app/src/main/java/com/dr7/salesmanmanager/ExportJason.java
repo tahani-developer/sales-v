@@ -94,6 +94,7 @@ public class ExportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
+    int taxType=0;
 
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
@@ -130,6 +131,8 @@ public class ExportJason extends AppCompatActivity {
             ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
             ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
             CONO=mHandler.getAllSettings().get(0).getCoNo();
+            taxType=mHandler.getAllSettings().get(0).getTaxClarcKind();
+            Log.e("taxType",""+taxType);
         }
 
         this.requestQueue = Volley.newRequestQueue(context);
@@ -1581,7 +1584,7 @@ public class ExportJason extends AppCompatActivity {
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveVouchers";
                 // Log.e("ipAdress", "ip -->" + ip);
-                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
 

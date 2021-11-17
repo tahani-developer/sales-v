@@ -531,5 +531,12 @@
     <string name="oneUnit">وحدة</string>
     <string name="addCusttomerSucssesfuly">تم اضافة العميل بنجاح</string>
     <string name="refresh_customerData">جاري تحديث قائمة العملاء</string>
+    <string name="select">اختيار</string>
+    <string name="notSameCustomer">Not Same Customer</string>
+    <string name="noVoucherByThisNumber">لا يوجد فاتورة بهذا الرقم</string>
+    <string name="from">من</string>
+    <string name="to">الى</string>
+    <string name="please_export_data">يجب ترحيل البيانات أولا</string>
+    <string name="noVoucherForThisSerial">لايوجد فاتورة لهذا السيريال </string>
 
 </resources>

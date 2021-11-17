@@ -128,6 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
+            android:visibility="gone"
             android:checked="false"
             android:text="@string/all"
             android:textColor="@color/text_view_color"

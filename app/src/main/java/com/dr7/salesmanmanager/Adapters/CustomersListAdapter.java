@@ -1,4 +1,4 @@
-package com.dr7.salesmanmanager;
+package com.dr7.salesmanmanager.Adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -15,7 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dr7.salesmanmanager.CustomerCheckInFragment;
+import com.dr7.salesmanmanager.CustomerListShow;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.R;
 
 import java.util.ArrayList;
 import java.util.List;

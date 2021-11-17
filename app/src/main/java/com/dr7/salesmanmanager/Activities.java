@@ -19,11 +19,13 @@ import android.os.Bundle;
 //import android.support.v4.app.FragmentManager;
 
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.MainActivity.curentDate;
 import static com.dr7.salesmanmanager.MainActivity.curentTime;
 import static com.dr7.salesmanmanager.MainActivity.masterControlLoc;
@@ -66,6 +69,8 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherNumberTextView;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
+import org.json.JSONException;
+
 //import de.hdodenhof.circleimageview.CircleImageView;
 //import maes.tech.intentanim.CustomIntent;
 //commit test
@@ -79,7 +84,7 @@ public class Activities extends AppCompatActivity implements
 
     private ImageView  returnInvImageView, receiptImageView, stockImageView,saleImageView,transaction_imageview;
   //  private CircleImageView saleImageView;
-    private CardView saleCardView, receiptCardView, accountBalance, supplimentCardView,uncollectChechue;
+    private CardView saleCardView, receiptCardView, accountBalance, returnCardView,uncollectChechue;
 
     private int activitySelected;
     public  static  String currentKeyTotalDiscount="",keyCreditLimit="",  currentKey="";
@@ -104,6 +109,7 @@ public class Activities extends AppCompatActivity implements
     public static TextView totalBalance_text,lastVisit_textView;
     public  static  LocationPermissionRequest locationPermissionRequestAc;
     public  GeneralMethod generalMethod;
+    LinearLayout linearReturn;
 // LocationPermissionRequest locationPermissionRequest;
 
     @Override 
@@ -174,7 +180,7 @@ public class Activities extends AppCompatActivity implements
         Log.e("addDiscount","discount"+discount);
         discvalue_static=discount;
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
-        salesInvoice.calculateTotals();
+        salesInvoice.calculateTotals(0);
     }
 
     Animation animZoomIn ;
@@ -261,6 +267,10 @@ public class Activities extends AppCompatActivity implements
         receiptCardView = (CardView) findViewById(R.id.receiptCardView);
         accountBalance= (CardView) findViewById(R.id.accountBalanceCardView);
         uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
+        returnCardView= (CardView) findViewById(R.id.returnCardView);
+        linearReturn=findViewById(R.id.linearReturn);
+        if(voucherReturn_spreat==0)
+            linearReturn.setVisibility(View.GONE);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
 //        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
 //        switchLayout=findViewById(R.id.switchLayout);
@@ -282,6 +292,7 @@ public class Activities extends AppCompatActivity implements
         uncollectChechue.setOnClickListener(onClickListener);
         receiptCardView.setOnClickListener(onClickListener);
         saleCardView.setOnClickListener(onClickListener);
+        returnCardView.setOnClickListener(onClickListener);
 
       //  saleCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
         //receiptCardView.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.layer2));
@@ -310,7 +321,7 @@ public class Activities extends AppCompatActivity implements
             if(isNetworkAvailable())
             {
                 ImportJason importJason =new ImportJason(Activities.this);
-                importJason.getCustomerInfo(2,today,today);
+                importJason.getCustomerInfo(2,"","");
             }
 
 //        }
@@ -657,9 +668,15 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        finish();
-                        Intent inte=new Intent(Activities.this,AccountStatment.class);
-                        startActivity(inte);
+                        if(allDataPosted())
+                        {
+                            finish();
+                            Intent inte=new Intent(Activities.this,AccountStatment.class);
+                            startActivity(inte);
+                        }else {
+                            showDialogExportData();
+                        }
+
 
                     }
                     break;
@@ -691,9 +708,84 @@ public class Activities extends AppCompatActivity implements
 
                     }
                     break;
+                case  R.id.returnCardView :
+                    if (!(CustomerListShow.Customer_Name == "No Customer Selected !")) {
+                        if (!isFragmentBlank) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(Activities.this);
+                            builder2.setTitle(getResources().getString(R.string.app_confirm_dialog));
+                            builder2.setCancelable(false);
+                            builder2.setMessage(getResources().getString(R.string.app_confirm_dialog_msg));
+                            builder2.setPositiveButton(getResources().getString(R.string.app_yes), new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                    finish();
+                                    Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
+                                    inte.putExtra("type", "2");
+                                    startActivity(inte);
+                                }
+                            });
+
+                            builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
+                            builder2.create().show();
+                        } else {
+                            finish();
+                            Intent inte = new Intent(Activities.this, ReturnByVoucherNo.class);
+                            inte.putExtra("type", "2");
+                            startActivity(inte);
+
+                        }
+                    }else {
+                        Toast.makeText(Activities.this, "Please Select a Customer", Toast.LENGTH_LONG).show();
+
+                    }
+                    break;
             }
         }
     };
+
+    private void showDialogExportData() {
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
+
+
+        sweetMessage.setTitleText(this.getResources().getString(R.string.please_export_data));
+        sweetMessage.setContentText("");
+        sweetMessage.setCanceledOnTouchOutside(true);
+
+        sweetMessage.setConfirmButton(this.getResources().getString(R.string.app_exp_data), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                ExportJason objJson = null;
+                try {
+                    objJson = new ExportJason(Activities.this);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+//                        objJson.startExportDatabase();
+                    objJson.startExport();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                sweetMessage.dismissWithAnimation();
+            }
+        })
+
+                .show();
+    }
+
+    private boolean allDataPosted() {
+        boolean isPosted = databaseHandler.isAllReceptposted();
+        Log.e("isAllReceptposted","1"+isPosted);
+        if (!isPosted) {         return false;
+
+        }
+        else {
+            return  true;
+        }
+    }
 
     private void clearSerial() {
         try {
@@ -771,7 +863,7 @@ public class Activities extends AppCompatActivity implements
         salesInvoice.getItemsList().addAll(itemsList);
         // salesInvoice.itemsListAdapter.ite setItemsList(itemsList);
         salesInvoice.itemsListAdapter.notifyDataSetChanged();
-        salesInvoice.calculateTotals();
+        salesInvoice.calculateTotals(0);
 
     }
 
@@ -795,7 +887,7 @@ public class Activities extends AppCompatActivity implements
 
         // salesInvoice.itemsListAdapter.ite setItemsList(itemsList);
         salesInvoice.itemsListAdapter.notifyDataSetChanged();
-        salesInvoice.calculateTotals();
+        salesInvoice.calculateTotals(0);
     }
 
     @Override

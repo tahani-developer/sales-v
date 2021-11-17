@@ -1,8 +1,7 @@
-package com.dr7.salesmanmanager;
+package com.dr7.salesmanmanager.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
+import com.dr7.salesmanmanager.R;
 
 import java.text.DecimalFormat;
 import java.util.List;

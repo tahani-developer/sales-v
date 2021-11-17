@@ -3556,6 +3556,35 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return infos;
     }
+    public ArrayList<serialModel> getAllSerialItemsByVoucherNo(String voucherNo) {
+        ArrayList<serialModel> infos = new ArrayList<>();
+//        SELECT  * FROM  SERIAL_ITEMS_TABLE where VOUCHER_NO='333886' and  KIND_VOUCHER='504'
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE where VOUCHER_NO='"+voucherNo+"' and  KIND_VOUCHER='504'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                serialModel info = new serialModel();
+                info.setSerialCode(cursor.getString(1));
+                info.setCounterSerial(Integer.parseInt(cursor.getString(2)));
+                info.setVoucherNo((cursor.getString(3)));
+                info.setItemNo(cursor.getString(4));
+//                info.setKindVoucher(cursor.getString(5));
+                info.setKindVoucher("506");
+                info.setDateVoucher(cursor.getString(6));
+                info.setStoreNo(cursor.getString(7));
+                info.setIsPosted(cursor.getString(8));
+                info.setIsBonus(cursor.getString(9));
+                info.setPriceItem(cursor.getFloat(10));
+                info.setIsPosted("0");
+                infos.add(info);
+
+            } while (cursor.moveToNext());
+            Log.e("getAllSerialItems",""+infos.size());
+        }
+        return infos;
+    }
 
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
@@ -4032,14 +4061,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return vouchers;
     }
 
-    public Voucher getAllVouchers_VoucherNo(int voucherNo) {
+    public Voucher getAllVouchers_VoucherNo(int voucherNo,int voucherKind) {
 //        List<Voucher> vouchers = new ArrayList<Voucher>();
         // Select All Query
         Log.e("voucherNoDB",""+voucherNo);
 
         Voucher Voucher= new Voucher();
 
-        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "' ";
+        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "'and  VOUCHER_TYPE='"+voucherKind+"'  ";
         Log.e("select",""+selectQuery);
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4161,7 +4190,61 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return  masters;
     }
 
+    public ArrayList<Item> getAllItems_byVoucherNo(String voucherNo) {
+        ArrayList<Item> items = new ArrayList<Item>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+voucherNo+"' and  VOUCHER_TYPE='504'";
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+                Item item = new Item();
+
+                item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
+                item.setVoucherType(Integer.parseInt(cursor.getString(1)));
+                item.setItemNo(cursor.getString(2));
+                // Log.e("cursorItemNo",""+cursor.getString(2));
+                item.setItemName(cursor.getString(3));
+                item.setUnit(cursor.getString(4));
+                item.setQty(Float.parseFloat(cursor.getString(5)));
+                item.setPrice(Float.parseFloat(cursor.getString(6)));
+                item.setBonus(Float.parseFloat(cursor.getString(7)));
+                item.setDisc(Float.parseFloat(cursor.getString(8)));
+                item.setDiscPerc(cursor.getString(9));
+                item.setTotalDiscVal(cursor.getFloat(10));
+                item.setVoucherDiscount(cursor.getFloat(10));
+                try {
+
+                    item.setTaxValue(Double.parseDouble(cursor.getString(11)));
+                    item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
+                }catch (Exception e)
+                {
+                    Log.e("DBHandler","impo"+e.getMessage());
+                }
+                item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
+                item.setYear(cursor.getString(14));
+                item.setIsPosted(Integer.parseInt(cursor.getString(15)));
+                item.setDate(cursor.getString(16));
+                item.setDescreption(cursor.getString(17));
+                item.setSerialCode(cursor.getString(18));
+
+                item.setWhich_unit(cursor.getString(19));
+                item.setWhich_unit_str(cursor.getString(20));
+                item.setWhichu_qty(cursor.getString(21));
+                item.setEnter_qty(cursor.getString(22));
+                item.setEnter_price(cursor.getString(23));
+                item.setUnit_barcode(cursor.getString(24));
+//                Log.e("setDescreption",""+cursor.getString(17));
+
+                // Adding transaction to list
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -5907,6 +5990,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL("delete from " + SALES_VOUCHER_DETAILS + " where IS_POSTED = '1' ");
         db.execSQL("delete from " + PAYMENTS + " where IS_POSTED = '1' ");
         db.execSQL("delete from " + PAYMENTS_PAPER + " where IS_POSTED = '1' ");
+        db.execSQL("delete from " + SERIAL_ITEMS_TABLE + " where IS_POSTED_SERIAL = '1' ");
         db.close();
     }
     public  void  deletItemsOfferQty(){
@@ -6110,7 +6194,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             int y = cursor.getInt(0);
-            if (y >= 0) {
+            if (y > 0) {
                 x++;
                 Log.e("selectQuery", "y" + y);
             }
@@ -6123,7 +6207,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor2 = db.rawQuery(selectQuery, null);
         if (cursor2.moveToFirst()) {
             int y = cursor2.getInt(0);
-            if (y >= 0) {
+            if (y > 0) {
                 x++;
                 Log.e("selectQuery", "y2" + y);
             }
@@ -6135,7 +6219,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor3 = db.rawQuery(selectQuery, null);
         if (cursor3.moveToFirst()) {
             int y = cursor3.getInt(0);
-            if (y >= 0) {
+            if (y > 0) {
                 x++;
                 Log.e("selectQuery", "y3Added" + y);
             }
@@ -6147,9 +6231,60 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor4 = db.rawQuery(selectQuery, null);
         if (cursor4.moveToFirst()) {
             int y = cursor4.getInt(0);
-            if (y >= 0) {
+            if (y > 0) {
                 x++;
                 Log.e("selectQuery", "y4Added" + y);
+            }
+        }
+
+
+
+
+
+        Log.e("selectQuery", "x==" + x);
+        if(x>0)
+        {
+            return false;
+        }
+        return true;
+    }
+    public boolean isAllReceptposted() {
+        int x =0;
+        //select count(*) from SALES_VOUCHER_MASTER where IS_POSTED=0;
+        String selectQuery = "SELECT count(*) FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int y = cursor.getInt(0);
+            if (y > 0) {
+                x++;
+                Log.e("selectQuery", "y" + y);
+            }
+        }
+
+        //********************************************************
+        selectQuery = "SELECT count(*) FROM " + PAYMENTS + " where  IS_POSTED = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor2 = db.rawQuery(selectQuery, null);
+        if (cursor2.moveToFirst()) {
+            int y = cursor2.getInt(0);
+            if (y > 0) {
+                x++;
+                Log.e("selectQuery", "y2" + y);
+            }
+        }
+        //*******************************************
+        selectQuery = "SELECT count(*) FROM " + SERIAL_ITEMS_TABLE + " where  IS_POSTED_SERIAL = 0 ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor3 = db.rawQuery(selectQuery, null);
+        if (cursor3.moveToFirst()) {
+            int y = cursor3.getInt(0);
+            if (y > 0) {
+                x++;
+                Log.e("selectQuery", "y3" + y);
             }
         }
 
@@ -6163,7 +6298,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return true;
     }
-
     public double getMinOfferQty(double total) {
         String selectQuery = "SELECT MAX (AMOUNT_QTY) FROM " + ITEMS_QTY_OFFER+
                 " WHERE '"+total+"' >= AMOUNT_QTY";
@@ -7152,7 +7286,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public ArrayList<MainGroup_Id_Count> getMainGroup_Id_Count(String currentDate) {
 
 //        +" where '"+currentDate+"' between From_Date_Offer and To_Date_Offer"
-        String selectQuery = "select GroupId_Offer, count (GroupId_Offer) as GroupCount from GroupOffer_Item  where '"+currentDate+"'  between From_Date_Offer and To_Date_Offer group by GroupId_Offer;";
+        String selectQuery = "select GroupId_Offer, count (GroupId_Offer) as GroupCount from GroupOffer_Item";
 
         db = this.getWritableDatabase();
         ArrayList<MainGroup_Id_Count> listAllGroup=new ArrayList<>();
@@ -7184,5 +7318,60 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return  "";
     }
 
+    public String getItemName(String itemNo) {
+        Log.e("getItemName","getItemName="+itemNo);
+        String selectQuery = "select Name from Items_Master where ItemNo='"+itemNo.trim()+"'";
+        String itemUnit="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    return "";
+                } else {
+                    itemUnit = (cursor.getString(0));
+                    Log.e("getItemName","getItemName="+itemUnit);
+                    return itemUnit;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  itemUnit;
+    }
+
+    public String getVoucherNoFromSerialTable(String srialCode) {
+        Log.e("getItemName","getItemName="+srialCode);
+        String selectQuery = "select max(VOUCHER_NO)  from SERIAL_ITEMS_TABLE where SERIAL_CODE_NO='"+srialCode.trim()+"' and KIND_VOUCHER='504'";
+        String itemUnit="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    itemUnit= "NotFound";
+                } else {
+                    itemUnit = (cursor.getString(0));
+                    Log.e("getVoucherNoFromS","="+itemUnit);
+                    return itemUnit;
+                }
+
+            }else {
+                itemUnit= "NotFound";
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+            itemUnit= "NotFound";
+        }
+        Log.e("getVoucherNoFromSer","result="+itemUnit);
+        return  itemUnit;
+    }
 }
 

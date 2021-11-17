@@ -145,6 +145,8 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
+import static com.dr7.salesmanmanager.Login.talaatLayoutAndPassowrd;
+import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
@@ -450,7 +452,7 @@ public class SalesInvoice extends Fragment {
         totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                calculateTotals();
+                calculateTotals(0);
             }
         });
         valueTotalDiscount= (EditText) view.findViewById(R.id.valueTotalDiscount);
@@ -460,7 +462,7 @@ public class SalesInvoice extends Fragment {
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                calculateTotals();
+                calculateTotals(0);
             }
         });
 
@@ -481,6 +483,8 @@ public class SalesInvoice extends Fragment {
         threeDForm = new DecimalFormat("00.000");
         valueCheckHidPrice = CustomerListShow.CustHideValu;
         initialView(view);
+        if(voucherReturn_spreat==1)
+        retSalesRadioButton.setVisibility(View.GONE);
         if (mDbHandler.getAllSettings().get(0).getNoReturnInvoice() == 1) {
             retSalesRadioButton.setEnabled(false);
         }
@@ -495,7 +499,7 @@ public class SalesInvoice extends Fragment {
                 try {
                     voucherNo = mDbHandler.getLastVoucherNo(voucherType);
                     if (voucherNo != 0 && voucherNo != -1) {
-                        voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                        voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo,voucherType);
                         Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
                         printLastVoucher(voucherNo, voucherForPrint);
                     } else {
@@ -764,7 +768,7 @@ public class SalesInvoice extends Fragment {
                                     updateListSerialBukupDeleted("",voucherNo+"");
                                     clearLayoutData(1);
                                 }
-                                calculateTotals();
+                                calculateTotals(0);
 
                                 break;
                             case R.id.cashRadioButton:
@@ -779,7 +783,7 @@ public class SalesInvoice extends Fragment {
                                     updateListSerialBukupDeleted("",voucherNo+"");
                                     clearLayoutData(1);
                                 }
-                                calculateTotals();
+                                calculateTotals(0);
                                 break;
                         }
                     }
@@ -1047,11 +1051,16 @@ public class SalesInvoice extends Fragment {
         Log.e("canChangePrice",""+canChangePrice);
 
 
+        if(talaatLayoutAndPassowrd==1)
+        {
+            notIncludeTax.setVisibility(View.GONE);
+            linearTotalCashDiscount.setVisibility(View.GONE);
+        }
         return view;
     }
 
-    private void checkGroupOffer() {
-
+    private void checkGroupOffer(int flagDel){
+        Log.e("checkGroupOffer","flagDel= "+flagDel);
         float qtyOffer=0;
        listGroup=new ArrayList<>();
         listGroup=mDbHandler.getAllGroupOffers(voucherDate);
@@ -1065,14 +1074,23 @@ public class SalesInvoice extends Fragment {
                 {
                     qtyOffer=Float.parseFloat(listGroup.get(j).qtyItem);
                    // Log.e("matchOffer","qtyOffer"+qtyOffer);
-                    if((items.get(i).getItemNo().trim().equals(listGroup.get(j).ItemNo.trim()))&&
-                            (items.get(i).getQty()>=qtyOffer))
-                    {
-                        Log.e("checkGroupOffer","listGroup"+items.get(i).getItemNo()+"\tlistGroup="+listGroup.get(j).ItemNo);
-                        listGroup.get(j).matchOffer=1;
+                    if((items.get(i).getItemNo().trim().equals(listGroup.get(j).ItemNo.trim()))){
+                        items.get(i).setDisc(0);
+                        items.get(i).setDiscPerc("0");
+//                        if(flagDel==1)
+//                        {
+                            items.get(i).setAmount(items.get(i).getQty() * items.get(i).getPrice() );
+//                        }
+                        if(items.get(i).getQty()>=qtyOffer)
+                        {
+                            Log.e("checkGroupOffer","listGroup"+items.get(i).getItemNo()+"\tlistGroup="+listGroup.get(j).ItemNo);
+                            listGroup.get(j).matchOffer=1;
 
 
+
+                        }
                     }
+
                 }
             }
             checkMatchesGroup(listGroup);
@@ -1086,6 +1104,7 @@ public class SalesInvoice extends Fragment {
     private void checkMatchesGroup(ArrayList<OfferGroupModel> listGroup) {
         listAppliedGroup= new ArrayList<Integer>();
         listMainIdCount=mDbHandler.getMainGroup_Id_Count(voucherDate);
+        //check date of listMainIdCount
         int count=0,item_count=1,descType=0;
         double totalItemDiscount=0;
         count=0;
@@ -1260,7 +1279,7 @@ public class SalesInvoice extends Fragment {
                                     try {
                                         voucherNo = mDbHandler.getLastVoucherNo(voucherType);
                                         if (voucherNo != 0 && voucherNo != -1) {
-                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo,voucherType);
                                             Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
                                             printLastVoucher(voucherNo, voucherForPrint);
                                         } else {
@@ -1344,7 +1363,7 @@ public class SalesInvoice extends Fragment {
                                     try {
                                         voucherNo = mDbHandler.getLastVoucherNo(voucherType);
                                         if (voucherNo != 0 && voucherNo != -1) {
-                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo);
+                                            voucherForPrint = mDbHandler.getAllVouchers_VoucherNo(voucherNo,voucherType);
                                             Log.e("no", "" + voucherForPrint.getCustName() + "\t voucherType" + voucherType);
                                             printLastVoucher(voucherNo, voucherForPrint);
                                         } else {
@@ -3145,7 +3164,7 @@ public class SalesInvoice extends Fragment {
                                         items.remove(position);
 
                                         itemsListView.setAdapter(itemsListAdapter);
-                                        calculateTotals();
+                                        calculateTotals(1);
 
 //                                    clearLayoutData();
 
@@ -3184,7 +3203,7 @@ public class SalesInvoice extends Fragment {
 
 
                                         itemsListView.setAdapter(itemsListAdapter);
-                                        calculateTotals();
+                                        calculateTotals(1);
 
 //                                    clearLayoutData();
 
@@ -3324,17 +3343,23 @@ public class SalesInvoice extends Fragment {
                                         {
                                             float priceUnitItem=priceValue/itemUnit;
                                             items.get(position).setPrice(priceUnitItem);
+                                           // items.get(position).setEnter_price(priceUnitItem+"");
+                                            items.get(position).setEnter_qty((qty.getText().toString().trim()));
 
                                         }
                                         else {
                                             items.get(position).setPrice(priceValue);
+                                          //  items.get(position).setEnter_price(priceValue+"");
+                                            items.get(position).setEnter_qty((qty.getText().toString().trim()));
                                         }
                                     }else {
 
 
 
-                                          items.get(position).setPrice(priceValue);
+                                        items.get(position).setPrice(priceValue);
                                         items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim()));
+                                       // items.get(position).setEnter_price(priceValue+"");
+                                        items.get(position).setEnter_qty((qty.getText().toString().trim()));
                                     }
 
 
@@ -3476,7 +3501,7 @@ public class SalesInvoice extends Fragment {
                               //  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
                               //  Log.e("updateAmount1=","getDisc="+items.get(position).getDisc());
                               //  Log.e("updateAmount1=","getDiscPerc="+items.get(position).getDiscPerc());
-                                calculateTotals();
+                                calculateTotals(0);
                                 itemsListView.setAdapter(itemsListAdapter);
 
                                 dialog.dismiss();
@@ -4169,7 +4194,7 @@ public class SalesInvoice extends Fragment {
             }
             updateQtyBasket();// check item amount
             updateAmount(position,discount);
-            calculateTotals();
+            calculateTotals(0);
          return  true;
         }
         else {// empty List
@@ -4518,8 +4543,9 @@ public class SalesInvoice extends Fragment {
         return false;
     }
 
-    public void calculateTotals() {
-        Log.e("TOTAL", "noTax==" + notIncludeTax.isChecked());
+    public void calculateTotals(int flagDelete) {
+
+        Log.e("calculateTotals","flagDel= "+flagDelete);
         if(notIncludeTax.isChecked())
         {
             noTax=0;
@@ -4560,6 +4586,7 @@ public class SalesInvoice extends Fragment {
                 limit_offer = 0;
             }
             for (int i = 0; i < items.size(); i++) {
+
                 discount_oofers_total_cash = 0;
                 discount_oofers_total_credit = 0;
                 disc_items_total = 0;
@@ -4646,7 +4673,7 @@ public class SalesInvoice extends Fragment {
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
-            checkGroupOffer();
+            checkGroupOffer(flagDelete);
 
             for (int i = 0; i < items.size(); i++) {
                 itemGroup = items.get(i).getCategory();
@@ -4805,7 +4832,7 @@ public class SalesInvoice extends Fragment {
             } catch (NumberFormatException e) {
                 totalDiscount = 0.0;
             }
-                checkGroupOffer();
+                checkGroupOffer(flagDelete);
 
             for (int i = 0; i < items.size(); i++) {
 

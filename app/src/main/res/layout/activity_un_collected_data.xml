@@ -39,19 +39,20 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="2"
                     android:text="@string/PAIDAMT"
 
                     android:textColor="@color/colorblue_dark"
-                    android:drawableStart="@drawable/ic_money_on_black_24dp"
                     android:autoSizeTextType="uniform"
                     android:textSize="14sp"
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeMaxTextSize="14sp"
                     android:autoSizeMinTextSize="12sp"
-                    android:textStyle="bold"
-                    android:drawableLeft="@drawable/ic_money_on_black_24dp" />
+                    android:textStyle="bold">
+
+                </TextView>
                 <TextView
                     android:id="@+id/paidAmountText"
                     android:layout_width="match_parent"
@@ -86,6 +87,19 @@
                     android:visibility="gone"
                     android:layout_weight="1.5"
                     />
+                <TextView
+                    android:id="@+id/ge"
+                    android:layout_width="30dp"
+                    android:visibility="invisible"
+
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/search_btn"
+                    android:textColor="@color/add_button"
+                    />
 
             </LinearLayout>
 
@@ -104,10 +118,10 @@
                     android:id="@+id/recivedAmount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:layout_margin="1dp"
                     android:layout_weight="2"
-                    android:gravity="center"
+                    android:gravity="center_vertical"
                     android:textColor="@color/colorblue_dark"
                     android:autoSizeTextType="uniform"
                     android:textSize="14sp"
@@ -116,9 +130,7 @@
                     android:autoSizeMinTextSize="12sp"
                     android:textStyle="bold"
                     android:text="@string/recivedAmount"
-                    android:drawableStart="@drawable/ic_money_on_black_24dp"
-
-                    android:drawableLeft="@drawable/ic_money_on_black_24dp" />
+              />
                 <TextView
                     android:id="@+id/recivedAmount_text"
                     android:layout_width="match_parent"
@@ -151,34 +163,56 @@
                     android:background="@drawable/done_button"
                     android:text="@string/preview"
                     android:textColor="@color/colorblue_dark" />
+                <TextView
+                    android:id="@+id/ge44"
+                    android:layout_width="30dp"
+                    android:visibility="invisible"
 
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/search_btn"
+                    android:textColor="@color/add_button"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/datLinear"
                 android:orientation="horizontal"
                 android:layout_height="match_parent"
-                android:layout_weight="8.8"
-                android:layout_margin="2dp"
+                android:layout_weight="8"
+
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_width="match_parent"
 
                 >
-
+                <LinearLayout
+                    android:id="@+id/row22"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="1dp"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="1dp">
                 <LinearLayout
                     android:id="@+id/row2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="1dp"
+                    android:layout_weight="1"
                     android:orientation="horizontal"
                     android:layout_marginLeft="1dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textStyle="bold"
                         android:text="@string/from_date"
                         android:textColor="@color/colorblue_dark3"
                         android:textSize="14sp" />
@@ -187,24 +221,48 @@
                         android:id="@+id/from_date"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
                         android:gravity="center_vertical"
+                        android:drawableStart="@drawable/ic_date_range_black_24dp"
                         android:background="@drawable/back_border_edit"
                         android:textColor="@color/add_button"
                         android:textSize="14sp"
                         android:inputType="date"
                         android:focusable="false"/>
+                    <TextView
+                        android:id="@+id/ge4"
+                        android:layout_width="30dp"
+
+                        android:visibility="invisible"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/search_btn"
+                        android:textColor="@color/add_button"
+                        />
+                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/row222"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="1dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="1dp">
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
+                        android:textStyle="bold"
                         android:gravity="center_vertical"
                         android:text="@string/to_date"
                         android:textColor="@color/colorblue_dark3"
@@ -214,10 +272,12 @@
                         android:id="@+id/to_date"
                         android:layout_width="match_parent"
                         android:layout_weight="1"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
+                        android:drawableStart="@drawable/ic_date_range_black_24dp"
+
                         android:gravity="center_vertical"
                         android:background="@drawable/back_border_edit"
                         android:textColor="@color/add_button"
@@ -240,12 +300,13 @@
 
 
                 </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="2.5"
                 android:orientation="vertical"
                 android:layout_width="match_parent">
                 <!--                <HorizontalScrollView-->
@@ -376,12 +437,17 @@
                             android:layout_weight="1"
 
                             android:layout_margin="2dp">
+
                             <TableLayout
-                                xmlns:android="http://schemas.android.com/apk/res/android"
                                 android:id="@+id/TableCheckData"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_margin="2dp"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginEnd="2dp"
+                                android:layout_marginRight="2dp"
+                                android:layout_marginBottom="2dp"
                                 android:background="@color/layer7">
 
 
