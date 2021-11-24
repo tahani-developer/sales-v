@@ -7346,32 +7346,38 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     public String getVoucherNoFromSerialTable(String srialCode) {
         Log.e("getItemName","getItemName="+srialCode);
-        String selectQuery = "select max(VOUCHER_NO)  from SERIAL_ITEMS_TABLE where SERIAL_CODE_NO='"+srialCode.trim()+"' and KIND_VOUCHER='504'";
-        String itemUnit="";
+        String selectQuery = "select VOUCHER_NO , KIND_VOUCHER   from SERIAL_ITEMS_TABLE where SERIAL_CODE_NO='"+srialCode.trim()+"' ";
+        String voucherNo="",vouchKind="";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         try {
             if (cursor.moveToLast()) {
                 if (cursor.getString(0) == null) {
-                    itemUnit= "NotFound";
+                    voucherNo= "NotFound";
                 } else {
-                    itemUnit = (cursor.getString(0));
-                    Log.e("getVoucherNoFromS","="+itemUnit);
-                    return itemUnit;
+                    voucherNo = (cursor.getString(0));
+                    vouchKind=cursor.getString(1);
+                  //  Log.e("getVoucherNoFromS","vouchKind="+vouchKind);
+
+
                 }
 
             }else {
-                itemUnit= "NotFound";
+                voucherNo= "NotFound";
             }
         }
         catch ( Exception e)
         {
-            Log.e("Exception","getUnitForItem"+e.getMessage());
-            itemUnit= "NotFound";
+           // Log.e("Exception","getUnitForItem"+e.getMessage());
+            voucherNo= "NotFound";
         }
-        Log.e("getVoucherNoFromSer","result="+itemUnit);
-        return  itemUnit;
+        if(vouchKind.equals("506"))
+        {
+            voucherNo="returned";
+        }
+       // Log.e("getVoucherNoFromSer","result="+voucherNo);
+       return voucherNo;
     }
 }
 

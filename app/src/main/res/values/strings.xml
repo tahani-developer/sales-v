@@ -493,6 +493,7 @@
     <string name="to">To</string>
     <string name="please_export_data">please export data</string>
     <string name="noVoucherForThisSerial">No Voucher For This Serial</string>
+    <string name="thisSerialIsReturnedBefor">This Serial had Returned Befor</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

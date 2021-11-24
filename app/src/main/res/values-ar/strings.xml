@@ -538,5 +538,6 @@
     <string name="to">الى</string>
     <string name="please_export_data">يجب ترحيل البيانات أولا</string>
     <string name="noVoucherForThisSerial">لايوجد فاتورة لهذا السيريال </string>
+    <string name="thisSerialIsReturnedBefor">تم ارجاع السيريال من قبل </string>
 
 </resources>

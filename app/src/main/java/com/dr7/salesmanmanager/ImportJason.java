@@ -165,9 +165,9 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin = mHandler.getAllUserNo();
-        headerDll = "/Falcons/VAN.dll";
-//        headerDll="";
-        Log.e("SalesManLogin", "" + SalesManLogin);
+//        headerDll = "/Falcons/VAN.dll";
+        headerDll="";
+        //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
             ipWithPort = settings.get(0).getIpPort();
@@ -355,13 +355,15 @@ public class ImportJason extends AppCompatActivity {
 
                         double totalBalance = 0;
                         requestArray = new JSONArray(s);
+                        requestDetail = new serialModel();
                         //  Log.e("requestArray", "" + requestArray.length());
 
 
                         for (int i = 0; i < requestArray.length(); i++) {
                             JSONObject infoDetail = requestArray.getJSONObject(i);
-                            requestDetail = new serialModel();
+
                             requestDetail.setVoucherNo(infoDetail.get("VHFNO").toString());
+                            requestDetail.setKindVoucher(infoDetail.get("TRANSKIND").toString());
 
                             voucherNumber=requestDetail.getVoucherNo();
 
@@ -369,7 +371,9 @@ public class ImportJason extends AppCompatActivity {
 
 
                         }
+                        if(requestDetail.getKindVoucher().equals("504"))
                             loadSerial.setText("VHFNO"+voucherNumber);
+                        else loadSerial.setText("returned");
 
 
 
@@ -2250,9 +2254,20 @@ public class ImportJason extends AppCompatActivity {
 //                    else
 //                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
                         Customer.setPriceListId(finalObject.getString("PRICELISTID"));
-                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        try {
+                            Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        }
+                        catch (Exception e){
+                            Customer.setCashCredit(0);
+                        }
                         Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
-                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        try {
+                            Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        }
+                        catch (Exception e)
+                        {
+                            Customer.setCreditLimit(0);
+                        }
                         try {
                             Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
                         } catch (Exception e) {
@@ -2298,7 +2313,6 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-
 //**************************************************************************
                 try {
                     JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
@@ -2747,7 +2761,7 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("Import Data", e.getMessage().toString());
 //                }
 
-
+Log.e("customerList",""+customerList.size());
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
                 progressDialog.dismiss();

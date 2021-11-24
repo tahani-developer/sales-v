@@ -270,7 +270,11 @@ public class Activities extends AppCompatActivity implements
         returnCardView= (CardView) findViewById(R.id.returnCardView);
         linearReturn=findViewById(R.id.linearReturn);
         if(voucherReturn_spreat==0)
+        {
             linearReturn.setVisibility(View.GONE);
+
+        }
+        else linearReturn.setVisibility(View.VISIBLE);
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
 //        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
 //        switchLayout=findViewById(R.id.switchLayout);

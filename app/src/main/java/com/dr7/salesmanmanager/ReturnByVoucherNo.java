@@ -231,6 +231,9 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                             }
 
                         }
+                        else if(editable.toString().contains("returned")){
+                            showReturnedSerial();
+                        }
                 }
 
             }
@@ -292,14 +295,20 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         {
            String voucherNoSerial=dataBase.getVoucherNoFromSerialTable(srialCode);
            Log.e("voucherNoSerial",""+voucherNoSerial);
-           if(!voucherNoSerial.equals("NotFound"))
+           if(voucherNoSerial.equals("returned"))
            {
-               fillDataForVoucher(voucherNoSerial);
-
+               showReturnedSerial();
            }else {
-               importJason.getVoucherNoFromServer(srialCode);
-               serial_text.setError(getResources().getString(R.string.invalidSerial));
+               if(!voucherNoSerial.equals("NotFound"))
+               {
+                   fillDataForVoucher(voucherNoSerial);
+
+               }else {
+                   importJason.getVoucherNoFromServer(srialCode);
+                   serial_text.setError(getResources().getString(R.string.invalidSerial));
+               }
            }
+
         }else {
             serial_text.setError(getResources().getString(R.string.reqired_filled));
         }
@@ -346,6 +355,12 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         startActivity(i);
     }
 
+
+    private void showReturnedSerial() {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(this.getString(R.string.thisSerialIsReturnedBefor))
+                .show();
+    }
     private void showNotFound() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(this.getString(R.string.noVoucherByThisNumber))

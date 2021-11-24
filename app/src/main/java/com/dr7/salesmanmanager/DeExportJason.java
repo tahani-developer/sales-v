@@ -568,8 +568,8 @@ public class DeExportJason extends AppCompatActivity {
         ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
         CONO=mHandler.getAllSettings().get(0).getCoNo();
         SalesManLogin= mHandler.getAllUserNo();
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+//        headerDll="/Falcons/VAN.dll";
+        headerDll="";
         if (!ipAddress.equals("")) {
             //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
             //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
