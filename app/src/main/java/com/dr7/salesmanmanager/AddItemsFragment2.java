@@ -101,8 +101,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public  List<Item> itemsList_forFilter;
     Context context;
     GeneralMethod generalMethod;
-
-
+     Spinner categorySpinner,Kind_item_Spinner;
     public  String voucherDate="";
     public static final int REQUEST_Camera_Barcode = 1;
     private Item item;
@@ -166,6 +165,7 @@ public class AddItemsFragment2 extends DialogFragment {
         List.clear();
 
 
+
 //        voucherDate = convertToEnglish(voucherDate);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -203,6 +203,7 @@ public class AddItemsFragment2 extends DialogFragment {
             if(!userNo.equals(""))
             {
                 fillListItemJson();
+
             }
             else {
                 AddItemsFragment2.this.dismiss();
@@ -259,7 +260,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
 
-        final Spinner categorySpinner = view.findViewById(R.id.cat);
+        categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0, getResources().getString(R.string.all_item));
 
@@ -271,7 +272,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
         // ****************************** Kind Item Spenner*****************************************************
 
-        final Spinner Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
+        Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
         List<String> Kind_item=new ArrayList<>();
         try {
             Kind_item = mHandler.getAllKindItems();
@@ -293,17 +294,22 @@ public class AddItemsFragment2 extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                    ArrayList<Item> filteredList = new ArrayList<>();
-                    for (int j = 0; j < jsonItemsList.size(); j++) {
-                        Log.e("llog",jsonItemsList.get(j).getKind_item() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
-                        if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
-                            filteredList.add(jsonItemsList.get(j));
+                    if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                        filterTow();
+                    }else {
+                        filterKindItem();
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+
+
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+                    Log.e("categorySpinner","else"+categorySpinner.getSelectedItemPosition());
+                    if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                        filterCategoury();// filter about categoury
+
+                    }else {
+                        fillAllItems();
+                    }
+
                 }
 
 
@@ -311,8 +317,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                recyclerView.setAdapter(adapter);
+                fillAllItems();
             }
         });
 
@@ -321,23 +326,25 @@ public class AddItemsFragment2 extends DialogFragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
-                    ArrayList<Item> filteredList = new ArrayList<>();
-                    for (int k = 0; k < jsonItemsList.size(); k++) {
-                        if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
-                            filteredList.add(jsonItemsList.get(k));
+                    if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                        filterTow();
+                    }else {
+                        filterCategoury();
                     }
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+
+
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
-                    recyclerView.setAdapter(adapter);
+                    if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                        filterKindItem();
+                    }else
+                    fillAllItems();
+
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                recyclerView.setAdapter(adapter);
+                fillAllItems();
 
             }
         });
@@ -622,6 +629,48 @@ public class AddItemsFragment2 extends DialogFragment {
         });
         return view;
     }
+
+    private void filterTow() {
+        ArrayList<Item> filteredList = new ArrayList<>();
+        for (int j = 0; j < jsonItemsList.size(); j++) {
+            if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString())&&
+                    jsonItemsList.get(j).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                filteredList.add(jsonItemsList.get(j));
+        }
+        Log.e("filterTow",filteredList.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+        Log.e("filterTow",filteredList.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void filterKindItem() {
+        ArrayList<Item> filteredList = new ArrayList<>();
+        for (int j = 0; j < jsonItemsList.size(); j++) {
+            if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
+                filteredList.add(jsonItemsList.get(j));
+        }
+        Log.e("filterKindItem",filteredList.size() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void fillAllItems() {
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void filterCategoury() {
+        ArrayList<Item> filteredList = new ArrayList<>();
+        for (int k = 0; k < jsonItemsList.size(); k++) {
+            if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
+                filteredList.add(jsonItemsList.get(k));
+        }
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
+        recyclerView.setAdapter(adapter);
+    }
+
     /*//                new com.google.zxing.integration.android.IntentIntegrator(getActivity()).initiateScan();
 //
 //                barcode.setText("");
@@ -763,9 +812,10 @@ try {
             rate_customer="0";
 
         }
-        Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
+       // Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
 
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
+            Log.e("jsonItemsList","000000");
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
@@ -780,7 +830,7 @@ try {
                 if(priceListTypeVoucher!=0)
                 {
                     jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+listOfferNo,payMethod,dateCurent);
-                    Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
+                  //  Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
                 }
                 else {// regular list
 
@@ -791,12 +841,13 @@ try {
 
 
             }
-            else {
+            else {// here 1
                 jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
+                Log.e("jsonItemsList","11111jsonItemsList2.size()="+jsonItemsList2.size());
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
             }
             size_firstlist = jsonItemsList2.size();
-            Log.e("size_firstlist",""+size_firstlist);
+           // Log.e("size_firstlist",""+size_firstlist);
             if (size_firstlist != 0&&priceListTypeVoucher!=1) {
                 size_customerpriceslist = size_firstlist;
 
@@ -823,7 +874,7 @@ try {
                 }
 
                 jsonItemsList = jsonItemsList_intermidiate;
-                Log.e("jsonItemsList",""+jsonItemsList.size());
+               // Log.e("jsonItemsList",""+jsonItemsList.size());
 
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
@@ -832,10 +883,13 @@ try {
                 {
                     jsonItemsList=jsonItemsList2;
                 }else {
+                    Log.e("jsonItemsList","2222");
+                   // if(jsonItemsList.size()==0)
                     jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
                 }
 
             }
+
 
 //            Collections.sort(jsonItemsList<itemNoList>);
 
@@ -846,7 +900,9 @@ try {
     @SuppressLint("ResourceAsColor")
     public boolean addItem(String itemNumber, String itemName, String tax, String unit, String qty,
                            String price, String bonus, String discount, RadioGroup discTypeRadioGroup,
-                           String category, String posPrice, int useWeight, Context context, String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial) {
+                           String category, String posPrice, int useWeight, Context context,
+                           String descriptRemark, ArrayList<serialModel > itemSerialList,int hasSerial,int oneUnit)
+    {
         boolean itemInlocalList=false;
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
@@ -936,13 +992,20 @@ try {
                 {
 
                 }
+                if(oneUnit==0)
+                    item.setOneUnitItem("0");
+                else item.setOneUnitItem("1");
 
 
                 //***************************************************
                 if(mDbHandler.getAllSettings().get(0).getItemUnit()==1)
                 {
                     int itemUnit=mDbHandler.getUnitForItem(itemNumber);
+                    if(oneUnit==0)
                     item.setQty(Float.parseFloat(qty)*itemUnit);
+                    else {// just item one unit
+                        item.setQty(Float.parseFloat(qty));
+                    }
                   //  Log.e("priceItem","="+item.getQty()+"\titemUnit="+itemUnit);
                     if(itemUnit!=1)
                     {
@@ -953,18 +1016,40 @@ try {
                     else {
                         item.setPrice(priceItem);
                     }
-                    Log.e("unitDetail",""+unitDetail.getItemNo());
+
                     if(unitDetail.getItemNo()!=null)
                     {
-                        if(unitDetail.getConvRate()!=1)  // there are units
+                        Log.e("unitDetail",""+unitDetail.getItemNo());
+                        if(unitDetail.getConvRate()!=1)
+                        {
+                            // there are units
                             item.setWhich_unit("1");
-                        else item.setWhich_unit("0");
+                        }
+                        else
+                        {
+                            item.setWhich_unit("0");
+                        }
+                        if(oneUnit==1)//one unit not
+                        {
+                            float priceUnitItem=priceItem/itemUnit;
+                            Log.e("oneUnit",""+oneUnit+"\tpriceItem="+priceItem+"\tqty="+qty);
+                            item.setWhich_unit("0");
+                            item.setWhich_unit_str("");
+                            item.setWhichu_qty(0+"");
+                            item.setEnter_qty(qty);
+                            item.setEnter_price(priceUnitItem+"");
+                            item.setUnit_barcode(unitDetail.getItemBarcode());
 
-                        item.setWhich_unit_str(unitDetail.getUnitId());
-                        item.setWhichu_qty(unitDetail.getConvRate()+"");
-                        item.setEnter_qty(qty);
-                        item.setEnter_price((priceItem*qtyFloat)+"");
-                        item.setUnit_barcode(unitDetail.getItemBarcode());
+                        }else {
+                            item.setWhich_unit_str(unitDetail.getUnitId());
+                            item.setWhichu_qty(unitDetail.getConvRate()+"");
+                            item.setEnter_qty(qty);
+                            item.setEnter_price((priceItem)+"");
+                            item.setUnit_barcode(unitDetail.getItemBarcode());
+                        }
+
+
+
                     }
                     else {
                         Log.e("unitDetail","else");
@@ -1025,10 +1110,10 @@ try {
 
             if (discTypeRadioGroup.getCheckedRadioButtonId() == R.id.discPercRadioButton) {
                 item.setDiscType(1);// error for discount promotion // percent discount
-                Log.e("setDiscType", "percent");
+
             } else {
                 item.setDiscType(0);// value Discount
-                Log.e("setDiscType", "value");
+
             }
         Log.e("setDiscType", item.getDiscType()+"");
             try {
@@ -1042,12 +1127,10 @@ try {
                     item.setDisc((item.getQty() * item.getPrice() *
                             (Float.parseFloat(discount.trim())) / 100));
                 }
-                Log.e("setDiscType", item.getDisc()+"\tperc="+item.getDiscPerc());
+
                 descPerc = ((item.getQty() * item.getPrice() *
                         (Float.parseFloat(discount.trim()) / 100)));
 
-                Log.e("setDiscType22", item.getDisc()+"");
-                Log.e("setDiscType223", item.getDiscType()+"");
             } catch (NumberFormatException e) {
                 item.setDisc(0);
                 item.setDiscPerc("0");
@@ -1058,40 +1141,35 @@ try {
 
                     itemGroup = item.getCategory();
 
-                /*if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE) )
-                    item.setAmount(item.getQty() * (float)item.getPosPrice()  - item.getDisc());
-                else*/
-
 
                     item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
 
-                    Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
+                  //  Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
                 } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
                     item.setAmount(item.getQty() * item.getPrice() - descPerc);
-                    Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
+                   // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
                 }
             } catch (NumberFormatException e) {
                 item.setAmount(0);
             }
 //        }
 
-        Log.e("setDisc1",""+item.getDiscType());
+
         if ((!item.getItemName().equals("")) && item.getAmount() > 0 || item.getDiscType()==0 ||(item.getItemName().equals("(bonus)"))) {
             if (item.getItemName().equals("(bonus)")) {
                 flagBonus = List.get(List.size() - 1).getQty();
                 total_items_quantity -= flagBonus;
                 Log.e("flagBonus", "" + flagBonus);
-//               ?     amountBonus = items.get(i).getQty();
-//                    totalQty = totalQty - flagBonus;
+
             }
             else {
                 total_items_quantity += item.getQty();
                 totalQty_textView.setText("+ " + total_items_quantity);
-                Log.e("setQty", "" + Float.parseFloat(qty));
-                Log.e("total_items_quantity", "" + total_items_quantity);
+                //Log.e("setQty", "" + Float.parseFloat(qty));
+
             }
 
 
@@ -1133,7 +1211,6 @@ try {
 
                         String prc = generalMethod.convertToEnglish(generalMethod.getDecimalFormat(netPriceItem));
                        // float prcFloat = Float.parseFloat(prc);
-                        Log.e("itemSerialList", "item" + item.getQty() + "\tprice=" + item.getPrice() + "\tgetDisc=" + item.getDisc() + "\ttotal=" + prc);
                         itemSerialList.get(i).setPriceItemSales(prc);
                     }catch (Exception e){
 

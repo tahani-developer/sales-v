@@ -77,6 +77,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
@@ -93,6 +94,7 @@ public class ExportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
+    int taxType=0;
 
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
@@ -129,6 +131,8 @@ public class ExportJason extends AppCompatActivity {
             ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
             ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
             CONO=mHandler.getAllSettings().get(0).getCoNo();
+            taxType=mHandler.getAllSettings().get(0).getTaxClarcKind();
+            Log.e("taxType",""+taxType);
         }
 
         this.requestQueue = Volley.newRequestQueue(context);
@@ -340,8 +344,8 @@ public class ExportJason extends AppCompatActivity {
         exportAddedCustomer();
     }
     void startExportDelPhi()throws JSONException {
-//        headerDll="/Falcons/VAN.dll";
-        headerDll="";
+        headerDll="/Falcons/VAN.dll";
+//        headerDll="";
 //        startExportDatabase();
         exportSalesVoucherM();// 1
 //        savePayment();
@@ -815,11 +819,21 @@ public class ExportJason extends AppCompatActivity {
         }
         if(workOnLine==1&&typaImport==1) {
             isPosted=mHandler.isAllVoucher_posted();
+            if(makeOrders==1)
+            {   userNo=  mHandler.getAllSettings().get(0).getStoreNo();}
 
                 if(isPosted==true)
                 {
                     ImportJason obj = new ImportJason(context);
-                    obj.getItemBalance(userNo);
+                    if(mHandler.getAllSettings().get(0).getItemUnit()==1)
+                    {
+                        obj.startParsing(userNo);
+
+                    }else {
+                        obj.getItemBalance(userNo);
+                    }
+
+
                 }
                 else{
                     Toast.makeText(context,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
@@ -900,7 +914,7 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                 nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-               // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -946,6 +960,7 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
+                    mHandler.updateVoucher();
                     exportVoucherDetail();// 2
                 }else {
                     pdVoucher.dismissWithAnimation();
@@ -1269,7 +1284,7 @@ public class ExportJason extends AppCompatActivity {
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                     nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                    Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
+                  //  Log.e("nameValuePairs","added=_JSONSTR"+vouchersObject.toString().trim());
 
 
                     request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1318,6 +1333,8 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
                     updateAddedCustomer();// 10
+
+                   // Toast.makeText(context, context.getResources().getString(R.string.addCusttomerSucssesfuly), Toast.LENGTH_SHORT).show();
 
                 }else {
                     if(result.contains("Error in Saving"))
@@ -1455,7 +1472,7 @@ public class ExportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
                 nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+                 Log.e("nameValuePairs","Details=JSONSTR"+vouchersObject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -1567,7 +1584,7 @@ public class ExportJason extends AppCompatActivity {
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveVouchers";
                 // Log.e("ipAdress", "ip -->" + ip);
-                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
 
@@ -1641,7 +1658,7 @@ public class ExportJason extends AppCompatActivity {
 
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
-        mHandler.updateVoucher();
+
         mHandler.updateVoucherDetails();
         Log.e("onPostExecute","updateVoucherExported---3---");
     }

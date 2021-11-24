@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_launcher"
+                app:srcCompat="@drawable/ic_launcher_foreground"
                 tools:visibility="visible" />
 
             <TextView
@@ -436,7 +436,7 @@
                         android:id="@+id/textView24"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="الخصم :"
+                        android:text="خصم ك:"
                         android:textColor="@color/add_button"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -450,7 +450,28 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/textView242"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="خصم س:"
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/discountItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2"
+                        android:textColor="@color/add_button"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </TableRow>
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">

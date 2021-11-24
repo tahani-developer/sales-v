@@ -29,22 +29,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
+import com.dr7.salesmanmanager.Adapters.CustomersListAdapter;
 import com.dr7.salesmanmanager.Modles.Customer;
-import com.dr7.salesmanmanager.Modles.CustomerPrice;
-import com.dr7.salesmanmanager.Modles.ItemSwitch;
-import com.dr7.salesmanmanager.Modles.ItemsMaster;
-import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
-import com.dr7.salesmanmanager.Modles.Offers;
-import com.dr7.salesmanmanager.Modles.PriceListD;
-import com.dr7.salesmanmanager.Modles.PriceListM;
-import com.dr7.salesmanmanager.Modles.QtyOffers;
-import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
-import com.dr7.salesmanmanager.Modles.SalesTeam;
-import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
-import com.dr7.salesmanmanager.Modles.serialModel;
-import com.dr7.salesmanmanager.Reports.Reports;
-import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -70,7 +57,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.typaImport;
 

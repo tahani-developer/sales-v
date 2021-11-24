@@ -12,6 +12,7 @@ public class serialModel {
     private  int  counterSerial;
     private String voucherNo;
     private String itemNo;
+    private String itemName;
     private String dateVoucher;
     private String kindVoucher;
     private String storeNo;
@@ -24,7 +25,15 @@ public class serialModel {
     private  String priceItemSales;
     private  String customerNo;
     private  String customerName;
+    public   int  isClicked=0;
 
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
     public String getCustomerName() {
         return customerName;
     }

@@ -8,9 +8,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.dr7.salesmanmanager.Adapters.AccountStatmentAdapter;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Transaction;
-import com.dr7.salesmanmanager.Reports.InventoryReport;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -37,6 +36,8 @@ import java.util.List;
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.CustomerListShow.Customer_Name;
 import static com.dr7.salesmanmanager.ImportJason.listCustomerInfo;
+import static com.dr7.salesmanmanager.Login.dateFromToActive;
+import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 
 public class AccountStatment extends AppCompatActivity {
@@ -49,21 +50,43 @@ public class AccountStatment extends AppCompatActivity {
     Button preview_button_account;
      Spinner customerSpinner;
      String customerId="";
-     TextView name,lastVisitDateTime;
+     TextView name,lastVisitDateTime,from_date,to_date,getAcc;
      DatabaseHandler databaseHandler;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
     Transaction transaction;
+    String today="",from="",toDate="";
+    GeneralMethod generalMethod;
+    LinearLayout datLinear;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_statment);
 
-        ImportJason importJason =new ImportJason(AccountStatment.this);
-        importJason.getCustomerInfo(0);
+
 
         initialView();
+        LinearLayout linearMain=findViewById(R.id.linearMain);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
         inflateBoomMenu();
+        getDataFromServer(0);
 //        Log.e("customername",""+customername.size());
 
 //        preview_button_account.setOnClickListener(new View.OnClickListener() {
@@ -109,10 +132,18 @@ public class AccountStatment extends AppCompatActivity {
                 Log.e("customername",""+s.toString());
                 if(s.toString().equals("2"))
                 {
-                    if(listCustomerInfo.size()!=0)
-                {
+//                    if(listCustomerInfo.size()!=0)
+//                {
                     fillAdapter();
+//                }
                 }
+                else {
+                    if(s.toString().equals("3")){
+                        listCustomerInfo.clear();
+                        total_qty_text.setText("0");
+                        fillAdapter();
+
+                    }
                 }
             }
         });
@@ -183,6 +214,7 @@ public class AccountStatment extends AppCompatActivity {
     }
     @SuppressLint("WrongConstant")
     private void initialView() {
+        generalMethod=new GeneralMethod(AccountStatment.this);
         recyclerView_report=findViewById(R.id.recyclerView_report);
         getAccountList_text=findViewById(R.id.getAccountList_text);
         preview_button_account=findViewById(R.id.preview_button_account);
@@ -196,7 +228,55 @@ public class AccountStatment extends AppCompatActivity {
         lastVisitDateTime=findViewById(R.id.last_visit_text);
         databaseHandler=new DatabaseHandler(AccountStatment.this);
         total_qty_text=findViewById(R.id.total_qty_text);
+        from_date = (TextView) findViewById(R.id.from_date);
+        to_date = (TextView) findViewById(R.id.to_date);
+        getAcc=(TextView) findViewById(R.id.getAcc);
+        datLinear=findViewById(R.id.datLinear);
+        if(dateFromToActive==0)
+        {
+            datLinear.setVisibility(View.GONE);
+        }else {
+            datLinear.setVisibility(View.VISIBLE);
+        }
+        getAcc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDataFromServer(1);
+
+
+            }
+        });
+        today=generalMethod.getCurentTimeDate(1);
+//        from_date.setText(today);
+        to_date.setText(today);
+        from_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalMethod.DateClick(from_date);
+            }
+        });
+        to_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generalMethod.DateClick(to_date);
+            }
+        });
         getLastVaisit();
+    }
+
+    private void getDataFromServer(int flag ) {
+        if(flag==1)// with date
+        {
+            from=from_date.getText().toString().trim();
+            toDate=to_date.getText().toString().trim();
+        }else {
+            from="";
+            toDate="";
+        }
+
+      //  Log.e("from_Date","from=="+from+"toDate==="+toDate);
+        ImportJason importJason =new ImportJason(AccountStatment.this);
+        importJason.getCustomerInfo(0,from,toDate);
     }
 
     private void getLastVaisit() {

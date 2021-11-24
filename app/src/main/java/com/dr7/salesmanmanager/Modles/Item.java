@@ -54,8 +54,15 @@ public class Item implements Serializable {
     private String enter_qty;
     private String enter_price;
     private String unit_barcode;
+    private String oneUnitItem;
 
+    public String getOneUnitItem() {
+        return oneUnitItem;
+    }
 
+    public void setOneUnitItem(String oneUnitItem) {
+        this.oneUnitItem = oneUnitItem;
+    }
 
     public String getWhich_unit() {
         return which_unit;
@@ -554,7 +561,11 @@ public class Item implements Serializable {
 
             obj.put("WHICHUNIT", which_unit);
             obj.put("WHICHUNITSTR", which_unit_str);
+            if(!whichu_qty.equals(""))
             obj.put("WHICHUQTY", whichu_qty);
+            else {
+                obj.put("WHICHUQTY", "0");
+            }
             obj.put("ENTERQTY", enter_qty);
             obj.put("ENTERPRICE", enter_price);
             obj.put("UNITBARCODE", unit_barcode);

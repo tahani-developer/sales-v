@@ -1176,9 +1176,9 @@ public class ESCPSample2
 					posPtr.printAndroidFont(null, true, "الضريبة  : " + voucherforPrint.getTax() + "\n", nLineWidth, 26, alignment);
 
 				}
-				posPtr.printAndroidFont(null, true, "اجمالي الخصم   : " + convertToEnglish(decimalFormat.format((voucherforPrint.getTotalVoucherDiscount()+itemDiscount) ))+ "\n", nLineWidth, 26, alignment);
-					//posPtr.printAndroidFont(null, true, " خصم سطري    : " + convertToEnglish(decimalFormat.format(itemDiscount)) + "\n", nLineWidth, 26, alignment);
-					//posPtr.printAndroidFont(null, true, " خصم كلي    : " + voucherforPrint.getTotalVoucherDiscount()  + "\n", nLineWidth, 26, alignment);
+				//posPtr.printAndroidFont(null, true, "اجمالي الخصم   : " + convertToEnglish(decimalFormat.format((voucherforPrint.getTotalVoucherDiscount()+itemDiscount) ))+ "\n", nLineWidth, 26, alignment);
+					posPtr.printAndroidFont(null, true, " خصم سطري    : " + convertToEnglish(decimalFormat.format(itemDiscount)) + "\n", nLineWidth, 26, alignment);
+					posPtr.printAndroidFont(null, true, " خصم كلي    : " + voucherforPrint.getTotalVoucherDiscount()  + "\n", nLineWidth, 26, alignment);
 
 
 				posPtr.printAndroidFont(null, true, "الصافي   : " + voucherforPrint.getNetSales() + "\n", nLineWidth, 26, alignment);
@@ -1634,6 +1634,10 @@ public class ESCPSample2
 	item_largeName=(TextView)dialogs.findViewById(R.id.ittem_largeName);
 	LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
 
+//	prices=convertToEnglish(decimalFormat.format(prices));
+//		totals=convertToEnglish(decimalFormat.format(totals));
+		String discountStr=convertToEnglish(decimalFormat.format(discount));
+//		prices=convertToEnglish(decimalFormat.format(prices));
 	price.setText(prices);
 	price.setTextSize(textSize);
 	total.setText(totals);
@@ -1653,7 +1657,7 @@ public class ESCPSample2
 		}
 		item.setText("item name");
 		item.setVisibility(View.GONE);
-		item_discount.setText(discount+"");
+		item_discount.setText(discountStr);
 		item_discount.setTextSize(textSize);
 		Log.e("itemPrint",""+items.length()+items);
 	}
@@ -1662,7 +1666,7 @@ public class ESCPSample2
 		item.setVisibility(View.VISIBLE);
 		item.setText(items);
 		item.setTextSize(textSize);
-		item_discount.setText(discount+"");
+		item_discount.setText(discountStr);
 		item_discount.setTextSize(textSize);
 	}
 
@@ -1746,7 +1750,7 @@ public class ESCPSample2
 		{
 			img.setImageBitmap(companyInfo.getLogo());
 		}
-		else{img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_launcher));}
+		else{img.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_launcher_foreground));}
 		compname.setText(companyInfo.getCompanyName());
 		tel.setText("" + companyInfo.getcompanyTel());
 		 if(companyInfo.getTaxNo()!=0)

@@ -147,15 +147,24 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public  static final int typaImport=1;//0---- mySql   1-----IIs
+    public  static  int typaImport=1;//0---- mySql   1-----IIs
 
     public  static final int rawahneh=1;// 1= EXPORT STOCK TABLES
-    public  static final int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
+    public  static  final  int getMaxVoucherServer=1;
+
+    public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static final int makeOrders=0;// 1= just orders app
 
     public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
-    public  static  final  int getMaxVoucherServer=0;
-    public  static  final  int offerTalaat=0;
+
+    public  static    int offerTalaat=0;
+    public  static   int  offerQasion=1;
+    public  static    int getTotalBalanceInActivities=1;
+    public  static    int dateFromToActive=1;
+
+    public  static  final int  talaatLayoutAndPassowrd=0;
+    public  static  final  int voucherReturn_spreat=1;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -569,6 +578,16 @@ public class Login extends AppCompatActivity {
             }
         });
 //        openApp();
+        if(talaatLayoutAndPassowrd==1)
+        {
+            passwordSettingAdmin=1;
+            offerTalaat=1;
+            typaImport=0;
+            dateFromToActive=0;
+            getTotalBalanceInActivities=0;
+            offerQasion=0;
+
+        }
     }
 
     private void openApp() {

@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.35</string>
+    <string name="version"> V 100.60</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -483,6 +483,17 @@
     <string name="defferentCustomer">This Serial For Different Customer</string>
     <string name="shelf_inventory_report">Shelf   Inventory Report</string>
     <string name="itemUnit">Item Unit</string>
+    <string name="oneUnit">One Unit</string>
+    <string name="addCusttomerSucssesfuly">Add Custtomer Sucssesfuly</string>
+    <string name="refresh_customerData">Refresh Customer Data</string>
+    <string name="select">Select</string>
+    <string name="notSameCustomer">Not Same Customer</string>
+    <string name="noVoucherByThisNumber">No Voucher By This Number</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="please_export_data">please export data</string>
+    <string name="noVoucherForThisSerial">No Voucher For This Serial</string>
+    <string name="thisSerialIsReturnedBefor">This Serial had Returned Befor</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

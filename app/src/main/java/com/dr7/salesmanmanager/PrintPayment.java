@@ -1137,6 +1137,7 @@ public boolean filters(int n) {
         final Dialog dialogs=new Dialog(PrintPayment.this);
         dialogs.setContentView(R.layout.print_payment_cash);
         CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
 //*******************************************initial ***************************************************************
         TextView compname,tel,taxNo,cashNo,date,custname,note,paytype,ammont;
         LinearLayout cheque_print_linear=(LinearLayout)dialogs.findViewById(R.id.cheque_payment_layout) ;
@@ -1170,11 +1171,14 @@ public boolean filters(int n) {
         });
 
 //************************************************fill layout *********************************************************************
-        if(!companyInfo.getLogo().equals(null))
-        {
+//        if(!companyInfo.getLogo().equals(null))
+//        {
+        try {
             companey_logo.setImageBitmap(companyInfo.getLogo());
+        }catch ( Exception e){}
 
-        }
+
+//        }
         compname.setText(companyInfo.getCompanyName() );
         tel.setText(""+companyInfo.getcompanyTel());
         taxNo.setText(""+companyInfo.getTaxNo() );

@@ -44,9 +44,7 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class SerialReport extends AppCompatActivity {
     RecyclerView recyclerView;
    public static List<serialModel> allseriallist =new ArrayList<>();
-
     private List<serialModel> searchlist=new ArrayList<>();
-
     DatabaseHandler databaseHandler;
     public static SerialReportAdpter adapter;
     TextView searchicon;
@@ -70,7 +68,7 @@ Spinner ItemKindspinner;
         init();
         itemsMasters.clear();
         itemsMasters=databaseHandler.getItemMaster2();
-        Log.e("itemsMasters"," "+ itemsMasters.size());
+      //  Log.e("itemsMasters"," "+ itemsMasters.size());
         fillSp();
 
         Log.e("SerialReport","SerialReport");
@@ -169,7 +167,7 @@ Spinner ItemKindspinner;
 
         mastersItemkinds = databaseHandler.getItemkinds(ItemKindspinner.getSelectedItem().toString());
         Log.e("itemsMasters2===", mastersItemkinds.size()+"");
-        Log.e("itemsMasters2===",mastersItemkinds.get(0).getItemNo());
+     //   Log.e("itemsMasters2===",mastersItemkinds.get(0).getItemNo());
       //  return mastersItemkinds.get(0).getItemNo();
 
 
@@ -229,6 +227,7 @@ Spinner ItemKindspinner;
                 if(!ItemKindspinner.getSelectedItem().toString().equals("")) {
 
                     Log.e("allseriallist===", allseriallist.get(i).getItemNo()+"");
+                    Log.e("allseriallist.get(i)===", allseriallist.get(i).getItemNo()+"");
 
 
                     for (int j = 0; j < mastersItemkinds.size(); j++)

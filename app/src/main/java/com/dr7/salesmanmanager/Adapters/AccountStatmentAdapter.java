@@ -1,8 +1,7 @@
-package com.dr7.salesmanmanager;
+package com.dr7.salesmanmanager.Adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
+import com.dr7.salesmanmanager.R;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -37,7 +37,7 @@ public class AccountStatmentAdapter extends RecyclerView.Adapter<AccountStatment
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.account_row, parent, false);
-        Log.e("", "onCreateViewHolder");
+       // Log.e("", "onCreateViewHolder");
         return new ViewHolder(view);
 
     }
@@ -46,7 +46,7 @@ public class AccountStatmentAdapter extends RecyclerView.Adapter<AccountStatment
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.e("onBindViewHolder", "" + totalBalance);
+       // Log.e("onBindViewHolder", "" + totalBalance);
 
         //totalBalance=0;
         //  holder.setIsRecyclable(false);
@@ -74,7 +74,7 @@ public class AccountStatmentAdapter extends RecyclerView.Adapter<AccountStatment
         holder.linearLayout.setPadding(5, 10, 5, 10);
 
         if (inventorylist.size() != 0) {
-            Log.e("onBindViewHolder", "=total=" + inventorylist.get(inventorylist.size() - 1).getBalance());
+           // Log.e("onBindViewHolder", "=total=" + inventorylist.get(inventorylist.size() - 1).getBalance());
             total_qty_text.setText(convertToEnglish(decimalFormat.format(inventorylist.get(inventorylist.size() - 1).getBalance())));
         }
 
@@ -102,7 +102,7 @@ public class AccountStatmentAdapter extends RecyclerView.Adapter<AccountStatment
             date_transe = itemView.findViewById(R.id.date_transe);
             transeName = itemView.findViewById(R.id.transeName);
             voucherNo = itemView.findViewById(R.id.voucherNo);
-            Log.e("", "ViewHolder const");
+            //Log.e("", "ViewHolder const");
 
         }
     }

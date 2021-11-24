@@ -40,10 +40,12 @@ import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -56,6 +58,7 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.UnCollect_Modell;
+import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.google.gson.Gson;
@@ -101,11 +104,15 @@ import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
+import static com.dr7.salesmanmanager.Login.dateFromToActive;
 import static com.dr7.salesmanmanager.Login.goMainText;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.Methods.convertToEnglish;
+import static com.dr7.salesmanmanager.Methods.getDecimal;
+import static com.dr7.salesmanmanager.ReturnByVoucherNo.loadSerial;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -114,10 +121,10 @@ public class ImportJason extends AppCompatActivity {
     private Context context;
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
-    SweetAlertDialog pdValidation,pdPayments,getDataProgress;
-    public  String curentIpDevice="";
-    String headerDll="";
-    int counter=0,voucherTyp=504;
+    SweetAlertDialog pdValidation, pdPayments, getDataProgress;
+    public String curentIpDevice = "";
+    String headerDll = "";
+    int counter = 0, voucherTyp = 504;
 
     public static List<Customer> customerList = new ArrayList<>();
     public static List<ItemUnitDetails> itemUnitDetailsList = new ArrayList<>();
@@ -134,18 +141,22 @@ public class ImportJason extends AppCompatActivity {
     public static List<Offers> offersList = new ArrayList<>();
     public static List<QtyOffers> qtyOffersList = new ArrayList<>();
     public static List<ItemsQtyOffer> itemsQtyOfferList = new ArrayList<>();
+    public static List<OfferGroupModel> groupOfferList = new ArrayList<>();
     public static List<Account_Report> account_reportList = new ArrayList<>();
     public static List<OfferListMaster> offerListMasterArrayList = new ArrayList<>();
     public static ArrayList<Account__Statment_Model> listCustomerInfo = new ArrayList<Account__Statment_Model>();
-    public static ArrayList<serialModel> itemSerialList=new ArrayList<>();
-    public static ArrayList<UnCollect_Modell> unCollectlList=new ArrayList<>();
-    public static ArrayList<Payment> paymentChequesList=new ArrayList<>();
+    public static ArrayList<serialModel> itemSerialList = new ArrayList<>();
+    public static ArrayList<UnCollect_Modell> unCollectlList = new ArrayList<>();
+    public static ArrayList<Payment> paymentChequesList = new ArrayList<>();
+    public static ArrayList<serialModel> returnListSerial = new ArrayList<>();
+    public static ArrayList<Item> listItemsReturn = new ArrayList<>();
+    public static Voucher voucherReturn = new Voucher();
     private JsonArrayRequest loginRequest;
     private RequestQueue requestQueue;
-    public  String CONO="";
-    String userNo= "";
+    public String CONO = "";
+    String userNo = "";
     boolean start = false;
-    String ipAddress = "",ipWithPort="",SalesManLogin;
+    String ipAddress = "", ipWithPort = "", SalesManLogin;
 
     public ImportJason(Context context) {
         this.context = context;
@@ -153,251 +164,776 @@ public class ImportJason extends AppCompatActivity {
         List<Settings> settings = mHandler.getAllSettings();
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
-        SalesManLogin= mHandler.getAllUserNo();
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
-        Log.e("SalesManLogin",""+SalesManLogin);
+        SalesManLogin = mHandler.getAllUserNo();
+//        headerDll = "/Falcons/VAN.dll";
+        headerDll="";
+        //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-            ipWithPort=settings.get(0).getIpPort();
-            Log.e("ipWithPort",""+ipWithPort);
-            if(makeOrders==1)
-            {
+            ipWithPort = settings.get(0).getIpPort();
+            Log.e("ipWithPort", "" + ipWithPort);
+            if (makeOrders == 1) {
 
-                userNo=  mHandler.getAllSettings().get(0).getStoreNo();
-                Log.e("userNo","getAllSettings=="+userNo);
-            }else{
-                userNo= mHandler.getAllUserNo();
+                userNo = mHandler.getAllSettings().get(0).getStoreNo();
+                Log.e("userNo", "getAllSettings==" + userNo);
+            } else {
+                userNo = mHandler.getAllUserNo();
             }
 
-            CONO=mHandler.getAllSettings().get(0).getCoNo();
-        }
-        else {
+            CONO = mHandler.getAllSettings().get(0).getCoNo();
+        } else {
             Toast.makeText(context, "Check Setting Ip", Toast.LENGTH_SHORT).show();
         }
-        counter=0;
+        counter = 0;
     }
 
-    public void getCustomerInfo(int type) {
+    public void getCustomerInfo(int type, String fromDate, String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
             Log.e("getCustomerInfo", "*****");
-            new JSONTask_AccountStatment(CustomerListShow.Customer_Account,type).execute();
-          //  new SyncRemark().execute();
-        }
+            if (fromDate.equals("") && toDate.equals("")) {
 
-    }
+                new JSONTask_AccountStatment(CustomerListShow.Customer_Account, type, fromDate, toDate).execute();
+            } else {
 
-    public void getUnCollectedCheques() {
-        List<Settings> settings = mHandler.getAllSettings();
-        if (settings.size() != 0) {
-            ipAddress = settings.get(0).getIpAddress();
-            Log.e("getUnCollectedCheques", "*****");
-            new JSONTask_UncollectedCheques(CustomerListShow.Customer_Account).execute();
+                new JSONTask_AccountStatment_Withdate(CustomerListShow.Customer_Account, type, fromDate, toDate).execute();
+            }
             //  new SyncRemark().execute();
         }
 
     }
 
-    public void getAllcheques() {
+    public void getUnCollectedCheques(String fromDate, String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-            new JSONTask_GetAllCheques(CustomerListShow.Customer_Account).execute();
+            Log.e("getUnCollectedCheques", "*****");
+            new JSONTask_UncollectedCheques(CustomerListShow.Customer_Account, fromDate, toDate).execute();
+            //  new SyncRemark().execute();
+        }
+
+    }
+
+    public void getAllcheques(String fromDate, String toDate) {
+        List<Settings> settings = mHandler.getAllSettings();
+        if (settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            new JSONTask_GetAllCheques(CustomerListShow.Customer_Account, fromDate, toDate).execute();
 
         }
     }
 
     public void getMaxVoucherNo() {
-       // getDataVolley(salesMan,504 );
-        new JSONTask_maxVoucherNo(salesMan,504 ).execute();
+        // getDataVolley(salesMan,504 );
+        new JSONTask_maxVoucherNo(salesMan, 504).execute();
 
     }
 
-//    public float getAvailableQty(String itemNoSelected) {
-//        return
-//    }
+    public void getSerialData(String voucherNo) {
+        new JSONTask_SerialReturnData(voucherNo).execute();
+    }
+
+    public void getVoucherNoFromServer(String srialCode) {
+        Log.e("getVoucherNoFromServer","srialCode="+srialCode );
+        new JSONTask_getVoucherNoForSerial(srialCode).execute();
+    }
+    private class JSONTask_getVoucherNoForSerial extends AsyncTask<String, String, String> {
+
+        private String serialCode = "";
 
 
-    private class SyncRemark extends AsyncTask<String, String, String> {
-        private String JsonResponse = null;
-        private HttpURLConnection urlConnection = null;
-        private BufferedReader reader = null;
+        public JSONTask_getVoucherNoForSerial(String voucNo) {
+            this.serialCode = voucNo;
+
+            Log.e("voucherNo", "JSONTask==" + serialCode);
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            progressDialog = new ProgressDialog(context,R.style.MyTheme);
-//            progressDialog.setCancelable(false);
-//            progressDialog.setMessage("Loading...");
-//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progressDialog.setProgress(0);
-//            progressDialog.show();
-
-//            pd.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-//            pd.setTitleText("يتم استيراد Remark");
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
 
         }
 
         @Override
         protected String doInBackground(String... params) {
+//http://10.0.0.22:8085/GetVhfNoBySerial?CONO=295&SERIALNO=355020113133366
             try {
 
 
-//                final List<MainSetting>mainSettings=dbHandler.getAllMainSetting();
-//                String ip="";
-//                if(mainSettings.size()!=0) {
-//                    ip=mainSettings.get(0).getIP();
-//                }
-                //http://localhost:8082/GetACCOUNTSTATMENT?ACCNO=402001100
-                //http://localhost:8082/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100
-                String link = "http://10.0.0.22:8081/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-              //  String link = "http://" + ipAddress + "/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-//                String link = "http://"+ip + "/GetNotes";
-                Log.e("ipAdress", "ip -->" + link);
-
-                // ITEM_CARD
-//                String max=dbHandler.getMaxInDate("ITEM_SWITCH");
-//                String maxInDate="";
-//                if(max.equals("-1")) {
-//                    maxInDate="05/03/2020";
-//                }else{
-//                    maxInDate=max.substring(0,10);
-//                    String date[]=maxInDate.split("-");
-//                    maxInDate=date[2]+"/"+date[1]+"/"+date[0];
-//                    Log.e("splitSwitch ",""+maxInDate);
-//                }
-//                String data = "MAXDATE=" + URLEncoder.encode(maxInDate, "UTF-8");
-////
-                URL url = new URL(link);
-
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setRequestMethod("GET");
-
-//                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-//                wr.writeBytes(data);
-//                wr.flush();
-//                wr.close();
-//                Log.e("url____",""+link+data);
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                StringBuffer stringBuffer = new StringBuffer();
-
-                while ((JsonResponse = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(JsonResponse + "\n");
-                }
-
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-
-                Log.e("tag", "TAG_itemSwitch -->" + stringBuffer.toString());
-
-                return stringBuffer.toString();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("tag", "Error closing stream", e);
+                if (!ipAddress.equals("")) {
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
                     }
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVhfNoBySerial?SERIALNO=" + serialCode.trim() + "&CONO=" + CONO;
+
+
                 }
+                Log.e("GetVhfNoBySerial=", "" + URL_TO_HIT.toString());
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
             }
-            return null;
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                // Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        pdValidation.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
         }
 
         @Override
-        protected void onPostExecute(String JsonResponse) {
-            super.onPostExecute(JsonResponse);
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
 
-//            if (JsonResponse != null && JsonResponse.contains("REMARKBODY")) {
-                JSONObject result = null;
-                String impo = "";
-                if (JsonResponse != null) {
-                    if (JsonResponse.contains("VHFNo")) {
-                        // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
-                        //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+            JSONObject result = null;
+            String impo = "";
 
-                        try {
-//                            result = new JSONObject(s);
-                            Account__Statment_Model requestDetail;
+            pdValidation.dismissWithAnimation();
+            String voucherNumber="";
+            if (s != null) {
+                if (s.contains("VHFNO")) {
+                    //  [{"VHFNO":"1900000169","STORENO":"1","TRNSDATE":"14\/08\/2021","TRANSKIND":"504","ITEMNO":"4213000125","SERIAL_CODE":"359573266728966","QTY":"1","VSERIAL":"1","ISPOSTED":"1"},
 
-
-                            JSONArray requestArray = null;
-                            listCustomerInfo = new ArrayList<>();
-
-                            requestArray = result.getJSONArray(JsonResponse);
-                            Log.e("requestArray", "" + requestArray.length());
+                    try {
+                        serialModel requestDetail;
+                        JSONArray requestArray = null;
 
 
-                            for (int i = 0; i < requestArray.length(); i++) {
-                                JSONObject infoDetail = requestArray.getJSONObject(i);
-                                requestDetail = new Account__Statment_Model();
-                                requestDetail.setVoucherNo(infoDetail.get("VHFNo").toString());
-                                requestDetail.setTranseNmae(infoDetail.get("TransName").toString());
-                                requestDetail.setDate_voucher(infoDetail.get("VHFDATE").toString());
-
-                                try {
-                                    requestDetail.setDebit(Double.parseDouble(infoDetail.get("DEBIT").toString()));
-                                    requestDetail.setCredit(Double.parseDouble(infoDetail.get("Credit").toString()));
-                                } catch (Exception e) {
-                                    requestDetail.setDebit(0);
-                                    requestDetail.setCredit(0);
-                                }
+                        double totalBalance = 0;
+                        requestArray = new JSONArray(s);
+                        requestDetail = new serialModel();
+                        //  Log.e("requestArray", "" + requestArray.length());
 
 
-                                listCustomerInfo.add(requestDetail);
-                                Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+
+                            requestDetail.setVoucherNo(infoDetail.get("VHFNO").toString());
+                            requestDetail.setKindVoucher(infoDetail.get("TRANSKIND").toString());
+
+                            voucherNumber=requestDetail.getVoucherNo();
+
+                              // Log.e("vhfno==", "==" + requestDetail.getVoucherNo());
 
 
-                            }
-                            getAccountList_text.setText("2");
-
-                        } catch (JSONException e) {
-//                        progressDialog.dismiss();
-                            e.printStackTrace();
                         }
+                        if(requestDetail.getKindVoucher().equals("504"))
+                            loadSerial.setText("VHFNO"+voucherNumber);
+                        else loadSerial.setText("returned");
+
+
+
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
                     }
-//                    else
-//                        Log.e("onPostExecute", "" + .toString());
+                } else {
+                }
+                //  Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
+            }
+
+        }
+
+    }
+
+    private class JSONTask_SerialReturnData extends AsyncTask<String, String, String> {
+
+        private String voucherNo = "";
+
+
+        public JSONTask_SerialReturnData(String voucNo) {
+            this.voucherNo = voucNo;
+
+            Log.e("voucherNo", "JSONTask==" + voucherNo);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+//http://localhost:8085/GetVE_ITEMSERIAL?CONO=295&VHFNO=1900000169
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVE_ITEMSERIAL?VHFNO=" + voucherNo + "&CONO=" + CONO;
+
+
+                }
+                Log.e("GetVE_ITEMSERIAL=", "" + URL_TO_HIT.toString());
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
                 }
 
-//            }
-            else if (JsonResponse != null && JsonResponse.contains("No Data Found.")){
-//                new SyncItemUnite().execute();
-//                pd.dismissWithAnimation();
+                in.close();
 
-            }else {
-                Log.e("TAG_itemSwitch", "****Failed to export data");
+
+                JsonResponse = sb.toString();
+                // Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
 //                progressDialog.dismiss();
-//                if(pd!=null) {
-//                    pd.dismiss();
-//                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-//                            .setTitleText("استيراد Remark")
-//                            .setContentText("فشل استيراد Remark")
-//                            .show();
-//                }
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        pdValidation.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            returnListSerial = new ArrayList<>();
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("VHFNO")) {
+                    //  [{"VHFNO":"1900000169","STORENO":"1","TRNSDATE":"14\/08\/2021","TRANSKIND":"504","ITEMNO":"4213000125","SERIAL_CODE":"359573266728966","QTY":"1","VSERIAL":"1","ISPOSTED":"1"},
+
+                    try {
+                        serialModel requestDetail;
+                        JSONArray requestArray = null;
+
+
+                        double totalBalance = 0;
+                        requestArray = new JSONArray(s);
+                      //  Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            requestDetail = new serialModel();
+                            requestDetail.setVoucherNo(infoDetail.get("VHFNO").toString());
+                            requestDetail.setStoreNo(infoDetail.get("STORENO").toString());
+                            requestDetail.setDateVoucher(infoDetail.get("TRNSDATE").toString());
+                            requestDetail.setKindVoucher("506");
+                            requestDetail.setItemName("");
+                            requestDetail.setIsPosted("0");
+
+                            try {
+                                requestDetail.setKindVoucher((infoDetail.get("TRANSKIND").toString()));
+                                requestDetail.setItemNo(infoDetail.get("ITEMNO").toString());
+                                requestDetail.setIsBonus("0");
+                            } catch (Exception e) {
+
+                            }
+                            requestDetail.setSerialCode(infoDetail.get("SERIAL_CODE").toString());
+
+                            returnListSerial.add(requestDetail);
+                         //   Log.e("returnListSerial", "==" + returnListSerial.size());
+
+
+                        }
+                      //  if(returnListSerial.size()!=0)
+                            loadSerial.setText("fillSerial");
+
+
+
+
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else {
+                    if(s.contains("No Parameter Found"))
+                    {
+                        loadSerial.setText("No Parameter Found");
+                    }
+                }
+              //  Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+            }
+            if(returnListSerial.size()!=0)
+            new JSONTask_VoucherMReturnData(voucherNo).execute();
+
+        }
+
+    }
+
+    private class JSONTask_VoucherMReturnData extends AsyncTask<String, String, String> {
+
+        private String voucherNo = "";
+
+
+        public JSONTask_VoucherMReturnData(String voucNo) {
+            this.voucherNo = voucNo;
+
+            Log.e("VoucherMReturnData", "JSONTask==" + voucherNo);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            //  http://10.0.0.22:8085/GetVE_M?CONO=295&VHFNO=6
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVE_M?VHFNO=" + voucherNo + "&CONO=" + CONO;
+
+
+                }
+                Log.e("GetVE_M=", "" + URL_TO_HIT.toString());
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                // Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        pdValidation.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("VOUCHERNO")) {
+                    //[{"COMAPNYNO":"295","VOUCHERYEAR":"2021","VOUCHERNO":"6","VOUCHERTYPE":"504","VOUCHERDATE":"05\/10\/2021","SALESMANNO":"00006","CUSTOMERNO":"1110010059","VOUCHERDISCOUNT":"0","VOUCHERDISCOUNTPERCENT":"0","NOTES":" ","CACR":"1","ISPOSTED":"1","PAYMETHOD":"1","NETSALES":"37.12","REALDATEEXPOTED":"05\/10\/2021","REALTIMEEXPOTED":"02:10:50 م"}]
+
+                    try {
+                        Voucher voucher;
+                        JSONArray requestArray = null;
+                        voucherReturn = new Voucher();
+                        requestArray = new JSONArray(s);
+                       // Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            voucher = new Voucher();
+                            try {
+
+
+                                voucher.setCompanyNumber(Integer.parseInt(CONO));
+                                voucher.setVoucherNumber(Integer.parseInt(infoDetail.get("VOUCHERNO").toString()));
+                                voucher.setVoucherType(506);
+                                //  voucher.setVoucherDate(infoDetail.get("VOUCHERNO").toString());
+                                voucher.setSaleManNumber(Integer.parseInt(salesMan));
+//                              voucher.setVoucherDiscount(infoDetail.get("VOUCHERNO").toString());
+//                              voucher.setVoucherDiscountPercent(VOUCHERDISCOUNTPERCENT);
+                                voucher.setRemark("");
+                                voucher.setPayMethod(Integer.parseInt(infoDetail.get("PAYMETHOD").toString()));
+
+                                voucher.setIsPosted(0);
+                                voucher.setTotalVoucherDiscount(Integer.parseInt(infoDetail.get("VOUCHERDISCOUNT").toString()));
+                                //  voucher.setSubTotal(Double.parseDouble(infoDetail.get("NETSALES").toString()));
+                                //voucher.setTax(Integer.parseInt(infoDetail.get("VOUCHERNO").toString()));
+                                voucher.setCustNumber(infoDetail.get("CUSTOMERNO").toString());
+                                voucher.setNetSales(Double.parseDouble(infoDetail.get("NETSALES").toString()));
+                                // voucher.setCustName(infoDetail.get("VOUCHERNO").toString());
+
+                                Log.e("voucher",""+voucher.getCustNumber()+"\t"+voucher.getNetSales());
+                                voucher.setVoucherYear(Integer.parseInt(infoDetail.get("VOUCHERYEAR").toString()));
+                            } catch (Exception e) {
+                                Log.e("voucher", "Exception=" + e.getMessage());
+                            }
+                            // voucher.setTime(timevocher);
+
+                            voucherReturn = voucher;
+                       //     Log.e("returnListSerial", "==" + voucherReturn);
+
+
+                        }
+//                        if(voucherReturn.getCustNumber().trim().equals(CustomerListShow.Customer_Account.trim()))
+//                        {
+                            loadSerial.setText("fillpayMethod");
+                            new  JSONTask_VoucherDetailReturnData(voucherNo).execute();
+//                        }
+
+//                        else {
+//                            loadSerial.setText("NotSameCustomer");
+//                        }
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else {
+                    if(s.contains("No Parameter Found"))
+                    {
+                        loadSerial.setText("No Parameter Found");
+                    }
+                }
+                Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+            }
+
+        }
+
+    }
+    //http://10.0.0.22:8085/GetVE_M?CONO=295&VHFNO=6
+    private class JSONTask_VoucherDetailReturnData extends AsyncTask<String, String, String> {
+
+        private String voucherNo = "";
+
+
+        public JSONTask_VoucherDetailReturnData(String voucNo) {
+            this.voucherNo = voucNo;
+
+            Log.e("VoucherMReturnData", "JSONTask==" + voucherNo);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            //  http://10.0.0.22:8085/GetVE_M?CONO=295&VHFNO=6
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVE_D?VHFNO=" + voucherNo + "&CONO=" + CONO;
+
+
+                }
+                Log.e("GetVE_d=", "" + URL_TO_HIT.toString());
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                // Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        pdValidation.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            listItemsReturn = new ArrayList<>();
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("VOUCHERNO")) {
+//                    {"COMAPNYNO":"295","VOUCHERYEAR":"2021","VOUCHERNO":"6","VOUCHERTYPE":"504","ITEMNO":"30100002","UNIT":"1",
+//                            "QTY":"15","BONUS":"0","UNITPRICE":"2","ITEMDISCOUNTVALUE":"0","ITEMDISCOUNTPRC":"0",
+//                            "VOUCHERDISCOUNT":"0","TAXVALUE":"4.8","TAXPERCENT":"16","ISPOSTED":"0","ITEM_DESCRITION":"",
+//                            "SERIAL_CODE":"0","ITEM_SERIAL_CODE":"","WHICHUNIT":"1","WHICHUNITSTR":"Test2","WHICHUQTY":"3.0",
+//                            "ENTERQTY":"5","ENTERPRICE":"30.0","UNITBARCOD":"456","CALCQTY":"5"},
+
+                    try {
+                        Item voucher;
+                        JSONArray requestArray = null;
+
+                        requestArray =  new JSONArray(s);
+                        Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            voucher = new Item();
+                            try {
+                                voucher.setCompanyNumber(Integer.parseInt(CONO));
+                                voucher.setVoucherNumber(Integer.parseInt(infoDetail.get("VOUCHERNO").toString()));
+                                voucher.setVoucherType(506);
+                                voucher.setItemNo(infoDetail.get("ITEMNO").toString());
+                                voucher.setSalesmanNo(salesMan);
+                                voucher.setUnit(infoDetail.get("UNIT").toString());
+                                voucher.setQty(Float.parseFloat(infoDetail.get("QTY").toString()));
+                               // voucher.setQty(0);
+
+                                voucher.setPrice(Float.parseFloat(infoDetail.get("UNITPRICE").toString()));
+                                voucher.setBonus(Float.parseFloat(infoDetail.get("BONUS").toString()));
+                                voucher.setDisc(Float.parseFloat(infoDetail.get("ITEMDISCOUNTVALUE").toString()));
+                                voucher.setDiscPerc(infoDetail.get("ITEMDISCOUNTPRC").toString());
+
+                                voucher.setIsPosted(0);
+                                voucher.setVoucherDiscount(Float.parseFloat(infoDetail.get("VOUCHERDISCOUNT").toString()));
+                              voucher.setTax(Float.parseFloat(infoDetail.get("TAXVALUE").toString()));
+                                voucher.setTaxPercent(Float.parseFloat(infoDetail.get("TAXPERCENT").toString()));
+
+                                voucher.setSerialCode("0");
+                                voucher.setDescreption("");
+                                voucher.setIsPosted(0);
+
+                                voucher.setWhich_unit(infoDetail.get("WHICHUNIT").toString());
+                                voucher.setWhich_unit_str(infoDetail.get("WHICHUNITSTR").toString());
+                                voucher.setWhichu_qty(infoDetail.get("WHICHUQTY").toString());
+                                voucher.setEnter_qty(infoDetail.get("ENTERQTY").toString());
+                                voucher.setEnter_price(infoDetail.get("ENTERPRICE").toString());
+                                voucher.setUnit_barcode(infoDetail.get("UNITBARCOD").toString());
+
+
+
+                                voucher.setYear(infoDetail.get("VOUCHERYEAR").toString());
+                                listItemsReturn.add(voucher);
+                            }catch (Exception e){
+                                Log.e("voucher", "Exception="+e.getMessage()  );
+                            }
+                            // voucher.setTime(timevocher);
+
+
+                            //Log.e("listItemsReturn", "==" + listItemsReturn.size());
+
+
+                        }
+
+                        loadSerial.setText("fillItems");
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else {
+                }
+                Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+
             }
 
         }
     }
 
-    public  void  getCustomerData(){
 
-       new  JSONTaskDelphi_customer().execute();
+    public void getCustomerData() {
+
+        new JSONTaskDelphi_customer().execute();
     }
 
 
@@ -407,10 +943,10 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
-           // http://10.0.0.22:8082/GetVanAllData
-         // URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+            // http://10.0.0.22:8082/GetVanAllData
+            // URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
 
-        // new JSONTask(salesNo).execute(URL_TO_HIT);
+            // new JSONTask(salesNo).execute(URL_TO_HIT);
 //            if(isNetworkAvailable()){
 //                new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
 //            }
@@ -421,27 +957,21 @@ public class ImportJason extends AppCompatActivity {
 //                            .show();
 //
 //            }
-            if(typaImport==0)//mysql
+            if (typaImport == 0)//mysql
             {
-             new JSONTask(userNo).execute(URL_TO_HIT);
-            }else if(typaImport==1)
-            {
-                if(makeOrders==1)
-                {// store Number from setting
-                    if(!userNo.equals(""))
-                    new JSONTaskDelphi(userNo).execute(URL_TO_HIT);
+                new JSONTask(userNo).execute(URL_TO_HIT);
+            } else if (typaImport == 1) {
+                if (makeOrders == 1) {// store Number from setting
+                    if (!userNo.equals(""))
+                        new JSONTaskDelphi(userNo).execute(URL_TO_HIT);
                     else {
                         new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
                     }
-                }else{
+                } else {
                     new JSONTaskDelphi(salesNo).execute(URL_TO_HIT);
                 }
 
             }
-
-
-
-
 
 
         }
@@ -449,13 +979,13 @@ public class ImportJason extends AppCompatActivity {
 
     }
 
-    private void getDataVolley(String salesNo,int voucherType ) {
-        voucherTyp=voucherType;
+    private void getDataVolley(String salesNo, int voucherType) {
+        voucherTyp = voucherType;
 
-            getDataProgress = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-            getDataProgress.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-            getDataProgress.setTitleText(context.getResources().getString(R.string.process));
-            getDataProgress.setCancelable(false);
+        getDataProgress = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        getDataProgress.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        getDataProgress.setTitleText(context.getResources().getString(R.string.process));
+        getDataProgress.setCancelable(false);
 
 
 //        getDataProgress.show();
@@ -464,22 +994,20 @@ public class ImportJason extends AppCompatActivity {
 //        ipWithPort="8085";
         if (!ipAddress.equals("")) {
 
-            if(ipAddress.contains(":"))
-            {
-                int ind=ipAddress.indexOf(":");
-                ipAddress=ipAddress.substring(0,ind);
+            if (ipAddress.contains(":")) {
+                int ind = ipAddress.indexOf(":");
+                ipAddress = ipAddress.substring(0, ind);
             }
 
-            if(!salesNo.equals(""))
-            {
-                URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetmaxNo?STRNO="+salesNo+"&CONO="+CONO+"&VKIND="+String.valueOf(voucherType).trim();
+            if (!salesNo.equals("")) {
+                URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + salesNo + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherType).trim();
 
-            }else {
-                URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetmaxNo?STRNO="+SalesManLogin+"&CONO="+CONO+"&VKIND="+String.valueOf(voucherType).trim();
+            } else {
+                URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + SalesManLogin + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherType).trim();
 
             }
 
-            Log.e("URL_TO_HIT1010",""+URL_TO_HIT);
+            Log.e("URL_TO_HIT1010", "" + URL_TO_HIT);
         }
         getDataProgress.show();
         loginRequest = new JsonArrayRequest(Request.Method.POST, URL_TO_HIT
@@ -529,7 +1057,7 @@ public class ImportJason extends AppCompatActivity {
         @Override
         public void onResponse(JSONArray response) {
             // getDataProgress.dismissWithAnimation();
-              Log.e("presenter/", "trackingCheque/" + response.toString());
+            Log.e("presenter/", "trackingCheque/" + response.toString());
 //            if (response.toString().contains("MAXVHFNO")) {
 
             if (response != null) {
@@ -544,43 +1072,36 @@ public class ImportJason extends AppCompatActivity {
                         long maxVoucherLong = Long.parseLong(maxVoucher);
 
                         Toast.makeText(context,
-                                "Sucsses VoucherNo"+voucherTyp,
+                                "Sucsses VoucherNo" + voucherTyp,
                                 Toast.LENGTH_SHORT).show();
-                        if(voucherTyp==504) {
+                        if (voucherTyp == 504) {
 
 
                             mHandler.addSerialVoucherNo(maxVoucherLong, 0, 0);
 
-                        }
-                        else {
+                        } else {
 
-                            mHandler.updateVoucherNo(maxVoucherLong, 506,0);
+                            mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
 
                             goMainText.setText("main");
 
                         }
                         counter++;
 
-                        if(voucherTyp==504)
-                        {
+                        if (voucherTyp == 504) {
                             getDataProgress.dismissWithAnimation();
 
-                            getDataVolley(salesMan,506);
-                        }
-                        else {
+                            getDataVolley(salesMan, 506);
+                        } else {
                             getDataProgress.dismissWithAnimation();
                         }
-
-
-
-
 
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-            }else {
+            } else {
                 getDataProgress.dismissWithAnimation();
                 goMainText.setText("main");
             }
@@ -590,6 +1111,7 @@ public class ImportJason extends AppCompatActivity {
 
 
     }
+
     // new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
     //                        .setTitleText("**** Cheque Tracing ****")
     //                        .setContentText("Check Data not found")
@@ -598,11 +1120,11 @@ public class ImportJason extends AppCompatActivity {
     public class JSONTask_maxVoucherNo extends AsyncTask<String, String, String> {
 
         private String salesMan_no = "", JsonResponse;
-        int voucherTyp=0;
+        int voucherTyp = 0;
 
-        public JSONTask_maxVoucherNo(String salesMan_no,int voucherType) {
+        public JSONTask_maxVoucherNo(String salesMan_no, int voucherType) {
             this.salesMan_no = salesMan_no;
-            this.voucherTyp=voucherType;
+            this.voucherTyp = voucherType;
         }
 
         @Override
@@ -620,25 +1142,24 @@ public class ImportJason extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
+            Log.e("doInBackground", "" + ipAddress);
             try {
                 if (!ipAddress.equals("")) {
 
-                    if(ipAddress.contains(":"))
-                    {
-                        int ind=ipAddress.indexOf(":");
-                        ipAddress=ipAddress.substring(0,ind);
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
                     }
 
-                    if(!salesMan_no.equals(""))
-                    {
-                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetmaxNo?STRNO="+salesMan_no+"&CONO="+CONO+"&VKIND="+String.valueOf(voucherTyp).trim();
+                    if (!salesMan_no.equals("")) {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + salesMan_no + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherTyp).trim();
 
-                    }else {
-                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetmaxNo?STRNO="+SalesManLogin+"&CONO="+CONO+"&VKIND="+String.valueOf(voucherTyp).trim();
+                    } else {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetmaxNo?STRNO=" + SalesManLogin + "&CONO=" + CONO + "&VKIND=" + String.valueOf(voucherTyp).trim();
 
                     }
 
-                    Log.e("URL_TO_HIT1010",""+URL_TO_HIT);
+                    Log.e("URL_TO_HIT1010", "" + URL_TO_HIT);
                 }
             } catch (Exception e) {
 
@@ -669,8 +1190,7 @@ public class ImportJason extends AppCompatActivity {
                 // JsonResponse = sb.toString();
 
                 String finalJson = sb.toString();
-                Log.e("finalJson***Import", "maxVoucherNo="+finalJson);
-
+                Log.e("finalJson***Import", "maxVoucherNo=" + finalJson);
 
 
                 return finalJson;
@@ -704,77 +1224,66 @@ public class ImportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-           // Log.e("onPostExecute","maxVoucherNo"+result.toString());
+            // Log.e("onPostExecute","maxVoucherNo"+result.toString());
             if (result != null) {
 
-                    if (result.length() != 0) {
-                        if(result.contains("MAXVHFNO"))
-                        {
-                            try {
-                                String maxVoucher = "";
-                                JSONArray requestArray = null;
-                                requestArray =  new JSONArray(result);
+                if (result.length() != 0) {
+                    if (result.contains("MAXVHFNO")) {
+                        try {
+                            String maxVoucher = "";
+                            JSONArray requestArray = null;
+                            requestArray = new JSONArray(result);
 
-                                JSONObject infoDetail = requestArray.getJSONObject(0);
+                            JSONObject infoDetail = requestArray.getJSONObject(0);
 
-                                maxVoucher=infoDetail.get("MAXVHFNO").toString();
-                                // maxVoucher = jresponse.getString("MAXVHFNO");
-                                long maxVoucherLong = Long.parseLong(maxVoucher);
+                            maxVoucher = infoDetail.get("MAXVHFNO").toString();
+                            // maxVoucher = jresponse.getString("MAXVHFNO");
+                            long maxVoucherLong = Long.parseLong(maxVoucher);
 
-                                Toast.makeText(context,
-                                        "Sucsses VoucherNo"+voucherTyp,
-                                        Toast.LENGTH_SHORT).show();
-                                if(voucherTyp==504) {
+                            Toast.makeText(context,
+                                    "Sucsses VoucherNo" + voucherTyp,
+                                    Toast.LENGTH_SHORT).show();
+                            if (voucherTyp == 504) {
 
 
-                                    mHandler.addSerialVoucherNo(maxVoucherLong, 0, 0);
+                                mHandler.addSerialVoucherNo(maxVoucherLong, 0, 0);
 
-                                }
-                                else {
+                            } else {
 
-                                    mHandler.updateVoucherNo(maxVoucherLong, 506,0);
+                                mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
 
-                                    goMainText.setText("main");
+                                goMainText.setText("main");
 
-                                }
-                                counter++;
+                            }
+                            counter++;
 
-                                if(voucherTyp==504)
-                                {
-                                    getDataProgress.dismissWithAnimation();
+                            if (voucherTyp == 504) {
+                                getDataProgress.dismissWithAnimation();
 
 //                                    getDataVolley(salesMan,506);
-                                    new JSONTask_maxVoucherNo(salesMan_no,506).execute();
-                                }
-                                else {
-                                    getDataProgress.dismissWithAnimation();
-                                }
-
-
-
-
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                new JSONTask_maxVoucherNo(salesMan_no, 506).execute();
+                            } else {
+                                getDataProgress.dismissWithAnimation();
                             }
-                        }else {
-                            getDataProgress.dismissWithAnimation();
-                            goMainText.setText("main");
-                        }
 
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        getDataProgress.dismissWithAnimation();
+                        goMainText.setText("main");
                     }
 
+                }
 
-            }
-            else {
+
+            } else {
                 getDataProgress.dismissWithAnimation();
                 goMainText.setText("main");
             }
         }
     }
-
-
 
 
     public void getItemBalance(String salesNo) {
@@ -791,6 +1300,7 @@ public class ImportJason extends AppCompatActivity {
 
 
     }
+
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -803,18 +1313,18 @@ public class ImportJason extends AppCompatActivity {
     }
 
     public void getPreviousIpForSalesMen() {
-     new JSONTask_PreviousIp().execute();
+        new JSONTask_PreviousIp().execute();
     }
 
     public void addCurentIp(String currentIp) {
-        curentIpDevice=currentIp;
-        Log.e("addCurentIp","="+curentIpDevice);
+        curentIpDevice = currentIp;
+        Log.e("addCurentIp", "=" + curentIpDevice);
         //new JSONTask_AddIpDevice().execute();
 
     }
 
     public void getPriceFromAdmin() {
-      new  JSONTask_getPciceFromAdmin().execute();
+        new JSONTask_getPciceFromAdmin().execute();
     }
 
     private class SQLTask_unpostVoucher extends AsyncTask<String, Integer, String> {
@@ -925,6 +1435,7 @@ public class ImportJason extends AppCompatActivity {
         new SQLTask().execute(URL_TO_HIT);
 
     }
+
     void storeInDatabase_part() {
         new SQLTask_part().execute(URL_TO_HIT);
 
@@ -932,12 +1443,14 @@ public class ImportJason extends AppCompatActivity {
 
     private class JSONTask extends AsyncTask<String, String, List<Customer>> {
 
-        public  String salesNo="";
-        public  JSONTask(String sales){
-            this.salesNo=sales;
-            Log.e("JSONTask","salesNo"+salesNo);
+        public String salesNo = "";
+
+        public JSONTask(String sales) {
+            this.salesNo = sales;
+            Log.e("JSONTask", "salesNo" + salesNo);
 
         }
+
         @Override
         protected void onPreExecute() {
             try {
@@ -975,7 +1488,7 @@ public class ImportJason extends AppCompatActivity {
 
                 String link = URL_TO_HIT;
                 URL url = new URL(link);
-                Log.e("import_mySql",URL_TO_HIT);
+                Log.e("import_mySql", URL_TO_HIT);
 
                 //*************************************
                 HttpURLConnection httpsURLConnection = (HttpURLConnection) url.openConnection();
@@ -1135,7 +1648,7 @@ public class ImportJason extends AppCompatActivity {
 
                         itemSerialList.add(item);
                     }
-                    Log.e("itemSerialList",""+itemSerialList.size());
+                    Log.e("itemSerialList", "" + itemSerialList.size());
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
@@ -1157,8 +1670,6 @@ public class ImportJason extends AppCompatActivity {
                 }
 
 
-
-
                 try {
 //                    `ITEMPICSPATH`
                     JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
@@ -1173,24 +1684,22 @@ public class ImportJason extends AppCompatActivity {
                         item.setCategoryId(finalObject.getString("CateogryID"));
                         item.setBarcode(finalObject.getString("Barcode"));
 //                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
-                    item.setPosPrice(finalObject.getDouble("F_D"));
-                    item.setIsSuspended(0);
-                    try {
-                        item.setItemL(finalObject.getDouble("ItemL"));
+                        item.setPosPrice(finalObject.getDouble("F_D"));
+                        item.setIsSuspended(0);
+                        try {
+                            item.setItemL(finalObject.getDouble("ItemL"));
 
-                    }
-                    catch (Exception e)
-                    {
-                        Log.e("Exception",""+finalObject.getDouble("ItemL"));
-                        item.setItemL(0.0);
+                        } catch (Exception e) {
+                            // Log.e("Exception",""+finalObject.getDouble("ItemL"));
+                            item.setItemL(0.0);
 
-                    }
+                        }
 
-                    try {
-                      if(  finalObject.getString("ITEMK") == "" ||  finalObject.getString("ITEMK") == null || finalObject.getString("ITEMK") == "null")
-                          item.setKind_item("***");
-                      else
-                        item.setKind_item(finalObject.getString("ITEMK")); // here ?
+                        try {
+                            if (finalObject.getString("ITEMK") == "" || finalObject.getString("ITEMK") == null || finalObject.getString("ITEMK") == "null")
+                                item.setKind_item("***");
+                            else
+                                item.setKind_item(finalObject.getString("ITEMK")); // here ?
 
                         } catch (Exception e) {
                             Log.e("ErrorImport", "Item_Kind_null");
@@ -1199,7 +1708,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                         try {
                             item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
-                            Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
+                            // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
                         } catch (Exception e) {
                         }
                         try {
@@ -1210,12 +1719,9 @@ public class ImportJason extends AppCompatActivity {
                             }
 
 
-
-
-                    }
-                    catch (Exception e)
-                    {                            item.setPhotoItem( "");
-                    }
+                        } catch (Exception e) {
+                            item.setPhotoItem("");
+                        }
 //                    ITEMPICSPATH
                         itemsMasterList.add(item);
                     }
@@ -1237,17 +1743,15 @@ public class ImportJason extends AppCompatActivity {
                         item.setIsSuspended(0);
 //                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
 
-                    priceListMpList.add(item);
+                        priceListMpList.add(item);
+                    }
+
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
                 }
 
-            }catch (JSONException e)
-            {
-                Log.e("Import Data", e.getMessage().toString());
-            }
 
-
-            try
-            {
+                try {
 
                     JSONArray parentArraySales_Team = parentObject.getJSONArray("Sales_Team");
                     salesTeamList.clear();
@@ -1259,30 +1763,27 @@ public class ImportJason extends AppCompatActivity {
                         item.setSalesManNo(finalObject.getString("SalesManNo"));
                         item.setSalesManName(finalObject.getString("SalesManName"));
                         try {
-                        item.setIsSuspended(finalObject.getString("IsSuspended"));
-                        }catch (Exception e)
-                        {
-                        Log.e("setIsSuspended",""+e.getMessage());
-                        item.setIsSuspended(finalObject.getString("IsSuspended"));
+                            item.setIsSuspended(finalObject.getString("IsSuspended"));
+                        } catch (Exception e) {
+                            Log.e("setIsSuspended", "" + e.getMessage());
+                            item.setIsSuspended(finalObject.getString("IsSuspended"));
                         }
 
 
-                      //  item.setIpAddressDevice(finalObject.getString("IpAddressDevice"));
+                        //  item.setIpAddressDevice(finalObject.getString("IpAddressDevice"));
 
 
                         salesTeamList.add(item);
+                    }
+                    Log.e("ImportData", salesTeamList.size() + "");
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
                 }
-                Log.e("ImportData", salesTeamList.size()+"");
-            }
-            catch (JSONException e)
-            {
-                Log.e("Import Data", e.getMessage().toString());
-            }
-            try {
-                JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
-                salesManItemsBalanceList.clear();
-                for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
-                    JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
+                try {
+                    JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
+                    salesManItemsBalanceList.clear();
+                    for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
+                        JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
 
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("ComapnyNo"));
@@ -1290,14 +1791,12 @@ public class ImportJason extends AppCompatActivity {
                         item.setItemNo(finalObject.getString("ItemNo"));
                         item.setQty(finalObject.getDouble("Qty"));
 
-                    salesManItemsBalanceList.add(item);
-                }
+                        salesManItemsBalanceList.add(item);
+                    }
 
-            }
-            catch ( Exception e)
-            {
-                Log.e("Exception","Gson"+e.getMessage());
-            }
+                } catch (Exception e) {
+                    Log.e("Exception", "Gson" + e.getMessage());
+                }
 
 
 //                try {
@@ -1312,7 +1811,6 @@ public class ImportJason extends AppCompatActivity {
 //                {
 //                    Log.e("Exception","Gson"+e.getMessage());
 //                }
-
 
 
 //                JSONArray parentArraySalesmanAndStoreLink = parentObject.getJSONArray("SalesmanAndStoreLink");
@@ -1338,26 +1836,25 @@ public class ImportJason extends AppCompatActivity {
                         salesMan.setUserName(finalObject.getString("SALESNO"));
 
 //                    Log.e("*******" , finalObject.getString("SALESNO"));
-                    salesMenList.add(salesMan);
-                }
-                }catch (JSONException e)
-                {
+                        salesMenList.add(salesMan);
+                    }
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
                 try {
 
-                JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("customer_prices");
-                customerPricesList.clear();
+                    JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("customer_prices");
+                    customerPricesList.clear();
 
-                for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
-                    JSONObject finalObject = parentArrayCustomerPrice.getJSONObject(i);
+                    for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
+                        JSONObject finalObject = parentArrayCustomerPrice.getJSONObject(i);
 
-                    CustomerPrice price = new CustomerPrice();
-                    price.setItemNumber(finalObject.getString("ITEMNO"));
-                    price.setCustomerNumber(finalObject.getInt("CUSTOMER_NO"));
-                    price.setPrice(finalObject.getDouble("PRICE"));
-                    price.setDiscount(finalObject.getDouble("DISCOUNT"));
+                        CustomerPrice price = new CustomerPrice();
+                        price.setItemNumber(finalObject.getString("ITEMNO"));
+                        price.setCustomerNumber(finalObject.getInt("CUSTOMER_NO"));
+                        price.setPrice(finalObject.getDouble("PRICE"));
+                        price.setDiscount(finalObject.getDouble("DISCOUNT"));
 
 //                    try {
 //                        price.setOther_Discount(finalObject.getString("OTHER_DISCOUNT"));
@@ -1375,11 +1872,10 @@ public class ImportJason extends AppCompatActivity {
 //
 //                    }
 
-                    customerPricesList.add(price);
+                        customerPricesList.add(price);
 
-                }
-                }catch (JSONException e)
-                {
+                    }
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
@@ -1400,10 +1896,9 @@ public class ImportJason extends AppCompatActivity {
                         offer.setBonusQty(finalObject.getDouble("BQTY"));
                         offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
                         try {
-                            int discType=Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
+                            int discType = Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
                             offer.setDiscountItemType(discType);
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             offer.setDiscountItemType(0);
                         }
 
@@ -1451,12 +1946,10 @@ public class ImportJason extends AppCompatActivity {
 
                     }
 
-                }catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-                try
-                {
+                try {
                     JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
 
                     priceListDpList.clear();
@@ -1475,9 +1968,7 @@ public class ImportJason extends AppCompatActivity {
                         priceListDpList.add(item);
                     }
 
-                }
-                catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
@@ -1500,6 +1991,32 @@ public class ImportJason extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
+                }
+                try {
+                    JSONArray parentArrayItemsQtyOffer = parentObject.getJSONArray("Group_Offer_List");
+                    groupOfferList.clear();
+                    ArrayList<OfferGroupModel> listOffer = new ArrayList<>();
+
+                    for (int i = 0; i < parentArrayItemsQtyOffer.length(); i++) {
+                        JSONObject finalObject = parentArrayItemsQtyOffer.getJSONObject(i);
+
+                        OfferGroupModel acountReport = new OfferGroupModel();
+                        acountReport.id_serial = (finalObject.getString("id_serial"));
+                        acountReport.Name = finalObject.getString("ItemName");
+                        acountReport.ItemNo = finalObject.getString("ItemNo");
+                        acountReport.fromDate = finalObject.getString("From_Date");
+                        acountReport.toDate = finalObject.getString("To_Date");
+                        acountReport.discount = finalObject.getString("Discount");
+                        acountReport.discountType = finalObject.getInt("Discount_Type");
+                        acountReport.groupIdOffer = finalObject.getInt("GroupId");
+                        acountReport.qtyItem = finalObject.getString("qty_item");
+
+                        groupOfferList.add(acountReport);
+                    }
+                    Log.e("groupOfferList", "result2=" + groupOfferList.size());
+
+
+                } catch (Exception e) {
                 }
                 /*
                  *
@@ -1558,7 +2075,7 @@ public class ImportJason extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e("CustomerIOException", e.getMessage().toString());
                 progressDialog.dismiss();
-              //  Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
 
             } catch (JSONException e) {
@@ -1596,14 +2113,17 @@ public class ImportJason extends AppCompatActivity {
             }
         }
     }
+
     private class JSONTaskDelphi extends AsyncTask<String, String, List<Customer>> {
 
-        public  String salesNo="";
-        public  JSONTaskDelphi(String sales){
-            this.salesNo=sales;
-            Log.e("JSONTask","salesNo"+salesNo);
+        public String salesNo = "";
+
+        public JSONTaskDelphi(String sales) {
+            this.salesNo = sales;
+            Log.e("JSONTask", "salesNo" + salesNo);
 
         }
+
         @Override
         protected void onPreExecute() {
             try {
@@ -1634,30 +2154,27 @@ public class ImportJason extends AppCompatActivity {
                     if (!ipAddress.equals("")) {
                         //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
                         //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                        if(ipAddress.contains(":"))
-                        {
-                            int ind=ipAddress.indexOf(":");
-                            ipAddress=ipAddress.substring(0,ind);
+                        if (ipAddress.contains(":")) {
+                            int ind = ipAddress.indexOf(":");
+                            ipAddress = ipAddress.substring(0, ind);
                         }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
-                     //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+                        //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
 
-                        if(!salesNo.equals(""))
-                        {
-                            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetVanAllData?STRNO="+salesNo+"&CONO="+CONO;
+                        if (!salesNo.equals("")) {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + salesNo + "&CONO=" + CONO;
 
-                        }else {
-                            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+                        } else {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + SalesManLogin + "&CONO=" + CONO;
 
                         }
 
-                        Log.e("URL_TO_HIT",""+URL_TO_HIT);
+                        Log.e("URL_TO_HIT", "" + URL_TO_HIT);
                     }
                 } catch (Exception e) {
 
                 }
-
 
 
                 String link = URL_TO_HIT;
@@ -1665,19 +2182,19 @@ public class ImportJason extends AppCompatActivity {
 
                 //*************************************
 
-                    String JsonResponse = null;
-                    StringBuffer sb = new StringBuffer("");
-                    HttpClient client = new DefaultHttpClient();
-                    HttpGet request = new HttpGet();
-                    request.setURI(new URI(URL_TO_HIT));
+                String JsonResponse = null;
+                StringBuffer sb = new StringBuffer("");
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
 
 
-                HttpResponse response=null;
+                HttpResponse response = null;
 
                 try {
-                     response = client.execute(request);
-                }catch (Exception e){
-                   // Log.e("response",""+response.toString());
+                    response = client.execute(request);
+                } catch (Exception e) {
+                    // Log.e("response",""+response.toString());
                     Handler h = new Handler(Looper.getMainLooper());
                     h.post(new Runnable() {
                         public void run() {
@@ -1686,7 +2203,6 @@ public class ImportJason extends AppCompatActivity {
                         }
                     });
                 }
-
 
 
                 try {
@@ -1695,14 +2211,14 @@ public class ImportJason extends AppCompatActivity {
 
 
                     String line = "";
-                    Log.e("finalJson***Import", sb.toString());
+                    // Log.e("finalJson***Import", sb.toString());
 
                     while ((line = in.readLine()) != null) {
                         sb.append(line);
                     }
 
                     in.close();
-                }catch (Exception e){
+                } catch (Exception e) {
                     Handler h = new Handler(Looper.getMainLooper());
                     h.post(new Runnable() {
                         public void run() {
@@ -1713,11 +2229,10 @@ public class ImportJason extends AppCompatActivity {
                 }
 
 
-
-                   // JsonResponse = sb.toString();
+                // JsonResponse = sb.toString();
 
                 String finalJson = sb.toString();
-                Log.e("finalJson***Import", finalJson);
+                // Log.e("finalJson***Import", finalJson);
                 String rate_customer = "";
                 String HideVal = "";
                 customerList.clear();
@@ -1739,9 +2254,20 @@ public class ImportJason extends AppCompatActivity {
 //                    else
 //                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
                         Customer.setPriceListId(finalObject.getString("PRICELISTID"));
-                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        try {
+                            Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        }
+                        catch (Exception e){
+                            Customer.setCashCredit(0);
+                        }
                         Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
-                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        try {
+                            Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        }
+                        catch (Exception e)
+                        {
+                            Customer.setCreditLimit(0);
+                        }
                         try {
                             Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
                         } catch (Exception e) {
@@ -1761,7 +2287,7 @@ public class ImportJason extends AppCompatActivity {
 
                             }
                         } catch (Exception e) {
-                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                             Customer.setACCPRC("0");
 
                         }
@@ -1776,7 +2302,7 @@ public class ImportJason extends AppCompatActivity {
                             }
                             Customer.setCustomerIdText(finalObject.getString("CUSTID"));
                         } catch (Exception e) {
-                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                             Customer.setACCPRC("0");
 
                         }
@@ -1787,6 +2313,35 @@ public class ImportJason extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
+//**************************************************************************
+                try {
+                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+                    itemUnitDetailsList.clear();
+                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+
+                        ItemUnitDetails item = new ItemUnitDetails();
+                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        item.setItemNo(finalObject.getString("ITEMNO"));
+                        item.setUnitId(finalObject.getString("UNITID"));
+                        item.setConvRate(finalObject.getDouble("CONVRATE"));
+                        try {
+                            item.setUnitPrice("");
+                            item.setItemBarcode("");
+                        } catch (Exception e) {
+                            item.setUnitPrice("");
+
+                            item.setItemBarcode("");
+                        }
+
+
+                        itemUnitDetailsList.add(item);
+                        Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                //***************************************************************************
                 try {
 //                    //[{"ITEMU":"Test1","ITEMOCODE":"6251088000015","ITEMBARCODE":"123","CALCQTY":"5","SALEPRICE":"10"},
 //                    // {"ITEMU":"Test2","ITEMOCODE":"30100002","ITEMBARCODE":"456","CALCQTY":"3","SALEPRICE":"6"}]
@@ -1803,7 +2358,7 @@ public class ImportJason extends AppCompatActivity {
                         try {
                             item.setUnitPrice(finalObject.getString("SALEPRICE"));
                             item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             item.setUnitPrice("");
 
                             item.setItemBarcode("");
@@ -1811,38 +2366,11 @@ public class ImportJason extends AppCompatActivity {
 
 
                         itemUnitDetailsList.add(item);
+                        Log.e("itemUnitDetailsList", "2====" + itemUnitDetailsList.size());
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-//**************************************************************************
-//                try {
-//                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
-//                    itemUnitDetailsList.clear();
-//                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-//                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
-//
-//                        ItemUnitDetails item = new ItemUnitDetails();
-//                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-//                        item.setItemNo(finalObject.getString("ITEMNO"));
-//                        item.setUnitId(finalObject.getString("UNITID"));
-//                        item.setConvRate(finalObject.getDouble("CONVRATE"));
-//                        try {
-//                            item.setUnitPrice("");
-//                            item.setItemBarcode("");
-//                        }catch (Exception e){
-//                            item.setUnitPrice("");
-//
-//                            item.setItemBarcode("");
-//                        }
-//
-//
-//                        itemUnitDetailsList.add(item);
-//                    }
-//                } catch (JSONException e) {
-//                    Log.e("Import Data", e.getMessage().toString());
-//                }
-                //***************************************************************************
 
 
                 try {
@@ -1859,7 +2387,7 @@ public class ImportJason extends AppCompatActivity {
 
                         itemSerialList.add(item);
                     }
-                    Log.e("itemSerialList",""+itemSerialList.size());
+                    // Log.e("itemSerialList",""+itemSerialList.size());
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
@@ -1881,8 +2409,6 @@ public class ImportJason extends AppCompatActivity {
                 }
 
 
-
-
                 try {
 //                    `ITEMPICSPATH`
                     JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
@@ -1901,16 +2427,14 @@ public class ImportJason extends AppCompatActivity {
                         item.setIsSuspended(0);
                         try {
                             item.setItemL(finalObject.getDouble("ITEML"));
-                            Log.e("Exception",""+finalObject.getDouble("ITEML"));
-                        }
-                        catch (Exception e)
-                        {
+                            Log.e("Exception", "" + finalObject.getDouble("ITEML"));
+                        } catch (Exception e) {
                             item.setItemL(0.0);
 
                         }
 
                         try {
-                            if(  finalObject.getString("ItemK") == "" ||  finalObject.getString("ItemK") == null || finalObject.getString("ItemK") == "null")
+                            if (finalObject.getString("ItemK") == "" || finalObject.getString("ItemK") == null || finalObject.getString("ItemK") == "null")
                                 item.setKind_item("***");
                             else
                                 item.setKind_item(finalObject.getString("ItemK")); // here ?
@@ -1922,7 +2446,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                         try {
                             item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
-                            Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
+                            // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
                         } catch (Exception e) {
                         }
                         try {
@@ -1933,11 +2457,8 @@ public class ImportJason extends AppCompatActivity {
                             }
 
 
-
-
-                        }
-                        catch (Exception e)
-                        {                            item.setPhotoItem( "");
+                        } catch (Exception e) {
+                            item.setPhotoItem("");
                         }
 //                    ITEMPICSPATH
                         itemsMasterList.add(item);
@@ -1963,14 +2484,12 @@ public class ImportJason extends AppCompatActivity {
                         priceListMpList.add(item);
                     }
 
-                }catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
 
-                try
-                {
+                try {
 
                     JSONArray parentArraySales_Team = parentObject.getJSONArray("Sales_Team");
                     salesTeamList.clear();
@@ -1983,9 +2502,8 @@ public class ImportJason extends AppCompatActivity {
                         item.setSalesManName(finalObject.getString("SALESMANNAME"));
                         try {
                             item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
-                        }catch (Exception e)
-                        {
-                            Log.e("setIsSuspended",""+e.getMessage());
+                        } catch (Exception e) {
+                            Log.e("setIsSuspended", "" + e.getMessage());
                             item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
                         }
 
@@ -1995,10 +2513,8 @@ public class ImportJason extends AppCompatActivity {
 
                         salesTeamList.add(item);
                     }
-                    Log.e("ImportData", salesTeamList.size()+"");
-                }
-                catch (JSONException e)
-                {
+                    Log.e("ImportData", salesTeamList.size() + "");
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
                 try {
@@ -2008,32 +2524,29 @@ public class ImportJason extends AppCompatActivity {
 
                     for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
                         JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
-                        Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
-                        String qty="";
+                        // Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
+                        String qty = "";
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
                         item.setSalesManNo(finalObject.getString("STOCK_CODE"));
                         item.setItemNo(finalObject.getString("ItemOCode"));
 
-                            qty=finalObject.getString("QTY");
-                     try {
-                         double qtydoubl=Double.parseDouble(qty);
-                         item.setQty(qtydoubl);
+                        qty = finalObject.getString("QTY");
+                        try {
+                            double qtydoubl = Double.parseDouble(qty);
+                            item.setQty(qtydoubl);
 
-                     }
-                     catch (Exception e){
-                         item.setQty(0);
-                         Log.e("Exception",""+qty);
-                     }
+                        } catch (Exception e) {
+                            item.setQty(0);
+                            Log.e("Exception", "" + qty);
+                        }
 //                        item.setQty(finalObject.getDouble("QTY"));
 
                         salesManItemsBalanceList.add(item);
                     }
 
-                }
-                catch ( Exception e)
-                {
-                    Log.e("Exception","GsonSalesMan_Items_Balance"+e.getMessage());
+                } catch (Exception e) {
+                    Log.e("Exception", "GsonSalesMan_Items_Balance" + e.getMessage());
                 }
 
                 try {
@@ -2049,14 +2562,14 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("*******" , finalObject.getString("SALESNO"));
                         salesMenList.add(salesMan);
                     }
-                }catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
                 try {
 
                     JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
+                    Log.e("parentArrayCustomerPrice", "" + parentArrayCustomerPrice.length());
                     customerPricesList.clear();
 
                     for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
@@ -2085,11 +2598,11 @@ public class ImportJason extends AppCompatActivity {
 //                    }
 
                         customerPricesList.add(price);
+                        Log.e("customerPricesList", "" + customerPricesList.size());
 
                     }
-                }catch (JSONException e)
-                {
-                    Log.e("Import Data", e.getMessage().toString());
+                } catch (JSONException e) {
+                    Log.e("ImportcustomerPr", e.getMessage().toString());
                 }
 
 
@@ -2109,10 +2622,9 @@ public class ImportJason extends AppCompatActivity {
                         offer.setBonusQty(finalObject.getDouble("BQTY"));
                         offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
                         try {
-                            int discType=Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
+                            int discType = Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
                             offer.setDiscountItemType(discType);
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             offer.setDiscountItemType(0);
                         }
 
@@ -2160,14 +2672,12 @@ public class ImportJason extends AppCompatActivity {
 
                     }
 
-                }catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
-                try
-                {
+                try {
                     JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
-
+                    //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+parentArrayPrice_List_D.toString());
                     priceListDpList.clear();
                     for (int i = 0; i < parentArrayPrice_List_D.length(); i++) {
                         JSONObject finalObject = parentArrayPrice_List_D.getJSONObject(i);
@@ -2176,23 +2686,28 @@ public class ImportJason extends AppCompatActivity {
                         item.setCompanyNo(finalObject.getString("COMAPNYNO"));
                         item.setPrNo(finalObject.getInt("PRNO"));
                         item.setItemNo(finalObject.getString("ITEMNO"));
+                        // Log.e("itemUnit","itemno==="+item.getItemNo());
                         item.setUnitId(finalObject.getString("UNITID"));
                         item.setPrice(finalObject.getDouble("PRICE"));
-                        item.setTaxPerc(finalObject.getDouble("TAXPERC"));
+                        try {
+                            item.setTaxPerc(finalObject.getDouble("TAXPERC"));
+                        } catch (Exception e) {
+                            item.setTaxPerc(0);
+                        }
+
                         try {
                             item.setMinSalePrice(Double.parseDouble(finalObject.getString("MINPRICE")));
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             item.setMinSalePrice(0);
                         }
 
 
                         priceListDpList.add(item);
+                        //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+priceListDpList.size());
+
                     }
 
-                }
-                catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
 
@@ -2246,7 +2761,7 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("Import Data", e.getMessage().toString());
 //                }
 
-
+Log.e("customerList",""+customerList.size());
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
                 progressDialog.dismiss();
@@ -2268,12 +2783,11 @@ public class ImportJason extends AppCompatActivity {
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
-                       if( customerList.size()==0){
-                           new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                   .setTitleText("check Connection")
-                                   .show();
+                        if (customerList.size() == 0) {
+                            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("check Connection")
+                                    .show();
                         }
-
 
 
                     }
@@ -2305,18 +2819,21 @@ public class ImportJason extends AppCompatActivity {
                 storeInDatabase();
             } else {
 
-               // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
     private class JSONTaskDelphi_Data2 extends AsyncTask<String, String, List<SalesManItemsBalance>> {
 
-        public  String salesNo="";
-        public  JSONTaskDelphi_Data2(String sales){
-            this.salesNo=sales;
-            Log.e("JSONTask","salesNo"+salesNo);
+        public String salesNo = "";
+
+        public JSONTaskDelphi_Data2(String sales) {
+            this.salesNo = sales;
+            Log.e("JSONTask", "salesNo" + salesNo);
 
         }
+
         @Override
         protected void onPreExecute() {
             try {
@@ -2347,31 +2864,28 @@ public class ImportJason extends AppCompatActivity {
                     if (!ipAddress.equals("")) {
                         //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
                         //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                        if(ipAddress.contains(":"))
-                        {
-                            int ind=ipAddress.indexOf(":");
-                            ipAddress=ipAddress.substring(0,ind);
+                        if (ipAddress.contains(":")) {
+                            int ind = ipAddress.indexOf(":");
+                            ipAddress = ipAddress.substring(0, ind);
                         }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
                         //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
-                       // http://localhost:8082/GetVanData2?STRNO=4&CONO=295
-                        if(!salesNo.equals(""))
-                        {
-                            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetVanData2?STRNO="+salesNo+"&CONO="+CONO;
+                        // http://localhost:8082/GetVanData2?STRNO=4&CONO=295
+                        if (!salesNo.equals("")) {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanData2?STRNO=" + salesNo + "&CONO=" + CONO;
 
-                        }else {
-                            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetVanData2?STRNO="+SalesManLogin+"&CONO="+CONO;
+                        } else {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanData2?STRNO=" + SalesManLogin + "&CONO=" + CONO;
 
                         }
 
 
-                        Log.e("URL_TO_HIT",""+URL_TO_HIT);
+                        Log.e("URL_TO_HIT", "" + URL_TO_HIT);
                     }
                 } catch (Exception e) {
 
                 }
-
 
 
                 String link = URL_TO_HIT;
@@ -2444,7 +2958,7 @@ public class ImportJason extends AppCompatActivity {
 
                         itemSerialList.add(item);
                     }
-                   // Log.e("itemSerialList",""+itemSerialList.size());
+                    // Log.e("itemSerialList",""+itemSerialList.size());
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
                 }
@@ -2463,14 +2977,11 @@ public class ImportJason extends AppCompatActivity {
 
                         salesManItemsBalanceList.add(item);
                     }
-                    Log.e("salesManItemsBalanceList",""+salesManItemsBalanceList.size());
+                    Log.e("salesManItemsBalanceList", "" + salesManItemsBalanceList.size());
 
+                } catch (Exception e) {
+                    Log.e("Exception", "Gson" + e.getMessage());
                 }
-                catch ( Exception e)
-                {
-                    Log.e("Exception","Gson"+e.getMessage());
-                }
-
 
 
             } catch (MalformedURLException e) {
@@ -2522,6 +3033,7 @@ public class ImportJason extends AppCompatActivity {
             }
         }
     }
+
     private class SQLTask extends AsyncTask<String, Integer, String> {
         ProgressBar pb;
         Dialog dialog;
@@ -2539,7 +3051,7 @@ public class ImportJason extends AppCompatActivity {
             window.setLayout(500, 250);
 
             pb = (ProgressBar) dialog.findViewById(R.id.progress);
-            title_progresspar= (TextView) dialog.findViewById(R.id.title_progresspar);
+            title_progresspar = (TextView) dialog.findViewById(R.id.title_progresspar);
 
             dialog.show();
         }
@@ -2555,7 +3067,7 @@ public class ImportJason extends AppCompatActivity {
                 }
                 publishProgress(i);
             }
-            int   storeNo=1;
+            int storeNo = 1;
             mHandler.deleteAllCustomers();
             mHandler.deleteAllItemUnitDetails();
             mHandler.deleteAllItemsMaster();
@@ -2564,6 +3076,7 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllSalesTeam();
             mHandler.deleteAllSalesmanAndStoreLink();
             mHandler.deleteAllSalesmen();
+            mHandler.deleteAllCustomerPrice_Current();
             mHandler.deleteAllCustomerPrice();
             mHandler.deleteAllOffers();
             mHandler.deleteAllSalesmenStations();
@@ -2573,17 +3086,19 @@ public class ImportJason extends AppCompatActivity {
             mHandler.deleteAllItemsSwitch();
             mHandler.deleteAllItemsSerialMaster();
             mHandler.deleteOfferMaster();
+            mHandler.deletOfferGroup();
             try {
-                storeNo=Integer.parseInt(userNo);
+                storeNo = Integer.parseInt(userNo);
+            } catch (Exception e) {
+                storeNo = 1;
             }
-            catch (Exception e){storeNo=1;}
 
             if (mHandler.getIsPosted(storeNo) == 1) {
 
 //                if (mHandler.getIsPosted(Integer.parseInt(Login.salesMan)) == 1) {
                 mHandler.deleteAllSalesManItemsBalance();
                 mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList);
-                Log.e("In***" , " inaddSalesMan_Items_Balance");
+                Log.e("In***", " inaddSalesMan_Items_Balance");
                 runOnUiThread(new Runnable() {
 
                     @Override
@@ -2597,39 +3112,38 @@ public class ImportJason extends AppCompatActivity {
 
             }
             mHandler.add_SerialMasteItems(itemSerialList);
-            Log.e("In***" , " inadd_SerialMasteItems");
-            setText(title_progresspar,"add_Serial_Items");
+            Log.e("In***", " inadd_SerialMasteItems");
+            setText(title_progresspar, "add_Serial_Items");
 
 
             mHandler.addCustomer(customerList);
-            Log.e("In***" , " inaddCustomer");
-            setText(title_progresspar,"add_Customer");
+            Log.e("In***", " inaddCustomer");
+            setText(title_progresspar, "add_Customer");
 
             mHandler.addItem_Unit_Details(itemUnitDetailsList);
-            Log.e("In***" , " inaddItem_Unit_Details");
-            setText(title_progresspar,"add_Item_Unit_Details");
+            Log.e("In***", " inaddItem_Unit_Details");
+            setText(title_progresspar, "add_Item_Unit_Details");
 
             mHandler.addItemsMaster(itemsMasterList);
-            Log.e("In***" , " inaddItemsMaster");
-            setText(title_progresspar,"add_items_Master");
+            Log.e("In***", " inaddItemsMaster");
+            setText(title_progresspar, "add_items_Master");
 
             mHandler.addItemSwitch(itemsSwitchList);
-            Log.e("In***" , " inaaddItemSwitch");
-            setText(title_progresspar,"add_items_Switch");
+            Log.e("In***", " inaaddItemSwitch");
+            setText(title_progresspar, "add_items_Switch");
 
             mHandler.addPrice_List_D(priceListDpList);
-            setText(title_progresspar,"add_price_ListD");
+            setText(title_progresspar, "add_price_ListD");
 
             mHandler.addPrice_List_M(priceListMpList);
-            Log.e("In***" , " in");
-            setText(title_progresspar,"add_price_ListM");
+            Log.e("In***", " in");
+            setText(title_progresspar, "add_price_ListM");
 
             for (int i = 0; i < salesTeamList.size(); i++) {
                 mHandler.addSales_Team(salesTeamList.get(i));
             }
-            setText(title_progresspar,"add_salesTeam");
-            Log.e("In***" , " addSales_Teamin");
-
+            setText(title_progresspar, "add_salesTeam");
+            Log.e("In***", " addSales_Teamin");
 
 
             for (int i = 0; i < salesManAndStoreLinksList.size(); i++) {
@@ -2639,29 +3153,29 @@ public class ImportJason extends AppCompatActivity {
             for (int i = 0; i < salesMenList.size(); i++) {
                 mHandler.addSalesmen(salesMenList.get(i));
             }
-            Log.e("In***" , "inaddSalesmen");
-            setText(title_progresspar,"add_Salesmen");
+            Log.e("In***", "inaddSalesmen");
+            setText(title_progresspar, "add_Salesmen");
 
             mHandler.addCustomerPrice(customerPricesList);
-            setText(title_progresspar,"add_customerPricesList");
+            setText(title_progresspar, "add_customerPricesList");
 
             mHandler.add_OfferListMaster(offerListMasterArrayList);
-            setText(title_progresspar,"add_OfferListMaster");
+            setText(title_progresspar, "add_OfferListMaster");
             for (int i = 0; i < offersList.size(); i++) {
                 mHandler.addOffer(offersList.get(i));
             }
-            setText(title_progresspar,"add_offersList");
+            setText(title_progresspar, "add_offersList");
 
             for (int i = 0; i < qtyOffersList.size(); i++) {
                 mHandler.addQtyOffers(qtyOffersList.get(i));
             }
-            setText(title_progresspar,"add_qtyOffers");
+            setText(title_progresspar, "add_qtyOffers");
 
 
             for (int i = 0; i < itemsQtyOfferList.size(); i++) {
                 mHandler.add_Items_Qty_Offer(itemsQtyOfferList.get(i));
             }
-            setText(title_progresspar,"add_itemsQtyOffer");
+            setText(title_progresspar, "add_itemsQtyOffer");
 
             for (int i = 0; i < account_reportList.size(); i++) {
                 mHandler.addAccount_report(account_reportList.get(i));
@@ -2669,9 +3183,14 @@ public class ImportJason extends AppCompatActivity {
             for (int i = 0; i < salesmanStationsList.size(); i++) {
                 mHandler.addSalesmanStation(salesmanStationsList.get(i));
             }
-            setText(title_progresspar,"add_salesmanStation");
+            setText(title_progresspar, "add_salesmanStation");
+            for (int i = 0; i < groupOfferList.size(); i++) {
+                mHandler.add_GroupOffer(groupOfferList.get(i));
+            }
+            setText(title_progresspar, "add_GroupOffer");
 
-            Log.e("In***" , "addSalesmanStation_finish");
+
+            Log.e("In***", "addSalesmanStation_finish");
 
             return "Finish Store";
         }
@@ -2690,7 +3209,8 @@ public class ImportJason extends AppCompatActivity {
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }
-        private void setText(final TextView text,final String value){
+
+        private void setText(final TextView text, final String value) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2699,6 +3219,7 @@ public class ImportJason extends AppCompatActivity {
             });
         }
     }
+
     private class SQLTask_part extends AsyncTask<String, Integer, String> {
         ProgressBar pb;
         Dialog dialog;
@@ -2716,7 +3237,7 @@ public class ImportJason extends AppCompatActivity {
             window.setLayout(500, 250);
 
             pb = (ProgressBar) dialog.findViewById(R.id.progress);
-            title_progresspar= (TextView) dialog.findViewById(R.id.title_progresspar);
+            title_progresspar = (TextView) dialog.findViewById(R.id.title_progresspar);
 
             dialog.show();
         }
@@ -2732,16 +3253,16 @@ public class ImportJason extends AppCompatActivity {
                 }
                 publishProgress(i);
             }
-            int   storeNo=1;
+            int storeNo = 1;
 
 
             mHandler.deleteAllItemsSerialMaster();
             mHandler.deleteAllSalesManItemsBalance();
             mHandler.addSalesMan_Items_Balance(salesManItemsBalanceList);
-            Log.e("In***" , " inaddSalesMan_Items_Balance");
+            Log.e("In***", " inaddSalesMan_Items_Balance");
             mHandler.add_SerialMasteItems(itemSerialList);
-            Log.e("In***" , " inadd_SerialMasteItems");
-            setText(title_progresspar,"add_Serial_Items");
+            Log.e("In***", " inadd_SerialMasteItems");
+            setText(title_progresspar, "add_Serial_Items");
 
 
             return "Finish Store";
@@ -2761,7 +3282,8 @@ public class ImportJason extends AppCompatActivity {
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }
-        private void setText(final TextView text,final String value){
+
+        private void setText(final TextView text, final String value) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2773,10 +3295,12 @@ public class ImportJason extends AppCompatActivity {
 
     private class JSONTask_UncollectedCheques extends AsyncTask<String, String, String> {
 
-        private String custId = "";
+        private String custId = "", fromD, toD;
 
-        public JSONTask_UncollectedCheques(String customerId) {
+        public JSONTask_UncollectedCheques(String customerId, String fromDate, String toDate) {
             this.custId = customerId;
+            fromD = fromDate;
+            toD = toDate;
         }
 
         @Override
@@ -2801,15 +3325,26 @@ public class ImportJason extends AppCompatActivity {
 
                 if (!ipAddress.equals("")) {
                     //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
-                  //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                    if(ipAddress.contains(":"))
-                    {
-                        int ind=ipAddress.indexOf(":");
-                        ipAddress=ipAddress.substring(0,ind);
+                    //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
                     }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetTheUnCollectedCheques?ACCNO="+custId+"&CONO="+CONO;
+                    //  http://localhost:8085/tGetTheUnCollectedChequesWithDate?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=31/12/2021
+
+                    if (dateFromToActive == 1) {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/tGetTheUnCollectedChequesWithDate?ACCNO=" + custId
+                                + "&CONO=" + CONO + "&FROMDATE=" + fromD.trim() + "&TODATE=" + toD.trim();
+                        Log.e("URL_TO_HIT", "tGetTheUnCollectedChequesWithDate=" + URL_TO_HIT);
+
+                    } else {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetTheUnCollectedCheques?ACCNO=" + custId + "&CONO=" + CONO;
+
+                    }
+
+
                 }
             } catch (Exception e) {
 
@@ -2875,6 +3410,7 @@ public class ImportJason extends AppCompatActivity {
             JSONObject result = null;
             String impo = "";
             pdValidation.dismissWithAnimation();
+            listCustomerInfo = new ArrayList<>();
             if (s != null) {
                 if (s.contains("AccCode")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -2886,9 +3422,9 @@ public class ImportJason extends AppCompatActivity {
 
 
                         JSONArray requestArray = null;
-                        listCustomerInfo = new ArrayList<>();
 
-                        requestArray =  new JSONArray(s);
+
+                        requestArray = new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
 
 
@@ -2900,14 +3436,12 @@ public class ImportJason extends AppCompatActivity {
                             requestDetail.setPAIDAMT(infoDetail.get("PAIDAMT").toString());
 
 
-
                             unCollectlList.add(requestDetail);
                             Log.e("listRequest", "listCustomerInfo" + unCollectlList.size());
 
 
                         }
-                        if(unCollectlList.size()!=0)
-                        {
+                        if (unCollectlList.size() != 0) {
                             resultData.setText("yes");
                         }
 
@@ -2916,18 +3450,24 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                } else if (s.contains("No Data Found")) {
+                    resultData.setText("noData");
+                }
+                Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }
 
     }
+
     private class JSONTask_GetAllCheques extends AsyncTask<String, String, String> {
 
-        private String custId = "";
+        private String custId = "", fromD, toDat;
 
-        public JSONTask_GetAllCheques(String customerId) {
+        public JSONTask_GetAllCheques(String customerId, String fromDate, String toDate) {
             this.custId = customerId;
+            fromD = fromDate;
+            toDat = toDate;
         }
 
         @Override
@@ -2952,13 +3492,24 @@ public class ImportJason extends AppCompatActivity {
                 if (!ipAddress.equals("")) {
                     //http://10.0.0.22:8082/GetAllTheCheques?ACCNO=1224
                     //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
-                    if(ipAddress.contains(":"))
-                    {
-                        int ind=ipAddress.indexOf(":");
-                        ipAddress=ipAddress.substring(0,ind);
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+                    if (dateFromToActive == 1) {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheChequesWithDate?ACCNO=" + custId +
+                                "&CONO=" + CONO + "&FROMDATE=" + fromD.trim() + "&TODATE=" + toDat.trim();
+
+                    } else {
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheCheques?ACCNO=" + custId + "&CONO=" + CONO;
+
                     }
 
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetAllTheCheques?ACCNO="+custId+"&CONO="+CONO;
+                    //  http://localhost:8085/GetAllTheChequesWithDate?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=01/10/2021
+
+                    Log.e("URL_TO_HIT", "GetAllTheChequesWithDate=" + URL_TO_HIT);
+
+
                 }
             } catch (Exception e) {
                 pdPayments.dismissWithAnimation();
@@ -3025,6 +3576,7 @@ public class ImportJason extends AppCompatActivity {
             JSONObject result = null;
             String impo = "";
             pdPayments.dismissWithAnimation();
+            paymentChequesList = new ArrayList<>();
             if (s != null) {
                 if (s.contains("VHFNo")) {
                     // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
@@ -3037,9 +3589,9 @@ public class ImportJason extends AppCompatActivity {
 
 
                         JSONArray requestArray = null;
-                        paymentChequesList = new ArrayList<>();
 
-                        requestArray =  new JSONArray(s);
+
+                        requestArray = new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
 
 
@@ -3048,17 +3600,19 @@ public class ImportJason extends AppCompatActivity {
                             requestDetail = new Payment();
                             try {
                                 requestDetail.setCheckNumber(Integer.parseInt(infoDetail.get("ChequeNo").toString()));
+                            } catch (Exception e) {
+                                requestDetail.setCheckNumber(111);
                             }
-                            catch (Exception e){ requestDetail.setCheckNumber(111);}
                             //
 
                             requestDetail.setDueDate(infoDetail.get("DueDate").toString());
-                            requestDetail.setBank("Jordan Bank");
+                            requestDetail.setBank(infoDetail.get("PAYEENAME").toString());
                             try {
                                 requestDetail.setAmount(Double.parseDouble(infoDetail.get("CAmount").toString()));
 
-                            }catch (Exception e){requestDetail.setAmount(0);}
-
+                            } catch (Exception e) {
+                                requestDetail.setAmount(0);
+                            }
 
 
                             paymentChequesList.add(requestDetail);
@@ -3066,9 +3620,10 @@ public class ImportJason extends AppCompatActivity {
 
 
                         }
-                        if(paymentChequesList.size()!=0)
-                        {
+                        if (paymentChequesList.size() != 0) {
                             resultData.setText("payment");
+                        } else {
+                            resultData.setText("noData");
                         }
 
 
@@ -3076,20 +3631,33 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                    getUnCollectedCheques(fromD, toDat);
+                } else {
+                    if (s.contains("No Data Found")) {
+                        resultData.setText("noData");
+                    }
+                }
+
+
+                Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }
 
     }
+
     private class JSONTask_AccountStatment extends AsyncTask<String, String, String> {
 
         private String custId = "";
-        private  int type=0;
+        private int type = 0;
+        public String from_Date, to_Date;
 
-        public JSONTask_AccountStatment(String customerId,int typeImpo) {
+        public JSONTask_AccountStatment(String customerId, int typeImpo, String fromDate, String toDate) {
             this.custId = customerId;
-            this.type=typeImpo;
+            this.type = typeImpo;
+            from_Date = fromDate;
+            to_Date = toDate;
+            Log.e("from_Date", "==" + from_Date + "to===" + to_Date);
         }
 
         @Override
@@ -3109,19 +3677,23 @@ public class ImportJason extends AppCompatActivity {
 
             try {
 
-                //+custId
-                headerDll="/Falcons/VAN.dll";
+
 
                 if (!ipAddress.equals("")) {
                     //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                    if(ipAddress.contains(":"))
-                    {
-                        int ind=ipAddress.indexOf(":");
-                        ipAddress=ipAddress.substring(0,ind);
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
                     }
-                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetACCOUNTSTATMENT?ACCNO="+custId+"&CONO="+CONO;
+                    //  URL_TO_HIT="http://92.253.93.250/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=1110010143&CONO=295";
+                    // http://localhost:8085/GetACCOUNTSTATMENT?CONO=295&ACCNO=1110010062&FROMDATE=01/01/2021&TODATE=01/10/2021
+                    // custId="1110010062";
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetACCOUNTSTATMENT?ACCNO=" + custId + "&CONO=" + CONO;
+
+
                 }
-                Log.e("urlAccount",""+URL_TO_HIT.toString());
+                Log.e("urlAccount", "" + URL_TO_HIT.toString());
             } catch (Exception e) {
                 pdValidation.dismissWithAnimation();
             }
@@ -3205,8 +3777,8 @@ public class ImportJason extends AppCompatActivity {
                         JSONArray requestArray = null;
                         listCustomerInfo = new ArrayList<>();
 
-                        double totalBalance=0;
-                        requestArray =  new JSONArray(s);
+                        double totalBalance = 0;
+                        requestArray = new JSONArray(s);
                         Log.e("requestArray", "" + requestArray.length());
 
 
@@ -3224,20 +3796,18 @@ public class ImportJason extends AppCompatActivity {
                                 requestDetail.setDebit(0);
                                 requestDetail.setCredit(0);
                             }
-                            if(requestDetail.getDebit()!=0.0)
-                            {
-                                totalBalance-=requestDetail.getDebit();// دائن
+                            if (requestDetail.getDebit() != 0.0) {
+                                totalBalance -= requestDetail.getDebit();// دائن
                             }
 
-                            if(requestDetail.getCredit()!=0.0)
-                            {
+                            if (requestDetail.getCredit() != 0.0) {
 
-                                totalBalance+=requestDetail.getCredit();// مدين
+                                totalBalance += requestDetail.getCredit();// مدين
 
                             }
 
                             requestDetail.setBalance(totalBalance);
-                            Log.e("onBindViewHolder","=total="+totalBalance);
+                            Log.e("onBindViewHolder", "=total=" + totalBalance);
 
 
                             listCustomerInfo.add(requestDetail);
@@ -3245,13 +3815,11 @@ public class ImportJason extends AppCompatActivity {
 
 
                         }
-                        if(type==0)
-                        {
+                        if (type == 0) {
                             getAccountList_text.setText("2");
-                        }
-                        else {
-                            if(listCustomerInfo.size()!=0)
-                            totalBalance_text.setText(listCustomerInfo.get(listCustomerInfo.size()-1).getBalance()+"");
+                        } else {
+                            if (listCustomerInfo.size() != 0)
+                                totalBalance_text.setText(convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + ""));
                         }
 
 
@@ -3259,12 +3827,214 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else Log.e("onPostExecute", "" + s.toString());
+                } else {
+                    if (s.contains("No Parameter Found")) {
+                        if (type == 0) {
+                            getAccountList_text.setText("3");
+                        }
+                    }
+
+                }
+                Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
         }
 
     }
+
+    private class JSONTask_AccountStatment_Withdate extends AsyncTask<String, String, String> {
+
+        private String custId = "";
+        private int type = 0;
+        public String from_Date, to_Date;
+
+        public JSONTask_AccountStatment_Withdate(String customerId, int typeImpo, String fromDate, String toDate) {
+            this.custId = customerId;
+            this.type = typeImpo;
+            from_Date = fromDate;
+            to_Date = toDate;
+            Log.e("from_Date", "==" + from_Date + "to===" + to_Date);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                if (!ipAddress.equals("")) {
+                    //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                    if (ipAddress.contains(":")) {
+                        int ind = ipAddress.indexOf(":");
+                        ipAddress = ipAddress.substring(0, ind);
+                    }
+
+
+                    URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetACCOUNTSTATMENTWITHDATE?ACCNO=" + custId +
+                            "&CONO=" + CONO + "&FROMDATE=" + from_Date.trim() + "&TODATE=" + to_Date.trim();
+
+
+                }
+                Log.e("urlAccount", "" + URL_TO_HIT.toString());
+            } catch (Exception e) {
+                pdValidation.dismissWithAnimation();
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//                nameValuePairs.add(new BasicNameValuePair("FLAG", "1"));
+//                nameValuePairs.add(new BasicNameValuePair("customerNo", custId));
+
+
+                //  request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_CustomerAccount", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        pdValidation.dismissWithAnimation();
+                        Toast.makeText(context, "Ip Connection Failed AccountStatment", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            JSONObject result = null;
+            String impo = "";
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("VHFNo")) {
+                    // Log.e("CUSTOMER_INFO","onPostExecute\t"+s.toString());
+                    //{"CUSTOMER_INFO":[{"VHFNo":"0","TransName":"ÞíÏ ÇÝÊÊÇÍí","VHFDATE":"31-DEC-19","DEBIT":"0","Credit":"16194047.851"}
+
+                    try {
+//                        result = new JSONObject(s);
+                        Account__Statment_Model requestDetail;
+
+
+                        JSONArray requestArray = null;
+                        listCustomerInfo = new ArrayList<>();
+
+                        double totalBalance = 0;
+                        requestArray = new JSONArray(s);
+                        Log.e("requestArray", "" + requestArray.length());
+
+
+                        for (int i = 0; i < requestArray.length(); i++) {
+                            JSONObject infoDetail = requestArray.getJSONObject(i);
+                            requestDetail = new Account__Statment_Model();
+                            requestDetail.setVoucherNo(infoDetail.get("VHFNo").toString());
+                            requestDetail.setTranseNmae(infoDetail.get("TransName").toString());
+                            requestDetail.setDate_voucher(infoDetail.get("VHFDATE").toString());
+
+                            try {
+                                requestDetail.setDebit(Double.parseDouble(infoDetail.get("DEBIT").toString()));
+                                requestDetail.setCredit(Double.parseDouble(infoDetail.get("Credit").toString()));
+                            } catch (Exception e) {
+                                requestDetail.setDebit(0);
+                                requestDetail.setCredit(0);
+                            }
+                            if (requestDetail.getDebit() != 0.0) {
+                                totalBalance -= requestDetail.getDebit();// دائن
+                            }
+
+                            if (requestDetail.getCredit() != 0.0) {
+
+                                totalBalance += requestDetail.getCredit();// مدين
+
+                            }
+
+                            requestDetail.setBalance(totalBalance);
+                            Log.e("onBindViewHolder", "=total=" + totalBalance);
+
+
+                            listCustomerInfo.add(requestDetail);
+                            //Log.e("listRequest", "listCustomerInfo" + listCustomerInfo.size());
+
+
+                        }
+                        if (type == 0) {
+                            getAccountList_text.setText("2");
+                        } else {
+                            if (listCustomerInfo.size() != 0)
+                                totalBalance_text.setText(convertToEnglish(getDecimal(listCustomerInfo.get(listCustomerInfo.size() - 1).getBalance()) + ""));
+                        }
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (s.contains("No Parameter Found")) {
+                        if (type == 0) {
+                            getAccountList_text.setText("3");
+                        }
+                    }
+
+                }
+                Log.e("onPostExecute", "" + s.toString());
+//                progressDialog.dismiss();
+            }
+        }
+
+    }
+
     private class JSONTask_UpdateLocation extends AsyncTask<String, String, String> {
 
         JSONObject jsonObject;
@@ -3304,7 +4074,7 @@ public class ImportJason extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("UPDATE_LOCATION_SALES_MAN", jsonObject.toString()));
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-              //  Log.e("tag_CustomerInfo", "jsonObject.toString()\t" + jsonObject.toString());
+                //  Log.e("tag_CustomerInfo", "jsonObject.toString()\t" + jsonObject.toString());
 
                 HttpResponse response = client.execute(request);
 
@@ -3374,6 +4144,7 @@ public class ImportJason extends AppCompatActivity {
 //                progressDialog.dismiss();
         }
     }
+
     private class JSONTask_PreviousIp extends AsyncTask<String, String, String> {
 
         private String custId = "";
@@ -3486,13 +4257,11 @@ public class ImportJason extends AppCompatActivity {
                         requestArray = result.getJSONArray("IpAdressForSalesMan");
 
                         JSONObject infoDetail = requestArray.getJSONObject(0);
-                        previousIp=infoDetail.get("IpAddressDevice").toString();
-                        Log.e("requestArray", "previousIp" +previousIp );
-                        if(previousIp.equals(""))
-                        {
+                        previousIp = infoDetail.get("IpAddressDevice").toString();
+                        Log.e("requestArray", "previousIp" + previousIp);
+                        if (previousIp.equals("")) {
                             checkIpDevice.setText("2");// to add ip
-                        }
-                        else {
+                        } else {
                             checkIpDevice.setText(previousIp);
                         }
 
@@ -3503,20 +4272,19 @@ public class ImportJason extends AppCompatActivity {
 //                        progressDialog.dismiss();
                         e.printStackTrace();
                     }
-                } else
-                {
-                    if(s.contains("Not definded id"))
-                    {
+                } else {
+                    if (s.contains("Not definded id")) {
                         checkIpDevice.setText("-1");
                     }
                     Log.e("onPostExecute", "" + s.toString());
 
                     pdValidation.dismissWithAnimation();
                 }
-            }else pdValidation.dismissWithAnimation();
+            } else pdValidation.dismissWithAnimation();
         }
 
     }
+
     private class JSONTask_AddIpDevice extends AsyncTask<String, String, String> {
 
         private String custId = "";
@@ -3559,9 +4327,8 @@ public class ImportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 Log.e("JSONTask_PreviousIp", "" + curentIpDevice);
                 nameValuePairs.add(new BasicNameValuePair("_ID", "11"));
-                nameValuePairs.add(new BasicNameValuePair("SALESNO",Login.salesMan));
+                nameValuePairs.add(new BasicNameValuePair("SALESNO", Login.salesMan));
                 nameValuePairs.add(new BasicNameValuePair("IpDevice", curentIpDevice));
-
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -3621,17 +4388,18 @@ public class ImportJason extends AppCompatActivity {
                 if (s.contains("UPDATE_SALES_MAN_SUCCESS")) {
                     checkIpDevice.setText("-1");
 
-                        pdValidation.dismissWithAnimation();
-//
-                } else
-                {if(s.contains("UPDATE_SALES_MAN_FAIL"))
-
                     pdValidation.dismissWithAnimation();
+//
+                } else {
+                    if (s.contains("UPDATE_SALES_MAN_FAIL"))
+
+                        pdValidation.dismissWithAnimation();
                 }
-            }else pdValidation.dismissWithAnimation();
+            } else pdValidation.dismissWithAnimation();
         }
 
     }
+
     private class JSONTask_getPciceFromAdmin extends AsyncTask<String, String, String> {
 
         private String custId = "";
@@ -3674,7 +4442,6 @@ public class ImportJason extends AppCompatActivity {
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
 
                 nameValuePairs.add(new BasicNameValuePair("_ID", "21"));
-
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -3734,14 +4501,13 @@ public class ImportJason extends AppCompatActivity {
                 Log.e("getPciceFromAdmin ", "JsonResponse\t" + s.toString());
                 if (!s.contains("notupDate")) {
                     pdValidation.dismissWithAnimation();
-                   startParsing("");
+                    startParsing("");
 //
-                } else
-                {
+                } else {
 
                     pdValidation.dismissWithAnimation();
                 }
-            }else pdValidation.dismissWithAnimation();
+            } else pdValidation.dismissWithAnimation();
         }
 
     }
@@ -3756,7 +4522,7 @@ public class ImportJason extends AppCompatActivity {
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(true);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(context.getResources().getString(R.string.refresh_customerData));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -3777,25 +4543,36 @@ public class ImportJason extends AppCompatActivity {
                     if (!ipAddress.equals("")) {
                         //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
                         //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                        if(ipAddress.contains(":"))
-                        {
-                            int ind=ipAddress.indexOf(":");
-                            ipAddress=ipAddress.substring(0,ind);
+                        if (ipAddress.contains(":")) {
+                            int ind = ipAddress.indexOf(":");
+                            ipAddress = ipAddress.substring(0, ind);
                         }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
                         //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
 
-                        URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+"/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + SalesManLogin + "&CONO=" + CONO;
 
                         //URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
 
-                        Log.e("URL_TO_HIT","getCustomerList="+URL_TO_HIT);
+                        Log.e("URL_TO_HIT", "getCustomerList=" + URL_TO_HIT);
                     }
                 } catch (Exception e) {
+                    progressDialog.dismiss();
+
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable() {
+                        public void run() {
+                            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("check Connection")
+                                    .show();
+
+
+//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
                 }
-
 
 
                 String link = URL_TO_HIT;
@@ -3901,7 +4678,6 @@ public class ImportJason extends AppCompatActivity {
                 }
 
 
-
             } catch (MalformedURLException e) {
                 Log.e("Customer", "********ex1");
                 progressDialog.dismiss();
@@ -3914,8 +4690,8 @@ public class ImportJason extends AppCompatActivity {
                 h.post(new Runnable() {
                     public void run() {
                         new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("check Connection")
-                            .show();
+                                .setTitleText("check Connection")
+                                .show();
 
 
 //                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
@@ -3930,19 +4706,7 @@ public class ImportJason extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 Log.e("Customer", "********finally");
-                progressDialog.dismiss();
 
-                Handler h = new Handler(Looper.getMainLooper());
-                h.post(new Runnable() {
-                    public void run() {
-                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("check Connection")
-                                .show();
-
-
-//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
-                    }
-                });
                 try {
                     if (reader != null) {
                         reader.close();
@@ -3961,17 +4725,15 @@ public class ImportJason extends AppCompatActivity {
             super.onPostExecute(result);
             progressDialog.dismiss();
             if (result != null) {
-                if(result.size()!=0)
-                {
-                    Log.e("result","storeInDatabase_customer="+result.size());
+                if (result.size() != 0) {
+                    // Log.e("result","storeInDatabase_customer="+result.size());
 
 
                     storeInDatabase_customer();
 
 
                     Toast.makeText(context, "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
 
                 }
             } else {
@@ -3979,19 +4741,16 @@ public class ImportJason extends AppCompatActivity {
             }
         }
     }
+
     public void storeInDatabase_customer() {
-        Log.e("storeInDatabase_cust",""+customerList.size());
-        if(customerList.size()!=0)
-        {
+        // Log.e("storeInDatabase_cust",""+customerList.size());
+        if (customerList.size() != 0) {
             mHandler.deleteAllCustomers();
             mHandler.addCustomer(customerList);
         }
 
 
-
-//        for (int i = 0; i < customerList.size(); i++) {
-
-//        }
     }
-    }
+}
+
 

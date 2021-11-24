@@ -177,13 +177,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="7"
+                    android:layout_weight="9"
                     android:layout_margin="2dp"
 
                     android:gravity="center"
                     android:id="@+id/serialtable"
                     android:background="@drawable/back_border_shape"
-                    android:padding="2dp">
+                    android:padding="2dp"
+                    >
 
 
                     <TextView
