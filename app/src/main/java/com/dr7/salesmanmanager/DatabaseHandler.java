@@ -2548,7 +2548,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
             db = this.getReadableDatabase();
             db.beginTransaction();
-
+              Log.e("serialModelItem===",serialModelItem.size()+"");
             for (int i = 0; i < serialModelItem.size(); i++) {
                 ContentValues values = new ContentValues();
                 values.put(StoreNo, serialModelItem.get(i).getStoreNo());

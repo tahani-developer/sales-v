@@ -56,12 +56,17 @@
                     android:gravity="center"
                     >
 
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/addItemImgButton2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentTop="true"
-                        android:layout_margin="10dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
                         android:clickable="true"
                         android:src="@drawable/items2"
                         app:civ_border_color="@color/colorPrimaryDark" />
@@ -361,15 +366,31 @@
 
                         <RadioGroup
                             android:id="@+id/transKindRadioGroup"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:layout_weight="4"
                             android:orientation="horizontal"
                        >
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_weight="4"
+                                android:orientation="vertical"
+                                >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_weight="4"
+    android:orientation="horizontal"
+>
 
-                                <RadioButton
+                            <RadioButton
                                     android:id="@+id/salesRadioButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -384,24 +405,32 @@
                                     android:id="@+id/retSalesRadioButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-
                                     android:checked="false"
                                     android:text="@string/app_ret_inv2"
                                     android:textColor="@color/text_view_color"
                                     android:textSize="10sp" />
 
-
+</LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:layout_weight="4"
+                                android:orientation="horizontal"
+                                >
                             <RadioButton
                                 android:id="@+id/orderRadioButton"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-
                                 android:checked="false"
                                 android:text="@string/app_cust_order2"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="10sp" />
-
+                            </LinearLayout>
+                            </LinearLayout>
                         </RadioGroup>
+
                         </LinearLayout>
                                 <LinearLayout
                                     android:orientation="horizontal"

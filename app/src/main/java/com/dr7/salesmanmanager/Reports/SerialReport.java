@@ -164,6 +164,7 @@ Spinner ItemKindspinner;
    void getitemkind() {
 
      mastersItemkinds = new ArrayList<ItemsMaster>();
+
         mastersItemkinds = databaseHandler.getItemkinds(ItemKindspinner.getSelectedItem().toString());
         Log.e("itemsMasters2===", mastersItemkinds.size()+"");
      //   Log.e("itemsMasters2===",mastersItemkinds.get(0).getItemNo());
@@ -225,6 +226,7 @@ Spinner ItemKindspinner;
             )
                 if(!ItemKindspinner.getSelectedItem().toString().equals("")) {
 
+                    Log.e("allseriallist===", allseriallist.get(i).getItemNo()+"");
                     Log.e("allseriallist.get(i)===", allseriallist.get(i).getItemNo()+"");
 
 
