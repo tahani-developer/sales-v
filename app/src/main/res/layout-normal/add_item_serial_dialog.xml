@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
+    android:layout_width="290dp"
     android:layout_height="450dp"
-    android:minWidth="320dp"
+    android:minWidth="290dp"
     android:minHeight="450dp"
     android:id="@+id/mainLinearAddItem"
     android:layoutDirection="locale"

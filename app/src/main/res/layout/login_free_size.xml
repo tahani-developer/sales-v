@@ -242,7 +242,7 @@
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight=".8"
 
             >
             <androidx.cardview.widget.CardView
@@ -250,7 +250,7 @@
                 android:id="@+id/logi12"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.3"
                 android:layout_below="@+id/passwordEditText"
                 android:layout_centerHorizontal="true"
 
@@ -267,7 +267,7 @@
             android:layout_weight="1"
             android:layout_below="@+id/passwordEditText"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+
 
             app:cardBackgroundColor="@color/colorblue_dark3"
             app:cardCornerRadius="15dp"
@@ -297,7 +297,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible"
-                android:layout_weight="1"
+                android:layout_weight="1.3"
                 android:layout_below="@+id/passwordEditText"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="34dp"

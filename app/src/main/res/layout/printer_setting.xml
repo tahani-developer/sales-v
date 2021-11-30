@@ -40,9 +40,9 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight=".5"
         android:background="@drawable/back_border_edit"
-        android:layout_marginBottom="5dp"
+
         android:orientation="horizontal">
 
         <RadioButton
@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
          android:textSize="14sp"
-            android:layout_weight="1"
+            android:layout_weight=".5"
             android:text="Normal" />
 
         <RadioButton
@@ -58,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textSize="14sp"
-            android:layout_weight="1"
+            android:layout_weight=".5"
             android:text="Large Name" />
     </RadioGroup>
     <CheckBox

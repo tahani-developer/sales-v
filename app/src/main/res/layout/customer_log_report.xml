@@ -132,6 +132,7 @@
         android:id="@+id/HorizontalScrollView01"
         android:layout_width="match_parent"
         android:layout_weight="1"
+        android:padding="5dp"
         android:layout_height="match_parent"
 
         >
@@ -139,6 +140,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
         android:background="@color/layer6"
         android:layout_margin="15dp"
         >
@@ -148,6 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
+            android:padding="5dp"
             android:background="@color/white">
 
             <TableRow
