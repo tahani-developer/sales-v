@@ -28,6 +28,7 @@ public class ItemsListAdapter extends BaseAdapter {
     private DecimalFormat decimalFormat;
     int typeScreen=0;//0 landscap
     DatabaseHandler databaseHandler ;
+    String rate="0";
 
     public ItemsListAdapter(Context context, List<Item> itemList,int type)
     {
@@ -38,6 +39,7 @@ public class ItemsListAdapter extends BaseAdapter {
         this.typeScreen=type;
         Log.e("typeScreen",""+typeScreen+"\t type"+type);
         databaseHandler=new DatabaseHandler(context);
+        rate=databaseHandler.getRateOfCustomer();
     }
 
     public void setItemsList(List<Item> itemList)
@@ -128,7 +130,7 @@ public class ItemsListAdapter extends BaseAdapter {
         if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
         {
             int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
-            String itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim());
+            String itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),rate);
            // Log.e("priceTextView","1="+itemUnitPrice);
             if(!itemUnitPrice.equals(""))
             {

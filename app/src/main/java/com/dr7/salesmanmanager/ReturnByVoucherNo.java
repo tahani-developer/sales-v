@@ -516,7 +516,11 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     private void saveSerial() {
         for(int i=0;i<returnListSerial.size();i++)
         {
+            Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());
+            dataBase.updateSerialReturnedInBaseInvoice(returnListSerial.get(i).getVoucherNo(),returnListSerial.get(i).getSerialCode());
+
             returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
+            Log.e("returnListSerial","getVoucherNo=after="+returnListSerial.get(i).getVoucherNo());
             dataBase.add_Serial(returnListSerial.get(i));
         }
     }
@@ -533,11 +537,12 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                 returnListSerial.remove(i);
                 if(i!=0)
                 i--;
+                else i=-1;
             }
             else {
                 returnListSerial.get(i).setKindVoucher("506");
                 returnListSerial.get(i).setDateVoucher(curent);
-                returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
+               // returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
             }
         }
         Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());

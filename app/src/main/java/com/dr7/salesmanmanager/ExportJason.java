@@ -1341,6 +1341,7 @@ public class ExportJason extends AppCompatActivity {
                     {
                         Toast.makeText(context, "Error in Saving Added Customer", Toast.LENGTH_SHORT).show();
 
+                        //{"ErrorCode":"1","ErrorDesc":"ORA-00001: unique constraint (A2021_555.CUSTSALESM_O0) violated"}
                     }
                 }
 

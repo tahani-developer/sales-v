@@ -165,8 +165,8 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin = mHandler.getAllUserNo();
-//        headerDll = "/Falcons/VAN.dll";
-        headerDll="";
+        headerDll = "/Falcons/VAN.dll";
+//        headerDll="";
         //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
@@ -2358,10 +2358,20 @@ public class ImportJason extends AppCompatActivity {
                         try {
                             item.setUnitPrice(finalObject.getString("SALEPRICE"));
                             item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
+
+                            item.setPriceClass_1(finalObject.getString("PCLASS1"));
+                            item.setPriceClass_2(finalObject.getString("PCLASS2"));
+                            item.setPriceClass_3(finalObject.getString("PCLASS3"));
+
+
+
                         } catch (Exception e) {
                             item.setUnitPrice("");
 
                             item.setItemBarcode("");
+                            item.setPriceClass_1("");
+                            item.setPriceClass_2("");
+                            item.setPriceClass_3("");
                         }
 
 

@@ -72,11 +72,11 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
                 Log.e("linearSelected","bb"+b);
                 if(b)
                 {
-                    list.get(position).isClicked=1;
+                    list.get(holder.getAdapterPosition()).isClicked=1;
                 }else {
-                    list.get(position).isClicked=0;
+                    list.get(holder.getAdapterPosition()).isClicked=0;
                 }
-                Log.e("linearSelected","position="+list.get(position).isClicked);
+                Log.e("linearSelected","position="+list.get(holder.getAdapterPosition()).isClicked);
             }
         });
 

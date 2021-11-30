@@ -282,7 +282,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                holder.price.setText("" + items.get(position).getPrice());
 //            }else{
 
-            String postPriceUniteValue=MHandler.getUnitPrice(items.get(position).getItemNo());
+            Log.e("rate_customer",""+rate_customer);
+            String postPriceUniteValue=MHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
             if(!postPriceUniteValue.equals(""))
             {
                 try {
@@ -1140,7 +1141,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                                                               String itemUnitPrice=mHandler.getUnitPrice(items.get(position).getItemNo());
+                                                               String itemUnitPrice=mHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
                                                                if(!itemUnitPrice.equals(""))
                                                                    price.setText(itemUnitPrice);
 //                                                           }
