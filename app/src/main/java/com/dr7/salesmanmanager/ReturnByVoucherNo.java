@@ -422,7 +422,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             }
             try {
 //                        objJson.startExportDatabase();
-                objJson.startExport();
+                objJson.startExport(0);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -459,6 +459,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
       voucherReturn.setVoucherNumber(max_voucherNumber);
       voucherReturn.setVoucherType(506);
       voucherReturn.setIsPosted(0);
+      voucherReturn.setRemark("");
 
       voucherReturn.setVoucherDate(generalMethod.getCurentTimeDate(1));
       voucherReturn.setCustNumber(CustomerListShow.Customer_Account);

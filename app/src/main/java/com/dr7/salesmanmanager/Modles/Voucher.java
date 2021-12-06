@@ -270,7 +270,11 @@ public class Voucher {
             obj.put("SALESMANNO", saleManNumber);
             obj.put("VOUCHERDISCOUNT", voucherDiscount);
             obj.put("VOUCHERDISCOUNTPERCENT", voucherDiscountPercent);
-            obj.put("NOTES", remark);
+            if(remark==null)
+            {
+                obj.put("NOTES", "");
+            }else obj.put("NOTES", remark);
+
             obj.put("CACR", payMethod);
             obj.put("ISPOSTED", "0");
             obj.put("NETSALES", netSales);

@@ -1089,7 +1089,7 @@ public class MainActivity extends AppCompatActivity
                                 }
                                 try {
 //                                    obj.startExportDatabase();
-                                    obj.startExport();
+                                    obj.startExport(0);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -1796,7 +1796,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         try {
 //                        objJson.startExportDatabase();
-                            objJson.startExport();
+                            objJson.startExport(0);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -2093,7 +2093,7 @@ public class MainActivity extends AppCompatActivity
                                 obj = new ExportJason(MainActivity.this);
 
 //                                obj.startExportDatabase();
-                                obj.startExport();
+                                obj.startExport(0);
                             } catch (JSONException e) {
                                 Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
                                 e.printStackTrace();

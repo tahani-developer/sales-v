@@ -856,7 +856,7 @@ public class SalesInvoice extends Fragment {
                             try {
                                 exportJason = new ExportJason(getActivity());
 //                                exportJason.startExportDatabase();
-                                exportJason.startExport();
+                                exportJason.startExport(0);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -2947,7 +2947,7 @@ public class SalesInvoice extends Fragment {
                 try {
                     ExportJason exportJason = new ExportJason(getActivity());
 //                    exportJason.startExportDatabase();
-                    exportJason.startExport();
+                    exportJason.startExport(0);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

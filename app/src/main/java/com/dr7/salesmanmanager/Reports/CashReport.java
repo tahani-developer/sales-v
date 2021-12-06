@@ -244,7 +244,7 @@ public class CashReport  extends AppCompatActivity {
                     cash_paymenttext.setText(convertToEnglish(decimalFormat.format(cashPayment))+"");
                     creditPaymenttext.setText(convertToEnglish(decimalFormat.format(creditPayment))+"");
                     nettext.setText(convertToEnglish(decimalFormat.format(net)));
-                    total_cash=net+cash-returnCash;
+                    total_cash=cashPayment+cash-returnCash;
                     creditCard.setText(convertToEnglish(decimalFormat.format(creditCardPayment))+"");
                     total_cashtext.setText(convertToEnglish(decimalFormat.format((total_cash))));
                     }

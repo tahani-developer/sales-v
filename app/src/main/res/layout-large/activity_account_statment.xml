@@ -81,6 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="8.8"
+                android:visibility="gone"
 
                 android:orientation="horizontal"
                 android:padding="2dp"
@@ -231,7 +232,50 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/row221222"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="8.8"
 
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_weight="4"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:textStyle="bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/transName"
+                    android:textColor="@color/colorblue_dark3"
+                    android:textSize="14sp" />
+                <Spinner
+                    android:id="@+id/itemKindspinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/back_border_edit"
+
+
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    />
+                <TextView
+                    android:id="@+id/getfilterKind"
+                    android:layout_width="30dp"
+
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/search_btn"
+                    android:textColor="@color/add_button"
+                    />
+            </LinearLayout>
             <HorizontalScrollView
                 android:id="@+id/HorizontalScrollView01"
                 android:layout_height="match_parent"

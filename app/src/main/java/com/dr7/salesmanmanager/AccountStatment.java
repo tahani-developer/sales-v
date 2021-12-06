@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dr7.salesmanmanager.Adapters.AccountStatmentAdapter;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -31,7 +33,9 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.dr7.salesmanmanager.CustomerListShow.Customer_Name;
@@ -42,21 +46,26 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class AccountStatment extends AppCompatActivity {
 //master
+List<String> spinnerArray = new ArrayList<>();
     List<Customer> customerInfoList=new ArrayList<>();
     ArrayList<Account__Statment_Model> listAccountBalance;
     RecyclerView recyclerView_report;
     LinearLayoutManager layoutManager;
     public  static TextView getAccountList_text,total_qty_text;
     Button preview_button_account;
+    ArrayList<String> mastersKinds=new ArrayList<>();
      Spinner customerSpinner;
      String customerId="";
-     TextView name,lastVisitDateTime,from_date,to_date,getAcc;
+     TextView name,lastVisitDateTime,from_date,to_date,getAcc,getfilterKind;
      DatabaseHandler databaseHandler;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
     Transaction transaction;
     String today="",from="",toDate="";
     GeneralMethod generalMethod;
     LinearLayout datLinear;
+     Spinner itemKindspinner;
+    private ArrayList<Account__Statment_Model> searchlist=new ArrayList<>();
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("WrongConstant")
     @Override
@@ -231,6 +240,14 @@ public class AccountStatment extends AppCompatActivity {
         from_date = (TextView) findViewById(R.id.from_date);
         to_date = (TextView) findViewById(R.id.to_date);
         getAcc=(TextView) findViewById(R.id.getAcc);
+        getfilterKind=(TextView) findViewById(R.id.getfilterKind);
+        getfilterKind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listCustomerInfo.size()!=0)
+                filterSpinner();
+            }
+        });
         datLinear=findViewById(R.id.datLinear);
         if(dateFromToActive==0)
         {
@@ -262,6 +279,36 @@ public class AccountStatment extends AppCompatActivity {
             }
         });
         getLastVaisit();
+        itemKindspinner=findViewById(R.id.itemKindspinner);
+    }
+
+    private void filterSpinner() {
+        searchlist.clear();
+       String kindFilter= itemKindspinner.getSelectedItem().toString();
+       Log.e("kindFilter",""+kindFilter);
+        for (int i = 0; i < listCustomerInfo.size(); i++) {
+            if ((kindFilter.toString().equals(listCustomerInfo.get(i).getTranseNmae()))||(kindFilter.toString().equals(getResources().getString(R.string.all))))
+            {
+                searchlist.add(listCustomerInfo.get(i));
+            }
+
+
+
+        }
+        Log.e("itemki===","searchlist="+searchlist.size());
+        if( searchlist.size()!=0 ) {
+
+
+            fillAdapterSearch(searchlist);
+        }
+        else
+        {fillAdapter();}
+        Log.e("itemki===","cc");
+    }
+
+    private void fillAdapterSearch(ArrayList<Account__Statment_Model> searchlist) {
+        AccountStatmentAdapter adapter = new AccountStatmentAdapter(searchlist, AccountStatment.this);
+        recyclerView_report.setAdapter(adapter);
     }
 
     private void getDataFromServer(int flag ) {
@@ -308,6 +355,50 @@ public class AccountStatment extends AppCompatActivity {
 
         AccountStatmentAdapter adapter = new AccountStatmentAdapter(listCustomerInfo, AccountStatment.this);
         recyclerView_report.setAdapter(adapter);
+        fillSpinerKind();
+    }
+
+    private void fillSpinerKind() {
+        spinnerArray=getAllKind(listCustomerInfo);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+
+                this, R.layout.item_spinner_acc, spinnerArray);
+        itemKindspinner.setAdapter(adapter);
+        itemKindspinner.setSelection(0);
+    }
+
+    private List<String> getAllKind(ArrayList<Account__Statment_Model> listCustomerInfo) {
+        mastersKinds.clear();
+        mastersKinds.add(getResources().getString(R.string.all));
+        for(int i=0;i<listCustomerInfo.size();i++)
+        {
+            mastersKinds.add(listCustomerInfo.get(i).getTranseNmae());
+        }
+        Log.e("mastersKinds","1="+mastersKinds.size());
+        mastersKinds= removeDuplicates(mastersKinds);
+        Log.e("mastersKinds","2="+mastersKinds.size());
+        return  mastersKinds;
+    }
+
+
+    public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
+    {
+
+        // Create a new LinkedHashSet
+        Set<T> set = new LinkedHashSet<>();
+
+        // Add the elements to set
+        set.addAll(list);
+
+        // Clear the list
+        list.clear();
+
+        // add the elements of set
+        // with no duplicates to the list
+        list.addAll(set);
+
+        // return the list
+        return list;
     }
 
     @Override

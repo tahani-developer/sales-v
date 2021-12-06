@@ -200,7 +200,9 @@ public class VouchersReport extends AppCompatActivity {
                                         vouchers.get(n).getVoucherDiscount() + "",
                                         vouchers.get(n).getSubTotal() + "",
                                         vouchers.get(n).getTax() + "",
-                                        vouchers.get(n).getNetSales() + "" };
+                                        vouchers.get(n).getNetSales() + ""
+
+                                };
 
 
                                 switch (vouchers.get(n).getPayMethod()) {

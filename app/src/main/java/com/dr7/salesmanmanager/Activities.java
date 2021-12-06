@@ -769,7 +769,7 @@ public class Activities extends AppCompatActivity implements
                 }
                 try {
 //                        objJson.startExportDatabase();
-                    objJson.startExport();
+                    objJson.startExport(1);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -829,7 +829,10 @@ public class Activities extends AppCompatActivity implements
 
 
               //  locationPermissionRequest.closeLocation();
-                MainActivity. masterControlLoc.setText("2");
+                try {
+                    MainActivity. masterControlLoc.setText("2");
+                }
+              catch (Exception e){}
                 dashLayout.setVisibility(View.VISIBLE);
                 fragmentContainer.setVisibility(View.GONE);
                 clearSerial();

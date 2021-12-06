@@ -113,6 +113,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.loadSerial;
+import static com.dr7.salesmanmanager.UnCollectedData.from_date;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -3507,6 +3508,12 @@ Log.e("customerList",""+customerList.size());
                         ipAddress = ipAddress.substring(0, ind);
                     }
                     if (dateFromToActive == 1) {
+                        if(fromD.equals(""))
+                        {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheCheques?ACCNO=" + custId + "&CONO=" + CONO;
+
+                        }
+                        else
                         URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheChequesWithDate?ACCNO=" + custId +
                                 "&CONO=" + CONO + "&FROMDATE=" + fromD.trim() + "&TODATE=" + toDat.trim();
 
