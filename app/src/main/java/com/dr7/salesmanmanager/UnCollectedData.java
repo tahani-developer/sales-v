@@ -94,7 +94,7 @@ public class UnCollectedData extends AppCompatActivity {
         to_date = (TextView) findViewById(R.id.to_date);
         getAcc=(TextView) findViewById(R.id.getAcc);
         today=generalMethod.getCurentTimeDate(1);
-        from_date.setText(today);
+//        from_date.setText(today);
         to_date.setText(today);
         from=from_date.getText().toString().trim();
         toDate=to_date.getText().toString().trim();

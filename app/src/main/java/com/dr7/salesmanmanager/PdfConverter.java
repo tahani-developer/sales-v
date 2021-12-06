@@ -234,23 +234,35 @@ public class PdfConverter {
         PdfPTable pdfPTable = new PdfPTable(6);
         pdfPTable.setWidthPercentage(100f);
         pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-        insertCell(pdfPTable,context.getString(R.string.voucherNo)                    , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable,context.getString(R.string.transName      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable,context.getString(R.string.date_voucher      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+
+        insertCell(pdfPTable,context.getResources().getString(R.string.balance   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
         insertCell(pdfPTable,context.getResources().getString(R.string.debit   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,context.getResources().getString(R.string.credit   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable,context.getResources().getString(R.string.balance   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+        insertCell(pdfPTable,context.getString(R.string.date_voucher      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+
+        insertCell(pdfPTable,context.getString(R.string.transName      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+
+        insertCell(pdfPTable,context.getString(R.string.voucherNo)                    , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 
         pdfPTable.setHeaderRows(1);
         for (int i = 0; i < list.size(); i++) {
-            insertCell(pdfPTable, String.valueOf(list.get(i).getVoucherNo() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getTranseNmae())       , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getDate_voucher()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getDebit()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getCredit()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
             insertCell(pdfPTable, String.valueOf(list.get(i).getBalance()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getCredit()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getDebit()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getDate_voucher()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getTranseNmae())       , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+            insertCell(pdfPTable, String.valueOf(list.get(i).getVoucherNo() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 
 

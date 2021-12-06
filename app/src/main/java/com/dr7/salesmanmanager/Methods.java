@@ -14,7 +14,7 @@ public class Methods {
     public  static  String getDecimal(double numberFloat){
 
        DecimalFormat decimalFormat;
-        decimalFormat = new DecimalFormat("00.000");
+        decimalFormat = new DecimalFormat("000.000");
         try {
             return  decimalFormat.format(numberFloat);
         }catch (Exception e)

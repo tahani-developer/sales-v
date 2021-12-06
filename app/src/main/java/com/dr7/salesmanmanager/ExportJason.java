@@ -94,7 +94,7 @@ public class ExportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
-    int taxType=0;
+    int taxType=0,importDataAfter=0;
 
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
@@ -326,7 +326,12 @@ public class ExportJason extends AppCompatActivity {
 
 
     }
-    public  void startExport() throws JSONException {
+    public  void startExport(int expoAndImpo) throws JSONException {
+        if(expoAndImpo==1)
+        {
+            importDataAfter=1;// to import new data if (0)
+        }
+        else importDataAfter=0;
         if(typaImport==0)//mysql
         {
             startExportDatabase();
@@ -1341,6 +1346,7 @@ public class ExportJason extends AppCompatActivity {
                     {
                         Toast.makeText(context, "Error in Saving Added Customer", Toast.LENGTH_SHORT).show();
 
+                        //{"ErrorCode":"1","ErrorDesc":"ORA-00001: unique constraint (A2021_555.CUSTSALESM_O0) violated"}
                     }
                 }
 
@@ -1892,6 +1898,36 @@ public class ExportJason extends AppCompatActivity {
     public void exportInventorySh(){// 13
         getInventoryShelfTables();
         new  JSONTask_InventoryShelfDelphi().execute();
+    }
+    public void exportLoadVan(){// 13
+        getLoadVanBalance();
+        new  JSONTask_LoadVanDelphi().execute(); //14
+    }
+
+    private void getLoadVanBalance() {
+        try {
+
+            jsonArrayBalance=new JSONArray();
+            salesManItemsBalanceList=mHandler.getSalesManItemsBalance(Login.salesMan);
+            for (int i = 0; i < salesManItemsBalanceList.size(); i++) {
+
+                salesManItemsBalanceList.get(i).getSalesManNo();
+                salesManItemsBalanceList.get(i).getItemNo();
+                salesManItemsBalanceList.get(i).getQty();
+                jsonArrayBalance.put(salesManItemsBalanceList.get(i).getJSONObject());
+            }
+        }
+        catch ( Exception e)
+        {
+
+        }
+        try {
+            vouchersObject=new JSONObject();
+            vouchersObject.put("JSN",jsonArrayBalance);
+            Log.e("getSerialetail",""+jsonArrayBalance);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exportStockRequestMaster(){// 13
@@ -2451,11 +2487,89 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_InventoryShelfDelphi---13"+result);
             pdVoucher.setTitle("Export Transaction");
-            pdVoucher.dismissWithAnimation();
+           // pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
                     mHandler.updateInventoryShelf();
+                }
+
+
+            }
+            exportLoadVan();
+
+        }
+    }
+    private class JSONTask_LoadVanDelphi extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTLOADVAN";
+
+            String JsonResponse="";
+            Log.e("tagexPORT", "EXPORT_LOADVAN");
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                try {
+                    request.setURI(new URI(URL_TO_HIT));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("JsonResponse", "ExporVoucher" + JsonResponse);
+
+
+
+                //*******************************************
+
+
+            } catch (Exception e) {
+            }
+            return JsonResponse;
+
+
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+            Log.e("onPostExecuteTrans","JSONTask_EXPORTLOADVAN---132"+result);
+            pdVoucher.setTitle("Export LOADVAN");
+            pdVoucher.dismissWithAnimation();
+            if (result != null && !result.equals("")) {
+                if(result.contains("Saved Successfully"))
+                {
+//                    mHandler.updateInventoryShelf();
                 }
 
 
@@ -2482,6 +2596,7 @@ public class ExportJason extends AppCompatActivity {
             new JSONTaskEXPORT_STOCK().execute();
         }
                 else {
+                    if(importDataAfter==0)
                     getData();
                 }
     }
@@ -2509,8 +2624,8 @@ public class ExportJason extends AppCompatActivity {
                 //http://localhost:8082/EXPORTTOSTOCK?CONO=295&STRNO=4
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTTOSTOCK";
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
-                Log.e("tag_link", "ExportData -->" + link);
-                Log.e("tag_data", "ExportData -->" + data);
+                Log.e("tag_link", "ExportData -->" + link);Log.e("tag_data", "ExportData -->" + data);
+
 
 ////
                 URL url = new URL(link);
@@ -2672,6 +2787,7 @@ public class ExportJason extends AppCompatActivity {
             } else {
             }
             pdStosk.dismissWithAnimation();
+            if(importDataAfter==0)
             getData();
         }
     }

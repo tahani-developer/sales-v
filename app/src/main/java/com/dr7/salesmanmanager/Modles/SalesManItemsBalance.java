@@ -82,9 +82,13 @@ public class SalesManItemsBalance {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
+
+
+            obj.put("LOADTYPE", "1");
             obj.put("VANCODE", SalesManNo);
             obj.put("ITEMCODE", ItemNo);
             obj.put("LOADQTY", Qty);
+            obj.put("NETQTY", Qty);
             obj.put("LOADDATE",today);
         } catch (JSONException e) {
             Log.e("TagSalesmanBalance" , "JSONException");

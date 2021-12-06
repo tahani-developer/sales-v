@@ -45,9 +45,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".ReturnByVoucherNo"
-            android:exported="false" />
+            android:exported="false"
+
+            />
         <activity
             android:name=".Reports.ShelfInventoeryReport"
             android:windowSoftInputMode="stateHidden"></activity>

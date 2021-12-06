@@ -113,6 +113,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.loadSerial;
+import static com.dr7.salesmanmanager.UnCollectedData.from_date;
 import static com.dr7.salesmanmanager.UnCollectedData.resultData;
 
 public class ImportJason extends AppCompatActivity {
@@ -165,8 +166,8 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin = mHandler.getAllUserNo();
-//        headerDll = "/Falcons/VAN.dll";
-        headerDll="";
+        headerDll = "/Falcons/VAN.dll";
+//        headerDll="";
         //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
             ipAddress = settings.get(0).getIpAddress();
@@ -2358,10 +2359,20 @@ public class ImportJason extends AppCompatActivity {
                         try {
                             item.setUnitPrice(finalObject.getString("SALEPRICE"));
                             item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
+
+                            item.setPriceClass_1(finalObject.getString("PCLASS1"));
+                            item.setPriceClass_2(finalObject.getString("PCLASS2"));
+                            item.setPriceClass_3(finalObject.getString("PCLASS3"));
+
+
+
                         } catch (Exception e) {
                             item.setUnitPrice("");
 
                             item.setItemBarcode("");
+                            item.setPriceClass_1("");
+                            item.setPriceClass_2("");
+                            item.setPriceClass_3("");
                         }
 
 
@@ -3497,6 +3508,12 @@ Log.e("customerList",""+customerList.size());
                         ipAddress = ipAddress.substring(0, ind);
                     }
                     if (dateFromToActive == 1) {
+                        if(fromD.equals(""))
+                        {
+                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheCheques?ACCNO=" + custId + "&CONO=" + CONO;
+
+                        }
+                        else
                         URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetAllTheChequesWithDate?ACCNO=" + custId +
                                 "&CONO=" + CONO + "&FROMDATE=" + fromD.trim() + "&TODATE=" + toDat.trim();
 

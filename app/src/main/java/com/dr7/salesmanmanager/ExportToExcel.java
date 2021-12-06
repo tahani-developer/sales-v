@@ -724,24 +724,24 @@ public class ExportToExcel {
                // sheet.mergeCells(0, 0, 6, 0);// col , row, to col , to row
                 sheet.addCell(new Label(2, 0, context.getString(R.string.AccountStatment)+" : \t "+CustomerListShow.Customer_Name)); // column and row
             //    sheet.mergeCells(0, 1, 6, 1);
-                sheet.addCell(new Label(0, 1, context.getString(R.string.voucherNo))); // column and row
-                sheet.addCell(new Label(1, 1, context.getString(R.string.transName)));
-                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.date_voucher)));
-                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.debit)));
-                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.credit)));
-                sheet.addCell(new Label(5, 1, context.getResources().getString(R.string.balance)));
+                sheet.addCell(new Label(0, 1, context.getString(R.string.balance))); // column and row
+                sheet.addCell(new Label(1, 1, context.getString(R.string.debit)));
+                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.credit)));
+                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.date_voucher)));
+                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.transName)));
+                sheet.addCell(new Label(5, 1, context.getResources().getString(R.string.voucherNo)));
 
 
             //    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
 
                 for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo() + ""));
-                    sheet.addCell(new Label(1, i + 2, list.get(i).getTranseNmae()));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getDate_voucher() + ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getDebit()+ ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getCredit()+""));
+                    sheet.addCell(new Label(0, i + 2, list.get(i).getBalance() + ""));
+                    sheet.addCell(new Label(1, i + 2, list.get(i).getCredit()+""));
+                    sheet.addCell(new Label(2, i + 2, list.get(i).getDebit() + ""));
+                    sheet.addCell(new Label(3, i + 2, list.get(i).getDate_voucher()+ ""));
+                    sheet.addCell(new Label(4, i + 2, list.get(i).getTranseNmae()+""));
 
-                    sheet.addCell(new Label(5, i + 2, list.get(i).getBalance()+""));
+                    sheet.addCell(new Label(5, i + 2, list.get(i).getVoucherNo()+""));
 
                  //   sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
 

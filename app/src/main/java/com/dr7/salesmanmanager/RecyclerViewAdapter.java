@@ -282,7 +282,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                holder.price.setText("" + items.get(position).getPrice());
 //            }else{
 
-            String postPriceUniteValue=MHandler.getUnitPrice(items.get(position).getItemNo());
+            Log.e("rate_customer",""+rate_customer);
+            String postPriceUniteValue=MHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
             if(!postPriceUniteValue.equals(""))
             {
                 try {
@@ -1140,7 +1141,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                                                               String itemUnitPrice=mHandler.getUnitPrice(items.get(position).getItemNo());
+                                                               String itemUnitPrice=mHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
                                                                if(!itemUnitPrice.equals(""))
                                                                    price.setText(itemUnitPrice);
 //                                                           }
@@ -1243,11 +1244,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                            currentKey = "";
                                                                                            if (mHandler.getAllSettings().get(0).getUseWeightCase() == 0) {
                                                                                                unitValue = unit.getSelectedItem().toString();
-                                                                                               Log.e("unitValue", "" + unitValue);
+                                                                                              // Log.e("unitValue", "" + unitValue);
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
 //                                                                                                       || mHandler.getAllSettings().get(0).getAllowMinus() == 1
 //                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
-                                                                                               if (validQty(items.get(position).getQty(), Double.parseDouble(unitQty.getText().toString()))) {
+                                                                                               if (validQty(items.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
 
                                                                                                    if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
                                                                                                            Double.parseDouble(price.getText().toString()) >= items.get(position).getMinSalePrice())) {
@@ -1955,8 +1956,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .show();
     }
 
-    private boolean validQty(float qtyCurrent, double qtyRequired) {
-        Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
+    private boolean validQty(float qtyCurrent, float qtyRequired) {
+        //Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
         if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
                 || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
             return true;
@@ -1972,7 +1973,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            return  true;
 //        }
 //        else {
-        if (qtyCurrent >= qtyRequired) {
+        if ( qtyRequired<=qtyCurrent) {
             return true;
         }
 //        }
