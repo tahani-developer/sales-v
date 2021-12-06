@@ -1790,7 +1790,7 @@ public class ImportJason extends AppCompatActivity {
                         item.setSalesManNo(finalObject.getString("SalesManNo"));
                         item.setItemNo(finalObject.getString("ItemNo"));
                         item.setQty(finalObject.getDouble("Qty"));
-
+                        Log.e("salesManItemsBalanceList", "Gson" + item.getItemNo()+"\t"+item.getQty());
                         salesManItemsBalanceList.add(item);
                     }
 
