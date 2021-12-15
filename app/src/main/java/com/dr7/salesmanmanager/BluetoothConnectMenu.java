@@ -69,6 +69,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import static com.dr7.salesmanmanager.ImportJason.returnListSerial;
 import static com.dr7.salesmanmanager.NumberToArabic.getArabicString;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
@@ -753,6 +754,30 @@ public class BluetoothConnectMenu extends Activity {
                                 }
 
 
+                            }else if(count == 10){
+                                Log.e("printInventory",""+count+"report"+returnListSerial.size());
+
+                            }else if(count == 11){
+                                Log.e("printReturnVocher",""+count+"report"+returnListSerial.size());
+                                double totalqty=0;
+                                Bitmap headerLayout=convertToImage_HEADER_Prin();
+
+                                sample.imageTestEnglish(1, headerLayout);
+                                for(int i=0;i<returnListSerial.size();i++)
+                                {
+                                    totalqty+=Double.parseDouble(returnListSerial.get(i).getQty());
+
+                                    Bitmap inventoryLayout=convertToImage_inventoryRow(itemsInventoryPrint.get(i));
+                                    sample.imageTestEnglish(1, inventoryLayout);
+                                }
+                                Bitmap inventoryLayout_footer=convertToImage_inventoryFooter(totalqty);
+                                sample.imageTestEnglish(1, inventoryLayout_footer);
+
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                         }

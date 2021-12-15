@@ -40,8 +40,7 @@
         app:civ_border_color="@color/colorblue_dark"
         app:civ_border_width="2dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        />
+        tools:layout_editor_absoluteY="0dp" />
 
     <EditText
         android:id="@+id/usernameEditText"

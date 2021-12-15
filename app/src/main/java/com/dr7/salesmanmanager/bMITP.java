@@ -57,12 +57,15 @@ import java.util.Vector;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
 import static com.dr7.salesmanmanager.PrintPayment.pay1;
 import static com.dr7.salesmanmanager.PrintPayment.paymentPrinter;
 import static com.dr7.salesmanmanager.PrintVoucher.items;
 import static com.dr7.salesmanmanager.PrintVoucher.vouch1;
 import static com.dr7.salesmanmanager.ReceiptVoucher.paymentsforPrint;
 import static com.dr7.salesmanmanager.Reports.AccountReport.acount_report_list;
+import static com.dr7.salesmanmanager.ReturnByVoucherNo.listItemsMain;
+import static com.dr7.salesmanmanager.ReturnByVoucherNo.returblistItemsMain;
 import static com.dr7.salesmanmanager.SalesInvoice.finishPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrint;
 import static com.dr7.salesmanmanager.SalesInvoice.itemForPrintLast;
@@ -679,6 +682,44 @@ public class bMITP extends Activity {
 //
 //                          }
 
+                          break;
+                      case 10:
+                  //        printVoucher = voucherReturn;
+                      //    itemPrint = listItemsMain;
+
+                          DatabaseHandler databaseHandler=new DatabaseHandler(context);
+                          int x=databaseHandler.getLastVoucherNo(506);
+                          Log.e("x==",x+"");
+                         // voucherReturn=dataBase.getAllVouchers_VoucherNo(Integer.parseInt(voucherNo),504);
+
+                          printVoucher =databaseHandler.getAllVouchers_VoucherNo(x,506);
+                          Log.e("printVoucher==",printVoucher.getVoucherNumber()+"");
+
+
+
+                     //  int y=databaseHandler.getMaxFromVoucherMaster(506);
+
+                          returblistItemsMain=databaseHandler.getAllItems();
+                          itemPrint = returblistItemsMain;
+
+
+
+
+                       //   itemPrint=databaseHandler.
+//                          convertLayoutToImageW(bMITP.this,sample,settings);
+                          if(printShape==0) {//Normal print (Arabic)
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+
+                              }
+                          }else {// just for ejabi customer (English Voucher ) and for  Large Name
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+                              }
+
+                          }
                           break;
 
                   }
