@@ -150,6 +150,7 @@ public class ImportJason extends AppCompatActivity {
     public static ArrayList<UnCollect_Modell> unCollectlList = new ArrayList<>();
     public static ArrayList<Payment> paymentChequesList = new ArrayList<>();
     public static ArrayList<serialModel> returnListSerial = new ArrayList<>();
+
     public static ArrayList<Item> listItemsReturn = new ArrayList<>();
     public static Voucher voucherReturn = new Voucher();
     private JsonArrayRequest loginRequest;
@@ -166,7 +167,7 @@ public class ImportJason extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
         this.requestQueue = Volley.newRequestQueue(context);
         SalesManLogin = mHandler.getAllUserNo();
-        headerDll = "/Falcons/VAN.dll";
+       // headerDll = "/Falcons/VAN.dll";
 //        headerDll="";
         //Log.e("SalesManLogin", "" + SalesManLogin);
         if (settings.size() != 0) {
@@ -533,6 +534,7 @@ public class ImportJason extends AppCompatActivity {
                             requestDetail.setSerialCode(infoDetail.get("SERIAL_CODE").toString());
 
                             returnListSerial.add(requestDetail);
+
                          //   Log.e("returnListSerial", "==" + returnListSerial.size());
 
 

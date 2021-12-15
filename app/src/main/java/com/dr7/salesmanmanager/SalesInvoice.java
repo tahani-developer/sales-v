@@ -334,7 +334,8 @@ public class SalesInvoice extends Fragment {
     public  static  int checkQtyServer=0  ,sales=1;
     LinearLayout linearTotalCashDiscount,linearPayMethod;
 
-    int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,R.drawable.ic_refresh_white_24dp,
+    int[] listImageIcone=new int[]{R.drawable.ic_delete_forever_black_24dp,
+            R.drawable.ic_refresh_white_24dp,
           R.drawable.ic_print_white_24dp,R.drawable.ic_create_white_24dp
             ,R.drawable.ic_account_balance_white_24dp};
 //    R.drawable.ic_save_black_24dp,

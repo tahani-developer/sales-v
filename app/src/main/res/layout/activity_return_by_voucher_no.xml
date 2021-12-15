@@ -7,6 +7,10 @@
     android:background="@color/layer7"
     android:id="@+id/linearMain"
     tools:context=".ReturnByVoucherNo">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_weight="1.5"
@@ -428,12 +432,31 @@
             android:orientation="horizontal">
             <LinearLayout
 
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
 
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                >
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+
+
 
 
                 android:background="@drawable/done_button"
@@ -450,31 +473,49 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
-            <Button
-                android:layout_height="55dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:visibility="invisible"
 
-                android:textColor="@color/white"
-                app:cornerRadius="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:shadowRadius="10"
-                android:elevation="5dp"
-                android:text="@string/save"
-                android:background="@color/colorblue_dark3"
-                />
+            </LinearLayout>
             <LinearLayout
 
-                android:layout_height="55dp"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
+
+                >
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+<!--            <Button-->
+<!--                android:layout_height="55dp"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:visibility="invisible"-->
+
+<!--                android:textColor="@color/white"-->
+<!--                app:cornerRadius="15dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:layout_marginRight="10dp"-->
+<!--                android:shadowRadius="10"-->
+<!--                android:elevation="5dp"-->
+<!--                android:text="@string/save"-->
+<!--                android:background="@color/colorblue_dark3"-->
+<!--                />-->
+            <LinearLayout
+
+                android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
 
-
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
 
 
                android:background="@drawable/cancel_button"
@@ -493,9 +534,38 @@
 
             </LinearLayout>
 
+            <LinearLayout
 
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+
+                >
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmb"
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:bmb_normalColor="@color/colorblue1"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            app:bmb_draggable="true"
+            />
+    </RelativeLayout>
 </LinearLayout>

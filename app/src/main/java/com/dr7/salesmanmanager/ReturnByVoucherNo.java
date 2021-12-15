@@ -13,30 +13,51 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Reports.CashReport;
+import com.dr7.salesmanmanager.Reports.InventoryReport;
 import com.dr7.salesmanmanager.Reports.SerialReport;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.TextOutsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import org.json.JSONException;
 
@@ -62,23 +83,31 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     ImportJason importJason;
     public  static   TextView loadSerial;
     List<String> listItemDeleted=new ArrayList<>();
-    public  ArrayList<Item> listItemsMain = new ArrayList<>();
+    public  static   ArrayList<Item> listItemsMain = new ArrayList<>();
+    public  static   List<Item> returblistItemsMain = new ArrayList<>();
+    public  static   List<Item> LASTVOCHER = new ArrayList<>();
+    public  static   List<Item> LASTVOCHER2 = new ArrayList<>();
     public  DatabaseHandler dataBase;
     float total=0;
     String curent="";
     public RadioGroup paymentTermRadioGroup;
-
-
-
+    CompanyInfo companyInfo;
+    int[] listImageIcone=new int[]{R.drawable.ic_print_white_24dp,
+            R.drawable.pdf_icon,R.drawable.excel_small
+            };
+    LinearLayout boomlin;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return_by_voucher_no);
         initialView();
+      //  boomlin=findViewById(R.id.boomlin);
+        //boomlin.setVisibility(View.INVISIBLE);
         getVoucherNo();
+     inflateBoomMenu();
        // getLocalData();
-
+// PDF
     }
 
     private void getVoucherNo() {
@@ -106,7 +135,11 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         textView_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //boomlin.setVisibility(View.VISIBLE);
                 saveData();
+                showprintDialog();
+
             }
         });
         getserialData=findViewById(R.id.getserialData);
@@ -247,7 +280,44 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                 .setTitleText(this.getString(R.string.noVoucherForThisSerial))
                 .show();
     }
+    private void Dailog(){
+        final Dialog dialog = new Dialog(ReturnByVoucherNo.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.zone_search);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+        dialog.show();
+        ArrayList<String> nameOfEngi = new ArrayList<>();
 
+        nameOfEngi.add(getResources().getString(R.string.export_to_pdf)) ;
+        nameOfEngi.add("export_to_ecxel");
+        nameOfEngi.add(getResources().getString(R.string.print)) ;
+        final ListView list = dialog.findViewById(R.id.listViewEngineering);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, nameOfEngi);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // TODO Auto-generated method stub
+               // String value=adapter.getItem(position);
+
+                if(position==0)  printLayout();
+                    else if(position==1) exportToPdf();
+                        else if(position==2)exportToEx();
+
+
+            }
+        });
+
+
+
+
+    }
     private void openEditSerialDialog() {
         final EditText editText = new EditText(this);
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -351,6 +421,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+        clearData();
         Intent i=new Intent(this,Activities.class);
         startActivity(i);
     }
@@ -401,7 +472,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
       saveVoucherD();
       saveVoucherMaster();
      dataBase.updateVoucherNo(max_voucherNumber, 506, 0);
-    clearData();
+  clearData();
         saveSuccses();
        // exportData();
 
@@ -435,7 +506,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
     private void clearData() {
 
-        listItemsMain.clear();
+     listItemsMain.clear();
         returnListSerial.clear();
         listItemDeleted.clear();
         voucherNo_text.setText("");
@@ -698,6 +769,216 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+    private void inflateBoomMenu() {
+        String[] textListButtons=new String[]{};
+        textListButtons=new String[]
+                {
+
+                        getResources().getString(R.string.print)
+
+                        ,getResources().getString(R.string.export_to_pdf),
+                        "export_to_ecxel"};
+
+
+        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.TextOutsideCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
+
+        for (int j = 0; j < 3; j++) {
+            TextOutsideCircleButton.Builder builder = new TextOutsideCircleButton.Builder()
+                    .normalImageRes(listImageIcone[j])
+                    .textSize(12)
+                    .normalText(textListButtons[j])
+                    .textPadding(new Rect(5, 5, 5, 0))
+                    .listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index) {
+                                case 0:
+                                 printLayout();
+                                    break;
+                                case 1:
+                                    exportToPdf();
+                                    break;
+
+                                case 2:
+                                          exportToEx();
+                                    break;
+
+                            }
+                        }
+                    });
+            bmb.addBuilder(builder);
+        }
+        // inflateMenuInsideText(view);
+
+    }
+    private void exportToEx() {
+
+
+
+        LASTVOCHER.clear();
+        LASTVOCHER2.clear();
+        LASTVOCHER=dataBase.   getAllItemsBYVOCHER();
+        LASTVOCHER2.add(LASTVOCHER.get(LASTVOCHER.size()-1)) ;
+        Log.e("LASTVOCHER==",LASTVOCHER.size()+"");
+        Log.e("LASTVOCHER2==",LASTVOCHER2.size()+"");
+
+
+        ExportToExcel exportToExcel=new ExportToExcel();
+        exportToExcel.createExcelFile(ReturnByVoucherNo.this,"ReturnVocher.xls",14,LASTVOCHER2);
+
+    }
+    public  void exportToPdf(){
+
+        LASTVOCHER.clear();
+        LASTVOCHER2.clear();
+        LASTVOCHER=dataBase.   getAllItemsBYVOCHER();
+        LASTVOCHER2.add(LASTVOCHER.get(LASTVOCHER.size()-1)) ;
+        Log.e("LASTVOCHER==",LASTVOCHER.size()+"");
+        Log.e("LASTVOCHER2==",LASTVOCHER2.size()+"");
+
+        PdfConverter pdf =new PdfConverter(ReturnByVoucherNo.this);
+
+       pdf.exportListToPdf(LASTVOCHER2,"ReturnVocher","",12);
+        Log.e("ReturnVocher",returnListSerial.size()+"");
+    }
+
+    private void printLayout() {
+       // getVoucherLocal();
+        try{
+            if (dataBase.getAllSettings().get(0).getPrintMethod() == 0) {
+
+                try {
+                    int printer = dataBase.getPrinterSetting();
+                    companyInfo = dataBase.getAllCompanyInfo().get(0);
+                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                        if (printer != -1) {
+                            switch (printer) {
+                                case 0:
+//
+//                                    Intent i = new Intent(ReturnByVoucherNo.this, BluetoothConnectMenu.class);
+//                                    i.putExtra("printKey", "11");
+//                                    startActivity(i);
+break;
+//                                                             lk30.setChecked(true);
+
+                                case 1:
+
+//                                    try {
+//                                        findBT();
+//                                        openBT(1);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                                             lk31.setChecked(true);
+
+                                case 2:
+
+//                                        try {
+//                                            findBT();
+//                                            openBT(2);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                                             lk32.setChecked(true);
+
+//                                    convertLayoutToImage();
+
+//                                    Intent O1= new Intent(InventoryReport.this, bMITP.class);
+//                                    O1.putExtra("printKey", "9");
+//                                    startActivity(O1);
+
+
+                                case 3:
+
+//                                    try {
+//                                        findBT();
+//                                        openBT(3);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                                             qs.setChecked(true);
+
+                                case 4:
+//                                    Intent O= new Intent(ReturnByVoucherNo.this, bMITP.class);
+//                                    O.putExtra("printKey", "11");
+//                                    startActivity(O);
+
+                                case 5:
+//                                    convertLayoutToImage();
+//                                    Intent O= new Intent(ReturnByVoucherNo.this, bMITP.class);
+//                                    O.putExtra("printKey", "11");
+//                                    startActivity(O);
+                                case 6:
+//                                    convertLayoutToImage();
+                                    Intent O1= new Intent(ReturnByVoucherNo.this, bMITP.class);
+                                    O1.putExtra("printKey", "10");
+                                    startActivity(O1);
+                                    break;
+
+
+                            }
+                        } else {
+                            Toast.makeText(ReturnByVoucherNo.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(ReturnByVoucherNo.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(ReturnByVoucherNo.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException e) {
+                    Toast.makeText(ReturnByVoucherNo.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(ReturnByVoucherNo.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+
+                }
+            } else {
+                // hiddenDialog();
+            }
+        }
+        catch(Exception e){
+            Toast.makeText(ReturnByVoucherNo.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void showprintDialog() {
+        Handler h = new Handler(Looper.getMainLooper());
+        h.post(new Runnable() {
+            public void run() {
+                new SweetAlertDialog(ReturnByVoucherNo.this, SweetAlertDialog.BUTTON_CONFIRM)
+                        .setTitleText("Confirm")
+                        .setContentText(getResources().getString(R.string.action_print_voucher2))
+                        .setConfirmButton(getResources().getString(R.string.app_yes), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                               printLayout();
+                                sweetAlertDialog.dismiss();
+
+
+                            }
+
+                        })
+                        .setCancelButton(getResources().getString(R.string.no), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+
+
+    }
+
 }
 //VE_ITEMSERIALS
 //

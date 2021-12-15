@@ -3711,7 +3711,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
 
-    private int getMaxFromVoucherMaster(int voucherType) {
+    public int getMaxFromVoucherMaster(int voucherType) {
 
         int maxVoucher=0;
         //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
@@ -4350,7 +4350,62 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return items;
     }
+    public List<Item> getAllItemsBYVOCHER() {
+        List<Item> items = new ArrayList<Item>();
+        // Select All Query
+        //AND VOUCHER_NUMBER= (SELECT MAX(VOUCHER_TYPE VOUCHER_NUMBER FROM SALES_VOUCHER_DETAILS)
+        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506";
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+                Item item = new Item();
+
+                item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
+                item.setVoucherType(Integer.parseInt(cursor.getString(1)));
+                item.setItemNo(cursor.getString(2));
+                // Log.e("cursorItemNo",""+cursor.getString(2));
+                item.setItemName(cursor.getString(3));
+                item.setUnit(cursor.getString(4));
+                item.setQty(Float.parseFloat(cursor.getString(5)));
+                item.setPrice(Float.parseFloat(cursor.getString(6)));
+                item.setBonus(Float.parseFloat(cursor.getString(7)));
+                item.setDisc(Float.parseFloat(cursor.getString(8)));
+                item.setDiscPerc(cursor.getString(9));
+                item.setTotalDiscVal(cursor.getFloat(10));
+                item.setVoucherDiscount(cursor.getFloat(10));
+                try {
+
+                    item.setTaxValue(Double.parseDouble(cursor.getString(11)));
+                    item.setTaxPercent(Float.parseFloat(cursor.getString(12)));
+                }catch (Exception e)
+                {
+                    Log.e("DBHandler","impo"+e.getMessage());
+                }
+                item.setCompanyNumber(Integer.parseInt(cursor.getString(13)));
+                item.setYear(cursor.getString(14));
+                item.setIsPosted(Integer.parseInt(cursor.getString(15)));
+                item.setDate(cursor.getString(16));
+                item.setDescreption(cursor.getString(17));
+                item.setSerialCode(cursor.getString(18));
+
+                item.setWhich_unit(cursor.getString(19));
+                item.setWhich_unit_str(cursor.getString(20));
+                item.setWhichu_qty(cursor.getString(21));
+                item.setEnter_qty(cursor.getString(22));
+                item.setEnter_price(cursor.getString(23));
+                item.setUnit_barcode(cursor.getString(24));
+//                Log.e("setDescreption",""+cursor.getString(17));
+
+                // Adding transaction to list
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
     public String getRateOfCustomer()
     {
        String rate="";
