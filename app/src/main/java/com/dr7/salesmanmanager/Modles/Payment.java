@@ -199,6 +199,7 @@ public class Payment {
             obj.put("VOUNO", voucherNumber);
             obj.put("PAYMENTDATE", payDate);
             obj.put("CUSTOMERNO", custNumber);
+            Log.e("custNumber",""+custNumber);
             obj.put("AMOUNT", amount);
             obj.put("NOTES", remark);
             obj.put("SALESMANNO", saleManNumber);

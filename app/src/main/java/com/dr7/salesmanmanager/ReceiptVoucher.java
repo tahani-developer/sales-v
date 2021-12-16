@@ -1392,6 +1392,7 @@ public class ReceiptVoucher extends Fragment {
         String paymentYear = df2.format(currentTimeAndDate);
 
         String cusNumber = (CustomerListShow.Customer_Account);
+        Log.e("cusNumber","1"+cusNumber);
         String cusName = CustomerListShow.Customer_Name;
         String remark = remarkEditText.getText().toString();
         // if(!(amountEditText.getText().toString().equals(""))) {

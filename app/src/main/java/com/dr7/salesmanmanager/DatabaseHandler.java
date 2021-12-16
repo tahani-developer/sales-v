@@ -73,7 +73,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 158;
+    private static final int DATABASE_VERSION = 159;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -529,6 +529,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String IS_POSTED3 = "IS_POSTED";
     private static final String PAY_METHOD3 = "PAY_METHOD3";
     private static final String PAY_YEAR = "PAY_YEAR";
+    private static final String CUSTOMER_NUMBER_STR = "CUSTOMER_NUMBER_STR";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1132,7 +1133,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + IS_POSTED3 + " INTEGER,"
                 + PAY_METHOD3 + " INTEGER,"
                 + CUSTOMER_NAME + " TEXT,"
-                + PAY_YEAR + " INTEGER" + ")";
+                + PAY_YEAR + " INTEGER ,"
+                +CUSTOMER_NUMBER_STR+ " TEXT "
+
+                + ")";
         db.execSQL(CREATE_TABLE_PAYMENTS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -2242,7 +2246,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         }
 
+        try{
+            db.execSQL("ALTER TABLE  PAYMENTS ADD   CUSTOMER_NUMBER_STR  TEXT  DEFAULT '' ");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
     public void add_GroupOffer(OfferGroupModel offerGroup)
@@ -2334,7 +2344,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         ContentValues values = new ContentValues();
         if(flag==0)//update return type from import
         {
-            long curentMaxVoucher=getMaxFromVoucherMaster(506);
+            long curentMaxVoucher=getMaxFromVoucherMaster(type);
             Log.e("getMaxSerialNumber", "updateVoucherNo" + curentMaxVoucher+"\t"+saleVoucher);
             if (curentMaxVoucher > saleVoucher) {// dont change
             } else {
@@ -2350,6 +2360,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                         Log.e("VoucherSerialize","Exception=VoucherReturn_no"+e.getMessage());
                     }
 
+                }
+                else {
+                    if(type==508)
+                    {
+                        try {
+                            values.put(VoucherNewOrder_no,saleVoucher);
+                            db.update(VoucherSerialize, values, null, null);
+
+                            Log.e("VoucherSerialize","VoucherNewOrder_no"+saleVoucher);
+                            db.close();
+                        }catch (Exception e){
+                            Log.e("VoucherSerialize","Exception=VoucherReturn_no"+e.getMessage());
+                        }
+
+                    }
                 }
 
             }
@@ -3258,6 +3283,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(COMPANY_NUMBER3, payment.getCompanyNumber());
         values.put(VOUCHER_NUMBER3, payment.getVoucherNumber());
         values.put(PAY_DATE, payment.getPayDate());
+        Log.e("cusNumber","2="+payment.getCustNumber());
         values.put(CUSTOMER_NUMBER, payment.getCustNumber());
         values.put(AMOUNT, payment.getAmount());
         values.put(REMARK3, payment.getRemark());
@@ -3266,7 +3292,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(PAY_METHOD3, payment.getPayMethod());
         values.put(CUSTOMER_NAME, payment.getCustName());
         values.put(PAY_YEAR, payment.getYear());
-
+        values.put(CUSTOMER_NUMBER_STR, payment.getCustNumber());
         db.insert(PAYMENTS, null, values);
         db.close();
     }
@@ -5263,6 +5289,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 payment.setPayMethod(Integer.parseInt(cursor.getString(8)));
                 payment.setCustName(cursor.getString(9));
                 payment.setYear(Integer.parseInt(cursor.getString(10)));
+                payment.setCustNumber(cursor.getString(11));
 
                 paymentsList.add(payment);
             } while (cursor.moveToNext());
@@ -5296,6 +5323,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 payment.setPayMethod(Integer.parseInt(cursor.getString(8)));
                 payment.setCustName(cursor.getString(9));
                 payment.setYear(Integer.parseInt(cursor.getString(10)));
+                payment.setCustNumber(cursor.getString(11));
 
 
             } while (cursor.moveToNext());
@@ -6121,7 +6149,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 payment.setPayMethod(Integer.parseInt(cursor.getString(8)));
                 payment.setCustName(cursor.getString(9));
                 payment.setYear(Integer.parseInt(cursor.getString(10)));
-
+                payment.setCustNumber(cursor.getString(11));
                 paymentsList.add(payment);
             } while (cursor.moveToNext());
         }

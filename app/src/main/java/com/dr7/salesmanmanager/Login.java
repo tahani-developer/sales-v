@@ -149,8 +149,8 @@ public class Login extends AppCompatActivity {
     FloatingActionButton setting_floatingBtn;
     public  static  int typaImport=0;//0---- mySql   1-----IIs
 
-    public  static final int rawahneh=1;// 1= EXPORT STOCK TABLES
-    public  static  final  int getMaxVoucherServer=1;
+    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static  final  int getMaxVoucherServer=0;
 
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static final int makeOrders=0;// 1= just orders app
@@ -159,11 +159,11 @@ public class Login extends AppCompatActivity {
 
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
-    public  static    int getTotalBalanceInActivities=1;
-    public  static    int dateFromToActive=1;
+    public  static    int getTotalBalanceInActivities=0;
+    public  static    int dateFromToActive=0;
 
     public  static  final int  talaatLayoutAndPassowrd=0;
-    public  static  final  int voucherReturn_spreat=1;
+    public  static  final  int voucherReturn_spreat=0;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override

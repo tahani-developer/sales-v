@@ -1241,7 +1241,15 @@ public class ImportJason extends AppCompatActivity {
 
                             maxVoucher = infoDetail.get("MAXVHFNO").toString();
                             // maxVoucher = jresponse.getString("MAXVHFNO");
-                            long maxVoucherLong = Long.parseLong(maxVoucher);
+                            long maxVoucherLong=0;
+                            if(!maxVoucher.equals(""))
+                            {                             maxVoucherLong = Long.parseLong(maxVoucher);
+
+
+                            }else {
+                                maxVoucherLong=0;
+
+                            }
 
                             Toast.makeText(context,
                                     "Sucsses VoucherNo" + voucherTyp,
@@ -1252,10 +1260,18 @@ public class ImportJason extends AppCompatActivity {
                                 mHandler.addSerialVoucherNo(maxVoucherLong, 0, 0);
 
                             } else {
+                                if (voucherTyp == 506)
+                                {
+                                    mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
 
-                                mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
+                                   // goMainText.setText("main");
+                                }else {
+                                    mHandler.updateVoucherNo(maxVoucherLong, 508, 0);
 
-                                goMainText.setText("main");
+                                    goMainText.setText("main");
+                                }
+
+
 
                             }
                             counter++;
@@ -1266,6 +1282,10 @@ public class ImportJason extends AppCompatActivity {
 //                                    getDataVolley(salesMan,506);
                                 new JSONTask_maxVoucherNo(salesMan_no, 506).execute();
                             } else {
+                                if (voucherTyp == 506){
+                                    getDataProgress.dismissWithAnimation();
+                                    new JSONTask_maxVoucherNo(salesMan_no, 508).execute();
+                                }else
                                 getDataProgress.dismissWithAnimation();
                             }
 
