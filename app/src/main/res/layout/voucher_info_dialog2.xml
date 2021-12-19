@@ -2,10 +2,108 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="330dp"
-    android:layout_height="350dp"
+    android:layout_height="400dp"
     android:background="@color/layer7"
     android:padding="2dp"
     android:orientation="vertical">
+    <LinearLayout android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_weight="15"
+        android:layout_width="match_parent">
+
+        <LinearLayout android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:padding="3dp"
+android:textSize="11sp"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorblue_dark"
+                android:text="@string/voucherNo"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/vochernum"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:enabled="false"
+                android:layout_gravity="center"
+                android:padding="3dp"
+                android:textColor="@color/colorBlack"
+
+                android:layout_height="match_parent"
+                 />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:padding="3dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorblue_dark"
+                android:text="@string/CUS_NAME"/>
+
+            <EditText
+                android:id="@+id/customername"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:enabled="false"
+                android:padding="3dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+        <LinearLayout android:orientation="horizontal"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:padding="3dp"
+                android:textColor="@color/colorblue_dark"
+                android:text="@string/voucher_date"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:padding="3dp"
+                android:enabled="false"
+                android:id="@+id/vocherdate"
+                android:textColor="@color/colorBlack"
+
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="11sp"
+                android:padding="3dp"
+                android:textColor="@color/colorblue_dark"
+                android:text="@string/pay_method"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:textSize="11sp"
+                android:padding="3dp"
+                android:layout_gravity="center"
+                android:id="@+id/paymethod"
+                android:textColor="@color/colorBlack"
+
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
     <HorizontalScrollView
         android:id="@+id/HorizontalScrollView01"
         android:layout_width="match_parent"
@@ -113,4 +211,91 @@
             tools:ignore="TextViewEdits" />
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/layer3"
+        android:layout_margin="5dp"
+        >
+
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:text="@string/sub_total"
+            android:paddingLeft="10dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subTotalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:textSize="12sp"
+            android:text="@string/app_zero"
+            android:textColor="@color/colorblue1"
+
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/tax"
+            android:textSize="12sp"
+            android:paddingLeft="10dp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/taxTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:text="@string/app_zero"
+            android:textColor="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:text="@string/net_sales"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/netSalesTextView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:text="@string/app_zero"
+            android:textColor="@color/colorblue1"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5"
+        android:layout_margin="5dp"
+        >
+        <Button
+            android:id="@+id/Print"
+            android:layout_width="80dp"
+            android:text="@string/print"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
 </LinearLayout>

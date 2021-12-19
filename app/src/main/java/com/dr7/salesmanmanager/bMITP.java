@@ -42,6 +42,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Port.AlertView;
+import com.dr7.salesmanmanager.Reports.VouchersReport;
 import com.sewoo.request.android.RequestHandler;
 
 import java.io.File;
@@ -721,7 +722,28 @@ public class bMITP extends Activity {
 
                           }
                           break;
+                      case 12:
+                          //        printVoucher = voucherReturn;
+                          //    itemPrint = listItemsMain;
 
+
+                          printVoucher = VouchersReport.VocherToPrint;
+                          itemPrint = VouchersReport.itemsToPrint;
+
+                          if(printShape==0) {//Normal print (Arabic)
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+
+                              }
+                          }else {// just for ejabi customer (English Voucher ) and for  Large Name
+                              for (int i = 0; i < settings; i++) {
+//                              sample.printMultilingualFontEsc(0);
+                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+                              }
+
+                          }
+                          break;
                   }
 
 
