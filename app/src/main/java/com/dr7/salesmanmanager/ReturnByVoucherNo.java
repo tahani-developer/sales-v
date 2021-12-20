@@ -824,7 +824,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
         voucherNo=dataBase.getLastVoucherNo(506)+"";
-        LASTVOCHER=dataBase.   getAllItemsBYVOCHER(voucherNo);
+        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo);
         ExportToExcel exportToExcel=new ExportToExcel();
         exportToExcel.createExcelFile(ReturnByVoucherNo.this,"ReturnVocher.xls",14,LASTVOCHER);
 
@@ -834,7 +834,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
         voucherNo=dataBase.getLastVoucherNo(506)+"";
-        LASTVOCHER=dataBase.   getAllItemsBYVOCHER(voucherNo);
+        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo);
 
 
         PdfConverter pdf =new PdfConverter(ReturnByVoucherNo.this);

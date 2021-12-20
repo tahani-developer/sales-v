@@ -4436,11 +4436,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return items;
     }
-    public List<Item> getAllItemsBYVOCHER() {
+    public List<Item> getAllItemsBYVOCHER(String voucherNo) {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
         //AND VOUCHER_NUMBER= (SELECT MAX(VOUCHER_TYPE VOUCHER_NUMBER FROM SALES_VOUCHER_DETAILS)
-        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506";
+        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506 and VOUCHER_NUMBER='"+voucherNo+"'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

@@ -244,16 +244,16 @@ public class Login extends AppCompatActivity {
 
         } else {
 
-            typaImport = 1;
-            rawahneh = 1;
-            getMaxVoucherServer = 1;
-            makeOrders = 0;
-            passwordSettingAdmin = 0;
-            getTotalBalanceInActivities = 0;
-            voucherReturn_spreat = 0;
-
-            mDHandler.insertFlagSettings(new Flag_Settings("iis", 1, 1,
-                    0, 0, 0, 0));
+//            typaImport = 1;
+//            rawahneh = 1;
+//            getMaxVoucherServer = 1;
+//            makeOrders = 0;
+//            passwordSettingAdmin = 0;
+//            getTotalBalanceInActivities = 0;
+//            voucherReturn_spreat = 0;
+//
+//            mDHandler.insertFlagSettings(new Flag_Settings("iis", 1, 1,
+//                    0, 0, 0, 0));
 
         }
 
@@ -347,6 +347,15 @@ public class Login extends AppCompatActivity {
                 showSettingIpDialog();
             }
         });
+        try {
+                flag_settingsList = mDHandler.getFlagSettings();
+        if (flag_settingsList.size() == 0) {
+            showMoreSettingDialog();
+        }
+        }catch (Exception e){
+
+        }
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -442,84 +451,8 @@ public class Login extends AppCompatActivity {
 
         //////B
         more.setOnClickListener(v -> {
+            showMoreSettingDialog();
 
-            final Dialog moreDialog = new Dialog(Login.this);
-            moreDialog.setCancelable(false);
-            moreDialog.setContentView(R.layout.more_settings_dialog);
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(moreDialog.getWindow().getAttributes());
-            lp.width = (int)(getResources().getDisplayMetrics().widthPixels/1.15);
-            moreDialog.getWindow().setAttributes(lp);
-            moreDialog.show();
-
-            Button okBtn = moreDialog.findViewById(R.id.okBtn);
-
-            Button cancelBtn = moreDialog.findViewById(R.id.cancelBtn);
-
-            RadioGroup radioGrpData = moreDialog.findViewById(R.id.radioGrpData);
-//            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
-//            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
-
-            Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn;
-            swExport = moreDialog.findViewById(R.id.swExport);
-            swMax = moreDialog.findViewById(R.id.swMax);
-            swOrder = moreDialog.findViewById(R.id.swOrder);
-            swPassword = moreDialog.findViewById(R.id.swPassword);
-            swTotal = moreDialog.findViewById(R.id.swTotal);
-            swReturn = moreDialog.findViewById(R.id.swReturn);
-
-            flag_settingsList = mDHandler.getFlagSettings();
-
-            if (flag_settingsList.size() != 0) {
-
-                if (flag_settingsList.get(0).getData_Type().equals("mysql")) {
-//                    radioBtnSQL.setChecked(true);
-//                    radioBtnIIS.setChecked(false);
-                    radioGrpData.check(R.id.radioBtnSQL);
-                } else {
-//                    radioBtnSQL.setChecked(false);
-//                    radioBtnIIS.setChecked(true);
-                    radioGrpData.check(R.id.radioBtnIIS);
-                }
-
-                swExport.setChecked((flag_settingsList.get(0).getExport_Stock() == 1));
-                swMax.setChecked((flag_settingsList.get(0).getMax_Voucher() == 1));
-                swOrder.setChecked((flag_settingsList.get(0).getMake_Order() == 1));
-                swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
-                swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
-                swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
-
-            }
-
-            okBtn.setOnClickListener(v1 -> {
-
-                //update flag_settings
-                //update variables
-                String dataType1;
-                if (radioGrpData.getCheckedRadioButtonId() == R.id.radioBtnSQL) {
-                    typaImport = 0;
-                    dataType1 = "mysql";
-                } else {
-                    typaImport = 1;
-                    dataType1 = "iis";
-                }
-
-                rawahneh = swExport.isChecked() ? 1 : 0;
-                getMaxVoucherServer = swMax.isChecked() ? 1 : 0;
-                makeOrders = swOrder.isChecked() ? 1 : 0;
-                passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
-                getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
-                voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
-
-                mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat);
-
-
-                moreDialog.dismiss();
-
-            });
-
-            cancelBtn.setOnClickListener(v12 -> moreDialog.dismiss());
 
 
         });
@@ -568,6 +501,94 @@ public class Login extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void showMoreSettingDialog() {
+
+        final Dialog moreDialog = new Dialog(Login.this);
+        moreDialog.setCancelable(false);
+        moreDialog.setContentView(R.layout.more_settings_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(moreDialog.getWindow().getAttributes());
+        lp.width = (int)(getResources().getDisplayMetrics().widthPixels/1.15);
+        moreDialog.getWindow().setAttributes(lp);
+        moreDialog.show();
+
+        Button okBtn = moreDialog.findViewById(R.id.okBtn);
+
+        Button cancelBtn = moreDialog.findViewById(R.id.cancelBtn);
+
+        RadioGroup radioGrpData = moreDialog.findViewById(R.id.radioGrpData);
+//            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
+//            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
+
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn;
+        swExport = moreDialog.findViewById(R.id.swExport);
+        swMax = moreDialog.findViewById(R.id.swMax);
+        swOrder = moreDialog.findViewById(R.id.swOrder);
+        swPassword = moreDialog.findViewById(R.id.swPassword);
+        swTotal = moreDialog.findViewById(R.id.swTotal);
+        swReturn = moreDialog.findViewById(R.id.swReturn);
+
+        flag_settingsList = mDHandler.getFlagSettings();
+
+        if (flag_settingsList.size() != 0) {
+
+            if (flag_settingsList.get(0).getData_Type().equals("mysql")) {
+//                    radioBtnSQL.setChecked(true);
+//                    radioBtnIIS.setChecked(false);
+                radioGrpData.check(R.id.radioBtnSQL);
+            } else {
+//                    radioBtnSQL.setChecked(false);
+//                    radioBtnIIS.setChecked(true);
+                radioGrpData.check(R.id.radioBtnIIS);
+            }
+
+            swExport.setChecked((flag_settingsList.get(0).getExport_Stock() == 1));
+            swMax.setChecked((flag_settingsList.get(0).getMax_Voucher() == 1));
+            swOrder.setChecked((flag_settingsList.get(0).getMake_Order() == 1));
+            swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
+            swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
+            swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
+
+        }
+
+        okBtn.setOnClickListener(v1 -> {
+
+            //update flag_settings
+            //update variables
+            String dataType1;
+            if (radioGrpData.getCheckedRadioButtonId() == R.id.radioBtnSQL) {
+                typaImport = 0;
+                dataType1 = "mysql";
+            } else {
+                typaImport = 1;
+                dataType1 = "iis";
+            }
+
+            rawahneh = swExport.isChecked() ? 1 : 0;
+            getMaxVoucherServer = swMax.isChecked() ? 1 : 0;
+            makeOrders = swOrder.isChecked() ? 1 : 0;
+            passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
+            getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
+            voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
+            if(flag_settingsList.size()==0)
+            {
+                mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat));
+            }else {
+                mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat);
+            }
+
+
+
+
+            moreDialog.dismiss();
+
+        });
+
+        cancelBtn.setOnClickListener(v12 -> moreDialog.dismiss());
     }
 
     private void showPasswordDialog() {

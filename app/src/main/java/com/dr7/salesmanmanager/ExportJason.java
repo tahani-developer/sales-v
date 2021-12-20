@@ -344,14 +344,12 @@ public class ExportJason extends AppCompatActivity {
 
     }
     public  void startExportCustomer(){
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+
         exportJustCustomer=1;
         exportAddedCustomer();
     }
     void startExportDelPhi()throws JSONException {
-        headerDll="/Falcons/VAN.dll";
-//        headerDll="";
+
 //        startExportDatabase();
         exportSalesVoucherM();// 1
 //        savePayment();
@@ -2596,9 +2594,26 @@ public class ExportJason extends AppCompatActivity {
 
             new JSONTaskEXPORT_STOCK().execute();
         }
-                else {
+         else {
+
                     if(importDataAfter==0)
-                    getData();
+                    {
+                        if(workOnLine==1)
+                        {
+                            getData();
+                        }else {
+                            SweetAlertDialog  pdStosk = new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE);
+                            pdStosk.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                            pdStosk.setTitleText(" Saved ");
+                            pdStosk.setCancelable(true);
+                            pdStosk.show();
+                        }
+                    }
+
+
+
+
+
                 }
     }
     private class JSONTaskEXPORT_STOCK extends AsyncTask<String, String, String> {
