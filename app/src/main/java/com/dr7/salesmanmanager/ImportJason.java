@@ -127,7 +127,7 @@ public class ImportJason extends AppCompatActivity {
     DatabaseHandler mHandler;
     SweetAlertDialog pdValidation, pdPayments, getDataProgress;
     public String curentIpDevice = "";
-
+    String headerDll = "";
     int counter = 0, voucherTyp = 504;
     public  GeneralMethod generalMethod;
 
@@ -2614,7 +2614,7 @@ public class ImportJason extends AppCompatActivity {
                 try {
 
                     JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
-                    Log.e("parentArrayCustome", "" + parentArrayCustomerPrice.length());
+                    Log.e("parentArrayCustomerPrice", "" + parentArrayCustomerPrice.length());
                     customerPricesList.clear();
 
                     for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
@@ -3023,7 +3023,7 @@ Log.e("customerList",""+customerList.size());
 
                         salesManItemsBalanceList.add(item);
                     }
-                    Log.e("salesManItemsBalan", "" + salesManItemsBalanceList.size());
+                    Log.e("salesManItemsBalanceList", "" + salesManItemsBalanceList.size());
 
                 } catch (Exception e) {
                     Log.e("Exception", "Gson" + e.getMessage());

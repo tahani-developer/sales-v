@@ -289,7 +289,7 @@ public class PrintVoucher extends AppCompatActivity {
                                 } else {
                                     TextView textView = new TextView(PrintVoucher.this);
                                     textView.setText(getResources().getString(R.string.print));
-
+                                    textView.setClickable(true);
 
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
                                     textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
@@ -303,23 +303,23 @@ public class PrintVoucher extends AppCompatActivity {
                                             TextView textView = (TextView) row.getChildAt(1);
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
                                             String s="";
-
+                                            Log.e("voucher2==", "  " +"gggg");
                                             try{ if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("") && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0 && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
                                                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
 //                                                     try {
-                                                    Log.e("voucher", "  " + vouch.getVoucherNumber());
+                                                    Log.e("voucher==", "  " + vouch.getVoucherNumber());
                                                     try {
 
                                                         int printer = obj.getPrinterSetting();
 
-
+                                                        Log.e("printer==", "  " + printer);
                                                         switch (printer) {
                                                             case 0:
                                                                 vouch1 = vouch;
                                                                 Intent i = new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
                                                                 i.putExtra("printKey", "0");
                                                                 startActivity(i);
-
+                                                                Log.e("hheere11","hheere11");
 //                                                             lk30.setChecked(true);
                                                                 break;
                                                             case 1:
@@ -347,9 +347,11 @@ public class PrintVoucher extends AppCompatActivity {
 
 //
                                                             case 3:
+                                                                Log.e("hheere","hheere");
                                                                 vouch1 = vouch;
                                                                 voucherPrint=vouch;
                                                                 convertLayoutToImageW();
+
                                                                 Intent o = new Intent(PrintVoucher.this, bMITP.class);
                                                                 o.putExtra("printKey", "0");
                                                                 startActivity(o);
@@ -373,6 +375,7 @@ public class PrintVoucher extends AppCompatActivity {
 
                                                                 vouch1 = vouch;
                                                                 voucherPrint=vouch;
+                                                                Log.e("hheere44","hheere");
 //                                                                convertLayoutToImageW();
                                                                 Intent o12 = new Intent(PrintVoucher.this, bMITP.class);
                                                                 o12.putExtra("printKey", "0");
@@ -512,283 +515,294 @@ public class PrintVoucher extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Voucher voucher) {
-        final Dialog dialog = new Dialog(PrintVoucher.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.print);
-
-        final Button okButton = dialog.findViewById(R.id.print1);
-        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
-        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
-
-        TextView companyName = dialog.findViewById(R.id.company);
-        TextView phone = dialog.findViewById(R.id.phone);
-        TextView taxNo = dialog.findViewById(R.id.tax_no);
-        TextView date = dialog.findViewById(R.id.date);
-        TextView vouch_no = dialog.findViewById(R.id.voucher_no);
-        TextView vouchType = dialog.findViewById(R.id.voucher_type);
-        TextView payMethod = dialog.findViewById(R.id.payMethod);
-        TextView cust = dialog.findViewById(R.id.cust_);
-        TextView remark = dialog.findViewById(R.id.remark_);
-        TextView totalNoTax = dialog.findViewById(R.id.total_noTax);
-        TextView discount = dialog.findViewById(R.id.discount);
-        TextView tax = dialog.findViewById(R.id.tax);
-        TextView netSale = dialog.findViewById(R.id.net_sales_);
-
-        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
-
-        companyName.setText(companyInfo.getCompanyName());
-        phone.setText(phone.getText().toString() + companyInfo.getcompanyTel());
-        taxNo.setText(taxNo.getText().toString() + companyInfo.getTaxNo());
-        date.setText(date.getText().toString() + voucher.getVoucherDate());
-        vouch_no.setText(vouch_no.getText().toString() + voucher.getVoucherNumber());
-        remark.setText(remark.getText().toString() + voucher.getRemark());
-        cust.setText(cust.getText().toString() + voucher.getCustName());
-        totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
-        discount.setText(discount.getText().toString() + voucher.getVoucherDiscount());
-        tax.setText(tax.getText().toString() + voucher.getTax());
-        netSale.setText(netSale.getText().toString() + voucher.getNetSales());
-
-        String voucherTyp = "";
-        switch (voucher.getVoucherType()) {
-            case 504:
-                voucherTyp = "فاتورة بيع";
-                break;
-            case 506:
-                voucherTyp = "فاتورة مرتجعات";
-                break;
-            case 508:
-                voucherTyp = "طلب جديد";
-                break;
-        }
-        vouchType.setText(vouchType.getText().toString() + voucherTyp);
-        payMethod.setText(payMethod.getText().toString() + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
-
-        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f);
-        lp2.setMargins(0, 7, 0, 0);
-        lp3.setMargins(0, 7, 0, 0);
-
-        if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
-
-            final TableRow headerRow = new TableRow(PrintVoucher.this);
-
-            TextView headerView7 = new TextView(PrintVoucher.this);
-            headerView7.setGravity(Gravity.CENTER);
-            headerView7.setText("المجموع");
-            headerView7.setLayoutParams(lp2);
-            headerView7.setTextSize(12);
-            headerRow.addView(headerView7);
-
-            TextView headerView6 = new TextView(PrintVoucher.this);
-            headerView6.setGravity(Gravity.CENTER);
-            headerView6.setText("الخصم");
-            headerView6.setLayoutParams(lp2);
-            headerView6.setTextSize(12);
-            headerRow.addView(headerView6);
-
-            TextView headerView5 = new TextView(PrintVoucher.this);
-            headerView5.setGravity(Gravity.CENTER);
-            headerView5.setText("المجاني");
-            headerView5.setLayoutParams(lp2);
-            headerView5.setTextSize(12);
-            headerRow.addView(headerView5);
-
-            TextView headerView4 = new TextView(PrintVoucher.this);
-            headerView4.setGravity(Gravity.CENTER);
-            headerView4.setText("سعر الوحدة");
-            headerView4.setLayoutParams(lp2);
-            headerView4.setTextSize(12);
-            headerRow.addView(headerView4);
-
-            TextView headerView3 = new TextView(PrintVoucher.this);
-            headerView3.setGravity(Gravity.CENTER);
-            headerView3.setText("الوزن");
-            headerView3.setLayoutParams(lp2);
-            headerView3.setTextSize(12);
-            headerRow.addView(headerView3);
-
-            TextView headerView2 = new TextView(PrintVoucher.this);
-            headerView2.setGravity(Gravity.CENTER);
-            headerView2.setText("العدد");
-            headerView2.setLayoutParams(lp2);
-            headerView2.setTextSize(12);
-            headerRow.addView(headerView2);
-
-            TextView headerView1 = new TextView(PrintVoucher.this);
-            headerView1.setGravity(Gravity.CENTER);
-            headerView1.setText("السلعة");
-            headerView1.setLayoutParams(lp3);
-            headerView1.setTextSize(12);
-            headerRow.addView(headerView1);
-
-            tabLayout.addView(headerRow);
-        } else {
-            final TableRow headerRow = new TableRow(PrintVoucher.this);
-            TextView headerView1 = new TextView(PrintVoucher.this);
-
-            TextView headerView6 = new TextView(PrintVoucher.this);
-            headerView6.setGravity(Gravity.CENTER);
-            headerView6.setText("المجموع");
-            headerView6.setLayoutParams(lp2);
-            headerView6.setTextSize(12);
-            headerRow.addView(headerView6);
-
-            TextView headerView5 = new TextView(PrintVoucher.this);
-            headerView5.setGravity(Gravity.CENTER);
-            headerView5.setText("الخصم");
-            headerView5.setLayoutParams(lp2);
-            headerView5.setTextSize(12);
-            headerRow.addView(headerView5);
-
-            TextView headerView4 = new TextView(PrintVoucher.this);
-            headerView4.setGravity(Gravity.CENTER);
-            headerView4.setText("المجاني");
-            headerView4.setLayoutParams(lp2);
-            headerView4.setTextSize(12);
-            headerRow.addView(headerView4);
-
-            TextView headerView3 = new TextView(PrintVoucher.this);
-            headerView3.setGravity(Gravity.CENTER);
-            headerView3.setText("سعر الوحدة");
-            headerView3.setLayoutParams(lp2);
-            headerView3.setTextSize(12);
-            headerRow.addView(headerView3);
-
-            TextView headerView2 = new TextView(PrintVoucher.this);
-            headerView2.setGravity(Gravity.CENTER);
-            headerView2.setText("العدد");
-            headerView2.setLayoutParams(lp2);
-            headerView2.setTextSize(12);
-            headerRow.addView(headerView2);
-
-            headerView1.setGravity(Gravity.CENTER);
-            headerView1.setText("السلعة");
-            headerView1.setLayoutParams(lp3);
-            headerView1.setTextSize(12);
-            headerRow.addView(headerView1);
-
-            tabLayout.addView(headerRow);
-        }
-
-        for (int j = 0; j < items.size(); j++) {
-
-            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
-                final TableRow row = new TableRow(PrintVoucher.this);
-
-                if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
-
-                    for (int i = 0; i <= 7; i++) {
-                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                        lp.setMargins(0, 10, 0, 0);
-                        row.setLayoutParams(lp);
-
-                        TextView textView = new TextView(PrintVoucher.this);
-                        textView.setGravity(Gravity.CENTER);
-                        textView.setTextSize(10);
-
-                        switch (i) {
-                            case 6:
-                                textView.setText(items.get(j).getItemName());
-                                textView.setLayoutParams(lp3);
-                                break;
-
-                            case 5:
-                                textView.setText(items.get(j).getUnit());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 4:
-                                textView.setText("" + items.get(j).getQty());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 3:
-                                textView.setText("" + items.get(j).getPrice());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 2:
-                                textView.setText("" + items.get(j).getBonus());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 1:
-                                textView.setText("" + items.get(j).getDisc());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 0:
-                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
-                                amount = convertToEnglish(amount);
-                                textView.setText(amount);
-                                textView.setLayoutParams(lp2);
-                                break;
-                        }
-                        row.addView(textView);
-                    }
-
-                } else {
-                    for (int i = 0; i <= 6; i++) {
-                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                        lp.setMargins(0, 10, 0, 0);
-                        row.setLayoutParams(lp);
-
-                        TextView textView = new TextView(PrintVoucher.this);
-                        textView.setGravity(Gravity.CENTER);
-                        textView.setTextSize(10);
-
-                        switch (i) {
-                            case 5:
-                                textView.setText(items.get(j).getItemName());
-                                textView.setLayoutParams(lp3);
-                                break;
-
-                            case 4:
-                                textView.setText(items.get(j).getQty()+"");
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 3:
-                                textView.setText("" + items.get(j).getPrice());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 2:
-                                textView.setText("" + items.get(j).getBonus());
-                                textView.setLayoutParams(lp2);
-                                break;
-
-                            case 1:
-                                textView.setText("" + items.get(j).getDisc());
-                                textView.setLayoutParams(lp2);
-
-                            case 0:
-                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
-                                amount = convertToEnglish(amount);
-                                textView.setText(amount);
-                                textView.setLayoutParams(lp2);
-                                break;
-                        }
-                        row.addView(textView);
-                    }
-                }
-                tabLayout.addView(row);
-            }
-        }
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PrintHelper photoPrinter = new PrintHelper(PrintVoucher.this);
-                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-                linearLayout.setDrawingCacheEnabled(true);
-                bitmap = linearLayout.getDrawingCache();
-                photoPrinter.printBitmap("invoice.jpg", bitmap);
-
-            }
-        });
-        dialog.show();
+        convertLayoutToImage(voucher);
+//        final Dialog dialog = new Dialog(PrintVoucher.this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(true);
+//        dialog.setContentView(R.layout.print);
+//
+//        final Button okButton = dialog.findViewById(R.id.print1);
+//        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
+//        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
+//
+//        TextView companyName = dialog.findViewById(R.id.company);
+//        TextView phone = dialog.findViewById(R.id.phone);
+//        TextView taxNo = dialog.findViewById(R.id.tax_no);
+//        TextView date = dialog.findViewById(R.id.date);
+//        TextView vouch_no = dialog.findViewById(R.id.voucher_no);
+//        TextView vouchType = dialog.findViewById(R.id.voucher_type);
+//        TextView payMethod = dialog.findViewById(R.id.payMethod);
+//        TextView cust = dialog.findViewById(R.id.cust_);
+//        TextView remark = dialog.findViewById(R.id.remark_);
+//        TextView totalNoTax = dialog.findViewById(R.id.total_noTax);
+//        TextView discount = dialog.findViewById(R.id.discount);
+//        TextView tax = dialog.findViewById(R.id.tax);
+//        TextView netSale = dialog.findViewById(R.id.net_sales_);
+//
+//        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+//
+//        companyName.setText(companyInfo.getCompanyName());
+//        phone.setText(phone.getText().toString() + companyInfo.getcompanyTel());
+//        taxNo.setText(taxNo.getText().toString() + companyInfo.getTaxNo());
+//        date.setText(date.getText().toString() + voucher.getVoucherDate());
+//        vouch_no.setText(vouch_no.getText().toString() + voucher.getVoucherNumber());
+//        remark.setText(remark.getText().toString() + voucher.getRemark());
+//        cust.setText(cust.getText().toString() + voucher.getCustName());
+//        totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
+//        discount.setText(discount.getText().toString() + voucher.getVoucherDiscount());
+//        tax.setText(tax.getText().toString() + voucher.getTax());
+//        netSale.setText(netSale.getText().toString() + voucher.getNetSales());
+//
+//        String voucherTyp = "";
+//        switch (voucher.getVoucherType()) {
+//            case 504:
+//                voucherTyp = "فاتورة بيع";
+//                break;
+//            case 506:
+//                voucherTyp = "فاتورة مرتجعات";
+//                break;
+//            case 508:
+//                voucherTyp = "طلب جديد";
+//                break;
+//        }
+//        vouchType.setText(vouchType.getText().toString() + voucherTyp);
+//        payMethod.setText(payMethod.getText().toString() + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+//
+//        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f);
+//        lp2.setMargins(0, 7, 0, 0);
+//        lp3.setMargins(0, 7, 0, 0);
+//
+//        if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+//
+//            final TableRow headerRow = new TableRow(PrintVoucher.this);
+//
+//            TextView headerView7 = new TextView(PrintVoucher.this);
+//            headerView7.setGravity(Gravity.CENTER);
+//            headerView7.setText("المجموع");
+//            headerView7.setLayoutParams(lp2);
+//            headerView7.setTextSize(12);
+//            headerRow.addView(headerView7);
+//
+//            TextView headerView6 = new TextView(PrintVoucher.this);
+//            headerView6.setGravity(Gravity.CENTER);
+//            headerView6.setText("الخصم");
+//            headerView6.setLayoutParams(lp2);
+//            headerView6.setTextSize(12);
+//            headerRow.addView(headerView6);
+//
+//            TextView headerView5 = new TextView(PrintVoucher.this);
+//            headerView5.setGravity(Gravity.CENTER);
+//            headerView5.setText("المجاني");
+//            headerView5.setLayoutParams(lp2);
+//            headerView5.setTextSize(12);
+//            headerRow.addView(headerView5);
+//
+//            TextView headerView4 = new TextView(PrintVoucher.this);
+//            headerView4.setGravity(Gravity.CENTER);
+//            headerView4.setText("سعر الوحدة");
+//            headerView4.setLayoutParams(lp2);
+//            headerView4.setTextSize(12);
+//            headerRow.addView(headerView4);
+//
+//            TextView headerView3 = new TextView(PrintVoucher.this);
+//            headerView3.setGravity(Gravity.CENTER);
+//            headerView3.setText("الوزن");
+//            headerView3.setLayoutParams(lp2);
+//            headerView3.setTextSize(12);
+//            headerRow.addView(headerView3);
+//
+//            TextView headerView2 = new TextView(PrintVoucher.this);
+//            headerView2.setGravity(Gravity.CENTER);
+//            headerView2.setText("العدد");
+//            headerView2.setLayoutParams(lp2);
+//            headerView2.setTextSize(12);
+//            headerRow.addView(headerView2);
+//
+//            TextView headerView1 = new TextView(PrintVoucher.this);
+//            headerView1.setGravity(Gravity.CENTER);
+//            headerView1.setText("السلعة");
+//            headerView1.setLayoutParams(lp3);
+//            headerView1.setTextSize(12);
+//            headerRow.addView(headerView1);
+//
+//            tabLayout.addView(headerRow);
+//        } else {
+//            final TableRow headerRow = new TableRow(PrintVoucher.this);
+//            TextView headerView1 = new TextView(PrintVoucher.this);
+//
+//            TextView headerView6 = new TextView(PrintVoucher.this);
+//            headerView6.setGravity(Gravity.CENTER);
+//            headerView6.setText("المجموع");
+//            headerView6.setLayoutParams(lp2);
+//            headerView6.setTextSize(12);
+//            headerRow.addView(headerView6);
+//
+//            TextView headerView5 = new TextView(PrintVoucher.this);
+//            headerView5.setGravity(Gravity.CENTER);
+//            headerView5.setText("الخصم");
+//            headerView5.setLayoutParams(lp2);
+//            headerView5.setTextSize(12);
+//            headerRow.addView(headerView5);
+//
+//            TextView headerView4 = new TextView(PrintVoucher.this);
+//            headerView4.setGravity(Gravity.CENTER);
+//            headerView4.setText("المجاني");
+//            headerView4.setLayoutParams(lp2);
+//            headerView4.setTextSize(12);
+//            headerRow.addView(headerView4);
+//
+//            TextView headerView3 = new TextView(PrintVoucher.this);
+//            headerView3.setGravity(Gravity.CENTER);
+//            headerView3.setText("سعر الوحدة");
+//            headerView3.setLayoutParams(lp2);
+//            headerView3.setTextSize(12);
+//            headerRow.addView(headerView3);
+//
+//            TextView headerView2 = new TextView(PrintVoucher.this);
+//            headerView2.setGravity(Gravity.CENTER);
+//            headerView2.setText("العدد");
+//            headerView2.setLayoutParams(lp2);
+//            headerView2.setTextSize(12);
+//            headerRow.addView(headerView2);
+//
+//            headerView1.setGravity(Gravity.CENTER);
+//            headerView1.setText("السلعة");
+//            headerView1.setLayoutParams(lp3);
+//            headerView1.setTextSize(12);
+//            headerRow.addView(headerView1);
+//
+//            tabLayout.addView(headerRow);
+//        }
+//
+//        for (int j = 0; j < items.size(); j++) {
+//
+//            if (voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) {
+//                final TableRow row = new TableRow(PrintVoucher.this);
+//
+//                if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+//
+//                    for (int i = 0; i <= 7; i++) {
+//                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//                        lp.setMargins(0, 10, 0, 0);
+//                        row.setLayoutParams(lp);
+//
+//                        TextView textView = new TextView(PrintVoucher.this);
+//                        textView.setGravity(Gravity.CENTER);
+//                        textView.setTextSize(10);
+//
+//                        switch (i) {
+//                            case 6:
+//                                textView.setText(items.get(j).getItemName());
+//                                textView.setLayoutParams(lp3);
+//                                break;
+//
+//                            case 5:
+//                                textView.setText(items.get(j).getUnit());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 4:
+//                                textView.setText("" + items.get(j).getQty());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 3:
+//                                textView.setText("" + items.get(j).getPrice());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 2:
+//                                textView.setText("" + items.get(j).getBonus());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 1:
+//                                textView.setText("" + items.get(j).getDisc());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 0:
+//                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+//                                amount = convertToEnglish(amount);
+//                                textView.setText(amount);
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//                        }
+//                        row.addView(textView);
+//                    }
+//
+//                } else {
+//                    for (int i = 0; i <= 6; i++) {
+//                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//                        lp.setMargins(0, 10, 0, 0);
+//                        row.setLayoutParams(lp);
+//
+//                        TextView textView = new TextView(PrintVoucher.this);
+//                        textView.setGravity(Gravity.CENTER);
+//                        textView.setTextSize(10);
+//
+//                        switch (i) {
+//                            case 5:
+//                                textView.setText(items.get(j).getItemName());
+//                                textView.setLayoutParams(lp3);
+//                                break;
+//
+//                            case 4:
+//                                textView.setText(items.get(j).getQty()+"");
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 3:
+//                                textView.setText("" + items.get(j).getPrice());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 2:
+//                                textView.setText("" + items.get(j).getBonus());
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//
+//                            case 1:
+//                                textView.setText("" + items.get(j).getDisc());
+//                                textView.setLayoutParams(lp2);
+//
+//                            case 0:
+//                                String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+//                                amount = convertToEnglish(amount);
+//                                textView.setText(amount);
+//                                textView.setLayoutParams(lp2);
+//                                break;
+//                        }
+//                        row.addView(textView);
+//                    }
+//                }
+//                tabLayout.addView(row);
+//            }
+//        }
+//
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.e(" okButton"," okButton");
+//                PrintHelper photoPrinter = new PrintHelper(PrintVoucher.this);
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//                linearLayout.setDrawingCacheEnabled(true);
+//                bitmap = linearLayout.getDrawingCache();
+//                photoPrinter.printBitmap("invoice.jpg", bitmap);
+////////////////////////////////////////////////
+//               /* linearView.setDrawingCacheEnabled(true);
+//                linearView.buildDrawingCache();
+//                Bitmap bit =linearView.getDrawingCache();
+//                PrintHelper photoPrinter = new PrintHelper(PrintPayment.this);
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//                linearView.setDrawingCacheEnabled(true);
+//                bitmap = linearView.getDrawingCache();
+//                photoPrinter.printBitmap("pay.jpg", bitmap);
+//                return bit;// creates bitmap and returns the same*/
+//            }
+//        });
+//        dialog.show();
     }
 
     void findBT(int voucherNo,Voucher voucher) {
@@ -1406,6 +1420,9 @@ public class PrintVoucher extends AppCompatActivity {
 //        linearView.buildDrawingCache();
 //        Bitmap bit =linearView.getDrawingCache();
 
+
+
+    /*
         Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Drawable bgDrawable = linearView.getBackground();
@@ -1416,7 +1433,16 @@ public class PrintVoucher extends AppCompatActivity {
         }
         linearView.draw(canvas);
 
-        return bitmap;// creates bitmap and returns the same
+        return bitmap;// creates bitmap and returns the same*/
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        PrintHelper photoPrinter = new PrintHelper(PrintVoucher.this);
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        linearView.setDrawingCacheEnabled(true);
+        bitmap = linearView.getDrawingCache();
+        photoPrinter.printBitmap("pay.jpg", bitmap);
+        return bit;// creates bitmap and returns the same
     }
 
     public Bitmap convertLayoutToImageW() {

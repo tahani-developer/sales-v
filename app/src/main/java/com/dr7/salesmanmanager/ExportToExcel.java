@@ -724,21 +724,32 @@ public class ExportToExcel {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.voucherNo) )); // column and row
+           /*     sheet.addCell(new Label(0, 0, context.getString(R.string.voucherNo) )); // column and row
                 sheet.addCell(new Label(2, 0, context.getString(R.string.item_number      ) ));
                 sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.item_name   ) ));
                 sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.qty)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.app_price) ));
-
+                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.app_price) ));*/
+                sheet.addCell(new Label(0, 0,  context.getResources().getString(R.string.app_price))); // column and row
+                sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.qty) ));
+                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.item_name   ) ));
+                sheet.addCell(new Label(4, 0, context.getString(R.string.item_number      ) ));
+                sheet.addCell(new Label(5, 0, context.getString(R.string.voucherNo)));
 
                 sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
 
                 for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + ""));
+                /*    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + ""));
                     sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo()));
                     sheet.addCell(new Label(3, i + 2, list.get(i).getItemName()+ ""));
                     sheet.addCell(new Label(4, i + 2, list.get(i).getQty()+ ""));
-                    sheet.addCell(new Label(5, i + 2, String.valueOf(list.get(i).getPrice())));
+                    sheet.addCell(new Label(5, i + 2, String.valueOf(list.get(i).getPrice())));*/
+
+                    sheet.addCell(new Label(0, i + 2, String.valueOf(list.get(i).getPrice())));
+                    sheet.addCell(new Label(2, i + 2, list.get(i).getQty()+ ""));
+                    sheet.addCell(new Label(3, i + 2, list.get(i).getItemName()+ ""));
+                    sheet.addCell(new Label(4, i + 2, list.get(i).getItemNo()+ ""));
+                    sheet.addCell(new Label(5, i + 2,list.get(i).getVoucherNumber()+"" ));
+
                     sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
 
                 }
