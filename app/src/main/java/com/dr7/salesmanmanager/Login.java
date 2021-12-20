@@ -37,7 +37,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,7 @@ import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
@@ -104,7 +108,7 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
-
+    List<Flag_Settings> flag_settingsList;
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
     private CircleImageView logo;
@@ -117,7 +121,7 @@ public class Login extends AppCompatActivity {
     Context context;
     TextView loginText;
     EditText ipEditText;
-    public  static String userNo="";
+    public static String userNo = "";
     SweetAlertDialog dialogTem, sweetAlertDialog;
     ImportJason importData;
 
@@ -133,8 +137,8 @@ public class Login extends AppCompatActivity {
     public LocationManager locationManager;
     private static final int REQUEST_LOCATION_PERMISSION = 3;
     public static Date currentTimeAndDate;
-    public static  SimpleDateFormat df, df2;
-    public static  String curentDate, curentTime;
+    public static SimpleDateFormat df, df2;
+    public static String curentDate, curentTime;
     public static Location location_main;
     LinearLayout mainlayout;
     String provider;
@@ -147,24 +151,27 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public  static  int typaImport=0;//0---- mySql   1-----IIs
+    public static int typaImport;//0---- mySql   1-----IIs
 
-    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
-    public  static  final  int getMaxVoucherServer=0;
+    public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static    int getMaxVoucherServer=0;
 
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
-    public  static final int makeOrders=0;// 1= just orders app
+    public  static  int makeOrders=0;// 1= just orders app
 
-    public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
+    public  static    int OfferCakeShop=0;// if 0 calck offer many times
 
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
     public  static    int getTotalBalanceInActivities=0;
     public  static    int dateFromToActive=0;
 
-    public  static  final int  talaatLayoutAndPassowrd=0;
-    public  static  final  int voucherReturn_spreat=0;
+    public  static   int  talaatLayoutAndPassowrd=0;
+    public  static    int voucherReturn_spreat=0;
 
+    public  static  String headerDll = "";
+
+//    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +228,34 @@ public class Login extends AppCompatActivity {
             mainlayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         setLogo();
+
+
+        ///B
+        flag_settingsList = mDHandler.getFlagSettings();
+        if (flag_settingsList.size() != 0) {
+
+            typaImport = flag_settingsList.get(0).getData_Type().equals("mysql") ? 0 : 1;
+            rawahneh = flag_settingsList.get(0).getExport_Stock();
+            getMaxVoucherServer = flag_settingsList.get(0).getMax_Voucher();
+            makeOrders = flag_settingsList.get(0).getMake_Order();
+            passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
+            getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
+            voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
+
+        } else {
+
+            typaImport = 1;
+            rawahneh = 1;
+            getMaxVoucherServer = 1;
+            makeOrders = 0;
+            passwordSettingAdmin = 0;
+            getTotalBalanceInActivities = 0;
+            voucherReturn_spreat = 0;
+
+            mDHandler.insertFlagSettings(new Flag_Settings("iis", 1, 1,
+                    0, 0, 0, 0));
+
+        }
 
         loginCardView.setOnClickListener(new OnClickListener() {
 
@@ -372,9 +407,12 @@ public class Login extends AppCompatActivity {
 
         final Button cancel_button = (Button) dialog.findViewById(R.id.cancelBtn);
         final Button importData = (Button) dialog.findViewById(R.id.importData);
+
+        //B
+        final TextView more = dialog.findViewById(R.id.more);
+
         //********************************fill data******************************************
-        if(mDHandler.getAllSettings().size()!=0)
-        {
+        if (mDHandler.getAllSettings().size() != 0) {
             ipEditText.setText(mDHandler.getAllSettings().get(0).getIpAddress());
             portSetting.setText(mDHandler.getAllSettings().get(0).getIpPort());
             storeNo_edit.setText(mDHandler.getAllUserNo());
@@ -383,8 +421,7 @@ public class Login extends AppCompatActivity {
             ipEditText.setClickable(false);
             ipEditText.setEnabled(false);
 //            ipEditText.setAlpha(0.5f);
-        }
-        else {
+        } else {
             ipEditText.setEnabled(true);
         }
         editIp.setOnClickListener(new View.OnClickListener() {
@@ -402,17 +439,102 @@ public class Login extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+        //////B
+        more.setOnClickListener(v -> {
+
+            final Dialog moreDialog = new Dialog(Login.this);
+            moreDialog.setCancelable(false);
+            moreDialog.setContentView(R.layout.more_settings_dialog);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(moreDialog.getWindow().getAttributes());
+            lp.width = (int)(getResources().getDisplayMetrics().widthPixels/1.15);
+            moreDialog.getWindow().setAttributes(lp);
+            moreDialog.show();
+
+            Button okBtn = moreDialog.findViewById(R.id.okBtn);
+
+            Button cancelBtn = moreDialog.findViewById(R.id.cancelBtn);
+
+            RadioGroup radioGrpData = moreDialog.findViewById(R.id.radioGrpData);
+//            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
+//            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
+
+            Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn;
+            swExport = moreDialog.findViewById(R.id.swExport);
+            swMax = moreDialog.findViewById(R.id.swMax);
+            swOrder = moreDialog.findViewById(R.id.swOrder);
+            swPassword = moreDialog.findViewById(R.id.swPassword);
+            swTotal = moreDialog.findViewById(R.id.swTotal);
+            swReturn = moreDialog.findViewById(R.id.swReturn);
+
+            flag_settingsList = mDHandler.getFlagSettings();
+
+            if (flag_settingsList.size() != 0) {
+
+                if (flag_settingsList.get(0).getData_Type().equals("mysql")) {
+//                    radioBtnSQL.setChecked(true);
+//                    radioBtnIIS.setChecked(false);
+                    radioGrpData.check(R.id.radioBtnSQL);
+                } else {
+//                    radioBtnSQL.setChecked(false);
+//                    radioBtnIIS.setChecked(true);
+                    radioGrpData.check(R.id.radioBtnIIS);
+                }
+
+                swExport.setChecked((flag_settingsList.get(0).getExport_Stock() == 1));
+                swMax.setChecked((flag_settingsList.get(0).getMax_Voucher() == 1));
+                swOrder.setChecked((flag_settingsList.get(0).getMake_Order() == 1));
+                swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
+                swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
+                swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
+
+            }
+
+            okBtn.setOnClickListener(v1 -> {
+
+                //update flag_settings
+                //update variables
+                String dataType1;
+                if (radioGrpData.getCheckedRadioButtonId() == R.id.radioBtnSQL) {
+                    typaImport = 0;
+                    dataType1 = "mysql";
+                } else {
+                    typaImport = 1;
+                    dataType1 = "iis";
+                }
+
+                rawahneh = swExport.isChecked() ? 1 : 0;
+                getMaxVoucherServer = swMax.isChecked() ? 1 : 0;
+                makeOrders = swOrder.isChecked() ? 1 : 0;
+                passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
+                getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
+                voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
+
+                mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat);
+
+
+                moreDialog.dismiss();
+
+            });
+
+            cancelBtn.setOnClickListener(v12 -> moreDialog.dismiss());
+
+
+        });
+
+
         final Button ok_button = (Button) dialog.findViewById(R.id.saveSetting);
         ok_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
-                {
-                    addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
+                if (validateNotEmpty(ipEditText) && validateNotEmpty(storeNo_edit)) {
+                    addIpSetting(ipEditText.getText().toString(), portSetting.getText().toString(), cono.getText().toString());
                     dialog.dismiss();
-                  Log.e("validateNotEmpty","validateNotEmpty");
-                }
-                else {                  Log.e("validateNotEmpty","NOTTTTT");
+                    Log.e("validateNotEmpty", "validateNotEmpty");
+                } else {
+                    Log.e("validateNotEmpty", "NOTTTTT");
                 }
             }
         });
@@ -447,6 +569,7 @@ public class Login extends AppCompatActivity {
             }
         });
     }
+
     private void showPasswordDialog() {
         final EditText editText = new EditText(Login.this);
         editText.setTextColor(getResources().getColor(R.color.text_view_color));

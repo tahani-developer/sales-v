@@ -33,6 +33,7 @@ import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
+import static com.dr7.salesmanmanager.Login.headerDll;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
@@ -120,7 +121,7 @@ public class ExportJason extends AppCompatActivity {
     boolean isPosted = true;
 //    getCustomerLocation
     String ipAddress="",ipWithPort="",URL_TO_HIT="";
-    String headerDll="";
+
     public int exportJustCustomer=0;
 
     public ExportJason(Context context) throws JSONException {

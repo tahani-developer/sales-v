@@ -57,6 +57,7 @@ public class Account__Statment_Model {
     }
 
     public void setBalance(double balance) {
+
         this.balance = balance;
     }
 

@@ -578,6 +578,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
     private void calcTotalVoucher() {
 
+        total=0;
         for (int i=0;i<listItemsMain.size();i++)
         {
             total+=listItemsMain.get(i).getQty()*listItemsMain.get(i).getPrice();
@@ -588,11 +589,11 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     private void saveSerial() {
         for(int i=0;i<returnListSerial.size();i++)
         {
-            Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());
+           // Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());
             dataBase.updateSerialReturnedInBaseInvoice(returnListSerial.get(i).getVoucherNo(),returnListSerial.get(i).getSerialCode());
 
             returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
-            Log.e("returnListSerial","getVoucherNo=after="+returnListSerial.get(i).getVoucherNo());
+           // Log.e("returnListSerial","getVoucherNo=after="+returnListSerial.get(i).getVoucherNo());
             dataBase.add_Serial(returnListSerial.get(i));
         }
     }
@@ -617,7 +618,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                // returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
             }
         }
-        Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
+      //  Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
 
         deleteItemsDetail();
 
@@ -658,9 +659,9 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                         if(oneDisc!=0)
                             salePrice=listItemsReturn.get(j).getPrice()-oneDisc;
                         else salePrice=listItemsReturn.get(j).getPrice();
-                        Log.e("salePrice",""+salePrice);
+                     //   Log.e("salePrice",""+salePrice);
                     }catch (Exception e){
-                        Log.e("salePrice","Exception"+e.getMessage());
+                       // Log.e("salePrice","Exception"+e.getMessage());
                         salePrice=listItemsReturn.get(j).getPrice();
                     }
 
@@ -674,7 +675,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
 
                     returnListSerial.get(i).setItemName( itemName);
-                    Log.e("getItemNo","returnListSerial.get(i).getItemNo()"+itemName);
+                   // Log.e("getItemNo","returnListSerial.get(i).getItemNo()"+itemName);
                 }
 
             }
@@ -708,7 +709,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
 
     public void fillAdapterData( List<serialModel> serialModels) {
-        Log.e("SerialReport2","SerialReport2");
+       // Log.e("SerialReport2","SerialReport2");
         recyclerView.setLayoutManager(new LinearLayoutManager(ReturnByVoucherNo.this));
         adapter = new ReturnItemAdapter (serialModels,ReturnByVoucherNo.this,0 );
         recyclerView.setAdapter(adapter);
@@ -743,11 +744,11 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (Result != null) {
             if (Result.getContents() == null) {
-                Log.e("ReturnSerial", "cancelled scan");
+               // Log.e("ReturnSerial", "cancelled scan");
                 Toast.makeText(this, "cancelled", Toast.LENGTH_SHORT).show();
             } else {
 
-                Log.e("ReturnSerial", "onActivityResult" + Result.getContents());
+               // Log.e("ReturnSerial", "onActivityResult" + Result.getContents());
 
                 try {
                     serialBarcode = Result.getContents().trim();
@@ -822,29 +823,24 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
-        LASTVOCHER=dataBase.   getAllItemsBYVOCHER();
-        LASTVOCHER2.add(LASTVOCHER.get(LASTVOCHER.size()-1)) ;
-        Log.e("LASTVOCHER==",LASTVOCHER.size()+"");
-        Log.e("LASTVOCHER2==",LASTVOCHER2.size()+"");
-
-
+        voucherNo=dataBase.getLastVoucherNo(506)+"";
+        LASTVOCHER=dataBase.   getAllItemsBYVOCHER(voucherNo);
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(ReturnByVoucherNo.this,"ReturnVocher.xls",14,LASTVOCHER2);
+        exportToExcel.createExcelFile(ReturnByVoucherNo.this,"ReturnVocher.xls",14,LASTVOCHER);
 
     }
     public  void exportToPdf(){
 
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
-        LASTVOCHER=dataBase.   getAllItemsBYVOCHER();
-        LASTVOCHER2.add(LASTVOCHER.get(LASTVOCHER.size()-1)) ;
-        Log.e("LASTVOCHER==",LASTVOCHER.size()+"");
-        Log.e("LASTVOCHER2==",LASTVOCHER2.size()+"");
+        voucherNo=dataBase.getLastVoucherNo(506)+"";
+        LASTVOCHER=dataBase.   getAllItemsBYVOCHER(voucherNo);
+
 
         PdfConverter pdf =new PdfConverter(ReturnByVoucherNo.this);
 
-       pdf.exportListToPdf(LASTVOCHER2,"ReturnVocher","",12);
-        Log.e("ReturnVocher",returnListSerial.size()+"");
+       pdf.exportListToPdf(LASTVOCHER,"ReturnVocher","",12);
+       // Log.e("ReturnVocher",returnListSerial.size()+"");
     }
 
     private void printLayout() {

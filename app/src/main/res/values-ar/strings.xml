@@ -458,7 +458,7 @@
     <string name="last_visit">أخر زيارة </string>
     <string name="transName">إسم الحركة</string>
     <string name="date_voucher">التاريخ</string>
-    <string name="total_balance"> اجمالي الرصيد</string>
+    <string name="total_balance">عرض اجمالي الرصيد</string>
     <string name="debit">دائن</string>
     <string name="credit">مدين</string>
     <string name="balance">الرصيد</string>
@@ -466,7 +466,7 @@
     <string name="YouHaveItemDiscount">لايتطلب موافقة الادمن</string>
     <string name="makeRequest">طلب تجاوز سقف الذمم</string>
     <string name="request_credit_limit">طلب تجاوز سقف الذمة</string>
-    <string name="ok" />
+    <string name="ok">موافق</string>
     <string name="text_location_permission">text Location Permission</string>
     <string name="invalidSerial">رقم تسلسلي خاطئ</string>
     <string name="enter_serial">أدخل الرقم التسلسلي</string>
@@ -540,5 +540,12 @@
     <string name="please_export_data">يجب ترحيل البيانات أولا</string>
     <string name="noVoucherForThisSerial">لايوجد فاتورة لهذا السيريال </string>
     <string name="thisSerialIsReturnedBefor">تم ارجاع السيريال من قبل </string>
+    <string name="data_type">نوع البيانات</string>
+    <string name="export_stock">تصدير البيانات للمستودعات</string>
+    <string name="max_voucher">أكبر رقم تسلسلي للفواتير</string>
+    <string name="make_order">طلبيات</string>
+    <string name="password_from_admin">رقم سر الاعدادات من الادمن</string>
+    <string name="voucher_return">فصل الفواتير المرتجعة</string>
+    <string name="more">المزيد</string>
 
 </resources>

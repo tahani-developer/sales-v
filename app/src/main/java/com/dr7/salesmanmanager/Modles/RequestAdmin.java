@@ -161,4 +161,32 @@ public class RequestAdmin {
         }
         return obj;
     }
+    public JSONObject getJSONObjectDelphi() {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("SALESMAN_NAME", salesman_name);
+            obj.put("SALESMAN_NO", salesman_no);
+            obj.put("CUSTOMER_NAME", customer_name);// store
+            obj.put("CUSTOMER_NO", customer_no);
+            obj.put("REQUEST_TYPE", request_type);
+            obj.put("AMOUNT_VALUE", amount_value);
+            obj.put("VOUCHER_NO", voucher_no);
+            obj.put("TOTAL_VOUCHER", total_voucher);
+            obj.put("STATUS", status);
+            obj.put("KEY_VALIDATION", key_validation);
+            obj.put("DATE", date);
+            obj.put("TIME", time);
+//            obj.put("note", "");
+            obj.put("NOTE", note);
+            obj.put("SEEN_ROW", seen_row);
+            obj.put("ROW_ID", "");
+
+
+
+        } catch (JSONException e) {
+            Log.e("TagserialModel" , "JSONException"+e.getMessage());
+        }
+        return obj;
+    }
 }

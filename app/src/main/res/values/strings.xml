@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.71</string>
+    <string name="version"> V 100.75</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -407,7 +407,7 @@
     <string name="saveSuccessfuly">Save Successfuly</string>
     <string name="transName">Trans Name</string>
     <string name="date_voucher">Date</string>
-    <string name="total_balance">Total Balance</string>
+    <string name="total_balance">Show Total Balance</string>
     <string name="debit">Debit</string>
     <string name="credit">Credit</string>
     <string name="balance">Balance</string>
@@ -421,7 +421,7 @@
     <string name="YouHaveItemDiscount">You Have same Item Discount</string>
     <string name="makeRequest">Make Request For Limit Credit </string>
     <string name="request_credit_limit">Request to exceed the limit of credit</string>
-    <string name="ok" />
+    <string name="ok">OK</string>
     <string name="text_location_permission">text Location Permission</string>
     <string name="title_location_permission">Location Permission</string>
     <string name="invalidSerial">Invalid Serial</string>
@@ -495,6 +495,13 @@
     <string name="please_export_data">please export data</string>
     <string name="noVoucherForThisSerial">No Voucher For This Serial</string>
     <string name="thisSerialIsReturnedBefor">This Serial had Returned Befor</string>
+    <string name="data_type">Data Type</string>
+    <string name="export_stock">Export Stock</string>
+    <string name="max_voucher">Get Max Voucher</string>
+    <string name="make_order">Make Order</string>
+    <string name="password_from_admin">Password From Admin</string>
+    <string name="voucher_return">Split Returned Vouchers</string>
+    <string name="more">more</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -690,37 +690,30 @@ public class bMITP extends Activity {
 
                           DatabaseHandler databaseHandler=new DatabaseHandler(context);
                           int x=databaseHandler.getLastVoucherNo(506);
-                          Log.e("x==",x+"");
-                         // voucherReturn=dataBase.getAllVouchers_VoucherNo(Integer.parseInt(voucherNo),504);
+                          if(x!=0)
+                          {
+                              Log.e("x==",x+"");
+                              printVoucher =databaseHandler.getAllVouchers_VoucherNo(x,506);
+                              Log.e("printVoucher==",printVoucher.getVoucherNumber()+"");
 
-                          printVoucher =databaseHandler.getAllVouchers_VoucherNo(x,506);
-                          Log.e("printVoucher==",printVoucher.getVoucherNumber()+"");
+                              returblistItemsMain=databaseHandler.getAllItems();
+                              itemPrint = returblistItemsMain;
 
+                              if(printShape==0) {//Normal print (Arabic)
+                                  for (int i = 0; i < settings; i++) {
+                                      sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
 
-
-                     //  int y=databaseHandler.getMaxFromVoucherMaster(506);
-
-                          returblistItemsMain=databaseHandler.getAllItems();
-                          itemPrint = returblistItemsMain;
-
-
-
-
-                       //   itemPrint=databaseHandler.
-//                          convertLayoutToImageW(bMITP.this,sample,settings);
-                          if(printShape==0) {//Normal print (Arabic)
-                              for (int i = 0; i < settings; i++) {
-//                              sample.printMultilingualFontEsc(0);
-                                  sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+                                  }
+                              }else {// just for ejabi customer (English Voucher ) and for  Large Name
+                                  for (int i = 0; i < settings; i++) {
+                                      sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
+                                  }
 
                               }
-                          }else {// just for ejabi customer (English Voucher ) and for  Large Name
-                              for (int i = 0; i < settings; i++) {
-//                              sample.printMultilingualFontEsc(0);
-                                  sample.printMultilingualFontEscEjapy(0, printVoucher, itemPrint);
-                              }
-
+                          }else {
+                              Toast.makeText(context, "not Exist voucher For this customer", Toast.LENGTH_SHORT).show();
                           }
+
                           break;
                       case 12:
                           //        printVoucher = voucherReturn;
