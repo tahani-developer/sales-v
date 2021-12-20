@@ -108,7 +108,7 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
-
+    List<Flag_Settings> flag_settingsList;
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
     private CircleImageView logo;
@@ -153,21 +153,21 @@ public class Login extends AppCompatActivity {
     FloatingActionButton setting_floatingBtn;
     public static int typaImport;//0---- mySql   1-----IIs
 
-    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
-    public  static  final  int getMaxVoucherServer=0;
+    public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static    int getMaxVoucherServer=0;
 
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
-    public  static final int makeOrders=0;// 1= just orders app
+    public  static  int makeOrders=0;// 1= just orders app
 
-    public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
+    public  static    int OfferCakeShop=0;// if 0 calck offer many times
 
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
     public  static    int getTotalBalanceInActivities=0;
     public  static    int dateFromToActive=0;
 
-    public  static  final int  talaatLayoutAndPassowrd=0;
-    public  static  final  int voucherReturn_spreat=0;
+    public  static   int  talaatLayoutAndPassowrd=0;
+    public  static    int voucherReturn_spreat=0;
 
     public  static  String headerDll = "";
 
