@@ -21,6 +21,7 @@ public class TimerTask {
     }
 
     public  void  startTimer(){
+//        request.checkRequestState();
         timer = new Timer();
         timer.schedule(new java.util.TimerTask() {
             @Override

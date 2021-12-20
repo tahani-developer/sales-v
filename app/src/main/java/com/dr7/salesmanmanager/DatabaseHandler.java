@@ -4376,11 +4376,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return items;
     }
-    public List<Item> getAllItemsBYVOCHER() {
+    public List<Item> getAllItemsBYVOCHER(String voucherNo) {
         List<Item> items = new ArrayList<Item>();
+        Log.e("getAllItemsBYVOCHER","voucherNo="+voucherNo);
         // Select All Query
         //AND VOUCHER_NUMBER= (SELECT MAX(VOUCHER_TYPE VOUCHER_NUMBER FROM SALES_VOUCHER_DETAILS)
-        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506";
+        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506 and VOUCHER_NUMBER='"+voucherNo+"'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4896,14 +4897,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            Log.e("getAItemsNotInC", "***************************************" + cursor.getCount());
+            Log.e("getAItemsNotInC", "1***************************************" + cursor.getCount());
             do {
 
                 itemNoList.add(cursor.getString(0));
 
             } while (cursor.moveToNext());
         }
-        Log.e("item size",""+itemNoList.size());
+        Log.e("itemsize","2**************"+itemNoList.size());
 
         return itemNoList;
 
@@ -7020,10 +7021,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         return itemNo;
     }
-    public  String getSolidQtyForItem(String itemNo){
+    public  String getSolidQtyForItem(String itemNo,String today){
        // SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER=7022001657 and IS_POSTED='0'
-        String soiledQty="";
         String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
+
+//       Log.e("getSolidQtyForItem","today="+today);
+        String soiledQty="";
+        //SELECT  IFNULL( SUM(detail.UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS  detail
+//        WHERE detail.ITEM_NUMBER='10129' and detail.VOUCHER_TYPE =504 and detail.VOUCHER_NUMBER in( select master.VOUCHER_NUMBER from SALES_VOUCHER_MASTER master  where  master.VOUCHER_DATE='02/09/2021' and master.VOUCHER_TYPE=504 );
+//        String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS detail WHERE detail.ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 and " +
+//                "detail.VOUCHER_NUMBER in( select master.VOUCHER_NUMBER from SALES_VOUCHER_MASTER master  where  master.VOUCHER_DATE='"+today+"' and master.VOUCHER_TYPE=504 ) ";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
@@ -7535,6 +7542,33 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // updating row
         db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO + "=" + voucherNo +" and "+ SERIAL_CODE_NO + " = '" + serialCode.trim()+"'", null);
+    }
+//    select Price from CustomerPrices where CustomerNumber='1110000002' and ItemNo_='30001826'
+    public String getItemPrice(String itemNo) {
+        Log.e("getItemName","getItemName="+itemNo);
+        String customerNo=CustomerListShow.Customer_Account;
+        String selectQuery = " select Price from CustomerPrices  where ItemNo_='"+itemNo.trim()+"' and  CustomerNumber='"+customerNo+"' ";
+        String itemUnit="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    return "";
+                } else {
+                    itemUnit = (cursor.getString(0));
+                    Log.e("getItemPrice","getItemPrice="+itemUnit);
+                    return itemUnit;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  itemUnit;
     }
 }
 

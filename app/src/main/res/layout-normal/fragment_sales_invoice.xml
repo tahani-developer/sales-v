@@ -373,22 +373,8 @@
                             android:layout_weight="4"
                             android:orientation="horizontal"
                        >
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_weight="4"
-                                android:orientation="vertical"
-                                >
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:layout_weight="4"
-    android:orientation="horizontal"
->
+
+
 
                             <RadioButton
                                     android:id="@+id/salesRadioButton"
@@ -410,15 +396,8 @@
                                     android:textColor="@color/text_view_color"
                                     android:textSize="10sp" />
 
-</LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:layout_weight="4"
-                                android:orientation="horizontal"
-                                >
+
+
                             <RadioButton
                                 android:id="@+id/orderRadioButton"
                                 android:layout_width="wrap_content"
@@ -427,8 +406,7 @@
                                 android:text="@string/app_cust_order2"
                                 android:textColor="@color/text_view_color"
                                 android:textSize="10sp" />
-                            </LinearLayout>
-                            </LinearLayout>
+
                         </RadioGroup>
 
                         </LinearLayout>

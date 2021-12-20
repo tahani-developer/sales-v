@@ -147,7 +147,7 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public  static  int typaImport=0;//0---- mySql   1-----IIs
+    public  static  int typaImport=1;//0---- mySql   1-----IIs
 
     public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
     public  static  final  int getMaxVoucherServer=0;
@@ -165,6 +165,9 @@ public class Login extends AppCompatActivity {
     public  static  final int  talaatLayoutAndPassowrd=0;
     public  static  final  int voucherReturn_spreat=0;
 
+    public  static  String headerDll = "";
+
+//    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

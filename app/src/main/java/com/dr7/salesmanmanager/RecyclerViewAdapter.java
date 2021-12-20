@@ -162,6 +162,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     float priceUnit=0;
     String rate_customer="0";
 
+
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
         this.items = items;
         this.filterList = items;
@@ -192,13 +193,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ipAddress = MHandler.getAllSettings().get(0).getIpAddress();
         itemUnit=MHandler.getAllSettings().get(0).getItemUnit();
          rate_customer = MHandler.getRateOfCustomer();
+        getTimeAndDate();
+
 
     }
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_listview, parent, false);
-
         return new viewHolder(view);
     }
 
@@ -207,6 +209,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(final viewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         holder.setIsRecyclable(false);
+
 //        if (isClicked.get(position) == 0)
 //            holder.linearLayout.setBackgroundColor(Color.parseColor("#455A64"));
 //        else
@@ -303,13 +306,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
 
         }
+        if(MHandler.getAllSettings().get(0).getPriceByCust()==1){
+            String priceCus=MHandler.getItemPrice(items.get(position).getItemNo());
+            if(!priceCus.equals(""))
+            {
+                holder.price.setText(priceCus);
+                items.get(position).setPrice(Float.parseFloat(priceCus));
+            }
+
+        }
 
 
 
 //       *******************************//////////////////////
         if (showSolidQty == 1) {
             holder.table_solidQty.setVisibility(View.VISIBLE);
-            holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(items.get(position).getItemNo()));
+            holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(items.get(position).getItemNo(),voucherDate));
 
 
         } else {
