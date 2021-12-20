@@ -93,6 +93,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
 
 public class AddItemsFragment2 extends DialogFragment {
+    public   AllItemRecyclerListViewAdapter allItemAdapterList;
     public static  List<Item> jsonItemsList;
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
@@ -115,6 +116,8 @@ public class AddItemsFragment2 extends DialogFragment {
 //    public static List<Item> jsonItemsList2;
 //    public static List<Item> jsonItemsList_intermidiate;
     RecyclerView recyclerView;
+
+    ListView listAllItemsView;
     TextView emptyView;
     ListView verticalList;
     public  static   float total_items_quantity=0;
@@ -248,14 +251,17 @@ public class AddItemsFragment2 extends DialogFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
+//        listAllItemsView=view.findViewById(R.id.itemsListView);
+        listAllItemsView = (ListView) view.findViewById(R.id.itemsListView);
 
 // ...
 
 
 //       if( jsonItemsList.size()!=0){
-           recyclerView.setLayoutManager(linearLayoutManager);
-           RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-           recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+//        fillListViewAllItem();
+        fillItemRecycler();
+
 //       }
 
 
@@ -630,6 +636,41 @@ public class AddItemsFragment2 extends DialogFragment {
         return view;
     }
 
+    private void fillItemRecycler() {
+        listAllItemsView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+
+        RecyclerViewAdapter adapter;
+        try {
+           // Log.e("forAdapter",""+jsonItemsList.size());
+
+
+
+            adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+
+                    recyclerView.setAdapter(adapter);
+//            recyclerView.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    recyclerView.setAdapter(adapter);
+//                }
+//            },100);
+
+        }catch (Exception e){
+
+            Log.e("recyclerView","exce="+e.getMessage());
+        }
+    }
+
+    private void fillListViewAllItem() {
+        Log.e("fillListViewAllItem","jsonItemsList="+jsonItemsList.size());
+        allItemAdapterList = new AllItemRecyclerListViewAdapter( jsonItemsList,AddItemsFragment2.this);// if screen is landscape =====> 0
+
+
+        listAllItemsView.setAdapter(allItemAdapterList);
+    }
+
     private void filterTow() {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int j = 0; j < jsonItemsList.size(); j++) {
@@ -820,73 +861,84 @@ try {
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
-        else {
-            List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+        else {// price by customer
+            try {
+               // List<String> itemNoList = mDbHandler.getItemNumbersNotInPriceListD();// difference itemNo between tow table (CustomerPricess and priceListD)
+               // Log.e("itemsize","3**************"+itemNoList.size());
+            }catch (Exception e){
+                Log.e("itemNoList","**********"+e.getMessage());
+            }
 
             //from customers pricess
 
-            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
-            {
-                if(priceListTypeVoucher!=0)
-                {
-                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+listOfferNo,payMethod,dateCurent);
-                  //  Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
-                }
-                else {// regular list
-
-
-                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+priceListTypeVoucher,payMethod,dateCurent);
-                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,0); // from price list d
-                }
-
-
-            }
-            else {// here 1
-                jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
+//            if(mDbHandler.getAllSettings().get(0).getReadOfferFromAdmin()==1)
+//            {
+//                if(priceListTypeVoucher!=0)
+//                {
+//                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+listOfferNo,payMethod,dateCurent);
+//                  //  Log.e("priceListTypeVoucher",""+listOfferNo+"\t"+jsonItemsList2.size());
+//                }
+//                else {// regular list
+//
+//
+//                    jsonItemsList2 = mDbHandler.getAllItemsPriceFromAdmin(rate_customer,""+priceListTypeVoucher,payMethod,dateCurent);
+//                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,0); // from price list d
+//                }
+//
+//
+//            }
+//            else {// here 1
+               // jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
                 Log.e("jsonItemsList","11111jsonItemsList2.size()="+jsonItemsList2.size());
                 jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
-            }
+//            }
             size_firstlist = jsonItemsList2.size();
            // Log.e("size_firstlist",""+size_firstlist);
             if (size_firstlist != 0&&priceListTypeVoucher!=1) {
-                size_customerpriceslist = size_firstlist;
+//                Log.e("jsonItemsList_inte","11111"+jsonItemsList_intermidiate.size()+"\t"+jsonItemsList2.size());
+//                size_customerpriceslist = size_firstlist;
+//                 Log.e("size_firstlist",""+size_firstlist);
 
-                for (int k = 0; k < size_firstlist; k++) {
-                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
-                }
+//                for (int k = 0; k < size_firstlist; k++) {
+//                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
+//                }
+//                jsonItemsList_intermidiate.addAll(jsonItemsList2);
+                Log.e("jsonItemsList_inte","111222"+jsonItemsList_intermidiate.size()+"\t"+jsonItemsList2.size());
                 //****************************************************************************************
 
 
 
 
-                for (int i = 0; i < jsonItemsList.size(); i++) {
-                    for (int j = 0; j < itemNoList.size(); j++)
-                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
-                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
-                            size_firstlist++;
-
-
-
-                        } else {
-
-                        }
-
-                }
-
-                jsonItemsList = jsonItemsList_intermidiate;
+//                for (int i = 0; i < jsonItemsList.size(); i++) {
+//                    for (int j = 0; j < itemNoList.size(); j++)
+//                    {
+//                        if (jsonItemsList.get(i).getItemNo().equals(itemNoList.get(j).toString())) {
+//                            jsonItemsList_intermidiate.add(size_firstlist, jsonItemsList.get(i));
+//                            size_firstlist++;
+//                            break;
+//
+//
+//
+//                        }
+//                    }
+//
+//
+//                }
+//
+//                jsonItemsList = jsonItemsList_intermidiate;
                // Log.e("jsonItemsList",""+jsonItemsList.size());
 
 
             } else {//  (Customer Pricesfor this customer==0)    ====== >>>>>     get data from priceListD
-
-                if(priceListTypeVoucher!=0)
-                {
-                    jsonItemsList=jsonItemsList2;
-                }else {
-                    Log.e("jsonItemsList","2222");
-                   // if(jsonItemsList.size()==0)
-                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
-                }
+//                Log.e("jsonItemsList","2222");
+//                if(priceListTypeVoucher!=0)
+//                {
+//                    jsonItemsList=jsonItemsList2;
+//                }else {
+//                    Log.e("jsonItemsList","233");
+//                   // if(jsonItemsList.size()==0)
+//                    jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
+//                }
 
             }
 

@@ -88,11 +88,9 @@ public class SalesmanStations {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-
-
             obj.put("LATITUDE", latitude);
             obj.put("LONGITUDE", longitude);
-            obj.put("SALESNO", salesmanNo);
+            obj.put("SALESNO",salesmanNo );//salesmanNo
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

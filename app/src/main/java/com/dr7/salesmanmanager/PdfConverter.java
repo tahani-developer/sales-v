@@ -312,19 +312,19 @@ public class PdfConverter {
 
 
 
-        createPDF("ShelfReturnInvoice" + ".pdf");
+        createPDF("ReturnInvoice" + ".pdf");
         PdfPTable pdfPTable = new PdfPTable(5);
         pdfPTable.setWidthPercentage(100f);
-        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 
 
 
-     insertCell(pdfPTable,context.getString(R.string.voucherNo), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+   insertCell(pdfPTable,context.getString(R.string.voucherNo), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,context.getString(R.string.item_number      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
            insertCell(pdfPTable,context.getResources().getString(R.string.item_name   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,context.getResources().getString(R.string.qty) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,context.getResources().getString(R.string.app_price) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-      //  insertCell(pdfPTable,context.getResources().getString(R.string.voucher_date ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
 
 
 

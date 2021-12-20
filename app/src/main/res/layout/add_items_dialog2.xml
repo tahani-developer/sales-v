@@ -186,12 +186,25 @@
         android:layout_marginHorizontal="20dp"
         android:background="@color/white"
         android:padding="10dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+    <ListView
+        android:id="@+id/itemsListView"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/white"
+        android:padding="10dp"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
 
-    </androidx.recyclerview.widget.RecyclerView>
+        />
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"

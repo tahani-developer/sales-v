@@ -3,6 +3,7 @@ package com.dr7.salesmanmanager.Reports;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
@@ -31,10 +32,13 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
+import com.dr7.salesmanmanager.ReturnByVoucherNo;
+import com.dr7.salesmanmanager.bMITP;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -56,7 +60,9 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 public class VouchersReport extends AppCompatActivity {
 
     List<Voucher> vouchers;
+    public static    Voucher   VocherToPrint;
     List<Item> items;
+    public static   List<Item> itemsToPrint;
     TextView Customer_nameSales , textSubTotal , textTax , textNetSales;
     RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
     EditText from_date, to_date, cust_number;
@@ -70,8 +76,10 @@ public class VouchersReport extends AppCompatActivity {
 
     double subTotal = 0 , tax = 0 , netSales = 0;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
-
+   CompanyInfo companyInfo;
     GeneralMethod generalMethod;
+    public static int type;
+    DatabaseHandler obj;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -80,6 +88,7 @@ public class VouchersReport extends AppCompatActivity {
         new LocaleAppUtils().changeLayot(VouchersReport.this);
         setContentView(R.layout.vouchers_report);
        LinearLayout linearMain=findViewById(R.id.linearMain);
+        itemsToPrint=new ArrayList<>();
         try{
             if(languagelocalApp.equals("ar"))
             {
@@ -104,7 +113,7 @@ public class VouchersReport extends AppCompatActivity {
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
 
-        DatabaseHandler obj = new DatabaseHandler(VouchersReport.this);
+        obj   = new DatabaseHandler(VouchersReport.this);
         vouchers = obj.getAllVouchers();
         items = obj.getAllItems();
 
@@ -179,6 +188,7 @@ public class VouchersReport extends AppCompatActivity {
                 clear();
                 if(!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
                     subTotal = 0 ; tax = 0 ; netSales = 0;
+                    type=voucherType;
                     for (int n = 0; n < vouchers.size(); n++) {
 
                         if (filters(n)) {
@@ -336,13 +346,53 @@ public class VouchersReport extends AppCompatActivity {
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog2);
         Window window = dialog.getWindow();
+        EditText VochNum,PayMth,CusName,VochDate;
+        TextView subTotal,tax,netSales;
+        subTotal=dialog.findViewById(R.id.subTotalTextView);
+        tax=dialog.findViewById(R.id.taxTextView);
+        netSales=dialog.findViewById(R.id.netSalesTextView1);
+        VochNum =dialog.findViewById(R.id.vochernum);
+                PayMth=dialog.findViewById(R.id.paymethod);
+        CusName=dialog.findViewById(R.id.customername);
+                VochDate=dialog.findViewById(R.id.vocherdate);
+        dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                printLayout(obj);
+            }
+        });
 //        window.setLayout(800, 400);
+
+
+        for (int k = 0; k < vouchers.size(); k++) {
+if( voucherNumber == vouchers.get(k).getVoucherNumber() &&
+                    voucherType == vouchers.get(k).getVoucherType()) {
+VocherToPrint=vouchers.get(k);
+    VochNum.setText(vouchers.get(k).getVoucherNumber() + "");
+  if(vouchers.get(k).getPayMethod()==1)
+      PayMth.setText(getResources().getString(R.string.cash)+"");
+  else  if(vouchers.get(k).getPayMethod()==0)
+      PayMth.setText(getResources().getString(R.string.credit)+"");
+        CusName.setText(vouchers.get(k).getCustName());
+    VochDate.setText(vouchers.get(k).getVoucherDate() + "");
+    subTotal.setText(vouchers.get(k).getSubTotal() + "");
+
+    tax.setText(vouchers.get(k).getTax() + "");
+    netSales.setText(vouchers.get(k).getNetSales() + "");
+
+}
+        }
+
+
+
 
         TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
 
         for (int k = 0; k < items.size(); k++) {
 
             if (voucherNumber == items.get(k).getVoucherNumber() && voucherType == items.get(k).getVoucherType()) {
+
+                itemsToPrint.add(items.get(k));
                 TableRow row = new TableRow(VouchersReport.this);
                 row.setPadding(5, 10, 5, 10);
 
@@ -466,5 +516,103 @@ public class VouchersReport extends AppCompatActivity {
         } catch (ParseException e) {  e.printStackTrace(); }
 
         return false ;
+    }
+    private void printLayout(DatabaseHandler dataBase) {
+        // getVoucherLocal();
+        try{
+            if (dataBase.getAllSettings().get(0).getPrintMethod() == 0) {
+
+                try {
+                    int printer = dataBase.getPrinterSetting();
+                    companyInfo = dataBase.getAllCompanyInfo().get(0);
+                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                        if (printer != -1) {
+                            switch (printer) {
+                                case 0:
+//
+//                                    Intent i = new Intent(ReturnByVoucherNo.this, BluetoothConnectMenu.class);
+//                                    i.putExtra("printKey", "11");
+//                                    startActivity(i);
+                                    break;
+//                                                             lk30.setChecked(true);
+
+                                case 1:
+
+//                                    try {
+//                                        findBT();
+//                                        openBT(1);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                                             lk31.setChecked(true);
+
+                                case 2:
+
+//                                        try {
+//                                            findBT();
+//                                            openBT(2);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                                             lk32.setChecked(true);
+
+//                                    convertLayoutToImage();
+
+//                                    Intent O1= new Intent(InventoryReport.this, bMITP.class);
+//                                    O1.putExtra("printKey", "9");
+//                                    startActivity(O1);
+
+
+                                case 3:
+
+//                                    try {
+//                                        findBT();
+//                                        openBT(3);
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                                             qs.setChecked(true);
+
+                                case 4:
+//                                    Intent O= new Intent(ReturnByVoucherNo.this, bMITP.class);
+//                                    O.putExtra("printKey", "11");
+//                                    startActivity(O);
+
+                                case 5:
+//                                    convertLayoutToImage();
+//                                    Intent O= new Intent(ReturnByVoucherNo.this, bMITP.class);
+//                                    O.putExtra("printKey", "11");
+//                                    startActivity(O);
+                                case 6:
+//                                    convertLayoutToImage();
+                                    Intent O1= new Intent(VouchersReport.this, bMITP.class);
+                                    O1.putExtra("printKey", "12");
+                                    startActivity(O1);
+                                    break;
+
+
+                            }
+                        } else {
+                            Toast.makeText(VouchersReport.this, "please chose printer setting", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(VouchersReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(VouchersReport.this, "Please set Printer Setting", Toast.LENGTH_SHORT).show();
+                } catch (NullPointerException e) {
+                    Toast.makeText(VouchersReport.this, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(VouchersReport.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
+
+                }
+            } else {
+                // hiddenDialog();
+            }
+        }
+        catch(Exception e){
+            Toast.makeText(VouchersReport.this, R.string.fill_setting, Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

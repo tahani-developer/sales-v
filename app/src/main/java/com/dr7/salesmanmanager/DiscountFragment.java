@@ -217,9 +217,9 @@ public class DiscountFragment extends DialogFragment {
         decimalFormat = new DecimalFormat("##.000");
 
 
-        if (mdHandler.getAllSettings().get(0).getTaxClarcKind() == 1) {
-            discPercent.setEnabled(false);
-        }
+//        if (mdHandler.getAllSettings().get(0).getTaxClarcKind() == 1) {
+//            discPercent.setEnabled(false);
+//        }
 
         OnClickListener onClickListener = new OnClickListener() {
             @Override

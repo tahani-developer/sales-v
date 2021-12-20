@@ -142,36 +142,36 @@ public class Login extends AppCompatActivity {
     public static Location location_main;
     LinearLayout mainlayout;
     String provider;
-    int salesManInt = 1;
+    int salesManInt=1;
     public static Timer timer = null;
     LocationPermissionRequest locationPermissionRequest;
-    public static String currentIp = "", previousIp = "";
-    String serialNo2 = "";
-    int approveAdmin = 0;
-    public static TextView checkIpDevice, goMainText;
+   public static String currentIp="",previousIp="";
+    String serialNo2="";
+    int approveAdmin=0;
+    public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
     public static int typaImport;//0---- mySql   1-----IIs
 
-    public static int rawahneh;// 1= EXPORT STOCK TABLES
-    public static int getMaxVoucherServer;
+    public  static final int rawahneh=0;// 1= EXPORT STOCK TABLES
+    public  static  final  int getMaxVoucherServer=0;
 
-    public static int passwordSettingAdmin;//0 ---> static password   1 ----->password from admin
-    public static int makeOrders;// 1= just orders app
+    public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
+    public  static final int makeOrders=0;// 1= just orders app
 
-    public static final int OfferCakeShop = 0;// if 0 calck offer many times
+    public  static  final  int OfferCakeShop=0;// if 0 calck offer many times
 
-    public static int offerTalaat = 0;
-    public static int offerQasion = 1;
-    public static int getTotalBalanceInActivities;
-    public static int dateFromToActive = 0;
+    public  static    int offerTalaat=0;
+    public  static   int  offerQasion=1;
+    public  static    int getTotalBalanceInActivities=0;
+    public  static    int dateFromToActive=0;
 
-    public static final int talaatLayoutAndPassowrd = 0;
-    public static int voucherReturn_spreat;
+    public  static  final int  talaatLayoutAndPassowrd=0;
+    public  static  final  int voucherReturn_spreat=0;
 
-    Flag_Settings baseFlagSettings;
-    List<Flag_Settings> flag_settingsList;
+    public  static  String headerDll = "";
 
+//    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +336,7 @@ public class Login extends AppCompatActivity {
 
             }
         });
-        // locationPermissionRequest.timerLocation();
+      // locationPermissionRequest.timerLocation();
         setting_floatingBtn.setOnClickListener(new OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -350,37 +350,42 @@ public class Login extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void copyFile() {
-        try {
+    public void copyFile()
+    {
+        try
+        {
             File sd = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
             File data = Environment.getDataDirectory();
             boolean isPresent = true;
-            if (!sd.canWrite()) {
-                isPresent = sd.mkdir();
+            if (!sd.canWrite())
+            {
+                isPresent= sd.mkdir();
 
             }
 
 
+
             String backupDBPath = "VanSalesDatabase_backup";
 
-            File currentDB = getApplicationContext().getDatabasePath("VanSalesDatabase");
+            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
             File backupDB = new File(sd, backupDBPath);
 
-            if (currentDB.exists() && isPresent) {
+            if (currentDB.exists()&&isPresent) {
                 FileChannel src = new FileInputStream(currentDB).getChannel();
                 FileChannel dst = new FileOutputStream(backupDB).getChannel();
                 dst.transferFrom(src, 0, src.size());
                 src.close();
                 dst.close();
                 Toast.makeText(Login.this, "Backup Succesfulley", Toast.LENGTH_SHORT).show();
-            } else {
+            }else {
 
                 Toast.makeText(Login.this, "Backup Failed", Toast.LENGTH_SHORT).show();
             }
-            isPresent = false;
+            isPresent=false;
 
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e("Settings Backup", e.getMessage());
         }
     }
@@ -396,7 +401,7 @@ public class Login extends AppCompatActivity {
         ipEditText = (EditText) dialog.findViewById(R.id.ipEditText);
         final EditText portSetting = (EditText) dialog.findViewById(R.id.portSetting);
         final EditText storeNo_edit = (EditText) dialog.findViewById(R.id.storeNo_edit);
-        TextView editIp = (TextView) dialog.findViewById(R.id.editIp);
+         TextView editIp= (TextView) dialog.findViewById(R.id.editIp);
 
         final EditText cono = (EditText) dialog.findViewById(R.id.cono);
 
@@ -423,6 +428,7 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showPasswordDialog();
+
 
             }
         });
@@ -535,22 +541,26 @@ public class Login extends AppCompatActivity {
         importData.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateNotEmpty(ipEditText) && validateNotEmpty(storeNo_edit)) {
-                    if (mDHandler.getAllSettings().size() == 0) {
-                        addIpSetting(ipEditText.getText().toString(), portSetting.getText().toString(), cono.getText().toString());
+                if(validateNotEmpty(ipEditText)&&validateNotEmpty(storeNo_edit))
+                {
+                    if(mDHandler.getAllSettings().size()==0)
+                    {
+                        addIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
 
-                    } else {
-                        mDHandler.updateIpSetting(ipEditText.getText().toString(), portSetting.getText().toString(), cono.getText().toString());
+                    }
+                    else {
+                        mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
-                    boolean isPosted = mDHandler.isAllVoucher_posted();
-                    if (isPosted) {
-                        ImportJason importJason = new ImportJason(Login.this);
-                        importJason.startParsing(storeNo_edit.getText().toString());
-                    } else {
-                        Toast.makeText(Login.this, R.string.failImpo_export_data, Toast.LENGTH_SHORT).show();
+                   boolean isPosted=mDHandler.isAllVoucher_posted();
+                   if(isPosted)
+                   {
+                       ImportJason importJason=new ImportJason(Login.this);
+                       importJason.startParsing(storeNo_edit.getText().toString());
+                   }else {
+                       Toast.makeText(Login.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
 
-                    }
+                   }
 
 
                     dialog.dismiss();
@@ -564,21 +574,23 @@ public class Login extends AppCompatActivity {
         final EditText editText = new EditText(Login.this);
         editText.setTextColor(getResources().getColor(R.color.text_view_color));
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        SweetAlertDialog sweetMessage = new SweetAlertDialog(Login.this, SweetAlertDialog.NORMAL_TYPE);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(Login.this, SweetAlertDialog.NORMAL_TYPE);
 
         sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
-        sweetMessage.setConfirmText("Ok");
+        sweetMessage .setConfirmText("Ok");
         sweetMessage.setCanceledOnTouchOutside(true);
         sweetMessage.setCustomView(editText);
         sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                if (editText.getText().toString().equals("2021000")) {
+                if(editText.getText().toString().equals("2021000"))
+                {
                     ipEditText.setAlpha(1f);
                     ipEditText.setEnabled(true);
                     ipEditText.requestFocus();
                     sweetAlertDialog.dismissWithAnimation();
-                } else {
+                }
+                else {
                     editText.setError("Incorrect");
                 }
             }
@@ -586,26 +598,29 @@ public class Login extends AppCompatActivity {
 
                 .show();
     }
-
-    private void addIpSetting(String ipAddress, String ipPort, String cono) {
-        if (mDHandler.getAllSettings().size() == 0) {
-            mDHandler.addIPSetting(504, 0, ipAddress, ipPort, cono);
-            mDHandler.addIPSetting(506, 0, ipAddress, ipPort, cono);
-            mDHandler.addIPSetting(508, 0, ipAddress, ipPort, cono);
-            mDHandler.addIPSetting(1, 0, ipAddress, ipPort, cono);
-            mDHandler.addIPSetting(4, 0, ipAddress, ipPort, cono);
-            mDHandler.addIPSetting(2, 0, ipAddress, ipPort, cono);
-        } else {
-            mDHandler.updateIpSetting(ipAddress, ipPort, cono);
+    private void addIpSetting(String ipAddress, String ipPort,String cono) {
+        if(mDHandler.getAllSettings().size()==0)
+        {
+            mDHandler.addIPSetting(504,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(506,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(508,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(1,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(4,0,ipAddress,ipPort,cono);
+            mDHandler.addIPSetting(2,0,ipAddress,ipPort,cono);
+        }
+        else {
+            mDHandler.updateIpSetting(ipAddress,ipPort,cono);
         }
 
     }
 
     private boolean validateNotEmpty(EditText editText) {
-        if (!editText.getText().toString().equals("")) {
+        if(!editText.getText().toString().equals(""))
+        {
             editText.setError(null);
             return true;
-        } else {
+        }
+        else {
             editText.setError(getResources().getString(R.string.reqired_filled));
             editText.requestFocus();
             return false;
@@ -626,7 +641,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void initialView() {
-        checkIpDevice = findViewById(R.id.checkIpDevice);
+        checkIpDevice=findViewById(R.id.checkIpDevice);
         locationPermissionRequest = new LocationPermissionRequest(Login.this);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -635,7 +650,7 @@ public class Login extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mDHandler = new DatabaseHandler(Login.this);
         model_key = new activeKey();
-        goMainText = findViewById(R.id.goMainText);
+        goMainText=findViewById(R.id.goMainText);
         loginText = (TextView) findViewById(R.id.logInTextView);
         currentTimeAndDate = Calendar.getInstance().getTime();
         Log.e("currentTimeAndDate", "" + currentTimeAndDate);
@@ -649,7 +664,7 @@ public class Login extends AppCompatActivity {
         curentTime = convertToEnglish(curentTime);
         Log.e("curentTime", "" + curentTime);
         mainlayout = (LinearLayout) findViewById(R.id.mainlayout);
-        setting_floatingBtn = findViewById(R.id.setting_floatingBtn);
+        setting_floatingBtn=findViewById(R.id.setting_floatingBtn);
 //        if(typaImport==0)
 //        {
 //            setting_floatingBtn.setVisibility(View.GONE);
@@ -659,8 +674,8 @@ public class Login extends AppCompatActivity {
 
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
         loginCardView = (CardView) findViewById(R.id.loginCardView);
-        userNo = mDHandler.getAllUserNo();
-        importData = new ImportJason(Login.this);
+        userNo= mDHandler.getAllUserNo();
+        importData=new ImportJason(Login.this);
         goMainText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -676,21 +691,24 @@ public class Login extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
-                if (editable.toString().length() != 0) {
-                    if (editable.toString().equals("main")) {
+                if(editable.toString().length()!=0)
+                {
+                    if(editable.toString().equals("main"))
+                    {
                         mainIntent();
                     }
                 }
             }
         });
 //        openApp();
-        if (talaatLayoutAndPassowrd == 1) {
-            passwordSettingAdmin = 1;
-            offerTalaat = 1;
-            typaImport = 0;
-            dateFromToActive = 0;
-            getTotalBalanceInActivities = 0;
-            offerQasion = 0;
+        if(talaatLayoutAndPassowrd==1)
+        {
+            passwordSettingAdmin=1;
+            offerTalaat=1;
+            typaImport=0;
+            dateFromToActive=0;
+            getTotalBalanceInActivities=0;
+            offerQasion=0;
 
         }
     }
@@ -712,8 +730,8 @@ public class Login extends AppCompatActivity {
     }
 
     private String getIpAddressForDevice() {
-        String ipNo = "";
-
+        String ipNo="";
+        
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
         }
@@ -721,20 +739,21 @@ public class Login extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 return "";
-            } else {
+            }
+            else {
                 ipNo = Build.getSerial();
             }
 
-        } else {
+        }
+        else {
             ipNo = Build.SERIAL;
         }
-        Log.e("getMacAddress", "MAC Address : " + ipNo);
+        Log.e("getMacAddress","MAC Address : " + ipNo);
 
 
-        Log.e("getMacAddress", "serialNo2" + ipNo);
+        Log.e("getMacAddress","serialNo2"+ipNo);
         return ipNo;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -743,17 +762,19 @@ public class Login extends AppCompatActivity {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                         return;
-                    } else {
+                    }
+                    else {
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
                             serialNo2 = Build.getSerial();
 
 
-                        } else {
+                        }
+                        else {
                             serialNo2 = Build.SERIAL;
                         }
 
-                        Log.e("serialNo2", "Permissions  " + serialNo2);
+                       Log.e("serialNo2","Permissions  "+serialNo2);
                     }
                 } else {
                     //not granted
@@ -764,9 +785,9 @@ public class Login extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.e("Location", "granted");
-                    Log.e("LocationIn", "GoToMain 1");
+                    Log.e("LocationIn","GoToMain 1");
 
-                    // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
+                   // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
                     startService(new Intent(Login.this, MyServices.class));
                     Intent main = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(main);
@@ -776,14 +797,14 @@ public class Login extends AppCompatActivity {
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
                         Log.e("Location", "granted updates");
-                        Log.e("LocationIn", "GoToMain 2");
+                        Log.e("LocationIn","GoToMain 2");
                         //Request location updates:
 //                        locationPermissionRequest.
 //                        locationManager.requestLocationUpdates(provider, 400, 1, (LocationListener) this);
                     }
 
                 } else {
-                    Log.e("LocationIn", "GoToMain 3");
+                    Log.e("LocationIn","GoToMain 3");
                     Log.e("Location", "Deny");
                     // permission, denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -791,6 +812,8 @@ public class Login extends AppCompatActivity {
                 }
                 break;
             }
+
+
 
 
             default:
@@ -913,7 +936,6 @@ public class Login extends AppCompatActivity {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void checkExistToLogin() {
         if (exist) {
@@ -927,26 +949,31 @@ public class Login extends AppCompatActivity {
                     salesMan = convertToEnglish(usernameEditText.getText().toString());
                     salesManNo = passwordEditText.getText().toString();
                     try {
-                        Transaction transaction = new Transaction();
+                        Transaction transaction=new Transaction();
                         transaction.setCheckInDate(curentDate);
                         transaction.setCheckInTime(curentTime);
                         transaction.setLongtude(location_main.getLongitude());
                         transaction.setLatitud(location_main.getLatitude());
                         transaction.setSalesManId(Integer.parseInt(salesMan));
                         mDHandler.addlogin(transaction);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e){
 
                     }
-                    if (mDHandler.getAllSettings().size() != 0) {
-                        if (mDHandler.getAllSettings().get(0).getApproveAdmin() == 1) {
+                    if(mDHandler.getAllSettings().size()!=0)
+                    {
+                        if(mDHandler.getAllSettings().get(0).getApproveAdmin()==1)
+                        {
 //                            goToMain();
                             verifyIpDevice();
-                        } else {
+                        }
+                        else {
 
                             verifyIpDevice();
 //                            goToMain();
                         }
-                    } else {
+                    }
+                    else {
 //                        goToMain();
                         verifyIpDevice();
                     }
@@ -954,7 +981,7 @@ public class Login extends AppCompatActivity {
 //                    locationPermissionRequest.closeLocation();
 
 //                    if(validLocation()){}
-
+                   
 //                                CustomIntent.customType(getBaseContext(),"left-to-right");
                 }
             } else {
@@ -966,8 +993,8 @@ public class Login extends AppCompatActivity {
                         showDialog_key();
                     } else {
 
-                        salesMan = convertToEnglish(usernameEditText.getText().toString());
-                        salesManNo = passwordEditText.getText().toString();
+                        salesMan =convertToEnglish( usernameEditText.getText().toString());
+                        salesManNo =passwordEditText.getText().toString();
 //                       locationPermissionRequest.closeLocation();
                         verifyIpDevice();
 //                       goToMain();
@@ -986,14 +1013,13 @@ public class Login extends AppCompatActivity {
     }
 
     private void getIpDevice() {
-        currentIp = getIpAddressForDevice();
-        previousIp = getPreviousIpForSalesMen();
+        currentIp=getIpAddressForDevice();
+        previousIp=getPreviousIpForSalesMen();
         //V22219AQ02457
 
     }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void verifyIpDevice() {
+    public  void  verifyIpDevice(){
         goToMain();
 //        getIpDevice();
 //        Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
@@ -1014,20 +1040,22 @@ public class Login extends AppCompatActivity {
     }
 
     private void addCurentIp(String currentIp) {
-        ImportJason importJason = new ImportJason(Login.this);
+        ImportJason importJason=new ImportJason(Login.this);
         importJason.addCurentIp(currentIp);
     }
 
     private String getPreviousIpForSalesMen() {
 
-        String ipDevice = mDHandler.getIpAddresDevice_fromSalesTeam();
-        Log.e("getPreviousIpFo", "ipDevice" + ipDevice);
-        if (ipDevice.equals("")) {
-            ipDevice = getIpAddressForDevice();
-            mDHandler.updatIpDevice(ipDevice);
-            addCurentIp(ipDevice);
-            return "";
-        } else {
+        String ipDevice=mDHandler.getIpAddresDevice_fromSalesTeam();
+        Log.e("getPreviousIpFo","ipDevice"+ipDevice);
+        if(ipDevice.equals(""))
+        {
+          ipDevice= getIpAddressForDevice();
+           mDHandler.updatIpDevice(ipDevice);
+           addCurentIp(ipDevice);
+            return  "";
+        }
+        else {
             return ipDevice;
         }
 
@@ -1038,14 +1066,14 @@ public class Login extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void goToMain() {
-        List<Settings> settingsList = mDHandler.getAllSettings();
-        approveAdmin = 0;
-        try {
+       List<Settings>settingsList= mDHandler.getAllSettings();
+         approveAdmin=0;
+       try {
             approveAdmin = settingsList.get(0).getApproveAdmin();
-        } catch (Exception e) {
-            approveAdmin = 0;
-        }
-        Log.e("uttttttt", "ll " + Utils.getIPAddress(true)); // IPv6
+       }catch (Exception e){
+            approveAdmin=0;
+       }
+        Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
         mDHandler.deletAllSalesLogIn();
         mDHandler.addUserNO(Login.salesMan);
@@ -1063,71 +1091,79 @@ public class Login extends AppCompatActivity {
 //            Log.e("deleteExcept",""+Login.salesMan);
 //        }
         try {
-            salesManInt = Integer.parseInt(salesMan);
-        } catch (Exception e) {
-            salesManInt = 1;
+            salesManInt=Integer.parseInt(salesMan);
+        }catch (Exception e){
+            salesManInt=1;
         }
-        if (typaImport == 1 && getMaxVoucherServer == 1)//iis
+        if(typaImport==1&&getMaxVoucherServer==1)//iis
         {
-            boolean isPosted = mDHandler.isAllVoucher_posted();
-            if (isPosted) {
-                getMaxVoucherFromServer(salesManInt);
-            } else {
-                Toast.makeText(Login.this, R.string.failImportMaxExportData, Toast.LENGTH_SHORT).show();
-                mainIntent();
+                    boolean isPosted=mDHandler.isAllVoucher_posted();
+        if(isPosted)
+        {
+            getMaxVoucherFromServer(salesManInt);
+        }else {
+            Toast.makeText(Login.this,R.string.failImportMaxExportData , Toast.LENGTH_SHORT).show();
+            mainIntent();
 
-            }
-            // mainIntent();
-        } else {//mysql
+        }
+           // mainIntent();
+        }
+        else {//mysql
             mainIntent();
         }
 
 
-    }
+
+
+
+
+
+
+
+}
+
 
 
     private void getMaxVoucherFromServer(int salesManInt) {
-        importData = new ImportJason(Login.this);
+        importData=new ImportJason(Login.this);
         importData.getMaxVoucherNo();
     }
 //    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void mainIntent() {
+    public  void mainIntent(){
 
-        if (approveAdmin == 1) {
-            boolean locCheck = locationPermissionRequest.checkLocationPermission();
-            boolean isNetworkAvailable = isNetworkAvailable();
-            if (!isNetworkAvailable) {
+        if(approveAdmin==1) {
+            boolean locCheck= locationPermissionRequest.checkLocationPermission();
+            boolean isNetworkAvailable=isNetworkAvailable();
+            if(!isNetworkAvailable){
                 Toast.makeText(Login.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
             }
 
-            Log.e("LocationIn", "GoToMain" + locCheck);
-            if (locCheck) {
-                Log.e("LocationIn", "GoToMain IN " + locCheck);
+            Log.e("LocationIn","GoToMain"+locCheck);
+            if(locCheck){
+                Log.e("LocationIn","GoToMain IN "+locCheck);
                 startService(new Intent(Login.this, MyServices.class));
                 finish();
                 Intent main = new Intent(Login.this, MainActivity.class);
                 startActivity(main);
-            } else {
-                Log.e("LocationIn", "GoToMain else " + locCheck);
+            }else {
+                Log.e("LocationIn","GoToMain else "+locCheck);
             }
 
-        } else {
-            Log.e("LocationIn", "GoToMain no approve" + approveAdmin);
+        }else {
+            Log.e("LocationIn","GoToMain no approve" +approveAdmin);
 //            finish();
             Intent main = new Intent(Login.this, MainActivity.class);
-            startActivity(main);
+           startActivity(main);
         }
     }
-
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
     private boolean validLocation() {
 //        getCompanyLocation();
 //        getCurentLocation();
@@ -1260,53 +1296,54 @@ public class Login extends AppCompatActivity {
 //    };
 
     private void getCurentLocation() {
-        //****************************************************************
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                            //****************************************************************
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {// Not granted permission
+                  locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {// Not granted permission
 
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+                        ActivityCompat.requestPermissions(this, new String[]
+                                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
 
-        }
+                    }
 //                    Thread.sleep(1000);
 
 
-        /////////////////////////////////////////**********************************
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(Login.this);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(Login.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            location_main = new Location(location);
+                    /////////////////////////////////////////**********************************
+                    fusedLocationClient = LocationServices.getFusedLocationProviderClient(Login.this);
+                    fusedLocationClient.getLastLocation()
+                            .addOnSuccessListener(Login.this, new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    // Got last known location. In some rare situations this can be null.
+                                    if (location != null) {
+                                        location_main=new Location(location);
 
-                            location_main.setLatitude(latitude_main);
-                            location_main.setLongitude(longitude_main);
-                            Log.e("saveCurrentLocation", "" + location_main.getLatitude() + "\t" + location_main.getLongitude());
+                                        location_main.setLatitude(latitude_main);
+                                        location_main.setLongitude(longitude_main);
+                                        Log.e("saveCurrentLocation", "" + location_main.getLatitude() + "\t" + location_main.getLongitude());
 
-                            new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText(getResources().getString(R.string.succsesful))
-                                    .setContentText(getResources().getString(R.string.LocationSaved))
-                                    .show();
-                            Toast.makeText(Login.this, "latitude=" + latitude_main + "long=" + longitude_main, Toast.LENGTH_SHORT).show();
-                        } else {
-                            new SweetAlertDialog(Login.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText(getResources().getString(R.string.warning_message))
-                                    .setContentText(getResources().getString(R.string.enternetConnection))
-                                    .show();
-                        }
-                        // Logic to handle location object
+                                        new SweetAlertDialog(Login.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText(getResources().getString(R.string.succsesful))
+                                                .setContentText(getResources().getString(R.string.LocationSaved))
+                                                .show();
+                                        Toast.makeText(Login.this, "latitude="+latitude_main+"long="+longitude_main, Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        new SweetAlertDialog(Login.this,SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText(getResources().getString(R.string.warning_message))
+                                                .setContentText(getResources().getString(R.string.enternetConnection))
+                                                .show();
+                                    }
+                                    // Logic to handle location object
 
-                    }
-                });
+                                }
+                            });
 
 
-    }
+}
 
     private void checkFullName(int i, String fullUserName) {
         if (usernameEditText.getText().toString().equals(fullUserName)) {
@@ -1381,7 +1418,7 @@ public class Login extends AppCompatActivity {
                 key_value_Db = mDHandler.getActiveKeyValue();
                 Log.e("key_value_Db", "" + key_value_Db);
                 if (key_value_Db == key_int) {
-                    salesMan = convertToEnglish(usernameEditText.getText().toString());
+                    salesMan =convertToEnglish(  usernameEditText.getText().toString());
                     salesManNo = passwordEditText.getText().toString();
 //
                     Toast.makeText(Login.this, "welcome" + salesMan, Toast.LENGTH_SHORT).show();
@@ -1409,12 +1446,12 @@ public class Login extends AppCompatActivity {
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
-                        openDialog = false;
+                        openDialog=false;
                         Toast.makeText(Login.this, states.isLocationPresent() + "", Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
-                        openDialog = false;
+                        openDialog=false;
                         Toast.makeText(Login.this, "Canceled", Toast.LENGTH_SHORT).show();
                         break;
                     default:
