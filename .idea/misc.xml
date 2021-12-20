@@ -3,6 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable-xhdpi/done_button_purble.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/a.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/b.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/background_container.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/bg_more_settings.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/ic_more.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/radiobtn_style.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/drawable/settings_header.xml" value="0.2203125" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout-mdpi/account_row.xml" value="0.33" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/activities2.xml" value="0.20416666666666666" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/activity_account_report.xml" value="0.20416666666666666" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/ip_setting_dialog.xml" value="0.3054393305439331" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/more_settings.xml" value="0.33" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/more_settings_dialog.xml" value="0.25" />
+        <entry key="..\:/Android_Studio_Projects/SalesmanManager/app/src/main/res/layout/offer_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.15653495440729484" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_return_by_voucher_no.xml" value="0.23397435897435898" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/de_export_dialog.xml" value="0.23515769944341372" />
@@ -73,7 +89,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
