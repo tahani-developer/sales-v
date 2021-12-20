@@ -218,7 +218,7 @@ public class SalesInvoice extends Fragment {
     private static String smokeGE = "SMOKE";
     public static List<Item> itemForPrintLast;
     LocationManager locationManager;
-    Bitmap testB;
+    Bitmap testB,bitmap;
     byte[] printIm;
     PrintPic printPic;
     private static int salesMan;
@@ -5267,13 +5267,13 @@ public class SalesInvoice extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
-
+Log.e("voucher===",voucher.getVoucherNumber()+"");
         final Dialog dialogs = new Dialog(getActivity());
         dialogs.setContentView(R.layout.printdialog);
         CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-
+        Log.e("voucher2===",voucher.getVoucherNumber()+"");
         TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
-
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
         ImageView img = (ImageView) dialogs.findViewById(R.id.img);
         compname = (TextView) dialogs.findViewById(R.id.compname);
         tel = (TextView) dialogs.findViewById(R.id.tel);
@@ -5309,7 +5309,7 @@ public class SalesInvoice extends Fragment {
             }
         });
 
-
+        Log.e("voucher3===",voucher.getVoucherNumber()+"");
         String voucherTyp = "";
         switch (voucher.getVoucherType()) {
             case 504:
@@ -5417,16 +5417,29 @@ public class SalesInvoice extends Fragment {
         dialogs.show();
 
 //        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
-        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+      // linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
-
+/*
         linearView.setDrawingCacheEnabled(true);
         linearView.buildDrawingCache();
         Bitmap bit = linearView.getDrawingCache();
-        return bit;
+        return bit;*/
+
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        PrintHelper photoPrinter = new PrintHelper(getActivity());
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        linearView.setDrawingCacheEnabled(true);
+        bitmap= linearView.getDrawingCache();
+        photoPrinter.printBitmap("pay.jpg", bitmap);
+        return bit;// creates bitmap and returns the same
+
+
+
         // creates bitmap and returns the same
     }
 
@@ -5814,284 +5827,285 @@ public class SalesInvoice extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     public void hiddenDialog() {
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.print);
-
-        final Button okButton = dialog.findViewById(R.id.print1);
-        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
-        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
-
-        TextView companyName = dialog.findViewById(R.id.company);
-        TextView phone = dialog.findViewById(R.id.phone);
-        TextView taxNo = dialog.findViewById(R.id.tax_no);
-        TextView date = dialog.findViewById(R.id.date);
-        TextView vouch_no = dialog.findViewById(R.id.voucher_no);
-        TextView vouchType = dialog.findViewById(R.id.voucher_type);
-        TextView payMethod = dialog.findViewById(R.id.payMethod);
-        TextView cust = dialog.findViewById(R.id.cust_);
-        TextView remark = dialog.findViewById(R.id.remark_);
-        TextView totalNoTax = dialog.findViewById(R.id.total_noTax);
-        TextView discount = dialog.findViewById(R.id.discount);
-        TextView tax = dialog.findViewById(R.id.tax);
-        TextView netSale = dialog.findViewById(R.id.net_sales_);
-
-        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-
-        companyName.setText(companyInfo.getCompanyName());
-        phone.setText(phone.getText().toString() + companyInfo.getcompanyTel());
-        taxNo.setText(taxNo.getText().toString() + companyInfo.getTaxNo());
-        date.setText(date.getText().toString() + voucher.getVoucherDate());
-        vouch_no.setText(vouch_no.getText().toString() + voucher.getVoucherNumber());
-        remark.setText(remark.getText().toString() + voucher.getRemark());
-        cust.setText(cust.getText().toString() + voucher.getCustName());
-        totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
-        discount.setText(discount.getText().toString() + totalDiscount);
-        tax.setText(tax.getText().toString() + voucher.getTax());
-        netSale.setText(netSale.getText().toString() + voucher.getNetSales());
-
-        String voucherTyp = "";
-        switch (voucher.getVoucherType()) {
-            case 504:
-                voucherTyp = "فاتورة بيع";
-                break;
-            case 506:
-                voucherTyp = "فاتورة مرتجعات";
-                break;
-            case 508:
-                voucherTyp = "طلب جديد";
-                break;
-        }
-        vouchType.setText(vouchType.getText().toString() + voucherTyp);
-        payMethod.setText(payMethod.getText().toString() + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
-
-        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f);
-        lp2.setMargins(2, 7, 0, 0);
-        lp3.setMargins(0, 7, 0, 0);
-
-        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
-
-            final TableRow headerRow = new TableRow(getActivity());
-
-            TextView headerView7 = new TextView(getActivity());
-            headerView7.setGravity(Gravity.CENTER);
-            headerView7.setText("المجموع");
-            headerView7.setLayoutParams(lp2);
-            headerView7.setTextSize(12);
-            headerRow.addView(headerView7);
-
-            TextView headerView6 = new TextView(getActivity());
-            headerView6.setGravity(Gravity.CENTER);
-            headerView6.setText("الخصم");
-            headerView6.setLayoutParams(lp2);
-            headerView6.setTextSize(12);
-            headerRow.addView(headerView6);
-
-            TextView headerView5 = new TextView(getActivity());
-            headerView5.setGravity(Gravity.CENTER);
-            headerView5.setText("المجاني");
-            headerView5.setLayoutParams(lp2);
-            headerView5.setTextSize(12);
-            headerRow.addView(headerView5);
-
-            TextView headerView4 = new TextView(getActivity());
-            headerView4.setGravity(Gravity.CENTER);
-            headerView4.setText("سعر الوحدة");
-            headerView4.setLayoutParams(lp2);
-            headerView4.setTextSize(12);
-            headerRow.addView(headerView4);
-
-            TextView headerView3 = new TextView(getActivity());
-            headerView3.setGravity(Gravity.CENTER);
-            headerView3.setText("الوزن");
-            headerView3.setLayoutParams(lp2);
-            headerView3.setTextSize(12);
-            headerRow.addView(headerView3);
-
-            TextView headerView2 = new TextView(getActivity());
-            headerView2.setGravity(Gravity.CENTER);
-            headerView2.setText("العدد");
-            headerView2.setLayoutParams(lp2);
-            headerView2.setTextSize(12);
-            headerRow.addView(headerView2);
-
-            TextView headerView1 = new TextView(getActivity());
-            headerView1.setGravity(Gravity.CENTER);
-            headerView1.setText("السلعة");
-            headerView1.setLayoutParams(lp3);
-            headerView1.setTextSize(12);
-            headerRow.addView(headerView1);
-
-            tabLayout.addView(headerRow);
-        } else {
-            final TableRow headerRow = new TableRow(getActivity());
-            TextView headerView1 = new TextView(getActivity());
-
-            TextView headerView6 = new TextView(getActivity());
-            headerView6.setGravity(Gravity.CENTER);
-            headerView6.setText("المجموع");
-            headerView6.setLayoutParams(lp2);
-            headerView6.setTextSize(12);
-            headerRow.addView(headerView6);
-
-            TextView headerView5 = new TextView(getActivity());
-            headerView5.setGravity(Gravity.CENTER);
-            headerView5.setText("الخصم");
-            headerView5.setLayoutParams(lp2);
-            headerView5.setTextSize(12);
-            headerRow.addView(headerView5);
-
-            TextView headerView4 = new TextView(getActivity());
-            headerView4.setGravity(Gravity.CENTER);
-            headerView4.setText("المجاني");
-            headerView4.setLayoutParams(lp2);
-            headerView4.setTextSize(12);
-            headerRow.addView(headerView4);
-
-            TextView headerView3 = new TextView(getActivity());
-            headerView3.setGravity(Gravity.CENTER);
-            headerView3.setText("سعر الوحدة");
-            headerView3.setLayoutParams(lp2);
-            headerView3.setTextSize(12);
-            headerRow.addView(headerView3);
-
-            TextView headerView2 = new TextView(getActivity());
-            headerView2.setGravity(Gravity.CENTER);
-            headerView2.setText("العدد");
-            headerView2.setLayoutParams(lp2);
-            headerView2.setTextSize(12);
-            headerRow.addView(headerView2);
-
-            headerView1.setGravity(Gravity.CENTER);
-            headerView1.setText("السلعة");
-            headerView1.setLayoutParams(lp3);
-            headerView1.setTextSize(12);
-            headerRow.addView(headerView1);
-
-            tabLayout.addView(headerRow);
-        }
-
-        for (int j = 0; j < itemsList.size(); j++) {
-            final TableRow row = new TableRow(getActivity());
-
-            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
-
-                for (int i = 0; i <= 7; i++) {
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                    lp.setMargins(0, 10, 0, 0);
-                    row.setLayoutParams(lp);
-
-                    TextView textView = new TextView(getActivity());
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setTextSize(10);
-
-                    switch (i) {
-                        case 6:
-                            textView.setText(itemsList.get(j).getItemName());
-                            textView.setLayoutParams(lp3);
-                            break;
-
-                        case 5:
-                            textView.setText(itemsList.get(j).getUnit());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 4:
-                            textView.setText("" + itemsList.get(j).getQty());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 3:
-                            textView.setText("" + itemsList.get(j).getPrice());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 2:
-                            textView.setText("" + itemsList.get(j).getBonus());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 1:
-                            textView.setText("" + itemsList.get(j).getDisc());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 0:
-                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
-                            amount = convertToEnglish(amount);
-                            textView.setText(amount);
-                            textView.setLayoutParams(lp2);
-                            break;
-                    }
-                    row.addView(textView);
-                }
-
-            } else {
-                for (int i = 0; i <= 6; i++) {
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                    lp.setMargins(0, 10, 0, 0);
-                    row.setLayoutParams(lp);
-
-                    TextView textView = new TextView(getActivity());
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setTextSize(10);
-
-                    switch (i) {
-                        case 5:
-                            textView.setText(itemsList.get(j).getItemName());
-                            textView.setLayoutParams(lp3);
-                            break;
-
-                        case 4:
-                            textView.setText(itemsList.get(j).getQty()+"");
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 3:
-                            textView.setText("" + itemsList.get(j).getPrice());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 2:
-                            textView.setText("" + itemsList.get(j).getBonus());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 1:
-                            textView.setText("" + itemsList.get(j).getDisc());
-                            textView.setLayoutParams(lp2);
-                            break;
-
-                        case 0:
-                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
-                            amount = convertToEnglish(amount);
-                            textView.setText(amount);
-                            textView.setLayoutParams(lp2);
-                            break;
-                    }
-                    row.addView(textView);
-                }
-            }
-            tabLayout.addView(row);
-
-        }
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PrintHelper photoPrinter = new PrintHelper(getActivity());
-                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-
-                linearLayout.setDrawingCacheEnabled(true);
-                Bitmap bitmap = linearLayout.getDrawingCache();
-                photoPrinter.printBitmap("invoice.jpg", bitmap);
-
-            }
-        });
-
-        dialog.show();
+        convertLayoutToImage(voucher);
+//        final Dialog dialog = new Dialog(getActivity());
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(true);
+//        dialog.setContentView(R.layout.print);
+//
+//        final Button okButton = dialog.findViewById(R.id.print1);
+//        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
+//        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
+//
+//        TextView companyName = dialog.findViewById(R.id.company);
+//        TextView phone = dialog.findViewById(R.id.phone);
+//        TextView taxNo = dialog.findViewById(R.id.tax_no);
+//        TextView date = dialog.findViewById(R.id.date);
+//        TextView vouch_no = dialog.findViewById(R.id.voucher_no);
+//        TextView vouchType = dialog.findViewById(R.id.voucher_type);
+//        TextView payMethod = dialog.findViewById(R.id.payMethod);
+//        TextView cust = dialog.findViewById(R.id.cust_);
+//        TextView remark = dialog.findViewById(R.id.remark_);
+//        TextView totalNoTax = dialog.findViewById(R.id.total_noTax);
+//        TextView discount = dialog.findViewById(R.id.discount);
+//        TextView tax = dialog.findViewById(R.id.tax);
+//        TextView netSale = dialog.findViewById(R.id.net_sales_);
+//
+//        CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
+//
+//        companyName.setText(companyInfo.getCompanyName());
+//        phone.setText(phone.getText().toString() + companyInfo.getcompanyTel());
+//        taxNo.setText(taxNo.getText().toString() + companyInfo.getTaxNo());
+//        date.setText(date.getText().toString() + voucher.getVoucherDate());
+//        vouch_no.setText(vouch_no.getText().toString() + voucher.getVoucherNumber());
+//        remark.setText(remark.getText().toString() + voucher.getRemark());
+//        cust.setText(cust.getText().toString() + voucher.getCustName());
+//        totalNoTax.setText(totalNoTax.getText().toString() + voucher.getSubTotal());
+//        discount.setText(discount.getText().toString() + totalDiscount);
+//        tax.setText(tax.getText().toString() + voucher.getTax());
+//        netSale.setText(netSale.getText().toString() + voucher.getNetSales());
+//
+//        String voucherTyp = "";
+//        switch (voucher.getVoucherType()) {
+//            case 504:
+//                voucherTyp = "فاتورة بيع";
+//                break;
+//            case 506:
+//                voucherTyp = "فاتورة مرتجعات";
+//                break;
+//            case 508:
+//                voucherTyp = "طلب جديد";
+//                break;
+//        }
+//        vouchType.setText(vouchType.getText().toString() + voucherTyp);
+//        payMethod.setText(payMethod.getText().toString() + (voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+//
+//        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2.0f);
+//        lp2.setMargins(2, 7, 0, 0);
+//        lp3.setMargins(0, 7, 0, 0);
+//
+//        if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+//
+//            final TableRow headerRow = new TableRow(getActivity());
+//
+//            TextView headerView7 = new TextView(getActivity());
+//            headerView7.setGravity(Gravity.CENTER);
+//            headerView7.setText("المجموع");
+//            headerView7.setLayoutParams(lp2);
+//            headerView7.setTextSize(12);
+//            headerRow.addView(headerView7);
+//
+//            TextView headerView6 = new TextView(getActivity());
+//            headerView6.setGravity(Gravity.CENTER);
+//            headerView6.setText("الخصم");
+//            headerView6.setLayoutParams(lp2);
+//            headerView6.setTextSize(12);
+//            headerRow.addView(headerView6);
+//
+//            TextView headerView5 = new TextView(getActivity());
+//            headerView5.setGravity(Gravity.CENTER);
+//            headerView5.setText("المجاني");
+//            headerView5.setLayoutParams(lp2);
+//            headerView5.setTextSize(12);
+//            headerRow.addView(headerView5);
+//
+//            TextView headerView4 = new TextView(getActivity());
+//            headerView4.setGravity(Gravity.CENTER);
+//            headerView4.setText("سعر الوحدة");
+//            headerView4.setLayoutParams(lp2);
+//            headerView4.setTextSize(12);
+//            headerRow.addView(headerView4);
+//
+//            TextView headerView3 = new TextView(getActivity());
+//            headerView3.setGravity(Gravity.CENTER);
+//            headerView3.setText("الوزن");
+//            headerView3.setLayoutParams(lp2);
+//            headerView3.setTextSize(12);
+//            headerRow.addView(headerView3);
+//
+//            TextView headerView2 = new TextView(getActivity());
+//            headerView2.setGravity(Gravity.CENTER);
+//            headerView2.setText("العدد");
+//            headerView2.setLayoutParams(lp2);
+//            headerView2.setTextSize(12);
+//            headerRow.addView(headerView2);
+//
+//            TextView headerView1 = new TextView(getActivity());
+//            headerView1.setGravity(Gravity.CENTER);
+//            headerView1.setText("السلعة");
+//            headerView1.setLayoutParams(lp3);
+//            headerView1.setTextSize(12);
+//            headerRow.addView(headerView1);
+//
+//            tabLayout.addView(headerRow);
+//        } else {
+//            final TableRow headerRow = new TableRow(getActivity());
+//            TextView headerView1 = new TextView(getActivity());
+//
+//            TextView headerView6 = new TextView(getActivity());
+//            headerView6.setGravity(Gravity.CENTER);
+//            headerView6.setText("المجموع");
+//            headerView6.setLayoutParams(lp2);
+//            headerView6.setTextSize(12);
+//            headerRow.addView(headerView6);
+//
+//            TextView headerView5 = new TextView(getActivity());
+//            headerView5.setGravity(Gravity.CENTER);
+//            headerView5.setText("الخصم");
+//            headerView5.setLayoutParams(lp2);
+//            headerView5.setTextSize(12);
+//            headerRow.addView(headerView5);
+//
+//            TextView headerView4 = new TextView(getActivity());
+//            headerView4.setGravity(Gravity.CENTER);
+//            headerView4.setText("المجاني");
+//            headerView4.setLayoutParams(lp2);
+//            headerView4.setTextSize(12);
+//            headerRow.addView(headerView4);
+//
+//            TextView headerView3 = new TextView(getActivity());
+//            headerView3.setGravity(Gravity.CENTER);
+//            headerView3.setText("سعر الوحدة");
+//            headerView3.setLayoutParams(lp2);
+//            headerView3.setTextSize(12);
+//            headerRow.addView(headerView3);
+//
+//            TextView headerView2 = new TextView(getActivity());
+//            headerView2.setGravity(Gravity.CENTER);
+//            headerView2.setText("العدد");
+//            headerView2.setLayoutParams(lp2);
+//            headerView2.setTextSize(12);
+//            headerRow.addView(headerView2);
+//
+//            headerView1.setGravity(Gravity.CENTER);
+//            headerView1.setText("السلعة");
+//            headerView1.setLayoutParams(lp3);
+//            headerView1.setTextSize(12);
+//            headerRow.addView(headerView1);
+//
+//            tabLayout.addView(headerRow);
+//        }
+//
+//        for (int j = 0; j < itemsList.size(); j++) {
+//            final TableRow row = new TableRow(getActivity());
+//
+//            if (mDbHandler.getAllSettings().get(0).getUseWeightCase() == 1) {
+//
+//                for (int i = 0; i <= 7; i++) {
+//                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//                    lp.setMargins(0, 10, 0, 0);
+//                    row.setLayoutParams(lp);
+//
+//                    TextView textView = new TextView(getActivity());
+//                    textView.setGravity(Gravity.CENTER);
+//                    textView.setTextSize(10);
+//
+//                    switch (i) {
+//                        case 6:
+//                            textView.setText(itemsList.get(j).getItemName());
+//                            textView.setLayoutParams(lp3);
+//                            break;
+//
+//                        case 5:
+//                            textView.setText(itemsList.get(j).getUnit());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 4:
+//                            textView.setText("" + itemsList.get(j).getQty());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 3:
+//                            textView.setText("" + itemsList.get(j).getPrice());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 2:
+//                            textView.setText("" + itemsList.get(j).getBonus());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 1:
+//                            textView.setText("" + itemsList.get(j).getDisc());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 0:
+//                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+//                            amount = convertToEnglish(amount);
+//                            textView.setText(amount);
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//                    }
+//                    row.addView(textView);
+//                }
+//
+//            } else {
+//                for (int i = 0; i <= 6; i++) {
+//                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//                    lp.setMargins(0, 10, 0, 0);
+//                    row.setLayoutParams(lp);
+//
+//                    TextView textView = new TextView(getActivity());
+//                    textView.setGravity(Gravity.CENTER);
+//                    textView.setTextSize(10);
+//
+//                    switch (i) {
+//                        case 5:
+//                            textView.setText(itemsList.get(j).getItemName());
+//                            textView.setLayoutParams(lp3);
+//                            break;
+//
+//                        case 4:
+//                            textView.setText(itemsList.get(j).getQty()+"");
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 3:
+//                            textView.setText("" + itemsList.get(j).getPrice());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 2:
+//                            textView.setText("" + itemsList.get(j).getBonus());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 1:
+//                            textView.setText("" + itemsList.get(j).getDisc());
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//
+//                        case 0:
+//                            String amount = "" + (itemsList.get(j).getQty() * itemsList.get(j).getPrice() - itemsList.get(j).getDisc());
+//                            amount = convertToEnglish(amount);
+//                            textView.setText(amount);
+//                            textView.setLayoutParams(lp2);
+//                            break;
+//                    }
+//                    row.addView(textView);
+//                }
+//            }
+//            tabLayout.addView(row);
+//
+//        }
+//
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                PrintHelper photoPrinter = new PrintHelper(getActivity());
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//
+//                linearLayout.setDrawingCacheEnabled(true);
+//                Bitmap bitmap = linearLayout.getDrawingCache();
+//                photoPrinter.printBitmap("invoice.jpg", bitmap);
+//
+//            }
+//        });
+//
+//        dialog.show();
 
     }
 
