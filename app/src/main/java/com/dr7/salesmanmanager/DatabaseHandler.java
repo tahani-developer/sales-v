@@ -25,6 +25,7 @@ import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.CustomerPrice;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemSwitch;
@@ -73,76 +74,75 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 159;
+    private static final int DATABASE_VERSION = 160;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
     static SQLiteDatabase db;
     // tables from JSON
     //----------------------------------------------------------------------
-    private static final String  GroupOffer_Item  = "GroupOffer_Item";
+    private static final String GroupOffer_Item = "GroupOffer_Item";
 
-    private static final String  Id_serial   = "Id_serial";
-    private static final String  ItemNo_Offer   = "ItemNo_Offer";
-    private static final String  ItemName_Offer   = "ItemName_Offer";
-    private static final String  From_Date_Offer   = "From_Date_Offer";
-    private static final String  To_Date_Offer   = "To_Date_Offer";
-    private static final String  Discount_Offer   = "Discount_Offer";
-    private static final String  Discount_Type_Offer   = "Discount_Type_Offer";
-    private static final String  GroupId_Offer   = "GroupId_Offer";
-    private static final String  Qty_item   = "Qty_item";
-
-
-
-    //----------------------------------------------------------------------
-    //----------------------------------------------------------------------
-    private static final String  VoucherSerialize  = "VoucherSerialize";
-
-    private static final String  VoucherSales_no   = "VoucherSales_no";
-    private static final String  VoucherReturn_no   = "VoucherReturn_no";
-    private static final String  VoucherNewOrder_no   = "VoucherNewOrder_no";
-
-
-    //----------------------------------------------------------------------
-    private static final String  INVENTORY_SHELF  = "INVENTORY_SHELF";
-
-    private static final String  TRANS_NO         = "TRANS_NO";
-    private static final String  ITEM_NO          = "ITEM_NO";
-    private static final String  SERIAL_NO        = "SERIAL_NO";
-    private static final String  QTY_ITEM          = "QTY_ITEM";
-    private static final String  TRANS_DATE        ="TRANS_DATE";
-    private static final String  CUSTOMER_NO      ="CUSTOMER_NO";
-    private static final String  SALESMAN_NUMBER   ="SALESMAN_NUMBER";
-    private static final String  VOUCHER_NUMBER_INVENTORY   ="VOUCHER_NUMBER_INVENTORY";
-    private static final String  IsPosted          = "IsPosted";
-
-    //----------------------------------------------------------------------
-    private static final String  price_offer_list_master  = "price_offer_list_master";
-
-    private static final String  PO_LIST_NO       = "PO_LIST_NO";
-    private static final String  PO_LIST_NAME   = "PO_LIST_NAME";
-    private static final String  PO_LIST_TYPE    = "PO_LIST_TYPE";
-    private static final String  FROM_DATE_master    = "FROM_DATE_master";
-    private static final String  TO_DATE_master="TO_DATE_master";
+    private static final String Id_serial = "Id_serial";
+    private static final String ItemNo_Offer = "ItemNo_Offer";
+    private static final String ItemName_Offer = "ItemName_Offer";
+    private static final String From_Date_Offer = "From_Date_Offer";
+    private static final String To_Date_Offer = "To_Date_Offer";
+    private static final String Discount_Offer = "Discount_Offer";
+    private static final String Discount_Type_Offer = "Discount_Type_Offer";
+    private static final String GroupId_Offer = "GroupId_Offer";
+    private static final String Qty_item = "Qty_item";
 
 
     //----------------------------------------------------------------------
     //----------------------------------------------------------------------
-    private static final String  SerialItemMaster  = "SerialItemMaster";
+    private static final String VoucherSerialize = "VoucherSerialize";
 
-    private static final String  StoreNo       = "StoreNo";
-    private static final String  ITEM_OCODE_M   = "ITEM_OCODE_M";
-    private static final String  SerialCode    = "SerialCode";
-    private static final String  Qty_serial    = "Qty_serial";
+    private static final String VoucherSales_no = "VoucherSales_no";
+    private static final String VoucherReturn_no = "VoucherReturn_no";
+    private static final String VoucherNewOrder_no = "VoucherNewOrder_no";
+
+
+    //----------------------------------------------------------------------
+    private static final String INVENTORY_SHELF = "INVENTORY_SHELF";
+
+    private static final String TRANS_NO = "TRANS_NO";
+    private static final String ITEM_NO = "ITEM_NO";
+    private static final String SERIAL_NO = "SERIAL_NO";
+    private static final String QTY_ITEM = "QTY_ITEM";
+    private static final String TRANS_DATE = "TRANS_DATE";
+    private static final String CUSTOMER_NO = "CUSTOMER_NO";
+    private static final String SALESMAN_NUMBER = "SALESMAN_NUMBER";
+    private static final String VOUCHER_NUMBER_INVENTORY = "VOUCHER_NUMBER_INVENTORY";
+    private static final String IsPosted = "IsPosted";
+
+    //----------------------------------------------------------------------
+    private static final String price_offer_list_master = "price_offer_list_master";
+
+    private static final String PO_LIST_NO = "PO_LIST_NO";
+    private static final String PO_LIST_NAME = "PO_LIST_NAME";
+    private static final String PO_LIST_TYPE = "PO_LIST_TYPE";
+    private static final String FROM_DATE_master = "FROM_DATE_master";
+    private static final String TO_DATE_master = "TO_DATE_master";
 
 
     //----------------------------------------------------------------------
     //----------------------------------------------------------------------
-    private static final String  Item_Switch  = "Item_Switch";
+    private static final String SerialItemMaster = "SerialItemMaster";
 
-    private static final String  ITEM_NAMEA   = "ITEM_NAMEA";
-    private static final String  ITEM_OCODE   = "ITEM_OCODE";
-    private static final String  ITEM_NCODE   = "ITEM_NCODE";
+    private static final String StoreNo = "StoreNo";
+    private static final String ITEM_OCODE_M = "ITEM_OCODE_M";
+    private static final String SerialCode = "SerialCode";
+    private static final String Qty_serial = "Qty_serial";
+
+
+    //----------------------------------------------------------------------
+    //----------------------------------------------------------------------
+    private static final String Item_Switch = "Item_Switch";
+
+    private static final String ITEM_NAMEA = "ITEM_NAMEA";
+    private static final String ITEM_OCODE = "ITEM_OCODE";
+    private static final String ITEM_NCODE = "ITEM_NCODE";
 
     //----------------------------------------------------------------------
     private static final String  SALESMAN_LOGIN_LOGHistory  = "SALESMAN_LOGIN_LOGHistory";
@@ -359,11 +359,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Price = "Price";
     private static final String DISCOUNT_CUSTOMER = "DISCOUNT_CUSTOMER";
     private static final String ItemNo_ = "ItemNo_";
-    private static final String Other_Discount   = "Other_Discount";
-    private static final String FromDate         = "FromDate";
-    private static final String ToDate          = "ToDate";
-    private static final String ListNo          = "ListNo";
-    private static final String ListType        = "ListType";
+    private static final String Other_Discount = "Other_Discount";
+    private static final String FromDate = "FromDate";
+    private static final String ToDate = "ToDate";
+    private static final String ListNo = "ListNo";
+    private static final String ListType = "ListType";
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -377,11 +377,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Price_ = "Price_";
     private static final String DISCOUNT_CUSTOMER_ = "DISCOUNT_CUSTOMER_";
     private static final String ItemNo_N = "ItemNo_N";
-    private static final String Other_Discount_   = "Other_Discount_";
-    private static final String FromDate_         = "FromDate_";
-    private static final String ToDate_          = "ToDate_";
-    private static final String ListNo_          = "ListNo_";
-    private static final String ListType_        = "ListType_";
+    private static final String Other_Discount_ = "Other_Discount_";
+    private static final String FromDate_ = "FromDate_";
+    private static final String ToDate_ = "ToDate_";
+    private static final String ListNo_ = "ListNo_";
+    private static final String ListType_ = "ListType_";
 
     // tables from ORIGINAL
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -421,37 +421,37 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String WORK_ONLINE = "WORK_ONLINE";
     private static final String PAYMETHOD_CHECK = "PAYMETHOD_CHECK";
     private static final String BONUS_NOT_ALLOWED = "BONUS_NOT_ALLOWED";
-    private static final String NO_OFFERS_FOR_CREDIT_INVOICE="NO_OFFERS_FOR_CREDIT_INVOICE";
-    private static final String AMOUNT_OF_MAX_DISCOUNT="AMOUNT_OF_MAX_DISCOUNT";
-    private static final String Customer_Authorized="Customer_Authorized";
-    private static final String Password_Data="Password_Data";
-    private static final String Arabic_Language="Arabic_Language";
-    private static final String HideQty="HideQty";
-    private static final String LockCashReport="LockCashReport";
-    private static final String salesManName="salesManName";
-    private static final String PreventOrder="PreventOrder";
-    private static final String RequiredNote="RequiredNote";
-    private static final String PreventTotalDiscount="PreventTotalDiscount";
-    private static final String AutomaticCheque="AutomaticCheque";
-    private static final String Tafqit="Tafqit";
-    private static final String  PreventChangPayMeth="PreventChangPayMeth";
-    private static final String ShowCustomerList="ShowCustomerList";
-    private static final String NoReturnInvoice="NoReturnInvoice";
-    private static final String WORK_WITH_SERIAL="WORK_WITH_SERIAL";
-    private static final String SHOW_IMAGE_ITEM="SHOW_IMAGE_ITEM";
-    private static final String APPROVE_ADMIN="APPROVE_ADMIN";
-    private static final String SAVE_ONLY="SAVE_ONLY";
-    private static final String SHOW_QUANTITY_SOLD="SHOW_QUANTITY_SOLD";
-    private static final String READ_OFFER_FROM_ADMIN="READ_OFFER_FROM_ADMIN";
-    private static final String IP_PORT="IP_PORT";
-    private static final String CheckQtyServer="CheckQtyServer";
-    private static final String DontShowTaxOnPrinter="DontShowTaxOnPrinter";
-    private static final String CONO="CONO";
-    private static final String ContinusReading="ContinusReading";
-    private static final String ActiveTotalDisc="ActiveTotalDisc";
-    private static final String ValueTotalDisc="ValueTotalDisc";
-    private static final String STORE_NO="STORE_NO";
-    private static final String Item_Unit="Item_Unit";
+    private static final String NO_OFFERS_FOR_CREDIT_INVOICE = "NO_OFFERS_FOR_CREDIT_INVOICE";
+    private static final String AMOUNT_OF_MAX_DISCOUNT = "AMOUNT_OF_MAX_DISCOUNT";
+    private static final String Customer_Authorized = "Customer_Authorized";
+    private static final String Password_Data = "Password_Data";
+    private static final String Arabic_Language = "Arabic_Language";
+    private static final String HideQty = "HideQty";
+    private static final String LockCashReport = "LockCashReport";
+    private static final String salesManName = "salesManName";
+    private static final String PreventOrder = "PreventOrder";
+    private static final String RequiredNote = "RequiredNote";
+    private static final String PreventTotalDiscount = "PreventTotalDiscount";
+    private static final String AutomaticCheque = "AutomaticCheque";
+    private static final String Tafqit = "Tafqit";
+    private static final String PreventChangPayMeth = "PreventChangPayMeth";
+    private static final String ShowCustomerList = "ShowCustomerList";
+    private static final String NoReturnInvoice = "NoReturnInvoice";
+    private static final String WORK_WITH_SERIAL = "WORK_WITH_SERIAL";
+    private static final String SHOW_IMAGE_ITEM = "SHOW_IMAGE_ITEM";
+    private static final String APPROVE_ADMIN = "APPROVE_ADMIN";
+    private static final String SAVE_ONLY = "SAVE_ONLY";
+    private static final String SHOW_QUANTITY_SOLD = "SHOW_QUANTITY_SOLD";
+    private static final String READ_OFFER_FROM_ADMIN = "READ_OFFER_FROM_ADMIN";
+    private static final String IP_PORT = "IP_PORT";
+    private static final String CheckQtyServer = "CheckQtyServer";
+    private static final String DontShowTaxOnPrinter = "DontShowTaxOnPrinter";
+    private static final String CONO = "CONO";
+    private static final String ContinusReading = "ContinusReading";
+    private static final String ActiveTotalDisc = "ActiveTotalDisc";
+    private static final String ValueTotalDisc = "ValueTotalDisc";
+    private static final String STORE_NO = "STORE_NO";
+    private static final String Item_Unit = "Item_Unit";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -462,8 +462,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String NOTE = "NOTE";
 
     private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
-    private static final String LATITUDE_COMPANY  = "LATITUDE_COMPANY";
-    private static final String NOTEPOSITION  = "NOTEPOSITION";
+    private static final String LATITUDE_COMPANY = "LATITUDE_COMPANY";
+    private static final String NOTEPOSITION = "NOTEPOSITION";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
 
@@ -484,7 +484,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CUST_NAME = "CUST_NAME";
     private static final String CUST_NUMBER = "CUST_NUMBER";
     private static final String VOUCHER_YEAR = "VOUCHER_YEAR";
-    private static final String VOUCHER_time="VOUCHER_time";
+    private static final String VOUCHER_time = "VOUCHER_time";
 
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -508,12 +508,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SERIAL_CODE = "SERIAL_CODE";
     private static final String VOUCH_DATE = "VOUCH_DATE";
 
-    private static final String WHICH_UNIT    ="WHICH_UNIT";
-    private static final String WHICH_UNIT_STR="WHICH_UNIT_STR";
-    private static final String WHICHU_QTY    ="WHICHU_QTY";
-    private static final String ENTER_QTY     ="ENTER_QTY";
-    private static final String ENTER_PRICE   ="ENTER_PRICE";
-    private static final String UNIT_BARCODE  ="UNIT_BARCODE";
+    private static final String WHICH_UNIT = "WHICH_UNIT";
+    private static final String WHICH_UNIT_STR = "WHICH_UNIT_STR";
+    private static final String WHICHU_QTY = "WHICHU_QTY";
+    private static final String ENTER_QTY = "ENTER_QTY";
+    private static final String ENTER_PRICE = "ENTER_PRICE";
+    private static final String UNIT_BARCODE = "UNIT_BARCODE";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String PAYMENTS = "PAYMENTS";
@@ -576,9 +576,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String SALESMAN7 = "SALESMAN";
     private static final String SALESMAN_NO7 = "SALESMAN_NO";
     private static final String IS_POSTED7 = "IS_POSTED";
-    private static final String ADRESS_CUSTOMER  = "ADRESS_CUSTOMER";
-    private static final String TELEPHONE        = "TELEPHONE";
-    private static final String CONTACT_PERSON   = "CONTACT_PERSON";
+    private static final String ADRESS_CUSTOMER = "ADRESS_CUSTOMER";
+    private static final String TELEPHONE = "TELEPHONE";
+    private static final String CONTACT_PERSON = "CONTACT_PERSON";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String VS_PROMOTION = "VS_PROMOTION";
@@ -607,6 +607,18 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String UserNo_LogIn = "UserNo_LogIn";
 
+    //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+    ////B
+    private static final String Flag_Settings = "Flag_Settings";
+    private static final String Data_Type = "Data_Type";
+    private static final String Export_Stock = "Export_Stock";
+    private static final String Max_Voucher = "Max_Voucher";
+    private static final String Make_Order = "Make_Order";
+    private static final String Admin_Password = "Admin_Password";
+    private static final String Total_Balance = "Total_Balance";
+    private static final String Voucher_Return = "Voucher_Return";
+
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -616,15 +628,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void onCreate(SQLiteDatabase db) {
 
 
-        String CREATE_Item_Switch_TABLE= "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
+        String CREATE_Item_Switch_TABLE = "CREATE TABLE IF NOT EXISTS " + Item_Switch + "("
                 + ITEM_NAMEA + " TEXT,"
                 + ITEM_OCODE + " TEXT,"
                 + ITEM_NCODE + " TEXT"
 
-               + ")";
+                + ")";
         db.execSQL(CREATE_Item_Switch_TABLE);
         //***************************************************************************************
-        String CREATE_SALESMAN_LOGIN_TABLE= "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
+        String CREATE_SALESMAN_LOGIN_TABLE = "CREATE TABLE IF NOT EXISTS " + SALESMAN_LOGIN_LOGHistory + "("
                 + DATE_LOGIN + " TEXT,"
                 + TIME_LOGIN + " TEXT,"
                 + TIME_LOGOUT + " TEXT,"
@@ -632,14 +644,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + LATITUDE2 + " REAL,"
                 + SALESMAN_NO + " TEXT,"
                 + IS_POSTED_LOGIN + " INTEGER,"
-                +"  PRIMARY KEY (DATE_LOGIN)"+
+                + "  PRIMARY KEY (DATE_LOGIN)" +
 
                 ")";
         db.execSQL(CREATE_SALESMAN_LOGIN_TABLE);
         //-------------------------------------------------------------------------
 
 
-        String CREATE_SERIAL_ITEMS_TABLE= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
+        String CREATE_SERIAL_ITEMS_TABLE = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE + "("
                 + KEY_SERIAL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SERIAL_CODE_NO + " TEXT,"
                 + COUNTER_SERIAL + " INTEGER,"
@@ -650,17 +662,17 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + DATE_VOUCHER + " TEXT,"
                 + STORE_NO_SALESMAN + " INTEGER,"
                 + IS_POSTED_SERIAL + " INTEGER,"
-                + IS_BONUS_SERIAL+" INTEGER,"
-                + Price_ITEM+" real, "
-                +Price_ITEM_Sales+" real,"
-                +IS_RETURNED+" INTEGER "+
+                + IS_BONUS_SERIAL + " INTEGER,"
+                + Price_ITEM + " real, "
+                + Price_ITEM_Sales + " real,"
+                + IS_RETURNED + " INTEGER " +
 
 
                 ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE);
         //-------------------------------------------------------------------------
 
-        String CREATE_SERIAL_ITEMS_TABLE_backup= "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
+        String CREATE_SERIAL_ITEMS_TABLE_backup = "CREATE TABLE IF NOT EXISTS " + SERIAL_ITEMS_TABLE_backup + "("
                 + KEY_SERIAL2 + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SERIAL_CODE_NO2 + " TEXT,"
                 + COUNTER_SERIAL2 + " INTEGER,"
@@ -737,20 +749,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(CREATE_TABLE_CUSTOMER_LOCATION);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
-        String CREATE_TABLE_ACCOUNT_REPORT= "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
+        String CREATE_TABLE_ACCOUNT_REPORT = "CREATE TABLE  IF NOT EXISTS " + ACCOUNT_REPORT + "("
                 + DATE + " TEXT,"
                 + TRANSFER_NAME + " TEXT,"
                 + DEBTOR + " TEXT,"
                 + CREDITOR + " TEXT,"
                 + TODATE + " TEXT,"
                 + CUST_BALANCE + " TEXT,"
-                 +CUST_NUMBER_REPORT + " TEXT"+
+                + CUST_NUMBER_REPORT + " TEXT" +
                 ")";
         db.execSQL(CREATE_TABLE_ACCOUNT_REPORT);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
 
-        String CREATE_TABLE_ITEMS_QTY_OFFER= "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
+        String CREATE_TABLE_ITEMS_QTY_OFFER = "CREATE TABLE IF NOT EXISTS " + ITEMS_QTY_OFFER + "("
                 + ITEMNAME + " TEXT,"
                 + ITEMNO + " INTEGER,"
                 + AMOUNT_QTY + " INTEGER,"
@@ -763,7 +775,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE IF NOT EXISTS " + QTY_OFFERS + "("
                 + QTY + " REAL,"
                 + DISCOUNT_VALUE + " REAL,"
-                + PAYMENT_TYPE + " INTEGER"+ ")";
+                + PAYMENT_TYPE + " INTEGER" + ")";
 
         db.execSQL(CREATE_TABLE_QTY_OFFERS);
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -781,11 +793,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CUST_LAT + " TEXT not null default '',"
                 + CUST_LONG + " TEXT not null default '',"
                 + MAX_DISCOUNT + " REAL,"
-                +ACCPRC+ " TEXT,"
-                +HIDE_VAL+ " INTEGER,"
+                + ACCPRC + " TEXT,"
+                + HIDE_VAL + " INTEGER,"
 
-                +IS_POST+" INTEGER not null default  0,"
-                +CUS_ID_Text+ " TEXT"
+                + IS_POST + " INTEGER not null default  0,"
+                + CUS_ID_Text + " TEXT"
 
 
 
@@ -803,15 +815,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ConvRate + " INTEGER,"
                 + PriceUnit + " TEXT,"
                 + ItemBarcode + " TEXT ,"
-                +PRICECLASS_1+ " TEXT ,"
-                + PRICECLASS_2+ " TEXT ,"
-                + PRICECLASS_3+ " TEXT "
+                + PRICECLASS_1 + " TEXT ,"
+                + PRICECLASS_2 + " TEXT ,"
+                + PRICECLASS_3 + " TEXT "
 
                 + ")";
         db.execSQL(CREATE_TABLE_Item_Unit_Details);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
-        String CREATE_TABLE_VISIT_RATE= "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
+        String CREATE_TABLE_VISIT_RATE = "CREATE TABLE  IF NOT EXISTS " + VISIT_RATE + "("
                 + VISIT_PERPOS + " INTEGER,"
                 + CUSTOMER_REGARDS + " INTEGER,"
                 + CHECK_STORE + " INTEGER,"
@@ -838,7 +850,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ITEM_F_D + " REAL,"
                 + KIND_ITEM + " TEXT,"
                 + ITEM_HAS_SERIAL + " INTEGER,"
-                 +ITEM_PHOTO + " TEXT"
+                + ITEM_PHOTO + " TEXT"
 
                 + ")";
 
@@ -847,12 +859,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
         String CREATE_ACTIVE_KEY = "CREATE TABLE IF NOT EXISTS " + ACTIVE_KEY + "("
 
-                + KEY_VALUE + " INTEGER"+ ")";
+                + KEY_VALUE + " INTEGER" + ")";
         db.execSQL(CREATE_ACTIVE_KEY);
         //-----------------------------------------------------
 
         String CREATE_PRINTER_SETTING_TABLE = "CREATE TABLE IF NOT EXISTS " + PRINTER_SETTING_TABLE + "("
-                + PRINTER_SETTING +" INTEGER ,"
+                + PRINTER_SETTING + " INTEGER ,"
                 + PRINTER_SHAPE + " INTEGER,"
                 + SHORT_INVOICE + " INTEGER,"
                 + DONT_PRINT_HEADER + " INTEGER"
@@ -888,7 +900,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + SalesManName4 + " TEXT,"
                 + IsSuspended4 + " INTEGER,"
 
-                +IP_ADDRESS_DEVICE+ " TEXT"
+                + IP_ADDRESS_DEVICE + " TEXT"
 
                 + ")";
         db.execSQL(CREATE_TABLE_Sales_Team);
@@ -941,7 +953,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CustomerNumber_ + " INTEGER,"
                 + Price_ + " INTEGER,"
                 + DISCOUNT_CUSTOMER_ + " real,"
-                + ItemNo_N+ " TEXT,"
+                + ItemNo_N + " TEXT,"
                 + Other_Discount_ + " TEXT,"
                 + FromDate_ + " TEXT,"
                 + ToDate_ + " TEXT,"
@@ -970,7 +982,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CHECK_OUT_TIME + " TEXT,"
                 + STATUS + " INTEGER,"
                 + IS_POSTED2 + " INTEGER,"
-                + REAL_LONGTUD+ " TEXT,"
+                + REAL_LONGTUD + " TEXT,"
                 + REAL_LATITUDE + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_CONTACTS);
 
@@ -1028,7 +1040,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 + ValueTotalDisc + " REAL, "
                 + STORE_NO + " INTEGER, "
-                +Item_Unit+" INTEGER "
+                + Item_Unit + " INTEGER "
 
 
 
@@ -1045,9 +1057,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + TAX_NO + " INTEGER,"
                 + LOGO + " BLOB,"
                 + NOTE + " TEXT,"
-                + LONGTUDE_COMPANY +" REAL,"
-                + LATITUDE_COMPANY +" REAL,"
-                + NOTEPOSITION +" TEXT "
+                + LONGTUDE_COMPANY + " REAL,"
+                + LATITUDE_COMPANY + " REAL,"
+                + NOTEPOSITION + " TEXT "
                 + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
@@ -1055,34 +1067,31 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
 
 
+            String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
+                    + COMPANY_NUMBER + " INTEGER,"
+                    + VOUCHER_NUMBER + " INTEGER,"
+                    + VOUCHER_TYPE + " INTEGER,"
+                    + VOUCHER_DATE + " TEXT,"
+                    + SALES_MAN_NUMBER + " INTEGER,"
+                    + VOUCHER_DISCOUNT + " INTEGER,"
+                    + VOUCHER_DISCOUNT_PERCENT + " TEXT,"
+                    + REMARK + " TEXT,"
+                    + PAY_METHOD + " INTEGER,"
+                    + IS_POSTED + " INTEGER,"
+                    + TOTAL_DISC + " INTEGER,"
+                    + SUB_TOTAL + " INTEGER,"
+                    + TAX + " INTEGER,"
+                    + NET_SALES + " INTEGER,"
+                    + CUST_NAME + " TEXT,"
+                    + CUST_NUMBER + " TEXT,"
+                    + VOUCHER_YEAR + " INTEGER,"
+                    + VOUCHER_time + " TEXT "
 
-        String CREATE_TABLE_SALES_VOUCHER_MASTER = "CREATE TABLE  IF NOT EXISTS " + SALES_VOUCHER_MASTER + "("
-                + COMPANY_NUMBER + " INTEGER,"
-                + VOUCHER_NUMBER + " INTEGER,"
-                + VOUCHER_TYPE + " INTEGER,"
-                + VOUCHER_DATE + " TEXT,"
-                + SALES_MAN_NUMBER + " INTEGER,"
-                + VOUCHER_DISCOUNT + " INTEGER,"
-                + VOUCHER_DISCOUNT_PERCENT + " TEXT,"
-                + REMARK + " TEXT,"
-                + PAY_METHOD + " INTEGER,"
-                + IS_POSTED + " INTEGER,"
-                + TOTAL_DISC + " INTEGER,"
-                + SUB_TOTAL + " INTEGER,"
-                + TAX + " INTEGER,"
-                + NET_SALES + " INTEGER,"
-                + CUST_NAME + " TEXT,"
-                + CUST_NUMBER + " TEXT,"
-                + VOUCHER_YEAR + " INTEGER,"
-                + VOUCHER_time + " TEXT "
 
-
-                + ")";
-        db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
-        }
-        catch (Exception e)
-        {
-            Log.e("databaseHandler","CREATE_TABLE_SALES_VOUCHER_MASTER");
+                    + ")";
+            db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
+        } catch (Exception e) {
+            Log.e("databaseHandler", "CREATE_TABLE_SALES_VOUCHER_MASTER");
         }
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1104,10 +1113,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + COMPANY_NUMBER2 + " INTEGER,"
                 + ITEM_YEAR + " TEXT,"
                 + IS_POSTED1 + " INTEGER,"
-                + ITEM_DESCRIPTION+ " TEXT,"
-                + SERIAL_CODE+ " TEXT,"
+                + ITEM_DESCRIPTION + " TEXT,"
+                + SERIAL_CODE + " TEXT,"
 
-                + VOUCH_DATE+ " TEXT, "
+                + VOUCH_DATE + " TEXT, "
                 + WHICH_UNIT + " TEXT, "
                 + WHICH_UNIT_STR + " TEXT, "
                 + WHICHU_QTY + " TEXT, "
@@ -1116,8 +1125,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + UNIT_BARCODE + " TEXT "
 
 
-
-        + ")";
+                + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1134,7 +1142,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + PAY_METHOD3 + " INTEGER,"
                 + CUSTOMER_NAME + " TEXT,"
                 + PAY_YEAR + " INTEGER ,"
-                +CUSTOMER_NUMBER_STR+ " TEXT "
+                + CUSTOMER_NUMBER_STR + " TEXT "
 
                 + ")";
         db.execSQL(CREATE_TABLE_PAYMENTS);
@@ -1174,7 +1182,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + UNIT_QTY6 + " INTEGER,"
                 + VOUCHER_DATE5 + " TEXT,"
                 + CURRENT_QTY + " real,"
-                +isPostedDetails+ " INTEGER"
+                + isPostedDetails + " INTEGER"
                 + ")";
         db.execSQL(CREATE_TABLE_REQUEST_DETAILS);
 
@@ -1225,6 +1233,19 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + CUSTOMR_NO + " TEXT,"
                 + CUSUSTOMR_NAME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_STATIONS);
+
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+        //////B
+        String CREATE_TABLE_FlAG_SETTINGS = "CREATE TABLE IF NOT EXISTS " + Flag_Settings + "("
+                + Data_Type + " TEXT,"
+                + Export_Stock + " INTEGER,"
+                + Max_Voucher + " INTEGER,"
+                + Make_Order + " INTEGER,"
+                + Admin_Password + " INTEGER,"
+                + Total_Balance + " INTEGER,"
+                + Voucher_Return + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
+
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
@@ -1239,12 +1260,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + TRANS_DATE + " TEXT,"
                     + CUSTOMER_NO + " TEXT,"
                     + SALESMAN_NUMBER + " TEXT,"
-                    +VOUCHER_NUMBER_INVENTORY+ " INTEGER,"
-                    +IsPosted+ " INTEGER "
+                    + VOUCHER_NUMBER_INVENTORY + " INTEGER,"
+                    + IsPosted + " INTEGER "
                     + ")";
             db.execSQL(CREATE_TABLE_INVENTORY_SHELF);
 
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         try {
             String CREATE_TABLE_VoucherSerialize = "CREATE TABLE IF NOT EXISTS " + VoucherSerialize + "("
                     + VoucherSales_no + " INTEGER,"
@@ -1253,7 +1275,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + ")";
             db.execSQL(CREATE_TABLE_VoucherSerialize);
 
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         try {
             // GroupOffer_Item  = "GroupOffer_Item";
             // Id_serial   = "Id_serial";
@@ -1285,9 +1308,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             db.execSQL(CREATE_TABLE_GroupOffer_Item);
 
 
-
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -1314,189 +1335,144 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD Arabic_Language INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
 
 
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD HideQty  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD LockCashReport  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD salesManName  TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD PreventOrder  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
 
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD RequiredNote  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD PreventTotalDiscount  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD AutomaticCheque  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
+        try {
             db.execSQL("ALTER TABLE SETTING ADD Tafqit  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD PreventChangPayMeth  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD ShowCustomerList  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD NoReturnInvoice  INTEGER NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD WORK_WITH_SERIAL  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD SHOW_IMAGE_ITEM  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD APPROVE_ADMIN  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD SAVE_ONLY  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD SHOW_QUANTITY_SOLD  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD READ_OFFER_FROM_ADMIN  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD IP_PORT  TEXT NOT NULL DEFAULT ' '");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
 
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD CheckQtyServer INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD DontShowTaxOnPrinter INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD CONO TEXT NOT NULL DEFAULT ''");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD ContinusReading INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD ActiveTotalDisc INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD ValueTotalDisc REAL NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD STORE_NO REAL NOT NULL DEFAULT '1'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
 
-        try
-        {
+        try {
             db.execSQL("ALTER TABLE SETTING ADD  Item_Unit INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
 
@@ -2215,10 +2191,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             db.execSQL(CREATE_TABLE_CustomerPrices2);
 
 
-
-
-
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         try {
@@ -2254,9 +2227,96 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        ////B
+        try {
+            String CREATE_TABLE_FlAG_SETTINGS = "CREATE TABLE IF NOT EXISTS " + Flag_Settings + "("
+                    + Data_Type + " TEXT,"
+                    + Export_Stock + " INTEGER,"
+                    + Max_Voucher + " INTEGER,"
+                    + Make_Order + " INTEGER,"
+                    + Admin_Password + " INTEGER,"
+                    + Total_Balance + " INTEGER,"
+                    + Voucher_Return + " INTEGER" + ")";
+            db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
+
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage() + "");
+        }
+
     }
-    public void add_GroupOffer(OfferGroupModel offerGroup)
-    {
+
+    ////B
+    public void insertFlagSettings(com.dr7.salesmanmanager.Modles.Flag_Settings flag_settings) {
+
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Data_Type, flag_settings.getData_Type());
+        values.put(Export_Stock, flag_settings.getExport_Stock());
+        values.put(Max_Voucher, flag_settings.getMax_Voucher());
+        values.put(Make_Order, flag_settings.getMake_Order());
+        values.put(Admin_Password, flag_settings.getAdmin_Password());
+        values.put(Total_Balance, flag_settings.getTotal_Balance());
+        values.put(Voucher_Return, flag_settings.getVoucher_Return());
+
+        db.insert(Flag_Settings, null, values);
+        db.close();
+
+    }
+
+    public List<Flag_Settings> getFlagSettings() {
+
+        List<Flag_Settings> flagSettings = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + Flag_Settings;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Flag_Settings mySettings = new Flag_Settings(
+                        cursor.getString(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getInt(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5),
+                        cursor.getInt(6)
+                );
+
+                flagSettings.add(mySettings);
+
+            } while (cursor.moveToNext());
+            cursor.close();
+            Log.e("getFlagSettings", "" + flagSettings.size());
+        }
+        return flagSettings;
+
+    }
+
+    public void updateFlagSettings (String dataType, int export, int max, int order,
+                                    int password, int total, int vReturn) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Data_Type, dataType);
+        values.put(Export_Stock, export);
+        values.put(Max_Voucher, max);
+        values.put(Make_Order, order);
+        values.put(Admin_Password, password);
+        values.put(Total_Balance, total);
+        values.put(Voucher_Return, vReturn);
+
+        db.update(Flag_Settings, values, null, null);
+
+        Log.e("Flag Settings", "UPDATE");
+        db.close();
+
+    }
+
+
+    public void add_GroupOffer(OfferGroupModel offerGroup) {
         try {
 
             db = this.getReadableDatabase();
@@ -4376,12 +4436,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return items;
     }
-    public List<Item> getAllItemsBYVOCHER(String voucherNo) {
+    public List<Item> getAllItemsBYVOCHER() {
         List<Item> items = new ArrayList<Item>();
-        Log.e("getAllItemsBYVOCHER","voucherNo="+voucherNo);
         // Select All Query
         //AND VOUCHER_NUMBER= (SELECT MAX(VOUCHER_TYPE VOUCHER_NUMBER FROM SALES_VOUCHER_DETAILS)
-        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506 and VOUCHER_NUMBER='"+voucherNo+"'";
+        String selectQuery = "select * FROM SALES_VOUCHER_DETAILS where VOUCHER_TYPE= 506";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4897,14 +4956,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            Log.e("getAItemsNotInC", "1***************************************" + cursor.getCount());
+            Log.e("getAItemsNotInC", "***************************************" + cursor.getCount());
             do {
 
                 itemNoList.add(cursor.getString(0));
 
             } while (cursor.moveToNext());
         }
-        Log.e("itemsize","2**************"+itemNoList.size());
+        Log.e("item size",""+itemNoList.size());
 
         return itemNoList;
 

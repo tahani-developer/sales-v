@@ -70,7 +70,8 @@
                 android:background="@drawable/back_border_edit"
                 android:textColor="@color/add_button"
                 android:layout_marginBottom="5dp"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                />
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
