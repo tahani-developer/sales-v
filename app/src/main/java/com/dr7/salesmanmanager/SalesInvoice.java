@@ -591,7 +591,7 @@ public class SalesInvoice extends Fragment {
             }
             Log.e("getPaymethodCheck",""+payMethod);
 
-        } else {
+        } else {// cash paymethod from setting
 
             cash.setChecked(true);
             payMethod = 1;
@@ -747,9 +747,13 @@ public class SalesInvoice extends Fragment {
         });
         try {
             if (mDbHandler.getAllSettings().get(0).getPreventChangPayMeth() == 1) {
-                paymentTermRadioGroup.setEnabled(false);
-                credit.setEnabled(false);
-                cash.setEnabled(false);
+                if (CustomerListShow.paymentTerm == 1)
+                {
+                    paymentTermRadioGroup.setEnabled(false);
+                    credit.setEnabled(false);
+                    cash.setEnabled(false);
+                }
+
             } else {
                 paymentTermRadioGroup.setEnabled(true);
                 credit.setEnabled(true);
