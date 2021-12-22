@@ -306,7 +306,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
 
         }
-        if(MHandler.getAllSettings().get(0).getPriceByCust()==1){
+        if(MHandler.getAllSettings().get(0).getPriceByCust()==1){// for ejabi ***** test
             String priceCus=MHandler.getItemPrice(items.get(position).getItemNo());
             if(!priceCus.equals(""))
             {

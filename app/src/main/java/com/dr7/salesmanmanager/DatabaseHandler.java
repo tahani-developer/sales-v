@@ -7082,14 +7082,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     public  String getSolidQtyForItem(String itemNo,String today){
        // SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER=7022001657 and IS_POSTED='0'
-        String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
+       // String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
 
 //       Log.e("getSolidQtyForItem","today="+today);
         String soiledQty="";
         //SELECT  IFNULL( SUM(detail.UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS  detail
 //        WHERE detail.ITEM_NUMBER='10129' and detail.VOUCHER_TYPE =504 and detail.VOUCHER_NUMBER in( select master.VOUCHER_NUMBER from SALES_VOUCHER_MASTER master  where  master.VOUCHER_DATE='02/09/2021' and master.VOUCHER_TYPE=504 );
-//        String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS detail WHERE detail.ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 and " +
-//                "detail.VOUCHER_NUMBER in( select master.VOUCHER_NUMBER from SALES_VOUCHER_MASTER master  where  master.VOUCHER_DATE='"+today+"' and master.VOUCHER_TYPE=504 ) ";
+        String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS detail WHERE detail.ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 and " +
+                "detail.VOUCHER_NUMBER in( select master.VOUCHER_NUMBER from SALES_VOUCHER_MASTER master  where  master.VOUCHER_DATE='"+today+"' and master.VOUCHER_TYPE=504 ) ";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
