@@ -231,7 +231,8 @@ public class PrintVoucher extends AppCompatActivity {
 
                 clear();
 
-                if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
+                if (!from_date.getText().toString().equals("")
+                        && !to_date.getText().toString().equals("")) {
 
                     for (int n = 0; n < vouchers.size(); n++) {
                         final Voucher vouch;
@@ -240,7 +241,8 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                            row.setPadding(5, 5, 10, 5);
+                          //  row.setPadding(5, 5, 10, 5);
+                            row.setPadding(10, 10, 10, 10);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -279,20 +281,21 @@ public class PrintVoucher extends AppCompatActivity {
 //                                    textView.setTextSize(12);
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
-
                                     TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                  lp2.height=100;
                                     textView.setLayoutParams(lp2);
+
 
 
                                     row.addView(textView);
 
                                 } else {
-                                    TextView textView = new TextView(PrintVoucher.this);
-                                    textView.setText(getResources().getString(R.string.print));
+                                    Button textView = new  Button(PrintVoucher.this);
+                                    //textView.setText(getResources().getString(R.string.print));
                                     textView.setClickable(true);
-
-                                    textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
-                                    textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
+                                    textView.setBackground(getResources().getDrawable(R.drawable.ic_print_black_24dp));
+                                 //   textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.layer5));
+                                  //  textView.setBackgroundColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorAccent));
                                     textView.setGravity(Gravity.CENTER);
 
 
@@ -304,7 +307,13 @@ public class PrintVoucher extends AppCompatActivity {
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
                                             String s="";
                                             Log.e("voucher2==", "  " +"gggg");
-                                            try{ if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("") && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0 && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
+                                    //        try{
+
+                                                if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("")
+                                                        && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0
+                                                        && obj.getAllCompanyInfo().get(0).getTaxNo() != -1) {
+                                                    Log.e("voucher3==", " voucher3== " );
+
                                                 if (obj.getAllSettings().get(0).getPrintMethod() == 0) {
 //                                                     try {
                                                     Log.e("voucher==", "  " + vouch.getVoucherNumber());
@@ -400,15 +409,19 @@ public class PrintVoucher extends AppCompatActivity {
 //                                                     } catch (IOException ex) {
 //                                                     }
                                                 } else {
+
+                                                    Log.e("voucher==", " LASTCASE " +"");
                                                     hiddenDialog(vouch);
                                                 }
                                             } else {
                                                 Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
-                                            }}
-                                            catch (Exception e)
-                                            {
-                                                Toast.makeText(PrintVoucher.this, ""+getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
                                             }
+
+                                         //   }
+//                                            catch (Exception e)
+//                                            {
+//                                                Toast.makeText(PrintVoucher.this, ""+getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
+//                                            }
 
                                         }
                                     });
@@ -515,11 +528,12 @@ public class PrintVoucher extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Voucher voucher) {
-        convertLayoutToImage(voucher);
+        Log.e("hiddenDialog==", " hiddenDialog " +"");
+        convertLayoutToImage2(voucher);
 //        final Dialog dialog = new Dialog(PrintVoucher.this);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        dialog.setCancelable(true);
-//        dialog.setContentView(R.layout.print);
+//       dialog.setContentView(R.layout.print);
 //
 //        final Button okButton = dialog.findViewById(R.id.print1);
 //        final LinearLayout linearLayout = dialog.findViewById(R.id.linear1);
@@ -1247,7 +1261,7 @@ public class PrintVoucher extends AppCompatActivity {
     }
     public Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
-
+        Log.e(" convertLayoutToImage", voucher.getVoucherNumber() +"");
         final Dialog dialogs = new Dialog(PrintVoucher.this);
         dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogs.setCancelable(false);
@@ -1276,7 +1290,7 @@ public class PrintVoucher extends AppCompatActivity {
         ammont = (TextView) dialogs.findViewById(R.id.ammont);
         textW = (TextView) dialogs.findViewById(R.id.wa1);
         TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
-//
+
 
 
         doneinsewooprint.setOnClickListener(new View.OnClickListener() {
@@ -1334,6 +1348,7 @@ public class PrintVoucher extends AppCompatActivity {
         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         lp2.setMargins(0, 7, 0, 0);
+        lp2.weight=1;
         lp3.setMargins(0, 7, 0, 0);
 
         for (int j = 0; j < items.size(); j++) {
@@ -1344,12 +1359,13 @@ public class PrintVoucher extends AppCompatActivity {
 
                 for (int i = 0; i <= 7; i++) {
                     TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+
                     lp.setMargins(0, 10, 0, 0);
                     row.setLayoutParams(lp);
 
                     TextView textView = new TextView(PrintVoucher.this);
                     textView.setGravity(Gravity.CENTER);
-                    textView.setTextSize(18);
+                    textView.setTextSize(10);
 
                     switch (i) {
                         case 0:
@@ -1408,8 +1424,8 @@ public class PrintVoucher extends AppCompatActivity {
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
-
+      //  linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+   linearView.layout(0, 0,1420, 1573);
         Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
 
 //        linearView.setDrawingCacheEnabled(true);
@@ -1442,9 +1458,213 @@ public class PrintVoucher extends AppCompatActivity {
         linearView.setDrawingCacheEnabled(true);
         bitmap = linearView.getDrawingCache();
         photoPrinter.printBitmap("pay.jpg", bitmap);
+
+
         return bit;// creates bitmap and returns the same
     }
+    public Bitmap convertLayoutToImage2(Voucher voucher) {
+        LinearLayout linearView = null;
+        Log.e(" convertLayoutToImage", voucher.getVoucherNumber() +"");
+        final Dialog dialogs = new Dialog(PrintVoucher.this);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.setCancelable(false);
+        dialogs.setContentView(R.layout.printlay);
+//            fill_theVocher( voucher);
 
+
+        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+        doneinsewooprint = (TextView) dialogs.findViewById(R.id.done);
+
+        TextView compname, tel, taxNo, vhNo, date, custname, note, vhType, paytype, total, discount, tax, ammont, textW;
+        ImageView img = (ImageView) dialogs.findViewById(R.id.img);
+
+        compname = (TextView) dialogs.findViewById(R.id.compname);
+        tel = (TextView) dialogs.findViewById(R.id.tel);
+        taxNo = (TextView) dialogs.findViewById(R.id.taxNo);
+        vhNo = (TextView) dialogs.findViewById(R.id.vhNo);
+        date = (TextView) dialogs.findViewById(R.id.date);
+        custname = (TextView) dialogs.findViewById(R.id.custname);
+        note = (TextView) dialogs.findViewById(R.id.note);
+        vhType = (TextView) dialogs.findViewById(R.id.vhType);
+        paytype = (TextView) dialogs.findViewById(R.id.paytype);
+        total = (TextView) dialogs.findViewById(R.id.total);
+        discount = (TextView) dialogs.findViewById(R.id.discount);
+        tax = (TextView) dialogs.findViewById(R.id.tax);
+        ammont = (TextView) dialogs.findViewById(R.id.ammont);
+        textW = (TextView) dialogs.findViewById(R.id.wa1);
+        TableLayout tabLayout = (TableLayout) dialogs.findViewById(R.id.tab);
+//
+//        LinearLayout.LayoutParams lp6 = new LinearLayout.LayoutParams(0, 100);
+//        lp6.weight =1;
+//        tabLayout.setLayoutParams(lp6);
+
+//        doneinsewooprint.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(isFinishPrint) {
+//                    try {
+//                        closeBT();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    dialogs.dismiss();
+//                }
+//            }
+//        });
+
+
+        String voucherTyp = "";
+        switch (voucher.getVoucherType()) {
+            case 504:
+                voucherTyp = "فاتورة بيع";
+                break;
+            case 506:
+                voucherTyp = "فاتورة مرتجعات";
+                break;
+            case 508:
+                voucherTyp = "طلب جديد";
+                break;
+        }
+        img.setImageBitmap(companyInfo.getLogo());
+        compname.setText(companyInfo.getCompanyName());
+        tel.setText("" + companyInfo.getcompanyTel());
+        taxNo.setText("" + companyInfo.getTaxNo());
+        vhNo.setText("" + voucher.getVoucherNumber());
+        date.setText(voucher.getVoucherDate());
+        custname.setText(voucher.getCustName());
+        note.setText(voucher.getRemark());
+        vhType.setText(voucherTyp);
+
+        paytype.setText((voucher.getPayMethod() == 0 ? "ذمم" : "نقدا"));
+        total.setText("" + voucher.getSubTotal());
+        discount.setText("" + voucher.getVoucherDiscount());///
+        tax.setText("" + voucher.getTax());
+        ammont.setText("" + voucher.getNetSales());
+
+
+        if (obj.getAllSettings().get(0).getUseWeightCase() != 1) {
+            textW.setVisibility(View.GONE);
+        } else {
+            textW.setVisibility(View.VISIBLE);
+        }
+
+
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp2.setMargins(0, 7, 0, 0);
+        lp3.setMargins(0, 7, 0, 0);
+
+        for (int j = 0; j < items.size(); j++) {
+
+            if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber())&& (items.get(j).getVoucherType()== voucher.getVoucherType())) {
+                final TableRow row = new TableRow(PrintVoucher.this);
+
+
+                for (int i = 0; i <= 7; i++) {
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 0);
+                    row.setLayoutParams(lp);
+
+                    TextView textView = new TextView(PrintVoucher.this);
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(11);
+
+                    switch (i) {
+                        case 0:
+                            textView.setText(items.get(j).getItemName());
+                            textView.setLayoutParams(lp3);
+                            break;
+
+
+                        case 1:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getUnit());
+                                textView.setLayoutParams(lp2);
+                            } else {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                            }
+                            break;
+
+                        case 2:
+                            if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+                                textView.setText("" + items.get(j).getQty());
+                                textView.setLayoutParams(lp2);
+                                textView.setVisibility(View.VISIBLE);
+                            } else {
+                                textView.setVisibility(View.GONE);
+                            }
+                            break;
+
+                        case 3:
+                            textView.setText("" + items.get(j).getPrice());
+                            textView.setLayoutParams(lp2);
+                            break;
+
+
+                        case 4:
+                            String amount = "" + (items.get(j).getQty() * items.get(j).getPrice() - items.get(j).getDisc());
+                            amount = convertToEnglish(amount);
+                            textView.setText(amount);
+                            textView.setLayoutParams(lp2);
+                            break;
+                    }
+                    row.addView(textView);
+                }
+
+
+                tabLayout.addView(row);
+            }
+        }
+
+
+//        dialogs.show();
+
+
+//        linearView  = (LinearLayout) this.getLayoutInflater().inflate(R.layout.printdialog, null, false); //you can pass your xml layout
+        linearView = (LinearLayout) dialogs.findViewById(R.id.ll);
+
+        linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+    //    linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+     linearView.layout(0, 0,1420, 1573);
+        Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+
+
+    /*
+        Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = linearView.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        linearView.draw(canvas);
+
+        return bitmap;// creates bitmap and returns the same*/
+        linearView.setDrawingCacheEnabled(true);
+        linearView.buildDrawingCache();
+        Bitmap bit =linearView.getDrawingCache();
+        PrintHelper photoPrinter = new PrintHelper(PrintVoucher.this);
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        linearView.setDrawingCacheEnabled(true);
+        bitmap = linearView.getDrawingCache();
+        photoPrinter.printBitmap("pay.jpg", bitmap);
+
+
+        return bit;// creates bitmap and returns the same
+    }
     public Bitmap convertLayoutToImageW() {
         LinearLayout linearView = null;
 
