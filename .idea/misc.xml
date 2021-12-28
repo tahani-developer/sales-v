@@ -4,16 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.15653495440729484" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/inventory_report.xml" value="0.300556586270872" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_return_by_voucher_no.xml" value="0.23397435897435898" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_shelf_inventoery_report.xml" value="0.300556586270872" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/de_export_dialog.xml" value="0.23515769944341372" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/inventory_report.xml" value="0.9700598802395209" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/print.xml" value="0.2900641025641026" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/printdialog.xml" value="0.6030927835051546" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/printlay.xml" value="0.67" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/background_container.xml" value="0.20052083333333334" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_launcher_foreground_tick.xml" value="0.27708333333333335" />
+        <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_print_black_24dp.xml" value="0.1685185185185185" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/fragment_setting.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/inventory_report.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/login_free_size.xml" value="0.15299823633156967" />

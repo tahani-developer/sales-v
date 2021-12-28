@@ -999,6 +999,7 @@ public class ESCPSample2
 				//posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 				posPtr.printAndroidFont(null, true, voucherforPrint.getVoucherDate() + "\t\t" + getCurentTimeDate(2) + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 //				posPtr.printAndroidFont(null,true, " التاريخ: " + voucherforPrint.getVoucherDate() + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
+				posPtr.printAndroidFont(null, true, voucherTyp + "\t\t" + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1131,7 +1132,7 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
-					if (voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) {
+					if ((voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber()) && (itemforPrint.get(i).getVoucherType() == voucherforPrint.getVoucherType())) {
 						total_Qty += itemforPrint.get(i).getQty();
 
 						itemDiscount+=itemforPrint.get(i).getDisc();
@@ -1469,8 +1470,12 @@ public class ESCPSample2
 					break;
 			}
 
-			String salesmaname=obj.getSalesmanName(voucherforPrint.getCustNumber());
-
+//			String salesmaname=obj.getSalesmanName(voucherforPrint.getCustNumber());
+			String salesmaname= obj.getAllSettings().get(0).getSalesMan_name();
+			if(salesmaname.equals(""))
+			{
+				salesmaname=obj.getSalesmanName_fromSalesTeam();
+			}
 
 			posPtr.setAsync(false);
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
@@ -1605,6 +1610,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("posPtr",""+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -1994,7 +2000,12 @@ public class ESCPSample2
 			Log.e("Pay 0000 ==>",""+pay1.getPayMethod());
 			Log.e("payforBank 0000 ==>",""+payforBank.getPayMethod());
 		}
-		String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
+//		String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
+		String salesmaname= obj.getAllSettings().get(0).getSalesMan_name();
+		if(salesmaname.equals(""))
+		{
+			salesmaname=obj.getSalesmanName_fromSalesTeam();
+		}
 
 		int nLineWidth = 550;
 		try {
@@ -2140,8 +2151,13 @@ public class ESCPSample2
 				}
 			}
 
-			String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
-			if(salesmaname.equals("")){
+//			String salesmaname=obj.getSalesmanName(voucher.getCustNumber());
+//			if(salesmaname.equals("")){
+//				salesmaname=obj.getSalesmanName_fromSalesTeam();
+//			}
+			String salesmaname= obj.getAllSettings().get(0).getSalesMan_name();
+			if(salesmaname.equals(""))
+			{
 				salesmaname=obj.getSalesmanName_fromSalesTeam();
 			}
 

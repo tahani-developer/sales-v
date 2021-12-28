@@ -1049,6 +1049,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            if (!bonus.getText().toString().equals("")) {
                                                                                try {
+                                                                                   Log.e("bonus_request=",""+bonus.getText().toString());
                                                                                    getDataForDiscountTotal(items.get(position).getItemName(), "2", items.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);

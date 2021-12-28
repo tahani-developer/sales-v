@@ -168,6 +168,7 @@ public class PrintVoucher extends AppCompatActivity {
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo = new ArrayList<CompanyInfo>();
+        verifyStoragePermissions(PrintVoucher.this);
 
         obj = new DatabaseHandler(PrintVoucher.this);
         vouchers = obj.getAllVouchers();
@@ -282,7 +283,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
                                     TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                  lp2.height=100;
+                                  lp2.height=70;
                                     textView.setLayoutParams(lp2);
 
 
@@ -427,6 +428,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     });
 
                                     TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                   lp25.width=50;
                                     textView.setLayoutParams(lp25);
 
                                     row.addView(textView);
@@ -1250,14 +1252,27 @@ public class PrintVoucher extends AppCompatActivity {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
+        Log.e("permission",""+permission);
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//            ActivityCompat.requestPermissions( activity,
+//                    new String[]{
+//                            Manifest.permission.READ_EXTERNAL_STORAGE,
+//                            Manifest.permission.MANAGE_EXTERNAL_STORAGE
+//                    }, 1
+//            );
+//            ActivityCompat.requestPermissions(
+//                    activity,
+//                    PERMISSIONS_STORAGE,
+//                    REQUEST_EXTERNAL_STORAGE
+//            );
+//        }
+        ActivityCompat.requestPermissions( activity,
+                new String[]{
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                }, 1
+        );
     }
     public Bitmap convertLayoutToImage(Voucher voucher) {
         LinearLayout linearView = null;
