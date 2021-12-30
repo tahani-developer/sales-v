@@ -108,6 +108,7 @@ android:textSize="11sp"
         android:layout_width="match_parent"
         android:layout_margin="5dp"
         android:layout_weight="7"
+        android:fillViewport="true"
         android:layout_height="match_parent">
     <LinearLayout android:orientation="vertical"
         android:layout_height="match_parent"
@@ -124,7 +125,7 @@ android:textSize="11sp"
         android:paddingLeft="5dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -133,7 +134,7 @@ android:textSize="11sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -142,16 +143,16 @@ android:textSize="11sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="@string/unit_qty"
             android:textColor="@color/white"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -160,8 +161,8 @@ android:textSize="11sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/total_sales_noTax"
@@ -210,6 +211,14 @@ android:textSize="11sp"
             tools:ignore="TextViewEdits" />
 
     </LinearLayout>
+
+    <HorizontalScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+
+        android:fillViewport="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -221,9 +230,9 @@ android:textSize="11sp"
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight=".9"
             android:textSize="12sp"
             android:text="@string/sub_total"
             android:paddingLeft="10dp"
@@ -231,7 +240,7 @@ android:textSize="11sp"
 
         <TextView
             android:id="@+id/subTotalTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingLeft="5dp"
@@ -242,7 +251,7 @@ android:textSize="11sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/tax"
@@ -253,7 +262,7 @@ android:textSize="11sp"
 
         <TextView
             android:id="@+id/taxTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingLeft="5dp"
@@ -264,9 +273,9 @@ android:textSize="11sp"
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight=".9"
             android:paddingLeft="10dp"
             android:text="@string/net_sales"
             android:textSize="12sp"
@@ -274,7 +283,7 @@ android:textSize="11sp"
 
         <TextView
             android:id="@+id/netSalesTextView1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:paddingLeft="5dp"
@@ -284,6 +293,7 @@ android:textSize="11sp"
             android:textStyle="bold" />
 
     </LinearLayout>
+    </HorizontalScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

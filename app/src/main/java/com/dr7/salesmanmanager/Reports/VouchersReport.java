@@ -35,6 +35,7 @@ import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
+import com.dr7.salesmanmanager.PrintVoucher;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.ReturnByVoucherNo;
@@ -87,6 +88,7 @@ public class VouchersReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(VouchersReport.this);
         setContentView(R.layout.vouchers_report);
+
        LinearLayout linearMain=findViewById(R.id.linearMain);
         itemsToPrint=new ArrayList<>();
         try{
@@ -343,8 +345,34 @@ public class VouchersReport extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(VouchersReport.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+ //       new LocaleAppUtils().changeLayot(PrintVoucher.this);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.voucher_info_dialog2);
+
+
+
+       LinearLayout Main_linear=dialog.findViewById(R.id.Main_linear);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+
+                dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+
+        }
         Window window = dialog.getWindow();
         EditText VochNum,PayMth,CusName,VochDate;
         TextView subTotal,tax,netSales;
@@ -394,7 +422,7 @@ VocherToPrint=vouchers.get(k);
 
                 itemsToPrint.add(items.get(k));
                 TableRow row = new TableRow(VouchersReport.this);
-                row.setPadding(5, 10, 5, 10);
+               row.setPadding(5, 10, 5, 10);
 
                 if (k % 2 == 0)
                     row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
@@ -412,18 +440,52 @@ VocherToPrint=vouchers.get(k);
                     double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
                     record[4] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales ));
 
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                     row.setLayoutParams(lp);
+if(i==1){
+    TextView textView = new TextView(VouchersReport.this);
+    textView.setText(record[i]);
+    textView.setTextSize(12);
+    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+    textView.setGravity(Gravity.CENTER);
 
-                    TextView textView = new TextView(VouchersReport.this);
+    // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 4.0f);
+    lp2.width=120;
+    textView.setLayoutParams(lp2);
+    row.addView(textView);
+}
+
+//else
+//    if(i==0){
+//
+//
+//    TextView textView = new TextView(VouchersReport.this);
+//    textView.setText(record[i]);
+//    textView.setTextSize(12);
+//    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+//    textView.setGravity(Gravity.CENTER);
+//
+//    // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//    lp2.width=120;
+//    textView.setLayoutParams(lp2);
+//    row.addView(textView);
+//
+//}
+else
+
+{ TextView textView = new TextView(VouchersReport.this);
                     textView.setText(record[i]);
                     textView.setTextSize(12);
                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
                     textView.setGravity(Gravity.CENTER);
 
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                   // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+    lp2.width=90;
                     textView.setLayoutParams(lp2);
-                    row.addView(textView);
+                    row.addView(textView);}
                 }
 
                 TableItemInfo.addView(row);

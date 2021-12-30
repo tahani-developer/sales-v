@@ -710,6 +710,9 @@ public class ImportJason extends AppCompatActivity {
 
                                 Log.e("voucher",""+voucher.getCustNumber()+"\t"+voucher.getNetSales());
                                 voucher.setVoucherYear(Integer.parseInt(infoDetail.get("VOUCHERYEAR").toString()));
+
+                                ReturnByVoucherNo.VOCHdat=  infoDetail.get("VOUCHERDATE").toString();
+                                Log.e("VOCHdat",""+ReturnByVoucherNo.VOCHdat);
                             } catch (Exception e) {
                                 Log.e("voucher", "Exception=" + e.getMessage());
                             }

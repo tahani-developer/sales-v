@@ -31,7 +31,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
     private List<String> vocherlist=new ArrayList<>();;
     private List<serialModel> serialrowlist=new ArrayList<>();
     Context context;
-    View linearLayout;
+
     int shelfReport=0;
     DatabaseHandler databaseHandler;
 
@@ -53,7 +53,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
     public void onBindViewHolder(@NonNull ReturnItemAdapter.SerialReportViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.voucherDate.setText(list.get(position).getDateVoucher());
 
-
+        holder.    text_count.setText(list.get(position).getQty());
         Log.e("getItemNo","no="+list.get(position).getItemNo());
         holder.serialcode.setText(String.valueOf(list.get(position).getSerialCode()));
 //        if(list.get(position).getItemName().equals("null"))
@@ -62,17 +62,43 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 //        }else {
             holder.itemName.setText(String.valueOf(list.get(position).getItemName()));
 //        }
+        if(list.get(position).getSerialCode().equals("")) {
+            if (HaveSerial(list.get(position).getItemNo(), position) == 1) {
+                holder.linearSelected.setVisibility(View.INVISIBLE);
+                holder.price.setVisibility(View.INVISIBLE);
+                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.done_button2));
+
+            }
+        }
 
         holder.itemnum.setText(String.valueOf(list.get(position).getItemNo()));
         holder.price.setText(String.valueOf(list.get(position).getPriceItem()));
 
+
+
+      /*  holder.linearSelected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(list.get(holder.getAdapterPosition()).getSerialCode().equals("")) {
+                    {
+                        for (int i = 0; i < list.size(); i++)
+                            if (list.get(holder.getAdapterPosition()).getItemNo().equals(list.get(i).getItemNo()))
+                                list.get(holder.getAdapterPosition()).isClicked = 1;
+                    }
+                }
+            }
+        });*/
         holder.linearSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Log.e("linearSelected","bb"+b);
+
+
                 if(b)
                 {
                     list.get(holder.getAdapterPosition()).isClicked=1;
+
+
                 }else {
                     list.get(holder.getAdapterPosition()).isClicked=0;
                 }
@@ -89,8 +115,9 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
     }
 
     class SerialReportViewHolder extends RecyclerView.ViewHolder {
-        TextView price, vouchertype, serialcode, itemnum, itemName, export,voucherDate,customerName;
+        TextView text_count,price, vouchertype, serialcode, itemnum, itemName, export,voucherDate,customerName;
         CheckBox linearSelected;
+        LinearLayout linearLayout;
 
         public SerialReportViewHolder(@NonNull View itemView) {
 
@@ -100,7 +127,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
             voucherDate= itemView.findViewById(R.id.text_voucherdate);
             serialcode = itemView.findViewById(R.id.SE__serialcode);
             itemnum = itemView.findViewById(R.id.SE__itemnum);
-
+            text_count= itemView.findViewById(R.id. text_count);
             linearLayout = itemView.findViewById(R.id.lin);
 
             linearSelected=itemView.findViewById(R.id.linearSelected);
@@ -110,5 +137,12 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
         }
 
 
+    }
+    int HaveSerial (String serial,int pos){
+        int x=0;
+        for (int i = 0; i < list.size(); i++)
+            if (i!=pos &&serial.equals(list.get(i).getItemNo()))
+                x=1;
+            return x;
     }
 }

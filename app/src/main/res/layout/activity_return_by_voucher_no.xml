@@ -372,6 +372,17 @@
                             android:text="@string/app_price"
                             android:textColor="@color/white"
                             android:textStyle="bold" />
+                        <TextView
+
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="@string/qty"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
 
                         <TextView
                             android:id="@+id/textView_voucher_date"

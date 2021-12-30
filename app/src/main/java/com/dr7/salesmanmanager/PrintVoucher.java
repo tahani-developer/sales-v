@@ -1627,8 +1627,8 @@ public class PrintVoucher extends AppCompatActivity {
 
         linearView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-    //    linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
-     linearView.layout(0, 0,1420, 1573);
+// linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
+ linearView.layout(0, 0,1420, 1573);
         Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
 
 //        linearView.setDrawingCacheEnabled(true);
