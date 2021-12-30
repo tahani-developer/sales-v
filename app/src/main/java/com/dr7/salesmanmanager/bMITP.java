@@ -169,6 +169,8 @@ public class bMITP extends Activity {
             fWriter.close();
         } catch (FileNotFoundException var3) {
             Log.e("BluetoothConnectMenu1", var3.getMessage(), var3);
+
+
             if(getData.equals("6"))
             { clearData.setText("1");
                 finish();

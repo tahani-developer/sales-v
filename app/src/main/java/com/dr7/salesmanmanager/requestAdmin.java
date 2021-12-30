@@ -173,7 +173,7 @@ public class requestAdmin {
         {
             keyCreditLimit=discountRequest.getKey_validation();
         }
-        else  if(discountRequest.getRequest_type().equals("0")){
+        else  if(discountRequest.getRequest_type().equals("0")||discountRequest.getRequest_type().equals("2")){
             currentKey=discountRequest.getKey_validation();
         }
 
@@ -300,7 +300,7 @@ public class requestAdmin {
                         stateZero=true;
                     }
                     else {
-                        if(requestType.equals("0"))
+                        if(requestType.equals("0")||requestType.equals("2"))
                         checkState_recycler.setText("0");
                         else   if(requestType.equals("100"))
                             checkState_LimitCredit.setText("0");
@@ -338,7 +338,7 @@ public class requestAdmin {
                 }
             }
             else {
-                if(requestType.equals("0"))
+                if(requestType.equals("0")||requestType.equals("2"))
                 {
                     if(checkState_recycler.getText().toString().equals("0"))
                     {
@@ -594,7 +594,7 @@ public class requestAdmin {
                     });
                 }
 
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
 
 
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO));
@@ -659,7 +659,7 @@ public class requestAdmin {
 
             JSONObject result=null;
             String impo = "";
-            Log.e("STATUSE_REQUEST",""+s.toString());
+//            Log.e("STATUSE_REQUEST",""+s.toString());
             if (s != null) {
                 if (s.contains("STATUS")) {
                     stateZero=false;
@@ -906,17 +906,18 @@ public class requestAdmin {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("onPostExecute", "admin" + s.toString());
+
 //            pdValidation.dismissWithAnimation();
             if (s != null) {
                 if (s.contains("Saved Successfully")) {
+                    Log.e("onPostExecute", "admin" + requestType);
                     if(requestType.equals("1")||requestType.equals("10"))
                     {
                         checkState.setText("0");
                         stateZero=true;
                     }
                     else {
-                        if(requestType.equals("0"))
+                        if(requestType.equals("0")||requestType.equals("2"))
                             checkState_recycler.setText("0");
                         else   if(requestType.equals("100"))
                             checkState_LimitCredit.setText("0");

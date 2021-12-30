@@ -117,9 +117,9 @@ public class CashReport  extends AppCompatActivity {
     CompanyInfo companyInfo;
     List<Item> vouchersales;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
-
+    SimpleDateFormat df;
     ConstraintLayout mailLayout;
-
+    Date currentTimeAndDate;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -178,7 +178,10 @@ public class CashReport  extends AppCompatActivity {
         pic=(ImageView)findViewById(R.id.pic_reportCash);
          companyInfo=new CompanyInfo();
 
-
+         currentTimeAndDate = Calendar.getInstance().getTime();
+         df = new SimpleDateFormat("dd/MM/yyyy");
+//        String dat = df.format(currentTimeAndDate);
+//        dat = convertToEnglish(dat);
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -990,6 +993,8 @@ public class CashReport  extends AppCompatActivity {
         String date_text = date.getText().toString().trim();
         int pMethod = voucher.get(n).getPayMethod() ;
         String date = voucher.get(n).getVoucherDate() ;
+        String dat = df.format(currentTimeAndDate);
+
 
         try {
                 if (( formatDate(date).equals(formatDate(date_text))))
@@ -1008,7 +1013,7 @@ public class CashReport  extends AppCompatActivity {
         String date = payments.get(n).getPayDate() ;
 
         try {
-            if ((formatDate(date).after(formatDate(date_text)) || formatDate(date).equals(formatDate(date_text))))
+            if ( formatDate(date.trim()).equals(formatDate(date_text.trim())))
                 return true;
         }
 
@@ -1024,4 +1029,5 @@ public class CashReport  extends AppCompatActivity {
         Date d = sdf.parse(date);
         return d ;
     }
+
 }

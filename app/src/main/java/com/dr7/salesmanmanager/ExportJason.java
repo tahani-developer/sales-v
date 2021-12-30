@@ -2495,7 +2495,8 @@ public class ExportJason extends AppCompatActivity {
 
 
             }
-            exportLoadVan();
+            updatePosted(); //14
+//            exportLoadVan();
 
         }
     }

@@ -306,7 +306,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
 
         }
-        if(MHandler.getAllSettings().get(0).getPriceByCust()==1){
+        if(MHandler.getAllSettings().get(0).getPriceByCust()==1){// for ejabi ***** test
             String priceCus=MHandler.getItemPrice(items.get(position).getItemNo());
             if(!priceCus.equals(""))
             {
@@ -1049,6 +1049,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            if (!bonus.getText().toString().equals("")) {
                                                                                try {
+                                                                                   Log.e("bonus_request=",""+bonus.getText().toString());
                                                                                    getDataForDiscountTotal(items.get(position).getItemName(), "2", items.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
