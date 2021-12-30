@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                android:gravity="center"
+                  android:gravity="center"
                     />
 
 
@@ -53,13 +53,12 @@
                 android:id="@+id/SE__serialcode"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
-
                 android:gravity="center"
                 android:text="123456789011"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
 
-                android:textColor="@color/colorblue_dark"
+                android:textColor="@color/cancel_button"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/SE__itemnum"
@@ -100,7 +99,18 @@
                 android:text="text_price"
                 android:textColor="@color/colorblue_dark"
                 android:textStyle="bold" />
-
+            <TextView
+                android:id="@+id/text_count"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/qty"
+                android:textColor="@color/colorblue_dark"
+                android:textSize="12sp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/text_voucherdate"
                 android:layout_width="80dp"
@@ -113,26 +123,6 @@
                 android:textColor="@color/colorblue_dark"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

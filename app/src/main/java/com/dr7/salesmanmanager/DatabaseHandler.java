@@ -74,7 +74,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 160;
+    private static final int DATABASE_VERSION = 161;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1122,8 +1122,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + WHICHU_QTY + " TEXT, "
                 + ENTER_QTY + " TEXT, "
                 + ENTER_PRICE + " TEXT, "
-                + UNIT_BARCODE + " TEXT "
-
+                + UNIT_BARCODE + " TEXT, "
+                +IS_RETURNED+" INTEGER DEFAULT 0 "
 
                 + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
@@ -1786,6 +1786,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         try{
+
             db.execSQL("ALTER TABLE CUSTOMER_MASTER ADD  IS_POST  INTEGER  DEFAULT 0 ");
 
         }catch (Exception e)
@@ -2242,6 +2243,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage() + "");
+        }
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  IS_RETURNED  INTEGER  DEFAULT 0 ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
         }
 
     }
@@ -3715,6 +3723,37 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return infos;
     }
+    public ArrayList<serialModel> getAllSerialItemsByVoucherNoAndItems(String voucherNo,String itemno) {// here
+        ArrayList<serialModel> infos = new ArrayList<>();
+//        SELECT  * FROM  SERIAL_ITEMS_TABLE where VOUCHER_NO='333886' and  KIND_VOUCHER='504'
+        String selectQuery = "SELECT  * FROM  SERIAL_ITEMS_TABLE where VOUCHER_NO='"+voucherNo+"' and  KIND_VOUCHER='504' and IS_RETURNED=0 and ITEMNO_SERIAL="+"'"+itemno+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                serialModel info = new serialModel();
+                info.setSerialCode(cursor.getString(1));
+                info.setCounterSerial(Integer.parseInt(cursor.getString(2)));
+                info.setVoucherNo((cursor.getString(3)));
+                info.setItemNo(cursor.getString(4));
+//                info.setKindVoucher(cursor.getString(5));
+                info.setKindVoucher("506");
+                info.setDateVoucher(cursor.getString(6));
+                info.setStoreNo(cursor.getString(7));
+                info.setIsPosted(cursor.getString(8));
+                info.setIsBonus(cursor.getString(9));
+                info.setPriceItem(cursor.getFloat(10));
+                info.setIsReturned(cursor.getInt(12));
+                Log.e("setIsReturned",""+info.getIsReturned());
+                info.setIsPosted("0");
+                infos.add(info);
+
+            } while (cursor.moveToNext());
+            Log.e("getAllSerialItems",""+infos.size());
+        }
+        return infos;
+    }
 
     public List<CustomerLocation> getCustomerLocation() {
         List<CustomerLocation> infos = new ArrayList<>();
@@ -4323,7 +4362,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public ArrayList<Item> getAllItems_byVoucherNo(String voucherNo) {
         ArrayList<Item> items = new ArrayList<Item>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+voucherNo+"' and  VOUCHER_TYPE='504'";
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+voucherNo+"' and  VOUCHER_TYPE='504' AND IS_RETURNED = '0'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -7602,6 +7641,62 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         // updating row
         db.update(SERIAL_ITEMS_TABLE, values, VOUCHER_NO + "=" + voucherNo +" and "+ SERIAL_CODE_NO + " = '" + serialCode.trim()+"'", null);
     }
+
+
+    public int updateItemReturnedInVocherDetails(String voucherNo, String itemCode) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(IS_RETURNED, "1");
+
+
+
+        // updating row
+     int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo +" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'", null);
+   return x; }
+
+
+    public int HASSERAIAL(String itemCode) {
+    int x=0;
+        /*db = this.getWritableDatabase();
+        String selectQuery = "SELECT ITEM_HAS_SERIAL FROM Items_Master WHERE ItemNo="+"'"+itemCode+"'";
+        db.execSQL(selectQuery)*/
+
+
+
+
+        String selectQuery = "SELECT ITEM_HAS_SERIAL FROM Items_Master WHERE ItemNo="+"'"+itemCode+"'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    return 0;
+                } else {
+                   x= Integer.parseInt(cursor.getString(0));
+                    Log.e("x","getItemPrice="+x);
+                    return x;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+
+
+
+
+
+
+        return  x;
+
+    }
+
+
 //    select Price from CustomerPrices where CustomerNumber='1110000002' and ItemNo_='30001826'
     public String getItemPrice(String itemNo) {
         Log.e("getItemName","getItemName="+itemNo);
