@@ -947,7 +947,8 @@ try {
     private void fillZeroQty() {
         for (int i=0;i<listItemsReturn.size();i++)
         {
-           if(dataBase.HASSERAIAL(listItemsReturn.get(i).getItemNo())==1) listItemsReturn.get(i).setQty(0);
+           if(dataBase.HASSERAIAL(listItemsReturn.get(i).getItemNo())==1)
+               listItemsReturn.get(i).setQty(0);
         }
     }
 

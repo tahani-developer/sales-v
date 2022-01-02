@@ -355,7 +355,6 @@ public class Login extends AppCompatActivity {
         }catch (Exception e){
 
         }
-      // Log.e( "getItemsReturn","==="+mDHandler.getItemsReturn());
 
     }
 
