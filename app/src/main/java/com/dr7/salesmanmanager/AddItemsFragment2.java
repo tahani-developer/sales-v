@@ -421,11 +421,8 @@ public class AddItemsFragment2 extends DialogFragment {
         clearBarcode.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                barcode.setText("");
-                recyclerView.setVisibility(View.VISIBLE);
-                emptyView.setVisibility(View.GONE);
-                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
-                        recyclerView.setAdapter(adapter);
+                cleanBarcodeLayout();
+
 
             }
         });
@@ -636,6 +633,14 @@ public class AddItemsFragment2 extends DialogFragment {
         return view;
     }
 
+    private void cleanBarcodeLayout() {
+        barcode.setText("");
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.GONE);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+        recyclerView.setAdapter(adapter);
+    }
+
     private void fillItemRecycler() {
         listAllItemsView.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -822,6 +827,7 @@ try {
 
 
     }
+
 }catch (Exception e){}
 
     }

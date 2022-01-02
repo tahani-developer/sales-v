@@ -672,6 +672,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
             listItemsMain.get(i).setIsPosted(0);
+            Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
             dataBase.addItem(listItemsMain.get(i));
         }
     }
@@ -719,7 +720,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             dataBase.updateSerialReturnedInBaseInvoice(returnListSerial.get(i).getVoucherNo(),returnListSerial.get(i).getSerialCode());
              returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
            // Log.e("returnListSerial","getVoucherNo=after="+returnListSerial.get(i).getVoucherNo());
-          if(dataBase.HASSERAIAL(returnListSerial.get(i).getItemNo())!=0)  dataBase.add_Serial(returnListSerial.get(i));
+          if(dataBase.HASSERAIAL(returnListSerial.get(i).getItemNo())!=0)
+              dataBase.add_Serial(returnListSerial.get(i));
         }
 
 try {
@@ -798,10 +800,11 @@ try {
             else {
                 returnListSerial.get(i).setKindVoucher("506");
                 returnListSerial.get(i).setDateVoucher(curent);
-               // returnListSerial.get(i).setVoucherNo(max_voucherNumber+"");
+
+                Log.e("deleteItemNotSelected","returnListSerial"+returnListSerial.get(i).getPriceItem());
             }
         }
-   Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
+   //Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
 
         deleteItemsDetail();
 
@@ -883,13 +886,13 @@ try {
         canChangePayMethod();
     }
     private void fillitemNoPrc_allItemType( List<serialModel>  returnListSerial) {
-       Log.e("fillitemNoPrc_allItemType==",returnListSerial.size()+"");
+       Log.e("fillitemNoPrc_all==",returnListSerial.size()+"");
         for (int i=0;i<returnListSerial.size();i++)
         {
             for(int j=0;j<listItemsReturn.size();j++)
             {
-                if(returnListSerial.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim()))
-                {
+//                if(returnListSerial.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim()))
+//                {
                     float salePrice=1,oneDisc=0;
                     try {
                         oneDisc=listItemsReturn.get(j).getDisc()/listItemsReturn.get(j).getQty();
@@ -909,11 +912,15 @@ try {
 
                     String itemName=dataBase.getItemName(returnListSerial.get(i).getItemNo().toString().trim());
                     listItemsReturn.get(j).setItemName(itemName);
+                    listItemsReturn.get(j).setPrice(salePrice);
 
 
                     returnListSerial.get(i).setItemName( itemName);
                     // Log.e("getItemNo","returnListSerial.get(i).getItemNo()"+itemName);
-                }
+//                }
+//                else {
+//
+//                }
 
             }
 

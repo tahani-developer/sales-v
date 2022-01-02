@@ -164,9 +164,9 @@ public class Login extends AppCompatActivity {
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
     public  static    int getTotalBalanceInActivities=1;
-    public  static    int dateFromToActive=0;
+    public  static    int dateFromToActive=1;
 
-    public  static   int  talaatLayoutAndPassowrd=0;
+    public  static   int  talaatLayoutAndPassowrd=1;
     public  static    int voucherReturn_spreat=0;
 
 //    public  static  String headerDll = "";
@@ -355,6 +355,7 @@ public class Login extends AppCompatActivity {
         }catch (Exception e){
 
         }
+      // Log.e( "getItemsReturn","==="+mDHandler.getItemsReturn());
 
     }
 
