@@ -519,6 +519,11 @@ public class ExportJason extends AppCompatActivity {
 
     }
 
+    public void saveVouchersAndExport() {
+        Log.e("saveVouchersAndExport","saved");
+        saveExpot();
+    }
+
     class exportVoucherMasterClass implements Response.Listener<JSONObject>, Response.ErrorListener {
 
         @Override
@@ -2486,7 +2491,7 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_InventoryShelfDelphi---13"+result);
             pdVoucher.setTitle("Export Transaction");
-           // pdVoucher.dismissWithAnimation();
+            pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
@@ -2603,11 +2608,7 @@ public class ExportJason extends AppCompatActivity {
                         {
                             getData();
                         }else {
-                            SweetAlertDialog  pdStosk = new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE);
-                            pdStosk.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-                            pdStosk.setTitleText(" Saved ");
-                            pdStosk.setCancelable(true);
-                            pdStosk.show();
+                           showSavedSucces();
                         }
                     }
 
@@ -2799,6 +2800,8 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
                     pdStosk.setTitle("EXPORT_payment Successfully");
+                    pdStosk.dismissWithAnimation();
+                    showSavedSucces();
                 }
 
             } else {
@@ -2807,5 +2810,11 @@ public class ExportJason extends AppCompatActivity {
             if(importDataAfter==0)
             getData();
         }
+    }
+
+    private void showSavedSucces() {
+        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))
+                .show();
     }
 }

@@ -58,7 +58,7 @@
                 android:paddingVertical="10dp"
                 android:text="IIS"
                 android:textColor="#717171"
-                android:textSize="17sp" />
+                android:textSize="16sp" />
 
         </RadioGroup>
 
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/export_stock"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/max_voucher"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/make_order"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/password_from_admin"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -194,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/total_balance"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -220,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/voucher_return"
                 android:textColor="#717171"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

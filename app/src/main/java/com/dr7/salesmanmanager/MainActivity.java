@@ -132,6 +132,7 @@ import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
+import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 
@@ -1071,7 +1072,12 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-
+                            ExportJason obj = null;
+                            try {
+                                obj = new ExportJason(MainActivity.this);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             Log.e("sumExport", "" + sum_chech_export_lists);
                             if (mDbHandler.getAllSettings().get(0).getPassowrd_data() == 1) {
                                 openPasswordDialog(6);
@@ -1081,12 +1087,7 @@ public class MainActivity extends AppCompatActivity
                                 if (!isPosted) {
 
                                     Log.e("isPostedExport","2"+isPosted);
-                                ExportJason obj = null;
-                                try {
-                                    obj = new ExportJason(MainActivity.this);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+
                                 try {
 //                                    obj.startExportDatabase();
                                     obj.startExport(0);
@@ -1095,9 +1096,13 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                             }
-                                else {
-                                    Toast.makeText(MainActivity.this, getResources().getString(R.string.saveSuccessfuly), Toast.LENGTH_SHORT).show();
-                                }
+
+                                    obj.saveVouchersAndExport();
+
+
+//                                else {
+//                                    Toast.makeText(MainActivity.this, getResources().getString(R.string.saveSuccessfuly), Toast.LENGTH_SHORT).show();
+//                                }
 
 
                         }
