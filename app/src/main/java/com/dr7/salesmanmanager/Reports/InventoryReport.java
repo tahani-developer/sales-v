@@ -404,11 +404,11 @@ public class InventoryReport extends AppCompatActivity {
                             switch (index)
                             {
                                 case 0:
-                                    exportToPdf();
+                                    exportToPdf( itemsInventoryPrint);
 
                                     break;
                                 case 1:
-                                    exportToEx();
+                                    exportToEx( itemsInventoryPrint);
                                     break;
 
 
@@ -514,12 +514,12 @@ public class InventoryReport extends AppCompatActivity {
     }
 
 
-    private void exportToEx() {
+    private void exportToEx(List<inventoryReportItem> itemsReportinventory) {
         ExportToExcel exportToExcel=new ExportToExcel();
         exportToExcel.createExcelFile(InventoryReport.this,"ReportInventory.xls",2,itemsReportinventory);
 
     }
-    public  void exportToPdf(){
+    public  void exportToPdf(List<inventoryReportItem> itemsReportinventory){
         Log.e("exportToPdf",""+itemsReportinventory.size());
         PdfConverter pdf =new PdfConverter(InventoryReport.this);
         pdf.exportListToPdf(itemsReportinventory,"InventoryReport","21/12/2020",2);
