@@ -1143,7 +1143,16 @@ public class ESCPSample2
 				}
 
 			}
-			Log.e("getTotalVoucherDiscount",""+voucherforPrint.getTotalVoucherDiscount() );
+
+			double totalItemsDiscount=0;
+			try {
+				totalItemsDiscount=itemDiscount;
+			}catch (Exception e)
+			{
+				Log.e("getException","totalItemsDiscount===");
+			}
+			//Log.e("getTotalVoucherDiscount",""+totalItemsDiscount+"\t"+(voucherforPrint.getSubTotal() + totalItemsDiscount));
+
 
 
 			posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1165,10 +1174,12 @@ public class ESCPSample2
 					//posPtr.printAndroidFont(null, true,    convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales())))  +"\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
 				}
-			} else {
+			} else
+				{
+					Log.e("","");
 				posPtr.printAndroidFont(null, true, "اجمالي الكمية  : " + convertToEnglish(decimalFormat.format(total_Qty)) + "\n", nLineWidth, 26, alignment);
 				if (dontshowTax == 0) {//MORMAL PRINT
-					posPtr.printAndroidFont(null, true, "المجموع  : " + voucherforPrint.getSubTotal() + "\n", nLineWidth, 26, alignment);
+					posPtr.printAndroidFont(null, true, "المجموع  : " + convertToEnglish(decimalFormat.format(voucherforPrint.getSubTotal() + totalItemsDiscount))+ "\n", nLineWidth, 26, alignment);
 
 				}
 				if (dontshowTax == 0) {

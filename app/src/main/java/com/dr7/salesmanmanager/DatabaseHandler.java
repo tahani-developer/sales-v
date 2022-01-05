@@ -32,6 +32,7 @@ import com.dr7.salesmanmanager.Modles.ItemSwitch;
 import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
 import com.dr7.salesmanmanager.Modles.ItemsMaster;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
+import com.dr7.salesmanmanager.Modles.ItemsReturn;
 import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
 import com.dr7.salesmanmanager.Modles.OfferGroupModel;
 import com.dr7.salesmanmanager.Modles.OfferListMaster;
@@ -7723,6 +7724,37 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
         return  itemUnit;
+    }
+
+    public ArrayList<ItemsReturn >getItemsReturn() {
+        ArrayList<ItemsReturn > allItemReturn=new ArrayList<>();
+
+
+        String selectQuery = " select VOUCHER_NUMBER , ITEM_NUMBER from SALES_VOUCHER_DETAILS where  VOUCHER_TYPE='506' and IS_POSTED='0'";
+        String itemUnit="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToNext()) {
+                if (cursor.getString(0) == null) {
+
+                } else {
+                    ItemsReturn  item =new ItemsReturn();
+                    item.setVouycherNo(cursor.getString(0));
+                    item.setItemCode( cursor.getString(1));
+                    allItemReturn.add(item);
+                    Log.e("getItemPrice","getItemPrice="+allItemReturn.size());
+
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  allItemReturn;
     }
 }
 
