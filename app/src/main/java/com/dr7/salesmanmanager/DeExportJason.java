@@ -62,6 +62,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.ExportJason.CONO;
 import static com.dr7.salesmanmanager.ExportJason.SalesManLogin;
+import static com.dr7.salesmanmanager.Login.headerDll;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 
@@ -84,7 +85,7 @@ public class DeExportJason extends AppCompatActivity {
     public static List<serialModel> serialModelList = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
     String ipAddress="",ipWithPort="",URL_TO_HIT="";
-    String headerDll="";
+
 
     public DeExportJason(Context context, String fromDate, String toDate, int flag) {
         this.context = context;
@@ -568,7 +569,7 @@ public class DeExportJason extends AppCompatActivity {
         ipWithPort=mHandler.getAllSettings().get(0).getIpPort();
         CONO=mHandler.getAllSettings().get(0).getCoNo();
         SalesManLogin= mHandler.getAllUserNo();
-        headerDll="/Falcons/VAN.dll";
+
 //        headerDll="";
         if (!ipAddress.equals("")) {
             //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224

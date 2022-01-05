@@ -333,7 +333,9 @@ public class requestAdmin {
             {
                 if(checkState.getText().toString().equals("0"))
                 {
-//                    new  JSONTask_checkStateRequest().execute();
+                    if(typaImport==0)
+                    new  JSONTask_checkStateRequest().execute();
+                    else
                    new  JSONTask_checkStateRequest_IIS().execute();
                 }
             }
@@ -342,14 +344,18 @@ public class requestAdmin {
                 {
                     if(checkState_recycler.getText().toString().equals("0"))
                     {
-//                        new  JSONTask_checkStateRequest().execute();
+                        if(typaImport==0)
+                        new  JSONTask_checkStateRequest().execute();
+                        else
                         new  JSONTask_checkStateRequest_IIS().execute();
                     }
                 }
                 else if(requestType.equals("100"))
                 {
                     if(checkState_LimitCredit.getText().toString().equals("0")){
-//                        new  JSONTask_checkStateRequest().execute();
+                        if(typaImport==0)
+                        new  JSONTask_checkStateRequest().execute();
+                        else
                         new  JSONTask_checkStateRequest_IIS().execute();
                     }
                 }

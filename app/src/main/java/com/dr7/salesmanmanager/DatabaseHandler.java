@@ -75,7 +75,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 161;
+    private static final int DATABASE_VERSION = 162;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -453,6 +453,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String ValueTotalDisc = "ValueTotalDisc";
     private static final String STORE_NO = "STORE_NO";
     private static final String Item_Unit = "Item_Unit";
+    private static final String SUM_CURRENT_QTY = "SUM_CURRENT_QTY";
+    private static final String DONT_DUPLICATE_ITEMS = "DONT_DUPLICATE_ITEMS";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -1041,11 +1043,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 + ValueTotalDisc + " REAL, "
                 + STORE_NO + " INTEGER, "
-                + Item_Unit + " INTEGER "
-
-
-
-
+                + Item_Unit + " INTEGER ,"
+                +SUM_CURRENT_QTY+ " INTEGER, "
+                +DONT_DUPLICATE_ITEMS+ " INTEGER "
 
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
@@ -1476,6 +1476,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         } catch (Exception e) {
             Log.e(TAG, e.getMessage().toString());
         }
+        try {
+            db.execSQL("ALTER TABLE SETTING ADD  SUM_CURRENT_QTY INTEGER NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE SETTING ADD  DONT_DUPLICATE_ITEMS INTEGER NOT NULL DEFAULT '0'");
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
 
 //**************************************End Table setting *************************************************************
@@ -3098,7 +3105,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
-                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit) {
+                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3155,6 +3162,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Log.e("valueDisc","store="+store);
         values.put(  STORE_NO,store);
         values.put(Item_Unit,itemUnit);
+        values.put( SUM_CURRENT_QTY,sumQtys);
+       values.put(      DONT_DUPLICATE_ITEMS,noDuplicate);
 
 
         db.insert(TABLE_SETTING, null, values);
@@ -3215,6 +3224,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(  ValueTotalDisc,defaultValue);
         values.put(  STORE_NO,"1");
         values.put(Item_Unit,defaultValue);
+        values.put( SUM_CURRENT_QTY,defaultValue);
+        values.put(      DONT_DUPLICATE_ITEMS,defaultValue);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -3610,6 +3621,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setValueOfTotalDiscount((cursor.getDouble(45)));
                 setting.setStoreNo((cursor.getString(46)));
                 setting.setItemUnit((cursor.getInt(47)));
+                setting.setSumCurrentQty((cursor.getInt(48)));
+                setting.setDontduplicateItem((cursor.getInt(49)));
 
                 settings.add(setting);
             } while (cursor.moveToNext());

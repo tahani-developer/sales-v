@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.80</string>
+    <string name="version"> V 100.85</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -502,6 +502,8 @@
     <string name="password_from_admin">Password From Admin</string>
     <string name="voucher_return">Split Returned Vouchers</string>
     <string name="more">more</string>
+    <string name="sumCurrentQty">Sum Current Qty</string>
+    <string name="dontDuplicateItem">Dont Duplicate Item</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

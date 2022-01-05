@@ -236,11 +236,12 @@ public class ImportJason extends AppCompatActivity {
     }
 
     public void getSerialData(String voucherNo) {
+
         new JSONTask_SerialReturnData(voucherNo).execute();
     }
 
     public void getVoucherNoFromServer(String srialCode) {
-        Log.e("getVoucherNoFromServer","srialCode="+srialCode );
+
         new JSONTask_getVoucherNoForSerial(srialCode).execute();
     }
     private class JSONTask_getVoucherNoForSerial extends AsyncTask<String, String, String> {
@@ -1457,9 +1458,9 @@ public class ImportJason extends AppCompatActivity {
     }
 
     public void updateLocation(JSONObject jsonObject) {
-//        if(typaImport==0)
-//        new JSONTask_UpdateLocation(jsonObject).execute();
-//        else
+        if(typaImport==0)
+        new JSONTask_UpdateLocation(jsonObject).execute();
+        else
         new JSONTask_UpdateLocation_IIS(jsonObject).execute();
     }
 
@@ -1819,14 +1820,16 @@ public class ImportJason extends AppCompatActivity {
 
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         String salesNo=finalObject.getString("SalesManNo");
-                        Log.e("ejabi","salesNo="+salesNo+"\tsalesMan="+salesMan);
-                        if(salesNo.equals(salesMan))
+
+                       int sales_Man=Integer.parseInt(salesMan);
+                       // Log.e("ejabi","salesNo="+salesNo+"\tsalesMan="+salesMan+"\t"+sales_Man);
+                        if(salesNo.trim().equals(sales_Man+""))
                         {
                             item.setCompanyNo(finalObject.getString("ComapnyNo"));
                             item.setSalesManNo(finalObject.getString("SalesManNo"));
                             item.setItemNo(finalObject.getString("ItemNo"));
                             item.setQty(finalObject.getDouble("Qty"));
-                            Log.e("salesManItemsBalanceList", "Gson" + item.getItemNo()+"\t"+item.getQty());
+                           // Log.e("salesManItemsBalan", "Gson" + item.getItemNo()+"\t"+item.getQty());
                             salesManItemsBalanceList.add(item);
                         }
 

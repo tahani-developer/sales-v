@@ -87,6 +87,7 @@ import static com.dr7.salesmanmanager.Login.offerTalaat;
 
 import static com.dr7.salesmanmanager.SalesInvoice.discountRequest;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.items;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 
@@ -100,7 +101,7 @@ import static com.dr7.salesmanmanager.Activities.currentKey;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
     SalesInvoice.SalesInvoiceInterface salesInvoiceInterfaceListener;
-    private List<Item> items;
+    private List<Item> allItemsList;
     private ArrayList<Integer> isClicked = new ArrayList<>();
     private List<Item> filterList;
     private Context cont;
@@ -143,7 +144,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     requestAdmin request;
 
 
-    int typeRequest = 0, haveResult = 0, approveAdmin = 0;
+    int typeRequest = 0, haveResult = 0, approveAdmin = 0,dontDuplicateItems=0,sumCurentQty=0;
 
     LinearLayout mainRequestLinear;
     LinearLayout resultLinear;
@@ -164,12 +165,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     public RecyclerViewAdapter(List<Item> items, AddItemsFragment2 context) {
-        this.items = items;
+        this.allItemsList = items;
         this.filterList = items;
         this.context = context;
         cont = context.getActivity();
         try {
-            for (int i = 0; i <= items.size(); i++) {//******************
+            for (int i = 0; i <= allItemsList.size(); i++) {//******************
                 isClicked.add(0);
             }
         } catch (Exception e) {
@@ -193,6 +194,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ipAddress = MHandler.getAllSettings().get(0).getIpAddress();
         itemUnit=MHandler.getAllSettings().get(0).getItemUnit();
          rate_customer = MHandler.getRateOfCustomer();
+        dontDuplicateItems=MHandler.getAllSettings().get(0).getDontduplicateItem();
+        sumCurentQty=MHandler.getAllSettings().get(0).getSumCurrentQty();
         getTimeAndDate();
 
 
@@ -215,17 +218,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //        else
 //            holder.linearLayout.setBackgroundColor(R.color.done_button);
 
-        holder.itemNumber.setText(items.get(position).getItemNo());
-        holder.itemName.setText(items.get(position).getItemName());
+
+        holder.itemNumber.setText(allItemsList.get(position).getItemNo());
+        holder.itemName.setText(allItemsList.get(position).getItemName());
         holder.itemName.setMovementMethod(new ScrollingMovementMethod());
-        holder.tradeMark.setText(items.get(position).getItemName());
-        holder.category.setText("" + items.get(position).getCategory());
+        holder.tradeMark.setText(allItemsList.get(position).getItemName());
+        holder.category.setText("" + allItemsList.get(position).getCategory());
 
         if (MHandler.getAllSettings().get(0).getHide_qty() == 1) {
             holder.row_qty.setVisibility(View.GONE);
 //            holder.unitQty.setVisibility(View.GONE);
         } else {
-            holder.unitQty.setText("" + items.get(position).getQty());
+            if(sumCurentQty==1)
+            {
+                try {
+                    String solidQty=MHandler.getSolidQtyForItem(allItemsList.get(position).getItemNo(),voucherDate);
+                   // Log.e("sumCurentQty","solidQty=="+solidQty);
+                    float qtyCurent=Float.parseFloat(solidQty);
+                    holder.unitQty.setText("" + (allItemsList.get(position).getQty()-qtyCurent));
+                }catch (Exception e){
+
+                }
+
+
+            }else {
+                holder.unitQty.setText("" + allItemsList.get(position).getQty());
+            }
+
         }
         holder.unitQty.setEnabled(false);
 //        if(settingPriceCus==1)
@@ -258,7 +277,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 //                    itemBitmap=StringToBitMap(items.position).getItemPhoto()get(holder.getAdapterPosition()).getItemPhoto());
                     //   showImageOfCheck(items.get(position).getItemPhoto());
-                    String url = items.get(position).getItemPhoto();
+                    String url = allItemsList.get(position).getItemPhoto();
                     Log.e("url", "imagespecial" + url);
                     if (url.contains("Products")) {
                         int index = url.indexOf("P");
@@ -286,7 +305,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            }else{
 
             Log.e("rate_customer",""+rate_customer);
-            String postPriceUniteValue=MHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
+            String postPriceUniteValue=MHandler.getUnitPrice(allItemsList.get(position).getItemNo(),rate_customer);
             if(!postPriceUniteValue.equals(""))
             {
                 try {
@@ -294,7 +313,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }catch (Exception e){}
             }
             else {
-                priceUnit=items.get(position).getPrice();
+                priceUnit=allItemsList.get(position).getPrice();
             }
 
             holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
@@ -303,15 +322,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 //            items.get(position).setPrice(priceUnit);
         }else {
-            holder.price.setText(convertToEnglish(threeDForm.format(items.get(position).getPrice())) + "\t\tJD");
+            holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
 
         }
         if(MHandler.getAllSettings().get(0).getPriceByCust()==1){// for ejabi ***** test
-            String priceCus=MHandler.getItemPrice(items.get(position).getItemNo());
+            String priceCus=MHandler.getItemPrice(allItemsList.get(position).getItemNo());
             if(!priceCus.equals(""))
             {
                 holder.price.setText(priceCus);
-                items.get(position).setPrice(Float.parseFloat(priceCus));
+                allItemsList.get(position).setPrice(Float.parseFloat(priceCus));
             }
 
         }
@@ -321,17 +340,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //       *******************************//////////////////////
         if (showSolidQty == 1) {
             holder.table_solidQty.setVisibility(View.VISIBLE);
-            holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(items.get(position).getItemNo(),voucherDate));
+            holder.textViewsolidQty.setText("" + MHandler.getSolidQtyForItem(allItemsList.get(position).getItemNo(),voucherDate));
 
 
         } else {
             holder.table_solidQty.setVisibility(View.GONE);
         }
-        holder.tax.setText("" + items.get(position).getTaxPercent());
+        holder.tax.setText("" + allItemsList.get(position).getTaxPercent());
 
-        holder.barcode.setText(items.get(position).getBarcode());
+        holder.barcode.setText(allItemsList.get(position).getBarcode());
 
-        holder.posprice.setText(items.get(position).getPosPrice() + "");
+        holder.posprice.setText(allItemsList.get(position).getPosPrice() + "");
         holder.cardView.setOnClickListener(new View.OnClickListener() {
                                                @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                                                @Override
@@ -350,25 +369,42 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                    counterBonus = 0;
                                                    getTimeAndDate();
                                                    for (int i = 0; i < localItemNumber.size(); i++) {
-                                                       if (localItemNumber.get(i).equals(items.get(position).getItemNo())) {
+                                                       if (localItemNumber.get(i).equals(allItemsList.get(position).getItemNo())) {
 //                                                           if(canChangePrice==0)
 //                                                           {
-                                                           showAlertDialog();
+                                                          // showAlertDialog();
                                                            itemInlocalList = true;
                                                            break;
 //                                                           }
 
                                                        }
                                                    }
+
+
+
+                                                   if(dontDuplicateItems==1)
+                                                   {
+                                                        for (int i = 0; i < items.size(); i++) {
+                                                       if (items.get(i).getItemNo().equals(allItemsList.get(position).getItemNo())) {
+                                                           itemInlocalList = true;
+                                                           break;
+//                                                           }
+
+                                                       }
+                                                   }
+//                                                       Log.e("items",""+items.size());
+//                                                       Log.e("allItemsList",""+allItemsList.size());
+                                                   }
+
                                                    if (itemInlocalList == false) {
                                                        final Dialog dialog = new Dialog(view.getContext());
                                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                                        dialog.setCancelable(false);
-                                                       itemNoSelected = items.get(position).getItemNo();
+                                                       itemNoSelected = allItemsList.get(position).getItemNo();
 
                                                        try {
 
-                                                           if ((items.get(position).getItemHasSerial().equals("1")) && voucherType != 508) {
+                                                           if ((allItemsList.get(position).getItemHasSerial().equals("1")) && voucherType != 508) {
                                                                current_itemHasSerial = 1;
 
                                                                dialog.setContentView(R.layout.add_item_serial_dialog);
@@ -802,11 +838,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        approveAdmin = MHandler.getAllSettings().get(0).getApproveAdmin();
                                                        //**********************************************************************************************
                                                        if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
-                                                           if (items.get(position).getDiscountCustomer() != 0.0) {
+                                                           if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                                haveCstomerDisc = true;
-                                                               discountCustomer = items.get(position).getDiscountCustomer() + "";
+                                                               discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
 
-                                                               discount.setText(items.get(position).getDiscountCustomer() + "");
+                                                               discount.setText(allItemsList.get(position).getDiscountCustomer() + "");
 //                                                               discount.setEnabled(false);
                                                                radioGroup.check(R.id.discPercRadioButton);
                                                                radioGroup.setEnabled(false);
@@ -901,7 +937,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                          okButton.setVisibility(View.VISIBLE);
                                                            } else {// you need to approve admin for discount or bunos
                                                                typeRequest = 1;
-                                                               if (items.get(position).getItemHasSerial().equals("1")) {
+                                                               if (allItemsList.get(position).getItemHasSerial().equals("1")) {
                                                                    mainRequestLinear.setVisibility(View.VISIBLE);
                                                                    _linear_switch.setVisibility(View.VISIBLE);
                                                                    discountLinearLayout.setVisibility(View.VISIBLE);
@@ -963,12 +999,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    }
                                                                                }
                                                                                if (MHandler.getAllSettings().get(0).getPriceByCust() == 1) {
-                                                                                   if (items.get(position).getDiscountCustomer() != 0.0) {
+                                                                                   if (allItemsList.get(position).getDiscountCustomer() != 0.0) {
                                                                                        discountText = discount.getText().toString();
                                                                                        haveCstomerDisc = true;
                                                                                        addToList.setEnabled(false);
                                                                                        price.setEnabled(false);
-                                                                                       discountCustomer = items.get(position).getDiscountCustomer() + "";
+                                                                                       discountCustomer = allItemsList.get(position).getDiscountCustomer() + "";
 
                                                                                        if (haveCstomerDisc) {
 
@@ -977,7 +1013,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                try {
                                                                                                    currentKey = "";
                                                                                                    requestDiscount.setEnabled(false);
-                                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                                   getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                                    addToList.setEnabled(false);
                                                                                                    discount.setEnabled(false);
                                                                                                    unitQty.setEnabled(false);
@@ -1002,7 +1038,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                    } else {
                                                                                        try {
-                                                                                           getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                           getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                            addToList.setEnabled(false);
                                                                                            discount.setEnabled(false);
                                                                                            currentKey = "";
@@ -1019,7 +1055,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    }
                                                                                } else {
                                                                                    try {
-                                                                                       getDataForDiscountTotal(items.get(position).getItemName(), "0", items.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
+                                                                                       getDataForDiscountTotal(allItemsList.get(position).getItemName(), "0", allItemsList.get(position).getPrice() + "", discount.getText().toString(), unitQty.getText().toString());
                                                                                        addToList.setEnabled(false);
                                                                                        discount.setEnabled(false);
                                                                                        currentKey = "";
@@ -1050,7 +1086,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            if (!bonus.getText().toString().equals("")) {
                                                                                try {
                                                                                    Log.e("bonus_request=",""+bonus.getText().toString());
-                                                                                   getDataForDiscountTotal(items.get(position).getItemName(), "2", items.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
+                                                                                   getDataForDiscountTotal(allItemsList.get(position).getItemName(), "2", allItemsList.get(position).getPrice() + "", bonus.getText().toString(), unitQty.getText().toString());
                                                                                    addToList.setEnabled(false);
                                                                                    bonus.setEnabled(false);
                                                                                    unitQty.setEnabled(false);
@@ -1136,17 +1172,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                            }
                                                        });
-                                                       itemNumber.setText(items.get(position).getItemNo());
-                                                       itemName.setText(items.get(position).getItemName());
+                                                       itemNumber.setText(allItemsList.get(position).getItemNo());
+                                                       itemName.setText(allItemsList.get(position).getItemName());
                                                        final DatabaseHandler mHandler = new DatabaseHandler(cont);
                                                        //*********************************** change Price with customer or not accourding to setting  ************************************
                                                        if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
-                                                           price.setText("" + items.get(position).getPrice());
+                                                           price.setText("" + allItemsList.get(position).getPrice());
                                                            price.setEnabled(false);
                                                            //    price.setText("Desable");
 
                                                        } else {
-                                                           price.setText("" + items.get(position).getPrice());
+                                                           price.setText("" + allItemsList.get(position).getPrice());
                                                        }
                                                        if(mHandler.getAllSettings().get(0).getItemUnit()==1)
                                                        {
@@ -1154,7 +1190,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                                           {
 //                                                               price.setText("" + items.get(position).getPrice());
 //                                                           }else {
-                                                               String itemUnitPrice=mHandler.getUnitPrice(items.get(position).getItemNo(),rate_customer);
+                                                               String itemUnitPrice=mHandler.getUnitPrice(allItemsList.get(position).getItemNo(),rate_customer);
                                                                if(!itemUnitPrice.equals(""))
                                                                    price.setText(itemUnitPrice);
 //                                                           }
@@ -1181,14 +1217,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            textQty.setText(view.getContext().getResources().getString(R.string.app_qty));
                                                            // useWeight.setChecked(false);
                                                        } else
-                                                           unitQty.setText("" + items.get(position).getItemL());
+                                                           unitQty.setText("" + allItemsList.get(position).getItemL());
 
 
                                                        List<String> units = mHandler.getAllexistingUnits(itemNumber.getText().toString());
 
                                                        ArrayAdapter<String> unitsList = new ArrayAdapter<String>(cont, R.layout.spinner_style, units);
                                                        unit.setAdapter(unitsList);
-                                                       if ((items.get(position).getItemHasSerial().equals("1"))) {
+                                                       if ((allItemsList.get(position).getItemHasSerial().equals("1"))) {
                                                            unit.setVisibility(View.GONE);
                                                        }
                                                        unit.setVisibility(View.GONE);
@@ -1261,10 +1297,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                                                                               if (items.get(holder.getAdapterPosition()).getQty() >= Double.parseDouble(unitQty.getText().toString())
 //                                                                                                       || mHandler.getAllSettings().get(0).getAllowMinus() == 1
 //                                                                                                       || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508)
-                                                                                               if (validQty(items.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
+                                                                                               if (validQty(allItemsList.get(position).getQty(), Float.parseFloat(unitQty.getText().toString()))) {
 
                                                                                                    if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                                                                           Double.parseDouble(price.getText().toString()) >= items.get(position).getMinSalePrice())) {
+                                                                                                           Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
 
                                                                                                        AddItemsFragment2 obj = new AddItemsFragment2();
@@ -1279,7 +1315,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                        holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
                                                                                                                        bonus.getText().toString(),
                                                                                                                        discount.getText().toString(),
-                                                                                                                       radioGroup, items.get(position).getCategory(), items.get(position).getPosPrice() + "", useWeight,
+                                                                                                                       radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "", useWeight,
                                                                                                                        view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial,oneUnit);
 
                                                                                                                appliedOffer = getAppliedOffer(itemNumber.getText().toString(), unitQty.getText().toString(), 0);
@@ -1298,7 +1334,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                   // Log.e("bonus_calc=", "" + bonus_calc);
                                                                                                                    added = obj.addItem(offer.get(0).getBonusItemNo(), "(bonus)",
                                                                                                                            "0", "1", "" + bonus_calc, "0",
-                                                                                                                           "0", "0", radioGroup, items.get(position).getCategory(), items.get(position).getPosPrice() + "", useWeight, view.getContext()
+                                                                                                                           "0", "0", radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "", useWeight, view.getContext()
                                                                                                                            , item_remark.getText().toString(), serialListitems, current_itemHasSerial,oneUnit);
 
                                                                                                                    Log.e("bonus_calc=", "added2" + added);
@@ -1343,7 +1379,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                            holder.tax.getText().toString(), unitValue, unitQty.getText().toString(), price.getText().toString(),
                                                                                                                            bonus.getText().toString(), "" + disount_totalnew, radioGroup
-                                                                                                                           , items.get(position).getCategory(), items.get(position).getPosPrice() + "",
+                                                                                                                           , allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
                                                                                                                            useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                            current_itemHasSerial,oneUnit);
                                                                                                                }
@@ -1351,7 +1387,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                            holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
                                                                                                                            bonus.getText().toString(), discount.getText().toString(), radioGroup,
-                                                                                                                           items.get(position).getCategory(), items.get(position).getPosPrice() + "",
+                                                                                                                           allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
                                                                                                                            useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                            current_itemHasSerial,oneUnit);
 
@@ -1367,7 +1403,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                    holder.tax.getText().toString(), unitValue, unitQty.getText().toString() + "", price.getText().toString(),
                                                                                                                    bonus.getText().toString(), discount.getText().toString(), radioGroup,
-                                                                                                                   items.get(position).getCategory(), items.get(position).getPosPrice() + "",
+                                                                                                                   allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
                                                                                                                    useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                    current_itemHasSerial,oneUnit);
                                                                                                        }
@@ -1377,13 +1413,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                            holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
                                                                                                            isClicked.set(position, 1);
-                                                                                                           localItemNumber.add(items.get(position).getItemNo());
+                                                                                                           localItemNumber.add(allItemsList.get(position).getItemNo());
                                                                                                            itemInlocalList = false;
                                                                                                            dialog.dismiss();
                                                                                                        }
                                                                                                    } else {
-                                                                                                       Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
-                                                                                                       Log.e("bonus not added ", "" + items.get(position).getMinSalePrice());
+                                                                                                       Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + allItemsList.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                                                                       Log.e("bonus not added ", "" + allItemsList.get(position).getMinSalePrice());
                                                                                                        price.setError(view.getResources().getString(R.string.invalidValue));
 
                                                                                                    }
@@ -1404,11 +1440,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                                                    Log.e("here**", "" + position);
                                                                                                    if (position > -1) {
-                                                                                                       if (items.get(position).getQty() >= Double.parseDouble(qty)
+                                                                                                       if (allItemsList.get(position).getQty() >= Double.parseDouble(qty)
                                                                                                                || mHandler.getAllSettings().get(0).getAllowMinus() == 1
                                                                                                                || SalesInvoice.voucherType == 506 || SalesInvoice.voucherType == 508) {
                                                                                                            if (mHandler.getAllSettings().get(0).getMinSalePric() == 0 || (mHandler.getAllSettings().get(0).getMinSalePric() == 1 &&
-                                                                                                                   Double.parseDouble(price.getText().toString()) >= items.get(position).getMinSalePrice())) {
+                                                                                                                   Double.parseDouble(price.getText().toString()) >= allItemsList.get(position).getMinSalePrice())) {
 
                                                                                                                AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                                List<Offers> offer = checkOffers(itemNumber.getText().toString());
@@ -1420,7 +1456,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                        added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                                holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                                                                bonus.getText().toString(), discount.getText().toString(),
-                                                                                                                               radioGroup, items.get(position).getCategory(), items.get(position).getPosPrice() + "",
+                                                                                                                               radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
                                                                                                                                useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                                current_itemHasSerial, oneUnit);
 
@@ -1432,7 +1468,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                        added = obj.addItem(appliedOffer.getBonusItemNo(), "(bonus)",
                                                                                                                                "0", "1", "" + appliedOffer.getBonusQty(), "0",
                                                                                                                                "0", "0", radioGroup
-                                                                                                                               , items.get(position).getCategory(), items.get(position).getPosPrice() + ""
+                                                                                                                               , allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + ""
                                                                                                                                , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                                current_itemHasSerial, oneUnit);
                                                                                                                    }
@@ -1444,7 +1480,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                                    holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                                                                    bonus.getText().toString(), "" + (appliedOffer.getBonusQty() * Double.parseDouble(qty)), radioGroup,
-                                                                                                                                   items.get(position).getCategory(), items.get(position).getPosPrice() + ""
+                                                                                                                                   allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + ""
                                                                                                                                    , useWeight, view.getContext(), item_remark.getText().toString(), serialListitems,
                                                                                                                                    current_itemHasSerial,oneUnit);
                                                                                                                        }
@@ -1453,7 +1489,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
                                                                                                                            holder.tax.getText().toString(), unitValue, qty, price.getText().toString(),
                                                                                                                            bonus.getText().toString(), discount.getText().toString(),
-                                                                                                                           radioGroup, items.get(position).getCategory(), items.get(position).getPosPrice() + "",
+                                                                                                                           radioGroup, allItemsList.get(position).getCategory(), allItemsList.get(position).getPosPrice() + "",
                                                                                                                            useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial,oneUnit);
                                                                                                                }
                                                                                                                if (added) {
@@ -1464,7 +1500,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    dialog.dismiss();
                                                                                                                }
                                                                                                            } else
-                                                                                                               Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + items.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
+                                                                                                               Toast.makeText(view.getContext(), "Item hasn't been added, Min sale price for this item is " + allItemsList.get(position).getMinSalePrice(), Toast.LENGTH_LONG).show();
                                                                                                        } else
                                                                                                            Toast.makeText(view.getContext(), "Insufficient Quantity", Toast.LENGTH_LONG).show();
                                                                                                    } else
@@ -1545,10 +1581,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                        dialog.show();
 
                                                    } else {
-//                                                       new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
-//                                                               .setTitleText(view.getContext().getString(R.string.warning_message))
-//                                                               .setContentText(view.getContext().getString(R.string.itemadedbefor))
-//                                                               .show();
+                                                       new SweetAlertDialog(view.getContext(), SweetAlertDialog.ERROR_TYPE)
+                                                               .setTitleText(view.getContext().getString(R.string.warning_message))
+                                                               .setContentText(view.getContext().getString(R.string.itemadedbefor))
+                                                               .show();
                                                    }
                                                }
                                            }//on click
@@ -2302,7 +2338,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return allItemsList.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder {

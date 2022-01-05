@@ -84,6 +84,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
+import static com.dr7.salesmanmanager.ReturnByVoucherNo.voucherNo_ReturnNo;
 
 public class ExportJason extends AppCompatActivity {
 
@@ -328,11 +329,9 @@ public class ExportJason extends AppCompatActivity {
 
     }
     public  void startExport(int expoAndImpo) throws JSONException {
-        if(expoAndImpo==1)
-        {
-            importDataAfter=1;// to import new data if (0)
-        }
-        else importDataAfter=0;
+        Log.e("startExport","typaImport"+typaImport);
+        importDataAfter=expoAndImpo;
+
         if(typaImport==0)//mysql
         {
             startExportDatabase();
@@ -2610,6 +2609,10 @@ public class ExportJason extends AppCompatActivity {
                         }else {
                            showSavedSucces();
                         }
+                    }  else if(importDataAfter==2)
+                    {
+                        ImportJason obj = new ImportJason(context);
+                        obj.getSerialData(voucherNo_ReturnNo);
                     }
 
 
@@ -2801,14 +2804,21 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully")) {
                     pdStosk.setTitle("EXPORT_payment Successfully");
                     pdStosk.dismissWithAnimation();
+                    if(importDataAfter!=2)
                     showSavedSucces();
                 }
 
             } else {
             }
             pdStosk.dismissWithAnimation();
+            Log.e("importDataAfter",""+importDataAfter);
             if(importDataAfter==0)
             getData();
+            else if(importDataAfter==2)
+            {Log.e("importDataAfter","else"+importDataAfter);
+                ImportJason obj = new ImportJason(context);
+                obj.getSerialData(voucherNo_ReturnNo);
+            }
         }
     }
 

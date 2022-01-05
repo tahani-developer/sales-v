@@ -547,5 +547,7 @@
     <string name="password_from_admin">رقم سر الاعدادات من الادمن</string>
     <string name="voucher_return">فصل الفواتير المرتجعة</string>
     <string name="more">المزيد</string>
+    <string name="sumCurrentQty">الكميات المتوفرة الحالية</string>
+    <string name="dontDuplicateItem">منع تكرار المواد باسعار مختلفة</string>
 
 </resources>

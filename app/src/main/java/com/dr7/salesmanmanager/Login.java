@@ -166,7 +166,7 @@ public class Login extends AppCompatActivity {
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
 
-    public  static   int  talaatLayoutAndPassowrd=1;
+    public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
 
 //    public  static  String headerDll = "";
@@ -484,10 +484,12 @@ public class Login extends AppCompatActivity {
                     else {
                         mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
+                    mDHandler.deletAllSalesLogIn();
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
                    boolean isPosted=mDHandler.isAllVoucher_posted();
                    if(isPosted)
                    {
+
                        ImportJason importJason=new ImportJason(Login.this);
                        importJason.startParsing(storeNo_edit.getText().toString());
                    }else {
@@ -726,7 +728,6 @@ public class Login extends AppCompatActivity {
         {
             passwordSettingAdmin=1;
             offerTalaat=1;
-            typaImport=0;
             dateFromToActive=0;
             getTotalBalanceInActivities=0;
             offerQasion=0;

@@ -53,6 +53,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.MainActivity.curentDate;
 import static com.dr7.salesmanmanager.MainActivity.curentTime;
@@ -672,7 +673,7 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        if(allDataPosted())
+                        if(allDataPosted()||typaImport==0)
                         {
                             finish();
                             Intent inte=new Intent(Activities.this,AccountStatment.class);
@@ -783,7 +784,8 @@ public class Activities extends AppCompatActivity implements
     private boolean allDataPosted() {
         boolean isPosted = databaseHandler.isAllReceptposted();
         Log.e("isAllReceptposted","1"+isPosted);
-        if (!isPosted) {         return false;
+        if (!isPosted) {     
+            return false;
 
         }
         else {

@@ -50,6 +50,24 @@ public class Settings {
     private  double valueOfTotalDiscount;
     private  String storeNo;
     private  int itemUnit;
+    private  int sumCurrentQty;
+    private  int dontduplicateItem;
+
+    public int getSumCurrentQty() {
+        return sumCurrentQty;
+    }
+
+    public void setSumCurrentQty(int sumCurrentQty) {
+        this.sumCurrentQty = sumCurrentQty;
+    }
+
+    public int getDontduplicateItem() {
+        return dontduplicateItem;
+    }
+
+    public void setDontduplicateItem(int dontduplicateItem) {
+        this.dontduplicateItem = dontduplicateItem;
+    }
 
     public int getItemUnit() {
         return itemUnit;
