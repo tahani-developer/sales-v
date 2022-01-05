@@ -288,23 +288,24 @@ public class CashReport  extends AppCompatActivity {
                             if (printer != -1) {
                                 switch (printer) {
                                     case 0:
-
-                                        Intent i = new Intent(CashReport.this, BluetoothConnectMenu.class);
-                                        i.putExtra("printKey", "3");
-                                        startActivity(i);
-
-//                                                             lk30.setChecked(true);
-                                        break;
+//                                        Log.e(" case","==0");
+//                                        Intent O1= new Intent(CashReport.this, bMITP.class);
+//                                        O1.putExtra("printKey", "3");
+//                                        startActivity(O1);
+//
+////                                                             lk30.setChecked(true);
+//                                        break;
                                     case 1:
-
-                                        try {
-                                            findBT();
-                                            openBT(1);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
+//                                        Log.e(" case","==1");
+//                                        try {
+//                                            Intent O1= new Intent(CashReport.this, bMITP.class);
+//                                            O1.putExtra("printKey", "3");
+//                                            startActivity(O1);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
 //                                                             lk31.setChecked(true);
-                                        break;
+ //                                       break;
                                     case 2:
 
 //                                        try {
@@ -316,31 +317,35 @@ public class CashReport  extends AppCompatActivity {
 //                                                             lk32.setChecked(true);
 
 //                                        convertLayoutToImage();
-
-                                        Intent O1= new Intent(CashReport.this, bMITP.class);
-                                        O1.putExtra("printKey", "3");
-                                        startActivity(O1);
-
-                                        break;
+                                        Log.e(" case","==2");
+//                                        Intent O1= new Intent(CashReport.this, bMITP.class);
+//                                        O1.putExtra("printKey", "3");
+//                                        startActivity(O1);
+//
+//                                        break;
                                     case 3:
 
-                                        try {
-                                            findBT();
-                                            openBT(3);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-//                                                             qs.setChecked(true);
-                                        break;
+//                                        try {
+//                                            Intent O1= new Intent(CashReport.this, bMITP.class);
+//                                            O1.putExtra("printKey", "3");
+//                                            startActivity(O1);
+//                                        } catch (IOException e) {
+//                                            e.printStackTrace();
+//                                        }
+////                                                             qs.setChecked(true);
+//                                        break;
                                     case 4:
-                                        printTally();
-                                        break;
+//                               //         printTally();
+//                                        Intent O1= new Intent(CashReport.this, bMITP.class);
+//                                        O1.putExtra("printKey", "3");
+//                                        startActivity(O1);
+//                                        break;
                                     case 5:
                                     case 6:
 //                                        convertLayoutToImage();
-                                        Intent O= new Intent(CashReport.this, bMITP.class);
-                                        O.putExtra("printKey", "3");
-                                        startActivity(O);
+                                        Intent O1= new Intent(CashReport.this, bMITP.class);
+                                        O1.putExtra("printKey", "3");
+                                        startActivity(O1);
 
                                         break;
 
