@@ -254,7 +254,7 @@ List<String> spinnerArray = new ArrayList<>();
             datLinear.setVisibility(View.GONE);
         }else {
             datLinear.setVisibility(View.VISIBLE);
-            
+
         }
         getAcc.setOnClickListener(new View.OnClickListener() {
             @Override
