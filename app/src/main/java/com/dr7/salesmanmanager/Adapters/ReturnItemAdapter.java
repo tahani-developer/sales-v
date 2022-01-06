@@ -73,6 +73,12 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 //        }
         if(list.get(position).getSerialCode().equals("")) {
             if (HaveSerial(list.get(position).getItemNo(), position) == 1) {
+                holder.text_count.setEnabled(false);
+                if(list.get(position).getQty().equals("0"))
+                {   holder.text_count.setVisibility(View.INVISIBLE);
+
+                }
+                else{   holder.text_count.setVisibility(View.VISIBLE);}
                 holder.linearSelected.setVisibility(View.INVISIBLE);
 
                 holder.price.setVisibility(View.INVISIBLE);
@@ -141,7 +147,11 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
                     if(!s.toString().equals("")) {
                        if( HaveSerial(list.get(position).getItemNo(), position) == 0)
-                       {  if (Float.parseFloat( ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty())
+                       {
+
+                          if(!s.toString().equals("0")) {
+
+                              if (Float.parseFloat( ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty())
                                  >= Float.parseFloat(s.toString().trim())) {
 
                              ReturnByVoucherNo.allitemsdata.get(position).setQty(s.toString().trim());
@@ -158,7 +168,21 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
                                      }).show();
                              holder.text_count.setText(ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty());
 
-                         }
+                         }}else {
+
+                                  new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+
+                                          .setContentText(context.getString(R.string.invalidValue))
+                                          .setConfirmButton(context.getString(R.string.app_yes), new SweetAlertDialog.OnSweetClickListener() {
+                                              @Override
+                                              public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                  sweetAlertDialog.dismiss();
+                                              }
+                                          }).show();
+                                  holder.text_count.setText(ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty());
+
+
+                          }
                      }}}
             }
         });
@@ -166,6 +190,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
     private void updateqty(ReturnItemAdapter.SerialReportViewHolder holder,String itemNo) {
         for(int i=0;i<list.size();i++)
+
             if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
             {
                 if(HaveSerial(list.get(i).getItemNo(),i) == 1) {

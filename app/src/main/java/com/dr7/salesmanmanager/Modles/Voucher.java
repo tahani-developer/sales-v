@@ -34,6 +34,7 @@ public class Voucher {
     private int voucherYear;
     private String time;
 
+
     public String getTime() {
         return time;
     }
