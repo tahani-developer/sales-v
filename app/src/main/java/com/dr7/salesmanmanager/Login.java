@@ -206,7 +206,7 @@ public class Login extends AppCompatActivity {
             }
 
 
-            Log.e("languagelocalApp2", "" + languagelocalApp);
+         //   Log.e("languagelocalApp2", "" + languagelocalApp);
 
         } catch (Exception e) {
             languagelocalApp = "ar";
