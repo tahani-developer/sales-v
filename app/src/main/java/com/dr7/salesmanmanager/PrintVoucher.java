@@ -197,7 +197,7 @@ public class PrintVoucher extends AppCompatActivity {
         try {
             companeyinfo = obj.getAllCompanyInfo();
         }catch(Exception e){}
-        
+
 
         bluetoothSetup();
 

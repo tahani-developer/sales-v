@@ -61,6 +61,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
     public static List<serialModel> allitemsdata =new ArrayList<>();
+    public static List<serialModel> Recoverallitemsdata =new ArrayList<>();
     public static String VOCHdat="";
     DatabaseHandler databaseHandler;
     public static ReturnItemAdapter adapter;
@@ -110,6 +111,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void initialView() {
         allitemsdata.clear();
+        Recoverallitemsdata.clear();
         dataBase=new DatabaseHandler(this);
         textView_save=findViewById(R.id.textView_save);
         textView_cancel =findViewById(R.id.textView_can);
@@ -140,6 +142,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
            allitemsdata.clear();
+                Recoverallitemsdata.clear();
                 readBarcode();
                 textView_save.setEnabled(true);
                // getSerialVoucherNo();
@@ -167,6 +170,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             public void onClick(View view) {
                 if(voucherNo_text.getText().toString().trim().length()!=0)
                 {   allitemsdata.clear();
+                    Recoverallitemsdata.clear();
                     returnListSerial.clear();
                     voucherNo_text.setError(null);
                     voucherNo_ReturnNo =voucherNo_text.getText().toString().trim();
@@ -335,17 +339,30 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
         for (int i = 0; i < listItemsReturn.size(); i++) {
             serialModel serialModel1 = new serialModel();
+            serialModel recoverserialModel= new serialModel();
             serialModel1.setItemNo(listItemsReturn.get(i).getItemNo());
             serialModel1.setItemName(listItemsReturn.get(i).getItemName());
             serialModel1.setDateVoucher(voucherReturn.getVoucherDate());
             serialModel1.setPriceItem(listItemsReturn.get(i).getPrice());
+            if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0)
             serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getQty()));
+            else
+                serialModel1.setQty("0");
+
             serialModel1.setSerialCode("");
             allitemsdata.add(serialModel1);
+            ///recovery
+            recoverserialModel.setQty(serialModel1.getQty());
+            recoverserialModel.setItemNo(serialModel1.getItemNo());
+            Recoverallitemsdata.add( recoverserialModel);
+            /////
             for (int x = 0; x < returnListSerial.size(); x++)
-                if (listItemsReturn.get(i).getItemNo().equals(returnListSerial.get(x).getItemNo()))
+                if (listItemsReturn.get(i).getItemNo().equals(returnListSerial.get(x).getItemNo())) {
                     allitemsdata.add(returnListSerial.get(x));
 
+
+                    Recoverallitemsdata.add(returnListSerial.get(x));
+                }
         }
         fillitemNoPrc_allItemType();
     }
@@ -664,6 +681,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
         for(int i=0;i<listItemsMain.size();i++)
         {
+            Log.e("QTY==",""+"saveVoucherD  "+ listItemsMain.get(i).getQty());
+
             listItemsMain.get(i).setVoucherNumber(max_voucherNumber);
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
@@ -780,6 +799,7 @@ try {
 
        returnListSerial.clear();
        returnListSerial.addAll(allitemsdata);
+
       }
      //  Log.e("deleteItemsDetail","2returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
 
@@ -825,7 +845,9 @@ try {
                     if(!returnListSerial.get(i).getSerialCode().equals(""))
                     {
                         listItemsReturn.get(j).setQty(0);
-                    }
+                    }else {
+                        listItemsReturn.get(j).setQty(Float.parseFloat(returnListSerial.get(i).getQty()));
+                }
 
 
                     listItemsMain.add(listItemsReturn.get(j));

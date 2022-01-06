@@ -99,8 +99,9 @@
                 android:text="text_price"
                 android:textColor="@color/colorblue_dark"
                 android:textStyle="bold" />
-            <TextView
+            <EditText
                 android:id="@+id/text_count"
+                android:selectAllOnFocus="true"
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
