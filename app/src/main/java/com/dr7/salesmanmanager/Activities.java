@@ -784,7 +784,7 @@ public class Activities extends AppCompatActivity implements
     private boolean allDataPosted() {
         boolean isPosted = databaseHandler.isAllReceptposted();
         Log.e("isAllReceptposted","1"+isPosted);
-        if (!isPosted) {     
+        if (!isPosted) {
             return false;
 
         }
