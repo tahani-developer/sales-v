@@ -5270,6 +5270,8 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     private Bitmap convertLayoutToImage(Voucher voucher) {
+//        for(int i=0;i<90;i++)
+//            itemsList.add( itemsList.get( itemsList.size()-1));
         LinearLayout linearView = null;
 Log.e("voucher===",voucher.getVoucherNumber()+"");
         final Dialog dialogs = new Dialog(getActivity());

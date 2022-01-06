@@ -67,6 +67,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
+import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 public class
@@ -75,7 +76,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 162;
+    private static final int DATABASE_VERSION = 163;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1124,8 +1125,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ENTER_QTY + " TEXT, "
                 + ENTER_PRICE + " TEXT, "
                 + UNIT_BARCODE + " TEXT, "
-                +IS_RETURNED+" INTEGER DEFAULT 0 "
-
+                +IS_RETURNED+" INTEGER DEFAULT 0, "
+                + " Avilable_Qty" + " TEXT DEFAULT '0'"
                 + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
@@ -2259,6 +2260,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  Avilable_Qty  Text  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
     }
 
@@ -4375,8 +4386,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     public ArrayList<Item> getAllItems_byVoucherNo(String voucherNo) {
         ArrayList<Item> items = new ArrayList<Item>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+voucherNo+"' and  VOUCHER_TYPE='504' AND IS_RETURNED = '0'";
+        // Select All Query                                                                                                          //AND IS_RETURNED = '0'
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+voucherNo+"' and  VOUCHER_TYPE='504'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4420,10 +4431,27 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setEnter_qty(cursor.getString(22));
                 item.setEnter_price(cursor.getString(23));
                 item.setUnit_barcode(cursor.getString(24));
+                item.setIS_RETURNED(Integer.parseInt(cursor.getString(25)));
+                item.setAvi_Qty(Float.parseFloat(cursor.getString(26)));
 //                Log.e("setDescreption",""+cursor.getString(17));
-
+                 Log.e("Avi_Qty",cursor.getString(25)+"   return=="+cursor.getString(25));
                 // Adding transaction to list
+
+                if( item.getIS_RETURNED()==0)
+                {
+                    if(item.getAvi_Qty()==0)
+                    item.setAvi_Qty(  item.getQty());
+
+                    items.add(item);
+
+                }
+               else if( item.getIS_RETURNED()==1 &&
+
+                            item.getAvi_Qty()>0)
+                {
                 items.add(item);
+
+                        }
             } while (cursor.moveToNext());
         }
         return items;
@@ -7669,16 +7697,94 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
      int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo +" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'", null);
    return x; }
 
+    public int  UpdateAvi_QtyInOrigenalVoch(String voucherNo, float newqty,String itemCode){
+        db = this.getWritableDatabase();
+
+
+        float oldqty= getoldqty(itemCode,Integer.parseInt(voucherNo));
+        float endqty =oldqty-newqty;
+
+        Log.e("oldqty==", oldqty+"");
+        Log.e("endqty==", endqty+"");
+        Log.e("newqty==", newqty+"");
+        ContentValues values = new ContentValues();
+        values.put("Avilable_Qty", endqty);
+        // updating row
+        Log.e("endqty3==", voucherNo+"  "+itemCode.trim());
+        int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo+" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'"+" and "+ VOUCHER_TYPE + " = '504'", null);
+        Log.e("x==", x+"");
+
+        return x;
+
+    }
+    public float getoldqty(String itemNo,int voucherNo) {
+      Log.e("getItemName","getItemName="+itemNo);
+        String customerNo=CustomerListShow.Customer_Account;
+        String selectQuery = " select Avilable_Qty from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+        float itemUnit=0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    return 0;
+                } else {
+                    itemUnit = Float.parseFloat(cursor.getString(0));
+                    Log.e("itemUnit==", itemUnit+"");
+                    if(itemUnit==0)
+                        if(itemUnit==0)
+                            itemUnit= getoldqtyMain(itemNo,voucherNo);
+                    return itemUnit;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+
+
+       return  itemUnit;
+    }
+    public float getoldqtyMain(String itemNo,int voucherNo) {
+        Log.e("getItemName","getItemName="+itemNo);
+        String customerNo=CustomerListShow.Customer_Account;
+        String selectQuery = " select UNIT_QTY from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
+        float itemUnit=0;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                if (cursor.getString(0) == null) {
+                    return 0;
+                } else {
+                    itemUnit = Float.parseFloat(cursor.getString(0));
+                    Log.e("itemUnit==", itemUnit+"");
+
+                    return itemUnit;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+
+
+
+
+      return  itemUnit;
+    }
 
     public int HASSERAIAL(String itemCode) {
     int x=0;
         /*db = this.getWritableDatabase();
         String selectQuery = "SELECT ITEM_HAS_SERIAL FROM Items_Master WHERE ItemNo="+"'"+itemCode+"'";
         db.execSQL(selectQuery)*/
-
-
-
-
         String selectQuery = "SELECT ITEM_HAS_SERIAL FROM Items_Master WHERE ItemNo="+"'"+itemCode+"'";
 
         db = this.getWritableDatabase();
@@ -7700,11 +7806,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
-
-
-
-
-
 
         return  x;
 

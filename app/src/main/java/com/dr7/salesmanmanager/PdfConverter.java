@@ -8,6 +8,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
@@ -18,6 +21,7 @@ import androidx.core.content.FileProvider;
 import com.dr7.salesmanmanager.Modles.Account__Statment_Model;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
+import com.dr7.salesmanmanager.Modles.PdfDocumentAdapter;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
@@ -130,7 +134,7 @@ public class PdfConverter {
 
             doc.add(  pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_LONG).show();
+            if(report!=13)     Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_LONG).show();
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -140,7 +144,7 @@ public class PdfConverter {
         if (Build.VERSION.SDK_INT >= 23) {
             if (context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     && (context.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                showPdf(pdfFileName);
+            if(report!=13)    showPdf(pdfFileName);
                 Log.v("", "Permission is granted");
             } else {
 
@@ -202,6 +206,25 @@ public class PdfConverter {
             case 12:
                 Log.e("createReturnVocher",""+list.size());
                 tableContent=createReturnInvoice((List<Item>) list);
+                break;
+            case 13:
+                Log.e("createReturnVocher",""+list.size());
+                tableContent=createInvoiceForPrint((List<Item>) list);
+                Log.e("path==",String.valueOf(pdfFileName));
+
+                PrintManager printManager=(PrintManager) context.getSystemService(Context.PRINT_SERVICE);
+                try {
+                    PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(context, String.valueOf(pdfFileName));
+                    Log.e("path2==",String.valueOf(pdfFileName));
+                    printManager.print("Document", printAdapter, new PrintAttributes.Builder().build());
+                    Log.e("path3==",String.valueOf(pdfFileName));
+                }
+                catch (Exception e)
+                {
+                    Log.e("Exception==",e.getMessage());
+                }
+
+
                 break;
         }
         return  tableContent;
@@ -337,6 +360,48 @@ public class PdfConverter {
             insertCell(pdfPTable, String.valueOf(list.get(i).getPrice()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
        //     insertCell(pdfPTable, String.valueOf(list.get(i).getDateVoucher()        ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            //      insertCell(pdfPTable, String.valueOf(list.get(i).getSerialCode()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+
+
+
+        }
+        return pdfPTable;
+
+    }
+    private PdfPTable createInvoiceForPrint(List<Item> list)
+    {
+        //  insertCell(pdfPTable,context.getString(R.string.serialcode      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+
+
+
+        createPDF("ReturnInvoice" + ".pdf");
+        PdfPTable pdfPTable = new PdfPTable(5);
+        pdfPTable.setWidthPercentage(100f);
+        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+
+
+
+        insertCell(pdfPTable,context.getString(R.string.voucherNo), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getString(R.string.item_number      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.item_name   )   , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.qty) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.app_price) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+
+
+      pdfPTable.setHeaderRows(1);
+        for (int i = 0; i < list.size(); i++) {
+           insertCell(pdfPTable, String.valueOf(list.get(i).getVoucherNumber() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getItemNo())       , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+             insertCell(pdfPTable, String.valueOf(list.get(i).getItemName()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getQty()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getPrice()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+            //     insertCell(pdfPTable, String.valueOf(list.get(i).getDateVoucher()        ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             //      insertCell(pdfPTable, String.valueOf(list.get(i).getSerialCode()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 
@@ -613,6 +678,26 @@ public class PdfConverter {
         insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
        if(reportType==10)
            insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + CustomerListShow.Customer_Name, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+
+
+
+
+        if(reportType==13)
+            insertCell(pdfPTableHeader, context.getString(R.string.company_tel) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+        insertCell(pdfPTableHeader, context.getString(R.string.tax_no) + " : " +  date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+
+        insertCell(pdfPTableHeader, context.getString(R.string.voucherNo) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+
+        insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+        insertCell(pdfPTableHeader, context.getString(R.string.note) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+        insertCell(pdfPTableHeader, context.getString(R.string.voucher_type) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+        insertCell(pdfPTableHeader, context.getString(R.string.cust_name) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
+
+
+
+
+
+
 
         return  pdfPTableHeader;
     }

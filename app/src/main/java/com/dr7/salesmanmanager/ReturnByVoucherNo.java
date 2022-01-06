@@ -345,7 +345,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             serialModel1.setDateVoucher(voucherReturn.getVoucherDate());
             serialModel1.setPriceItem(listItemsReturn.get(i).getPrice());
             if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0)
-            serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getQty()));
+            serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getAvi_Qty()));
             else
                 serialModel1.setQty("0");
 
@@ -668,6 +668,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
       voucherReturn.setSubTotal(total);
       voucherReturn.setNetSales(total);
       voucherReturn.setTax(0);
+
       // calck netSales
       dataBase.addVoucher(voucherReturn);
      // Log.e("getPayMethod()",""+voucherReturn.getPayMethod());
@@ -688,8 +689,22 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             listItemsMain.get(i).setVoucherType(506);
             listItemsMain.get(i).setIsPosted(0);
             Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
+            if( dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==0)
+            dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
+          else
+            {
+                if(dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==1&&
+                        listItemsMain.get(i).getSerialCode().equals(""))
+                dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
+
+            }
+
+            Log.e("deat===",""+listItemsMain.get(i).getQty()+"{...}"+listItemsMain.get(i).getItemNo());
+            Log.e("voucherNo_===",""+voucherNo_text.getText().toString());
+
             dataBase.addItem(listItemsMain.get(i));
-        }
+
+              }
     }
 
     private void calculateTotalc() {

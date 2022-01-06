@@ -55,6 +55,24 @@ public class Item implements Serializable {
     private String enter_price;
     private String unit_barcode;
     private String oneUnitItem;
+    private float Avi_Qty;
+    private int   IS_RETURNED;
+
+    public int getIS_RETURNED() {
+        return IS_RETURNED;
+    }
+
+    public void setIS_RETURNED(int IS_RETURNED) {
+        this.IS_RETURNED = IS_RETURNED;
+    }
+
+    public float getAvi_Qty() {
+        return Avi_Qty;
+    }
+
+    public void setAvi_Qty(float avi_Qty) {
+        Avi_Qty = avi_Qty;
+    }
 
     public String getOneUnitItem() {
         return oneUnitItem;

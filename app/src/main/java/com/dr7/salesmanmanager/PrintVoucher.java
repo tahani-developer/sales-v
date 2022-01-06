@@ -549,15 +549,23 @@ public class PrintVoucher extends AppCompatActivity {
 
         return false;
     }
+   /* public  void exportToPdf(Voucher voucher){
 
+
+  List<Item> itemVOCHER = new ArrayList<>();
+        itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()));
+        PdfConverter pdf =new PdfConverter(PrintVoucher.this);
+        pdf.exportListToPdf(  itemVOCHER,"Vocher","",13);
+
+    }*/
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Voucher voucher) {
-
+     //   exportToPdf( voucher);
 
         //convertLayoutToImage(voucher);
 
 
-
+/*
 
 
         Log.e("hiddenDialog==", " hiddenDialog " +"");
@@ -603,7 +611,7 @@ Log.e("count==",count+"");
                 convertLayoutToImage2(voucher,voch_items);
             }
 
-
+*/
 
 
 //  final Dialog dialog = new Dialog(PrintVoucher.this);
