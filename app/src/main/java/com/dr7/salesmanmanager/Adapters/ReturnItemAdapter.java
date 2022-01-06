@@ -122,6 +122,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
                 }else {
                     list.get(holder.getAdapterPosition()).isClicked=0;
+                    updateqty2(holder, list.get(holder.getAdapterPosition()).getItemNo());
                 }
                     }
         });
@@ -195,6 +196,21 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
             {
                 if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
                     list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) + 1.0));
+
+
+                    notifyItemChanged(i);
+                }
+                //yourMethodName(holder,i);
+            }
+
+    }
+    private void updateqty2(ReturnItemAdapter.SerialReportViewHolder holder,String itemNo) {
+        for(int i=0;i<list.size();i++)
+
+            if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
+            {
+                if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
+                    list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) - 1.0));
 
 
                     notifyItemChanged(i);
