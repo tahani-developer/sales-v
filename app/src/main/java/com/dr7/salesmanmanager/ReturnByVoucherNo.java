@@ -592,8 +592,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           clearData();
           saveSuccses();
           // exportData();
-       //   showprintDialog();
-            exportData(1);
+          showprintDialog();
+//            exportData(1);
             textView_save.setEnabled(false);
     }
     else{
@@ -1238,7 +1238,7 @@ break;
 
                                printLayout();
                                 returnListSerial.clear();
-
+                                sweetAlertDialog.dismiss();
 
 
                             }
