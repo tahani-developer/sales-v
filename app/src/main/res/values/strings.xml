@@ -294,6 +294,7 @@
     <string name="cash_sale">Cash sales</string>
     <string name="credit_sales">Credit Sales</string>
     <string name="total_sales">Total Sales</string>
+    <string name="total">Total </string>
     <string name="netpayment">Net</string>
     <string name="total_cash">Total Cash</string>
     <string name="sales">Sales</string>

@@ -328,6 +328,7 @@
     <string name="itemkind">نوع المادة</string>
     <string name="credit_sales">المبيعات ذمم</string>
     <string name="total_sales">اجمالي المبيعات</string>
+    <string name="total">المجموع </string>
     <string name="netpayment">الصافي</string>
     <string name="total_cash">المجموع نقدا</string>
     <string name="sales">مبيعات</string>
