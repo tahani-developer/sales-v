@@ -84,7 +84,11 @@ public class ScanActivity extends AppCompatActivity
                     AddItemsStockFragment.barcode.setText(""+rawResult.getText().toString().trim());
                     Log.e("RESULT",""+rawResult.getText());
                 }
-
+                else if(type.equals("5"))
+                {
+                    ReturnByVoucherNo.Serialcode.setText(""+rawResult.getText().toString().trim());
+                    Log.e("RESULT",""+rawResult.getText());
+                }
             }
 
             onBackPressed();

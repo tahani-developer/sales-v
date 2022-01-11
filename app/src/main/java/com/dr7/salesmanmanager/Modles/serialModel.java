@@ -26,6 +26,15 @@ public class serialModel {
     private  String customerNo;
     private  String customerName;
     public   int  isClicked=0;
+
+    public int getIsClicked() {
+        return isClicked;
+    }
+
+    public void setIsClicked(int isClicked) {
+        this.isClicked = isClicked;
+    }
+
     public   int  isReturned=0;
 
     public int getIsReturned() {

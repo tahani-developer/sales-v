@@ -96,6 +96,8 @@ public class PdfConverter {
     //    PDFView pdfView;
     File pdfFileName;
     BaseFont base;
+    CompanyInfo companyInfo;
+    DatabaseHandler obj;
     private int directionOfHeader = Element.ALIGN_RIGHT;
 
     {
@@ -397,10 +399,20 @@ public class PdfConverter {
     }
     private void createInvoiceForPrint(List<Item> list)
     {
-        //  insertCell(pdfPTable,context.getString(R.string.serialcode      )                        , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        //  insertCell(pdfPTable,context.getString(R.string.serialcode      )
+        //  , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+ obj= new DatabaseHandler(context);
+ companyInfo = obj.getAllCompanyInfo().get(0);
 
+if( companyInfo!=null)
+        if (
+                !companyInfo.getCompanyName().equals("")&&
+               companyInfo.getcompanyTel()!=0) {
 
-   createvocherPDF("Invoice" + ".pdf",list);
+            createvocherPDF("Invoice" + ".pdf", list);
+        }else
+             {   Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_LONG).show();}
+
 //        PdfPTable pdfPTable = new PdfPTable(5);
 //        pdfPTable.setWidthPercentage(100f);
 //        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
@@ -767,8 +779,8 @@ void createvocherPDF(String fileName,List<Item> list) {
         doc.setPageSize(PageSize.A4);//size of page
         //open document
         doc.open();
-        DatabaseHandler obj= new DatabaseHandler(context);
-        CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
+
+
         String voucherTyp = "";
         switch (PrintVoucher.vouchPrinted.getVoucherType()) {
             case 504:
@@ -790,31 +802,28 @@ void createvocherPDF(String fileName,List<Item> list) {
         cell13.setBorder(Rectangle.NO_BORDER);
         headertable.addCell(cell13);
 
+ if( companyInfo.getLogo()!=null&&!companyInfo.getLogo().equals("")) {
+     Bitmap imageBytes = companyInfo.getLogo();
+     imageBytes = getResizedBitmap(imageBytes, 80, 80);
+     byte[] bytes = convertBitmapToByteArray(imageBytes);
 
 
-        Bitmap imageBytes= companyInfo.getLogo();
-        imageBytes= getResizedBitmap (imageBytes,80,80);
-        byte[] bytes= convertBitmapToByteArray(imageBytes);
+     BitmapFactory.decodeByteArray(bytes, 0, 10);
+     try {
 
-
-
-        BitmapFactory.decodeByteArray(bytes, 0, 10);
-        try{
-
-            Image imageView= Image.getInstance( bytes);
-            imageView.setAlignment(ALIGN_CENTER);
+         Image imageView = Image.getInstance(bytes);
+         imageView.setAlignment(ALIGN_CENTER);
          //   imageView.scaleToFit(10,10);
 
-       doc.add( imageView );
+         doc.add(imageView);
+
+     } catch (Exception e) {
+     }
 
 
+     doc.add(headertable);
 
-        }catch (Exception e){}
-
-
-        doc.add( headertable);
-
-
+ }
         doc.add(new Paragraph("\n"));
         doc.add(new Paragraph("\n"));
 
@@ -862,10 +871,10 @@ void createvocherPDF(String fileName,List<Item> list) {
         insertCell(pdfPTable,context.getResources().getString(R.string.app_price) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,context.getResources().getString(R.string.total) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
+        doc.add(  pdfPTable);
 
 
-
-        pdfPTable.setHeaderRows(1);
+    /*    pdfPTable.setHeaderRows(1);
         for (int i = 0; i < list.size(); i++) {
             insertCell(pdfPTable, String.valueOf(list.get(i).getItemName()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(list.get(i).getQty()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -876,13 +885,29 @@ void createvocherPDF(String fileName,List<Item> list) {
             insertCell(pdfPTable, amount      , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 
+        }*/
+
+
+
+        PdfPTable pdfPTable3 = new PdfPTable(4);
+        pdfPTable3.setWidthPercentage(100f);
+      pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+
+        pdfPTable3.setHeaderRows(1);
+        for (int i = 0; i < list.size(); i++) {
+            insertCell(pdfPTable3, String.valueOf(list.get(i).getItemName()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable3, String.valueOf(list.get(i).getQty()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable3, String.valueOf(list.get(i).getPrice()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+           String amount = "" + (list.get(i).getQty() * list.get(i).getPrice() - list.get(i).getDisc());
+
+           insertCell(pdfPTable3, amount      , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
         }
 
 
-
-
-
-        doc.add(  pdfPTable);
+        doc.add(  pdfPTable3);
         doc.add(new Paragraph("\n"));
         doc.add(new Paragraph("\n"));
         doc.add(new Paragraph("\n"));
