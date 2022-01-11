@@ -837,7 +837,7 @@ void createvocherPDF(String fileName,List<Item> list) {
         PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " +  PrintVoucher.vouchPrinted.getVoucherNumber(),arabicFontHeaderprint));
         PdfPCell cell5 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " +  PrintVoucher.vouchPrinted.getCustName(),arabicFontHeaderprint));
         PdfPCell cell6 = new PdfPCell(new Paragraph(context.getString(R.string.note) + " : " +companyInfo.getNoteForPrint(),arabicFontHeaderprint));
-        PdfPCell cell14 = new PdfPCell(new Paragraph(context.getString(R.string.app_paymentType) + " : " + voucherTyp,arabicFontHeaderprint));
+        PdfPCell cell14 = new PdfPCell(new Paragraph(context.getString(R.string.app_paymentType) + " : " + PrintVoucher.vouchPrinted.getPayMethod(),arabicFontHeaderprint));
 
 
         cell1.setBorder(Rectangle.NO_BORDER);
@@ -874,39 +874,40 @@ void createvocherPDF(String fileName,List<Item> list) {
         doc.add(  pdfPTable);
 
 
-    /*    pdfPTable.setHeaderRows(1);
-        for (int i = 0; i < list.size(); i++) {
-            insertCell(pdfPTable, String.valueOf(list.get(i).getItemName()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getQty()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(list.get(i).getPrice()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
-            String amount = "" + (list.get(i).getQty() * list.get(i).getPrice() - list.get(i).getDisc());
-
-            insertCell(pdfPTable, amount      , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
-
-        }*/
 
 
 
         PdfPTable pdfPTable3 = new PdfPTable(4);
         pdfPTable3.setWidthPercentage(100f);
-      pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+      pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 
-        pdfPTable3.setHeaderRows(1);
+       // pdfPTable3.setHeaderRows(1);
+        Log.e("list.size()==",list.size()+"");
+      //  list.add(list.get(list.size()-1));
         for (int i = 0; i < list.size(); i++) {
-            insertCell(pdfPTable3, String.valueOf(list.get(i).getItemName()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable3, String.valueOf(list.get(i).getQty()         ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable3, String.valueOf(list.get(i).getPrice()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                if(PrintVoucher.vouchPrinted.getVoucherNumber()== list.get(i).getVoucherNumber()
+              &&  PrintVoucher.vouchPrinted.getVoucherType()==list.get(i).getVoucherType() )
+                {
+                    Log.e("getVoucherNumber5==",list.get(i).getVoucherNumber()+"");
+                    Log.e("itenu==",list.get(i).getItemNo()+"");
+                    Log.e("itemname==",list.get(i).getItemName()+"");
+                    Log.e("qty==",list.get(i).getQty()+"");
+                    Log.e("getprice==",list.get(i).getPrice()+"");
+
+            insertCell(pdfPTable3, String.valueOf(list.get(i).getItemName() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable3, String.valueOf(list.get(i).getQty()  ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable3, String.valueOf(list.get(i).getPrice()) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
            String amount = "" + (list.get(i).getQty() * list.get(i).getPrice() - list.get(i).getDisc());
-
+                    Log.e("amount==",amount+"");
            insertCell(pdfPTable3, amount      , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
-
+            }
         }
 
-
+     //   doc.add(new Paragraph(list.get(0).getItemName(),arabicFont));
         doc.add(  pdfPTable3);
         doc.add(new Paragraph("\n"));
         doc.add(new Paragraph("\n"));

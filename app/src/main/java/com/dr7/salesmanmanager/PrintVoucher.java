@@ -556,11 +556,10 @@ public class PrintVoucher extends AppCompatActivity {
   List<Item> itemVOCHER = new ArrayList<>();
         itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()));
 
-//        for(int i=0;i<90;i++)
-//            itemVOCHER.add(itemVOCHER.get(itemVOCHER.size()-1));
+      Log.e("itemVOCHER==",""+itemVOCHER.size());
         PdfConverter pdf =new PdfConverter(PrintVoucher.this);
- pdf.exportListToPdf(  itemVOCHER,"Vocher","",13);
-    //  pdf.createvocherPDF("Vocher",itemVOCHER);
+ pdf.exportListToPdf(    items,"Vocher","",13);
+
 
   }
     @SuppressLint("SetTextI18n")
