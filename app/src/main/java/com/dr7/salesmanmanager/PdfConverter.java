@@ -158,8 +158,8 @@ public class PdfConverter {
         try {
 //
 
-            doc.add(  pdfPTableHeader);
-            doc.add(pdfPTable);
+if(doc!=null)            doc.add(  pdfPTableHeader);
+            if(doc!=null)           doc.add(pdfPTable);
             if(report!=13)     Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_LONG).show();
 
         } catch (DocumentException e) {
