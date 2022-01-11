@@ -3338,23 +3338,29 @@ public class SalesInvoice extends Fragment {
                                     priceValue=Float.parseFloat((price_update.getText().toString().trim()));
                                     String itemNumber=items.get(position).getItemNo();
                                     //***************************************************
-                                    if(mDbHandler.getAllSettings().get(0).getItemUnit()==1&&items.get(position).getOneUnitItem().equals("0"))
-                                    {
+                                    if(mDbHandler.getAllSettings().get(0).getItemUnit()==1
+                                            &&items.get(position).getOneUnitItem().equals("0"))
+                                    {// case unit
+
+
+
+
                                         int itemUnit=mDbHandler.getUnitForItem(itemNumber);
 
                                         items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim())*itemUnit);
 
                                         if(itemUnit!=1)
                                         {
+                                            items.get(position).setEnter_price(priceValue+"");
                                             float priceUnitItem=priceValue/itemUnit;
                                             items.get(position).setPrice(priceUnitItem);
-                                           // items.get(position).setEnter_price(priceUnitItem+"");
+
                                             items.get(position).setEnter_qty((qty.getText().toString().trim()));
 
                                         }
                                         else {
                                             items.get(position).setPrice(priceValue);
-                                          //  items.get(position).setEnter_price(priceValue+"");
+                                            items.get(position).setEnter_price(priceValue+"");
                                             items.get(position).setEnter_qty((qty.getText().toString().trim()));
                                         }
                                     }else {
@@ -3363,8 +3369,8 @@ public class SalesInvoice extends Fragment {
 
                                         items.get(position).setPrice(priceValue);
                                         items.get(position).setQty(Float.parseFloat(qty.getText().toString().trim()));
-                                       // items.get(position).setEnter_price(priceValue+"");
                                         items.get(position).setEnter_qty((qty.getText().toString().trim()));
+                                        items.get(position).setEnter_price((priceValue)+"");
                                     }
 
 

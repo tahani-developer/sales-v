@@ -201,7 +201,6 @@ else  if (  list.get(position).getIsClicked()==0)
                 if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
                     list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) + 1.0));
 
-
                     notifyItemChanged(i);
                 }
                 //yourMethodName(holder,i);
