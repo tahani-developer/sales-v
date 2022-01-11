@@ -41,6 +41,7 @@ import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Serial_Adapter;
+import com.dr7.salesmanmanager.Stock_Activity;
 import com.google.zxing.integration.android.IntentIntegrator;
 
 import java.util.ArrayList;
@@ -128,7 +129,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    String itemNo=items.get(position).getItemNo();
+                    String itemNo=items.get(position).getItemNo().trim();
                     Log.e("notExistInTotalList","itemNo"+itemNo);
                     if(notExistInTotalList(itemNo)) {
 
@@ -260,7 +261,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         for(int i=0;i<itemsNoList.size();i++)
         {
 
-            if(itemsNoList.get(i).equals(itemNo))
+            if(itemsNoList.get(i).trim().equals(itemNo.trim()))
             {
                 Log.e("notExistInTotalList","itemNo"+i+"\t"+itemsNoList.get(i));
                 return false;
@@ -284,17 +285,22 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(!editText.getText().toString().equals(""))
                 {
-
-//                    if(validbarcodeValue(editText.getText().toString().trim(),serialListitems_stock))
-//                    {
+                    if(checkInTotalList(editText.getText().toString().trim()))
+                    {
                         serialValueStock.setText(editText.getText().toString().trim());
                         sweetAlertDialog.dismissWithAnimation();
 
-//                    }
-//                    else {editText.setError(context.getResources().getString(R.string.invalidSerial));
-//                        editText.setText("");}
 
-//                    }
+                    }
+                    else {
+                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText(context.getString(R.string.warning_message))
+                                .setContentText(context.getString(R.string.duplicate)+"\t"+context.getResources().getString(R.string.inThisVoucher))
+
+                                .show();
+
+                    }
+
 
                 }
                 else {
@@ -306,6 +312,24 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 .show();
 
 
+
+    }
+
+    private boolean checkInTotalList(String s) {
+        boolean existInTotal=false;
+        if(listSerialInventory.size()!=0){
+            // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
+            for(int j=0;j<listSerialInventory.size();j++)
+            {
+                if(listSerialInventory.get(j).getSERIAL_NO().equals(s.toString().trim()))
+                {
+                    return  false;
+                }
+
+            }
+
+        }
+        return  true;
 
     }
 
@@ -406,57 +430,10 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(VERTICAL);
-//        if ((validbarcodeValue(barcodeValue, serialListitems))) {
             addSerialToList(barcodeValue, serialListitems);
 
             openSmallScanerTextView();
             serialValueStock.setError(null);
-//            addToList.setVisibility(View.VISIBLE);
-//            addToList.setEnabled(true);
-//            unitQty.setEnabled(false);
-//            flag = 1;
-//            counterSerial++;
-//            unitQty.setText(counterSerial + "");
-//
-//            unitQty.setEnabled(false);
-//            serialValueStock.setText("");
-//            serial_No_recyclerView.setLayoutManager(layoutManager);
-////
-//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
-//
-//                openSmallScanerTextView();
-
-//        }
-//        else {
-//            serialValueStock.setError("invalid");
-//            serial_No_recyclerView.setLayoutManager(layoutManager);
-//
-//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, context));
-//            unitQtyStock.setEnabled(false);
-//
-//
-//        }
-//        }
-//        if(validbarcodeValue(barcodeValue,serialListitems))
-//        {
-//            serialValue.setError(null);
-//            //serialListitems.get(numberBarcodsScanner).setSerialCode(barcodeValue);
-//            serial_No_recyclerView.setLayoutManager(layoutManager);
-//
-//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
-//            unitQty.setEnabled(false);
-//            numberBarcodsScanner++;
-//            serialValue.setText("");
-//            if(numberBarcodsScanner<serialListitems.size())
-//            {openSmallScanerTextView();}
-//        }else {
-//            serialValue.setError("invalid");
-//            serial_No_recyclerView.setLayoutManager(layoutManager);
-//
-//            serial_No_recyclerView.setAdapter(new Serial_Adapter(serialListitems, cont));
-//            unitQty.setEnabled(false);
-//
-//        }
 
 
     }
@@ -470,7 +447,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         counterSerial++;
         serialModel serial = new serialModel();
         serial.setCounterSerial(counterSerial);
-        serial.setSerialCode(barcodeValue);
+        serial.setSerialCode(barcodeValue.trim());
         serial.setIsBonus("0");
         serial.setIsDeleted("0");
         Log.e("voucherNo",""+voucherNumber);

@@ -1001,7 +1001,7 @@ try {
 
 //        }
 
-       // Log.e("canChangePrice",""+canChangePrice+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
+       // Log.e("canChangePrice","discount=="+discount+"\tpreviousePrice="+previousePrice+"\tcurentPrice"+curentPrice);
 
         if(!price.equals("0"))
         {
@@ -1077,7 +1077,7 @@ try {
 
                     if(unitDetail.getItemNo()!=null)
                     {
-                        Log.e("unitDetail",""+unitDetail.getItemNo());
+
                         if(unitDetail.getConvRate()!=1)
                         {
                             // there are units
@@ -1110,7 +1110,7 @@ try {
 
                     }
                     else {
-                        Log.e("unitDetail","else");
+
                         item.setWhich_unit("0");
 
                         item.setWhich_unit_str("");
@@ -1132,7 +1132,7 @@ try {
                     item.setPrice(priceItem);
 
 
-                    Log.e("unitDetail","else");
+
                     item.setWhich_unit("0");
 
                     item.setWhich_unit_str("");
@@ -1173,7 +1173,7 @@ try {
                 item.setDiscType(0);// value Discount
 
             }
-        Log.e("setDiscType", item.getDiscType()+"");
+
             try {
                 if (item.getDiscType() == 0) {
                     item.setDisc(Float.parseFloat(discount.trim()));// for Qasion offer * Qty
