@@ -505,6 +505,7 @@
     <string name="more">more</string>
     <string name="sumCurrentQty">Sum Current Qty</string>
     <string name="dontDuplicateItem">Dont Duplicate Item</string>
+    <string name="ReturnAll">Return All Items In Vocher</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

@@ -109,6 +109,10 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
                 }
             }
         });*/
+      if  (  list.get(position).getIsClicked()==1)
+          holder.linearSelected.setChecked(true);
+else  if (  list.get(position).getIsClicked()==0)
+        holder.linearSelected.setChecked(false);
         holder.linearSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

@@ -68,12 +68,15 @@ public class InventoryReport extends AppCompatActivity {
     EditText item_number2, item_name;
     TextView print;
     Button preview2;
+   Spinner qtySpinner;
    public static TextView total_qtyText;
      public static  List<inventoryReportItem> itemsReportinventory;
     public static  List<inventoryReportItem> itemsInventoryPrint;
+    ArrayList<inventoryReportItem> filteredList = new ArrayList<>();
     SearchView search;
     RecyclerView recyclerView;
     Context context;
+    Button preview;
 //    int totalQty_inventory=0;
      DatabaseHandler obj;
      CompanyInfo companyInfo;
@@ -90,6 +93,8 @@ public class InventoryReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(InventoryReport.this);
         setContentView(R.layout.inventory_report);
+        preview=findViewById(R.id.preview);
+
         LinearLayout linearMain=findViewById(R.id.linearMain);
         try{
             if(languagelocalApp.equals("ar"))
@@ -133,18 +138,38 @@ public class InventoryReport extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (!item_number2.getText().toString().equals("")) {
                     ArrayList<inventoryReportItem> filteredList_number = new ArrayList<>();
-                    for (int k = 0; k < itemsReportinventory.size(); k++) {
-                        if (itemsReportinventory.get(k).getItemNo().contains(item_number2.getText().toString())) {
+                    if(   filteredList.size()==0) {
+                        filteredList_number.clear();
+                        for (int k = 0; k < itemsReportinventory.size(); k++) {
+                            if (itemsReportinventory.get(k).getItemNo().contains(item_number2.getText().toString())) {
 
-                            filteredList_number.add(itemsReportinventory.get(k));
+                                filteredList_number.add(itemsReportinventory.get(k));
 
+                            }
                         }
+
+                        itemsInventoryPrint = filteredList_number;
+                        ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_number, context);
+                        recyclerView.setAdapter(adapter);
+                        setTextTotalQty(adapter.TotalQtyInventoey());
+                    }
+                    else{
+                        filteredList_number.clear();
+                        for (int k = 0; k < filteredList.size(); k++) {
+                            if (filteredList.get(k).getItemNo().contains(item_number2.getText().toString())) {
+
+                                filteredList_number.add(filteredList.get(k));
+
+                            }
+                        }
+
+                        itemsInventoryPrint = filteredList_number;
+                        ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_number, context);
+                        recyclerView.setAdapter(adapter);
+                        setTextTotalQty(adapter.TotalQtyInventoey());
                     }
 
-                    itemsInventoryPrint=filteredList_number;
-                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_number, context);
-                    recyclerView.setAdapter(adapter);
-                    setTextTotalQty( adapter.TotalQtyInventoey());
+
                 } else {
                     itemsInventoryPrint=itemsReportinventory;
                     ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
@@ -187,7 +212,7 @@ public class InventoryReport extends AppCompatActivity {
         setTextTotalQty( adapter.TotalQtyInventoey());
 
 //      load  Inventory Report  when choose item from spinner category
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    /*    categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
             {
@@ -195,11 +220,53 @@ public class InventoryReport extends AppCompatActivity {
                 if (!categorySpinner.getSelectedItem().toString().equals("no filter"))
                 {
                     ArrayList<inventoryReportItem> filteredList = new ArrayList<>();
-                    for (int k = 0; k < itemsReportinventory.size(); k++)
-                    {
-                        if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString()))
-                            filteredList.add(itemsReportinventory.get(k));
 
+
+                    if(    qtySpinner.getSelectedItem().equals("الكل") ) {
+                        Log.e("case1==","case1==");
+                        for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                            {
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString()))
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+                        }
+                    }
+                    else {
+
+                        if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر ") ) {
+                            Log.e("case2==","case2==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                        && itemsReportinventory.get(k).getQty() > 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+
+
+                            }
+                        }
+                        else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
+                        {
+                            Log.e("case3==","case3==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                        && itemsReportinventory.get(k).getQty() == 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+
+                        }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
+                        {
+                            Log.e("case4==","case4==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                    &&itemsReportinventory.get(k).getQty() <0)
+                                filteredList.add(itemsReportinventory.get(k));
+                        }
+
+
+                        }
 
                     }
                     itemsInventoryPrint=filteredList;
@@ -223,22 +290,22 @@ public class InventoryReport extends AppCompatActivity {
             }
         });
 
-
+*/
         //-------------------------------------spiner Qty -------------------------------------------
 
-        final Spinner qtySpinner = (Spinner) findViewById(R.id.quantityFilter);
+        qtySpinner = (Spinner) findViewById(R.id.quantityFilter);
        ArrayList<String> qtyList=new ArrayList<>() ;
        qtyList.add("الكل");
-       qtyList.add("أكبر من الصفر ");
-        qtyList.add("تساوي الصفر ");
-        qtyList.add("أصغر من الصفر ");
+       qtyList.add("أكبر من الصفر");
+        qtyList.add("تساوي الصفر");
+        qtyList.add("أصغر من الصفر");
         typeQty="الكل";
 
         final ArrayAdapter<String> adapter_2 = new ArrayAdapter<>(this, R.layout.spinner_style, qtyList);
         qtySpinner.setAdapter(adapter_2);
 
 //      load  Inventory Report  when choose item from spinner category
-        qtySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+     /*   qtySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ArrayList<inventoryReportItem> filteredList;
@@ -246,7 +313,19 @@ public class InventoryReport extends AppCompatActivity {
                 switch (i) {
                     case 0:// all items
                         typeQty="الكل";
-                        itemsInventoryPrint = itemsReportinventory;
+                        filteredList = new ArrayList<>();
+                        for (int m = 0; m < itemsReportinventory.size(); m++) {
+                            if ( categorySpinner.getSelectedItem().toString().equals("no filter")) {
+                                if (itemsReportinventory.get(m).getCategoryId().equals(categorySpinner.getSelectedItem().toString()))
+
+                                    filteredList.add(itemsReportinventory.get(m));
+                            }
+                        }
+
+
+
+                        }
+                        itemsInventoryPrint = filteredList;
                         ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
                         recyclerView.setAdapter(adapter);
                         setTextTotalQty(adapter.TotalQtyInventoey());
@@ -255,7 +334,8 @@ public class InventoryReport extends AppCompatActivity {
                         typeQty="أكبر من الصفر";
                         filteredList = new ArrayList<>();
                         for (int m = 0; m < itemsReportinventory.size(); m++) {
-                            if (itemsReportinventory.get(m).getQty() > 0) {
+                            if ( !categorySpinner.getSelectedItem().toString().equals("no filter")) {
+                            if (itemsReportinventory.get(m).getQty() > 0 &&itemsReportinventory.get(m).getCategoryId().equals(categorySpinner.getSelectedItem().toString())) {
                                 filteredList.add(itemsReportinventory.get(m));
                             }
 
@@ -272,7 +352,9 @@ public class InventoryReport extends AppCompatActivity {
 
                         filteredList = new ArrayList<>();
                         for (int m = 0; m < itemsReportinventory.size(); m++) {
-                            if (itemsReportinventory.get(m).getQty() == 0) {
+                            if (itemsReportinventory.get(m).getQty() == 0
+                                    &&   !categorySpinner.getSelectedItem().toString().equals("no filter") &&itemsReportinventory.get(m).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                            ) {
                                 filteredList.add(itemsReportinventory.get(m));
                             }
 
@@ -287,7 +369,9 @@ public class InventoryReport extends AppCompatActivity {
                         typeQty="أصغر من الصفر";
                         filteredList = new ArrayList<>();
                         for (int m = 0; m < itemsReportinventory.size(); m++) {
-                            if (itemsReportinventory.get(m).getQty() < 0) {
+                            if (itemsReportinventory.get(m).getQty() < 0
+                                    &&   !categorySpinner.getSelectedItem().toString().equals("no filter")      &&itemsReportinventory.get(m).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                            ) {
                                 filteredList.add(itemsReportinventory.get(m));
                             }
 
@@ -306,7 +390,7 @@ public class InventoryReport extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
         //*************************************************************************************
 
 //        preview2.setOnTouchListener(new View.OnTouchListener() {
@@ -335,7 +419,9 @@ public class InventoryReport extends AppCompatActivity {
                 Log.e("loa", "text cha");
                 if (newText != null && newText.length() > 0)
                 {
-                    String[] arrOfStr = newText.split(" ");
+
+                    if(filteredList.size()==0)
+                    { String[] arrOfStr = newText.split(" ");
                     int [] countResult=new int[arrOfStr.length];
                     Log.e("arrOfStr",""+arrOfStr.length);
 
@@ -369,6 +455,44 @@ public class InventoryReport extends AppCompatActivity {
                     recyclerView.setAdapter(adapter);
                     setTextTotalQty( adapter.TotalQtyInventoey());
                 }
+                else{
+                        String[] arrOfStr = newText.split(" ");
+                        int [] countResult=new int[arrOfStr.length];
+                        Log.e("arrOfStr",""+arrOfStr.length);
+
+                        ArrayList<inventoryReportItem> filteredList_name = new ArrayList<>();
+                        for (int k = 0; k < filteredList.size(); k++)
+                        {
+
+                            boolean isFound=false;
+                            for(int j=0;j<arrOfStr.length;j++){
+                                String lowers=arrOfStr[j].toLowerCase();
+                                String uppers=arrOfStr[j].toUpperCase();
+
+                                if(filteredList.get(k).getName().toLowerCase().contains(lowers)||filteredList.get(k).getName().toUpperCase().contains(uppers)){
+
+                                    isFound=true;
+
+                                }else {
+                                    isFound=false;
+                                    break;
+                                }
+
+
+                            }
+                            if(isFound){
+                                filteredList_name.add(filteredList.get(k));
+                            }
+
+                        }
+                        itemsInventoryPrint=filteredList_name;
+                        ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList_name, context);
+                        recyclerView.setAdapter(adapter);
+                        setTextTotalQty( adapter.TotalQtyInventoey());
+                    }
+
+
+                }
                 else
                     {
                         itemsInventoryPrint=itemsReportinventory;
@@ -380,6 +504,119 @@ public class InventoryReport extends AppCompatActivity {
                 return false;
             }
 
+        });
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filteredList.clear();
+
+                item_number2.setText("");
+                if (!categorySpinner.getSelectedItem().toString().equals("no filter"))
+                {
+
+
+
+                    if(    qtySpinner.getSelectedItem().equals("الكل") ) {
+                        Log.e("case1==","case1==");
+                        for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                            {
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString()))
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+                        }
+                    }
+                    else {
+                        filteredList.clear();
+                        if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر") ) {
+                            Log.e("case2==","case2==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                        && itemsReportinventory.get(k).getQty() > 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+
+
+                            }
+                        }
+                        else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
+                        {
+                            filteredList.clear();
+                            Log.e("case3==","case3==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                        && itemsReportinventory.get(k).getQty() == 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+
+                        }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
+                        {   filteredList.clear();
+                            Log.e("case4==","case4==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getCategoryId().equals(categorySpinner.getSelectedItem().toString())
+                                        &&itemsReportinventory.get(k).getQty() <0)
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+
+
+                        }
+
+                    }
+                    itemsInventoryPrint=filteredList;
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList, context);
+                    recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
+                } else
+                {
+
+
+                    filteredList.clear();
+                        if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر") ) {
+                            Log.e("case2==","case2==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (itemsReportinventory.get(k).getQty() > 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+
+
+                            }
+                            itemsInventoryPrint= filteredList;
+                        }
+                        else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
+                        {   filteredList.clear();
+                            Log.e("case3==","case3==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if ( itemsReportinventory.get(k).getQty() == 0)
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+                            itemsInventoryPrint= filteredList;
+                        }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
+                        {   filteredList.clear();
+                            Log.e("case4==","case4==");
+                            for (int k = 0; k < itemsReportinventory.size(); k++) {
+
+                                if (  itemsReportinventory.get(k).getQty() <0)
+                                    filteredList.add(itemsReportinventory.get(k));
+                            }
+
+                            itemsInventoryPrint= filteredList;
+                        }else{
+                            itemsInventoryPrint=itemsReportinventory;
+
+                        }
+
+
+
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+                    recyclerView.setAdapter(adapter);
+                    setTextTotalQty( adapter.TotalQtyInventoey());
+                }
+
+
+            }
         });
     }
 

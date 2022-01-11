@@ -1126,7 +1126,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ENTER_PRICE + " TEXT, "
                 + UNIT_BARCODE + " TEXT, "
                 +IS_RETURNED+" INTEGER DEFAULT 0, "
-                + " Avilable_Qty" + " TEXT DEFAULT '0'"
+                + "Avilable_Qty" + " TEXT DEFAULT '0'"
                 + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
