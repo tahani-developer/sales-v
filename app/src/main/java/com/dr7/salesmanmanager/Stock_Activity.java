@@ -209,7 +209,7 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
 
     }
-    private boolean checkInTotalList(String s) {
+    public boolean checkInTotalList(String s) {
         boolean existInTotal=false;
         if(listSerialInventory.size()!=0){
             // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
@@ -222,11 +222,6 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
             }
 
-//
-//                if(listSerialTotal.indexOf(s.toString().trim())!=-1)
-//                {
-//
-//                }
         }
         return  true;
     }

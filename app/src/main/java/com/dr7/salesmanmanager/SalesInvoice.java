@@ -3382,6 +3382,7 @@ public class SalesInvoice extends Fragment {
                                 float discountNew=0;
                                 try {
                                     discountNew=Float.parseFloat(discount_update.getText().toString().trim());
+
                                     if(discountNew!=100)
                                     {
                                         //radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
@@ -3408,6 +3409,7 @@ public class SalesInvoice extends Fragment {
                                         }
 
                                     }
+
                                 }catch (Exception e){
 
                                 }
@@ -3468,42 +3470,32 @@ public class SalesInvoice extends Fragment {
                                     }
                                     else {
 //                                        items.get(position+1)
-                                        //************ test here  ***********
-                                        if (offer.get(0).getPromotionType() == 0)
-                                        {
-                                            items.get(position).setBonus(0);
-                                            disount_totalnew=0;
-                                            if((position+1 )!= items.size()){
-                                                if(items.get(position+1).getItemName().equals("(bonus)"))
-                                                {
-                                                    items.remove(position+1);
-                                                }
-                                            }
 
-                                        }else {
-                                            disount_totalnew=0;
-                                        }
 
 
                                     }
                                 }
-  Log.e("appliedOffer","disount_totalnew"+disount_totalnew);
+
                                 total_items_quantity += items.get(position).getQty();
                                 totalQty_textView.setText("+" + total_items_quantity);
-                                if (items.get(position).getDiscType() == 0)// value
+                                if(disount_totalnew!=0)
                                 {
-                                    items.get(position).setDisc(disount_totalnew);
-                                    items.get(position).setDiscPerc((items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100))+"");
-                                    items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+                                    if (items.get(position).getDiscType() == 0)// value
+                                    {
+                                        items.get(position).setDisc(disount_totalnew);
+                                        items.get(position).setDiscPerc((items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100))+"");
 
-                                }
-                                else{
-                                    items.get(position).setDiscPerc(disount_totalnew+"");
-                                    items.get(position).setDisc(items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100));
-                                    items.get(position).setAmount((items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc()));
+                                    }
+                                    else{
+                                        items.get(position).setDiscPerc(disount_totalnew+"");
+                                        items.get(position).setDisc(items.get(position).getQty()*items.get(position).getPrice()*(disount_totalnew/100));
 
+                                    }
                                 }
-                              //  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
+                                items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
+
+
+                                //  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
                               //  Log.e("updateAmount1=","getDisc="+items.get(position).getDisc());
                               //  Log.e("updateAmount1=","getDiscPerc="+items.get(position).getDiscPerc());
                                 calculateTotals(0);
@@ -4451,6 +4443,7 @@ public class SalesInvoice extends Fragment {
                     Offers.add(offer);
                 }
             }
+            Log.e("checkOffers",""+Offers.size());
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -4550,7 +4543,7 @@ public class SalesInvoice extends Fragment {
 
     public void calculateTotals(int flagDelete) {
 
-        Log.e("calculateTotals","flagDel= "+flagDelete);
+
         if(notIncludeTax.isChecked())
         {
             noTax=0;

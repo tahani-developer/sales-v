@@ -112,7 +112,8 @@ public class AddItemsStockFragment extends DialogFragment {
         textViewItemNum=view.findViewById(R.id.textViewItemNum);
         textViewUnit_qty=view.findViewById(R.id.textViewUnit_qty);
         if(intentData.equals("read"))
-        {textViewItemNum.setVisibility(View.GONE);
+        {
+            textViewItemNum.setVisibility(View.GONE);
             textViewUnit_qty.setVisibility(View.GONE);
         }
        // jsonItemsList = mHandler.getAllJsonItemsStock(1);
