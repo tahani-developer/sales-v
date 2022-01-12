@@ -4,6 +4,7 @@ import static com.dr7.salesmanmanager.ImportJason.listItemsReturn;
 import static com.dr7.salesmanmanager.ImportJason.returnListSerial;
 import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
@@ -27,6 +29,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -61,7 +64,7 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ReturnByVoucherNo extends AppCompatActivity {
-    RecyclerView recyclerView;
+    public static   RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
     public static List<serialModel> allitemsdata =new ArrayList<>();
     public static List<serialModel> Recoverallitemsdata =new ArrayList<>();
@@ -90,7 +93,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             R.drawable.pdf_icon,R.drawable.excel_small
             };
     LinearLayout boomlin;
-    public  static TextView  ScanSerialcode;
+    public  static TextView  ScanSerialcode,checked;
     public  static EditText  Serialcode;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -117,41 +120,12 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void initialView() {
         Serialcode=findViewById(R.id.serialcode);
+        checked = findViewById(R.id.checked);
+
+
         allitemsdata.clear();
         Recoverallitemsdata.clear();
-        dataBase=new DatabaseHandler(this);
-        returnall=findViewById(R.id.returnall);
-        ScanSerialcode=findViewById(R.id.scan);
-        Serialcode. setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if (i != KeyEvent.KEYCODE_ENTER) {
-
-                    if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
-                        if (!   Serialcode.getText().toString().trim().equals("")) {
-                            if(allitemsdata.size()!=0)
-                            {
-                                for (int x=0;x<allitemsdata.size();x++){
-                                    if( allitemsdata.get(x).getSerialCode().equals(Serialcode.getText().toString().trim()))
-                                    {
-                                        allitemsdata.get(x).setIsClicked(1);
-                                        adapter. notifyItemChanged(x);
-                                        Serialcode.setText("");
-                                    }
-
-                                }
-                            }
-
-                        } else {
-
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-        Serialcode.addTextChangedListener(new TextWatcher() {
+        checked.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -164,27 +138,141 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                 if( !s.toString().equals("")){
-                     if(allitemsdata.size()!=0)
-                     {
-                         for (int i=0;i<allitemsdata.size();i++){
-                           if( allitemsdata.get(i).getSerialCode().equals(s.toString().trim()))
-                           {
-                               allitemsdata.get(i).setIsClicked(1);
-                               adapter. notifyItemChanged(i);
-                               Serialcode.setText("");
-                           }
+                if (!s.toString().equals("")) {
 
-                         }
-                     }
+                    fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 1);
 
-                 }
+                }
             }
         });
+        dataBase = new DatabaseHandler(this);
+        if (dataBase.getAllSettings().get(0).getContinusReading() == 1)// camera
+        {
+            Serialcode.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!s.toString().equals("")) {
+                        if (allitemsdata.size() != 0) {
+                            for (int i = 0; i < allitemsdata.size(); i++) {
+                                if (allitemsdata.get(i).getSerialCode().equals(s.toString().trim())) {
+                                    allitemsdata.get(i).setIsClicked(1);
+                                    fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 0);
+                                    Serialcode.setText("");
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            });
+        } else {
+
+
+            Serialcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                                     @Override
+                                                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                         if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                                                                 || actionId == EditorInfo.IME_NULL) {
+                                                             if (!Serialcode.getText().toString().trim().equals("")) {
+                                                                 if (allitemsdata.size() != 0) {
+                                                                     for (int x = 0; x < allitemsdata.size(); x++) {
+                                                                         if (allitemsdata.get(x).getSerialCode().
+                                                                                 equals(Serialcode.getText().toString().trim())) {
+                                                                             allitemsdata.get(x).setIsClicked(1);
+                                                                             fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 0);
+                                                                             Serialcode.setText("");
+                                                                         }
+
+                                                                     }
+                                                                 }
+
+                                                             } else {
+
+                                                             }
+
+                                                         }
+                                                         return false;
+                                                     }
+
+                                                 }
+
+            );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//            Serialcode. setOnKeyListener(new View.OnKeyListener() {
+//                @Override
+//                public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                    if (i == KeyEvent.KEYCODE_BACK) {
+//                        try {
+//                            onBackPressed();
+//                        }catch (Exception e){
+//
+//                        }
+//
+//
+//                    }
+//
+//                    else  if (i != KeyEvent.KEYCODE_ENTER) {
+//
+//                        if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+//                            if (!   Serialcode.getText().toString().trim().equals("")) {
+//                                if(allitemsdata.size()!=0)
+//                                {
+//                                    for (int x=0;x<allitemsdata.size();x++){
+//                                        if( allitemsdata.get(x).getSerialCode().
+//                                                equals(Serialcode.getText().toString().trim()))
+//                                        {
+//                                            allitemsdata.get(x).setIsClicked(1);
+//                                            fillAdapterData(ReturnByVoucherNo.this,allitemsdata,0);
+//                                            Serialcode.setText("");
+//                                        }
+//
+//                                    }
+//                                }
+//
+//                            } else {
+//
+//                            }
+//                            return true;
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
+
+
+        }
+
+        returnall=findViewById(R.id.returnall);
+        ScanSerialcode=findViewById(R.id.scan);
         ScanSerialcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // new IntentIntegrator(ReturnByVoucherNo.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+                // new IntentIntegrator(ReturnByVoucherNo.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
                 Intent i=new Intent(ReturnByVoucherNo.this,ScanActivity.class);
                 i.putExtra("key","5");
                 startActivity(i);
@@ -204,7 +292,11 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
                 Log.e("isChecked2==","is"+isChecked);
                 for(int i=0;i< allitemsdata.size();i++)
-                    allitemsdata.get(i). setIsClicked(1);
+              if( dataBase.HASSERAIAL(allitemsdata.get(i).getItemNo())==1
+                      &&allitemsdata.get(i).getSerialCode().equals(""))
+              { allitemsdata.get(i). setIsClicked(0);}
+                  else
+                  allitemsdata.get(i). setIsClicked(1);
 
 
             }else{
@@ -213,7 +305,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                     allitemsdata.get(i). setIsClicked(0);
 
             }
-                fillAdapterData( allitemsdata);
+                fillAdapterData( ReturnByVoucherNo.this,allitemsdata,2);
 
             }
         });
@@ -636,7 +728,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           sumAllListData();
 
       } else {
-          exportData(2);
+exportData(2);
 
 
 
@@ -717,6 +809,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           showprintDialog();
 //            exportData(1);
             textView_save.setEnabled(false);
+            returnall.setChecked(false);
     }
     else{
           Toast.makeText(ReturnByVoucherNo.this, "Fill Your List Please", Toast.LENGTH_LONG).show();
@@ -763,7 +856,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         listItemDeleted.clear();
         voucherNo_text.setText("");
         getVoucherNo();
-        fillAdapterData(returnListSerial);
+        fillAdapterData(ReturnByVoucherNo.this,returnListSerial,2);
         payMethod_textView.setText("");
         paymentTermRadioGroup.setVisibility(View.GONE);
         payMethod_textView.setVisibility(View.VISIBLE);
@@ -789,6 +882,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
       voucherReturn.setCustName(CustomerListShow.Customer_Name);
       voucherReturn.setSubTotal(total);
       voucherReturn.setNetSales(total);
+        voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
       voucherReturn.setTax(0);
 
       // calck netSales
@@ -810,6 +904,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
             listItemsMain.get(i).setIsPosted(0);
+            listItemsMain.get(i).setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
+
             Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
             if( dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==0)
             dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
@@ -865,7 +961,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     }
 
     private void saveSerial() {
-      //  Log.e("saveVoucherMaster",""+"saveVoucherMaster"+returnListSerial.size());
+   Log.e("saveSeria,returnListSeria",""+"saveVoucherMaster"+returnListSerial.size());
         for(int i=0;i<returnListSerial.size();i++)
         {
            // Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());
@@ -930,7 +1026,7 @@ try {
     }*/
 
    private void deleteItemNotSelected() {
-      //  Log.e("deleteItemsDetail","1returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
+     Log.e("deleteItemsDetail","1returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
       if(allitemsdata.size()!=0)
       {
 
@@ -1039,7 +1135,7 @@ try {
         }
         fillZeroQty();
        // adapter.notifyDataSetChanged();
-        fillAdapterData(returnListSerial);
+        fillAdapterData(ReturnByVoucherNo.this,returnListSerial,2);
         canChangePayMethod();
     }
     private void fillitemNoPrc_allItemType( ) {
@@ -1087,7 +1183,7 @@ try {
         }
         fillZeroQty();
         // adapter.notifyDataSetChanged();
-        fillAdapterData(allitemsdata);
+        fillAdapterData(ReturnByVoucherNo.this,allitemsdata,2);
         canChangePayMethod();
     }
     private void canChangePayMethod() {
@@ -1112,10 +1208,10 @@ try {
     }
 
 
-    public void fillAdapterData( List<serialModel> serialModels) {
+    public static void fillAdapterData(Context context, List<serialModel> serialModels,int flage) {
           Log.e("SerialReport2","SerialReport2");
-        recyclerView.setLayoutManager(new LinearLayoutManager(ReturnByVoucherNo.this));
-        adapter = new ReturnItemAdapter (serialModels,ReturnByVoucherNo.this,0 );
+          recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new ReturnItemAdapter (serialModels,context,0 ,flage);
         recyclerView.setAdapter(adapter);
 
 
@@ -1360,6 +1456,7 @@ break;
 
                                printLayout();
                                 returnListSerial.clear();
+
                                 sweetAlertDialog.dismiss();
 
 
@@ -1369,7 +1466,8 @@ break;
                         .setCancelButton(getResources().getString(R.string.no), new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-
+                                returnListSerial.clear();
+                                fillAdapterData(ReturnByVoucherNo.this,returnListSerial,1);
                                 sweetAlertDialog.dismiss();
 
                             }

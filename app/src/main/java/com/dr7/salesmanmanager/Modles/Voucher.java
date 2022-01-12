@@ -33,7 +33,15 @@ public class Voucher {
     private double totalQty;
     private int voucherYear;
     private String time;
+    private int ORIGINALvoucherNo;
 
+    public int getORIGINALvoucherNo() {
+        return ORIGINALvoucherNo;
+    }
+
+    public void setORIGINALvoucherNo(int ORIGINALvoucherNo) {
+        this.ORIGINALvoucherNo = ORIGINALvoucherNo;
+    }
 
     public String getTime() {
         return time;
