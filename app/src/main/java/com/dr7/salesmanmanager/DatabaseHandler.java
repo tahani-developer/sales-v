@@ -76,7 +76,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 163;
+    private static final int DATABASE_VERSION = 165;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -473,6 +473,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String COMPANY_NUMBER = "COMPANY_NUMBER";
     private static final String VOUCHER_NUMBER = "VOUCHER_NUMBER";
+    private static final String ORIGINALVOUCHER_NUMBER = "ORIGINALVOUCHER_NUMBER";
     private static final String VOUCHER_TYPE = "VOUCHER_TYPE";
     private static final String VOUCHER_DATE = "VOUCHER_DATE";
     private static final String SALES_MAN_NUMBER = "SALES_MAN_NUMBER";
@@ -1087,8 +1088,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + CUST_NAME + " TEXT,"
                     + CUST_NUMBER + " TEXT,"
                     + VOUCHER_YEAR + " INTEGER,"
-                    + VOUCHER_time + " TEXT "
-
+                    + VOUCHER_time + " TEXT, "
+           + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0'"
 
                     + ")";
             db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
@@ -1126,7 +1127,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + ENTER_PRICE + " TEXT, "
                 + UNIT_BARCODE + " TEXT, "
                 +IS_RETURNED+" INTEGER DEFAULT 0, "
-                + "Avilable_Qty" + " TEXT DEFAULT '0'"
+                + "Avilable_Qty" + " TEXT DEFAULT '0',"
+                + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0'"
                 + ")";
         db.execSQL(CREATE_TABLE_SALES_VOUCHER_DETAILS);
 
@@ -2092,7 +2094,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-
         try{
             db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NOTEPOSITION  TEXT  DEFAULT '0' ");
 
@@ -2269,7 +2270,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_MASTER ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SALES_VOUCHER_DETAILS ADD  ORIGINALVOUCHER_NUMBER  INTEGER  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
 
     }
 
@@ -3293,7 +3308,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CUST_NUMBER, voucher.getCustNumber());
         values.put(VOUCHER_YEAR, voucher.getVoucherYear());
         values.put(VOUCHER_time, voucher.getTime());
-
+        values.put(ORIGINALVOUCHER_NUMBER, voucher.getORIGINALvoucherNo());
 
         try {
 
@@ -3332,7 +3347,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(ITEM_YEAR, item.getYear());
         values.put(IS_POSTED1, item.getIsPosted());
         values.put(ITEM_DESCRIPTION, item.getDescription());
-
+        values.put(ORIGINALVOUCHER_NUMBER, item.getORIGINALvoucherNo());
         try {
             if(item.getSerialCode()==null)
             {

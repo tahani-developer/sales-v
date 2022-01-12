@@ -57,7 +57,15 @@ public class Item implements Serializable {
     private String oneUnitItem;
     private float Avi_Qty;
     private int   IS_RETURNED;
+    private int ORIGINALvoucherNo;
 
+    public int getORIGINALvoucherNo() {
+        return ORIGINALvoucherNo;
+    }
+
+    public void setORIGINALvoucherNo(int ORIGINALvoucherNo) {
+        this.ORIGINALvoucherNo = ORIGINALvoucherNo;
+    }
     public int getIS_RETURNED() {
         return IS_RETURNED;
     }

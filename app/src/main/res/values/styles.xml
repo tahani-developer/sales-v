@@ -55,5 +55,10 @@
         <item name="android:colorForeground">#C89E4A4A</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
+    <style name="CustomActivityTheme" parent="@android:style/Theme.Holo">
+        <item name="android:checkboxStyle">@style/customCheckBoxStyle</item>
+    </style>
 
+    <style name="customCheckBoxStyle" parent="@android:style/Widget.Holo.Light.CompoundButton.CheckBox">
+    </style>
 </resources>
