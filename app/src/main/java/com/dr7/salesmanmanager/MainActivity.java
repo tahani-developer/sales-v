@@ -1117,7 +1117,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.shelf_inventory) {
-            if(!CustomerListShow.Customer_Account.equals(""))
+            if(!CustomerListShow.Customer_Name.equals("") && !CustomerListShow.Customer_Name.equals("No Customer Selected !") )
             {
                 finish();
                 Intent i=new Intent(MainActivity.this,Stock_Activity.class);
