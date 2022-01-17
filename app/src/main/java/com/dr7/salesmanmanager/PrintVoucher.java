@@ -265,8 +265,8 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                          //  row.setPadding(5, 5, 10, 5);
-                            row.setPadding(10, 10, 10, 10);
+                           row.setPadding(5, 5, 10, 5);
+                          //  row.setPadding(10, 10, 10, 10);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
