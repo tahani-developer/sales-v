@@ -574,7 +574,7 @@ public class InventoryReport extends AppCompatActivity {
 
                     filteredList.clear();
                         if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر") ) {
-                            Log.e("case2==","case2==");
+                            Log.e("case21==","case2==");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (itemsReportinventory.get(k).getQty() > 0)
@@ -582,37 +582,42 @@ public class InventoryReport extends AppCompatActivity {
 
 
                             }
-                            itemsInventoryPrint= filteredList;
+
                         }
                         else if( qtySpinner.getSelectedItem().equals("تساوي الصفر"))
                         {   filteredList.clear();
-                            Log.e("case3==","case3==");
+                            Log.e("case31==","case3==");
+
+                            Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if ( itemsReportinventory.get(k).getQty() == 0)
                                     filteredList.add(itemsReportinventory.get(k));
                             }
-                            itemsInventoryPrint= filteredList;
+
                         }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
                         {   filteredList.clear();
-                            Log.e("case4==","case4==");
+                            Log.e("case41==","case4==");
+                            Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (  itemsReportinventory.get(k).getQty() <0)
                                     filteredList.add(itemsReportinventory.get(k));
                             }
 
-                            itemsInventoryPrint= filteredList;
+
                         }else{
-                            itemsInventoryPrint=itemsReportinventory;
+                            filteredList.addAll(itemsReportinventory);
+                            //itemsInventoryPrint=itemsReportinventory;
 
                         }
 
-
-
-                    ListInventoryAdapter adapter = new ListInventoryAdapter(itemsReportinventory, context);
+                    itemsInventoryPrint=filteredList;
+                    ListInventoryAdapter adapter = new ListInventoryAdapter(filteredList, context);
                     recyclerView.setAdapter(adapter);
                     setTextTotalQty( adapter.TotalQtyInventoey());
+
+
                 }
 
 
