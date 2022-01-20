@@ -89,6 +89,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     CheckBox returnall;
     public RadioGroup paymentTermRadioGroup;
     CompanyInfo companyInfo;
+    int typeTax=0;
     int[] listImageIcone=new int[]{R.drawable.ic_print_white_24dp,
             R.drawable.pdf_icon,R.drawable.excel_small
             };
@@ -211,7 +212,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
 
 
-
+            typeTax=dataBase.getAllSettings().get(0).getTaxClarcKind();
+            Log.e("typeTax",""+typeTax);
 
 
 
@@ -1148,12 +1150,18 @@ try {
             {
                 if(allitemsdata.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim()))
                 {
-                    float salePrice=1,oneDisc=0;
+                    float salePrice=1,oneDisc=0,oneTax=0;
                     try {
+                        if(listItemsReturn.get(j).getDisc()!=0)
                         oneDisc=listItemsReturn.get(j).getDisc()/listItemsReturn.get(j).getQty();
-                        if(oneDisc!=0)
-                            salePrice=listItemsReturn.get(j).getPrice()-oneDisc;
-                        else salePrice=listItemsReturn.get(j).getPrice();
+                        if(listItemsReturn.get(j).getTaxValue()!=0&&typeTax==0 )
+                        {
+                            oneTax= (float) (listItemsReturn.get(j).getTaxValue()/listItemsReturn.get(j).getQty());
+                        }
+
+//                        if(oneDisc!=0)
+                            salePrice=listItemsReturn.get(j).getPrice()-oneDisc+oneTax;
+//                       salePrice=listItemsReturn.get(j).getPrice();
 
                     }catch (Exception e){
                         // Log.e("salePrice","Exception"+e.getMessage());
