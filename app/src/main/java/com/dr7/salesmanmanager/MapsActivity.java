@@ -25,7 +25,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -46,13 +45,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        List<AddedCustomer> customers = new DatabaseHandler(MapsActivity.this).getAllAddedCustomer();
+    /*   List<AddedCustomer> customers = new DatabaseHandler(MapsActivity.this).getAllAddedCustomer();
         for (int i =0 ; i<customers.size() ; i++){
             showLocations(customers.get(i).getLatitude() , customers.get(i).getLongtitude() , customers.get(i).getCustName());
-        }
+        }*/
+
+
+        Bundle bundle = getIntent().getExtras();
+
+/*
+        String CustLa= bundle.getString("CustLa");
+        String CustLong= bundle.getString("CustLong");
+        String CustName= bundle.getString("CustName");
+
+*/
+        String CustLa= "31.9695985";
+        String CustLong="35.9138707";
+        String CustName="السادة هايل لينك المحترمين";
+        Log.e("CustLa=",CustLa);
+        Log.e("CustLong=",CustLong);
+        Log.e(" CustName=",CustName);
+        showLocations(Double.parseDouble(CustLa),Double.parseDouble(CustLong),CustName);
     }
 
-    public void showLocations(final double latitude , final double longitude , final String custName ){
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    public void showLocations(final double latitude , final double longitude , final String custName )
+    {
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this,
@@ -104,17 +132,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
 
 }

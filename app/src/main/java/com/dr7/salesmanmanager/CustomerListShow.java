@@ -165,6 +165,25 @@ public class CustomerListShow extends DialogFragment {
                 customersListAdapter = new CustomersListAdapter(CustomerListShow.this, getActivity(), emptyCustomerList);
                 itemsListView.setAdapter(customersListAdapter);
             }
+
+/*
+        for(int i=0;i< customerList .size();i++)
+            for(int j=0;j<  MainActivity.customerArrayList .size();j++)
+                if( MainActivity.customerArrayList.get(j).getCustName().equals
+                        (customerList.get(i).getCustName()))
+                {
+                    customerList.get(i).setCustLat(String.valueOf(MainActivity.customerArrayList.get(j).getLatitude()));
+                    customerList.get(i).setCustLat(String.valueOf(MainActivity.customerArrayList.get(j).getLongtitude()));
+                     Log.e("",customerList.get(i).getCustName()+" "+MainActivity.customerArrayList.get(j).getCustName());
+                         break;
+                }
+
+
+*/
+
+
+
+
         }
         else {
             Toast.makeText(getActivity(), "Empty Data", Toast.LENGTH_SHORT).show();
@@ -196,7 +215,32 @@ public class CustomerListShow extends DialogFragment {
 //                dismiss();
             }
         });
+        if(Login.SalsManPlanFlage==1) {
 
+
+
+
+            // remove customer not in plan
+            for (int i = 0; i < customerList.size(); i++)
+                if (!IsInPlan(customerList.get(i).getCustId())) {
+                    customerList.remove(i);
+                    i--;
+
+                }
+
+
+
+
+          /*  for (int i = 0; i < customerList.size(); i++)
+                for (int x = 0; x < MainActivity .customerArrayList.size(); x++)
+                    if(customerList.get(i).getCustId().
+                            equals(MainActivity .customerArrayList.get(x).getc)) {
+                        Log.e("customerLocation",MainActivity .customerArrayList.get(x).getCustId()+",,"+customerList.get(x).getCustId());
+                        customerList.get(i).setCustLat(MainActivity .customerArrayList.get(x).getCustLat());
+                        customerList.get(i).setCustLong(MainActivity .customerArrayList.get(x).getCustLong());
+                    }*/
+
+        }
         customerNameTextView.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -779,5 +823,18 @@ public class CustomerListShow extends DialogFragment {
             }
         }
     }
+    boolean IsInPlan(String id){
 
+
+        boolean f=false;
+
+        for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
+            if(MainActivity.DB_salesManPlanList .get(i).getCustNumber().equals(id)) {
+                f=true;
+                break;
+
+            }
+
+
+        return  f;   }
 }

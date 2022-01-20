@@ -55,6 +55,7 @@ import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
+import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
@@ -93,6 +94,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarException;
@@ -105,6 +107,7 @@ import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.Activities.totalBalance_text;
 
 import static com.dr7.salesmanmanager.Login.checkIpDevice;
+import static com.dr7.salesmanmanager.Login.curentDate;
 import static com.dr7.salesmanmanager.Login.dateFromToActive;
 import static com.dr7.salesmanmanager.Login.goMainText;
 import static com.dr7.salesmanmanager.Login.headerDll;
@@ -154,7 +157,7 @@ public class ImportJason extends AppCompatActivity {
     public static ArrayList<UnCollect_Modell> unCollectlList = new ArrayList<>();
     public static ArrayList<Payment> paymentChequesList = new ArrayList<>();
     public static ArrayList<serialModel> returnListSerial = new ArrayList<>();
-
+    public static ArrayList<SalesManPlan>salesManPlanList = new ArrayList<>();
     public static ArrayList<Item> listItemsReturn = new ArrayList<>();
     public static Voucher voucherReturn = new Voucher();
     private JsonArrayRequest loginRequest;
@@ -4931,6 +4934,228 @@ Log.e("customerList",""+customerList.size());
 
 
     }
+
+
+    public void getSalesmanPlan(int SalesmanNum) {
+        List<Settings> settings = mHandler.getAllSettings();
+        if (settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            new JSONTask_GetSalesmanPlan(SalesmanNum,curentDate).execute();
+
+        }
+    }
+    private class JSONTask_GetSalesmanPlan extends AsyncTask<String, String, String> {
+      int  SalesmanNum;
+      String date;
+
+        public JSONTask_GetSalesmanPlan(int salesmanNum, String date) {
+            SalesmanNum = salesmanNum;
+            this.date = date;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+       @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                if (!ipAddress.equals("")) {
+
+                   // http://10.0.0.22:8085/ADMGetPlan?CONO=290&SALESNO=1&PDATE=17/01/2022
+                    URL_TO_HIT =
+                    "http://" + ipAddress + ":"+ ipWithPort.trim() + headerDll.trim() +"/ADMGetPlan?CONO="+CONO.trim()+"&SALESNO="+SalesmanNum+"&PDATE="+date;
+
+                    Log.e("link", "" +  URL_TO_HIT );
+                }
+            } catch (Exception e) {
+                progressDialog.dismiss();
+            }
+
+            try {
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+                Log.e("finalJson***Import", finalJson);
+
+
+
+
+                return finalJson;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex)
+
+            {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            }
+            catch (Exception e)
+
+            {
+                e.printStackTrace();
+                Log.e("Exception", "" + e.getMessage());
+//                progressDialog.dismiss();
+                progressDialog.dismiss();
+                return null;
+            }
+
+
+            //***************************
+
+        }
+
+     /*   @Override
+        protected void onPostExecute(String array) {
+            super.onPostExecute(array);
+            progressDialog.dismiss();
+            JSONObject result = null;
+
+
+            if (array != null ) {
+
+                if (array.length() != 0) {
+                if(array.contains("CUSNAME"))
+                {
+                    for (int i = 0; i < array.length(); i++) {
+                        try {
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        SalesManPlan plan = new      SalesManPlan();
+                        try {
+                            plan.setDate(result.getString("TRDATE"));
+                            plan.setSaleManNumber(Integer.parseInt(result.getString("SALESNO")));
+                            plan.setLatitud(Double.parseDouble(result.getString("LA")));
+                            plan.setLongtude(Double.parseDouble(result.getString("LO")));
+                            plan.setCustName(result.getString("CUSNAME"));
+                            plan.setCustNumber(result.getString("CUSTNO"));
+                            plan.setOrder(Integer.parseInt(result.getString("ORDERD")));
+                            plan.setTypeOrder(Integer.parseInt(result.getString("TYPEORDER")));
+                            salesManPlanList.add( plan);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                    MainActivity.salesmanPlanRespon.setText(""); }
+
+                }
+            }
+        }*/
+     @Override
+     protected void onPostExecute(String array) {
+         super.onPostExecute(array);
+         progressDialog.dismiss();
+         JSONObject jsonObject1 = null;
+         if (array != null) {
+             if (array.contains("CUSNAME")) {
+
+                 if (array.length() != 0) {
+                     try {
+                         JSONArray requestArray = null;
+                         requestArray = new JSONArray(array);
+                         salesManPlanList.clear();
+                         Log.e("requestArray==",""+requestArray.length());
+                         for (int i = 0; i < requestArray.length(); i++) {
+                             Log.e("sss===","sssss");
+                             SalesManPlan plan = new      SalesManPlan();
+                             jsonObject1 = requestArray.getJSONObject(i);
+                                 plan.setDate(  jsonObject1.getString("TRDATE"));
+                                 plan.setSaleManNumber(Integer.parseInt(  jsonObject1.getString("SALESNO")));
+                                 plan.setLatitud(Double.parseDouble(  jsonObject1.getString("LA")));
+                                 plan.setLongtude(Double.parseDouble(  jsonObject1.getString("LO")));
+                                 plan.setCustName(  jsonObject1.getString("CUSNAME"));
+                                 plan.setCustNumber(  jsonObject1.getString("CUSTNO"));
+                                 plan.setOrder(Integer.parseInt(  jsonObject1.getString("ORDERD")));
+                                 plan.setTypeOrder(Integer.parseInt(  jsonObject1.getString("TYPEORDER")));
+                                 salesManPlanList.add( plan);
+                         }
+                         Log.e("salesManPlanList==",""+salesManPlanList.size());
+                         MainActivity.salesmanPlanRespon.setText("fill");
+
+
+
+                     } catch (JSONException e) {
+                         e.printStackTrace();
+                     }
+
+
+                 }
+
+
+
+             }
+         } else {
+
+                      }
+     }
+
+    }
+
+
+
+
+
+
+
+
 }
 
 

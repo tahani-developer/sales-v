@@ -574,7 +574,7 @@ public class CustomerCheckInFragment extends DialogFragment {
         this.customerCheckInListener = listener;
     }
 
-    public void editCheckOutTimeAndDate() {
+    public void editCheckOutTimeAndDate(Context context) {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -587,6 +587,12 @@ public class CustomerCheckInFragment extends DialogFragment {
         transaction.setCusCode(cusCode);
 
         mDbHandler.updateTransaction(cusCode,convertToEnglish(currentDate), convertToEnglish(currentTime));
+
+        if(Login.SalsManPlanFlage==1){
+
+            mDbHandler.updateLogStatusInPlan(cusCode,convertToEnglish(currentDate));
+        MainActivity.getSalesmanPlan(context);}
+
         List<Settings> settings = mDbHandler.getAllSettings();
         if (settings.size() != 0) {
             approveAdmin= settings.get(0).getApproveAdmin();

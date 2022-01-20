@@ -44,6 +44,7 @@ import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
+import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
@@ -76,7 +77,7 @@ DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 165;
+    private static final int DATABASE_VERSION = 169;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -622,7 +623,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Admin_Password = "Admin_Password";
     private static final String Total_Balance = "Total_Balance";
     private static final String Voucher_Return = "Voucher_Return";
+    private static final String ActiveSlasmanPlan = "ActiveSlasmanPlan";
 
+
+    //----------------------------------------------------------------------
+    private static final String SalesMan_Plan = "SalesMan_Plan";
+
+    private static final String orederd = "ORDERED";
+    private static final String typeorederd = "TYPEORDERED";
+    private static final String LogoutStatus = "LogoutStatus";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -1247,7 +1256,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + Make_Order + " INTEGER,"
                 + Admin_Password + " INTEGER,"
                 + Total_Balance + " INTEGER,"
-                + Voucher_Return + " INTEGER" + ")";
+                + Voucher_Return + " INTEGER,"
+                + ActiveSlasmanPlan + " INTEGER DEFAULT '0'" +
+
+                ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1315,6 +1327,33 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         } catch (Exception e) {
 
         }
+
+
+
+
+        try{
+
+        String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
+                + DATE + " TEXT,"
+                + SALES_MAN_NUMBER + " INTEGER,"
+                + CUSTOMER_NAME + " TEXT,"
+                + CUSTOMER_NO + " INTEGER,"
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT,"
+                + orederd + " INTEGER,"
+                + typeorederd + " INTEGER,"
+                + LogoutStatus + " INTEGER DEFAULT '0'" +
+                ")";
+        db.execSQL(CREATE_TABLE_SalesMan_Plan);}
+        catch (Exception e){
+
+        }
+        //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
+
+
+
+
+
 
 
 
@@ -2247,7 +2286,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + Make_Order + " INTEGER,"
                     + Admin_Password + " INTEGER,"
                     + Total_Balance + " INTEGER,"
-                    + Voucher_Return + " INTEGER" + ")";
+                    + Voucher_Return + " INTEGER"
+
+                    + ")";
             db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
 
 
@@ -2285,7 +2326,30 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{   String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
+                + DATE + " TEXT,"
+                + SALES_MAN_NUMBER + " INTEGER,"
+                + CUSTOMER_NAME + " TEXT,"
+                + CUSTOMER_NO + " INTEGER,"
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT,"
+                + orederd + " INTEGER,"
+                + typeorederd + " INTEGER,"
+                + LogoutStatus + " INTEGER DEFAULT '0'" +
+                ")";
+        db.execSQL(CREATE_TABLE_SalesMan_Plan);}
+        catch (Exception e){
 
+    }
+
+
+        try{
+            db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanPlan+"'  INTEGER  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
     }
 
     ////B
@@ -2301,6 +2365,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(Admin_Password, flag_settings.getAdmin_Password());
         values.put(Total_Balance, flag_settings.getTotal_Balance());
         values.put(Voucher_Return, flag_settings.getVoucher_Return());
+        values.put(ActiveSlasmanPlan, flag_settings.getActiveSlasmanPlan());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2323,7 +2388,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                         cursor.getInt(3),
                         cursor.getInt(4),
                         cursor.getInt(5),
-                        cursor.getInt(6)
+                        cursor.getInt(6),
+                        cursor.getInt(7)
+
                 );
 
                 flagSettings.add(mySettings);
@@ -2337,7 +2404,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void updateFlagSettings (String dataType, int export, int max, int order,
-                                    int password, int total, int vReturn) {
+                                    int password, int total, int vReturn,int SalPlan) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2349,6 +2416,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(Admin_Password, password);
         values.put(Total_Balance, total);
         values.put(Voucher_Return, vReturn);
+        values.put(ActiveSlasmanPlan, SalPlan);
 
         db.update(Flag_Settings, values, null, null);
 
@@ -7884,6 +7952,129 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
         return  allItemReturn;
+    }
+    public void addSalesmanPlan(SalesManPlan salesManPlans) {
+
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SALES_MAN_NUMBER, salesManPlans.getSaleManNumber());
+        values.put(DATE, salesManPlans.getDate());
+        values.put(LATITUDE,salesManPlans.getLatitud());
+        values.put(LONGITUDE,salesManPlans.getLongtude());
+        values.put(CUSTOMER_NAME, salesManPlans.getCustName());
+        values.put(CUSTOMER_NO, salesManPlans.getCustNumber());
+        values.put(orederd,salesManPlans.getOrder());
+        values.put(typeorederd,salesManPlans.getTypeOrder());
+        values.put(LogoutStatus,salesManPlans.getLogoutStatus());
+
+        db.insert(SalesMan_Plan, null, values);
+        db.close();
+    }
+    public ArrayList< SalesManPlan >getSalesmanPlan(String date) {
+        ArrayList< SalesManPlan > SalesManPlanlist=new ArrayList<>();
+
+        Log.e("date==", date+"");
+        String selectQuery = " select * from SalesMan_Plan where DATE= '"+convertToEnglish(date)+"'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            Log.e("getSalesmanPlan1==", "getSalesmanPlan");
+
+            if (cursor.moveToFirst()) {
+                do {
+                    Log.e("getSalesmanPlan4==", "getSalesmanPlan");
+
+                    if (cursor.getString(0) == null) {
+                        Log.e("getSalesmanPlan2==", "getSalesmanPlan");
+                    } else {
+                        Log.e("getSalesmanPlan3==", "getSalesmanPlan");
+                        SalesManPlan plan = new SalesManPlan();
+                        plan.setDate(cursor.getString(0));
+                        plan.setSaleManNumber(cursor.getInt(1));
+                        plan.setCustName(cursor.getString(2));
+                        plan.setCustNumber(cursor.getString(3));
+                        plan.setLatitud(cursor.getDouble(4));
+                        plan.setLongtude(cursor.getDouble(5));
+                        plan.setOrder(cursor.getInt(6));
+                        plan.setTypeOrder(cursor.getInt(7));
+                        plan.setLogoutStatus(cursor.getInt(8));
+
+
+                        SalesManPlanlist.add(plan);
+                        Log.e("SalesManPlanlist", "SalesManPlanlist=" + SalesManPlanlist.size());
+
+                    }
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+
+
+        //
+
+        //
+        return   SalesManPlanlist;
+    }
+
+    public void updateLogStatusInPlan(String cusCode,String currentDate) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(LogoutStatus,1);
+
+
+        // updating row
+Log.e("currentDate",currentDate);
+     int y=   db.update(SalesMan_Plan, values, CUSTOMER_NO + "=" + cusCode + " AND " + LogoutStatus + "=" + 0+ " AND DATE="  +"'"+currentDate+"'", null);
+        Log.e("y===",""+y);
+
+    }
+    public void deleteFromSalesMan_Plan(String currentDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SalesMan_Plan+"whre DATE='"+currentDate+"'");
+        db.close();
+    }
+
+
+    public   ArrayList<AddedCustomer> getAllCustomer() {
+        ArrayList<AddedCustomer> customers = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + ADDED_CUSTOMER;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                AddedCustomer customer = new AddedCustomer();
+
+                customer.setCustName(cursor.getString(0));
+                customer.setRemark(cursor.getString(1));
+                customer.setLatitude(Double.parseDouble(cursor.getString(2)));
+                customer.setLongtitude(Double.parseDouble(cursor.getString(3)));
+                customer.setSalesMan(cursor.getString(4));
+                customer.setIsPosted(Integer.parseInt(cursor.getString(5)));
+                customer.setSalesmanNo(cursor.getString(6));
+                customer.setADRESS_CUSTOMER(cursor.getString(7));
+                customer.setTELEPHONE(cursor.getString(8));
+                customer.setCONTACT_PERSON(cursor.getString(9));
+
+
+
+                customers.add(customer);
+            } while (cursor.moveToNext());
+        }
+
+        return customers;
     }
 
     public void updateSettingOnlyCustomer(int i) {
