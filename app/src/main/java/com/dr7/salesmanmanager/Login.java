@@ -168,10 +168,10 @@ public class Login extends AppCompatActivity {
 
     public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
-    public  static   int  SalsManPlanFlage=0;
-   public  static  String headerDll = "";
 
- //public  static  String  headerDll = "/Falcons/VAN.dll";
+//    public  static  String headerDll = "";
+
+    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,7 +241,7 @@ public class Login extends AppCompatActivity {
             passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
-            SalsManPlanFlage = flag_settingsList.get(0).getActiveSlasmanPlan();
+
         } else {
 
 //            typaImport = 1;
@@ -524,14 +524,14 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
-        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,SalsManPlan;
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn;
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         swOrder = moreDialog.findViewById(R.id.swOrder);
         swPassword = moreDialog.findViewById(R.id.swPassword);
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
-        SalsManPlan= moreDialog.findViewById(R.id.SalsManPlan);
+
         flag_settingsList = mDHandler.getFlagSettings();
 
         if (flag_settingsList.size() != 0) {
@@ -552,7 +552,7 @@ public class Login extends AppCompatActivity {
             swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
             swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
             swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
-            SalsManPlan.setChecked((flag_settingsList.get(0).getActiveSlasmanPlan() == 1));
+
         }
 
         okBtn.setOnClickListener(v1 -> {
@@ -574,14 +574,13 @@ public class Login extends AppCompatActivity {
             passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
             getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
             voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
-            SalsManPlanFlage=SalsManPlan.isChecked() ? 1 : 0;
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage));
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage);
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat);
             }
 
 

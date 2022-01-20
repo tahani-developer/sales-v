@@ -728,7 +728,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           sumAllListData();
 
       } else {
-exportData(2);
+          showNotFound();
+//exportData(2);
 
 
 
