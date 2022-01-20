@@ -97,7 +97,25 @@ android:visibility="gone"
         </LinearLayout>
 
     </LinearLayout>
+    <LinearLayout
 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Get Plan"
+            android:id="@+id/getplan"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorblue_dark"/>
+    </LinearLayout>
     <LinearLayout
 
         android:layout_width="match_parent"

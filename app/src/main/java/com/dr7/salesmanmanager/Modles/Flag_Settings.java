@@ -9,10 +9,18 @@ public class Flag_Settings {
     private int Admin_Password;
     private int Total_Balance;
     private int Voucher_Return;
-
-    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order,
-                         int admin_Password, int total_Balance, int voucher_Return) {
-
+    private int ActiveSlasmanPlan;
+    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance, int voucher_Return, int activeSlasmanPlan) {
+        Data_Type = data_Type;
+        Export_Stock = export_Stock;
+        Max_Voucher = max_Voucher;
+        Make_Order = make_Order;
+        Admin_Password = admin_Password;
+        Total_Balance = total_Balance;
+        Voucher_Return = voucher_Return;
+        ActiveSlasmanPlan = activeSlasmanPlan;
+    }
+    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance, int voucher_Return) {
         Data_Type = data_Type;
         Export_Stock = export_Stock;
         Max_Voucher = max_Voucher;
@@ -21,6 +29,14 @@ public class Flag_Settings {
         Total_Balance = total_Balance;
         Voucher_Return = voucher_Return;
 
+    }
+
+    public int getActiveSlasmanPlan() {
+        return ActiveSlasmanPlan;
+    }
+
+    public void setActiveSlasmanPlan(int activeSlasmanPlan) {
+        ActiveSlasmanPlan = activeSlasmanPlan;
     }
 
     public String getData_Type() {

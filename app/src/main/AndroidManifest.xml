@@ -53,7 +53,7 @@
         <activity
             android:name=".ReturnByVoucherNo"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false"
 
             />
