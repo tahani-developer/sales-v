@@ -107,12 +107,20 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
 
                  if(!custList.get(i).getCustLat().equals("")) {
-                     String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
-                             Double.parseDouble(custList.get(i).getCustLat()),
-                             Double.parseDouble(custList.get(i).getCustLong()));
-                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                     context.startActivity(intent);
 
+                     if(Double.parseDouble(custList.get(i).getCustLat())!=0) {
+                         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
+                                 Double.parseDouble(custList.get(i).getCustLat()),
+                                 Double.parseDouble(custList.get(i).getCustLong()));
+                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                         context.startActivity(intent);
+                     }
+                     else {
+                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                 .setTitleText(context.getResources().getString(R.string.Noloction))
+                                 .setContentText("")
+                                 .show();
+                     }
                  }else{
                      new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                              .setTitleText(context.getResources().getString(R.string.Noloction))
