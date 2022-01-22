@@ -507,6 +507,7 @@
     <string name="dontDuplicateItem">Dont Duplicate Item</string>
     <string name="ReturnAll">Return All Items In Vocher</string>
     <string name="Noloction">No Location For This Customer</string>
+    <string name="altayaa_shape">Altayaa Shape</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

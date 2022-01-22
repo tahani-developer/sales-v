@@ -2276,7 +2276,7 @@ public class ImportJason extends AppCompatActivity {
                 // JsonResponse = sb.toString();
 
                 String finalJson = sb.toString();
-                // Log.e("finalJson***Import", finalJson);
+                 Log.e("finalJson***Import", finalJson);
                 String rate_customer = "";
                 String HideVal = "";
                 customerList.clear();
