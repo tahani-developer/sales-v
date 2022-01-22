@@ -8052,7 +8052,7 @@ Log.e("currentDate",currentDate);
     }
     public void deleteFromSalesMan_Plan(String currentDate) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + SalesMan_Plan+"whre DATE='"+currentDate+"'");
+        db.execSQL("delete from " + SalesMan_Plan+" where DATE='"+currentDate+"'");
         db.close();
     }
 

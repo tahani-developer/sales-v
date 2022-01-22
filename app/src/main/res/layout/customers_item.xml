@@ -54,7 +54,7 @@
 
         <TextView
             android:id="@+id/showloction"
-            android:background="@drawable/ic_add_location_black_24dp"
+            android:background="@drawable/ic_baseline_not_listed_location_24"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".3"

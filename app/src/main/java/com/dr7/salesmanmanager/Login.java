@@ -168,7 +168,7 @@ public class Login extends AppCompatActivity {
 
     public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
-    public  static  int updateOnlySelectedCustomer=1;
+    public  static  int updateOnlySelectedCustomer=0;
 
     public  static    int   SalsManPlanFlage=0;
 //    public  static  String headerDll = "";
