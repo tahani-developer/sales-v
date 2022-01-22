@@ -74,10 +74,11 @@ import static com.dr7.salesmanmanager.StockRequest.clearData;
 public class
 
 DatabaseHandler extends SQLiteOpenHelper {
-
+    public static String  SalmnLat
+   , SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 169;
+    private static final int DATABASE_VERSION = 171;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1265,6 +1266,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT,"
                 + UserNo_LogIn + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
@@ -2350,6 +2354,17 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"' TEXT ");
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"' TEXT ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
+
     }
 
     ////B
@@ -3472,7 +3487,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void addUserNO(String  USER_NO) {
-        db = this.getReadableDatabase();
+    /*    db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(UserNo_LogIn,USER_NO);
@@ -3480,6 +3495,22 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         db.insert(SalesMenLogIn, null, values);
         db.close();
+
+*/
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserNo_LogIn,USER_NO);
+          db.update(SalesMenLogIn, values, null , null);
+
+
+          db.update(SalesMenLogIn, values, null , null);
+
+        db.close();
+
+
+
+
     }
 
     public void addPaymentPaper(Payment payment) {
@@ -8039,7 +8070,7 @@ Log.e("currentDate",currentDate);
     }
     public void deleteFromSalesMan_Plan(String currentDate) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + SalesMan_Plan+"whre DATE='"+currentDate+"'");
+        db.execSQL("delete from " + SalesMan_Plan+" where DATE='"+currentDate+"'");
         db.close();
     }
 
@@ -8084,6 +8115,39 @@ Log.e("currentDate",currentDate);
         db.update(TABLE_SETTING, values, null, null);
         Log.e("TABLE_SETTING", "UPDATE");
         db.close();
+    }
+    public void  setSalsemanLocation(String lat,String longla){
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LATITUDE, lat);
+        values.put(LONGITUDE, longla);
+  //  int z=    db.update(SalesMenLogIn, values, LATITUDE + "= '' AND " + LONGITUDE+ "= ''" +"OR "+ LATITUDE +"= '"+null +"' OR "+LATITUDE +"= '"+null+"'" , null);
+        int z=    db.update(SalesMenLogIn, values, null , null);
+
+        Log.e("SalesMenLogIn", "UPDATE"+z);
+        db.close();
+
+    }
+    public   void getSalsmanLoc() {
+        ArrayList<SalesMan> SalesMans = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + SalesMenLogIn;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                SalmnLat=cursor.getString(1);
+                SalmnLong=cursor.getString(2);
+
+            } while (cursor.moveToNext());
+        }
+
+
     }
 }
 

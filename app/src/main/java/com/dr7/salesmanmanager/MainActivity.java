@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -134,6 +135,7 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_R
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
@@ -142,7 +144,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+        implements  NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     RadioGroup radioGroup;
@@ -217,6 +219,11 @@ public class MainActivity extends AppCompatActivity
     String ipAddress="";
     NavigationView navigationView;
 
+
+
+
+
+
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
         if(!CustomerListShow.Customer_Name.contains("No Customer"))
@@ -259,6 +266,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
+
+    //////////
+
+
+    protected LocationManager locationManager1;
+    protected LocationListener locationListener1;
+
+    String lat;
+    String provider;
+    protected String latitude,longitude;
+    protected boolean gps_enabled,network_enabled;
+
+
+
+    ////////
+
+
+
+
+
+
+
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -269,8 +300,37 @@ public class MainActivity extends AppCompatActivity
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
 
-        hideItem();
 
+
+
+
+
+     try {
+saveCurentLocation();
+
+         databaseHandler = new DatabaseHandler(  MainActivity.this);
+
+         databaseHandler.getSalsmanLoc();
+         Log.e(" DatabaseHandler.SalmnLat",""+ DatabaseHandler.SalmnLat+"");
+         if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
+
+             databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+         }
+         else if(DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals(""))
+             databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+
+
+
+
+
+
+        }
+      catch (Exception e){
+
+          Log.e("Exception:",e.getMessage() );
+
+      }
+        hideItem();
 
 //////////////// salesman plan for cake shop
         salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
@@ -636,14 +696,14 @@ public class MainActivity extends AppCompatActivity
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    latitudeCheckIn=0;longtudeCheckIn=0;
-                    latitudeCheckIn  = location.getLatitude();
+                    latitudeCheckIn = 0;
+                    longtudeCheckIn = 0;
+                    latitudeCheckIn = location.getLatitude();
                     longtudeCheckIn = location.getLongitude();
-                    Log.e("onLocationChanged",""+latitudeCheckIn+""+longtudeCheckIn);
+                    Log.e("onLocationChanged", "" + latitudeCheckIn + "" + longtudeCheckIn);
 
 
                 }
-
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
                     Log.e("onStatusChanged",""+provider.toString()+status+"\t extras"+extras.toString());
@@ -1053,6 +1113,8 @@ public class MainActivity extends AppCompatActivity
                                     customerLocation_main.setCUS_NO(CustomerListShow.Customer_Account);
                                     customerLocation_main.setLONG(longitude_main + "");
                                     customerLocation_main.setLATIT(latitude_main + "");
+
+
 
                                     mDbHandler.addCustomerLocation(customerLocation_main);
                                     mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
@@ -3257,7 +3319,7 @@ public class MainActivity extends AppCompatActivity
     private void saveCurentLocation() throws InterruptedException {
         Log.e("updatecompanyInfo_1",""+latitudeCheckIn+longtudeCheckIn);
         getlocationForCheckIn();
-        Thread.sleep(2000);
+      //  Thread.sleep(2000);
         Log.e("updatecompanyInfo_2",""+latitudeCheckIn+longtudeCheckIn);
         if(latitudeCheckIn!=0 &&longtudeCheckIn!=0)
         {
@@ -3844,50 +3906,75 @@ dialog.dismiss();
         }
     }
  static void  ReSortList(){
-   if(  DB_salesManPlanList.get(0).getTypeOrder()==0)
-   {
-       Collections.sort(DB_salesManPlanList);
-       OrderTypeFlage=0;
-
-   }
-else {
-     for(int i=0;i< DB_salesManPlanList.size();i++) {
-           Location locationA = new Location("point A");
-
-           locationA.setLatitude(DB_salesManPlanList.get(i).getLatitud());
-           locationA.setLongitude(DB_salesManPlanList.get(i).getLongtude());
-
-           Location locationB = new Location("point B");
-      //     31.973113861570397, 35.909562515675 الداخلية
 
 
-           // جرش 32.271743106492224, 35.88992632707304
-            // اربد 32.569163163418864, 35.84655082984946
-          // 32.02355606374721, 35.84556662133978 صويلح
-    //     29.6133995179976, 35.02148227477434  aqaba
-           locationB.setLatitude(35.909562515675);
-           locationB.setLongitude(31.973113861570397);
-
-           float distance = locationA.distanceTo(locationB);
-           DB_salesManPlanList.get(i).setDistance(distance);
-           OrderTypeFlage=1;
-
-         Log.e("distance===",  DB_salesManPlanList.get(i).getCustName()+"  "+DB_salesManPlanList.get(i).getLatitud()+"   " +DB_salesManPlanList.get(i).getLongtude()+"    " +DB_salesManPlanList.get(i).getDistance()+"");
+        try {
 
 
-      }
-       Collections.sort(DB_salesManPlanList, new Comparator<SalesManPlan>() {
-           @Override
-           public int compare(SalesManPlan c1, SalesManPlan c2) {
-               return Double.compare(c1.getDistance(), c2.getDistance());
-           }
-       });
-       for(int x=0;x< DB_salesManPlanList.size();x++)
-           Log.e("DB_salesManPlan===", DB_salesManPlanList.get(x).getCustName()+"       "+DB_salesManPlanList.get(x).getDistance());
+            if (DB_salesManPlanList.get(0).getTypeOrder() == 0) {
+                Collections.sort(DB_salesManPlanList);
+                OrderTypeFlage = 0;
 
-   }
+            } else {
+                for (int i = 0; i < DB_salesManPlanList.size(); i++) {
+                    Location locationA = new Location("point A");
+
+                    locationA.setLatitude(DB_salesManPlanList.get(i).getLatitud());
+                    locationA.setLongitude(DB_salesManPlanList.get(i).getLongtude());
+
+                    Location locationB = new Location("point B");
+                    //     31.973113861570397, 35.909562515675 الداخلية
 
 
+                    // جرش 32.271743106492224, 35.88992632707304
+                    // اربد 32.569163163418864, 35.84655082984946
+                    // 32.02355606374721, 35.84556662133978 صويلح
+                    //     29.6133995179976, 35.02148227477434  aqaba
+
+                    databaseHandler.getSalsmanLoc();
+                    if (DatabaseHandler.SalmnLat != null && DatabaseHandler.SalmnLong != null
+                            && DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals("")
+                    ) {
+                        locationB.setLatitude(Double.parseDouble(DatabaseHandler.SalmnLat));
+                        locationB.setLongitude(Double.parseDouble(DatabaseHandler.SalmnLong));
+                    } else {
+
+
+
+                        databaseHandler.getSalsmanLoc();
+                        Log.e(" DatabaseHandler.SalmnLat", "" + DatabaseHandler.SalmnLat + "");
+                        if (DatabaseHandler.SalmnLat == null && DatabaseHandler.SalmnLong == null) {
+
+                            databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+                        } else if (DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals(""))
+                            databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+
+
+                    }
+
+
+                    float distance = locationA.distanceTo(locationB);
+                    DB_salesManPlanList.get(i).setDistance(distance);
+                    OrderTypeFlage = 1;
+
+                    Log.e("distance===", DB_salesManPlanList.get(i).getCustName() + "  " + DB_salesManPlanList.get(i).getLatitud() + "   " + DB_salesManPlanList.get(i).getLongtude() + "    " + DB_salesManPlanList.get(i).getDistance() + "");
+
+
+                }
+                Collections.sort(DB_salesManPlanList, new Comparator<SalesManPlan>() {
+                    @Override
+                    public int compare(SalesManPlan c1, SalesManPlan c2) {
+                        return Double.compare(c1.getDistance(), c2.getDistance());
+                    }
+                });
+                for (int x = 0; x < DB_salesManPlanList.size(); x++)
+                    Log.e("DB_salesManPlan===", DB_salesManPlanList.get(x).getCustName() + "       " + DB_salesManPlanList.get(x).getDistance());
+
+            }
+
+        }catch (Exception e){
+
+        }
          }
 
     static  void getSalesmanPlan(Context context)   {

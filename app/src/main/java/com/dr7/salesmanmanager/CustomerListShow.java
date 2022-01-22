@@ -215,11 +215,13 @@ public class CustomerListShow extends DialogFragment {
 //                dismiss();
             }
         });
+
+        Log.e("customerList555===",customerList.size()+"");
         if(Login.SalsManPlanFlage==1) {
 
 
 
-
+Log.e("customerList===",customerList.size()+"");
             // remove customer not in plan
             for (int i = 0; i < customerList.size(); i++)
                 if (!IsInPlan(customerList.get(i).getCustId())) {
@@ -227,7 +229,7 @@ public class CustomerListShow extends DialogFragment {
                     i--;
 
                 }
-
+            Log.e("customerList=",customerList.size()+"");
 
 
 
@@ -829,7 +831,7 @@ public class CustomerListShow extends DialogFragment {
         boolean f=false;
 
         for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
-            if(MainActivity.DB_salesManPlanList .get(i).getCustNumber().equals(id)) {
+            if(MainActivity.DB_salesManPlanList .get(i).getCustNumber().equals(id.trim())) {
                 f=true;
                 break;
 
