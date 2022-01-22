@@ -78,6 +78,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity
 
     public  static TextView masterControlLoc;
     String ipAddress="";
-
+    NavigationView navigationView;
 
     public static void settext2() {
         mainTextView.setText(CustomerListShow.Customer_Name);
@@ -269,29 +270,34 @@ public class MainActivity extends AppCompatActivity
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
 
+        hideItem();
+
+
 //////////////// salesman plan for cake shop
         salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
-        getplan=findViewById(R.id.     getplan);
+    //    getplan=findViewById(R.id.     getplan);
 
-        if(Login.SalsManPlanFlage!=1)getplan.setVisibility(View.GONE);
 
-            getplan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Login.SalsManPlanFlage==1) {
-                    int salesMan = 1;
-                    try {
-                        salesMan = Integer.parseInt(Login.salesMan);
-                    } catch (NumberFormatException e) {
-                        Log.e("NumberFormatException", "" + e.getMessage());
-                        salesMan = 1;
-                    }
-                    ImportJason obj = new ImportJason(MainActivity.this);
 
-                    obj.getSalesmanPlan(salesMan);
-                }
-            }
-        });
+     //   if(Login.SalsManPlanFlage!=1)getplan.setVisibility(View.GONE);
+
+//            getplan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(Login.SalsManPlanFlage==1) {
+//                    int salesMan = 1;
+//                    try {
+//                        salesMan = Integer.parseInt(Login.salesMan);
+//                    } catch (NumberFormatException e) {
+//                        Log.e("NumberFormatException", "" + e.getMessage());
+//                        salesMan = 1;
+//                    }
+//                    ImportJason obj = new ImportJason(MainActivity.this);
+//
+//                    obj.getSalesmanPlan(salesMan);
+//                }
+//            }
+//        });
 
 
 
@@ -593,7 +599,7 @@ public class MainActivity extends AppCompatActivity
 //        locationPermissionRequest.timerLocation();
 
 
-//        getLocation();
+      //  getLocation();
     }
 
     private void openReadBarcode() {
@@ -1166,13 +1172,41 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onPrepareOptionsMenu(menu);
     }
+    private void hideItem()
+    {
 
+
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+
+        if(Login.SalsManPlanFlage!=1)     nav_Menu.findItem(R.id.getplan).setVisible(false);
+    }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+       if(id == R.id.getplan){
+           if(Login.SalsManPlanFlage==1) {
+               int salesMan = 1;
+               try {
+                   salesMan = Integer.parseInt(Login.salesMan);
+               } catch (NumberFormatException e) {
+                   Log.e("NumberFormatException", "" + e.getMessage());
+                   salesMan = 1;
+               }
+               ImportJason obj = new ImportJason(MainActivity.this);
+
+               obj.getSalesmanPlan(salesMan);
+
+           }else{
+
+           }
+
+       }else
 
         if (id == R.id.nav_activities) {
 //            locationPermissionRequest.closeLocation();

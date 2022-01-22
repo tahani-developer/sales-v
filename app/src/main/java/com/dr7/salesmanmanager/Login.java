@@ -250,7 +250,7 @@ public class Login extends AppCompatActivity {
             passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
-
+            SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
         } else {
 
 //            typaImport = 1;
@@ -540,7 +540,7 @@ public class Login extends AppCompatActivity {
         swPassword = moreDialog.findViewById(R.id.swPassword);
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
-        plan = moreDialog.findViewById(R.id.plan);
+        plan = moreDialog.findViewById(R.id.SalsManPlan);
         flag_settingsList = mDHandler.getFlagSettings();
 
         if (flag_settingsList.size() != 0) {
@@ -565,7 +565,7 @@ public class Login extends AppCompatActivity {
         }
 
         okBtn.setOnClickListener(v1 -> {
-
+Log.e("okBtn","okBtn");
             //update flag_settings
             //update variables
             String dataType1;
@@ -588,7 +588,7 @@ public class Login extends AppCompatActivity {
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat));
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage);
