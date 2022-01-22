@@ -51,10 +51,19 @@
     <item android:title="Data Management"
         android:icon="@mipmap/ic_import_export">
         <menu>
+
+
+
+            <item
+                android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
+                android:title="@string/GetPlan"
+                android:id="@+id/getplan"
+                />
             <item
                 android:id="@+id/nav_imp_data"
                 android:icon="@drawable/ic_keyboard_arrow_down_black_24dp"
                 android:title="@string/app_imp_data" />
+
             <item
                 android:id="@+id/nav_refreshdata"
                 android:icon="@drawable/ic_refresh_white_24dp"

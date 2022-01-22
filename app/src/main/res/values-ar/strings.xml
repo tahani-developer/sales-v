@@ -552,4 +552,6 @@
     <string name="dontDuplicateItem">منع تكرار المواد باسعار مختلفة</string>
     <string name="ReturnAll">إرجاع كل الفاتورة </string>
     <string name="Noloction">لا يوجد موقع مخزن لهذا العميل</string>
+
+    <string name="GetPlan"> استيراد الخطة</string>
 </resources>
