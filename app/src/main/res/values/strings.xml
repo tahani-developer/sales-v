@@ -511,6 +511,7 @@
 
 
     <string name="GetPlan"> Get Plan</string>
+    <string name="altayaa_shape">Altayaa Shape</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

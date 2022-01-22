@@ -7,6 +7,15 @@ public class PrinterSetting {
     private int printerShape;
     private int shortInvoice;
     private int dontPrintHeader;
+    private int tayeeLayout;
+
+    public int getTayeeLayout() {
+        return tayeeLayout;
+    }
+
+    public void setTayeeLayout(int tayeeLayout) {
+        this.tayeeLayout = tayeeLayout;
+    }
 
     public int getDontPrintHeader() {
         return dontPrintHeader;

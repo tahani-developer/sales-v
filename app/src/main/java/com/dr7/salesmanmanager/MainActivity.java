@@ -141,6 +141,7 @@ import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.Login.updateOnlySelectedCustomer;
 import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
@@ -2449,6 +2450,11 @@ saveCurentLocation();
             wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
             allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
             salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
+            if(updateOnlySelectedCustomer==1){
+                salesManCustomersOnly.setChecked(true);
+                salesManCustomersOnly.setEnabled(false);
+            }
+
             minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
             allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
             exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
@@ -3367,9 +3373,10 @@ saveCurentLocation();
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
-        CheckBox short_Invoice,dontPrintHeader;
+        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox;
 
         short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        altayee_checkbox=(CheckBox) dialog.findViewById(R.id.altayee_checkbox);
         dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
@@ -3429,6 +3436,11 @@ if(printer.size()!=0) {
         dontPrintHeader.setChecked(false);
     }
     else dontPrintHeader.setChecked(true);
+    if(printer.get(0).getTayeeLayout()==1)
+    {
+        altayee_checkbox.setChecked(true);
+
+    }else    altayee_checkbox.setChecked(false);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -3493,6 +3505,15 @@ if(printer.size()!=0) {
                 }
                 else {
                     printerSetting.setDontPrintHeader(0);
+
+                }
+                if(altayee_checkbox.isChecked())
+                {
+                    printerSetting.setTayeeLayout(1);
+
+                }
+                else {
+                    printerSetting.setTayeeLayout(1);
 
                 }
 
