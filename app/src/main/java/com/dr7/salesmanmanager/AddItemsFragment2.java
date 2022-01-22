@@ -1024,7 +1024,8 @@ try {
             unitDetail=getItemUnitInfo(itemNumber);
             item.setItemNo(itemNumber);
             item.setItemName(itemName);
-            item.setTax(Float.parseFloat(tax.trim()));
+
+            item.setTax(Float.parseFloat(generalMethod.convertToEnglish(generalMethod.getDecimalFormat(Double.parseDouble(tax.trim())))));
             item.setCategory(category);
             item.setDescreption(descriptRemark);
 
@@ -1151,7 +1152,7 @@ try {
                     item.setBonus(Float.parseFloat("0.0"));
                 else
                     item.setBonus(Float.parseFloat(bonus));
-                item.setTax(Float.parseFloat(tax.trim()));
+                item.setTax(Float.parseFloat(generalMethod.convertToEnglish(generalMethod.getDecimalFormat(Double.parseDouble(tax.trim())))));
                 item.setPosPrice(Float.parseFloat(posPrice.trim()));
 
             } catch (NumberFormatException e) {

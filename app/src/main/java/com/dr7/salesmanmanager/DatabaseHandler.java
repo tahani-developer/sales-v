@@ -8076,5 +8076,14 @@ Log.e("currentDate",currentDate);
 
         return customers;
     }
+
+    public void updateSettingOnlyCustomer(int i) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SALESMAN_CUSTOMERS, i);
+        db.update(TABLE_SETTING, values, null, null);
+        Log.e("TABLE_SETTING", "UPDATE");
+        db.close();
+    }
 }
 

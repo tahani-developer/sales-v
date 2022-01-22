@@ -163,11 +163,13 @@ public class Login extends AppCompatActivity {
 
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
-    public  static    int getTotalBalanceInActivities=1;
-    public  static    int dateFromToActive=1;
+    public  static    int getTotalBalanceInActivities=0;
+    public  static    int dateFromToActive=0;
 
     public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
+    public  static  int updateOnlySelectedCustomer=1;
+
     public  static    int   SalsManPlanFlage=0;
 //    public  static  String headerDll = "";
 
@@ -198,6 +200,13 @@ public class Login extends AppCompatActivity {
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 }
+                try {
+                    mDHandler.updateSettingOnlyCustomer(updateOnlySelectedCustomer);
+                }catch (Exception e){
+
+                }
+
+
             } else {
                 languagelocalApp = "ar";
                 LocaleAppUtils.setLocale(new Locale("ar"));
