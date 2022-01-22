@@ -74,10 +74,11 @@ import static com.dr7.salesmanmanager.StockRequest.clearData;
 public class
 
 DatabaseHandler extends SQLiteOpenHelper {
-
+    public static String  SalmnLat
+   , SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 170;
+    private static final int DATABASE_VERSION = 171;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -236,7 +237,6 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
     private static final String SHORT_INVOICE ="SHORT_INVOICE";
     private static final String DONT_PRINT_HEADER ="DONT_PRINT_HEADER";
-    private static final String TAYE_LAYOUT="TAYE_LAYOUT";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -882,8 +882,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + PRINTER_SETTING + " INTEGER ,"
                 + PRINTER_SHAPE + " INTEGER,"
                 + SHORT_INVOICE + " INTEGER,"
-                + DONT_PRINT_HEADER + " INTEGER,"
-                +TAYE_LAYOUT+ " INTEGER"
+                + DONT_PRINT_HEADER + " INTEGER"
 
                 + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -1267,6 +1266,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
+
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT,"
                 + UserNo_LogIn + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
@@ -1755,15 +1757,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
         }
-
-        try{
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD TAYE_LAYOUT  INTEGER NOT NULL DEFAULT '0'");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
-        }
-        //**************************************************************************************
-
 
         try {
         String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
@@ -2361,6 +2354,17 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"' TEXT ");
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"' TEXT ");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+
+
     }
 
     ////B
@@ -2840,7 +2844,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
         values.put(SHORT_INVOICE,printer.getShortInvoice());
         values.put(DONT_PRINT_HEADER,printer.getDontPrintHeader());
-        values.put(TAYE_LAYOUT,printer.getTayeeLayout());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -3484,7 +3487,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void addUserNO(String  USER_NO) {
-        db = this.getReadableDatabase();
+    /*    db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(UserNo_LogIn,USER_NO);
@@ -3492,6 +3495,22 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         db.insert(SalesMenLogIn, null, values);
         db.close();
+
+*/
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(UserNo_LogIn,USER_NO);
+          db.update(SalesMenLogIn, values, null , null);
+
+
+          db.update(SalesMenLogIn, values, null , null);
+
+        db.close();
+
+
+
+
     }
 
     public void addPaymentPaper(Payment payment) {
@@ -5472,7 +5491,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 printerSetting.setPrinterShape(cursor.getInt(1));
                 printerSetting.setShortInvoice(cursor.getInt(2));
                 printerSetting.setDontPrintHeader(cursor.getInt(3));
-                printerSetting.setTayeeLayout(cursor.getInt(4));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -8097,6 +8115,39 @@ Log.e("currentDate",currentDate);
         db.update(TABLE_SETTING, values, null, null);
         Log.e("TABLE_SETTING", "UPDATE");
         db.close();
+    }
+    public void  setSalsemanLocation(String lat,String longla){
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LATITUDE, lat);
+        values.put(LONGITUDE, longla);
+  //  int z=    db.update(SalesMenLogIn, values, LATITUDE + "= '' AND " + LONGITUDE+ "= ''" +"OR "+ LATITUDE +"= '"+null +"' OR "+LATITUDE +"= '"+null+"'" , null);
+        int z=    db.update(SalesMenLogIn, values, null , null);
+
+        Log.e("SalesMenLogIn", "UPDATE"+z);
+        db.close();
+
+    }
+    public   void getSalsmanLoc() {
+        ArrayList<SalesMan> SalesMans = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + SalesMenLogIn;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                SalmnLat=cursor.getString(1);
+                SalmnLong=cursor.getString(2);
+
+            } while (cursor.moveToNext());
+        }
+
+
     }
 }
 

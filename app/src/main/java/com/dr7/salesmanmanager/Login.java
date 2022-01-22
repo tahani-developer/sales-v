@@ -171,9 +171,9 @@ public class Login extends AppCompatActivity {
     public  static  int updateOnlySelectedCustomer=0;
 
     public  static    int   SalsManPlanFlage=0;
-//    public  static  String headerDll = "";
+   public  static  String headerDll = "";
 
-    public  static  String  headerDll = "/Falcons/VAN.dll";
+ //   public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,6 +251,7 @@ public class Login extends AppCompatActivity {
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
             SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
+            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
 //            typaImport = 1;
@@ -493,7 +494,7 @@ public class Login extends AppCompatActivity {
                     else {
                         mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
-                    mDHandler.deletAllSalesLogIn();
+                  //  mDHandler.deletAllSalesLogIn();
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
                    boolean isPosted=mDHandler.isAllVoucher_posted();
                    if(isPosted)
@@ -1108,7 +1109,7 @@ Log.e("okBtn","okBtn");
        }
         Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
-        mDHandler.deletAllSalesLogIn();
+   //     mDHandler.deletAllSalesLogIn();
         mDHandler.addUserNO(Login.salesMan);
 //        try {
 //            if(!Login.salesMan.equals("1"))
