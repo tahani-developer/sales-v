@@ -151,7 +151,7 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public static int typaImport;//0---- mySql   1-----IIs
+    public static int typaImport=0;//0---- mySql   1-----IIs
 
     public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
     public  static    int getMaxVoucherServer=0;
