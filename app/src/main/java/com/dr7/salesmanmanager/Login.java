@@ -171,9 +171,9 @@ public class Login extends AppCompatActivity {
     public  static  int updateOnlySelectedCustomer=0;
 
     public  static    int   SalsManPlanFlage=0;
-//   public  static  String headerDll = "";
+   public  static  String headerDll = "";
 
-    public  static  String  headerDll = "/Falcons/VAN.dll";
+  //  public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -495,7 +495,22 @@ public class Login extends AppCompatActivity {
                         mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
                   //  mDHandler.deletAllSalesLogIn();
+
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
+                   Log.e("mDHandler1=",mDHandler.getAllUserNo());
+                   if( mDHandler.getAllUserNo()!=null) {
+                        if ( mDHandler.getAllUserNo().equals(""))
+                            mDHandler.addUserNO(storeNo_edit.getText().toString());
+                        else{
+                            Log.e("mDHandler6=",mDHandler.getAllUserNo());
+                            mDHandler.updateUserNO(storeNo_edit.getText().toString());
+                        }
+                    }  else{
+                       Log.e("mDHandler7=",mDHandler.getAllUserNo());
+                        mDHandler.updateUserNO(Login.salesMan);
+                    }
+
+
                    boolean isPosted=mDHandler.isAllVoucher_posted();
                    if(isPosted)
                    {
@@ -1110,7 +1125,23 @@ Log.e("okBtn","okBtn");
         Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
    //     mDHandler.deletAllSalesLogIn();
-        mDHandler.addUserNO(Login.salesMan);
+        Log.e("mDHandler2=",mDHandler.getAllUserNo());
+
+
+     //   mDHandler.addUserNO(Login.salesMan);
+        if( mDHandler.getAllUserNo()!=null) {
+            if ( mDHandler.getAllUserNo().equals(""))
+                mDHandler.addUserNO(Login.salesMan);
+            else{
+                Log.e("mDHandler3=",mDHandler.getAllUserNo());
+                mDHandler.updateUserNO(Login.salesMan);
+            }
+        }  else{
+            Log.e("mDHandler4=",mDHandler.getAllUserNo());
+            mDHandler.updateUserNO(Login.salesMan);
+        }
+
+
 //        try {
 //            if(!Login.salesMan.equals("1"))
 //            {
