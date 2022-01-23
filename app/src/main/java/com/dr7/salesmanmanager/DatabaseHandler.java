@@ -1,4 +1,4 @@
-package com.dr7.salesmanmanager;
+ package com.dr7.salesmanmanager;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,14 +71,11 @@ import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 
-public class
+public class DatabaseHandler extends SQLiteOpenHelper {
 
-DatabaseHandler extends SQLiteOpenHelper {
-    public static String  SalmnLat
-   , SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 171;
+    private static final int DATABASE_VERSION = 170;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -237,6 +234,7 @@ DatabaseHandler extends SQLiteOpenHelper {
     private static final String PRINTER_SHAPE ="PRINTER_SHAPE";
     private static final String SHORT_INVOICE ="SHORT_INVOICE";
     private static final String DONT_PRINT_HEADER ="DONT_PRINT_HEADER";
+    private static final String TAYE_LAYOUT="TAYE_LAYOUT";
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
     private static final String VISIT_RATE="VISIT_RATE";
@@ -711,18 +709,18 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-        String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
+            String CREATE_SERIAL_TABLE= "CREATE TABLE IF NOT EXISTS " + SerialItemMaster + "("
 
-                + StoreNo + " TEXT,"
-                + ITEM_OCODE_M + " TEXT,"
-                + SerialCode + " TEXT,"
-                + Qty_serial + " TEXT"
+                    + StoreNo + " TEXT,"
+                    + ITEM_OCODE_M + " TEXT,"
+                    + SerialCode + " TEXT,"
+                    + Qty_serial + " TEXT"
 
-                +
+                    +
 
 
-                ")";
-        db.execSQL(CREATE_SERIAL_TABLE);
+                    ")";
+            db.execSQL(CREATE_SERIAL_TABLE);
         }catch (Exception e){}
 
 
@@ -882,7 +880,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + PRINTER_SETTING + " INTEGER ,"
                 + PRINTER_SHAPE + " INTEGER,"
                 + SHORT_INVOICE + " INTEGER,"
-                + DONT_PRINT_HEADER + " INTEGER"
+                + DONT_PRINT_HEADER + " INTEGER,"
+                +TAYE_LAYOUT+ " INTEGER"
 
                 + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
@@ -1099,7 +1098,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + CUST_NUMBER + " TEXT,"
                     + VOUCHER_YEAR + " INTEGER,"
                     + VOUCHER_time + " TEXT, "
-           + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0'"
+                    + ORIGINALVOUCHER_NUMBER+" INTEGER DEFAULT '0'"
 
                     + ")";
             db.execSQL(CREATE_TABLE_SALES_VOUCHER_MASTER);
@@ -1266,9 +1265,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
-
-                + LATITUDE + " TEXT,"
-                + LONGITUDE + " TEXT,"
                 + UserNo_LogIn + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
@@ -1337,18 +1333,18 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         try{
 
-        String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
-                + DATE + " TEXT,"
-                + SALES_MAN_NUMBER + " INTEGER,"
-                + CUSTOMER_NAME + " TEXT,"
-                + CUSTOMER_NO + " INTEGER,"
-                + LATITUDE + " TEXT,"
-                + LONGITUDE + " TEXT,"
-                + orederd + " INTEGER,"
-                + typeorederd + " INTEGER,"
-                + LogoutStatus + " INTEGER DEFAULT '0'" +
-                ")";
-        db.execSQL(CREATE_TABLE_SalesMan_Plan);}
+            String CREATE_TABLE_SalesMan_Plan = "CREATE TABLE  IF NOT EXISTS " + SalesMan_Plan + "("
+                    + DATE + " TEXT,"
+                    + SALES_MAN_NUMBER + " INTEGER,"
+                    + CUSTOMER_NAME + " TEXT,"
+                    + CUSTOMER_NO + " INTEGER,"
+                    + LATITUDE + " TEXT,"
+                    + LONGITUDE + " TEXT,"
+                    + orederd + " INTEGER,"
+                    + typeorederd + " INTEGER,"
+                    + LogoutStatus + " INTEGER DEFAULT '0'" +
+                    ")";
+            db.execSQL(CREATE_TABLE_SalesMan_Plan);}
         catch (Exception e){
 
         }
@@ -1758,12 +1754,21 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
         }
 
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD TAYE_LAYOUT  INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString()+"DONT_PRINT_HEADER");
+        }
+        //**************************************************************************************
+
+
         try {
-        String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
-                + QTY + " REAL,"
-                + DISCOUNT_VALUE + " REAL,"
-                + PAYMENT_TYPE + " INTEGER"+ ")";
-        db.execSQL(CREATE_TABLE_QTY_OFFERS);
+            String CREATE_TABLE_QTY_OFFERS = "CREATE TABLE  IF NOT EXISTS " + QTY_OFFERS + "("
+                    + QTY + " REAL,"
+                    + DISCOUNT_VALUE + " REAL,"
+                    + PAYMENT_TYPE + " INTEGER"+ ")";
+            db.execSQL(CREATE_TABLE_QTY_OFFERS);
         }
         catch (Exception e) {
             Log.e("onUpgrade*****", "duplicated column QTY_OFFERS");
@@ -1780,9 +1785,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + DISCOUNT + " REAL" + ")";
             db.execSQL(CREATE_TABLE_ITEMS_QTY_OFFER);
         }
-          catch (Exception e) {
-                Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
-            }
+        catch (Exception e) {
+            Log.e("onUpgrade*****", "duplicated column ItemsQtyOffer");
+        }
         try {
             String CREATE_TABLE_CUSTOMER_LOCATION = "CREATE TABLE " + CUSTOMER_LOCATION + "("
                     + CUS_NO + " TEXT,"
@@ -1871,7 +1876,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     + STORE_NO_SALESMAN + " INTEGER,"
                     + IS_POSTED_SERIAL + " INTEGER,"+
                     IS_BONUS_SERIAL+" INTEGER,"+
-                     Price_ITEM +" real, "
+                    Price_ITEM +" real, "
                     +Price_ITEM_Sales+" real, "
                     +IS_RETURNED+" INTEGER "+
 
@@ -1881,7 +1886,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         catch (Exception e) {
 
             Log.e("SERIAL_ITEMS_TABLE",""+e.getMessage());
-            }
+        }
         try{
             db.execSQL("ALTER TABLE SERIAL_ITEMS_TABLE ADD  STORE_NO_SALESMAN  INTEGER  DEFAULT 1 ");
 
@@ -2103,7 +2108,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 +dateDelete+" TEXT" +
 
-        ")";
+                ")";
         db.execSQL(CREATE_SERIAL_ITEMS_TABLE_backup);
 
 
@@ -2341,10 +2346,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + typeorederd + " INTEGER,"
                 + LogoutStatus + " INTEGER DEFAULT '0'" +
                 ")";
-        db.execSQL(CREATE_TABLE_SalesMan_Plan);}
+            db.execSQL(CREATE_TABLE_SalesMan_Plan);}
         catch (Exception e){
 
-    }
+        }
 
 
         try{
@@ -2354,17 +2359,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
-        try{
-            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"' TEXT ");
-            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"' TEXT ");
-        }catch (Exception e)
-        {
-            Log.e(TAG, e.getMessage().toString());
-        }
-
-
-
-
     }
 
     ////B
@@ -2498,22 +2492,22 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         } else {
 
 
-        try {
-            deleteFromVoucherSerialize();
-            db = this.getReadableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(VoucherSales_no, saleVoucher);
-            values.put(VoucherReturn_no, retVoucher);
-            values.put(VoucherNewOrder_no, order);
+            try {
+                deleteFromVoucherSerialize();
+                db = this.getReadableDatabase();
+                ContentValues values = new ContentValues();
+                values.put(VoucherSales_no, saleVoucher);
+                values.put(VoucherReturn_no, retVoucher);
+                values.put(VoucherNewOrder_no, order);
 
-            db.insert(VoucherSerialize, null, values);
-            Log.e("VoucherSerialize", "VoucherSerialize");
-            db.close();
-        } catch (Exception e) {
-            Log.e("VoucherSerialize", "" + e.getMessage());
+                db.insert(VoucherSerialize, null, values);
+                Log.e("VoucherSerialize", "VoucherSerialize");
+                db.close();
+            } catch (Exception e) {
+                Log.e("VoucherSerialize", "" + e.getMessage());
 
+            }
         }
-    }
 
     }
 
@@ -2758,7 +2752,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
             db = this.getReadableDatabase();
             db.beginTransaction();
-              Log.e("serialModelItem===",serialModelItem.size()+"");
+            Log.e("serialModelItem===",serialModelItem.size()+"");
             for (int i = 0; i < serialModelItem.size(); i++) {
                 ContentValues values = new ContentValues();
                 values.put(StoreNo, serialModelItem.get(i).getStoreNo());
@@ -2844,6 +2838,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(PRINTER_SHAPE,printer.getPrinterShape());
         values.put(SHORT_INVOICE,printer.getShortInvoice());
         values.put(DONT_PRINT_HEADER,printer.getDontPrintHeader());
+        values.put(TAYE_LAYOUT,printer.getTayeeLayout());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -3272,7 +3267,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(  STORE_NO,store);
         values.put(Item_Unit,itemUnit);
         values.put( SUM_CURRENT_QTY,sumQtys);
-       values.put(      DONT_DUPLICATE_ITEMS,noDuplicate);
+        values.put(      DONT_DUPLICATE_ITEMS,noDuplicate);
 
 
         db.insert(TABLE_SETTING, null, values);
@@ -3440,7 +3435,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
             if(item.getVouchDate()!=null || !item.getVouchDate().equals(""))
-            values.put(VOUCH_DATE, item.getVouchDate());
+                values.put(VOUCH_DATE, item.getVouchDate());
             else
                 values.put(VOUCH_DATE,"");
         }
@@ -3487,7 +3482,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void addUserNO(String  USER_NO) {
-    /*    db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(UserNo_LogIn,USER_NO);
@@ -3495,22 +3490,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         db.insert(SalesMenLogIn, null, values);
         db.close();
-
-*/
-
-        db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(UserNo_LogIn,USER_NO);
-          db.update(SalesMenLogIn, values, null , null);
-
-
-          db.update(SalesMenLogIn, values, null , null);
-
-        db.close();
-
-
-
-
     }
 
     public void addPaymentPaper(Payment payment) {
@@ -3684,7 +3663,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-//*************************************************************************************************
+    //*************************************************************************************************
     public List<Settings> getAllSettings() {
         List<Settings> settings = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + TABLE_SETTING;
@@ -3763,28 +3742,28 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
 
 
-        if (cursor.moveToFirst()) {
-            do {
-                CompanyInfo info = new CompanyInfo();
-                info.setCompanyName(cursor.getString(0));
-                info.setcompanyTel(Integer.parseInt(cursor.getString(1)));
-                info.setTaxNo(Integer.parseInt(cursor.getString(2)));
+            if (cursor.moveToFirst()) {
+                do {
+                    CompanyInfo info = new CompanyInfo();
+                    info.setCompanyName(cursor.getString(0));
+                    info.setcompanyTel(Integer.parseInt(cursor.getString(1)));
+                    info.setTaxNo(Integer.parseInt(cursor.getString(2)));
 
-                if (cursor.getBlob(3).length == 0)
-                    info.setLogo(null);
-                else
-                    info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+                    if (cursor.getBlob(3).length == 0)
+                        info.setLogo(null);
+                    else
+                        info.setLogo(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
-                info.setNoteForPrint(cursor.getString(4));
-                info.setLongtudeCompany(cursor.getDouble(5));
-                info.setLatitudeCompany(cursor.getDouble(6));
-                info.setNotePosition(cursor.getString(7));
-                infos.add(info);
-            } while (cursor.moveToNext());
-        }
+                    info.setNoteForPrint(cursor.getString(4));
+                    info.setLongtudeCompany(cursor.getDouble(5));
+                    info.setLatitudeCompany(cursor.getDouble(6));
+                    info.setNotePosition(cursor.getString(7));
+                    infos.add(info);
+                } while (cursor.moveToNext());
+            }
         }catch (Exception e){
             Log.e("Exception","COMPANY_NAME");
-             selectQuery = "SELECT  COMPANY_NAME,COMPANY_TEL,TAX_NO,NOTE FROM  COMPANY_INFO";
+            selectQuery = "SELECT  COMPANY_NAME,COMPANY_TEL,TAX_NO,NOTE FROM  COMPANY_INFO";
             db = this.getWritableDatabase();
             Cursor cursor2 = db.rawQuery(selectQuery, null);
             if (cursor2.moveToFirst()) {
@@ -3793,7 +3772,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     info.setCompanyName(cursor2.getString(0));
                     info.setcompanyTel(Integer.parseInt(cursor2.getString(1)));
                     info.setTaxNo(Integer.parseInt(cursor2.getString(2)));
-                        info.setLogo(null);
+                    info.setLogo(null);
 
 
                     info.setNoteForPrint(cursor2.getString(3));
@@ -3942,7 +3921,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try {
             cursor.moveToFirst();
 
-             maxVoucher = Integer.parseInt(cursor.getString(0));
+            maxVoucher = Integer.parseInt(cursor.getString(0));
         }
         catch (Exception e){maxVoucher=0;}
 
@@ -3960,7 +3939,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             {
                 return maxVoucher;
             }else {
-                 maxVoucher=getMaxFromVoucherMaster( voucherType);
+                maxVoucher=getMaxFromVoucherMaster( voucherType);
                 return maxVoucher;
             }
 
@@ -3971,7 +3950,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             maxVoucher=getMaxFromVoucherMaster( voucherType);
             return maxVoucher;
 
-    }
+        }
 
     }
 
@@ -4003,33 +3982,33 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public int getMaxSerialNumberFromSerlizeTable(int voucherType) {
-    //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
-    String selectQuery = "SELECT * FROM " + VoucherSerialize  ;
-    db = this.getWritableDatabase();
-    int maxVoucher=0;
-    Cursor cursor = db.rawQuery(selectQuery, null);
-    try {
-        cursor.moveToFirst();
-        if(voucherType==504)
-        {
-            maxVoucher = Integer.parseInt(cursor.getString(0));
-        }
-        if(voucherType==506)
-        {
-            maxVoucher = Integer.parseInt(cursor.getString(1));
-        }
-        if(voucherType==508)
-        {
-            maxVoucher = Integer.parseInt(cursor.getString(2));
-        }
+        //SELECT IFNULL((select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER  where VOUCHER_TYPE = '508'),-1)
+        String selectQuery = "SELECT * FROM " + VoucherSerialize  ;
+        db = this.getWritableDatabase();
+        int maxVoucher=0;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            cursor.moveToFirst();
+            if(voucherType==504)
+            {
+                maxVoucher = Integer.parseInt(cursor.getString(0));
+            }
+            if(voucherType==506)
+            {
+                maxVoucher = Integer.parseInt(cursor.getString(1));
+            }
+            if(voucherType==508)
+            {
+                maxVoucher = Integer.parseInt(cursor.getString(2));
+            }
 
 
-        Log.e("getFromSerlizeTable","maxVoucher"+maxVoucher);
-    }catch (Exception e){maxVoucher=0;}
+            Log.e("getFromSerlizeTable","maxVoucher"+maxVoucher);
+        }catch (Exception e){maxVoucher=0;}
 
-    return maxVoucher;
+        return maxVoucher;
 
-}
+    }
     // hello
     public void setMaxSerialNumber(int voucherType, int newSerial) {
         db = this.getWritableDatabase();
@@ -4446,7 +4425,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<ItemsMaster> getItemkinds(String KINDITEM) {
         List<ItemsMaster> mastersItemkinds = new ArrayList<ItemsMaster>();
         // Select All Query
-      //  String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "' ";
+        //  String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "' ";
 
         String selectQuery = "SELECT * FROM " + Items_Master+" where KIND_ITEM = '"+KINDITEM+"' ";
 
@@ -4454,7 +4433,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
-       if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 ItemsMaster itemsMaster = new ItemsMaster();
                 itemsMaster.setCompanyNo(cursor.getString(0));
@@ -4548,24 +4527,24 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setIS_RETURNED(Integer.parseInt(cursor.getString(25)));
                 item.setAvi_Qty(Float.parseFloat(cursor.getString(26)));
 //                Log.e("setDescreption",""+cursor.getString(17));
-                 Log.e("Avi_Qty",cursor.getString(25)+"   return=="+cursor.getString(25));
+                Log.e("Avi_Qty",cursor.getString(25)+"   return=="+cursor.getString(25));
                 // Adding transaction to list
 
                 if( item.getIS_RETURNED()==0)
                 {
                     if(item.getAvi_Qty()==0)
-                    item.setAvi_Qty(  item.getQty());
+                        item.setAvi_Qty(  item.getQty());
 
                     items.add(item);
 
                 }
-               else if( item.getIS_RETURNED()==1 &&
+                else if( item.getIS_RETURNED()==1 &&
 
-                            item.getAvi_Qty()>0)
+                        item.getAvi_Qty()>0)
                 {
-                items.add(item);
+                    items.add(item);
 
-                        }
+                }
             } while (cursor.moveToNext());
         }
         return items;
@@ -4592,7 +4571,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
                 item.setVoucherType(Integer.parseInt(cursor.getString(1)));
                 item.setItemNo(cursor.getString(2));
-               // Log.e("cursorItemNo",""+cursor.getString(2));
+                // Log.e("cursorItemNo",""+cursor.getString(2));
                 item.setItemName(cursor.getString(3));
                 item.setUnit(cursor.getString(4));
                 item.setQty(Float.parseFloat(cursor.getString(5)));
@@ -4689,7 +4668,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     public String getRateOfCustomer()
     {
-       String rate="";
+        String rate="";
         String customer_id = CustomerListShow.Customer_Account;
         String selectQuery = "select DISTINCT  cusMaster.ACCPRC  from CUSTOMER_MASTER cusMaster  where cusMaster.CUS_ID ='"+customer_id+"' ";
         db = this.getWritableDatabase();
@@ -4730,7 +4709,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             }
             while (cursor.moveToNext());
         }
-    return  items_inventory;
+        return  items_inventory;
     }
 
     public List<Item> getAllJsonItems(String rate,int baseList ) {// price from price list d
@@ -4766,7 +4745,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-           // Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
+            // Log.i("DatabaseHandler", "***************************************" + cursor.getCount());
             do {
                 Item item = new Item();
                 Bitmap  itemBitmap=null;
@@ -4786,14 +4765,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 try {
 
 
-                if(cursor.getString(12)==null)
-                {
-                    item.setItemHasSerial("0");
-                    Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
-                }
-                else {
-                    item.setItemHasSerial(cursor.getString(12));
-                }
+                    if(cursor.getString(12)==null)
+                    {
+                        item.setItemHasSerial("0");
+                        Log.e("setItemHasSerial",""+item.getItemHasSerial()+"null");
+                    }
+                    else {
+                        item.setItemHasSerial(cursor.getString(12));
+                    }
                 }catch (Exception e)
                 {
                     item.setItemHasSerial("0");
@@ -4805,15 +4784,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 try {
 
 
-                if(cursor.getString(13)==null) {
-                    item.setItemPhoto(null);
+                    if(cursor.getString(13)==null) {
+                        item.setItemPhoto(null);
 
-                }
-                else {
+                    }
+                    else {
 //                    itemBitmap = StringToBitMap(cursor.getString(13));
 //                    item.setItemPhoto(itemBitmap);
-                    item.setItemPhoto(cursor.getString(13));
-                }
+                        item.setItemPhoto(cursor.getString(13));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -5085,7 +5064,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         if(flag==2)// just items has serial
         {
 
-           selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
                     "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
                     "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"' and M.ITEM_HAS_SERIAL='"+1+"'";
             //+"' and M.ITEM_HAS_SERIAL='"+1+"'"
@@ -5140,10 +5119,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         String customerId=CustomerListShow.Customer_Account;
         List<String> itemNoList=new ArrayList<>();
         String selectQuery ="SELECT DISTINCT   listItemNo.ItemNo \n"+
-      " FROM Items_Master listItemNo \n " +
-            "    EXCEPT \n" +
-       " select    cast( ItemNo_ as text)"+
-       " from CustomerPrices  where CustomerNumber = '"+customerId+"' ";
+                " FROM Items_Master listItemNo \n " +
+                "    EXCEPT \n" +
+                " select    cast( ItemNo_ as text)"+
+                " from CustomerPrices  where CustomerNumber = '"+customerId+"' ";
 
 
         db = this.getWritableDatabase();
@@ -5175,7 +5154,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-          return  true;
+            return  true;
 
         }
 
@@ -5362,12 +5341,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                     { kind_items.add("**");}
                     else {
                         if(!cursor.getString(0).equals(""))
-                        kind_items.add(cursor.getString(0));
+                            kind_items.add(cursor.getString(0));
                         else {
                             kind_items.add("**");
                         }
 
-                       // Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
+                        // Log.e("DB_Exception","kind_itemsElse"+cursor.getString(0));
                     }
 
 
@@ -5375,8 +5354,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             }
         }catch (Exception e)
         {
-          kind_items.add("**");
-          Log.e("DB_Exception","kind_items"+e.getMessage());
+            kind_items.add("**");
+            Log.e("DB_Exception","kind_items"+e.getMessage());
         }
 
         return kind_items;
@@ -5491,6 +5470,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 printerSetting.setPrinterShape(cursor.getInt(1));
                 printerSetting.setShortInvoice(cursor.getInt(2));
                 printerSetting.setDontPrintHeader(cursor.getInt(3));
+                printerSetting.setTayeeLayout(cursor.getInt(4));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }
@@ -5554,7 +5534,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     public Payment getPayments_voucherNo(int vouchNo) {
         Payment payment = new Payment();
-       String cusNo=CustomerListShow.Customer_Account;
+        String cusNo=CustomerListShow.Customer_Account;
 //        List<Payment> paymentsList = new ArrayList<Payment>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + PAYMENTS+" where VOUCHER_NUMBER = '" + vouchNo  + "' and CUSTOMER_NUMBER = '"+cusNo+"'";
@@ -5708,7 +5688,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         if (cursor.moveToFirst()) {
             do {
 
-              userNO= cursor.getString(0);
+                userNO= cursor.getString(0);
 
 
             } while (cursor.moveToNext());
@@ -5822,15 +5802,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         if (cursor.moveToFirst()) {
             do {
                 serialModel inventoryShelf=new serialModel();
-               // inventoryShelf.setTransNo((cursor.getInt(0)));
+                // inventoryShelf.setTransNo((cursor.getInt(0)));
 
                 inventoryShelf.setItemNo((cursor.getString(0))+"");
                 inventoryShelf.setSerialCode((cursor.getString(1))+"");
 
-               // inventoryShelf.setQTY_ITEM(cursor.getInt(3));
+                // inventoryShelf.setQTY_ITEM(cursor.getInt(3));
                 inventoryShelf.setDateVoucher(cursor.getString(2));
                 inventoryShelf.setCustomerNo(cursor.getString(3));
-               // inventoryShelf.setSALESMAN_NUMBER(cursor.getString(6));
+                // inventoryShelf.setSALESMAN_NUMBER(cursor.getString(6));
                 inventoryShelf.setVoucherNo(cursor.getString(4));
                 inventoryShelf.setCustomerName(cursor.getString(5));
 
@@ -5953,7 +5933,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(1).getQty());
 
         }
-    //Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+        //Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
 
         return salesManItemsBalanceList;
     }
@@ -6285,7 +6265,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void deletePriceListDCustomerRate(String rateCustomer) {
         Log.e("rateCustomer",""+rateCustomer);
         SQLiteDatabase db = this.getWritableDatabase();
-       // delete from Price_List_D where PrNo <> 1
+        // delete from Price_List_D where PrNo <> 1
         db.execSQL("delete from " + Price_List_D +" where PrNo <> '"+rateCustomer+"'");
         db.close();
     }
@@ -6411,7 +6391,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         return paymentsList;
     }
-        public void updateCustomersPayment_Info(double CriditLimit , int CashCredit , String custNo) {
+    public void updateCustomersPayment_Info(double CriditLimit , int CashCredit , String custNo) {
         db = this.getWritableDatabase();
         Log.e("updateCust",""+CriditLimit+CashCredit);
         ContentValues values = new ContentValues();
@@ -6489,27 +6469,27 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         unposted_sales=( getAllItems_bySalesman_No(itemNo,504,salesmanNo));
         unposted__return= ( getAllItems_bySalesman_No(itemNo,506,salesmanNo));
 
-            double newQty=(qty-unposted_sales )+unposted__return;
+        double newQty=(qty-unposted_sales )+unposted__return;
 
-                        values.put(Qty5, newQty);
-            db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
+        values.put(Qty5, newQty);
+        db.update(SalesMan_Items_Balance, values, SalesManNo5 + " = " + salesmanNo + " and " + ItemNo5 + " = " + itemNo, null);
 
-        }
+    }
 
 
     public int  getAllItems_bySalesman_No( String itemNo,int  vouchType,String salesmanNo){
         String selectQuery ="select IFNULL(sum(D.UNIT_QTY+BONUS),0) As Sold_Qty"+
-        " from SALES_VOUCHER_DETAILS D, SALES_VOUCHER_MASTER M"+
-               " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
-       +" And M.VOUCHER_TYPE ='" +vouchType+"'";
-     int total_qty=0;
+                " from SALES_VOUCHER_DETAILS D, SALES_VOUCHER_MASTER M"+
+                " where M.SALES_MAN_NUMBER = '"+salesmanNo+"'  and  D.ITEM_NUMBER = '"+itemNo+"' and D.IS_POSTED ='"+0+"' and  M.VOUCHER_NUMBER = D.VOUCHER_NUMBER  "
+                +" And M.VOUCHER_TYPE ='" +vouchType+"'";
+        int total_qty=0;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
                 // Adding transaction to list
-               total_qty=Integer.parseInt(cursor.getString(0));
+                total_qty=Integer.parseInt(cursor.getString(0));
             } while (cursor.moveToNext());
         }
 //        int t=Integer.parseInt(total_qty);
@@ -6551,7 +6531,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //        return items;
 //    }
 
-     public boolean isAllVoucher_posted() {
+    public boolean isAllVoucher_posted() {
         String selectQuery = "SELECT * FROM " + SALES_VOUCHER_MASTER + " where  IS_POSTED = 0 ";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -6583,7 +6563,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
         //********************************************************
-         selectQuery = "SELECT count(*) FROM " + PAYMENTS + " where  IS_POSTED = 0 ";
+        selectQuery = "SELECT count(*) FROM " + PAYMENTS + " where  IS_POSTED = 0 ";
 
         db = this.getWritableDatabase();
         Cursor cursor2 = db.rawQuery(selectQuery, null);
@@ -6950,34 +6930,34 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return true;
     }
-//  select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
+    //  select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
     public String isSerialCodeExist(String serial) {
 //  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
-    String count = "not",isPaid="";
-    String itemNo="",itemNoExist="",serialCode="";
-    if(itemNoSelected.equals(""))
-    {itemNo=itemNoStock.trim();}
-    else {
-        itemNo=itemNoSelected.trim();
-    }
+        String count = "not",isPaid="";
+        String itemNo="",itemNoExist="",serialCode="";
+        if(itemNoSelected.equals(""))
+        {itemNo=itemNoStock.trim();}
+        else {
+            itemNo=itemNoSelected.trim();
+        }
 
 
-    serialCode=serial.trim();
-    String salesNo=getAllUserNo();
+        serialCode=serial.trim();
+        String salesNo=getAllUserNo();
 
 
 //    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
         String selectQuery = "select SerialCode,ITEM_OCODE_M from SerialItemMaster where  trim(SerialCode)='"+serialCode.trim()+"' and StoreNo='"+salesNo.trim()+"'";
 
 
-    db = this.getWritableDatabase();
-    Cursor cursor = db.rawQuery(selectQuery, null);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
-    if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
 
-        count = cursor.getString(0);
-        itemNoExist = cursor.getString(1);
-    }
+            count = cursor.getString(0);
+            itemNoExist = cursor.getString(1);
+        }
         Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t"+itemNoExist);
         if(cursor != null)
         {
@@ -6993,7 +6973,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         else {
             count=itemNoExist;// exist for another item
         }
-       // Log.e("itemNoExist","="+itemNoExist+"\titemNo="+itemNo+"\tcount="+count);
+        // Log.e("itemNoExist","="+itemNoExist+"\titemNo="+itemNo+"\tcount="+count);
 //        if(!count.equals("not"))// exist in DataBase
 //        {
 //
@@ -7003,8 +6983,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 //        else {
 //            Log.e("itemNoExist",""+itemNoExist);
 //            count=itemNoExist;}
-    return count;
-}
+        return count;
+    }
 
 
 
@@ -7026,7 +7006,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public CompanyInfo getCompanyLocation() {
-       CompanyInfo infoLocation=new CompanyInfo();
+        CompanyInfo infoLocation=new CompanyInfo();
 
 //        LATITUDE_COMPANY LONGTUDE_COMPANY COMPANY_INFO
         String selectQuery = " select  LONGTUDE_COMPANY , LATITUDE_COMPANY from  COMPANY_INFO ";
@@ -7052,12 +7032,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         if (cursor.moveToLast()) {
             try {
-               if( cursor.moveToPrevious())
-               {
-                   infoVisit.setCheckInDate( cursor.getString(3));
-                   infoVisit.setCheckInTime( cursor.getString(4));
-                   Log.e("infoVisit", "infoVisit+\t" + infoVisit.getCheckInDate() + "\t");
-               }
+                if( cursor.moveToPrevious())
+                {
+                    infoVisit.setCheckInDate( cursor.getString(3));
+                    infoVisit.setCheckInTime( cursor.getString(4));
+                    Log.e("infoVisit", "infoVisit+\t" + infoVisit.getCheckInDate() + "\t");
+                }
             }
             catch ( Exception e)
             {Log.e("infoVisit", "Exception+\t\t");}
@@ -7129,12 +7109,12 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
-        if (cursor.moveToFirst()) {
+            if (cursor.moveToFirst()) {
 
 
-                    itemNo=cursor.getString(0);
+                itemNo=cursor.getString(0);
 
-                    Log.e("itemNo", "getItemNoForBarcode+\t" + itemNo+ "\t");
+                Log.e("itemNo", "getItemNoForBarcode+\t" + itemNo+ "\t");
 
             }
 
@@ -7152,7 +7132,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
     //******************************************************************
     public String isSerialCodePaied(String serial) {
-       // ***********************************
+        // ***********************************
 //        select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
         String valueSer = "not",voucherKind="",voucherNo="",voucherDate="",serialCode="";
         serialCode=serial.trim();
@@ -7210,7 +7190,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
 
-       // Log.e("getLastTransactio", "isSerialCodePaied+\t" + voucherKind + "\t");
+        // Log.e("getLastTransactio", "isSerialCodePaied+\t" + voucherKind + "\t");
 
         return voucherKind;
     }
@@ -7240,7 +7220,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 {
                     double otherDis=Double.parseDouble(offer.getOtherDiscount());
                     Log.e("otherDis1",""+otherDis);
-                   offer.setBonusQty(offer.getBonusQty()+otherDis);
+                    offer.setBonusQty(offer.getBonusQty()+otherDis);
                 }
                 Log.e("otherDis2",""+offer.getBonusQty());
                 offer.setItemNo(cursor.getString(4));
@@ -7268,7 +7248,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         catch ( Exception e)
         {itemNo="";
-           }
+        }
         if(cursor != null)
             cursor.close();
         Log.e("getItemNoForSerial","size"+itemNo);
@@ -7276,8 +7256,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return itemNo;
     }
     public  String getSolidQtyForItem(String itemNo,String today){
-       // SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER=7022001657 and IS_POSTED='0'
-       // String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
+        // SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER=7022001657 and IS_POSTED='0'
+        // String selectQuery = "SELECT IFNULL( SUM(UNIT_QTY),0) FROM SALES_VOUCHER_DETAILS WHERE ITEM_NUMBER='"+itemNo+"' and VOUCHER_TYPE =504 ";
 
 //       Log.e("getSolidQtyForItem","today="+today);
         String soiledQty="";
@@ -7331,7 +7311,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         // select PO_LIST_NAME ,PO_LIST_NO  from price_offer_list_master where PO_LIST_TYPE ='2' and '02/02/2021' between FROM_DATE and TO_DATE;
 
         //select PO_LIST_NAME,PO_LIST_NO from price_offer_list_master where PO_LIST_NO in( select DISTINCT ListNo from CustomerPrices where ListType=2 and CustomerNumber = 1110010038   and '03/02/2021' BETWEEN FromDate and ToDate)
-       String customerNo=CustomerListShow.Customer_Account;
+        String customerNo=CustomerListShow.Customer_Account;
         ArrayList<OfferListMaster> offersList=new ArrayList<>();
         String selectQuery = "select PO_LIST_NAME ,PO_LIST_NO  from price_offer_list_master  where PO_LIST_NO in( select DISTINCT ListNo from CustomerPrices where ListType=2 and CustomerNumber ='"+customerNo+"'   and '"+date+"' BETWEEN FromDate and ToDate)";
 
@@ -7347,7 +7327,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
                 }
 
-            while (cursor.moveToNext());
+                while (cursor.moveToNext());
             }
         }
         catch ( Exception e)
@@ -7416,8 +7396,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public List<serialModel> getalllserialitems() {
         Log.e("getalllserialitems","getalllserialitems");
         List<serialModel> seriallistList = new ArrayList<>();
-       // String Date_Vocher=getCurentTimeDate(1);
-       // String Date_Vocher="14/02/2021";
+        // String Date_Vocher=getCurentTimeDate(1);
+        // String Date_Vocher="14/02/2021";
         //       select serial.DATE_VOUCHER,serial.KIND_VOUCHER,serial.SERIAL_CODE_NO,serial.ITEMNO_SERIAL,serial.VOUCHER_NO,master.CUST_NUMBER,master.CUST_NAME  from SERIAL_ITEMS_TABLE serial,SALES_VOUCHER_MASTER master where serial.VOUCHER_NO=master.VOUCHER_NUMBER and serial.KIND_VOUCHER=master.VOUCHER_TYPE";
         String selectQuery = "select serial.DATE_VOUCHER,serial.KIND_VOUCHER,serial.SERIAL_CODE_NO,serial.ITEMNO_SERIAL,serial.VOUCHER_NO,master.CUST_NUMBER,master.CUST_NAME  from SERIAL_ITEMS_TABLE serial,SALES_VOUCHER_MASTER master where serial.VOUCHER_NO = master.VOUCHER_NUMBER and serial.KIND_VOUCHER = master.VOUCHER_TYPE ";
         db = this.getWritableDatabase();
@@ -7524,8 +7504,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public int getPayTypeForVoucher(String barcodeStr) {
-       // Log.e("getpreviusePriceSale","getPayTypeForVoucher="+barcodeStr);
-       // select PAY_METHOD from SERIAL_ITEMS_TABLE serial , SALES_VOUCHER_MASTER master where serial.SERIAL_CODE_NO='355020113127244' and master.VOUCHER_NUMBER=serial.VOUCHER_NO
+        // Log.e("getpreviusePriceSale","getPayTypeForVoucher="+barcodeStr);
+        // select PAY_METHOD from SERIAL_ITEMS_TABLE serial , SALES_VOUCHER_MASTER master where serial.SERIAL_CODE_NO='355020113127244' and master.VOUCHER_NUMBER=serial.VOUCHER_NO
         String selectQuery = "SELECT  PAY_METHOD FROM SERIAL_ITEMS_TABLE serial , SALES_VOUCHER_MASTER master  where serial.SERIAL_CODE_NO='"+barcodeStr.trim()+"' and master.VOUCHER_NUMBER=serial.VOUCHER_NO";
         int payMethod=0;
         db = this.getWritableDatabase();
@@ -7580,11 +7560,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public String getUnitPrice(String itemNo,String rate) {
-       // Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
+        // Log.e("getUnitPrice","itemNo"+itemNo+"\trate="+rate);
         String selectQuery="";
         switch (rate){
             case "0":
-                 selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'";
+                selectQuery = "select PriceUnit from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'";
                 break;
             case "1":
                 selectQuery = "select PRICECLASS_1 from Item_Unit_Details where ItemNo='"+itemNo.trim()+"'";
@@ -7598,7 +7578,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 break;
         }
 
-       // Log.e("selectQuery","itemNo"+selectQuery);
+        // Log.e("selectQuery","itemNo"+selectQuery);
         String itemUnit="";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -7628,8 +7608,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         try {
-                if (cursor.moveToFirst()) {
-                    do {
+            if (cursor.moveToFirst()) {
+                do {
                     itemUnit.setItemNo(cursor.getString(1));
                     itemUnit.setUnitId(cursor.getString(2));
                     itemUnit.setConvRate(Double.parseDouble(cursor.getString(3)));
@@ -7680,7 +7660,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e("Exception","getUnitForItem"+e.getMessage());
         }
-       // return  listCustomer;
+        // return  listCustomer;
 
     }
 
@@ -7764,7 +7744,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 } else {
                     voucherNo = (cursor.getString(0));
                     vouchKind=cursor.getString(1);
-                  //  Log.e("getVoucherNoFromS","vouchKind="+vouchKind);
+                    //  Log.e("getVoucherNoFromS","vouchKind="+vouchKind);
 
 
                 }
@@ -7775,15 +7755,15 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         catch ( Exception e)
         {
-           // Log.e("Exception","getUnitForItem"+e.getMessage());
+            // Log.e("Exception","getUnitForItem"+e.getMessage());
             voucherNo= "NotFound";
         }
         if(vouchKind.equals("506"))
         {
             voucherNo="returned";
         }
-       // Log.e("getVoucherNoFromSer","result="+voucherNo);
-       return voucherNo;
+        // Log.e("getVoucherNoFromSer","result="+voucherNo);
+        return voucherNo;
     }
 
     public void updateSerialReturnedInBaseInvoice(String voucherNo, String serialCode) {
@@ -7808,8 +7788,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         // updating row
-     int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo +" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'", null);
-   return x; }
+        int x=   db.update(SALES_VOUCHER_DETAILS, values, VOUCHER_NUMBER + "=" + voucherNo +" and "+ ITEM_NUMBER + " = '" + itemCode.trim()+"'", null);
+        return x; }
 
     public int  UpdateAvi_QtyInOrigenalVoch(String voucherNo, float newqty,String itemCode){
         db = this.getWritableDatabase();
@@ -7832,7 +7812,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     }
     public float getoldqty(String itemNo,int voucherNo) {
-      Log.e("getItemName","getItemName="+itemNo);
+        Log.e("getItemName","getItemName="+itemNo);
         String customerNo=CustomerListShow.Customer_Account;
         String selectQuery = " select Avilable_Qty from SALES_VOUCHER_DETAILS  where ITEM_NUMBER='"+itemNo.trim()+"' and VOUCHER_NUMBER  = '" + voucherNo+ "' and VOUCHER_TYPE='504'";
         float itemUnit=0;
@@ -7860,7 +7840,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
 
-       return  itemUnit;
+        return  itemUnit;
     }
     public float getoldqtyMain(String itemNo,int voucherNo) {
         Log.e("getItemName","getItemName="+itemNo);
@@ -7891,11 +7871,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-      return  itemUnit;
+        return  itemUnit;
     }
 
     public int HASSERAIAL(String itemCode) {
-    int x=0;
+        int x=0;
         /*db = this.getWritableDatabase();
         String selectQuery = "SELECT ITEM_HAS_SERIAL FROM Items_Master WHERE ItemNo="+"'"+itemCode+"'";
         db.execSQL(selectQuery)*/
@@ -7909,7 +7889,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 if (cursor.getString(0) == null) {
                     return 0;
                 } else {
-                   x= Integer.parseInt(cursor.getString(0));
+                    x= Integer.parseInt(cursor.getString(0));
                     Log.e("x","getItemPrice="+x);
                     return x;
                 }
@@ -7926,7 +7906,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
 
-//    select Price from CustomerPrices where CustomerNumber='1110000002' and ItemNo_='30001826'
+    //    select Price from CustomerPrices where CustomerNumber='1110000002' and ItemNo_='30001826'
     public String getItemPrice(String itemNo) {
         Log.e("getItemName","getItemName="+itemNo);
         String customerNo=CustomerListShow.Customer_Account;
@@ -8063,8 +8043,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         // updating row
-Log.e("currentDate",currentDate);
-     int y=   db.update(SalesMan_Plan, values, CUSTOMER_NO + "=" + cusCode + " AND " + LogoutStatus + "=" + 0+ " AND DATE="  +"'"+currentDate+"'", null);
+        Log.e("currentDate",currentDate);
+        int y=   db.update(SalesMan_Plan, values, CUSTOMER_NO + "=" + cusCode + " AND " + LogoutStatus + "=" + 0+ " AND DATE="  +"'"+currentDate+"'", null);
         Log.e("y===",""+y);
 
     }
@@ -8115,39 +8095,6 @@ Log.e("currentDate",currentDate);
         db.update(TABLE_SETTING, values, null, null);
         Log.e("TABLE_SETTING", "UPDATE");
         db.close();
-    }
-    public void  setSalsemanLocation(String lat,String longla){
-
-        db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(LATITUDE, lat);
-        values.put(LONGITUDE, longla);
-  //  int z=    db.update(SalesMenLogIn, values, LATITUDE + "= '' AND " + LONGITUDE+ "= ''" +"OR "+ LATITUDE +"= '"+null +"' OR "+LATITUDE +"= '"+null+"'" , null);
-        int z=    db.update(SalesMenLogIn, values, null , null);
-
-        Log.e("SalesMenLogIn", "UPDATE"+z);
-        db.close();
-
-    }
-    public   void getSalsmanLoc() {
-        ArrayList<SalesMan> SalesMans = new ArrayList<>();
-        // Select All Query
-        String selectQuery = "SELECT * FROM " + SalesMenLogIn;
-
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-
-                SalmnLat=cursor.getString(1);
-                SalmnLong=cursor.getString(2);
-
-            } while (cursor.moveToNext());
-        }
-
-
     }
 }
 
