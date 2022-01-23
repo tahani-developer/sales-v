@@ -75,7 +75,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 170;
+    private static final int DATABASE_VERSION = 172;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -5685,7 +5685,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToLast()) {
             do {
 
                 userNO= cursor.getString(0);
