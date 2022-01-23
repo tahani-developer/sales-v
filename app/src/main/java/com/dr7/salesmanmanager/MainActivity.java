@@ -315,7 +315,7 @@ saveCurentLocation();
          Log.e(" DatabaseHandler.SalmnLat",""+ DatabaseHandler.SalmnLat+"");
          if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
 
-             databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+             databaseHandler. setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
          }
          else if(DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals(""))
              databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");

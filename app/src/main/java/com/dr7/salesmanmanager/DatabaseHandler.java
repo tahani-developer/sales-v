@@ -72,7 +72,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-
+    public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
     private static final int DATABASE_VERSION = 172;
@@ -1265,7 +1265,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
 
         String CREATE_TABLE_SALESMEN_LOG_IN = "CREATE TABLE IF NOT EXISTS " + SalesMenLogIn + "( "
-                + UserNo_LogIn + " TEXT" + ")";
+
+                + UserNo_LogIn + " TEXT,"
+                + LATITUDE + " TEXT,"
+                + LONGITUDE + " TEXT"+
+                ")";
         db.execSQL(CREATE_TABLE_SALESMEN_LOG_IN);
         try {
             String CREATE_TABLE_INVENTORY_SHELF = "CREATE TABLE IF NOT EXISTS " + INVENTORY_SHELF + "("
@@ -2355,6 +2359,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         try{
             db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanPlan+"'  INTEGER  DEFAULT '0' ");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"'  Text");
+            db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"'  Text");
         }catch (Exception e)
         {
             Log.e(TAG, e.getMessage().toString());
@@ -3491,7 +3503,16 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.insert(SalesMenLogIn, null, values);
         db.close();
     }
+    public void updateUserNO(String  USER_NO) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(UserNo_LogIn,USER_NO);
+
+
+        db.update(SalesMenLogIn, values,null,null);
+        db.close();
+    }
     public void addPaymentPaper(Payment payment) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -3688,6 +3709,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 setting.setReadDiscountFromOffers(Integer.parseInt(cursor.getString(13)));
                 setting.setWorkOnline(Integer.parseInt(cursor.getString(14)));
                 setting.setPaymethodCheck(Integer.parseInt(cursor.getString(15)));
+                setting.setBonusNotAlowed(Integer.parseInt(cursor.getString(16)));
                 setting.setBonusNotAlowed(Integer.parseInt(cursor.getString(16)));
                 setting.setNoOffer_for_credit(Integer.parseInt(cursor.getString(17)));
                 setting.setAmountOfMaxDiscount(Integer.parseInt(cursor.getString(18)));
@@ -5693,7 +5715,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
             } while (cursor.moveToNext());
         }
-
+        Log.e("userNO=",userNO);
         return userNO;
     }
 
@@ -8095,6 +8117,40 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.update(TABLE_SETTING, values, null, null);
         Log.e("TABLE_SETTING", "UPDATE");
         db.close();
+    }
+    public void setSalsemanLocation(String lat,String Longat){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(LATITUDE,  lat);
+        values.put(LONGITUDE, Longat);
+        db.update(SalesMenLogIn, values, null, null);
+        Log.e("SalesMenLogIn", "UPDATE");
+        db.close();
+    }
+
+    public void getSalsmanLoc(){
+        String selectQuery = "select * from SalesMenLogIn";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        try {
+            if (cursor.moveToFirst()) {
+                do {
+
+                    SalmnLat=(cursor.getString(1));
+                    SalmnLong=(cursor.getString(2));
+
+
+
+
+                }while (cursor.moveToNext());
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
     }
 }
 
