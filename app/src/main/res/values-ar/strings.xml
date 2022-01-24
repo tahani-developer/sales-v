@@ -536,6 +536,7 @@
     <string name="select">اختيار</string>
     <string name="notSameCustomer">Not Same Customer</string>
     <string name="noVoucherByThisNumber">لا يوجد فاتورة بهذا الرقم</string>
+    <string name="noVoucherByThisCus">هذه الفاتورة ليست لهذا العميل</string>
     <string name="from">من</string>
     <string name="to">الى</string>
     <string name="please_export_data">يجب ترحيل البيانات أولا</string>
@@ -555,4 +556,6 @@
 
     <string name="GetPlan"> استيراد الخطة</string>
     <string name="altayaa_shape">فاتورة مؤسسة الطايع</string>
+
+    <string name="showplan">عرض الخطة </string>
 </resources>

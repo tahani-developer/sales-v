@@ -219,8 +219,8 @@ public class CustomerListShow extends DialogFragment {
         Log.e("customerList555===",customerList.size()+"");
         if(Login.SalsManPlanFlage==1) {
 
-
-
+if(MainActivity.DB_salesManPlanList .size()!=0)
+{
 Log.e("customerList===",customerList.size()+"");
             // remove customer not in plan
             for (int i = 0; i < customerList.size(); i++)
@@ -228,7 +228,8 @@ Log.e("customerList===",customerList.size()+"");
                     customerList.remove(i);
                     i--;
 
-                }
+                }}
+
             Log.e("customerList=",customerList.size()+"");
 
 

@@ -4370,14 +4370,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         return vouchers;
     }
 
-    public Voucher getAllVouchers_VoucherNo(int voucherNo,int voucherKind) {
+    public Voucher getAllVouchers_VoucherNo(int voucherNo,int voucherKind ) {
 //        List<Voucher> vouchers = new ArrayList<Voucher>();
         // Select All Query
         Log.e("voucherNoDB",""+voucherNo);
 
         Voucher Voucher= new Voucher();
 
-        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "'and  VOUCHER_TYPE='"+voucherKind+"'  ";
+        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "'and  VOUCHER_TYPE='"+voucherKind+"' ";
         Log.e("select",""+selectQuery);
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -4413,6 +4413,47 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
 
+    public Voucher getAllVouchers_VoucherNoAndCusId(int voucherNo,int voucherKind ,String CusId) {
+//        List<Voucher> vouchers = new ArrayList<Voucher>();
+        // Select All Query
+        Log.e("voucherNoDB",""+voucherNo);
+
+        Voucher Voucher= new Voucher();
+
+        String selectQuery = "SELECT  * FROM " + SALES_VOUCHER_MASTER +" where VOUCHER_NUMBER = '" + voucherNo + "'and  VOUCHER_TYPE='"+voucherKind+"' and CUST_NUMBER= '"+CusId+"' ";
+        Log.e("select",""+selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                Voucher.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                Voucher.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                Voucher.setVoucherType(Integer.parseInt(cursor.getString(2)));
+                Voucher.setVoucherDate(cursor.getString(3));
+                Voucher.setSaleManNumber(Integer.parseInt(cursor.getString(4)));
+                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(10)));//5
+                Voucher.setVoucherDiscountPercent(Double.parseDouble(cursor.getString(6)));
+                Voucher.setRemark(cursor.getString(7));
+                Voucher.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                Voucher.setIsPosted(Integer.parseInt(cursor.getString(9)));
+                Voucher.setTotalVoucherDiscount(Double.parseDouble(cursor.getString(10)));
+                Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
+                Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
+                Voucher.setCustName(cursor.getString(14));
+                Voucher.setCustNumber(cursor.getString(15));
+                Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
+                Voucher.setTime(cursor.getString(17));
+                // Adding transaction to list
+
+            } while (cursor.moveToNext());
+        }
+
+        return Voucher;
+    }
 
 
 

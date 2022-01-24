@@ -1971,7 +1971,7 @@ public class SalesInvoice extends Fragment {
                         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
 
                         String remark = " " + remarkEditText.getText().toString();
-                        salesMan = Integer.parseInt(Login.salesMan);
+                        salesMan = Integer.parseInt(Login.salesMan.trim());
 
                         ///  1 add time
 
