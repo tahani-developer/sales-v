@@ -4428,6 +4428,65 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return items;
     }
+
+    ///B
+    public List<Integer> getVoucherByCustomerNo(String customerNo) {
+
+        List<Integer> voucherNumbers = new ArrayList<>();
+
+        String selectQuery = "SELECT M.VOUCHER_NUMBER "+
+                "FROM SALES_VOUCHER_MASTER M, SALES_VOUCHER_DETAILS D " +
+                "WHERE M.VOUCHER_NUMBER = D.VOUCHER_NUMBER AND M.VOUCHER_TYPE = D.VOUCHER_TYPE " +
+                "AND M.CUST_NUMBER= \"" + customerNo+"\"";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int vNo;
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+
+                vNo = cursor.getInt(0);
+
+                voucherNumbers.add(vNo);
+
+            } while (cursor.moveToNext());
+        }
+        return voucherNumbers;
+
+    }
+
+    ///B
+    public List<String> getItemNoByCategory(String categoryId) {
+        List<String> itemNoList = new ArrayList<>();
+
+        String selectQuery = "SELECT I.ItemNo "+
+                "FROM ITEMS_MASTER I, SALES_VOUCHER_DETAILS D " +
+                "WHERE I.ItemNo = D.ITEM_NUMBER " +
+                "AND I.CateogryID = \"" + categoryId +"\"";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        String itemNo;
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+
+                itemNo = cursor.getString(0);
+
+                itemNoList.add(itemNo);
+
+            } while (cursor.moveToNext());
+        }
+        return itemNoList;
+
+    }
+
+
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<Item>();
         // Select All Query
@@ -7769,5 +7828,34 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
         return  allItemReturn;
     }
+
+    ////B
+    public String getLastVoucherDate() {
+
+        String lastDate = "";
+
+        String selectQuery = "SELECT VOUCHER_DATE FROM SALES_VOUCHER_MASTER";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToLast()) {
+            try {
+                if( cursor.moveToPrevious())
+                {
+                    lastDate =  cursor.getString(0);
+
+                    Log.e("Last_Voucher_Date", lastDate+"");
+                }
+            } catch ( Exception e)
+            {
+                Log.e("Last_Voucher_Date", "Exception+\t\t");
+            }
+        }
+
+
+        return lastDate;
+
+    }
+
 }
 

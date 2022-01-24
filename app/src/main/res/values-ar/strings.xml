@@ -550,4 +550,10 @@
     <string name="sumCurrentQty">الكميات المتوفرة الحالية</string>
     <string name="dontDuplicateItem">منع تكرار المواد باسعار مختلفة</string>
 
+    ////B
+    <string name="invalidDate">التاريخ غير صالح !</string>
+    <string name="invalidDate_msg">تاريخ جهازك غير صحيح! يرجى إعادة ضبط اعدادات التاريخ في جهازك.</string>
+    <string name="allCustomers">جميع العملاء</string>
+    <string name="allCategories">جميع الفئات</string>
+
 </resources>

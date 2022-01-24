@@ -50,6 +50,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import org.json.JSONException;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -91,8 +92,32 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return_by_voucher_no);
+
+
         initialView();
-      //  boomlin=findViewById(R.id.boomlin);
+
+        ////B
+        try {
+            if (!generalMethod.checkDeviceDate()) {
+
+                new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText(getString(R.string.invalidDate))
+                        .setContentText(getString(R.string.invalidDate_msg))
+                        .setCustomImage(R.drawable.date_error)
+                        .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //  boomlin=findViewById(R.id.boomlin);
         //boomlin.setVisibility(View.INVISIBLE);
         getVoucherNo();
      inflateBoomMenu();

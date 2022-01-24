@@ -349,6 +349,10 @@ public class SalesInvoice extends Fragment {
 
     public  CheckBox notIncludeTax;
     Transaction transaction;
+
+    //B
+    GeneralMethod generalMethod;
+
     public SalesInvoice() {
         // Required empty public constructor
     }
@@ -409,6 +413,29 @@ public class SalesInvoice extends Fragment {
         } else {
             // portrait
         }
+
+        ////B
+        generalMethod = new GeneralMethod(getActivity().getBaseContext());
+        try {
+            if (!generalMethod.checkDeviceDate()) {
+
+               new SweetAlertDialog(getContext(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                       .setTitleText(getString(R.string.invalidDate))
+                       .setContentText(getString(R.string.invalidDate_msg))
+                       .setCustomImage(R.drawable.date_error)
+                       .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                           @Override
+                           public void onClick(SweetAlertDialog sweetAlertDialog) {
+                               sweetAlertDialog.dismissWithAnimation();
+                           }
+                       })
+                       .show();
+
+           }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         getTimeAndDate();
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {

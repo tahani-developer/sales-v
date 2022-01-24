@@ -16,11 +16,13 @@ import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
@@ -61,6 +64,16 @@ public class ItemsReport extends AppCompatActivity {
     Calendar myCalendar;
     int voucherType = 504;
 
+    ///B
+    Spinner customerSpinner, itemGroupSpinner;
+    DatabaseHandler obj;
+    private ArrayList<String> customersSpinnerArray = new ArrayList<>();
+    private ArrayList<String> categorySpinnerArray = new ArrayList<>();
+    List<Customer> allCustomersList = new ArrayList<>();
+    List<String> allCategories = new ArrayList<>();
+    List<String> customersId = new ArrayList<>();
+
+
     double totalSold = 0 , totalBonus = 0 , totalSales = 0 ;
     private DecimalFormat decimalFormat;
     int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
@@ -92,7 +105,8 @@ public class ItemsReport extends AppCompatActivity {
         decimalFormat = new DecimalFormat("##.000");
 
         items = new ArrayList<Item>();
-        DatabaseHandler obj = new DatabaseHandler(ItemsReport.this);
+        //B
+        obj = new DatabaseHandler(ItemsReport.this);
         items = obj.getAllItems();
         inflateBoomMenu();
         TableItemsReport = (TableLayout) findViewById(R.id.TableItemsBalanceReport);
@@ -105,6 +119,44 @@ public class ItemsReport extends AppCompatActivity {
         textTotalBonus = (TextView) findViewById(R.id.totalBonusTextView) ;
         texttotalSales = (TextView) findViewById(R.id.totalSalesTextView1) ;
 
+        ///B
+        customerSpinner = findViewById(R.id.customerSpinner);
+        itemGroupSpinner = findViewById(R.id.itemGroupSpinner);
+
+        customersSpinnerArray.clear();
+        allCustomersList.clear();
+        customersId.clear();
+        allCustomersList = obj.getAllCustomers();
+
+        customersSpinnerArray.add(getString(R.string.allCustomers));
+        for (int r = 0; r < allCustomersList.size(); r++) {
+            customersSpinnerArray.add(allCustomersList.get(r).getCustName());
+            customersId.add(allCustomersList.get(r).getCustId());
+        }
+        Log.e("Cust_Names", customersSpinnerArray.toString()+"");
+        Log.e("Cust_IDs", customersId.toString()+"");
+
+        ArrayAdapter<String> customerSpinnerAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item, customersSpinnerArray);
+
+        customerSpinner.setAdapter(customerSpinnerAdapter);
+        customerSpinner.setSelection(0);
+
+        ////////
+        categorySpinnerArray.clear();
+        allCategories.clear();
+        allCategories = obj.getAllExistingCategories();
+
+        categorySpinnerArray.add(getString(R.string.allCategories));
+        categorySpinnerArray.addAll(allCategories);
+
+        ArrayAdapter<String> categorySpinnerAdapter = new ArrayAdapter<>(
+                this, R.layout.support_simple_spinner_dropdown_item, categorySpinnerArray);
+
+        itemGroupSpinner.setAdapter(categorySpinnerAdapter);
+        itemGroupSpinner.setSelection(0);
+
+        /////////
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         String today = df.format(currentTimeAndDate);
@@ -315,6 +367,20 @@ public class ItemsReport extends AppCompatActivity {
     }
 
     public boolean filters(int n) {
+        ///B
+        String customerName = customerSpinner.getSelectedItem().toString();
+        String itemCategory = itemGroupSpinner.getSelectedItem().toString();
+
+        List<Integer> vNos;
+        List<String> itemNos;
+
+        long selectedIdCustomer = customerSpinner.getSelectedItemId();
+        long selectedIdCategory = itemGroupSpinner.getSelectedItemId();
+        String customerId = "";
+        if (selectedIdCustomer!=0) {
+            customerId = customersId.get((int) (selectedIdCustomer - 1));
+            Log.e("SelectedCustomerId", customerId);
+        }
 
         String textItemNumber = item_number.getText().toString();
 
@@ -322,22 +388,83 @@ public class ItemsReport extends AppCompatActivity {
         String toDate = to_date.getText().toString();
 
         String itemNumber = items.get(n).getItemNo();
-        String date = items.get(n).getDate() ;
+        String date = items.get(n).getDate();
         int vType = items.get(n).getVoucherType();
 
         try {
             if (!textItemNumber.equals("")) {
+                Log.e("case1==","case1");
                 if ((itemNumber.equals(textItemNumber)) && vType == voucherType &&
-                    (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate)) ) &&
-                            (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
-
-                    return true;}
-            } else {
-                if (vType == voucherType  &&
-                        (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate)) ) &&
+                        (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
 
-                    return true;}
+                    if (selectedIdCustomer == 0 && selectedIdCategory == 0)
+                        return true;
+                    else if (selectedIdCustomer != 0 && selectedIdCategory == 0) {
+                        Log.e("case2==","case2");
+
+                        vNos = obj.getVoucherByCustomerNo(customerId);
+
+                        if (vNos.contains(items.get(n).getVoucherNumber()))
+                            return true;
+
+                    } else if (selectedIdCustomer == 0 && selectedIdCategory != 0) {
+                        Log.e("case3==","case3");
+                        itemNos = obj.getItemNoByCategory(itemCategory);
+
+                        if (itemNos.contains(items.get(n).getItemNo()) && items.get(n).getItemNo().equals(textItemNumber))
+                            return true;
+
+                    } else {
+
+                        Log.e("case4==","case4");
+                        vNos = obj.getVoucherByCustomerNo(customerId);
+
+                        itemNos = obj.getItemNoByCategory(itemCategory);
+
+                        if (vNos.contains(items.get(n).getVoucherNumber()) && itemNos.contains(items.get(n).getItemNo()) && items.get(n).getItemNo().equals(textItemNumber))
+                            return true;
+
+                    }
+
+
+                }
+            } else {
+                if (vType == voucherType &&
+                        (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+                        (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
+                    Log.e("case8==","case8");
+                    if (selectedIdCustomer == 0 && selectedIdCategory == 0)
+                        return true;
+                    else if (selectedIdCustomer != 0 && selectedIdCategory == 0) {
+                        Log.e("case7==","case7");
+                        vNos = obj.getVoucherByCustomerNo(customerId);
+
+                        if (vNos.contains(items.get(n).getVoucherNumber()))
+                            return true;
+
+                    } else if (selectedIdCustomer == 0 && selectedIdCategory != 0) {
+                        Log.e("case6==","case6");
+                        itemNos = obj.getItemNoByCategory(itemCategory);
+
+                        if (itemNos.contains(items.get(n).getItemNo()))
+                            return true;
+
+                    } else {
+
+                        Log.e("case5==","case5");
+                        vNos = obj.getVoucherByCustomerNo(customerId);
+
+                        itemNos = obj.getItemNoByCategory(itemCategory);
+
+                        if (vNos.contains(items.get(n).getVoucherNumber()) && itemNos.contains(items.get(n).getItemNo()))
+                            return true;
+
+
+                    }
+
+
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
