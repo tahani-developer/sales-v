@@ -5119,8 +5119,14 @@ Log.e("customerList",""+customerList.size());
                              jsonObject1 = requestArray.getJSONObject(i);
                                  plan.setDate(  jsonObject1.getString("TRDATE"));
                                  plan.setSaleManNumber(Integer.parseInt(  jsonObject1.getString("SALESNO")));
-                                 plan.setLatitud(Double.parseDouble(  jsonObject1.getString("LA")));
-                                 plan.setLongtude(Double.parseDouble(  jsonObject1.getString("LO")));
+                                 try {
+                                     plan.setLatitud(Double.parseDouble(  jsonObject1.getString("LA")));
+                                     plan.setLongtude(Double.parseDouble(  jsonObject1.getString("LO")));
+                                 }catch (Exception e){
+                                     plan.setLatitud(0);
+                                     plan.setLongtude(0);
+                                 }
+
                                  plan.setCustName(  jsonObject1.getString("CUSNAME"));
                                  plan.setCustNumber(  jsonObject1.getString("CUSTNO"));
                                  plan.setOrder(Integer.parseInt(  jsonObject1.getString("ORDERD")));
@@ -5140,6 +5146,7 @@ Log.e("customerList",""+customerList.size());
                  }
 
 
+                 getSuccsesfuly();
 
              }
          } else {
@@ -5149,11 +5156,12 @@ Log.e("customerList",""+customerList.size());
 
     }
 
+    private void getSuccsesfuly() {
+        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))
 
-
-
-
-
+                            .show();
+    }
 
 
 }
