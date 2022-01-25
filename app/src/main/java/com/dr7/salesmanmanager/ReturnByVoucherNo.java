@@ -721,21 +721,30 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     }*/
   private void getVoucherLocal() {
       //    loadSerial.setText("fillSerial");
+
       voucherReturn = dataBase.getAllVouchers_VoucherNo(Integer.parseInt(voucherNo_ReturnNo), 504);
 
       loadSerial.setText("fillpayMethod");
       listItemsReturn = dataBase.getAllItems_byVoucherNo(voucherNo_ReturnNo);
       if (voucherReturn.getCustName() != null) {
+
+          if(voucherReturn.getCustNumber().equals(MainActivity.CusId))
+          {
           returnListSerial = dataBase.getAllSerialItemsByVoucherNo(voucherNo_ReturnNo);
           sumAllListData();
+          }else {
+              new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                      .setTitleText(this.getString(R.string.noVoucherByThisCus))
+                      .show();
+          }
 
       } else {
           showNotFound();
 //exportData(2);
 
-
-
       }
+
+
 
 //       fillAdapterData( allitemsdata);
   }

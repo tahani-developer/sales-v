@@ -138,6 +138,10 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
         if(Login.SalsManPlanFlage==1) {
+
+            if( MainActivity.DB_salesManPlanList .size()==0){
+                holder.linearLayout.setEnabled(true);
+            }else{
             if (IsCkeckOut(custList.get(i).getCustId()))
                 holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
 
@@ -146,10 +150,11 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                 holder.linearLayout.setEnabled(true);
                 holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorblue_dark));
             } else
-                holder.linearLayout.setEnabled(false);
+                holder.linearLayout.setEnabled(false);}
         }else
 
             {
+
             // case no salesman plan
         }
 
@@ -158,6 +163,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
             public void onClick(View view) {
                 if(custList.get(i).getIsSuspended()!=1)
                 {
+                    MainActivity.CusId=  custList.get(i).getCustId();
                 CustomerListShow.Customer_Name = custList.get(i).getCustName();
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();

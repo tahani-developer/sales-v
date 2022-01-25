@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
+    public static String    CusId;
     public static int menuItemState;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
@@ -4007,7 +4008,12 @@ if(printer.size()!=0) {
         databaseHandler = new DatabaseHandler(  context);
         DB_salesManPlanList.clear();
                 DB_salesManPlanList =  databaseHandler .getSalesmanPlan(curentDate);
-     if(DB_salesManPlanList.size()!=0)   ReSortList();
+     if(DB_salesManPlanList.size()!=0)
+         ReSortList();
+     else
+         {
+
+         }
 
     }
   boolean  IsDateInLocalDatabase(){

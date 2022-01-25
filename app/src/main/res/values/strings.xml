@@ -491,6 +491,7 @@
     <string name="select">Select</string>
     <string name="notSameCustomer">Not Same Customer</string>
     <string name="noVoucherByThisNumber">No Voucher By This Number</string>
+    <string name="noVoucherByThisCus">This Voucher Is Not for This Customer</string>
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="please_export_data">please export data</string>
@@ -507,7 +508,7 @@
     <string name="dontDuplicateItem">Dont Duplicate Item</string>
     <string name="ReturnAll">Return All Items In Vocher</string>
     <string name="Noloction">No Location For This Customer</string>
-
+    <string name="showplan">Show Plan </string>
 
 
     <string name="GetPlan"> Get Plan</string>
