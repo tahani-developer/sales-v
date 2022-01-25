@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -76,10 +77,13 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
@@ -115,6 +119,8 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -129,24 +135,27 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_R
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
+import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.Login.updateOnlySelectedCustomer;
 import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+        implements  NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
+    public static String    CusId;
     public static int menuItemState;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
     public  static  EditText passwordFromAdmin, password ;
-    static public TextView mainTextView,timeTextView;
+    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
@@ -156,6 +165,7 @@ public class MainActivity extends AppCompatActivity
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private DatabaseHandler mDbHandler;
+    private static DatabaseHandler databaseHandler;
      public   LocationManager locationManager;
     LocationListener locationListener;
 
@@ -166,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     int position=0;
     public  static  double latitude_main, longitude_main;
     boolean isPosted = true,isPostedCustomerMaster=true;
-
+    public  static  int OrderTypeFlage;
     public static final int PICK_IMAGE = 1;
     Bitmap itemBitmapPic = null;
     boolean getLocationComp=false;
@@ -182,6 +192,9 @@ public class MainActivity extends AppCompatActivity
     public static List<Payment> payments = new ArrayList<>();
     public static List<Payment> paymentsPaper = new ArrayList<>();
     public static List<AddedCustomer> addedCustomer = new ArrayList<>();
+    public static ArrayList<SalesManPlan>DB_salesManPlanList = new ArrayList<>();
+    public static ArrayList<AddedCustomer>customerArrayList = new ArrayList<>();
+
     int sum_chech_export_lists=0;
     static public Date currentTimeAndDate;
     static public SimpleDateFormat df, df2;
@@ -206,6 +219,11 @@ public class MainActivity extends AppCompatActivity
 
     public  static TextView masterControlLoc;
     String ipAddress="";
+    NavigationView navigationView;
+
+
+
+
 
 
     public static void settext2() {
@@ -250,6 +268,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+
+
+    //////////
+
+
+    protected LocationManager locationManager1;
+    protected LocationListener locationListener1;
+
+    String lat;
+    String provider;
+    protected String latitude,longitude;
+    protected boolean gps_enabled,network_enabled;
+
+
+
+    ////////
+
+
+
+
+
+
+
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
@@ -257,11 +299,156 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(MainActivity.this);
-
-//        finish();
-//        startActivity(getIntent());
-
+        mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
+
+
+
+
+
+
+     try {
+saveCurentLocation();
+
+         databaseHandler = new DatabaseHandler(  MainActivity.this);
+
+         databaseHandler.getSalsmanLoc();
+         Log.e(" DatabaseHandler.SalmnLat",""+ DatabaseHandler.SalmnLat+"");
+         if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
+
+             databaseHandler. setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+         }
+         else if(DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals(""))
+             databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+
+
+
+
+
+
+        }
+      catch (Exception e){
+
+          Log.e("Exception:",e.getMessage() );
+
+      }
+        hideItem();
+
+//////////////// salesman plan for cake shop
+        salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
+    //    getplan=findViewById(R.id.     getplan);
+
+
+
+     //   if(Login.SalsManPlanFlage!=1)getplan.setVisibility(View.GONE);
+
+//            getplan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(Login.SalsManPlanFlage==1) {
+//                    int salesMan = 1;
+//                    try {
+//                        salesMan = Integer.parseInt(Login.salesMan);
+//                    } catch (NumberFormatException e) {
+//                        Log.e("NumberFormatException", "" + e.getMessage());
+//                        salesMan = 1;
+//                    }
+//                    ImportJason obj = new ImportJason(MainActivity.this);
+//
+//                    obj.getSalesmanPlan(salesMan);
+//                }
+//            }
+//        });
+
+
+
+
+
+
+        salesmanPlanRespon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals("")) {
+                    if (s.toString().equals("fill")) {
+
+                        getSalesmanPlan(MainActivity.this);
+                        //
+
+                        if(IsDateInLocalDatabase())
+                        {        // case when salesman get plan more than one time in same date
+                            Log.e("changscase","changscase");
+
+
+                            // update logoutstatus based on old plan in import list
+
+                          for(int i=0;i<DB_salesManPlanList.size();i++) {
+                              for (int j = 0; j < ImportJason.salesManPlanList.size(); j++)
+                                  if (DB_salesManPlanList.get(i).getCustNumber().
+                                          equals(ImportJason.salesManPlanList.get(j).getCustNumber())
+
+                                  &&DB_salesManPlanList.get(i).getDate().
+                                          equals(ImportJason.salesManPlanList.get(j).getDate()
+                                  )) {
+                                      ImportJason.salesManPlanList.get(j).setLogoutStatus(DB_salesManPlanList.get(i).getLogoutStatus());
+                                      Log.e("changscase", DB_salesManPlanList.get(i).getCustNumber()+"   " + DB_salesManPlanList.get(i).getLogoutStatus());
+                                  }
+                          }
+
+                                  //delete plane
+
+                            Date currentTimeAndDate = Calendar.getInstance().getTime();
+                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+                            String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+                            String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+                            mDbHandler.deleteFromSalesMan_Plan(convertToEnglish(currentDate));
+
+                            // update logoutstatus based on old plan
+                            for (int i = 0; i < ImportJason.salesManPlanList.size(); i++) {
+                                Log.e("detalis===",  ImportJason.salesManPlanList.get(i).getCustNumber()+"   " +  ImportJason.salesManPlanList.get(i).getLogoutStatus());
+
+                                mDbHandler.addSalesmanPlan(ImportJason.salesManPlanList.get(i));
+
+                            }
+                            getSalesmanPlan(MainActivity.this);
+
+                        } else { // case when salesman get plan in new  date
+
+                            Log.e("normalcase","normalcase");
+                            for (int i = 0; i < ImportJason.salesManPlanList.size(); i++) {
+
+                                mDbHandler.addSalesmanPlan(ImportJason.salesManPlanList.get(i));
+
+                            }
+                            getSalesmanPlan(MainActivity.this);
+                        }
+
+
+                    }
+                }
+            }
+        });
+        if(Login.SalsManPlanFlage==1)  getSalesmanPlan(MainActivity.this);
+        Log.e(" DB_salesManPlanList==",""+ DB_salesManPlanList.size());
+
+
+
+
+     //////////////   end
+
+
+
 
         radioGroup=findViewById(R.id.radioGrp);
         checkInCheckOutLinear=findViewById(R.id.checkInCheckOutLinear);
@@ -276,7 +463,7 @@ public class MainActivity extends AppCompatActivity
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mDbHandler = new DatabaseHandler(MainActivity.this);
+
         Login.salesMan=mDbHandler.getAllUserNo();
         drawer_layout=findViewById(R.id.drawer_layout);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -473,7 +660,7 @@ public class MainActivity extends AppCompatActivity
 //        locationPermissionRequest.timerLocation();
 
 
-
+      //  getLocation();
     }
 
     private void openReadBarcode() {
@@ -511,14 +698,14 @@ public class MainActivity extends AppCompatActivity
             locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-                    latitudeCheckIn=0;longtudeCheckIn=0;
-                    latitudeCheckIn  = location.getLatitude();
+                    latitudeCheckIn = 0;
+                    longtudeCheckIn = 0;
+                    latitudeCheckIn = location.getLatitude();
                     longtudeCheckIn = location.getLongitude();
-                    Log.e("onLocationChanged",""+latitudeCheckIn+""+longtudeCheckIn);
+                    Log.e("onLocationChanged", "" + latitudeCheckIn + "" + longtudeCheckIn);
 
 
                 }
-
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
                     Log.e("onStatusChanged",""+provider.toString()+status+"\t extras"+extras.toString());
@@ -929,6 +1116,8 @@ public class MainActivity extends AppCompatActivity
                                     customerLocation_main.setLONG(longitude_main + "");
                                     customerLocation_main.setLATIT(latitude_main + "");
 
+
+
                                     mDbHandler.addCustomerLocation(customerLocation_main);
                                     mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
                                     CustomerListShow.latitude = latitude_main + "";
@@ -1046,13 +1235,41 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onPrepareOptionsMenu(menu);
     }
+    private void hideItem()
+    {
 
+
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+
+        if(Login.SalsManPlanFlage!=1)     nav_Menu.findItem(R.id.getplan).setVisible(false);
+    }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+       if(id == R.id.getplan){
+           if(Login.SalsManPlanFlage==1) {
+               int salesMan = 1;
+               try {
+                   salesMan = Integer.parseInt(Login.salesMan);
+               } catch (NumberFormatException e) {
+                   Log.e("NumberFormatException", "" + e.getMessage());
+                   salesMan = 1;
+               }
+               ImportJason obj = new ImportJason(MainActivity.this);
+
+               obj.getSalesmanPlan(salesMan);
+
+           }else{
+
+           }
+
+       }else
 
         if (id == R.id.nav_activities) {
 //            locationPermissionRequest.closeLocation();
@@ -1117,7 +1334,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         else if (id == R.id.shelf_inventory) {
-            if(!CustomerListShow.Customer_Account.equals(""))
+            if(!CustomerListShow.Customer_Name.equals("") && !CustomerListShow.Customer_Name.equals("No Customer Selected !") )
             {
                 finish();
                 Intent i=new Intent(MainActivity.this,Stock_Activity.class);
@@ -1782,7 +1999,7 @@ public class MainActivity extends AppCompatActivity
 //                checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
 
                 CustomerCheckInFragment obj = new CustomerCheckInFragment();
-                obj.editCheckOutTimeAndDate();
+                obj.editCheckOutTimeAndDate(MainActivity.this);
                 List<Settings> settings = mDbHandler.getAllSettings();
                 if (settings.size() != 0) {
                     workOnLine= settings.get(0).getWorkOnline();
@@ -2234,6 +2451,11 @@ public class MainActivity extends AppCompatActivity
             wifi = (RadioButton) dialog.findViewById(R.id.wifiRadioButton);
             allowMinus = (CheckBox) dialog.findViewById(R.id.allow_sale_with_minus);
             salesManCustomersOnly = (CheckBox) dialog.findViewById(R.id.salesman_customers_only);
+            if(updateOnlySelectedCustomer==1){
+                salesManCustomersOnly.setChecked(true);
+                salesManCustomersOnly.setEnabled(false);
+            }
+
             minSalePrice = (CheckBox) dialog.findViewById(R.id.min_sale_price);
             allowOutOfRange = (CheckBox) dialog.findViewById(R.id.allow_cust_check_out_range);
             exclude = (RadioButton) dialog.findViewById(R.id.excludeRadioButton);
@@ -3104,7 +3326,7 @@ public class MainActivity extends AppCompatActivity
     private void saveCurentLocation() throws InterruptedException {
         Log.e("updatecompanyInfo_1",""+latitudeCheckIn+longtudeCheckIn);
         getlocationForCheckIn();
-        Thread.sleep(2000);
+      //  Thread.sleep(2000);
         Log.e("updatecompanyInfo_2",""+latitudeCheckIn+longtudeCheckIn);
         if(latitudeCheckIn!=0 &&longtudeCheckIn!=0)
         {
@@ -3152,9 +3374,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
-        CheckBox short_Invoice,dontPrintHeader;
+        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox;
 
         short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
+        altayee_checkbox=(CheckBox) dialog.findViewById(R.id.altayee_checkbox);
         dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
@@ -3214,6 +3437,11 @@ if(printer.size()!=0) {
         dontPrintHeader.setChecked(false);
     }
     else dontPrintHeader.setChecked(true);
+    if(printer.get(0).getTayeeLayout()==1)
+    {
+        altayee_checkbox.setChecked(true);
+
+    }else    altayee_checkbox.setChecked(false);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -3280,10 +3508,19 @@ if(printer.size()!=0) {
                     printerSetting.setDontPrintHeader(0);
 
                 }
+                if(altayee_checkbox.isChecked())
+                {
+                    printerSetting.setTayeeLayout(1);
+
+                }
+                else {
+                    printerSetting.setTayeeLayout(0);
+
+                }
 
                 mDbHandler.addPrinterSeting(printerSetting);
-                Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
-dialog.dismiss();
+               // Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
+                dialog.dismiss();
             }
 
         });
@@ -3689,5 +3926,111 @@ dialog.dismiss();
         catch (Exception e) {
             Log.e("Settings Backup", e.getMessage());
         }
+    }
+ static void  ReSortList(){
+
+
+        try {
+
+
+            if (DB_salesManPlanList.get(0).getTypeOrder() == 0) {
+                Collections.sort(DB_salesManPlanList);
+                OrderTypeFlage = 0;
+
+            } else {
+                for (int i = 0; i < DB_salesManPlanList.size(); i++) {
+                    Location locationA = new Location("point A");
+
+                    locationA.setLatitude(DB_salesManPlanList.get(i).getLatitud());
+                    locationA.setLongitude(DB_salesManPlanList.get(i).getLongtude());
+
+                    Location locationB = new Location("point B");
+                    //     31.973113861570397, 35.909562515675 الداخلية
+
+
+                    // جرش 32.271743106492224, 35.88992632707304
+                    // اربد 32.569163163418864, 35.84655082984946
+                    // 32.02355606374721, 35.84556662133978 صويلح
+                    //     29.6133995179976, 35.02148227477434  aqaba
+
+                    databaseHandler.getSalsmanLoc();
+                    if (DatabaseHandler.SalmnLat != null && DatabaseHandler.SalmnLong != null
+                            && DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals("")
+                    ) {
+                        locationB.setLatitude(Double.parseDouble(DatabaseHandler.SalmnLat));
+                        locationB.setLongitude(Double.parseDouble(DatabaseHandler.SalmnLong));
+                    } else {
+
+
+
+                        databaseHandler.getSalsmanLoc();
+                        Log.e(" DatabaseHandler.SalmnLat", "" + DatabaseHandler.SalmnLat + "");
+                        if (DatabaseHandler.SalmnLat == null && DatabaseHandler.SalmnLong == null) {
+
+                            databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+                        } else if (DatabaseHandler.SalmnLat.equals("") && DatabaseHandler.SalmnLong.equals(""))
+                            databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
+
+
+                    }
+
+
+                    float distance = locationA.distanceTo(locationB);
+                    DB_salesManPlanList.get(i).setDistance(distance);
+                    OrderTypeFlage = 1;
+
+                    Log.e("distance===", DB_salesManPlanList.get(i).getCustName() + "  " + DB_salesManPlanList.get(i).getLatitud() + "   " + DB_salesManPlanList.get(i).getLongtude() + "    " + DB_salesManPlanList.get(i).getDistance() + "");
+
+
+                }
+                Collections.sort(DB_salesManPlanList, new Comparator<SalesManPlan>() {
+                    @Override
+                    public int compare(SalesManPlan c1, SalesManPlan c2) {
+                        return Double.compare(c1.getDistance(), c2.getDistance());
+                    }
+                });
+                for (int x = 0; x < DB_salesManPlanList.size(); x++)
+                    Log.e("DB_salesManPlan===", DB_salesManPlanList.get(x).getCustName() + "       " + DB_salesManPlanList.get(x).getDistance());
+
+            }
+
+        }catch (Exception e){
+
+        }
+         }
+
+    static  void getSalesmanPlan(Context context)   {
+        currentTimeAndDate = Calendar.getInstance().getTime();
+        df2 = new SimpleDateFormat("hh:mm:ss");
+        curentTime=df2.format(currentTimeAndDate);
+        df= new SimpleDateFormat("dd/MM/yyyy");
+        curentDate = df.format(currentTimeAndDate);
+        databaseHandler = new DatabaseHandler(  context);
+        DB_salesManPlanList.clear();
+                DB_salesManPlanList =  databaseHandler .getSalesmanPlan(curentDate);
+     if(DB_salesManPlanList.size()!=0)
+         ReSortList();
+     else
+         {
+
+         }
+
+    }
+  boolean  IsDateInLocalDatabase(){
+        boolean f=false;
+
+
+        for(int i=0;i<DB_salesManPlanList.size();i++)
+            if (DB_salesManPlanList.get(i).getDate().
+                    equals(convertToEnglish(curentDate)))
+            { f=true;
+            break;
+            }
+
+
+    return f;}
+ void   getLocation(){
+
+     customerArrayList =databaseHandler. getAllCustomer();
     }
 }

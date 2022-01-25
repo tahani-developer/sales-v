@@ -49,11 +49,114 @@
 
             </LinearLayout>
 
+
+
+            <LinearLayout
+                android:id="@+id/row222"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="2.5"
+                    android:gravity="center"
+                    android:text="@string/category"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="12sp" />
+                <Spinner
+                    android:id="@+id/cat"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_weight="2"
+
+                    android:gravity="center"
+                    android:padding="3dp" />
+
+
+                <androidx.appcompat.widget.SearchView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="3"
+                    android:visibility="invisible"
+                    app:defaultQueryHint="Search.."
+
+                    app:queryHint="Item name"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/row221"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="3dp"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="2.5"
+                    android:gravity="center"
+                    android:text="@string/qty"
+                    android:textColor="@color/text_view_color"
+                    android:textSize="12sp" />
+                <Spinner
+                    android:id="@+id/quantityFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_weight="2"
+
+                    android:gravity="center"
+                    android:padding="3dp" />
+                <Button
+                    android:id="@+id/preview"
+                    android:padding="3dp"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/done_button"
+                    android:text="@string/preview"
+                    android:textColor="@color/layer5" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/mS"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight="3"
+                    android:visibility="invisible"
+                    app:defaultQueryHint="Search.."
+
+                    app:queryHint="Item name"/>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/row2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:background="@drawable/border"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal"
                 android:padding="2dp"
@@ -80,6 +183,9 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="3dp"
                     android:layout_marginLeft="3dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp"
+
                     android:layout_weight="2"
                     android:background="@drawable/back_border_edit"
                     android:gravity="center_vertical"
@@ -118,73 +224,6 @@
 
 
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/row221"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:layout_marginTop="3dp"
-                android:orientation="horizontal"
-                android:padding="2dp"
-                >
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="2.5"
-                    android:gravity="center"
-                    android:text="@string/category"
-                    android:textColor="@color/text_view_color"
-                    android:textSize="12sp" />
-                <Spinner
-                    android:id="@+id/cat"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-
-                    android:layout_weight="2"
-
-                    android:gravity="center"
-                    android:padding="3dp" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_weight="2.5"
-                    android:gravity="center"
-                    android:text="@string/qty"
-                    android:textColor="@color/text_view_color"
-                    android:textSize="12sp" />
-                <Spinner
-                    android:id="@+id/quantityFilter"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-
-                    android:layout_weight="2"
-
-                    android:gravity="center"
-                    android:padding="3dp" />
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/mS"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-
-                    android:layout_weight="3"
-                    android:visibility="invisible"
-                    app:defaultQueryHint="Search.."
-
-                    app:queryHint="Item name"/>
             </LinearLayout>
             <Button
                 android:id="@+id/preview_button_inventory"

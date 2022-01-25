@@ -328,6 +328,7 @@
     <string name="itemkind">نوع المادة</string>
     <string name="credit_sales">المبيعات ذمم</string>
     <string name="total_sales">اجمالي المبيعات</string>
+    <string name="total">المجموع </string>
     <string name="netpayment">الصافي</string>
     <string name="total_cash">المجموع نقدا</string>
     <string name="sales">مبيعات</string>
@@ -535,6 +536,7 @@
     <string name="select">اختيار</string>
     <string name="notSameCustomer">Not Same Customer</string>
     <string name="noVoucherByThisNumber">لا يوجد فاتورة بهذا الرقم</string>
+    <string name="noVoucherByThisCus">هذه الفاتورة ليست لهذا العميل</string>
     <string name="from">من</string>
     <string name="to">الى</string>
     <string name="please_export_data">يجب ترحيل البيانات أولا</string>
@@ -549,7 +551,13 @@
     <string name="more">المزيد</string>
     <string name="sumCurrentQty">الكميات المتوفرة الحالية</string>
     <string name="dontDuplicateItem">منع تكرار المواد باسعار مختلفة</string>
+    <string name="ReturnAll">إرجاع كل الفاتورة </string>
+    <string name="Noloction">لا يوجد موقع مخزن لهذا العميل</string>
 
+    <string name="GetPlan"> استيراد الخطة</string>
+    <string name="altayaa_shape">فاتورة مؤسسة الطايع</string>
+
+    <string name="showplan">عرض الخطة </string>
     ////B
     <string name="invalidDate">التاريخ غير صالح !</string>
     <string name="invalidDate_msg">تاريخ جهازك غير صحيح! يرجى إعادة ضبط اعدادات التاريخ في جهازك.</string>

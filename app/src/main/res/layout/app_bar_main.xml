@@ -35,5 +35,10 @@
         android:backgroundTint="@color/colorblue1"
 
         tools:ignore="VectorDrawableCompat" />
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:id="@+id/salesmanPlanRespon"
+    ></TextView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

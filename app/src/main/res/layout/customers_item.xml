@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_marginTop="3dp"
         android:background="@color/layer3"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -50,6 +51,14 @@
             android:text="@string/cust_name"
             android:textColor="#000000"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/showloction"
+            android:background="@drawable/ic_baseline_not_listed_location_24"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight=".3"
+            android:text="" />
 
     </LinearLayout>
 

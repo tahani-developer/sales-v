@@ -105,17 +105,16 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("MainActivity", ""+requestCode);
         String serialBarcode="";
 //        if (requestCode == 0x0000c0de) {
         IntentResult Result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (Result != null) {
             if (Result.getContents() == null) {
-                Log.e("MainActivity", "cancelled scan");
+
                 Toast.makeText(Stock_Activity.this, "cancelled", Toast.LENGTH_SHORT).show();
             } else {
 
-                Log.e("Stock_Activity", "onActivityResult" + Result.getContents());
+
 
                 try {
                     serialBarcode = Result.getContents().trim();
@@ -135,7 +134,6 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
                                 if(checkInTotalList(serialBarcode.trim()))
                                 {
-                            Log.e("Stock_Activity", "onActivityResult" +serialBarcode.toString().trim());
                                     serialValueStock.setText(serialBarcode.toString().trim());
 
 
@@ -209,7 +207,7 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
 
     }
-    private boolean checkInTotalList(String s) {
+    public boolean checkInTotalList(String s) {
         boolean existInTotal=false;
         if(listSerialInventory.size()!=0){
             // Log.e("checkInTotalList","indexOf"+listSerialTotal.indexOf(s.toString().trim()));
@@ -222,11 +220,6 @@ public class Stock_Activity extends AppCompatActivity implements    StockRequest
 
             }
 
-//
-//                if(listSerialTotal.indexOf(s.toString().trim())!=-1)
-//                {
-//
-//                }
         }
         return  true;
     }

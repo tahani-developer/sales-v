@@ -127,7 +127,7 @@ public class ItemsListAdapter extends BaseAdapter {
             qtyTextView.setText(""+itemList.get(i).getQty());
         }
 
-        if(databaseHandler.getAllSettings().get(0).getItemUnit()==1)
+        if(databaseHandler.getAllSettings().get(0).getItemUnit()==1 &&itemList.get(i).getOneUnitItem().equals("0"))
         {
             int itemUnit=databaseHandler.getUnitForItem(itemList.get(i).getItemNo());
             String itemUnitPrice=databaseHandler.getUnitPrice(itemList.get(i).getItemNo().trim(),rate);
@@ -136,7 +136,7 @@ public class ItemsListAdapter extends BaseAdapter {
             {
                 if(itemList.get(i).getOneUnitItem().equals("1"))
                 priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
-                else priceTextView.setText(itemUnitPrice);
+                else priceTextView.setText(itemList.get(i).getEnter_price());
 //                priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));
             }else {
                 priceTextView.setText(String.valueOf(itemList.get(i).getPrice()));

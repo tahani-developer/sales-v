@@ -359,17 +359,18 @@ public class Activities extends AppCompatActivity implements
         String visit="";
         transaction=new Transaction();
 
-        if(!CustomerListShow.Customer_Account.equals(""))
-        {
-            transaction=databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account,generalMethod.getSalesManLogin().trim());
-            if(transaction.getCheckInDate()!=null)
-            {
-                visit=transaction.getCheckInDate()+"\t\t"+transaction.getCheckInTime();
-                Log.e("getLastVaisit",""+CustomerListShow.Customer_Account+"\t"+Login.salesMan+"\t"+transaction.getCheckInDate());
+        if(!CustomerListShow.Customer_Account.equals("")) {
+            try {
+
+
+            transaction = databaseHandler.getLastVisitInfo(CustomerListShow.Customer_Account, generalMethod.getSalesManLogin().trim());
+            if (transaction.getCheckInDate() != null) {
+                visit = transaction.getCheckInDate() + "\t\t" + transaction.getCheckInTime();
+                Log.e("getLastVaisit", "" + CustomerListShow.Customer_Account + "\t" + Login.salesMan + "\t" + transaction.getCheckInDate());
+            } else {
+                visit = curentDate + "\t\t" + curentTime;
             }
-            else {
-                visit=curentDate+"\t\t"+curentTime;
-            }
+        }catch (Exception e){}
 
         }
 

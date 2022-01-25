@@ -140,6 +140,7 @@ public class PrintVoucher extends AppCompatActivity {
 
     //Voucher addvou;
     static Voucher vouch1;
+    static Voucher vouchPrinted;
     Bitmap bitmap;
     String itemsString;
     String itemsString2 = "";
@@ -264,8 +265,8 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                          //  row.setPadding(5, 5, 10, 5);
-                            row.setPadding(10, 10, 10, 10);
+                           row.setPadding(5, 5, 10, 5);
+                          //  row.setPadding(10, 10, 10, 10);
 
                             if (n % 2 == 0)
                                 row.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -549,62 +550,23 @@ public class PrintVoucher extends AppCompatActivity {
 
         return false;
     }
+  public  void exportToPdf(Voucher voucher){
 
+      vouchPrinted=voucher;
+  List<Item> itemVOCHER = new ArrayList<>();
+        itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()));
+
+      Log.e("itemVOCHER==",""+itemVOCHER.size());
+        PdfConverter pdf =new PdfConverter(PrintVoucher.this);
+ pdf.exportListToPdf(    items,"Vocher","",13);
+
+
+  }
     @SuppressLint("SetTextI18n")
     public void hiddenDialog(Voucher voucher) {
-
+  exportToPdf( voucher);
 
         //convertLayoutToImage(voucher);
-
-
-
-
-
-        Log.e("hiddenDialog==", " hiddenDialog " +"");
-        voch_items.clear();
-
-
-
-        int count=0;
-
-
-        for (int j = 0; j < items.size(); j++) {
-
-            if ((voucher.getVoucherNumber() == items.get(j).getVoucherNumber()) && (items.get(j).getVoucherType() == voucher.getVoucherType())) {
-                count++;
-                voch_items.add(items.get(j));
-            }
-
-        }
-Log.e("count==",count+"");
-        if (count <= 10)
-            convertLayoutToImage(voucher);
-        else
-            {
-                int x,y=0;
-                for (int i = 1; i <= Math.floor((voch_items.size() / 30)); i++) {
-                     x=((i * 30) - 30);
-                    y=(i * 30) - 1;
-                    ArrayList  <Item>temp = subArray(voch_items, x,
-                            y);
-                    convertLayoutToImage2(voucher,temp);
-                    Log.e("temp==",temp.size()+"");
-
-                    // do stuff with temp
-                }
-                ArrayList  <Item>temp = subArray(voch_items, y+1,
-                        voch_items.size()  - 1);
-                convertLayoutToImage2(voucher,temp);
-                printheader(voucher);
-                printfooter(voucher);
-
-                for (int j = 0; j < voch_items.size(); j++)
-                    sub_items.add(voch_items.get(j));
-                convertLayoutToImage2(voucher,voch_items);
-            }
-
-
-
 
 //  final Dialog dialog = new Dialog(PrintVoucher.this);
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

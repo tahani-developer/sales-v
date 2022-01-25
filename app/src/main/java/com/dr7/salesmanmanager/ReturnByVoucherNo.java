@@ -4,6 +4,7 @@ import static com.dr7.salesmanmanager.ImportJason.listItemsReturn;
 import static com.dr7.salesmanmanager.ImportJason.returnListSerial;
 import static com.dr7.salesmanmanager.ImportJason.voucherReturn;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Build;
@@ -23,11 +25,15 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,7 +65,7 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ReturnByVoucherNo extends AppCompatActivity {
-    RecyclerView recyclerView;
+    public static   RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
     public static List<serialModel> allitemsdata =new ArrayList<>();
     public static List<serialModel> Recoverallitemsdata =new ArrayList<>();
@@ -81,12 +87,16 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public  DatabaseHandler dataBase;
     float total=0;
     String curent="";
+    CheckBox returnall;
     public RadioGroup paymentTermRadioGroup;
     CompanyInfo companyInfo;
+    int typeTax=0;
     int[] listImageIcone=new int[]{R.drawable.ic_print_white_24dp,
             R.drawable.pdf_icon,R.drawable.excel_small
             };
     LinearLayout boomlin;
+    public  static TextView  ScanSerialcode,checked;
+    public  static EditText  Serialcode;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +145,215 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void initialView() {
+        Serialcode=findViewById(R.id.serialcode);
+        checked = findViewById(R.id.checked);
+
+
         allitemsdata.clear();
         Recoverallitemsdata.clear();
-        dataBase=new DatabaseHandler(this);
+        checked.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals("")) {
+
+                    fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 1);
+
+                }
+            }
+        });
+        dataBase = new DatabaseHandler(this);
+        if (dataBase.getAllSettings().get(0).getContinusReading() == 1)// camera
+        {
+            Serialcode.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!s.toString().equals("")) {
+                        if (allitemsdata.size() != 0) {
+                            for (int i = 0; i < allitemsdata.size(); i++) {
+                                if (allitemsdata.get(i).getSerialCode().equals(s.toString().trim())) {
+                                    allitemsdata.get(i).setIsClicked(1);
+                                    fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 0);
+                                    Serialcode.setText("");
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            });
+        } else {
+
+
+            Serialcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                                     @Override
+                                                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                         if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH
+                                                                 || actionId == EditorInfo.IME_NULL) {
+                                                             if (!Serialcode.getText().toString().trim().equals("")) {
+                                                                 if (allitemsdata.size() != 0) {
+                                                                     for (int x = 0; x < allitemsdata.size(); x++) {
+                                                                         if (allitemsdata.get(x).getSerialCode().
+                                                                                 equals(Serialcode.getText().toString().trim())) {
+                                                                             allitemsdata.get(x).setIsClicked(1);
+                                                                             fillAdapterData(ReturnByVoucherNo.this, allitemsdata, 0);
+                                                                             Serialcode.setText("");
+                                                                         }
+
+                                                                     }
+                                                                 }
+
+                                                             } else {
+
+                                                             }
+
+                                                         }
+                                                         return false;
+                                                     }
+
+                                                 }
+
+            );
+
+
+
+            typeTax=dataBase.getAllSettings().get(0).getTaxClarcKind();
+            Log.e("typeTax",""+typeTax);
+
+
+
+
+
+
+
+
+
+
+
+//            Serialcode. setOnKeyListener(new View.OnKeyListener() {
+//                @Override
+//                public boolean onKey(View view, int i, KeyEvent keyEvent) {
+//                    if (i == KeyEvent.KEYCODE_BACK) {
+//                        try {
+//                            onBackPressed();
+//                        }catch (Exception e){
+//
+//                        }
+//
+//
+//                    }
+//
+//                    else  if (i != KeyEvent.KEYCODE_ENTER) {
+//
+//                        if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+//                            if (!   Serialcode.getText().toString().trim().equals("")) {
+//                                if(allitemsdata.size()!=0)
+//                                {
+//                                    for (int x=0;x<allitemsdata.size();x++){
+//                                        if( allitemsdata.get(x).getSerialCode().
+//                                                equals(Serialcode.getText().toString().trim()))
+//                                        {
+//                                            allitemsdata.get(x).setIsClicked(1);
+//                                            fillAdapterData(ReturnByVoucherNo.this,allitemsdata,0);
+//                                            Serialcode.setText("");
+//                                        }
+//
+//                                    }
+//                                }
+//
+//                            } else {
+//
+//                            }
+//                            return true;
+//                        }
+//                    }
+//                    return false;
+//                }
+//            });
+
+
+        }
+
+        returnall=findViewById(R.id.returnall);
+        ScanSerialcode=findViewById(R.id.scan);
+        ScanSerialcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // new IntentIntegrator(ReturnByVoucherNo.this).setOrientationLocked(false).setCaptureActivity(CustomScannerActivity.class).initiateScan();
+                Intent i=new Intent(ReturnByVoucherNo.this,ScanActivity.class);
+                i.putExtra("key","5");
+                startActivity(i);
+            }
+        });
+
+        returnall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.e("isChecked==","is");
+                String msg = "You have " + (isChecked ? "checked" : "unchecked") + " this Check it Checkbox.";
+               // Toast.makeText(ReturnByVoucherNo.this, msg, Toast.LENGTH_SHORT).show();
+
+            if(isChecked)
+            {
+              //  Toast.makeText(ReturnByVoucherNo.this, msg, Toast.LENGTH_SHORT).show();
+
+                Log.e("isChecked2==","is"+isChecked);
+                for(int i=0;i< allitemsdata.size();i++)
+              if( dataBase.HASSERAIAL(allitemsdata.get(i).getItemNo())==1
+                      &&allitemsdata.get(i).getSerialCode().equals(""))
+              { allitemsdata.get(i). setIsClicked(0);}
+                  else
+                  allitemsdata.get(i). setIsClicked(1);
+
+
+            }else{
+                Log.e("isChecked2==","is"+isChecked);
+                for(int i=0;i< allitemsdata.size();i++)
+                    allitemsdata.get(i). setIsClicked(0);
+
+            }
+                fillAdapterData( ReturnByVoucherNo.this,allitemsdata,2);
+
+            }
+        });
+
+
+/*
+        returnall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(((CompoundButton) view).isChecked()){
+                    Log.e("isChecked==","is");
+                    for(int i=0;i< allitemsdata.size();i++)
+                        allitemsdata.get(i). setIsClicked(1);
+                    fillAdapterData( allitemsdata);}
+                else {
+                    System.out.println("Un-Checked");
+                }
+            }
+        });*/
+
         textView_save=findViewById(R.id.textView_save);
         textView_cancel =findViewById(R.id.textView_can);
         paymentTermRadioGroup=findViewById(R.id.paymentTermRadioGroup);
@@ -370,7 +586,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             serialModel1.setDateVoucher(voucherReturn.getVoucherDate());
             serialModel1.setPriceItem(listItemsReturn.get(i).getPrice());
             if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0)
-            serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getQty()));
+            serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getAvi_Qty()));
             else
                 serialModel1.setQty("0");
 
@@ -530,20 +746,30 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     }*/
   private void getVoucherLocal() {
       //    loadSerial.setText("fillSerial");
+
       voucherReturn = dataBase.getAllVouchers_VoucherNo(Integer.parseInt(voucherNo_ReturnNo), 504);
 
       loadSerial.setText("fillpayMethod");
       listItemsReturn = dataBase.getAllItems_byVoucherNo(voucherNo_ReturnNo);
       if (voucherReturn.getCustName() != null) {
+
+          if(voucherReturn.getCustNumber().equals(MainActivity.CusId))
+          {
           returnListSerial = dataBase.getAllSerialItemsByVoucherNo(voucherNo_ReturnNo);
           sumAllListData();
+          }else {
+              new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                      .setTitleText(this.getString(R.string.noVoucherByThisCus))
+                      .show();
+          }
 
       } else {
-          exportData(2);
-
-
+          showNotFound();
+//exportData(2);
 
       }
+
+
 
 //       fillAdapterData( allitemsdata);
   }
@@ -617,9 +843,10 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           clearData();
           saveSuccses();
           // exportData();
-       //   showprintDialog();
-            exportData(1);
+          showprintDialog();
+//            exportData(1);
             textView_save.setEnabled(false);
+            returnall.setChecked(false);
     }
     else{
           Toast.makeText(ReturnByVoucherNo.this, "Fill Your List Please", Toast.LENGTH_LONG).show();
@@ -666,7 +893,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         listItemDeleted.clear();
         voucherNo_text.setText("");
         getVoucherNo();
-        fillAdapterData(returnListSerial);
+        fillAdapterData(ReturnByVoucherNo.this,returnListSerial,2);
         payMethod_textView.setText("");
         paymentTermRadioGroup.setVisibility(View.GONE);
         payMethod_textView.setVisibility(View.VISIBLE);
@@ -692,7 +919,9 @@ public class ReturnByVoucherNo extends AppCompatActivity {
       voucherReturn.setCustName(CustomerListShow.Customer_Name);
       voucherReturn.setSubTotal(total);
       voucherReturn.setNetSales(total);
+        voucherReturn.setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
       voucherReturn.setTax(0);
+
       // calck netSales
       dataBase.addVoucher(voucherReturn);
      // Log.e("getPayMethod()",""+voucherReturn.getPayMethod());
@@ -712,9 +941,25 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
             listItemsMain.get(i).setIsPosted(0);
+            listItemsMain.get(i).setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
+
             Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
+            if( dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==0)
+            dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
+          else
+            {
+                if(dataBase.HASSERAIAL(listItemsMain.get(i).getItemNo())==1&&
+                        listItemsMain.get(i).getSerialCode().equals(""))
+                dataBase.UpdateAvi_QtyInOrigenalVoch(voucherNo_text.getText().toString(),listItemsMain.get(i).getQty(),listItemsMain.get(i).getItemNo());
+
+            }
+
+            Log.e("deat===",""+listItemsMain.get(i).getQty()+"{...}"+listItemsMain.get(i).getItemNo());
+            Log.e("voucherNo_===",""+voucherNo_text.getText().toString());
+
             dataBase.addItem(listItemsMain.get(i));
-        }
+
+              }
     }
 
     private void calculateTotalc() {
@@ -753,7 +998,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     }
 
     private void saveSerial() {
-      //  Log.e("saveVoucherMaster",""+"saveVoucherMaster"+returnListSerial.size());
+   Log.e("saveSeria,returnListSeria",""+"saveVoucherMaster"+returnListSerial.size());
         for(int i=0;i<returnListSerial.size();i++)
         {
            // Log.e("returnListSerial","getVoucherNo"+returnListSerial.get(i).getVoucherNo());
@@ -818,7 +1063,7 @@ try {
     }*/
 
    private void deleteItemNotSelected() {
-      //  Log.e("deleteItemsDetail","1returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
+     Log.e("deleteItemsDetail","1returnListSerial="+returnListSerial.size()+"\t  del="+listItemDeleted.size());
       if(allitemsdata.size()!=0)
       {
 
@@ -927,7 +1172,7 @@ try {
         }
         fillZeroQty();
        // adapter.notifyDataSetChanged();
-        fillAdapterData(returnListSerial);
+        fillAdapterData(ReturnByVoucherNo.this,returnListSerial,2);
         canChangePayMethod();
     }
     private void fillitemNoPrc_allItemType( ) {
@@ -939,12 +1184,18 @@ try {
             {
                 if(allitemsdata.get(i).getItemNo().toString().trim().equals(listItemsReturn.get(j).getItemNo().toString().trim()))
                 {
-                    float salePrice=1,oneDisc=0;
+                    float salePrice=1,oneDisc=0,oneTax=0;
                     try {
+                        if(listItemsReturn.get(j).getDisc()!=0)
                         oneDisc=listItemsReturn.get(j).getDisc()/listItemsReturn.get(j).getQty();
-                        if(oneDisc!=0)
-                            salePrice=listItemsReturn.get(j).getPrice()-oneDisc;
-                        else salePrice=listItemsReturn.get(j).getPrice();
+                        if(listItemsReturn.get(j).getTaxValue()!=0&&typeTax==0 )
+                        {
+                            oneTax= (float) (listItemsReturn.get(j).getTaxValue()/listItemsReturn.get(j).getQty());
+                        }
+
+//                        if(oneDisc!=0)
+                            salePrice=listItemsReturn.get(j).getPrice()-oneDisc+oneTax;
+//                       salePrice=listItemsReturn.get(j).getPrice();
 
                     }catch (Exception e){
                         // Log.e("salePrice","Exception"+e.getMessage());
@@ -975,7 +1226,7 @@ try {
         }
         fillZeroQty();
         // adapter.notifyDataSetChanged();
-        fillAdapterData(allitemsdata);
+        fillAdapterData(ReturnByVoucherNo.this,allitemsdata,2);
         canChangePayMethod();
     }
     private void canChangePayMethod() {
@@ -1000,10 +1251,10 @@ try {
     }
 
 
-    public void fillAdapterData( List<serialModel> serialModels) {
-       // Log.e("SerialReport2","SerialReport2");
-        recyclerView.setLayoutManager(new LinearLayoutManager(ReturnByVoucherNo.this));
-        adapter = new ReturnItemAdapter (serialModels,ReturnByVoucherNo.this,0 );
+    public static void fillAdapterData(Context context, List<serialModel> serialModels,int flage) {
+          Log.e("SerialReport2","SerialReport2");
+          recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new ReturnItemAdapter (serialModels,context,0 ,flage);
         recyclerView.setAdapter(adapter);
 
 
@@ -1249,6 +1500,7 @@ break;
                                printLayout();
                                 returnListSerial.clear();
 
+                                sweetAlertDialog.dismiss();
 
 
                             }
@@ -1257,7 +1509,8 @@ break;
                         .setCancelButton(getResources().getString(R.string.no), new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-
+                                returnListSerial.clear();
+                                fillAdapterData(ReturnByVoucherNo.this,returnListSerial,1);
                                 sweetAlertDialog.dismiss();
 
                             }

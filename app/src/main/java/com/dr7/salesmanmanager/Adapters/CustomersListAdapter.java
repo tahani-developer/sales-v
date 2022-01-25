@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,11 +20,19 @@ import android.widget.Toast;
 
 import com.dr7.salesmanmanager.CustomerCheckInFragment;
 import com.dr7.salesmanmanager.CustomerListShow;
+import com.dr7.salesmanmanager.Login;
+import com.dr7.salesmanmanager.MainActivity;
+import com.dr7.salesmanmanager.MapsActivity;
 import com.dr7.salesmanmanager.Modles.Customer;
+import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by mohd darras on 15/04/2018.
@@ -63,7 +74,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
 
     private class ViewHolder {
         LinearLayout linearLayout;
-        TextView custAccountTextView;
+        TextView custAccountTextView,showloction;
         TextView custNameTextView;
     }
 
@@ -74,18 +85,85 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         view = View.inflate(context, R.layout.customers_item, null);
 
         holder.linearLayout = (LinearLayout) view.findViewById(R.id.LinearLayout01);
+
         holder.custAccountTextView = (TextView) view.findViewById(R.id.custAccTextView);
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
+        holder. showloction= (TextView) view.findViewById(R.id.showloction);
+
+        holder. showloction.setVisibility(View.INVISIBLE);
+       // holder. showloction.setEnabled(false);
+       /* if(IsHaveOrder(custList.get(i).getCustId()))
+        {
+
+        }*/
 
 
+
+
+        holder. showloction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                 if(!custList.get(i).getCustLat().equals("")) {
+
+                     if(Double.parseDouble(custList.get(i).getCustLat())!=0) {
+                         String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?q=loc:%f,%f",
+                                 Double.parseDouble(custList.get(i).getCustLat()),
+                                 Double.parseDouble(custList.get(i).getCustLong()));
+                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                         context.startActivity(intent);
+                     }
+                     else {
+                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                 .setTitleText(context.getResources().getString(R.string.Noloction))
+                                 .setContentText("")
+                                 .show();
+                     }
+                 }else{
+                     new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                             .setTitleText(context.getResources().getString(R.string.Noloction))
+                             .setContentText("")
+                             .show();
+                 }
+
+
+
+
+
+             //   MapsActivity.showLocations1(Double.parseDouble(custList.get(i).getCustLat()),Double.parseDouble(custList.get(i).getCustLong()),custList.get(i).getCustName());
+            }
+        });
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
+        if(Login.SalsManPlanFlage==1) {
+
+            if( MainActivity.DB_salesManPlanList .size()==0){
+                holder.linearLayout.setEnabled(true);
+            }else{
+            if (IsCkeckOut(custList.get(i).getCustId()))
+                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
+
+            holder. showloction.setVisibility(View.VISIBLE);
+            if (Integer.parseInt(custList.get(i).getCustId()) == getAllowedCust()) {
+                holder.linearLayout.setEnabled(true);
+                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorblue_dark));
+            } else
+                holder.linearLayout.setEnabled(false);}
+        }else
+
+            {
+
+            // case no salesman plan
+        }
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(custList.get(i).getIsSuspended()!=1)
                 {
+                    MainActivity.CusId=  custList.get(i).getCustId();
                 CustomerListShow.Customer_Name = custList.get(i).getCustName();
                 CustomerListShow.Customer_Account = custList.get(i).getCustId() + "";
                 CustomerListShow.CashCredit = custList.get(i).getCashCredit();
@@ -204,4 +282,50 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         };
         return filter;
     }
+   int getAllowedCust(){
+
+
+int CusNum=-1;
+
+  for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
+           if(MainActivity.DB_salesManPlanList .get(i).getLogoutStatus()==0) {
+               CusNum = Integer.parseInt(MainActivity.DB_salesManPlanList .get(i).getCustNumber());
+          break;
+
+           }
+
+
+ return  CusNum;   }
+   boolean IsHaveOrder(String id){
+
+
+      boolean f=false;
+
+        for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
+            if(MainActivity.DB_salesManPlanList .get(i).getCustNumber().equals(id)) {
+               f=true;
+                break;
+
+            }
+
+
+        return  f;   }
+
+    boolean IsCkeckOut(String id){
+
+
+        boolean f=false;
+
+        for(int i=0;i< MainActivity.DB_salesManPlanList .size();i++)
+            if(MainActivity.DB_salesManPlanList .get(i).getCustNumber().equals(id)
+
+        &&MainActivity.DB_salesManPlanList .get(i).getLogoutStatus()==1) {
+                f=true;
+                break;
+
+            }
+
+
+        return  f;   }
+
 }

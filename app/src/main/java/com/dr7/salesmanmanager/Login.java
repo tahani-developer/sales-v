@@ -151,7 +151,7 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public static int typaImport;//0---- mySql   1-----IIs
+    public static int typaImport=0;//0---- mySql   1-----IIs
 
     public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
     public  static    int getMaxVoucherServer=0;
@@ -163,13 +163,15 @@ public class Login extends AppCompatActivity {
 
     public  static    int offerTalaat=0;
     public  static   int  offerQasion=1;
-    public  static    int getTotalBalanceInActivities=1;
-    public  static    int dateFromToActive=1;
+    public  static    int getTotalBalanceInActivities=0;
+    public  static    int dateFromToActive=0;
 
     public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
+    public  static  int updateOnlySelectedCustomer=0;
 
-//    public  static  String headerDll = "";
+    public  static    int   SalsManPlanFlage=0;
+//   public  static  String headerDll = "";
 
     public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -198,6 +200,13 @@ public class Login extends AppCompatActivity {
                     LocaleAppUtils.setConfigChange(Login.this);
 
                 }
+                try {
+                    mDHandler.updateSettingOnlyCustomer(updateOnlySelectedCustomer);
+                }catch (Exception e){
+
+                }
+
+
             } else {
                 languagelocalApp = "ar";
                 LocaleAppUtils.setLocale(new Locale("ar"));
@@ -241,7 +250,8 @@ public class Login extends AppCompatActivity {
             passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
-
+            SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
+            Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
 //            typaImport = 1;
@@ -484,8 +494,23 @@ public class Login extends AppCompatActivity {
                     else {
                         mDHandler.updateIpSetting(ipEditText.getText().toString(),portSetting.getText().toString(),cono.getText().toString());
                     }
-                    mDHandler.deletAllSalesLogIn();
+                  //  mDHandler.deletAllSalesLogIn();
+
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
+                   Log.e("mDHandler1=",mDHandler.getAllUserNo());
+                   if( mDHandler.getAllUserNo()!=null) {
+                        if ( mDHandler.getAllUserNo().equals(""))
+                            mDHandler.addUserNO(storeNo_edit.getText().toString());
+                        else{
+                            Log.e("mDHandler6=",mDHandler.getAllUserNo());
+                            mDHandler.updateUserNO(storeNo_edit.getText().toString());
+                        }
+                    }  else{
+                       Log.e("mDHandler7=",mDHandler.getAllUserNo());
+                        mDHandler.updateUserNO(Login.salesMan);
+                    }
+
+
                    boolean isPosted=mDHandler.isAllVoucher_posted();
                    if(isPosted)
                    {
@@ -524,14 +549,14 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
-        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn;
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan;
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         swOrder = moreDialog.findViewById(R.id.swOrder);
         swPassword = moreDialog.findViewById(R.id.swPassword);
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
-
+        plan = moreDialog.findViewById(R.id.SalsManPlan);
         flag_settingsList = mDHandler.getFlagSettings();
 
         if (flag_settingsList.size() != 0) {
@@ -552,11 +577,11 @@ public class Login extends AppCompatActivity {
             swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
             swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
             swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
-
+            plan.setChecked((flag_settingsList.get(0).getActiveSlasmanPlan() == 1));
         }
 
         okBtn.setOnClickListener(v1 -> {
-
+Log.e("okBtn","okBtn");
             //update flag_settings
             //update variables
             String dataType1;
@@ -574,13 +599,15 @@ public class Login extends AppCompatActivity {
             passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
             getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
             voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
+            SalsManPlanFlage = plan.isChecked() ? 1 : 0;
+
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat));
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat);
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage);
             }
 
 
@@ -677,7 +704,7 @@ public class Login extends AppCompatActivity {
         loginText = (TextView) findViewById(R.id.logInTextView);
         currentTimeAndDate = Calendar.getInstance().getTime();
         Log.e("currentTimeAndDate", "" + currentTimeAndDate);
-        df = new SimpleDateFormat("dd-MM-yyyy");
+        df = new SimpleDateFormat("dd/MM/yyyy");
         curentDate = df.format(currentTimeAndDate);
         curentDate = convertToEnglish(curentDate);
         Log.e("curentDate", "" + curentDate);
@@ -1097,8 +1124,24 @@ public class Login extends AppCompatActivity {
        }
         Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
-        mDHandler.deletAllSalesLogIn();
-        mDHandler.addUserNO(Login.salesMan);
+   //     mDHandler.deletAllSalesLogIn();
+        Log.e("mDHandler2=",mDHandler.getAllUserNo());
+
+
+     //   mDHandler.addUserNO(Login.salesMan);
+        if( mDHandler.getAllUserNo()!=null) {
+            if ( mDHandler.getAllUserNo().equals(""))
+                mDHandler.addUserNO(Login.salesMan);
+            else{
+                Log.e("mDHandler3=",mDHandler.getAllUserNo());
+                mDHandler.updateUserNO(Login.salesMan);
+            }
+        }  else{
+            Log.e("mDHandler4=",mDHandler.getAllUserNo());
+            mDHandler.updateUserNO(Login.salesMan);
+        }
+
+
 //        try {
 //            if(!Login.salesMan.equals("1"))
 //            {

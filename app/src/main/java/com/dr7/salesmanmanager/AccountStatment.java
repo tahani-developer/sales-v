@@ -240,6 +240,7 @@ List<String> spinnerArray = new ArrayList<>();
         from_date = (TextView) findViewById(R.id.from_date);
         to_date = (TextView) findViewById(R.id.to_date);
         getAcc=(TextView) findViewById(R.id.getAcc);
+        // to get data
         getfilterKind=(TextView) findViewById(R.id.getfilterKind);
         getfilterKind.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -254,6 +255,7 @@ List<String> spinnerArray = new ArrayList<>();
             datLinear.setVisibility(View.GONE);
         }else {
             datLinear.setVisibility(View.VISIBLE);
+
         }
         getAcc.setOnClickListener(new View.OnClickListener() {
             @Override

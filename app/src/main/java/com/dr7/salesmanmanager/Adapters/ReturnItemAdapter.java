@@ -1,10 +1,12 @@
 package com.dr7.salesmanmanager.Adapters;
 
 import static com.dr7.salesmanmanager.Reports.SerialReport.allseriallist;
-
+import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,8 +17,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,11 +46,12 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
     int shelfReport=0;
     DatabaseHandler databaseHandler;
     private int updateFlage=1;
-
-    public ReturnItemAdapter(List<serialModel> list, Context context,int typeReport) {
+    private int  Flage;
+    public ReturnItemAdapter(List<serialModel> list, Context context,int typeReport,int Flag) {
         this.list = list;
         this.context = context;
         shelfReport=typeReport;
+        this.Flage=Flag;
         databaseHandler=new DatabaseHandler(context);
         updateFlage=1;
     }
@@ -62,26 +67,54 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
     public void onBindViewHolder(@NonNull ReturnItemAdapter.SerialReportViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.voucherDate.setText(list.get(position).getDateVoucher());
 
-        holder.    text_count.setText(list.get(position).getQty());
+       int c= getserialsClickedcount(list.get(position).getItemNo());
+
+        holder.    text_count.setText("" +c);
+
+
         Log.e("getItemNo","no="+list.get(position).getItemNo());
         holder.serialcode.setText(String.valueOf(list.get(position).getSerialCode()));
-//        if(list.get(position).getItemName().equals("null"))
-//        {
-//            holder.itemName.setText(databaseHandler.getItemName(list.get(position).getItemNo()));
-//        }else {
-            holder.itemName.setText(String.valueOf(list.get(position).getItemName()));
-//        }
+        holder.itemName.setText(String.valueOf(list.get(position).getItemName()));
+
         if(list.get(position).getSerialCode().equals("")) {
             if (HaveSerial(list.get(position).getItemNo(), position) == 1) {
+                Log.e("caseHaveSerial","==1");
+                Log.e("getItemNo",list.get(position).getItemNo()+"");
+                Log.e("getserial",list.get(position).getSerialCode()+"");
+                Log.e("caseHaveSerial","==1");
+                holder.text_count.setEnabled(false);
+
+
+                if(c==0)
+                {
+                    Log.e("case4","==4");
+                    holder.text_count.setVisibility(View.INVISIBLE);
+
+                }
+                else{
+                    Log.e("caseHaveSerial","==1");
+                    Log.e("getItemNo",list.get(position).getItemNo()+"");
+                    Log.e("getserial",list.get(position).getSerialCode()+"");
+                    Log.e("caseHaveSerial","==1");
+                    Log.e("case5","==5");
+                    holder.text_count.setVisibility(View.VISIBLE);
+
+                }
                 holder.linearSelected.setVisibility(View.INVISIBLE);
 
                 holder.price.setVisibility(View.INVISIBLE);
                 holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.done_button2));
 
+            }else
+                {
+
+                    holder.    text_count.setText(list.get(position).getQty());
             }
 
         } else{
+            Log.e("caseHaveSerial","==2");
             holder.text_count.setEnabled(false);
+            holder.text_count.setVisibility(View.INVISIBLE);
             //   holder.text_count.
 
         }
@@ -91,18 +124,11 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
 
 
-      /*  holder.linearSelected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(list.get(holder.getAdapterPosition()).getSerialCode().equals("")) {
-                    {
-                        for (int i = 0; i < list.size(); i++)
-                            if (list.get(holder.getAdapterPosition()).getItemNo().equals(list.get(i).getItemNo()))
-                                list.get(holder.getAdapterPosition()).isClicked = 1;
-                    }
-                }
-            }
-        });*/
+
+      if  (  list.get(position).getIsClicked()==1)
+          holder.linearSelected.setChecked(true);
+else  if (  list.get(position).getIsClicked()==0)
+        holder.linearSelected.setChecked(false);
         holder.linearSelected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -116,6 +142,7 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
                 }else {
                     list.get(holder.getAdapterPosition()).isClicked=0;
+                    updateqty2(holder, list.get(holder.getAdapterPosition()).getItemNo());
                 }
                     }
         });
@@ -141,7 +168,11 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
                     if(!s.toString().equals("")) {
                        if( HaveSerial(list.get(position).getItemNo(), position) == 0)
-                       {  if (Float.parseFloat( ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty())
+                       {
+
+                          if(!s.toString().equals("0")) {
+
+                              if (Float.parseFloat( ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty())
                                  >= Float.parseFloat(s.toString().trim())) {
 
                              ReturnByVoucherNo.allitemsdata.get(position).setQty(s.toString().trim());
@@ -158,7 +189,21 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
                                      }).show();
                              holder.text_count.setText(ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty());
 
-                         }
+                         }}else {
+
+                                  new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+
+                                          .setContentText(context.getString(R.string.invalidValue))
+                                          .setConfirmButton(context.getString(R.string.app_yes), new SweetAlertDialog.OnSweetClickListener() {
+                                              @Override
+                                              public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                  sweetAlertDialog.dismiss();
+                                              }
+                                          }).show();
+                                  holder.text_count.setText(ReturnByVoucherNo.Recoverallitemsdata.get(position).getQty());
+
+
+                          }
                      }}}
             }
         });
@@ -166,13 +211,37 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
 
     private void updateqty(ReturnItemAdapter.SerialReportViewHolder holder,String itemNo) {
         for(int i=0;i<list.size();i++)
+
             if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
             {
                 if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
                     list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) + 1.0));
 
 
-                    notifyItemChanged(i);
+                if (!ReturnByVoucherNo.recyclerView.isComputingLayout())
+                    {
+                        //updateqty(holder,list.get(0).getItemNo());
+                        ReturnByVoucherNo.  checked.setText("checked");
+
+                    }
+
+                }
+
+            }
+
+    }
+    private void updateqty2(ReturnItemAdapter.SerialReportViewHolder holder,String itemNo) {
+        for(int i=0;i<list.size();i++)
+
+            if(list.get(i).getItemNo().equals(itemNo)&&list.get(i).getSerialCode().equals(""))
+            {
+                if(HaveSerial(list.get(i).getItemNo(),i) == 1) {
+                    list.get(i).setQty(String.valueOf(Float.parseFloat(list.get(i).getQty()) - 1.0));
+
+                    if (!ReturnByVoucherNo.recyclerView.isComputingLayout()){
+                        ReturnByVoucherNo.  checked.setText("checked");
+
+                    }
                 }
                 //yourMethodName(holder,i);
             }
@@ -221,5 +290,16 @@ public class ReturnItemAdapter extends   RecyclerView.Adapter<ReturnItemAdapter.
         updateFlage=2;
         holder.text_count.setText(list.get(position).getQty());
 
+    }
+ int   getserialsClickedcount(String s){
+        int count=0;
+     for(int i=0;i<list.size();i++)
+     {
+         if(list.get(i).getItemNo().equals(s) &&!list.get(i).getSerialCode().equals("")
+         &&list.get(i).getIsClicked()==1)
+             count++;
+
+     }
+     return count;
     }
 }

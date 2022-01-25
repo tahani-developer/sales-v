@@ -1306,6 +1306,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                        AddItemsFragment2 obj = new AddItemsFragment2();
                                                                                                        List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                        Offers appliedOffer = null;
+                                                                                                       Log.e("appliedOffer","1111==="+offer.size());
 //
                                                                                                        if (offer.size() != 0) {
 
@@ -2214,7 +2215,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     offer = offers.get(i);
                     Offers.add(offer);
-//                   Log.e("Offers", "" + Offers.size() + "\t" + offers.get(i).getBonusQty());
+                   Log.e("Offers", "" + Offers.size() + "\t" + offers.get(i).getBonusQty());
                 }
             }
 

@@ -7,10 +7,34 @@
     android:background="@color/layer7"
     android:id="@+id/linearMain"
     tools:context=".ReturnByVoucherNo">
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:fillViewport="true"-->
+<!--        android:layout_height="match_parent">-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_height="0dp">-->
+
+
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:fillViewport="true"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:layout_width="match_parent">
+
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_weight="1.5"
@@ -145,6 +169,7 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -241,6 +266,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_weight="5"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:text="@string/pay_method"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp" />
+         <CheckBox
+             android:layout_width="match_parent"
+             android:layout_height="30dp"
+             android:id="@+id/returnall"
+             android:textColor="@color/colorBlack"
+          android:buttonTint="@color/colorBlack"
+             android:text="@string/ReturnAll">
+
+         </CheckBox>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:visibility="gone"
             android:orientation="horizontal">
             <TextView
@@ -296,7 +348,64 @@
                     android:layout_height="7dp"
                     />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+               android:background="@drawable/border"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_weight="5"
+                    android:layout_width="match_parent"
+                    android:text="@string/serialcode"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                 android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp" />
+                <TextView
 
+                    android:visibility="invisible"
+
+                    android:layout_margin="5dp"
+                    android:layout_width="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_edit_blacksource_24"
+
+
+                    android:layout_height="30dp"
+
+
+
+                    android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/serialcode"
+                    android:layout_weight="5"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_width="match_parent"
+                    android:inputType="text"
+                    android:background="@drawable/back_border_edit"
+                    android:elevation="5dp"
+                    android:layout_height="40dp"
+android:hint="@string/serialcode"
+                    android:gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/scan"
+                    android:layout_margin="5dp"
+                    android:layout_width="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_scan_black_24dp"
+                    android:layout_height="30dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
             <HorizontalScrollView
                 android:id="@+id/HorizontalScrollView01"
                 android:layout_height="match_parent"
@@ -466,17 +575,21 @@
 
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
+
             </HorizontalScrollView>
 
             <!--    </LinearLayout>-->
 
         </LinearLayout>
+
+    </LinearLayout>
+<!--        </ScrollView>-->
         <!--        </HorizontalScrollView>-->
 
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_weight="6"
+            android:layout_weight="9"
             android:visibility="visible"
             android:layout_gravity="center"
             android:gravity="center"
@@ -492,12 +605,17 @@
 
                 >
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:id="@+id/checked"></TextView>
+                <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/save"
+
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -542,7 +660,7 @@
                     android:layout_height="55dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/save"
+
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -601,7 +719,7 @@
                     android:layout_height="55dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/save"
+
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -611,6 +729,7 @@
 
         </LinearLayout>
     </LinearLayout>
+      </ScrollView>
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb"
 
@@ -622,4 +741,6 @@
             app:bmb_draggable="true"
             />
     </RelativeLayout>
+<!--        </LinearLayout>-->
+<!--    </ScrollView>-->
 </LinearLayout>
