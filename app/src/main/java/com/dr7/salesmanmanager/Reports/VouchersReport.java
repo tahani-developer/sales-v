@@ -60,6 +60,9 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class VouchersReport extends AppCompatActivity {
 
+    //B
+    List<Voucher> filteredVouchers;
+
     List<Voucher> vouchers;
     public static    Voucher   VocherToPrint;
     List<Item> items;
@@ -113,10 +116,12 @@ public class VouchersReport extends AppCompatActivity {
         generalMethod=new GeneralMethod(VouchersReport.this);
 
         vouchers = new ArrayList<Voucher>();
+        filteredVouchers = new ArrayList<>();
         items = new ArrayList<Item>();
 
         obj   = new DatabaseHandler(VouchersReport.this);
         vouchers = obj.getAllVouchers();
+//        filteredVouchers = vouchers;
         items = obj.getAllItems();
 
         TableTransactionsReport = (TableLayout) findViewById(R.id.TableTransactionsReport);
@@ -186,7 +191,6 @@ public class VouchersReport extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 clear();
                 if(!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
                     subTotal = 0 ; tax = 0 ; netSales = 0;
@@ -194,6 +198,8 @@ public class VouchersReport extends AppCompatActivity {
                     for (int n = 0; n < vouchers.size(); n++) {
 
                         if (filters(n)) {
+
+                            filteredVouchers.add(vouchers.get(n));
 
                             final TableRow row = new TableRow(VouchersReport.this);
                             row.setPadding(5, 5, 5, 5);
@@ -332,13 +338,13 @@ public class VouchersReport extends AppCompatActivity {
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(VouchersReport.this,"VouchersReport.xls",3,vouchers);
+        exportToExcel.createExcelFile(VouchersReport.this,"VouchersReport.xls",3,filteredVouchers);
 
     }
     public  void exportToPdf(){
-        Log.e("exportToPdf",""+vouchers.size());
+        Log.e("exportToPdf",""+filteredVouchers.size());
         PdfConverter pdf =new PdfConverter(VouchersReport.this);
-        pdf.exportListToPdf(vouchers,"VouchersReport",from_date.getText().toString(),3);
+        pdf.exportListToPdf(filteredVouchers,"VouchersReport",from_date.getText().toString(),3);
     }
 
     public void voucherInfoDialog(int voucherNumber , int voucherType) {
@@ -511,6 +517,9 @@ else
             textTax.setText("0.000");
             textNetSales.setText("0.000");
         }
+
+        if (filteredVouchers.size() != 0)
+            filteredVouchers.clear();
     }
 
     public DatePickerDialog.OnDateSetListener openDatePickerDialog (final int flag){

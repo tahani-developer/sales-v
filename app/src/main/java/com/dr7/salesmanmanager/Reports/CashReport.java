@@ -95,6 +95,9 @@ public class CashReport  extends AppCompatActivity {
     List<String> listCashRepost;
     TextView cash_sal, credit_sale, total_sale;
     TextView cash_paymenttext, creditPaymenttext, nettext,total_cashtext,creditCard;
+
+    List<Voucher> filteredVouchers;
+
     List<Voucher> voucher;
      public static double cash = 0, credit = 0, total = 0, T_cash=0,T_credit=0;
     public static double cashPayment=0,creditPayment=0,net=0,total_cash=0,creditCardPayment=0;
@@ -154,6 +157,9 @@ public class CashReport  extends AppCompatActivity {
         decimalFormat = new DecimalFormat("##.000");
         payments = new ArrayList<Payment>();
         vouchersales=new ArrayList<Item>();
+
+        filteredVouchers = new ArrayList<>();
+
         inflateBoomMenu();
 
         try {
@@ -192,6 +198,9 @@ public class CashReport  extends AppCompatActivity {
                     returnCridet=0;returnCash=0;
                     for (int n = 0; n < voucher.size(); n++) {
                         if (filters(n)) {
+
+                            filteredVouchers.add(voucher.get(n));
+
                             switch (voucher.get(n).getPayMethod()) {
                                 case 0:
                                     paymethod = 0;
@@ -415,13 +424,13 @@ public class CashReport  extends AppCompatActivity {
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(CashReport.this,"CashReport.xls",8,voucher);
+        exportToExcel.createExcelFile(CashReport.this,"CashReport.xls",8,filteredVouchers);
 
     }
     public  void exportToPdf(){
 
         PdfConverter pdf =new PdfConverter(CashReport.this);
-        pdf.exportListToPdf(voucher,"CashReport",date.getText().toString(),8);
+        pdf.exportListToPdf(filteredVouchers,"CashReport",date.getText().toString(),8);
     }
 
     void findBT() {
@@ -778,6 +787,10 @@ public class CashReport  extends AppCompatActivity {
     private void clear() {
         T_cash=0;
         T_credit=0;
+
+        if(filteredVouchers.size() != 0 )
+            filteredVouchers.clear();
+
     }
     void sendData2() throws IOException {
         try {

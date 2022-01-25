@@ -43,23 +43,24 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class SerialReport extends AppCompatActivity {
     RecyclerView recyclerView;
-   public static List<serialModel> allseriallist =new ArrayList<>();
-    private List<serialModel> searchlist=new ArrayList<>();
+    public static List<serialModel> allseriallist = new ArrayList<>();
+    private List<serialModel> searchlist = new ArrayList<>();
     DatabaseHandler databaseHandler;
     public static SerialReportAdpter adapter;
     TextView searchicon;
     EditText searchedit;
     public TextView date;
     LinearLayout tableRow;
-Button button;
+    Button button;
     private Button preview;
     Calendar myCalendar;
     HorizontalScrollView HorizontalScrollView01;
     GeneralMethod generalMethod;
-Spinner ItemKindspinner;
+    Spinner ItemKindspinner;
     List<String> spinnerArray = new ArrayList<>();
     List<ItemsMaster> itemsMasters = new ArrayList<>();
     List<ItemsMaster> mastersItemkinds;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +68,16 @@ Spinner ItemKindspinner;
         setContentView(R.layout.activity_serial_report);
         init();
         itemsMasters.clear();
-        itemsMasters=databaseHandler.getItemMaster2();
-      //  Log.e("itemsMasters"," "+ itemsMasters.size());
+        itemsMasters = databaseHandler.getItemMaster2();
+        //  Log.e("itemsMasters"," "+ itemsMasters.size());
         fillSp();
 
-        Log.e("SerialReport","SerialReport");
-        allseriallist =databaseHandler.getalllserialitems();
+        Log.e("SerialReport", "SerialReport");
+        allseriallist = databaseHandler.getalllserialitems();
 
 
-
-        String Date_Vocher=generalMethod.getCurentTimeDate(1);
+        String Date_Vocher = generalMethod.getCurentTimeDate(1);
         filterDate(Date_Vocher);
-
-
-
-
-
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -112,32 +107,30 @@ Spinner ItemKindspinner;
             @Override
             public void onClick(View view) {
                 searchlist.clear();
-           getitemkind();
+                getitemkind();
                 for (int i = 0; i < allseriallist.size(); i++) {
                     if (date.getText().toString().equals(allseriallist.get(i).getDateVoucher()))
 
-                            if(!ItemKindspinner.getSelectedItem().toString().equals(""))
-                            {
-                                for (int j = 0; j < mastersItemkinds.size(); j++)
-                                if(mastersItemkinds.get(j).getItemNo().equals(allseriallist.get(i).getItemNo()))
-                                {
-                        searchlist.add(allseriallist.get(i));
-                        break;
+                        if (!ItemKindspinner.getSelectedItem().toString().equals("")) {
+                            for (int j = 0; j < mastersItemkinds.size(); j++)
+                                if (mastersItemkinds.get(j).getItemNo().equals(allseriallist.get(i).getItemNo())) {
+                                    searchlist.add(allseriallist.get(i));
+                                    break;
                                 }
-                            }else {
-                                searchlist.add(allseriallist.get(i));
-                            }
+                        } else {
+                            searchlist.add(allseriallist.get(i));
+                        }
 
                 }
-               if( allseriallist.size()!=0 ) {
-                   Log.e("itemki===","gg");
-                   tableRow.setVisibility(View.VISIBLE);
-                   fillAdapterData(searchlist);
-               }
-                else
-                  {tableRow.setVisibility(View.GONE);}
-                Log.e("itemki===","cc");
+                if (allseriallist.size() != 0) {
+                    Log.e("itemki===", "gg");
+                    tableRow.setVisibility(View.VISIBLE);
+                    fillAdapterData(searchlist);
+                } else {
+                    tableRow.setVisibility(View.GONE);
                 }
+                Log.e("itemki===", "cc");
+            }
         });
         searchicon.setVisibility(View.INVISIBLE);
         searchicon.setOnClickListener(new View.OnClickListener() {
@@ -155,36 +148,37 @@ Spinner ItemKindspinner;
 
     private void fillSp() {
 
-       spinnerArray=databaseHandler.getAllKindItems();
-        spinnerArray.add(0,"");
+        spinnerArray = databaseHandler.getAllKindItems();
+        spinnerArray.add(0, "");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);
         ItemKindspinner.setAdapter(adapter);
     }
-   void getitemkind() {
 
-     mastersItemkinds = new ArrayList<ItemsMaster>();
+    void getitemkind() {
+
+        mastersItemkinds = new ArrayList<ItemsMaster>();
 
         mastersItemkinds = databaseHandler.getItemkinds(ItemKindspinner.getSelectedItem().toString());
-        Log.e("itemsMasters2===", mastersItemkinds.size()+"");
-     //   Log.e("itemsMasters2===",mastersItemkinds.get(0).getItemNo());
-      //  return mastersItemkinds.get(0).getItemNo();
-
+        Log.e("itemsMasters2===", mastersItemkinds.size() + "");
+        //   Log.e("itemsMasters2===",mastersItemkinds.get(0).getItemNo());
+        //  return mastersItemkinds.get(0).getItemNo();
 
 
     }
+
     private void filterDate(String date_vocher) {
         searchlist.clear();
         // String Date_Vocher="14/02/2021";
         for (int i = 0; i < allseriallist.size(); i++) {
-            if(allseriallist.get(i).getDateVoucher().trim().equals(date_vocher.trim()))
+            if (allseriallist.get(i).getDateVoucher().trim().equals(date_vocher.trim()))
                 searchlist.add(allseriallist.get(i));
         }
 
 
-        if(searchlist.size()==0)tableRow.setVisibility(View.GONE);
-        else
-        { fillAdapterData(searchlist);
+        if (searchlist.size() == 0) tableRow.setVisibility(View.GONE);
+        else {
+            fillAdapterData(searchlist);
 
             tableRow.setVisibility(View.VISIBLE);
         }
@@ -205,6 +199,7 @@ Spinner ItemKindspinner;
         };
         return date;
     }
+
     private void updateLabel(int flag) {
         String myFormat = "dd/MM/yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -213,72 +208,68 @@ Spinner ItemKindspinner;
             date.setText(sdf.format(myCalendar.getTime()));
 
     }
+
     private void search() {
         searchlist.clear();
-     getitemkind();
-        String searchED=convertToEnglish(searchedit.getText().toString().trim());
+        getitemkind();
+        String searchED = convertToEnglish(searchedit.getText().toString().trim());
 
         for (int i = 0; i < allseriallist.size(); i++) {
             if ((allseriallist.get(i).getVoucherNo().startsWith(searchED))
-            || (allseriallist.get(i).getItemNo().startsWith(searchED))
-            ||(allseriallist.get(i).getSerialCode().startsWith(searchED))
+                    || (allseriallist.get(i).getItemNo().startsWith(searchED))
+                    || (allseriallist.get(i).getSerialCode().startsWith(searchED))
 
             )
-                if(!ItemKindspinner.getSelectedItem().toString().equals("")) {
+                if (!ItemKindspinner.getSelectedItem().toString().equals("")) {
 
-                    Log.e("allseriallist===", allseriallist.get(i).getItemNo()+"");
-                    Log.e("allseriallist.get(i)===", allseriallist.get(i).getItemNo()+"");
+                    Log.e("allseriallist===", allseriallist.get(i).getItemNo() + "");
+                    Log.e("allseriallist.get(i)===", allseriallist.get(i).getItemNo() + "");
 
 
                     for (int j = 0; j < mastersItemkinds.size(); j++)
-                        if(mastersItemkinds.get(j).getItemNo().equals(allseriallist.get(i).getItemNo()))
-                        {
+                        if (mastersItemkinds.get(j).getItemNo().equals(allseriallist.get(i).getItemNo())) {
                             searchlist.add(allseriallist.get(i));
 
-                    }
-                }
-            else
+                        }
+                } else
                     searchlist.add(allseriallist.get(i));
 
 
-    }
-        if(searchlist.size()>0){fillAdapterData(searchlist);
-        tableRow.setVisibility(View.VISIBLE);}
-    else
-        { tableRow.setVisibility(View.GONE);}
+        }
+        if (searchlist.size() > 0) {
+            fillAdapterData(searchlist);
+            tableRow.setVisibility(View.VISIBLE);
+        } else {
+            tableRow.setVisibility(View.GONE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void init() {
-        ItemKindspinner=findViewById(R.id.ItemKindspinner);
-        databaseHandler=new DatabaseHandler(SerialReport.this);
-        HorizontalScrollView01=findViewById(R.id.HorizontalScrollView01);
-        LinearLayout linearMain=findViewById(R.id.linearMain);
-        generalMethod=new GeneralMethod(SerialReport.this);
-        try{
-            if(languagelocalApp.equals("ar"))
-            {
+        ItemKindspinner = findViewById(R.id.ItemKindspinner);
+        databaseHandler = new DatabaseHandler(SerialReport.this);
+        HorizontalScrollView01 = findViewById(R.id.HorizontalScrollView01);
+        LinearLayout linearMain = findViewById(R.id.linearMain);
+        generalMethod = new GeneralMethod(SerialReport.this);
+        try {
+            if (languagelocalApp.equals("ar")) {
                 linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            }
-            else{
-                if(languagelocalApp.equals("en"))
-                {
+            } else {
+                if (languagelocalApp.equals("en")) {
                     linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
 
             }
-        }
-        catch ( Exception e)
-        {
+        } catch (Exception e) {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
-        button=findViewById(R.id.export);
-        recyclerView=findViewById(R.id.SErecyclerView_report);
-        searchedit=findViewById(R.id.search_edt);
-        searchicon=findViewById(R.id.Search);
-        date=findViewById(R.id.SE_date);
-        preview=findViewById(R.id.SE_preview);
-tableRow=findViewById(R.id.serialtable);
+        button = findViewById(R.id.export);
+        recyclerView = findViewById(R.id.SErecyclerView_report);
+        searchedit = findViewById(R.id.search_edt);
+        searchicon = findViewById(R.id.Search);
+        date = findViewById(R.id.SE_date);
+        preview = findViewById(R.id.SE_preview);
+        tableRow = findViewById(R.id.serialtable);
 
 
         searchedit.addTextChangedListener(new TextWatcher() {
@@ -295,18 +286,16 @@ tableRow=findViewById(R.id.serialtable);
             @Override
             public void afterTextChanged(Editable editable) {
 
-                Log.e("searchedit",editable+"");
-            if( !searchedit.getText().toString().trim().equals(""))search();
-            else
-            {
-                if(!date.getText().toString().equals(""))
-                {
-                    filterDate(date.getText().toString());
+                Log.e("searchedit", editable + "");
+                if (!searchedit.getText().toString().trim().equals("")) search();
+                else {
+                    if (!date.getText().toString().equals("")) {
+                        filterDate(date.getText().toString());
 
-             if( adapter!=null)       adapter.notifyDataSetChanged();
+                        if (adapter != null) adapter.notifyDataSetChanged();
+                    }
+
                 }
-
-            }
              /*   if(editable.equals(""))
                 {
                     Log.e("searchedit",editable+"");
@@ -321,25 +310,27 @@ tableRow=findViewById(R.id.serialtable);
         });
 
 
-
     }
-    public void fillAdapterData( List<serialModel> serialModels) {
-        Log.e("SerialReport2","SerialReport2");
+
+    public void fillAdapterData(List<serialModel> serialModels) {
+        Log.e("SerialReport2", "SerialReport2");
         recyclerView.setLayoutManager(new LinearLayoutManager(SerialReport.this));
-        adapter = new SerialReportAdpter (serialModels,SerialReport.this,0 );
+        adapter = new SerialReportAdpter(serialModels, SerialReport.this, 0);
         recyclerView.setAdapter(adapter);
 
     }
+
     private void exportToEx() {
-        ExportToExcel exportToExcel=new ExportToExcel();
-        if(searchlist.size()!=0)
-        exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, searchlist);
+        ExportToExcel exportToExcel = new ExportToExcel();
+        if (searchlist.size() != 0)
+            exportToExcel.createExcelFile(SerialReport.this, "Reportallserial.xls", 11, searchlist);
         else {
-            exportToExcel.createExcelFile(SerialReport.this,"Reportallserial.xls",11, allseriallist);
+            exportToExcel.createExcelFile(SerialReport.this, "Reportallserial.xls", 11, allseriallist);
 
         }
 
     }
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;

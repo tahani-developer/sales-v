@@ -55,6 +55,8 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class ItemsReport extends AppCompatActivity {
 
+    List<Item> filteredItems;
+
     List<Item> items;
     RadioGroup voucherTypeRadioGroup;
     EditText from_date, to_date, item_number;
@@ -105,6 +107,7 @@ public class ItemsReport extends AppCompatActivity {
         decimalFormat = new DecimalFormat("##.000");
 
         items = new ArrayList<Item>();
+        filteredItems = new ArrayList<>();
         //B
         obj = new DatabaseHandler(ItemsReport.this);
         items = obj.getAllItems();
@@ -205,6 +208,9 @@ public class ItemsReport extends AppCompatActivity {
                     for (int n = 0; n < items.size(); n++) {
                         if (filters(n))
                         {
+
+                            filteredItems.add(items.get(n));
+
                             TableRow row = new TableRow(ItemsReport.this);
                             row.setPadding(5, 10, 5, 10);
 
@@ -313,13 +319,13 @@ public class ItemsReport extends AppCompatActivity {
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(ItemsReport.this,"ItemsReport.xls",4,items);
+        exportToExcel.createExcelFile(ItemsReport.this,"ItemsReport.xls",4,filteredItems);
 
     }
     public  void exportToPdf(){
-        Log.e("exportToPdf",""+items.size());
+        Log.e("exportToPdf",""+filteredItems.size());
         PdfConverter pdf =new PdfConverter(ItemsReport.this);
-        pdf.exportListToPdf(items,"VouchersReport",from_date.getText().toString(),4);
+        pdf.exportListToPdf(filteredItems,"VouchersReport",from_date.getText().toString(),4);
     }
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -346,6 +352,10 @@ public class ItemsReport extends AppCompatActivity {
             textTotalBonus.setText("0.000");
             texttotalSales.setText("0.000");
         }
+
+        if (filteredItems.size() != 0)
+            filteredItems.clear();
+
     }
 
     private void updateLabel(int flag) {
