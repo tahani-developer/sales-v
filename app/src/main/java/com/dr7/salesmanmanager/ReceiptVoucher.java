@@ -182,6 +182,9 @@ public class ReceiptVoucher extends Fragment {
     int id_Bank;
     int[] listImageIcone=new int[]{ R.drawable.ic_save_black_24dp,R.drawable.ic_print_white_24dp,R.drawable.ic_delete_forever_black_24dp };
 
+    //B
+    GeneralMethod generalMethod;
+
     String[] textListButtons=new String[]{};
     public interface ReceiptInterFace {
         public void displayCustInfoFragment();
@@ -206,6 +209,28 @@ public class ReceiptVoucher extends Fragment {
         try {
             closeBT();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ////B
+        generalMethod = new GeneralMethod(getActivity().getBaseContext());
+        try {
+            if (!generalMethod.checkDeviceDate()) {
+
+                new SweetAlertDialog(getContext(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText(getString(R.string.invalidDate))
+                        .setContentText(getString(R.string.invalidDate_msg))
+                        .setCustomImage(R.drawable.date_error)
+                        .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+
+            }
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 

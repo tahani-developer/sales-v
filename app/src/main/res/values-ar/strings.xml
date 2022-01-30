@@ -558,4 +558,10 @@
     <string name="altayaa_shape">فاتورة مؤسسة الطايع</string>
 
     <string name="showplan">عرض الخطة </string>
+    ////B
+    <string name="invalidDate">التاريخ غير صالح !</string>
+    <string name="invalidDate_msg">تاريخ جهازك غير صحيح! يرجى إعادة ضبط اعدادات التاريخ في جهازك.</string>
+    <string name="allCustomers">جميع العملاء</string>
+    <string name="allCategories">جميع الفئات</string>
+
 </resources>

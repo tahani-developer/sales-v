@@ -555,4 +555,11 @@
         <item>Al-Rajhi Bank</item>
 
     </string-array>
+
+    ////B
+    <string name="invalidDate">Invalid Date !</string>
+    <string name="invalidDate_msg">Your phone date is inaccurate!\n Adjust your date settings please.</string>
+    <string name="allCustomers">All Customers</string>
+    <string name="allCategories">All Categories</string>
+
 </resources>
