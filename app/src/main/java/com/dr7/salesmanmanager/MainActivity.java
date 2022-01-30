@@ -439,7 +439,11 @@ saveCurentLocation();
                 }
             }
         });
-        if(Login.SalsManPlanFlage==1)  getSalesmanPlan(MainActivity.this);
+        if(Login.SalsManPlanFlage==1)
+        {getSalesmanPlan(MainActivity.this);
+            Log.e("eee==",""+ DB_salesManPlanList.size());
+        }
+
         Log.e(" DB_salesManPlanList==",""+ DB_salesManPlanList.size());
 
 
@@ -1122,10 +1126,19 @@ saveCurentLocation();
                                     mDbHandler.updateCustomerMasterLocation(CustomerListShow.Customer_Account, latitude_main + "", longitude_main + "");
                                     CustomerListShow.latitude = latitude_main + "";
                                     CustomerListShow.longtude = longitude_main + "";
-                                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                            .setTitleText(getResources().getString(R.string.succsesful))
-                                            .setContentText(getResources().getString(R.string.LocationSaved))
-                                            .show();
+                                    Handler h2 = new Handler(Looper.getMainLooper());
+                                    h2.post(new Runnable() {
+                                        public void run() {
+
+                                            new SweetAlertDialog(MainActivity.this, SweetAlertDialog.SUCCESS_TYPE)
+                                                    .setTitleText(getResources().getString(R.string.succsesful))
+                                                    .setContentText(getResources().getString(R.string.LocationSaved))
+                                                    .show();
+                                        }
+
+
+                                    });
+
 
 
                                     Log.e("saveCurrentLocation", "" + latitude_main + "\t" + longitude_main);
@@ -1256,7 +1269,7 @@ saveCurentLocation();
            if(Login.SalsManPlanFlage==1) {
                int salesMan = 1;
                try {
-                   salesMan = Integer.parseInt(Login.salesMan);
+                   salesMan = Integer.parseInt(Login.salesMan.trim());
                } catch (NumberFormatException e) {
                    Log.e("NumberFormatException", "" + e.getMessage());
                    salesMan = 1;

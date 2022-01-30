@@ -554,7 +554,7 @@ public class PrintVoucher extends AppCompatActivity {
 
       vouchPrinted=voucher;
   List<Item> itemVOCHER = new ArrayList<>();
-        itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()));
+        itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()),voucher.getVoucherType());
 
       Log.e("itemVOCHER==",""+itemVOCHER.size());
         PdfConverter pdf =new PdfConverter(PrintVoucher.this);

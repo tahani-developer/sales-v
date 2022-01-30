@@ -64,6 +64,8 @@
 
     <string name="add_cust">Add Customer</string>
     <string name="cust_name">Customer Name</string>
+
+    <string name="order">Order</string>
     <string name="app_trans_kind">Voucher Kind</string>
     <string name="payemtnTerm">Payment Term</string>
     <string name="app_cash">Cash   </string>
@@ -217,6 +219,8 @@
     <string name="by_voucher_kind">Voucher Kind</string>
     <string name="by_payment_Term">Payment Method</string>
     <string name="customer_number">Customer Number</string>
+    <string name="plantype">Plan Type</string>
+
     <string name="preview">Preview</string>
     <string name="item_number">Item No</string>
     <string name="item_name">Item Name</string>
@@ -509,10 +513,17 @@
     <string name="ReturnAll">Return All Items In Vocher</string>
     <string name="Noloction">No Location For This Customer</string>
     <string name="showplan">Show Plan </string>
-
-
+    <string name="TYPEPOFPLAN1">Order By  </string>
+    <string name="TYPEPOFPLAN2">Order By Customers Location  </string>
     <string name="GetPlan"> Get Plan</string>
     <string name="altayaa_shape">Altayaa Shape</string>
+    <string name="importplan"> Import the plan first</string>
+    importplan
+    <string name="title_activity_maps2">MapsActivity2</string>
+    <string name="title_activity_sales_man_plan_locations">SalesManPlanLocations</string>
+    <string name="title_activity_maps3">MapsActivity3</string>
+    <string name="showlocation">Show Plan In Map</string>
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -527,7 +538,6 @@
         <item>@string/Delete</item>
         <item>@string/ClearAll</item>
     </string-array>
-
     <string-array name="banks_list">
         <item>Arab Bank</item>
         <item>Arab Banking Corporation (Jordan)</item>

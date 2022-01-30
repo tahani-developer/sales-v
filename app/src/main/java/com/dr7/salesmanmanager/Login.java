@@ -758,6 +758,7 @@ Log.e("okBtn","okBtn");
             dateFromToActive=0;
             getTotalBalanceInActivities=0;
             offerQasion=0;
+//            OfferCakeShop=1;
 
         }
     }

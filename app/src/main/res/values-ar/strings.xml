@@ -60,7 +60,7 @@
     <string name="add_cust">اضافة عميل</string>
     <string name="cust_name">اسم العميل</string>
 <!--<string name="cust_name">  Customer Name</string>-->
-
+    <string name="order">الترتيب</string>
     <string name="app_trans_kind">نوع الفاتورة :</string>
     <string name="payemtnTerm">طريقة الدفع :</string>
     <string name="app_cash">نقداً  </string>
@@ -215,6 +215,7 @@
     <string name="by_voucher_kind"> نوع الفاتورة</string>
     <string name="by_payment_Term"> طريقة الدفع</string>
     <string name="customer_number">رقم العميل</string>
+    <string name="plantype">نوع الخطة</string>
     <string name="preview">اظهار</string>
     <string name="item_number">رقم المادة</string>
     <string name="item_name">اسم المادة</string>
@@ -558,4 +559,8 @@
     <string name="altayaa_shape">فاتورة مؤسسة الطايع</string>
 
     <string name="showplan">عرض الخطة </string>
+    <string name="TYPEPOFPLAN1">الترتيب حسب   </string>
+    <string name="TYPEPOFPLAN2">الترتيب حسب موقع العميل  </string>
+    <string name="importplan"> قم باستيراد الخطة اولا</string>
+    <string name="showlocation">عرض الخطة على الخريطة</string>
 </resources>
