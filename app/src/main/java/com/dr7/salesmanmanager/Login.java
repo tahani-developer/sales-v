@@ -159,10 +159,10 @@ public class Login extends AppCompatActivity {
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static  int makeOrders=0;// 1= just orders app
 
-    public  static    int OfferCakeShop=0;// if 0 calck offer many times
+    public  static    int OfferCakeShop=1;// if 0 calck offer many times
 
-    public  static    int offerTalaat=0;
-    public  static   int  offerQasion=1;
+    public  static    int offerTalaat=1;
+    public  static   int  offerQasion=0;
     public  static    int getTotalBalanceInActivities=0;
     public  static    int dateFromToActive=0;
 
@@ -171,9 +171,9 @@ public class Login extends AppCompatActivity {
     public  static  int updateOnlySelectedCustomer=0;
 
     public  static    int   SalsManPlanFlage=0;
-//   public  static  String headerDll = "";
+   public  static  String headerDll = "";
 
-    public  static  String  headerDll = "/Falcons/VAN.dll";
+//    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -509,7 +509,8 @@ public class Login extends AppCompatActivity {
                        Log.e("mDHandler7=",mDHandler.getAllUserNo());
                         mDHandler.updateUserNO(Login.salesMan);
                     }
-
+                   if( Login.salesMan.trim().length()==0)
+                    Login.salesMan=storeNo_edit.getText().toString().trim();
 
                    boolean isPosted=mDHandler.isAllVoucher_posted();
                    if(isPosted)
@@ -758,6 +759,7 @@ Log.e("okBtn","okBtn");
             dateFromToActive=0;
             getTotalBalanceInActivities=0;
             offerQasion=0;
+            OfferCakeShop=1;
 
         }
     }
@@ -1197,6 +1199,8 @@ Log.e("okBtn","okBtn");
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
+
+        Log.e("LocationIn","GoToMain"+"OfferCakeShop="+OfferCakeShop+"offerQasion="+offerQasion+"offerTalaat="+offerTalaat);
 
         if(approveAdmin==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();

@@ -267,7 +267,7 @@ public class VouchersReport extends AppCompatActivity {
 
                     }
 
-                    textSubTotal.setText(subTotal+"");
+                    textSubTotal.setText(convertToEnglish(decimalFormat.format(subTotal)));
                     textTax.setText( convertToEnglish(decimalFormat.format(tax)));
                     textNetSales.setText( convertToEnglish(decimalFormat.format(netSales)));
 
