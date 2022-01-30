@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 100.91</string>
+    <string name="version"> V 100.92</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -565,4 +565,11 @@
         <item>Al-Rajhi Bank</item>
 
     </string-array>
+
+    ////B
+    <string name="invalidDate">Invalid Date !</string>
+    <string name="invalidDate_msg">Your phone date is inaccurate!\n Adjust your date settings please.</string>
+    <string name="allCustomers">All Customers</string>
+    <string name="allCategories">All Categories</string>
+
 </resources>

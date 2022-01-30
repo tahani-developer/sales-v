@@ -1818,14 +1818,16 @@ public class ImportJason extends AppCompatActivity {
                 try {
                     JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
                     salesManItemsBalanceList.clear();
+                    int sales_Man=Integer.parseInt(salesMan);
+                    Log.e("ejabi","salesNo="+"\t"+sales_Man);
                     for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
                         JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
 
                         SalesManItemsBalance item = new SalesManItemsBalance();
                         String salesNo=finalObject.getString("SalesManNo");
 
-                       int sales_Man=Integer.parseInt(salesMan);
-                       // Log.e("ejabi","salesNo="+salesNo+"\tsalesMan="+salesMan+"\t"+sales_Man);
+                        Log.e("salesNo",""+salesNo);
+
                         if(salesNo.trim().equals(sales_Man+""))
                         {
                             item.setCompanyNo(finalObject.getString("ComapnyNo"));
@@ -5147,6 +5149,7 @@ Log.e("customerList",""+customerList.size());
                  }
 
 
+                 getSuccsesfuly();
 
              }
          } else {
@@ -5156,11 +5159,12 @@ Log.e("customerList",""+customerList.size());
 
     }
 
+    private void getSuccsesfuly() {
+        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))
 
-
-
-
-
+                            .show();
+    }
 
 
 }

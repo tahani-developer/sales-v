@@ -6,7 +6,10 @@ import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import org.apache.http.impl.cookie.DateUtils;
+
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -89,4 +92,66 @@ public class GeneralMethod {
         };
         return date;
     }
+
+    /////B
+    public boolean checkDeviceDate() throws ParseException {
+
+        Date deviceDateAndTime = Calendar.getInstance().getTime();
+
+//        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
+//        String deviceTime = timeFormat.format(deviceDateAndTime);
+//        Log.e("time", "" + deviceTime);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        String deviceDate = dateFormat.format(deviceDateAndTime);
+        Date deviceDate_d = dateFormat.parse(deviceDate);
+        Log.e("Device_Date", deviceDate + "");
+
+        boolean valid = false;
+
+        String lastV_Date = databaseHandler.getLastVoucherDate();
+        Date lastV_Date_d = dateFormat.parse(lastV_Date);
+
+        Log.e("LastV_Date", lastV_Date + "");
+
+        if (lastV_Date.equals(""))
+            valid = true;
+        else {
+
+            if (deviceDate_d.after(lastV_Date_d) || deviceDate_d.equals(lastV_Date_d))
+                valid = true;
+//            valid = deviceDate_d.after(lastV_Date_d);
+
+//            int lastV_Day = Integer.parseInt(lastV_Date.substring(0, 2));
+//            int lastV_Month = Integer.parseInt(lastV_Date.substring(3, 5));
+//            int lastV_year = Integer.parseInt(lastV_Date.substring(6, 10));
+//            Log.e("LastV_Date2", lastV_Day + "/" + lastV_Month + "/" + lastV_year);
+//
+//
+//            Log.e("Device_Date", deviceDate + "");
+//            int device_day = Integer.parseInt(deviceDate.substring(0, 2));
+//            int device_Month = Integer.parseInt(deviceDate.substring(3, 5));
+//            int device_year = Integer.parseInt(deviceDate.substring(6, 10));
+//            Log.e("Device_Date2", device_day + "/" + device_Month + "/" + device_year);
+//
+//
+//            if (device_year > lastV_year)
+//                valid = true;
+//            else if (device_year == lastV_year) {
+//
+//                if (device_Month > lastV_Month)
+//                    valid = true;
+//                else if (device_Month == lastV_Month) {
+//
+//                    if (device_day >= lastV_Day)
+//                        valid = true;
+//
+//                }
+//
+//            }
+        }
+        return valid;
+
+    }
+
 }

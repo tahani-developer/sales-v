@@ -57,6 +57,8 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class StockRequestVouchersReport extends AppCompatActivity {
 
+    List<Voucher> filteredVouchers;
+
     List<Voucher> vouchers;
     List<Item> items;
     EditText from_date, to_date;
@@ -93,6 +95,7 @@ public class StockRequestVouchersReport extends AppCompatActivity {
         }
 
         vouchers = new ArrayList<Voucher>();
+        filteredVouchers = new ArrayList<>();
         items = new ArrayList<Item>();
 
         obj = new DatabaseHandler(StockRequestVouchersReport.this);
@@ -145,6 +148,8 @@ public class StockRequestVouchersReport extends AppCompatActivity {
                     for (int n = 0; n < vouchers.size(); n++) {
 
                         if (filters(n)) {
+
+                            filteredVouchers.add(vouchers.get(n));
 
                             final TableRow row = new TableRow(StockRequestVouchersReport.this);
                             row.setPadding(5, 10, 5, 10);
@@ -259,13 +264,13 @@ public class StockRequestVouchersReport extends AppCompatActivity {
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(StockRequestVouchersReport.this,"StockRequestVouchersReport.xls",7,vouchers);
+        exportToExcel.createExcelFile(StockRequestVouchersReport.this,"StockRequestVouchersReport.xls",7,filteredVouchers);
 
     }
     public  void exportToPdf(){
-        Log.e("exportToPdf",""+items.size());
+        Log.e("exportToPdf",""+filteredVouchers.size());
         PdfConverter pdf =new PdfConverter(StockRequestVouchersReport.this);
-        pdf.exportListToPdf(vouchers,"StockRequestVouchersReport",from_date.getText().toString(),7);
+        pdf.exportListToPdf(filteredVouchers,"StockRequestVouchersReport",from_date.getText().toString(),7);
     }
     public void voucherInfoDialog(int voucherNumber) {
 
@@ -336,6 +341,10 @@ public class StockRequestVouchersReport extends AppCompatActivity {
         if (childCount > 1) {
             TableTransactionsReport.removeViews(1, childCount - 1);
         }
+
+        if (filteredVouchers.size() != 0)
+            filteredVouchers.clear();
+
     }
 
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {

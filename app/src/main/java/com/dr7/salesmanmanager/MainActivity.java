@@ -3527,13 +3527,13 @@ if(printer.size()!=0) {
 
                 }
                 else {
-                    printerSetting.setTayeeLayout(1);
+                    printerSetting.setTayeeLayout(0);
 
                 }
 
                 mDbHandler.addPrinterSeting(printerSetting);
-                Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
-dialog.dismiss();
+               // Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
+                dialog.dismiss();
             }
 
         });

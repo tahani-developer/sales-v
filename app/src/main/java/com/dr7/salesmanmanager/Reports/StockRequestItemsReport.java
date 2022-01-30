@@ -48,6 +48,8 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class StockRequestItemsReport extends AppCompatActivity {
 
+    List<Item> filteredItems;
+
     List<Item> items;
     EditText from_date, to_date;
     Button preview;
@@ -83,6 +85,7 @@ public class StockRequestItemsReport extends AppCompatActivity {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         items = new ArrayList<Item>();
+        filteredItems = new ArrayList<>();
         DatabaseHandler obj = new DatabaseHandler(StockRequestItemsReport.this);
         items = obj.getStockRequestItems();
 
@@ -129,6 +132,9 @@ public class StockRequestItemsReport extends AppCompatActivity {
                     sumQty = 0;
                     for (int n = 0; n < items.size(); n++) {
                         if (filters(n)) {
+
+                            filteredItems.add(items.get(n));
+
                             TableRow row = new TableRow(StockRequestItemsReport.this);
                             row.setPadding(5, 10, 5, 10);
 
@@ -221,14 +227,14 @@ public class StockRequestItemsReport extends AppCompatActivity {
     }
     private void exportToEx() {
         ExportToExcel exportToExcel=new ExportToExcel();
-         exportToExcel.createExcelFile(StockRequestItemsReport.this, "StockRequestItemsReport.xls", 6, items);
+         exportToExcel.createExcelFile(StockRequestItemsReport.this, "StockRequestItemsReport.xls", 6, filteredItems);
 
 
     }
     public  void exportToPdf(){
 
         PdfConverter pdf =new PdfConverter(StockRequestItemsReport.this);
-         pdf.exportListToPdf(items,"StockRequestItemsReport",from_date.getText().toString(),6);
+         pdf.exportListToPdf(filteredItems,"StockRequestItemsReport",from_date.getText().toString(),6);
 
 
 
@@ -256,6 +262,10 @@ public class StockRequestItemsReport extends AppCompatActivity {
             TableItemsReport.removeViews(1, childCount - 1);
             totalQtyTextView.setText("0.000");
         }
+
+        if (filteredItems.size() != 0 )
+            filteredItems.clear();
+
     }
 
     private void updateLabel(int flag) {

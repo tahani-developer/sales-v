@@ -259,7 +259,7 @@ public class Item implements Serializable {
     public Item(int companyNumber , String year ,int voucherNumber , int voucherType , String unit ,String itemNo, String itemName,
                 float qty, float price,float disc, String discPerc, float bonus, float voucherDiscount, double taxValue,
                 float taxPercent,int isPosted,String description, String serial_code,String which_unit,String which_unit_str
-    ,String whichu_qty,String enter_qty,String enter_price,String unit_barcode) {
+    ,String whichu_qty,String enter_qty,String enter_price,String unit_barcode,int originVo) {
         this.companyNumber = companyNumber;
         this.year = year;
         this.voucherNumber = voucherNumber;
@@ -284,6 +284,7 @@ public class Item implements Serializable {
         this.enter_qty=enter_qty;
         this.enter_price=enter_price;
         this.unit_barcode=unit_barcode;
+        this.ORIGINALvoucherNo=originVo;
     }
 
     //constructor for stock request
@@ -596,6 +597,7 @@ public class Item implements Serializable {
             obj.put("ENTERPRICE", enter_price);
             obj.put("UNITBARCODE", unit_barcode);
             obj.put("CALCQTY", enter_qty);
+            obj.put("ORGVHFNO", ORIGINALvoucherNo);
 
 
 

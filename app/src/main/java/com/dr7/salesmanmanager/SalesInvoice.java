@@ -186,6 +186,7 @@ public class SalesInvoice extends Fragment {
     int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0,contiusReading=0;
     int counterSerial;
 
+
     LinearLayout mainRequestLinear_serial;
     LinearLayout resultLinear;
     LinearLayout mainLinear;
@@ -350,6 +351,10 @@ public class SalesInvoice extends Fragment {
 
     public  CheckBox notIncludeTax;
     Transaction transaction;
+
+    //B
+    GeneralMethod generalMethod;
+
     public SalesInvoice() {
         // Required empty public constructor
     }
@@ -383,6 +388,7 @@ public class SalesInvoice extends Fragment {
         listMasterSerialForBuckup=new ArrayList<>();
         listSerialTotal.clear();
         copyListSerial=new ArrayList<>();
+
         contextG=getActivity().getApplicationContext();
 
         try {
@@ -410,6 +416,29 @@ public class SalesInvoice extends Fragment {
         } else {
             // portrait
         }
+
+        ////B
+        generalMethod = new GeneralMethod(getActivity().getBaseContext());
+        try {
+            if (!generalMethod.checkDeviceDate()) {
+
+               new SweetAlertDialog(getContext(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                       .setTitleText(getString(R.string.invalidDate))
+                       .setContentText(getString(R.string.invalidDate_msg))
+                       .setCustomImage(R.drawable.date_error)
+                       .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                           @Override
+                           public void onClick(SweetAlertDialog sweetAlertDialog) {
+                               sweetAlertDialog.dismissWithAnimation();
+                           }
+                       })
+                       .show();
+
+           }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         getTimeAndDate();
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {
@@ -1061,7 +1090,13 @@ public class SalesInvoice extends Fragment {
         {
             notIncludeTax.setVisibility(View.GONE);
             linearTotalCashDiscount.setVisibility(View.GONE);
+            offerTalaat=1;
+
+            offerQasion=0;
+            OfferCakeShop=1;
+
         }
+
         return view;
     }
 
@@ -1997,7 +2032,6 @@ public class SalesInvoice extends Fragment {
                         voucher.setVoucherDiscountPercent(discountPerc);
                         voucher.setRemark(remark);
                         voucher.setPayMethod(payMethod);
-
                         voucher.setIsPosted(0);
                         voucher.setTotalVoucherDiscount(totalDisc);
                         voucher.setSubTotal(subTotal);
@@ -2007,6 +2041,7 @@ public class SalesInvoice extends Fragment {
                         voucher.setCustNumber(CustomerListShow.Customer_Account);
                         voucher.setVoucherYear(Integer.parseInt(voucherYear));
                         voucher.setTime(timevocher);
+                        voucher.setORIGINALvoucherNo(voucherNumber);
 
 
 
@@ -2792,9 +2827,6 @@ public class SalesInvoice extends Fragment {
     public void AddVoucher() {
         Log.e("AddVoucher","customerTemporiryNmae="+customerTemporiryNmae);
 //        if (verifySerialListDosenotDuplicates()) {
-
-
-
         int store_No = salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
@@ -2803,7 +2835,9 @@ public class SalesInvoice extends Fragment {
             mDbHandler.add_Serial(listSerialTotal.get(j));
         }
         savedState = 2;// addesd sucssesfulley
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < items.size(); i++)
+        {
+            items.get(i).setORIGINALvoucherNo(voucherNumber);
 
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
                     items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
@@ -2811,7 +2845,7 @@ public class SalesInvoice extends Fragment {
                     items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(), items.get(i).getSerialCode()
 
             ,items.get(i).getWhich_unit(),items.get(i).getWhich_unit_str(),items.get(i).getWhichu_qty(),items.get(i).getEnter_qty()
-            ,items.get(i).getEnter_price(),items.get(i).getUnit_barcode());
+            ,items.get(i).getEnter_price(),items.get(i).getUnit_barcode(),items.get(i).getORIGINALvoucherNo());
 
             totalQty_forPrint += items.get(i).getQty();
             itemsList.add(item);
@@ -3320,7 +3354,7 @@ public class SalesInvoice extends Fragment {
                 if (!qty.getText().toString().equals("")) {
                     if (!qty.getText().toString().equals(".")) {
                         if (Float.parseFloat((qty.getText().toString().trim()))!=0) {
-
+                            disount_totalnew=0;
 
                             List<Item> jsonItemsList_insal = jsonItemsList;
                             for (int i = 0; i < jsonItemsList.size(); i++) {
@@ -3424,7 +3458,9 @@ public class SalesInvoice extends Fragment {
                                 List<Offers> offer = checkOffers(items.get(position).getItemNo());
                                 if (offer.size() > 0) {
                                     appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
-                                    if (!appliedOffer.getItemNo().equals("-1")) {
+                                    Log.e("appliedOffer",""+appliedOffer.getItemNo()+"offer="+offer.size());
+                                    if (!appliedOffer.getItemNo().equals("-1"))
+                                    {
 
 
                                         double bonus_calc = 0;
@@ -3459,6 +3495,9 @@ public class SalesInvoice extends Fragment {
 
                                         }
                                         else {
+                                            Log.e("appliedOffer","getPromotionType="+offer.get(0).getPromotionType());
+                                            items.get(position).setDisc(0);
+                                            items.get(position).setDiscPerc("0");
                                             // promotion type==1 ++++++>>discount offer
                                             discOfferType=appliedOffer.getDiscountItemType();
                                             items.get(position).setDiscType(discOfferType);
@@ -3477,11 +3516,14 @@ public class SalesInvoice extends Fragment {
                                     }
                                     else {
 //                                        items.get(position+1)
-
-
+                                        disount_totalnew=0;
+                                        items.get(position).setDisc(0);
+                                        items.get(position).setDiscPerc("0");
 
                                     }
                                 }
+                                Log.e("appliedOffer","getDisc="+ items.get(position).getDisc()+"\t"+disount_totalnew);
+
 
                                 total_items_quantity += items.get(position).getQty();
                                 totalQty_textView.setText("+" + total_items_quantity);
@@ -3502,7 +3544,7 @@ public class SalesInvoice extends Fragment {
                                 items.get(position).setAmount(items.get(position).getQty() * items.get(position).getPrice() - items.get(position).getDisc());
 
 
-                                //  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
+                                  Log.e("updateAmount1=","getAmount="+items.get(position).getAmount());
                               //  Log.e("updateAmount1=","getDisc="+items.get(position).getDisc());
                               //  Log.e("updateAmount1=","getDiscPerc="+items.get(position).getDiscPerc());
                                 calculateTotals(0);

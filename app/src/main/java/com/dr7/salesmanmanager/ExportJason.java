@@ -968,7 +968,7 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
-                    mHandler.updateVoucher();
+
                     exportVoucherDetail();// 2
                 }else {
                     pdVoucher.dismissWithAnimation();
@@ -1667,7 +1667,7 @@ public class ExportJason extends AppCompatActivity {
 
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
-
+        mHandler.updateVoucher();
         mHandler.updateVoucherDetails();
         Log.e("onPostExecute","updateVoucherExported---3---");
     }
