@@ -5121,14 +5121,15 @@ Log.e("customerList",""+customerList.size());
                              jsonObject1 = requestArray.getJSONObject(i);
                                  plan.setDate(  jsonObject1.getString("TRDATE"));
                                  plan.setSaleManNumber(Integer.parseInt(  jsonObject1.getString("SALESNO")));
-                                 try {
-                                     plan.setLatitud(Double.parseDouble(  jsonObject1.getString("LA")));
-                                     plan.setLongtude(Double.parseDouble(  jsonObject1.getString("LO")));
-                                 }catch (Exception e){
-                                     plan.setLatitud(0);
-                                     plan.setLongtude(0);
-                                 }
+                            if( !jsonObject1.getString("LO").equals(""))
+                            {plan.setLatitud(Double.parseDouble(  jsonObject1.getString("LA")));
+                                 plan.setLongtude(Double.parseDouble(  jsonObject1.getString("LO")));}
+                            else
+                            {
+                                plan.setLatitud(0);
+                                    plan.setLongtude(0);
 
+                            }
                                  plan.setCustName(  jsonObject1.getString("CUSNAME"));
                                  plan.setCustNumber(  jsonObject1.getString("CUSTNO"));
                                  plan.setOrder(Integer.parseInt(  jsonObject1.getString("ORDERD")));

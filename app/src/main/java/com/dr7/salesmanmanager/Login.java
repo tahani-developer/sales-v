@@ -1200,8 +1200,6 @@ Log.e("okBtn","okBtn");
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
 
-        Log.e("LocationIn","GoToMain"+"OfferCakeShop="+OfferCakeShop+"offerQasion="+offerQasion+"offerTalaat="+offerTalaat);
-
         if(approveAdmin==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();
             boolean isNetworkAvailable=isNetworkAvailable();

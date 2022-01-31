@@ -290,6 +290,7 @@ public class SalesInvoice extends Fragment {
     byte[] readBuffer;
     int readBufferPosition;
     int counter;
+    public static Voucher SaleInvoicePrinted;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -5874,7 +5875,19 @@ Log.e("voucher===",voucher.getVoucherNumber()+"");
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @SuppressLint("SetTextI18n")
     public void hiddenDialog() {
-        convertLayoutToImage(voucher);
+
+try {
+    SaleInvoicePrinted = voucher;
+    List<Item> itemVOCHER = new ArrayList<>();
+    itemVOCHER = mDbHandler.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()), voucher.getVoucherType());
+
+    Log.e("itemVOCHER==", "" + itemVOCHER.size());
+    PdfConverter pdf = new PdfConverter(SalesInvoice.this.getActivity());
+    pdf.exportListToPdf(itemVOCHER, "Vocher", "", 14);
+}catch (Exception e){
+    Log.e("Exception22==", "" + e.getMessage());
+}
+    //    convertLayoutToImage(voucher);
 //        final Dialog dialog = new Dialog(getActivity());
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        dialog.setCancelable(true);

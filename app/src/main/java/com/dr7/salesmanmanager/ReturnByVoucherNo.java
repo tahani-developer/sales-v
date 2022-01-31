@@ -1368,7 +1368,7 @@ try {
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
         voucherNo_ReturnNo =dataBase.getLastVoucherNo(506)+"";
-        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo_ReturnNo);
+        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo_ReturnNo,506);
         ExportToExcel exportToExcel=new ExportToExcel();
         exportToExcel.createExcelFile(ReturnByVoucherNo.this,"ReturnVocher.xls",14,LASTVOCHER);
 
@@ -1378,7 +1378,7 @@ try {
         LASTVOCHER.clear();
         LASTVOCHER2.clear();
         voucherNo_ReturnNo =dataBase.getLastVoucherNo(506)+"";
-        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo_ReturnNo);
+        LASTVOCHER=dataBase.getAllItemsBYVOCHER(voucherNo_ReturnNo,506);
 
 
         PdfConverter pdf =new PdfConverter(ReturnByVoucherNo.this);
