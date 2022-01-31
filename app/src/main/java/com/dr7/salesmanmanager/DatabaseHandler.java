@@ -4679,7 +4679,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
                 "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE ," +
                 " D.ITEM_DESCRIPTION ,D.SERIAL_CODE , D.WHICH_UNIT    , D.WHICH_UNIT_STR , D.WHICHU_QTY    , D.ENTER_QTY ," +
-                " D.ENTER_PRICE , D.UNIT_BARCODE  " +
+                " D.ENTER_PRICE , D.UNIT_BARCODE ,D.ORIGINALVOUCHER_NUMBER " +
                 "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
                 "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
 
@@ -4725,6 +4725,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 item.setEnter_qty(cursor.getString(22));
                 item.setEnter_price(cursor.getString(23));
                 item.setUnit_barcode(cursor.getString(24));
+                item.setORIGINALvoucherNo(cursor.getInt(25));
 //                Log.e("setDescreption",""+cursor.getString(17));
 
                 // Adding transaction to list

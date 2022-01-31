@@ -342,7 +342,7 @@ public class VouchersReport extends AppCompatActivity {
 
     }
     public  void exportToPdf(){
-        Log.e("exportToPdf",""+filteredVouchers.size());
+        //Log.e("exportToPdf",""+filteredVouchers.size());
         PdfConverter pdf =new PdfConverter(VouchersReport.this);
         pdf.exportListToPdf(filteredVouchers,"VouchersReport",from_date.getText().toString(),3);
     }

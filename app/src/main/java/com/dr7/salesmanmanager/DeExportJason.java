@@ -70,6 +70,7 @@ public class DeExportJason extends AppCompatActivity {
     SweetAlertDialog pdVoucher=null,pdPayment=null;
     private Context context;
     private String fromDate, toDate;
+    int taxType=0,importDataAfter=0;
     private int flag;
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArraySerial, jsonArrayItems, jsonArrayPayments, jsonArrayPaymentsPaper, jsonArrayAddedCustomer;
@@ -95,6 +96,7 @@ public class DeExportJason extends AppCompatActivity {
         this.mHandler = new DatabaseHandler(context);
         Log.e("DeExportJason", "" + fromDate + "\t" + toDate);
         fillIpAddressWithPort();
+        taxType=mHandler.getAllSettings().get(0).getTaxClarcKind();
 
     }
 
@@ -706,7 +708,7 @@ public class DeExportJason extends AppCompatActivity {
 
             } else {
                 pdVoucher.dismissWithAnimation();
-                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -803,6 +805,7 @@ public class DeExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully"))
                 {
                     Toast.makeText(context, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                    updateVoucherExported();
                     saveExpot();
                 }
                 else {
@@ -815,6 +818,12 @@ public class DeExportJason extends AppCompatActivity {
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private void updateVoucherExported() {// 3
+        Log.e("updateVoucherExported","trueee");
+        mHandler.updateVoucher();
+        mHandler.updateVoucherDetails();
+        Log.e("onPostExecute","updateVoucherExported---3---");
     }
     private void saveExpot() {
         // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5
@@ -854,8 +863,7 @@ public class DeExportJason extends AppCompatActivity {
 
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
                 String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveVouchers";
-                // Log.e("ipAdress", "ip -->" + ip);
-                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
                 Log.e("tag_link", "ExportData -->" + link);
                 Log.e("tag_data", "ExportData -->" + data);
 
