@@ -254,7 +254,8 @@ public class Login extends AppCompatActivity {
             Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
-//            typaImport = 1;
+
+            typaImport = 1;
 //            rawahneh = 1;
 //            getMaxVoucherServer = 1;
 //            makeOrders = 0;

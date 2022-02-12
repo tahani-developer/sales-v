@@ -4208,7 +4208,6 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         if (cursor.moveToFirst()) {
             do {
                 Customer customer = new Customer();
-
                 customer.setCompanyNumber(cursor.getString(0));
                 customer.setCustId(cursor.getString(1));
                 customer.setCustName(cursor.getString(2));
@@ -8350,6 +8349,31 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
         return arrayList;
+    }
+
+    public int isExist(String name) {
+         int count=0;
+
+        String selectQuery = "select count(*) CUST_NAME from ADDED_CUSTOMER  where trim(CUST_NAME)=trim('"+name+"');";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.e("selectQuery", selectQuery+"");
+
+        if (cursor.moveToFirst()) {
+            try {
+
+                count =  cursor.getInt(0);
+
+                    Log.e("count", count+"");
+
+            } catch ( Exception e)
+            {
+                Log.e("Last_Voucher_Date", "Exception+\t\t");
+            }
+        }
+
+
+        return count;
     }
 }
 

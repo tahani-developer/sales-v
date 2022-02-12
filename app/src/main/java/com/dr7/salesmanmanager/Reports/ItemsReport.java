@@ -399,12 +399,14 @@ public class ItemsReport extends AppCompatActivity {
 
         String itemNumber = items.get(n).getItemNo();
         String date = items.get(n).getDate();
+        String itemName=items.get(n).getItemName();
         int vType = items.get(n).getVoucherType();
 
         try {
-            if (!textItemNumber.equals("")) {
+            if (!textItemNumber.equals(""))
+            {
                 Log.e("case1==","case1");
-                if ((itemNumber.equals(textItemNumber)) && vType == voucherType &&
+                if ((itemNumber.contains(textItemNumber))||itemName.toLowerCase().contains(textItemNumber.toLowerCase()) && vType == voucherType &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
 

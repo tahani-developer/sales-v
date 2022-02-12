@@ -37,6 +37,8 @@ public class ItemsListAdapter extends BaseAdapter {
 
         decimalFormat = new DecimalFormat("##.000");
         this.typeScreen=type;
+        if(itemList.size()!=0)
+        Log.e("itemList",""+itemList.get(0).getDisc()+"\t getDiscType"+itemList.get(0).getDiscType()+"\t getAmount="+itemList.get(0).getAmount());
         Log.e("typeScreen",""+typeScreen+"\t type"+type);
         databaseHandler=new DatabaseHandler(context);
         rate=databaseHandler.getRateOfCustomer();
@@ -109,6 +111,7 @@ public class ItemsListAdapter extends BaseAdapter {
             }
         });
 
+        Log.e("itemList",""+itemList.get(i).getDisc()+"\t getDiscType"+itemList.get(i).getDiscType()+"\t getAmount="+itemList.get(i).getAmount());
 
         itemNoTextView.setText(itemList.get(i).getItemNo());
         itemNoTextView_detail.setText(itemList.get(i).getItemNo());

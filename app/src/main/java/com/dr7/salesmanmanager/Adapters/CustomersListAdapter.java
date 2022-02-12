@@ -91,15 +91,6 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder. showloction= (TextView) view.findViewById(R.id.showloction);
 
         holder. showloction.setVisibility(View.INVISIBLE);
-       // holder. showloction.setEnabled(false);
-       /* if(IsHaveOrder(custList.get(i).getCustId()))
-        {
-
-        }*/
-
-
-
-
         holder. showloction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +105,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
                                  Double.parseDouble(custList.get(i).getCustLong()));
                          Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                          context.startActivity(intent);
+
                      }
                      else {
                          new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)

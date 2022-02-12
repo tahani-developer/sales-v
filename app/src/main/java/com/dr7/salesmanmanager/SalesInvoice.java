@@ -4665,7 +4665,8 @@ public class SalesInvoice extends Fragment {
                     }
 
 
-                } else {// all item without discount item
+                }
+                else {// all item without discount item
                     totalQty = 0.0;
                     for (int x = 0; x < items.size(); x++) {
                         if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
@@ -5881,7 +5882,7 @@ try {
     List<Item> itemVOCHER = new ArrayList<>();
     itemVOCHER = mDbHandler.getAllItemsBYVOCHER(String.valueOf(voucher.getVoucherNumber()), voucher.getVoucherType());
 
-    Log.e("itemVOCHER==", "" + itemVOCHER.size());
+   // Log.e("itemVOCHER==", "" + itemVOCHER.size());
     PdfConverter pdf = new PdfConverter(SalesInvoice.this.getActivity());
     pdf.exportListToPdf(itemVOCHER, "Vocher", "", 14);
 }catch (Exception e){
