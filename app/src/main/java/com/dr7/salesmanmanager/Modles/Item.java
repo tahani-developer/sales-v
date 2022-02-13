@@ -626,4 +626,19 @@ public class Item implements Serializable {
         }
         return obj;
     }
+    public JSONObject getJSONObject3() {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("VHFNO", ORIGINALvoucherNo);
+            obj.put("IS_RETURNED", 1);
+            obj.put("AVLQTY", qty);
+            obj.put("ITEMCODE", itemNo);
+
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 }

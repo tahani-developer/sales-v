@@ -64,9 +64,9 @@ public class SalesManPlanLocations extends FragmentActivity implements OnMapRead
                 GMapV2Direction.MODE_DRIVING);
 
         ArrayList<LatLng> directionPoint = md.getDirection(doc);*/
-
-
-   Polyline polylin = mMap.addPolyline(ShowPlan.rectLine);
+        Polyline polylin;
+        if(ShowPlan.directionPoint.size()!=0)
+polylin = mMap.addPolyline(ShowPlan.rectLine);
 
     }
 

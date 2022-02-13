@@ -64,6 +64,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.ExportJason.ReturnItemsarrayList;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
@@ -8374,6 +8375,172 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
         return count;
+    }
+
+
+
+
+
+
+
+
+    /*public void getvocherNumforItemsReturnd() {
+        ReturnItemsarrayList.clear();
+        int vocherNum;
+        ArrayList<Integer>arrayList=new ArrayList<>();
+        arrayList.clear();
+
+        String selectQuery = "SELECT ORIGINALVOUCHER_NUMBER from SALES_VOUCHER_DETAILS where IS_POSTED='0' AND VOUCHER_TYPE='506'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                try {
+
+                    {
+                        vocherNum = cursor.getInt(0);
+                        arrayList.add(vocherNum);
+
+                    }
+                } catch (Exception e) {
+                    Log.e("getItemsReturndDetails", "Exception+\t\t");
+                }
+            } while (cursor.moveToNext());
+        }
+        Log.e("arrayListsize==", arrayList.size()+"\t\t");
+for (int i=0;i<arrayList.size();i++) {
+    getItemsReturndDetails(arrayList.get(i));
+    Log.e("arrayList999==", arrayList.get(i)+"\t\t");
+}
+
+    }*/
+    public int getItemsReturndDetails(int VOHNO) {
+        Log.e("getItemsReturndDetails==", "getItemsReturndDetails"+"\t\t");
+        int vocherNum;
+        ArrayList<Integer>arrayList=new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM  SALES_VOUCHER_DETAILS where VOUCHER_NUMBER='"+VOHNO +"' AND VOUCHER_TYPE='504'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.e("cursor", cursor.getCount()+"\t\t");
+
+
+        if(cursor.getCount()==0)
+
+            return 0;
+
+        else
+            return 1;
+      /*  if (cursor.moveToFirst()) {
+            try {
+
+             do   {
+                    Log.e("getItemsReturndDetails==item", "item"+"\t\t");
+
+                    Item item=new Item();
+                    item.setItemNo(cursor.getString(0));
+                    item.setAvi_Qty(cursor.getFloat(1));
+                    item.setIS_RETURNED(cursor.getInt(2));
+                    item.setVoucherNumber(cursor.getInt(3));
+                    ReturnItemsarrayList.add( item);
+
+            } while (cursor.moveToNext());
+            } catch ( Exception e)
+            {
+                Log.e("getItemsReturndDetails", "Exception+\t\t");
+            }
+        }*/
+
+  /*      Log.e("getItemsReturndDetails44===",ReturnItemsarrayList.size()+"   "+ImportJason.CopyForServerVocger_listItemsReturn.size()+ "+\t\t");
+
+        if( ReturnItemsarrayList.size()==0){ //this when orignal vocher in server not in local
+
+
+            {
+                Log.e("c",ReturnItemsarrayList.size()+"  if "+ "+\t\t");
+
+                Item item=new Item();
+                item.setItemNo();
+                item.setAvi_Qty();
+                item.setIS_RETURNED();
+                item.setVoucherNumber();
+                ReturnItemsarrayList.add( item);
+            }
+*/
+
+  /*  for(int i=0; i<ImportJason.CopyForServerVocger_listItemsReturn.size();i++)
+      //    if(VOHNO==ImportJason.CopyForServerVocger_listItemsReturn.get(i).getVoucherNumber())
+    {
+        Log.e("c",ReturnItemsarrayList.size()+"  if "+ "+\t\t");
+
+        Item item=new Item();
+        item.setItemNo(ImportJason.CopyForServerVocger_listItemsReturn.get(i).getItemNo());
+        item.setAvi_Qty(ImportJason.CopyForServerVocger_listItemsReturn.get(i).getAvi_Qty());
+        item.setIS_RETURNED(1);
+        item.setVoucherNumber(ImportJason.CopyForServerVocger_listItemsReturn.get(i).getVoucherNumber());
+        ReturnItemsarrayList.add( item);
+    }
+}*/
+}
+
+    public void getvocherNumforItemsReturnd() {
+        ArrayList<Item> items = new ArrayList<Item>();
+        // Select All Query                                                                                                          //AND IS_RETURNED = '0'
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where IS_POSTED= '"+0+"' and  VOUCHER_TYPE='506'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.e("cursor2==", cursor.getCount()+"\t\t");
+
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+                Item item = new Item();
+                Log.e("VoucherNumber==",  item.getVoucherNumber()+"\t\t");
+                item.setVoucherNumber(Integer.parseInt(cursor.getString(0)));
+                item.setVoucherType(Integer.parseInt(cursor.getString(1)));
+                item.setItemNo(cursor.getString(2));
+                // Log.e("cursorItemNo",""+cursor.getString(2));
+                item.setItemName(cursor.getString(3));
+                item.setQty(Float.parseFloat(cursor.getString(5)));
+                item.setIS_RETURNED(cursor.getInt(25));
+                item.setAvi_Qty(Float.parseFloat(cursor.getString(26)));
+                item.setORIGINALvoucherNo(cursor.getInt(27));
+
+
+
+                    items.add(item);
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+        for(int i=0;i<items.size();i++)
+   if( getItemsReturndDetails(items.get(i).getORIGINALvoucherNo())==0)   {
+       Log.i("DatabaseHandler==", "DatabaseHandler");
+
+
+
+
+       Item item = new Item();
+
+       item.setVoucherNumber(items.get(i).getVoucherNumber());
+       item.setVoucherType(items.get(i).getVoucherType());
+       item.setItemNo(items.get(i).getItemNo());
+       // Log.e("cursorItemNo",""+cursor.getString(2));
+       item.setItemName(items.get(i).getItemName());
+       item.setQty(items.get(i).getQty());
+       item.setIS_RETURNED(items.get(i).getIS_RETURNED());
+       item.setQty(items.get(i).getQty());
+       item.setORIGINALvoucherNo(items.get(i).getORIGINALvoucherNo());
+
+       ReturnItemsarrayList.add( item);
+
+   }
     }
 }
 
