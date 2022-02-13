@@ -313,7 +313,6 @@
     <string name="fill_setting">Please enter setting app</string>
     <string name="warning_message">Warning Message</string>
     <string name="emptyList">Empty List</string>
-    emptyList
     <string name="Confirm">Confirm</string>
 
     <string name="not_authoriz">Sorry, you are not authorized for this service to verify your financial account</string>
