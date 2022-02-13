@@ -145,13 +145,11 @@ public class CustomerListShow extends DialogFragment {
             if (mHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
             {
                 customerList = mHandler.getCustomersBySalesMan(Login.salesMan);
-                Log.e("getSalesManCustomers",""+customerList.size());
             }
 
             else
             {
                 customerList = mHandler.getAllCustomers();
-                Log.e("getAllCustomers",""+customerList.size());
 
             }
 

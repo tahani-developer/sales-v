@@ -2825,15 +2825,24 @@ public class SalesInvoice extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void AddVoucher() {
-        Log.e("AddVoucher","customerTemporiryNmae="+customerTemporiryNmae);
+
 //        if (verifySerialListDosenotDuplicates()) {
         int store_No = salesMan;
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         mDbHandler.addVoucher(voucher);
+        for (int i = 0; i < items.size(); i++){
+            for (int j = 0; j < listSerialTotal.size(); j++) {
+                if(items.get(i).getItemNo().equals(listSerialTotal.get(j).getItemNo()))
+                {
+                    listSerialTotal.get(j).setCounterSerial(i+1);
+                }
 
+            }
+        }
         for (int j = 0; j < listSerialTotal.size(); j++) {
             mDbHandler.add_Serial(listSerialTotal.get(j));
         }
+
         savedState = 2;// addesd sucssesfulley
         for (int i = 0; i < items.size(); i++)
         {
