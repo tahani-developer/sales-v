@@ -159,6 +159,7 @@ public class ImportJason extends AppCompatActivity {
     public static ArrayList<serialModel> returnListSerial = new ArrayList<>();
     public static ArrayList<SalesManPlan>salesManPlanList = new ArrayList<>();
     public static ArrayList<Item> listItemsReturn = new ArrayList<>();
+    public static ArrayList<Item> CopyForServerVocger_listItemsReturn = new ArrayList<>();
     public static Voucher voucherReturn = new Voucher();
     private JsonArrayRequest loginRequest;
     private RequestQueue requestQueue;
@@ -194,7 +195,11 @@ public class ImportJason extends AppCompatActivity {
         counter = 0;
         generalMethod=new GeneralMethod(context);
     }
+    public  void getVoucherMReturnData(String voucherNo){
 
+            new JSONTask_VoucherMReturnData(voucherNo).execute();
+
+    }
     public void getCustomerInfo(int type, String fromDate, String toDate) {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
@@ -561,14 +566,15 @@ public class ImportJason extends AppCompatActivity {
                 } else {
                     if(s.contains("No Parameter Found"))
                     {
-                        loadSerial.setText("No Parameter Found");
+                        loadSerial.setText("No Parameter");
                     }
                 }
               //  Log.e("onPostExecute", "" + s.toString());
 //                progressDialog.dismiss();
             }
-            if(returnListSerial.size()!=0)
-            new JSONTask_VoucherMReturnData(voucherNo).execute();
+          //if(returnListSerial.size()!=0)
+            getVoucherMReturnData(voucherNo);
+
 
         }
 
@@ -745,7 +751,8 @@ public class ImportJason extends AppCompatActivity {
                 } else {
                     if(s.contains("No Parameter Found"))
                     {
-                        loadSerial.setText("No Parameter Found");
+                       loadSerial.setText("No Parameter Found");
+
                     }
                 }
                 Log.e("onPostExecute", "" + s.toString());
@@ -910,11 +917,14 @@ public class ImportJason extends AppCompatActivity {
                                 voucher.setEnter_qty(infoDetail.get("ENTERQTY").toString());
                                 voucher.setEnter_price(infoDetail.get("ENTERPRICE").toString());
                                 voucher.setUnit_barcode(infoDetail.get("UNITBARCOD").toString());
-
-
+                                  if(infoDetail.get("IS_RETURNED").toString().equals("0"))
+                                      voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("ENTERQTY").toString()));
+                                   else
+                                voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("AVLQTY").toString()));
 
                                 voucher.setYear(infoDetail.get("VOUCHERYEAR").toString());
                                 listItemsReturn.add(voucher);
+                                CopyForServerVocger_listItemsReturn.add(voucher);
                             }catch (Exception e){
                                 Log.e("voucher", "Exception="+e.getMessage()  );
                             }

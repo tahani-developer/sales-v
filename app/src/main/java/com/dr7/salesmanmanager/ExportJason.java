@@ -1,10 +1,8 @@
 package com.dr7.salesmanmanager;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,48 +13,32 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.NoConnectionError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
-import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
-import com.dr7.salesmanmanager.Modles.CustomerPrice;
 import com.dr7.salesmanmanager.Modles.InventoryShelf;
 import com.dr7.salesmanmanager.Modles.Item;
-import com.dr7.salesmanmanager.Modles.ItemSwitch;
-import com.dr7.salesmanmanager.Modles.ItemUnitDetails;
-import com.dr7.salesmanmanager.Modles.ItemsMaster;
-import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
-import com.dr7.salesmanmanager.Modles.Offers;
 import com.dr7.salesmanmanager.Modles.Payment;
 import static com.dr7.salesmanmanager.Login.headerDll;
-import com.dr7.salesmanmanager.Modles.PriceListD;
-import com.dr7.salesmanmanager.Modles.PriceListM;
-import com.dr7.salesmanmanager.Modles.QtyOffers;
+
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
-import com.dr7.salesmanmanager.Modles.SalesTeam;
-import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
-import com.dr7.salesmanmanager.Reports.SalesMan;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.HttpHostConnectException;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,12 +49,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,6 +64,7 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
+import static com.dr7.salesmanmanager.ReturnByVoucherNo.ReturnupdateditemList;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.voucherNo_ReturnNo;
 
 public class ExportJason extends AppCompatActivity {
@@ -97,6 +78,13 @@ public class ExportJason extends AppCompatActivity {
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
     int taxType=0,importDataAfter=0;
+
+
+    JSONObject ReturnUpdateObject;
+    private JSONArray jsonArrayReturnUpdate;
+    SweetAlertDialog pdReturnUpdate;
+    public static List<Item>ReturnItemsarrayList=new ArrayList<>();
+
 
     public static List<Transaction> transactions = new ArrayList<>();
     public static List<Voucher> vouchers = new ArrayList<>();
@@ -142,7 +130,44 @@ public class ExportJason extends AppCompatActivity {
         SalesManLogin= mHandler.getAllUserNo();
         fillIpAddressWithPort();
     }
+    public void exportReturnUpdateList() {
 
+        Log.e("exportReturnUpdateList","exportReturnUpdateList");
+        getReturnUpdateObject();
+        pdReturnUpdate = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        pdReturnUpdate.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pdReturnUpdate.setTitleText("EXPORT_RETURN_UPDATE");
+        pdReturnUpdate.setCancelable(false);
+        pdReturnUpdate.show();
+
+        new JSONTask_ReturnVocherDeatials().execute();
+    }
+
+
+    private void getReturnUpdateObject() {
+        Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
+
+        Log.e("getReturnUpdateObject","getReturnUpdateObject");
+
+        mHandler.getvocherNumforItemsReturnd();
+        Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
+
+        jsonArrayReturnUpdate = new JSONArray();
+        for (int i = 0; i < ReturnItemsarrayList .size(); i++)
+        {
+
+                jsonArrayReturnUpdate.put(ReturnItemsarrayList.get(i).getJSONObject3());
+                Log.e("list elements===", "" + ReturnItemsarrayList.get(i).getJSONObject3());
+
+        }
+        try {
+            ReturnUpdateObject =new JSONObject();
+            ReturnUpdateObject.put("JSN", jsonArrayReturnUpdate);
+            Log.e("ReturnUpdateObject",""+ ReturnUpdateObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     private void fillIpAddressWithPort() {
         if (!ipAddress.equals("")) {
             //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
@@ -1406,7 +1431,10 @@ public class ExportJason extends AppCompatActivity {
 
 //
                     String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportSALES_VOUCHER_D";
-//                   // Log.e("ipAdress", "ip -->" + ip);
+            Log.e("link==", link+"");
+
+
+                    //                   // Log.e("ipAdress", "ip -->" + ip);
 //                    String data = "CONO="+CONO.trim()+"&JSONSTR=" + URLEncoder.encode(vouchersObject.toString(), "UTF-8") ;
 //                    Log.e("tag_link", "ExportData -->" + link);
 //                    Log.e("tag_data", "ExportData -->" + data);
@@ -1528,9 +1556,9 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully"))
                 {
 //                    Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
+                    exportReturnUpdateList();
 
-                    updateVoucherExported();// 3
-
+           //         updateVoucherExported();// 3
 
 
                 }
@@ -2827,4 +2855,123 @@ public class ExportJason extends AppCompatActivity {
                 .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))
                 .show();
     }
+    public class JSONTask_ReturnVocherDeatials extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String  link="";
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                if (!ipAddress.equals("")) {
+
+               link = "http://"+ipAddress.trim()+":"+ipWithPort+headerDll.trim()+"/UpdateReturn";
+
+
+
+                    Log.e("URL_TO_HIT",""+link);
+                }
+            } catch (Exception e) {
+                //progressDialog.dismiss();
+pdReturnUpdate.dismiss();
+
+            }
+
+            try {
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                try {
+                    request.setURI(new URI(link));
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR", ReturnUpdateObject.toString().trim()));
+                Log.e("URL_TO_HIT222",""+ ReturnUpdateObject.toString());
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+                HttpResponse response = client.execute(request);
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("JsonResponse", "Exporship" + JsonResponse);
+
+
+            }
+            catch (Exception e) {
+                pdReturnUpdate.dismiss();
+            }
+            return JsonResponse ;
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+//            progressDialog.dismiss();
+            Log.e("onPostExecuteReturnVocherDeatials",""+result);
+
+
+            pdReturnUpdate.dismiss();
+            if (result != null && !result.equals("")) {
+
+                if(result.contains("Internal Application Error")){
+
+
+
+
+                }else
+
+                if(result.contains("Saved Successfully"))
+                {
+               updateVoucherExported();// 3
+
+
+                }
+                else
+
+                {
+
+                }
+
+                // exportReplacementList(listAllReplacment);
+
+
+            }
+            else{
+
+            }
+
+
+
+        }
+//                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
+
+
+
+
+    }
+
+
 }

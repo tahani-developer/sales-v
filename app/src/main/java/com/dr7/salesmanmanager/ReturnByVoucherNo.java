@@ -65,6 +65,7 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ReturnByVoucherNo extends AppCompatActivity {
+    public static  List<Item> ReturnupdateditemList=new ArrayList<>();
     public static   RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
     public static List<serialModel> allitemsdata =new ArrayList<>();
@@ -457,7 +458,14 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 if(editable.toString().trim().length()!=0)
                 {
-                    if(editable.toString().equals("fillSerial"))
+
+
+                    if(editable.toString().equals("No Parameter"))
+                    {
+                        Log.e("editable1====","NO Serial");
+
+                    }
+                else    if(editable.toString().equals("fillSerial"))
                     {
                         Log.e("editable2====",""+listItemsReturn.size()+"");
 
@@ -492,7 +500,7 @@ public class ReturnByVoucherNo extends AppCompatActivity {
 
                         Log.e("editable66====",""+returnListSerial.size()+"");
 
-                        if(returnListSerial.size()!=0)
+                        if(returnListSerial.size()!=0||listItemsReturn.size()!=0)
 
                         {
                             sumAllListData();
@@ -550,7 +558,9 @@ public class ReturnByVoucherNo extends AppCompatActivity {
                         }
                         else if(editable.toString().equals("No Parameter Found"))
                         {
-                            showNotFound();
+                            Log.e("editable99====","editable99   "+voucherNo_ReturnNo);
+                        showNotFound();
+                        //    importJason.getVoucherMReturnData(voucherNo_ReturnNo);
                         }
                         else if(editable.toString().contains("VHFNO")){
                             Log.e("editable88====",""+returnListSerial.size()+"");
@@ -585,9 +595,12 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             serialModel1.setItemName(listItemsReturn.get(i).getItemName());
             serialModel1.setDateVoucher(voucherReturn.getVoucherDate());
             serialModel1.setPriceItem(listItemsReturn.get(i).getPrice());
-            if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0)
-            serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getAvi_Qty()));
-            else
+            if(dataBase.HASSERAIAL(serialModel1.getItemNo())==0) {
+
+                serialModel1.setQty(String.valueOf(listItemsReturn.get(i).getAvi_Qty()));
+
+
+            } else
                 serialModel1.setQty("0");
 
             serialModel1.setSerialCode("");
@@ -764,8 +777,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
           }
 
       } else {
-          showNotFound();
-//exportData(2);
+          //showNotFound();
+exportData(2);
 
       }
 
@@ -941,6 +954,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
             listItemsMain.get(i).setVouchDate(curent);
             listItemsMain.get(i).setVoucherType(506);
             listItemsMain.get(i).setIsPosted(0);
+            Log.e("ORIGINALvoucherNo",""+voucherNo_text.getText().toString().trim());
+
             listItemsMain.get(i).setORIGINALvoucherNo( Integer.parseInt(voucherNo_text.getText().toString().trim()));
 
             Log.e("serialModel1","2222salePrice="+listItemsMain.get(i).getPrice());
