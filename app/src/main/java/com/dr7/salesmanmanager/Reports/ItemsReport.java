@@ -1,7 +1,10 @@
 package com.dr7.salesmanmanager.Reports;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
@@ -14,13 +17,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
+
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -35,6 +43,8 @@ import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
+import com.dr7.salesmanmanager.ScanActivity;
+import com.google.android.material.textfield.TextInputLayout;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
@@ -51,6 +61,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class ItemsReport extends AppCompatActivity {
@@ -59,26 +70,31 @@ public class ItemsReport extends AppCompatActivity {
 
     List<Item> items;
     RadioGroup voucherTypeRadioGroup;
-    EditText from_date, to_date, item_number;
+    EditText from_date, to_date;
+    public static EditText item_number;
     Button preview;
-    TextView texttotalSold , textTotalBonus , texttotalSales ;
+    TextView texttotalSold, textTotalBonus, texttotalSales;
     TableLayout TableItemsReport;
     Calendar myCalendar;
     int voucherType = 504;
 
     ///B
-    Spinner customerSpinner, itemGroupSpinner;
+    Spinner itemGroupSpinner;
+    AutoCompleteTextView customerEdt;
+    TextInputLayout custTextField;
     DatabaseHandler obj;
     private ArrayList<String> customersSpinnerArray = new ArrayList<>();
     private ArrayList<String> categorySpinnerArray = new ArrayList<>();
     List<Customer> allCustomersList = new ArrayList<>();
     List<String> allCategories = new ArrayList<>();
     List<String> customersId = new ArrayList<>();
+    ImageButton scanBtn;
 
 
-    double totalSold = 0 , totalBonus = 0 , totalSales = 0 ;
+    double totalSold = 0, totalBonus = 0, totalSales = 0;
     private DecimalFormat decimalFormat;
-    int[] listImageIcone=new int[]{R.drawable.pdf_icon,R.drawable.excel_small};
+    int[] listImageIcone = new int[]{R.drawable.pdf_icon, R.drawable.excel_small};
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -86,22 +102,17 @@ public class ItemsReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(ItemsReport.this);
         setContentView(R.layout.items_report);
-        LinearLayout linearMain=findViewById(R.id.linearMain);
-        try{
-            if(languagelocalApp.equals("ar"))
-            {
+        LinearLayout linearMain = findViewById(R.id.linearMain);
+        try {
+            if (languagelocalApp.equals("ar")) {
                 linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            }
-            else{
-                if(languagelocalApp.equals("en"))
-                {
+            } else {
+                if (languagelocalApp.equals("en")) {
                     linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
 
             }
-        }
-        catch ( Exception e)
-        {
+        } catch (Exception e) {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         decimalFormat = new DecimalFormat("##.000");
@@ -118,12 +129,14 @@ public class ItemsReport extends AppCompatActivity {
         to_date = (EditText) findViewById(R.id.to_date);
         item_number = (EditText) findViewById(R.id.item_number);
         preview = (Button) findViewById(R.id.preview);
-        texttotalSold = (TextView) findViewById(R.id.totalSoldTextView) ;
-        textTotalBonus = (TextView) findViewById(R.id.totalBonusTextView) ;
-        texttotalSales = (TextView) findViewById(R.id.totalSalesTextView1) ;
+        texttotalSold = (TextView) findViewById(R.id.totalSoldTextView);
+        textTotalBonus = (TextView) findViewById(R.id.totalBonusTextView);
+        texttotalSales = (TextView) findViewById(R.id.totalSalesTextView1);
 
         ///B
-        customerSpinner = findViewById(R.id.customerSpinner);
+        scanBtn = findViewById(R.id.scanBtn);
+        custTextField = findViewById(R.id.custTextField);
+        customerEdt = findViewById(R.id.customerEdt);
         itemGroupSpinner = findViewById(R.id.itemGroupSpinner);
 
         customersSpinnerArray.clear();
@@ -131,19 +144,32 @@ public class ItemsReport extends AppCompatActivity {
         customersId.clear();
         allCustomersList = obj.getAllCustomers();
 
-        customersSpinnerArray.add(getString(R.string.allCustomers));
+//        customersSpinnerArray.add(getString(R.string.allCustomers));
         for (int r = 0; r < allCustomersList.size(); r++) {
             customersSpinnerArray.add(allCustomersList.get(r).getCustName());
             customersId.add(allCustomersList.get(r).getCustId());
         }
-        Log.e("Cust_Names", customersSpinnerArray.toString()+"");
-        Log.e("Cust_IDs", customersId.toString()+"");
+        Log.e("Cust_Names", customersSpinnerArray.toString() + "");
+        Log.e("Cust_IDs", customersId.toString() + "");
 
         ArrayAdapter<String> customerSpinnerAdapter = new ArrayAdapter<>(
-                this, R.layout.support_simple_spinner_dropdown_item, customersSpinnerArray);
+                this, android.R.layout.simple_dropdown_item_1line, customersSpinnerArray);
 
-        customerSpinner.setAdapter(customerSpinnerAdapter);
-        customerSpinner.setSelection(0);
+        customerEdt.setAdapter(customerSpinnerAdapter);
+
+//        customerEdt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.e("Selected Customer pos", position+"");
+//                Log.e("Selected Customer id", id+"");
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//        customerEdt.setSelection(0);
 
         ////////
         categorySpinnerArray.clear();
@@ -188,14 +214,41 @@ public class ItemsReport extends AppCompatActivity {
             }
         });
 
-        voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        voucherTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case R.id.salesRadioButton: voucherType = 504; break;
-                    case R.id.retSalesRadioButton: voucherType = 506; break;
-                    case R.id.orderRadioButton: voucherType = 508; break;
+                switch (checkedId) {
+                    case R.id.salesRadioButton:
+                        voucherType = 504;
+                        break;
+                    case R.id.retSalesRadioButton:
+                        voucherType = 506;
+                        break;
+                    case R.id.orderRadioButton:
+                        voucherType = 508;
+                        break;
                 }
+            }
+        });
+
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (ContextCompat.checkSelfPermission(ItemsReport.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(ItemsReport.this, new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+                    if (ContextCompat.checkSelfPermission(ItemsReport.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {//just for first time
+                        Log.e("requestResult", "PERMISSION_GRANTED");
+                        Intent i = new Intent(ItemsReport.this, ScanActivity.class);
+                        i.putExtra("key", "6");
+                        startActivity(i);
+
+                    }
+                } else {
+                    Intent i = new Intent(ItemsReport.this, ScanActivity.class);
+                    i.putExtra("key", "6");
+                    startActivity(i);
+                }
+
             }
         });
 
@@ -204,10 +257,11 @@ public class ItemsReport extends AppCompatActivity {
             public void onClick(View v) {
                 clear();
                 if (!from_date.getText().toString().equals("") && !to_date.getText().toString().equals("")) {
-                    totalSold = 0 ; totalBonus = 0 ; totalSales = 0 ;
+                    totalSold = 0;
+                    totalBonus = 0;
+                    totalSales = 0;
                     for (int n = 0; n < items.size(); n++) {
-                        if (filters(n))
-                        {
+                        if (filters(n)) {
 
                             filteredItems.add(items.get(n));
 
@@ -223,10 +277,10 @@ public class ItemsReport extends AppCompatActivity {
                             for (int i = 0; i < 5; i++) {
 
                                 String[] record = {
-                                        items.get(n).getItemNo()    + "",
-                                        items.get(n).getItemName()   + "",
-                                        items.get(n).getQty()       + "",
-                                        items.get(n).getBonus()     + "",
+                                        items.get(n).getItemNo() + "",
+                                        items.get(n).getItemName() + "",
+                                        items.get(n).getQty() + "",
+                                        items.get(n).getBonus() + "",
                                         ""};
 
                                 calTotalSales = (items.get(n).getQty() * items.get(n).getPrice()) - items.get(n).getDisc();
@@ -248,14 +302,14 @@ public class ItemsReport extends AppCompatActivity {
 
                             totalSold = totalSold + items.get(n).getQty();
                             totalBonus = totalBonus + items.get(n).getBonus();
-                            totalSales = totalSales + calTotalSales ;
+                            totalSales = totalSales + calTotalSales;
 
                             TableItemsReport.addView(row);
                         }
                     }
 
-                    texttotalSold.setText(totalSold+"");
-                    textTotalBonus.setText(totalBonus+"");
+                    texttotalSold.setText(totalSold + "");
+                    textTotalBonus.setText(totalBonus + "");
                     texttotalSales.setText(convertToEnglish(decimalFormat.format(totalSales)));
                 } else
                     Toast.makeText(ItemsReport.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
@@ -276,12 +330,14 @@ public class ItemsReport extends AppCompatActivity {
 //        });
 
     }
+
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
+
     private void inflateBoomMenu() {
-        BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
+        BoomMenuButton bmb = (BoomMenuButton) findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.SimpleCircle);
         bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
@@ -298,8 +354,7 @@ public class ItemsReport extends AppCompatActivity {
                         @Override
                         public void onBoomButtonClick(int index) {
                             // When the boom-button corresponding this builder is clicked.
-                            switch (index)
-                            {
+                            switch (index) {
                                 case 0:
                                     exportToPdf();
 
@@ -317,16 +372,19 @@ public class ItemsReport extends AppCompatActivity {
 
         }
     }
+
     private void exportToEx() {
-        ExportToExcel exportToExcel=new ExportToExcel();
-        exportToExcel.createExcelFile(ItemsReport.this,"ItemsReport.xls",4,filteredItems);
+        ExportToExcel exportToExcel = new ExportToExcel();
+        exportToExcel.createExcelFile(ItemsReport.this, "ItemsReport.xls", 4, filteredItems);
 
     }
-    public  void exportToPdf(){
-        Log.e("exportToPdf",""+filteredItems.size());
-        PdfConverter pdf =new PdfConverter(ItemsReport.this);
-        pdf.exportListToPdf(filteredItems,"VouchersReport",from_date.getText().toString(),4);
+
+    public void exportToPdf() {
+        Log.e("exportToPdf", "" + filteredItems.size());
+        PdfConverter pdf = new PdfConverter(ItemsReport.this);
+        pdf.exportListToPdf(filteredItems, "VouchersReport", from_date.getText().toString(), 4);
     }
+
     public DatePickerDialog.OnDateSetListener openDatePickerDialog(final int flag) {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -378,17 +436,21 @@ public class ItemsReport extends AppCompatActivity {
 
     public boolean filters(int n) {
         ///B
-        String customerName = customerSpinner.getSelectedItem().toString();
+        String customerName = customerEdt.getText().toString().trim();
         String itemCategory = itemGroupSpinner.getSelectedItem().toString();
 
         List<Integer> vNos;
         List<String> itemNos;
 
-        long selectedIdCustomer = customerSpinner.getSelectedItemId();
+
+        int selectedIdCustomer = customersSpinnerArray.indexOf(customerName);
+        Log.e("SelectedCustomer_pos", selectedIdCustomer + "");
+
         long selectedIdCategory = itemGroupSpinner.getSelectedItemId();
         String customerId = "";
-        if (selectedIdCustomer!=0) {
-            customerId = customersId.get((int) (selectedIdCustomer - 1));
+
+        if (selectedIdCustomer != ListView.INVALID_POSITION) {
+            customerId = customersId.get(selectedIdCustomer);
             Log.e("SelectedCustomerId", customerId);
         }
 
@@ -399,29 +461,28 @@ public class ItemsReport extends AppCompatActivity {
 
         String itemNumber = items.get(n).getItemNo();
         String date = items.get(n).getDate();
-        String itemName=items.get(n).getItemName();
+        String itemName = items.get(n).getItemName();
         int vType = items.get(n).getVoucherType();
 
         try {
-            if (!textItemNumber.equals(""))
-            {
-                Log.e("case1==","case1");
-                if ((itemNumber.contains(textItemNumber))||itemName.toLowerCase().contains(textItemNumber.toLowerCase()) && vType == voucherType &&
+            if (!textItemNumber.equals("")) {
+                Log.e("case1==", "case1");
+                if ((itemNumber.contains(textItemNumber)) || itemName.toLowerCase().contains(textItemNumber.toLowerCase()) && vType == voucherType &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
 
-                    if (selectedIdCustomer == 0 && selectedIdCategory == 0)
+                    if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory == 0)
                         return true;
-                    else if (selectedIdCustomer != 0 && selectedIdCategory == 0) {
-                        Log.e("case2==","case2");
+                    else if (selectedIdCustomer != ListView.INVALID_POSITION && selectedIdCategory == 0) {
+                        Log.e("case2==", "case2");
 
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
                         if (vNos.contains(items.get(n).getVoucherNumber()))
                             return true;
 
-                    } else if (selectedIdCustomer == 0 && selectedIdCategory != 0) {
-                        Log.e("case3==","case3");
+                    } else if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory != 0) {
+                        Log.e("case3==", "case3");
                         itemNos = obj.getItemNoByCategory(itemCategory);
 
                         if (itemNos.contains(items.get(n).getItemNo()) && items.get(n).getItemNo().equals(textItemNumber))
@@ -429,7 +490,7 @@ public class ItemsReport extends AppCompatActivity {
 
                     } else {
 
-                        Log.e("case4==","case4");
+                        Log.e("case4==", "case4");
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
                         itemNos = obj.getItemNoByCategory(itemCategory);
@@ -445,18 +506,18 @@ public class ItemsReport extends AppCompatActivity {
                 if (vType == voucherType &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate)))) {
-                    Log.e("case8==","case8");
-                    if (selectedIdCustomer == 0 && selectedIdCategory == 0)
+                    Log.e("case8==", "case8");
+                    if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory == 0)
                         return true;
-                    else if (selectedIdCustomer != 0 && selectedIdCategory == 0) {
-                        Log.e("case7==","case7");
+                    else if (selectedIdCustomer != ListView.INVALID_POSITION && selectedIdCategory == 0) {
+                        Log.e("case7==", "case7");
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
                         if (vNos.contains(items.get(n).getVoucherNumber()))
                             return true;
 
-                    } else if (selectedIdCustomer == 0 && selectedIdCategory != 0) {
-                        Log.e("case6==","case6");
+                    } else if (selectedIdCustomer == ListView.INVALID_POSITION && selectedIdCategory != 0) {
+                        Log.e("case6==", "case6");
                         itemNos = obj.getItemNoByCategory(itemCategory);
 
                         if (itemNos.contains(items.get(n).getItemNo()))
@@ -464,7 +525,7 @@ public class ItemsReport extends AppCompatActivity {
 
                     } else {
 
-                        Log.e("case5==","case5");
+                        Log.e("case5==", "case5");
                         vNos = obj.getVoucherByCustomerNo(customerId);
 
                         itemNos = obj.getItemNoByCategory(itemCategory);
