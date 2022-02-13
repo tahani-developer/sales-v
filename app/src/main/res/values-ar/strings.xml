@@ -569,4 +569,5 @@
     <string name="TYPEPOFPLAN2">الترتيب حسب موقع العميل  </string>
     <string name="importplan"> قم باستيراد الخطة اولا</string>
     <string name="showlocation">عرض الخطة على الخريطة</string>
+    <string name="duplicate_name">اسم مكرر</string>
 </resources>

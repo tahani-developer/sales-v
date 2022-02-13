@@ -331,7 +331,7 @@ public class PrintVoucher extends AppCompatActivity {
 //                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()));
                                             String s="";
                                             Log.e("voucher2==", "  " +"gggg");
-                                    //        try{
+                                            try{
 
                                                 if (!obj.getAllCompanyInfo().get(0).getCompanyName().equals("")
                                                         && obj.getAllCompanyInfo().get(0).getcompanyTel() != 0
@@ -441,11 +441,11 @@ public class PrintVoucher extends AppCompatActivity {
                                                 Toast.makeText(PrintVoucher.this, R.string.error_companey_info, Toast.LENGTH_LONG).show();
                                             }
 
-                                         //   }
-//                                            catch (Exception e)
-//                                            {
-//                                                Toast.makeText(PrintVoucher.this, ""+getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
-//                                            }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Toast.makeText(PrintVoucher.this, ""+getResources().getString(R.string.error_companey_info), Toast.LENGTH_SHORT).show();
+                                            }
 
                                         }
                                     });

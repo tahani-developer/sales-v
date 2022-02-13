@@ -262,7 +262,7 @@ public class CustomerCheckInFragment extends DialogFragment {
 
 
                                 mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                                        "01/01/19999", "0", 0,0));
+                                        currentDate, "0", 0,0));
 
 //                              if(mDbHandler.getAllSettings().get(0).getPriceByCust()==1){
 //                                  String rate_customer = mDbHandler.getRateOfCustomer();
@@ -305,7 +305,7 @@ public class CustomerCheckInFragment extends DialogFragment {
                         int salesMan = Integer.parseInt(Login.salesMan);
 
                         mDbHandler.addTransaction(new Transaction(salesMan, cusCode, cusName, currentDate, currentTime,
-                                "01/01/19999", "Not Yet", 0,0));
+                                currentDate, "Not Yet", 0,0));
 
                         saveCustLocation(cusCode);
                         new JSONTask().execute();

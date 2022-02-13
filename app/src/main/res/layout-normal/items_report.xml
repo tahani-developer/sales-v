@@ -205,7 +205,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3"
                     android:gravity="center_vertical"
-                    android:text="@string/item_number"
+                    android:text="@string/app_search"
                     android:textColor="@color/text_view_color"
                     android:textSize="12sp" />
 
@@ -215,6 +215,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
                     android:layout_weight="2"
+                    android:hint="item Name or number"
 
                     android:background="@drawable/back_border_edit"
                     android:gravity="center"

@@ -1208,11 +1208,11 @@ public class ESCPSample2
 					posPtr.printAndroidFont(null, true, " خصم سطري    : " + convertToEnglish(decimalFormat.format(itemDiscount)) + "\n", nLineWidth, 26, alignment);
 				posPtr.printAndroidFont(null, true, " خصم كلي    : " + voucherforPrint.getTotalVoucherDiscount() + "\n", nLineWidth, 26, alignment);
 
+				posPtr.printAndroidFont(null, true, "الصافي   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales()) )+ "\n", nLineWidth, 26, alignment);
 
 
 		}
 
-			posPtr.printAndroidFont(null, true, "الصافي   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales()) )+ "\n", nLineWidth, 26, alignment);
 			if(notePosition.equals("1")){
 				posPtr.printAndroidFont(null, true,  companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 

@@ -1798,23 +1798,16 @@ saveCurentLocation();
             public void onClick(View view) {
                 if (!addCus.getText().toString().equals("")) {
                     int payMethod=0;
-                    mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
-                            latitude_main, longitude_main, Login.salesMan, Login.salesMan,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
-                  dialog.dismiss();
-                  reFreshCustomerList();
-//                    String customerId=getCustomerId();
-//                    if(!customerId.equals(""))
-//                    {
-//                       int idRadioGroup= paymentTermRadioGroup.getCheckedRadioButtonId();
-//                       if(idRadioGroup==R.id.cashRadioButton)
-//                       {
-//                           payMethod=1;
-//                       }
-//                       else {    payMethod=0;
-//                       }
-//                        mDbHandler.addCustomer(new Customer(123,customerId,addCus.getText().toString(),address.getText().toString(),0,"0",0,"1",0,payMethod,latitude_main+"",longitude_main+"",0.0,"0",0,0,customerId+""));
-//                        dialog.dismiss();
-//                    }
+                    if(isCustExist(addCus.getText().toString().trim())==0){
+                        mDbHandler.addAddedCustomer(new AddedCustomer(addCus.getText().toString(), remark.getText().toString(),
+                                latitude_main, longitude_main, Login.salesMan, Login.salesMan,0,address.getText().toString(),telephone.getText().toString(),contactPerson.getText().toString()));
+                        dialog.dismiss();
+                        reFreshCustomerList();
+                    }else {
+                        addCus.setError(getResources().getString(R.string.duplicate_name));
+                    }
+
+
 
                 } else
                 {
@@ -1828,6 +1821,10 @@ saveCurentLocation();
 
 
         dialog.show();
+    }
+
+    private int isCustExist(String name) {
+        return  mDbHandler.isExist(name);
     }
 
     private void reFreshCustomerList() {

@@ -423,7 +423,7 @@ public class InventoryReport extends AppCompatActivity {
                     if(filteredList.size()==0)
                     { String[] arrOfStr = newText.split(" ");
                     int [] countResult=new int[arrOfStr.length];
-                    Log.e("arrOfStr",""+arrOfStr.length);
+                   // Log.e("arrOfStr",""+arrOfStr.length);
 
                     ArrayList<inventoryReportItem> filteredList_name = new ArrayList<>();
                     for (int k = 0; k < itemsReportinventory.size(); k++)
@@ -458,7 +458,7 @@ public class InventoryReport extends AppCompatActivity {
                 else{
                         String[] arrOfStr = newText.split(" ");
                         int [] countResult=new int[arrOfStr.length];
-                        Log.e("arrOfStr",""+arrOfStr.length);
+                      //  Log.e("arrOfStr",""+arrOfStr.length);
 
                         ArrayList<inventoryReportItem> filteredList_name = new ArrayList<>();
                         for (int k = 0; k < filteredList.size(); k++)
@@ -517,7 +517,7 @@ public class InventoryReport extends AppCompatActivity {
 
 
                     if(    qtySpinner.getSelectedItem().equals("الكل") ) {
-                        Log.e("case1==","case1==");
+                        //Log.e("case1==","case1==");
                         for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                             {
@@ -574,7 +574,7 @@ public class InventoryReport extends AppCompatActivity {
 
                     filteredList.clear();
                         if(    qtySpinner.getSelectedItem().equals("أكبر من الصفر") ) {
-                            Log.e("case21==","case2==");
+                           // Log.e("case21==","case2==");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (itemsReportinventory.get(k).getQty() > 0)
@@ -588,7 +588,7 @@ public class InventoryReport extends AppCompatActivity {
                         {   filteredList.clear();
                             Log.e("case31==","case3==");
 
-                            Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
+                            //Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if ( itemsReportinventory.get(k).getQty() == 0)
@@ -597,8 +597,8 @@ public class InventoryReport extends AppCompatActivity {
 
                         }else if( qtySpinner.getSelectedItem().equals("أصغر من الصفر"))
                         {   filteredList.clear();
-                            Log.e("case41==","case4==");
-                            Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
+                           // Log.e("case41==","case4==");
+                           // Log.e("itemsReportinventory==",itemsReportinventory.size()+"");
                             for (int k = 0; k < itemsReportinventory.size(); k++) {
 
                                 if (  itemsReportinventory.get(k).getQty() <0)
