@@ -217,7 +217,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //            holder.linearLayout.setBackgroundColor(Color.parseColor("#455A64"));
 //        else
 //            holder.linearLayout.setBackgroundColor(R.color.done_button);
+        Log.e("getVivible",""+allItemsList.get(position).getItemNo()+"\t"+allItemsList.size()
+        );
+        Log.e("getVivible",""+allItemsList.get(position).getVivible());
+        if(allItemsList.get(position).getVivible()==1)
+        {
 
+            holder.cardView.setVisibility(View.GONE);
+        }else  holder.cardView.setVisibility(View.VISIBLE);
 
         holder.itemNumber.setText(allItemsList.get(position).getItemNo());
         holder.itemName.setText(allItemsList.get(position).getItemName());

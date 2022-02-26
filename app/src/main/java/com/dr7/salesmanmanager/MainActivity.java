@@ -302,11 +302,6 @@ public class MainActivity extends AppCompatActivity
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
 
-
-
-
-
-
      try {
 saveCurentLocation();
 
@@ -706,7 +701,7 @@ saveCurentLocation();
                     longtudeCheckIn = 0;
                     latitudeCheckIn = location.getLatitude();
                     longtudeCheckIn = location.getLongitude();
-                    Log.e("onLocationChanged", "" + latitudeCheckIn + "" + longtudeCheckIn);
+//                    Log.e("onLocationChanged", "" + latitudeCheckIn + "" + longtudeCheckIn);
 
 
                 }
@@ -2667,6 +2662,7 @@ saveCurentLocation();
                 if (mDbHandler.getAllSettings().get(0).getAllowMinus() == 1)
                     allowMinus.setChecked(true);
 
+                Log.e("getSalesManCustomers","="+mDbHandler.getAllSettings().get(0).getSalesManCustomers());
                 if (mDbHandler.getAllSettings().get(0).getSalesManCustomers() == 1)
                     salesManCustomersOnly.setChecked(true);
 

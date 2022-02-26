@@ -171,8 +171,8 @@ public class Login extends AppCompatActivity {
     public  static  int updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
+    public  static    int   POS_ACTIVE=0;
 //   public  static  String headerDll = "";
-
     public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -201,6 +201,7 @@ public class Login extends AppCompatActivity {
 
                 }
                 try {
+                    if(updateOnlySelectedCustomer==1)
                     mDHandler.updateSettingOnlyCustomer(updateOnlySelectedCustomer);
                 }catch (Exception e){
 
@@ -251,6 +252,7 @@ public class Login extends AppCompatActivity {
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
             SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
+            POS_ACTIVE=flag_settingsList.get(0).getPos_active();
             Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
@@ -366,6 +368,7 @@ public class Login extends AppCompatActivity {
         }catch (Exception e){
 
         }
+        mDHandler.deleteAllPreviusYear();
 
     }
 
@@ -551,7 +554,7 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
-        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan;
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,activePos;
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         swOrder = moreDialog.findViewById(R.id.swOrder);
@@ -559,6 +562,7 @@ public class Login extends AppCompatActivity {
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
+        activePos= moreDialog.findViewById(R.id.activePos);
         flag_settingsList = mDHandler.getFlagSettings();
 
         if (flag_settingsList.size() != 0) {
@@ -580,6 +584,7 @@ public class Login extends AppCompatActivity {
             swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
             swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
             plan.setChecked((flag_settingsList.get(0).getActiveSlasmanPlan() == 1));
+            activePos.setChecked((flag_settingsList.get(0).getPos_active() == 1));
         }
 
         okBtn.setOnClickListener(v1 -> {
@@ -602,14 +607,15 @@ Log.e("okBtn","okBtn");
             getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
             voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
             SalsManPlanFlage = plan.isChecked() ? 1 : 0;
+            POS_ACTIVE = activePos.isChecked() ? 1 : 0;
 
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage));
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage);
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE);
             }
 
 

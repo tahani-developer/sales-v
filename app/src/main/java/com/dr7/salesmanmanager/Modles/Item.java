@@ -58,6 +58,15 @@ public class Item implements Serializable {
     private float Avi_Qty;
     private int   IS_RETURNED;
     private int ORIGINALvoucherNo;
+    private  int vivible=0;
+
+    public int getVivible() {
+        return vivible;
+    }
+
+    public void setVivible(int vivible) {
+        this.vivible = vivible;
+    }
 
     public int getORIGINALvoucherNo() {
         return ORIGINALvoucherNo;

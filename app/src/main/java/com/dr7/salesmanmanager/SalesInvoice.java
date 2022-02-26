@@ -582,7 +582,9 @@ public class SalesInvoice extends Fragment {
         connect.setVisibility(View.GONE);
         companyInfo = new CompanyInfo();
         offers_ItemsQtyOffer = mDbHandler.getItemsQtyOffer();
+
         limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+        Log.e("total_items_quantity","=="+total_items_quantity+"\t"+limit_offer);
         refrechItemForReprint();
         //*************************************************************************
 
@@ -4612,7 +4614,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
         double itemTax, itemTotal, itemTotalAfterTax,
-                itemTotalPerc, itemDiscVal, posPrice, totalQty = 0;
+                itemTotalPerc, itemDiscVal, posPrice, totalQty = 0,allItemQtyWithDisc=0;
         //**********************************************************************
         list_discount_offers = mDbHandler.getDiscountOffers();// total discount
         itemsQtyOfferList = mDbHandler.getItemsQtyOffer();
@@ -4638,6 +4640,7 @@ public class SalesInvoice extends Fragment {
             try {
 
                 limit_offer = mDbHandler.getMinOfferQty(total_items_quantity);
+                Log.e("total_items_quantity","=="+total_items_quantity+"\t"+limit_offer);
             } catch (Exception e) {
                 limit_offer = 0;
             }
@@ -4677,7 +4680,9 @@ public class SalesInvoice extends Fragment {
                 }
                 else {// all item without discount item
                     totalQty = 0.0;
+                    allItemQtyWithDisc=0;
                     for (int x = 0; x < items.size(); x++) {
+                        allItemQtyWithDisc+=items.get(x).getQty();
                         if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
                             if (items.get(x).getItemName().equals("(bonus)")) {
                                 flagBonus = items.get(x - 1).getQty();
@@ -4692,18 +4697,20 @@ public class SalesInvoice extends Fragment {
 
 
                     }
+
                     for (int j = 0; j < list_discount_offers.size(); j++) {
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
@@ -4836,8 +4843,9 @@ public class SalesInvoice extends Fragment {
 
 
                 } else {// all item without discount item
-                    totalQty = 0.0;
+                    totalQty = 0.0;allItemQtyWithDisc=0;
                     for (int x = 0; x < items.size(); x++) {
+                        allItemQtyWithDisc+=items.get(i).getQty();
                         if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
                             if (items.get(x).getItemName().equals("(bonus)")) {
                                 flagBonus = items.get(x - 1).getQty();
@@ -4856,14 +4864,14 @@ public class SalesInvoice extends Fragment {
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }

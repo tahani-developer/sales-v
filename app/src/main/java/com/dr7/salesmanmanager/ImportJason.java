@@ -53,6 +53,7 @@ import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PriceListD;
 import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
+import com.dr7.salesmanmanager.Modles.SMItemAvailability;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
@@ -136,6 +137,7 @@ public class ImportJason extends AppCompatActivity {
 
     public static List<Customer> customerList = new ArrayList<>();
     public static List<ItemUnitDetails> itemUnitDetailsList = new ArrayList<>();
+    public static List<SMItemAvailability> itemVisiblelsList = new ArrayList<>();
     public static List<ItemsMaster> itemsMasterList = new ArrayList<>();
     public static List<ItemSwitch> itemsSwitchList = new ArrayList<>();
     public static List<PriceListD> priceListDpList = new ArrayList<>();
@@ -2288,11 +2290,49 @@ public class ImportJason extends AppCompatActivity {
                 // JsonResponse = sb.toString();
 
                 String finalJson = sb.toString();
-                 Log.e("finalJson***Import", finalJson);
+//                 Log.e("finalJson***Import", finalJson);
+                int sales_Man = Integer.parseInt(salesMan);
                 String rate_customer = "";
                 String HideVal = "";
                 customerList.clear();
                 JSONObject parentObject = new JSONObject(finalJson);
+                try {
+                    JSONArray parentArrayItem_Visibility = parentObject.getJSONArray("ITEM_VISIBILATY");
+                    itemVisiblelsList.clear();
+                    for (int i = 0; i < parentArrayItem_Visibility.length(); i++) {
+                        JSONObject finalObject = parentArrayItem_Visibility.getJSONObject(i);
+
+                        SMItemAvailability item = new SMItemAvailability();
+                        try {
+                            item.setSalManNo(finalObject.getInt("SALESMANNO"));
+                        } catch (Exception e) {
+
+                        }
+
+                        Log.e("setSalManNo","="+item.getSalManNo()+"\tsales_Man="+sales_Man);
+                        if (item.getSalManNo() == sales_Man) {
+
+
+                        item.setItemOcode(finalObject.getString("ITEMOCODE"));
+                        try {
+                            item.setAvailability(finalObject.getInt("VISIBLE"));
+                        } catch (Exception e) {
+                            item.setAvailability(0);
+                        }
+
+
+                        Log.e("finalJson***Import", item.getItemOcode() + "\t" + item.getAvailability());
+
+                        itemVisiblelsList.add(item);
+                        Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
+                    }
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+                //*************************************ItemVisible**************************************
+
+
                 try {
                     JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
 
@@ -2392,7 +2432,7 @@ public class ImportJason extends AppCompatActivity {
 
 
                         itemUnitDetailsList.add(item);
-                        Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
+//                        Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
                     }
                 } catch (JSONException e) {
                     Log.e("Import Data", e.getMessage().toString());
@@ -3154,6 +3194,7 @@ Log.e("customerList",""+customerList.size());
             mHandler.deleteAllItemsSerialMaster();
             mHandler.deleteOfferMaster();
             mHandler.deletOfferGroup();
+            mHandler.deleteFromItemVisiblty();
             try {
                 storeNo = Integer.parseInt(userNo);
             } catch (Exception e) {
@@ -3182,18 +3223,25 @@ Log.e("customerList",""+customerList.size());
             Log.e("In***", " inadd_SerialMasteItems");
             setText(title_progresspar, "add_Serial_Items");
 
-
+            setText(title_progresspar, "add_Customer");
             mHandler.addCustomer(customerList);
             Log.e("In***", " inaddCustomer");
-            setText(title_progresspar, "add_Customer");
 
+
+            setText(title_progresspar, "add_Item_Visible");
+            mHandler.addSMitemAvilablity(itemVisiblelsList);
+            Log.e("In***", " add_Item_Visible"+itemVisiblelsList.size());
+
+
+
+            setText(title_progresspar, "add_Item_Unit_Details");
             mHandler.addItem_Unit_Details(itemUnitDetailsList);
             Log.e("In***", " inaddItem_Unit_Details");
-            setText(title_progresspar, "add_Item_Unit_Details");
 
+            setText(title_progresspar, "add_items_Master");
             mHandler.addItemsMaster(itemsMasterList);
             Log.e("In***", " inaddItemsMaster");
-            setText(title_progresspar, "add_items_Master");
+
 
             mHandler.addItemSwitch(itemsSwitchList);
             Log.e("In***", " inaaddItemSwitch");

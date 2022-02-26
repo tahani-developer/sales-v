@@ -74,7 +74,7 @@ public class VouchersReport extends AppCompatActivity {
     private DecimalFormat decimalFormat;
     int payMethod = 1;
     int voucherType = 504;
-    Spinner voucherKindSpinner,payMethodSpinner;
+    Spinner voucherKindSpinner, payMethodSpinner;
 
     double subTotal = 0, tax = 0, netSales = 0;
     int[] listImageIcone = new int[]{R.drawable.pdf_icon, R.drawable.excel_small};
@@ -126,7 +126,7 @@ public class VouchersReport extends AppCompatActivity {
         cust_number = (EditText) findViewById(R.id.customer_number);
         preview = (Button) findViewById(R.id.preview);
         voucherKindSpinner = (Spinner) findViewById(R.id.payKindSpinner);
-        payMethodSpinner= (Spinner) findViewById(R.id.payMethodSpinner);
+        payMethodSpinner = (Spinner) findViewById(R.id.payMethodSpinner);
 
         textSubTotal = (TextView) findViewById(R.id.subTotalTextView);
         textTax = (TextView) findViewById(R.id.taxTextView);
@@ -173,8 +173,7 @@ public class VouchersReport extends AppCompatActivity {
                     //type=voucherType;
                     for (int n = 0; n < vouchers.size(); n++) {
 
-                        if (filters(n))
-                        {
+                        if (filters(n)) {
                             filteredVouchers.add(vouchers.get(n));
 
                             final TableRow row = new TableRow(VouchersReport.this);
@@ -213,7 +212,7 @@ public class VouchersReport extends AppCompatActivity {
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                                 row.setLayoutParams(lp);
 
-                                if (i != 4&&i!=9) {
+                                if (i != 4 && i != 9) {
                                     TextView textView = new TextView(VouchersReport.this);
                                     textView.setText(record[i]);
                                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
@@ -237,27 +236,27 @@ public class VouchersReport extends AppCompatActivity {
                                     } else {
 
 
-                                    TextView textView = new TextView(VouchersReport.this);
-                                    textView.setText(getResources().getString(R.string.show));
+                                        TextView textView = new TextView(VouchersReport.this);
+                                        textView.setText(getResources().getString(R.string.show));
 
-                                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorblue_dark));
-                                    textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.white));
-                                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                    textView.setLayoutParams(lp3);
-                                    textView.setGravity(Gravity.CENTER);
+                                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorblue_dark));
+                                        textView.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.white));
+                                        TableRow.LayoutParams lp3 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                        textView.setLayoutParams(lp3);
+                                        textView.setGravity(Gravity.CENTER);
 
-                                    textView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            TextView textView = (TextView) row.getChildAt(1);
-                                            TextView textViewVoucherNo = (TextView) row.getChildAt(9);
-                                            int type = Integer.parseInt(textViewVoucherNo.getText().toString());
-                                            Log.e("type", "" + type);
-                                            voucherInfoDialog(Integer.parseInt(textView.getText().toString()), type);
-                                        }
-                                    });
-                                    row.addView(textView);
-                                }
+                                        textView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                TextView textView = (TextView) row.getChildAt(1);
+                                                TextView textViewVoucherNo = (TextView) row.getChildAt(9);
+                                                int type = Integer.parseInt(textViewVoucherNo.getText().toString());
+                                                Log.e("type", "" + type);
+                                                voucherInfoDialog(Integer.parseInt(textView.getText().toString()), type);
+                                            }
+                                        });
+                                        row.addView(textView);
+                                    }
                                 }
                             }
 
@@ -328,6 +327,7 @@ public class VouchersReport extends AppCompatActivity {
         Log.e("getVoucherType", "" + voucherType + "\tselectedPosuition=" + selectedPosuition);
 
     }
+
     private void fillSpinerPayMethod() {
         ArrayList<String> categorySpinnerArray = new ArrayList<>();
         categorySpinnerArray.add(getString(R.string.all));
@@ -341,6 +341,7 @@ public class VouchersReport extends AppCompatActivity {
         payMethodSpinner.setSelection(0);
 
     }
+
     private void fillSpiner() {
         ArrayList<String> categorySpinnerArray = new ArrayList<>();
         categorySpinnerArray.add(getString(R.string.allVoucher));
@@ -413,6 +414,7 @@ public class VouchersReport extends AppCompatActivity {
 
     public void voucherInfoDialog(int voucherNumber, int voucherType) {
 
+        Log.e("voucherInfoDialog", "" + voucherNumber + "\t" + voucherType);
         final Dialog dialog = new Dialog(VouchersReport.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //       new LocaleAppUtils().changeLayot(PrintVoucher.this);
@@ -459,7 +461,9 @@ public class VouchersReport extends AppCompatActivity {
         for (int k = 0; k < vouchers.size(); k++) {
             if (voucherNumber == vouchers.get(k).getVoucherNumber() &&
                     voucherType == vouchers.get(k).getVoucherType()) {
+
                 VocherToPrint = vouchers.get(k);
+                Log.e("VocherToPrint", "" + VocherToPrint.getVoucherDate());
                 VochNum.setText(vouchers.get(k).getVoucherNumber() + "");
                 if (vouchers.get(k).getPayMethod() == 1)
                     PayMth.setText(getResources().getString(R.string.cash) + "");
@@ -516,26 +520,7 @@ public class VouchersReport extends AppCompatActivity {
                         lp2.width = 120;
                         textView.setLayoutParams(lp2);
                         row.addView(textView);
-                    }
-
-//else
-//    if(i==0){
-//
-//
-//    TextView textView = new TextView(VouchersReport.this);
-//    textView.setText(record[i]);
-//    textView.setTextSize(12);
-//    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
-//    textView.setGravity(Gravity.CENTER);
-//
-//    // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-//    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-//    lp2.width=120;
-//    textView.setLayoutParams(lp2);
-//    row.addView(textView);
-//
-//}
-                    else {
+                    } else {
                         TextView textView = new TextView(VouchersReport.this);
                         textView.setText(record[i]);
                         textView.setTextSize(12);
@@ -627,13 +612,13 @@ public class VouchersReport extends AppCompatActivity {
                 if ((customerName.contains(textCompanyNumber)) &&
                         (formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
-                        (vType == voucherType|| voucherType == 1) && (pMethod == payMethod||payMethod==2) )
+                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2))
                     return true;
             } else {
                 Log.e("tag", "*****" + date + "***" + fromDate);
                 if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
                         (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))) &&
-                        (vType == voucherType|| voucherType == 1)  && (pMethod == payMethod||payMethod==2) )
+                        (vType == voucherType || voucherType == 1) && (pMethod == payMethod || payMethod == 2))
                     return true;
             }
 
