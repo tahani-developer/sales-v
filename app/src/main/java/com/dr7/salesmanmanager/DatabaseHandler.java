@@ -8488,7 +8488,7 @@ for (int i=0;i<arrayList.size();i++) {
     public void getvocherNumforItemsReturnd() {
         ArrayList<Item> items = new ArrayList<Item>();
         // Select All Query                                                                                                          //AND IS_RETURNED = '0'
-        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where IS_POSTED= '"+0+"' and  VOUCHER_TYPE='506'";
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_DETAILS where IS_POSTED= '0' and  VOUCHER_TYPE='506'";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

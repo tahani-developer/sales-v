@@ -2170,482 +2170,484 @@ public class ImportJason extends AppCompatActivity {
         }
     }
 
-    private class JSONTaskDelphi extends AsyncTask<String, String, List<Customer>> {
+     private class JSONTaskDelphi_Data2 extends AsyncTask<String, String, List<SalesManItemsBalance>> {
 
-        public String salesNo = "";
+        public String salesNo = "";  private class JSONTaskDelphi extends AsyncTask<String, String, List<Customer>> {
 
-        public JSONTaskDelphi(String sales) {
-            this.salesNo = sales;
-            Log.e("JSONTask", "salesNo" + salesNo);
+            public String salesNo = "";
 
-        }
+            public JSONTaskDelphi(String sales) {
+                this.salesNo = sales;
+                Log.e("JSONTask", "salesNo" + salesNo);
 
-        @Override
-        protected void onPreExecute() {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
-        }
 
-        @Override
-        protected List<Customer> doInBackground(String... params) {
-            URLConnection connection = null;
-            BufferedReader reader = null;
+            @Override
+            protected void onPreExecute() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                super.onPreExecute();
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("Loading...");
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setProgress(0);
+                progressDialog.show();
+            }
 
-            try {
+            @Override
+            protected List<Customer> doInBackground(String... params) {
+                URLConnection connection = null;
+                BufferedReader reader = null;
 
                 try {
 
-                    //+custId
+                    try {
 
-                    if (!ipAddress.equals("")) {
-                        //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
-                        //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
-                        if (ipAddress.contains(":")) {
-                            int ind = ipAddress.indexOf(":");
-                            ipAddress = ipAddress.substring(0, ind);
-                        }
+                        //+custId
+
+                        if (!ipAddress.equals("")) {
+                            //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
+                            //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                            if (ipAddress.contains(":")) {
+                                int ind = ipAddress.indexOf(":");
+                                ipAddress = ipAddress.substring(0, ind);
+                            }
 //                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
 
-                        //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+                            //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
 
-                        if (!salesNo.equals("")) {
-                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + salesNo + "&CONO=" + CONO;
+                            if (!salesNo.equals("")) {
+                                URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + salesNo + "&CONO=" + CONO;
 
-                        } else {
-                            URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + SalesManLogin + "&CONO=" + CONO;
+                            } else {
+                                URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + SalesManLogin + "&CONO=" + CONO;
 
+                            }
+
+                            Log.e("URL_TO_HIT", "" + URL_TO_HIT);
                         }
+                    } catch (Exception e) {
 
-                        Log.e("URL_TO_HIT", "" + URL_TO_HIT);
-                    }
-                } catch (Exception e) {
-
-                }
-
-
-                String link = URL_TO_HIT;
-                URL url = new URL(link);
-
-                //*************************************
-
-                String JsonResponse = null;
-                StringBuffer sb = new StringBuffer("");
-                HttpClient client = new DefaultHttpClient();
-                HttpGet request = new HttpGet();
-                request.setURI(new URI(URL_TO_HIT));
-
-
-                HttpResponse response = null;
-
-                try {
-                    response = client.execute(request);
-                } catch (Exception e) {
-                    // Log.e("response",""+response.toString());
-                    Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-
-                        }
-                    });
-                }
-
-
-                try {
-                    BufferedReader in = new BufferedReader(new
-                            InputStreamReader(response.getEntity().getContent()));
-
-
-                    String line = "";
-                    // Log.e("finalJson***Import", sb.toString());
-
-                    while ((line = in.readLine()) != null) {
-                        sb.append(line);
                     }
 
-                    in.close();
-                } catch (Exception e) {
-                    Handler h = new Handler(Looper.getMainLooper());
-                    h.post(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
 
+                    String link = URL_TO_HIT;
+                    URL url = new URL(link);
+
+                    //*************************************
+
+                    String JsonResponse = null;
+                    StringBuffer sb = new StringBuffer("");
+                    HttpClient client = new DefaultHttpClient();
+                    HttpGet request = new HttpGet();
+                    request.setURI(new URI(URL_TO_HIT));
+
+
+                    HttpResponse response = null;
+
+                    try {
+                        response = client.execute(request);
+                    } catch (Exception e) {
+                        // Log.e("response",""+response.toString());
+                        Handler h = new Handler(Looper.getMainLooper());
+                        h.post(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+
+                            }
+                        });
+                    }
+
+
+                    try {
+                        BufferedReader in = new BufferedReader(new
+                                InputStreamReader(response.getEntity().getContent()));
+
+
+                        String line = "";
+                        // Log.e("finalJson***Import", sb.toString());
+
+                        while ((line = in.readLine()) != null) {
+                            sb.append(line);
                         }
-                    });
-                }
+
+                        in.close();
+                    } catch (Exception e) {
+                        Handler h = new Handler(Looper.getMainLooper());
+                        h.post(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+
+                            }
+                        });
+                    }
 
 
-                // JsonResponse = sb.toString();
+                    // JsonResponse = sb.toString();
 
-                String finalJson = sb.toString();
-                 Log.e("finalJson***Import", finalJson);
-                String rate_customer = "";
-                String HideVal = "";
-                customerList.clear();
-                JSONObject parentObject = new JSONObject(finalJson);
-                try {
-                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
+                    String finalJson = sb.toString();
+                    Log.e("finalJson***Import", finalJson);
+                    String rate_customer = "";
+                    String HideVal = "";
+                    customerList.clear();
+                    JSONObject parentObject = new JSONObject(finalJson);
+                    try {
+                        JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
 
-                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
-                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+                        for (int i = 0; i < parentArrayCustomers.length(); i++) {
+                            JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
 
-                        Customer Customer = new Customer();
-                        Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
-                        Customer.setCustId(finalObject.getString("CUSTID"));
-                        Customer.setCustName(finalObject.getString("CUSTNAME"));
+                            Customer Customer = new Customer();
+                            Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
+                            Customer.setCustId(finalObject.getString("CUSTID"));
+                            Customer.setCustName(finalObject.getString("CUSTNAME"));
 //                        Log.e("setCustName","222"+Customer.getCustName());
-                        Customer.setAddress(finalObject.getString("ADDRESS"));
+                            Customer.setAddress(finalObject.getString("ADDRESS"));
 //                    if (finalObject.getString("IsSuspended") == null)
-                        Customer.setIsSuspended(0);
+                            Customer.setIsSuspended(0);
 //                    else
 //                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
-                        Customer.setPriceListId(finalObject.getString("PRICELISTID"));
-                        try {
-                            Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
-                        }
-                        catch (Exception e){
-                            Customer.setCashCredit(0);
-                        }
-                        Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
-                        try {
-                            Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
-                        }
-                        catch (Exception e)
-                        {
-                            Customer.setCreditLimit(0);
-                        }
-                        try {
-                            Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
-                        } catch (Exception e) {
-                            Customer.setPayMethod(-1);
+                            Customer.setPriceListId(finalObject.getString("PRICELISTID"));
+                            try {
+                                Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                            }
+                            catch (Exception e){
+                                Customer.setCashCredit(0);
+                            }
+                            Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
+                            try {
+                                Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                            }
+                            catch (Exception e)
+                            {
+                                Customer.setCreditLimit(0);
+                            }
+                            try {
+                                Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                            } catch (Exception e) {
+                                Customer.setPayMethod(-1);
 
-                        }
-                        Customer.setCustLat(finalObject.getString("LATITUDE"));
-                        Customer.setCustLong(finalObject.getString("LONGITUDE"));
+                            }
+                            Customer.setCustLat(finalObject.getString("LATITUDE"));
+                            Customer.setCustLong(finalObject.getString("LONGITUDE"));
 
 
-                        try {
-                            rate_customer = finalObject.getString("ACCPRC");
-                            if (!rate_customer.equals("null"))
-                                Customer.setACCPRC(rate_customer);
-                            else {
+                            try {
+                                rate_customer = finalObject.getString("ACCPRC");
+                                if (!rate_customer.equals("null"))
+                                    Customer.setACCPRC(rate_customer);
+                                else {
+                                    Customer.setACCPRC("0");
+
+                                }
+                            } catch (Exception e) {
+                                // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                                 Customer.setACCPRC("0");
 
                             }
-                        } catch (Exception e) {
-                            // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
-                            Customer.setACCPRC("0");
+                            //*******************************
+                            try {
+                                HideVal = finalObject.getString("HIDE_VAL");
+                                if (!HideVal.equals("null") && !HideVal.equals("") && !HideVal.equals("NULL"))
+                                    Customer.setHide_val(Integer.parseInt(HideVal));
+                                else {
+                                    Customer.setACCPRC("0");
 
-                        }
-                        //*******************************
-                        try {
-                            HideVal = finalObject.getString("HIDE_VAL");
-                            if (!HideVal.equals("null") && !HideVal.equals("") && !HideVal.equals("NULL"))
-                                Customer.setHide_val(Integer.parseInt(HideVal));
-                            else {
+                                }
+                                Customer.setCustomerIdText(finalObject.getString("CUSTID"));
+                            } catch (Exception e) {
+                                // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
                                 Customer.setACCPRC("0");
 
                             }
-                            Customer.setCustomerIdText(finalObject.getString("CUSTID"));
-                        } catch (Exception e) {
-                            // Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
-                            Customer.setACCPRC("0");
+                            //*******************************
 
+                            customerList.add(Customer);
                         }
-                        //*******************************
-
-                        customerList.add(Customer);
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
 //**************************************************************************
-                try {
-                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
-                    itemUnitDetailsList.clear();
-                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+                    try {
+                        JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details");
+                        itemUnitDetailsList.clear();
+                        for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+                            JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
 
-                        ItemUnitDetails item = new ItemUnitDetails();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setItemNo(finalObject.getString("ITEMNO"));
-                        item.setUnitId(finalObject.getString("UNITID"));
-                        item.setConvRate(finalObject.getDouble("CONVRATE"));
-                        try {
-                            item.setUnitPrice("");
-                            item.setItemBarcode("");
-                        } catch (Exception e) {
-                            item.setUnitPrice("");
+                            ItemUnitDetails item = new ItemUnitDetails();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setItemNo(finalObject.getString("ITEMNO"));
+                            item.setUnitId(finalObject.getString("UNITID"));
+                            item.setConvRate(finalObject.getDouble("CONVRATE"));
+                            try {
+                                item.setUnitPrice("");
+                                item.setItemBarcode("");
+                            } catch (Exception e) {
+                                item.setUnitPrice("");
 
-                            item.setItemBarcode("");
+                                item.setItemBarcode("");
+                            }
+
+
+                            itemUnitDetailsList.add(item);
+                            Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
                         }
-
-
-                        itemUnitDetailsList.add(item);
-                        Log.e("itemUnitDetailsList", "1" + itemUnitDetailsList.size());
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-                //***************************************************************************
-                try {
+                    //***************************************************************************
+                    try {
 //                    //[{"ITEMU":"Test1","ITEMOCODE":"6251088000015","ITEMBARCODE":"123","CALCQTY":"5","SALEPRICE":"10"},
 //                    // {"ITEMU":"Test2","ITEMOCODE":"30100002","ITEMBARCODE":"456","CALCQTY":"3","SALEPRICE":"6"}]
-                    JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details2");
-                    itemUnitDetailsList.clear();
-                    for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
-                        JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
+                        JSONArray parentArrayItem_Unit_Details = parentObject.getJSONArray("Item_Unit_Details2");
+                        itemUnitDetailsList.clear();
+                        for (int i = 0; i < parentArrayItem_Unit_Details.length(); i++) {
+                            JSONObject finalObject = parentArrayItem_Unit_Details.getJSONObject(i);
 
-                        ItemUnitDetails item = new ItemUnitDetails();
-                        item.setCompanyNo("");
-                        item.setItemNo(finalObject.getString("ITEMOCODE"));
-                        item.setUnitId(finalObject.getString("ITEMU"));
-                        item.setConvRate(finalObject.getDouble("CALCQTY"));
-                        try {
-                            item.setUnitPrice(finalObject.getString("SALEPRICE"));
-                            item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
+                            ItemUnitDetails item = new ItemUnitDetails();
+                            item.setCompanyNo("");
+                            item.setItemNo(finalObject.getString("ITEMOCODE"));
+                            item.setUnitId(finalObject.getString("ITEMU"));
+                            item.setConvRate(finalObject.getDouble("CALCQTY"));
+                            try {
+                                item.setUnitPrice(finalObject.getString("SALEPRICE"));
+                                item.setItemBarcode(finalObject.getString("ITEMBARCODE"));
 
-                            item.setPriceClass_1(finalObject.getString("PCLASS1"));
-                            item.setPriceClass_2(finalObject.getString("PCLASS2"));
-                            item.setPriceClass_3(finalObject.getString("PCLASS3"));
-
-
-
-                        } catch (Exception e) {
-                            item.setUnitPrice("");
-
-                            item.setItemBarcode("");
-                            item.setPriceClass_1("");
-                            item.setPriceClass_2("");
-                            item.setPriceClass_3("");
-                        }
+                                item.setPriceClass_1(finalObject.getString("PCLASS1"));
+                                item.setPriceClass_2(finalObject.getString("PCLASS2"));
+                                item.setPriceClass_3(finalObject.getString("PCLASS3"));
 
 
-                        itemUnitDetailsList.add(item);
-                        Log.e("itemUnitDetailsList", "2====" + itemUnitDetailsList.size());
-                    }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
 
+                            } catch (Exception e) {
+                                item.setUnitPrice("");
 
-                try {
-                    JSONArray parentArrayItem_Serial_Details = parentObject.getJSONArray("ITEMS_SERIALs");
-                    itemSerialList.clear();
-                    for (int i = 0; i < parentArrayItem_Serial_Details.length(); i++) {
-                        JSONObject finalObject = parentArrayItem_Serial_Details.getJSONObject(i);
-
-                        serialModel item = new serialModel();
-                        item.setStoreNo(finalObject.getString("STORENO"));
-                        item.setItemNo(finalObject.getString("ITEMOCODE"));
-                        item.setSerialCode(finalObject.getString("SERIALCODE"));
-                        item.setQty(finalObject.getString("QTY"));
-
-                        itemSerialList.add(item);
-                    }
-                    // Log.e("itemSerialList",""+itemSerialList.size());
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-                try {
-                    JSONArray parentArrayItem_Switch = parentObject.getJSONArray("item_swich");
-                    itemsSwitchList.clear();
-                    for (int i = 0; i < parentArrayItem_Switch.length(); i++) {
-                        JSONObject finalObject = parentArrayItem_Switch.getJSONObject(i);
-
-                        ItemSwitch item = new ItemSwitch();
-                        item.setItem_NAMEA(finalObject.getString("ITEMNAMEA"));
-                        item.setItem_OCODE(finalObject.getString("ITEMOCODE"));
-                        item.setItem_NCODE(finalObject.getString("ITEMNCODE"));
-
-                        itemsSwitchList.add(item);
-                    }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-
-
-                try {
-//                    `ITEMPICSPATH`
-                    JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
-//                Log.e("parentArrayItems_Master",""+parentArrayItems_Master.getString(""));
-                    itemsMasterList.clear();
-                    for (int i = 0; i < parentArrayItems_Master.length(); i++) {
-                        JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);
-                        ItemsMaster item = new ItemsMaster();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setItemNo(finalObject.getString("ITEMNO"));
-                        item.setName(finalObject.getString("NAME"));
-                        item.setCategoryId(finalObject.getString("CATEOGRYID"));
-                        item.setBarcode(finalObject.getString("BARCODE"));
-//                    item.setIsSuspended(finalObject.getInt("IsSuspended"));MINPRICE
-                        item.setPosPrice(finalObject.getDouble("F_D"));
-                        item.setIsSuspended(0);
-                        try {
-                            item.setItemL(finalObject.getDouble("ITEML"));
-                            Log.e("Exception", "" + finalObject.getDouble("ITEML"));
-                        } catch (Exception e) {
-                            item.setItemL(0.0);
-
-                        }
-
-                        try {
-                            if (finalObject.getString("ItemK") == "" || finalObject.getString("ItemK") == null || finalObject.getString("ItemK") == "null")
-                                item.setKind_item("***");
-                            else
-                                item.setKind_item(finalObject.getString("ItemK")); // here ?
-
-                        } catch (Exception e) {
-                            Log.e("ErrorImport", "Item_Kind_null");
-                            item.setKind_item("***");
-
-                        }
-                        try {
-                            item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
-                            // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
-                        } catch (Exception e) {
-                        }
-                        try {
-                            if (finalObject.getString("ITEMPICSPATH") == "" || finalObject.getString("ITEMPICSPATH") == null || finalObject.getString("ITEMPICSPATH") == "null") {
-                                item.setPhotoItem("");
-                            } else {
-                                item.setPhotoItem(finalObject.getString("ITEMPICSPATH"));
+                                item.setItemBarcode("");
+                                item.setPriceClass_1("");
+                                item.setPriceClass_2("");
+                                item.setPriceClass_3("");
                             }
 
 
-                        } catch (Exception e) {
-                            item.setPhotoItem("");
+                            itemUnitDetailsList.add(item);
+                            Log.e("itemUnitDetailsList", "2====" + itemUnitDetailsList.size());
                         }
-//                    ITEMPICSPATH
-                        itemsMasterList.add(item);
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
 
 
-                try {
-                    JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
-                    priceListMpList.clear();
-                    for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {
-                        JSONObject finalObject = parentArrayPrice_List_M.getJSONObject(i);
+                    try {
+                        JSONArray parentArrayItem_Serial_Details = parentObject.getJSONArray("ITEMS_SERIALs");
+                        itemSerialList.clear();
+                        for (int i = 0; i < parentArrayItem_Serial_Details.length(); i++) {
+                            JSONObject finalObject = parentArrayItem_Serial_Details.getJSONObject(i);
 
-                        PriceListM item = new PriceListM();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setPrNo(finalObject.getInt("PRNO"));
-                        item.setDescribtion(finalObject.getString("DESCRIPTION"));
-                        item.setIsSuspended(0);
+                            serialModel item = new serialModel();
+                            item.setStoreNo(finalObject.getString("STORENO"));
+                            item.setItemNo(finalObject.getString("ITEMOCODE"));
+                            item.setSerialCode(finalObject.getString("SERIALCODE"));
+                            item.setQty(finalObject.getString("QTY"));
+
+                            itemSerialList.add(item);
+                        }
+                        // Log.e("itemSerialList",""+itemSerialList.size());
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+                    try {
+                        JSONArray parentArrayItem_Switch = parentObject.getJSONArray("item_swich");
+                        itemsSwitchList.clear();
+                        for (int i = 0; i < parentArrayItem_Switch.length(); i++) {
+                            JSONObject finalObject = parentArrayItem_Switch.getJSONObject(i);
+
+                            ItemSwitch item = new ItemSwitch();
+                            item.setItem_NAMEA(finalObject.getString("ITEMNAMEA"));
+                            item.setItem_OCODE(finalObject.getString("ITEMOCODE"));
+                            item.setItem_NCODE(finalObject.getString("ITEMNCODE"));
+
+                            itemsSwitchList.add(item);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+
+
+                    try {
+//                    `ITEMPICSPATH`
+                        JSONArray parentArrayItems_Master = parentObject.getJSONArray("Items_Master");
+//                Log.e("parentArrayItems_Master",""+parentArrayItems_Master.getString(""));
+                        itemsMasterList.clear();
+                        for (int i = 0; i < parentArrayItems_Master.length(); i++) {
+                            JSONObject finalObject = parentArrayItems_Master.getJSONObject(i);
+                            ItemsMaster item = new ItemsMaster();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setItemNo(finalObject.getString("ITEMNO"));
+                            item.setName(finalObject.getString("NAME"));
+                            item.setCategoryId(finalObject.getString("CATEOGRYID"));
+                            item.setBarcode(finalObject.getString("BARCODE"));
+//                    item.setIsSuspended(finalObject.getInt("IsSuspended"));MINPRICE
+                            item.setPosPrice(finalObject.getDouble("F_D"));
+                            item.setIsSuspended(0);
+                            try {
+                                item.setItemL(finalObject.getDouble("ITEML"));
+                                Log.e("Exception", "" + finalObject.getDouble("ITEML"));
+                            } catch (Exception e) {
+                                item.setItemL(0.0);
+
+                            }
+
+                            try {
+                                if (finalObject.getString("ItemK") == "" || finalObject.getString("ItemK") == null || finalObject.getString("ItemK") == "null")
+                                    item.setKind_item("***");
+                                else
+                                    item.setKind_item(finalObject.getString("ItemK")); // here ?
+
+                            } catch (Exception e) {
+                                Log.e("ErrorImport", "Item_Kind_null");
+                                item.setKind_item("***");
+
+                            }
+                            try {
+                                item.setItemHasSerial(finalObject.getString("ITEMHASSERIAL"));
+                                // Log.e("setItemHasSerialJSON", "" + finalObject.getString("ITEMHASSERIAL"));
+                            } catch (Exception e) {
+                            }
+                            try {
+                                if (finalObject.getString("ITEMPICSPATH") == "" || finalObject.getString("ITEMPICSPATH") == null || finalObject.getString("ITEMPICSPATH") == "null") {
+                                    item.setPhotoItem("");
+                                } else {
+                                    item.setPhotoItem(finalObject.getString("ITEMPICSPATH"));
+                                }
+
+
+                            } catch (Exception e) {
+                                item.setPhotoItem("");
+                            }
+//                    ITEMPICSPATH
+                            itemsMasterList.add(item);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+
+
+                    try {
+                        JSONArray parentArrayPrice_List_M = parentObject.getJSONArray("Price_List_M");
+                        priceListMpList.clear();
+                        for (int i = 0; i < parentArrayPrice_List_M.length(); i++) {
+                            JSONObject finalObject = parentArrayPrice_List_M.getJSONObject(i);
+
+                            PriceListM item = new PriceListM();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setPrNo(finalObject.getInt("PRNO"));
+                            item.setDescribtion(finalObject.getString("DESCRIPTION"));
+                            item.setIsSuspended(0);
 //                    item.setIsSuspended(finalObject.getInt("IsSuspended"));
 
-                        priceListMpList.add(item);
-                    }
-
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-
-
-                try {
-
-                    JSONArray parentArraySales_Team = parentObject.getJSONArray("Sales_Team");
-                    salesTeamList.clear();
-                    for (int i = 0; i < parentArraySales_Team.length(); i++) {
-                        JSONObject finalObject = parentArraySales_Team.getJSONObject(i);
-
-                        SalesTeam item = new SalesTeam();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setSalesManNo(finalObject.getString("SALESMANNO"));
-                        item.setSalesManName(finalObject.getString("SALESMANNAME"));
-                        try {
-                            item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
-                        } catch (Exception e) {
-                            Log.e("setIsSuspended", "" + e.getMessage());
-                            item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
+                            priceListMpList.add(item);
                         }
 
-
-                        //  item.setIpAddressDevice(finalObject.getString("IpAddressDevice"));
-
-
-                        salesTeamList.add(item);
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                    Log.e("ImportData", salesTeamList.size() + "");
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-                try {
 
-                    JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
-                    salesManItemsBalanceList.clear();
 
-                    for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
-                        JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
-                        // Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
-                        String qty = "";
-                        SalesManItemsBalance item = new SalesManItemsBalance();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setSalesManNo(finalObject.getString("STOCK_CODE"));
-                        item.setItemNo(finalObject.getString("ItemOCode"));
+                    try {
 
-                        qty = finalObject.getString("QTY");
-                        try {
-                            double qtydoubl = Double.parseDouble(qty);
-                            item.setQty(qtydoubl);
+                        JSONArray parentArraySales_Team = parentObject.getJSONArray("Sales_Team");
+                        salesTeamList.clear();
+                        for (int i = 0; i < parentArraySales_Team.length(); i++) {
+                            JSONObject finalObject = parentArraySales_Team.getJSONObject(i);
 
-                        } catch (Exception e) {
-                            item.setQty(0);
-                            Log.e("Exception", "" + qty);
+                            SalesTeam item = new SalesTeam();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setSalesManNo(finalObject.getString("SALESMANNO"));
+                            item.setSalesManName(finalObject.getString("SALESMANNAME"));
+                            try {
+                                item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
+                            } catch (Exception e) {
+                                Log.e("setIsSuspended", "" + e.getMessage());
+                                item.setIsSuspended(finalObject.getString("ISSUSPENDED"));
+                            }
+
+
+                            //  item.setIpAddressDevice(finalObject.getString("IpAddressDevice"));
+
+
+                            salesTeamList.add(item);
                         }
+                        Log.e("ImportData", salesTeamList.size() + "");
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+                    try {
+
+                        JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
+                        salesManItemsBalanceList.clear();
+
+                        for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
+                            JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
+                            // Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
+                            String qty = "";
+                            SalesManItemsBalance item = new SalesManItemsBalance();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setSalesManNo(finalObject.getString("STOCK_CODE"));
+                            item.setItemNo(finalObject.getString("ItemOCode"));
+
+                            qty = finalObject.getString("QTY");
+                            try {
+                                double qtydoubl = Double.parseDouble(qty);
+                                item.setQty(qtydoubl);
+
+                            } catch (Exception e) {
+                                item.setQty(0);
+                                Log.e("Exception", "" + qty);
+                            }
 //                        item.setQty(finalObject.getDouble("QTY"));
 
-                        salesManItemsBalanceList.add(item);
+                            salesManItemsBalanceList.add(item);
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("Exception", "GsonSalesMan_Items_Balance" + e.getMessage());
                     }
 
-                } catch (Exception e) {
-                    Log.e("Exception", "GsonSalesMan_Items_Balance" + e.getMessage());
-                }
+                    try {
+                        JSONArray parentArraySalesMan = parentObject.getJSONArray("SALESMEN");
+                        salesMenList.clear();
+                        for (int i = 0; i < parentArraySalesMan.length(); i++) {
+                            JSONObject finalObject = parentArraySalesMan.getJSONObject(i);
 
-                try {
-                    JSONArray parentArraySalesMan = parentObject.getJSONArray("SALESMEN");
-                    salesMenList.clear();
-                    for (int i = 0; i < parentArraySalesMan.length(); i++) {
-                        JSONObject finalObject = parentArraySalesMan.getJSONObject(i);
-
-                        SalesMan salesMan = new SalesMan();
-                        salesMan.setPassword(finalObject.getString("USER_PASSWORD"));
-                        salesMan.setUserName(finalObject.getString("SALESNO"));
+                            SalesMan salesMan = new SalesMan();
+                            salesMan.setPassword(finalObject.getString("USER_PASSWORD"));
+                            salesMan.setUserName(finalObject.getString("SALESNO"));
 
 //                    Log.e("*******" , finalObject.getString("SALESNO"));
-                        salesMenList.add(salesMan);
+                            salesMenList.add(salesMan);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
 
-                try {
+                    try {
 
-                    JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
-                    Log.e("parentArrayCusto", "" + parentArrayCustomerPrice.length());
-                    customerPricesList.clear();
+                        JSONArray parentArrayCustomerPrice = parentObject.getJSONArray("Customer_prices");
+                        Log.e("parentArrayCusto", "" + parentArrayCustomerPrice.length());
+                        customerPricesList.clear();
 
-                    for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
-                        JSONObject finalObject = parentArrayCustomerPrice.getJSONObject(i);
+                        for (int i = 0; i < parentArrayCustomerPrice.length(); i++) {
+                            JSONObject finalObject = parentArrayCustomerPrice.getJSONObject(i);
 
-                        CustomerPrice price = new CustomerPrice();
-                        price.setItemNumber(finalObject.getString("ITEMCODE"));
-                        price.setCustomerNumber(finalObject.getInt("CUSTACCNO"));
-                        price.setPrice(finalObject.getDouble("PRICE"));
-                        price.setDiscount(finalObject.getDouble("DISCOUNT"));
+                            CustomerPrice price = new CustomerPrice();
+                            price.setItemNumber(finalObject.getString("ITEMCODE"));
+                            price.setCustomerNumber(finalObject.getInt("CUSTACCNO"));
+                            price.setPrice(finalObject.getDouble("PRICE"));
+                            price.setDiscount(finalObject.getDouble("DISCOUNT"));
 
 //                    try {
 //                        price.setOther_Discount(finalObject.getString("OTHER_DISCOUNT"));
@@ -2663,145 +2665,145 @@ public class ImportJason extends AppCompatActivity {
 //
 //                    }
 
-                        customerPricesList.add(price);
-                        Log.e("customerPricesList", "" + customerPricesList.size());
+                            customerPricesList.add(price);
+                            Log.e("customerPricesList", "" + customerPricesList.size());
 
-                    }
-                } catch (JSONException e) {
-                    Log.e("ImportcustomerPr", e.getMessage().toString());
-                }
-
-
-                try {
-                    JSONArray parentArrayOffers = parentObject.getJSONArray("VN_PROMOTION");
-                    offersList.clear();
-                    for (int i = 0; i < parentArrayOffers.length(); i++) {
-                        JSONObject finalObject = parentArrayOffers.getJSONObject(i);
-
-                        Offers offer = new Offers();
-                        offer.setPromotionID(finalObject.getInt("PROMOID"));
-                        offer.setPromotionType(finalObject.getInt("PROMOTYPE"));
-                        offer.setFromDate(finalObject.getString("BDTAE"));
-                        offer.setToDate(finalObject.getString("PEDTAE"));
-                        offer.setItemNo(finalObject.getString("ITEMCODE"));
-                        offer.setItemQty(finalObject.getDouble("PQTY"));
-                        offer.setBonusQty(finalObject.getDouble("BQTY"));
-                        offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
-                        try {
-                            int discType = Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
-                            offer.setDiscountItemType(discType);
-                        } catch (Exception e) {
-                            offer.setDiscountItemType(0);
                         }
-
-                        offersList.add(offer);
+                    } catch (JSONException e) {
+                        Log.e("ImportcustomerPr", e.getMessage().toString());
                     }
 
 
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
+                    try {
+                        JSONArray parentArrayOffers = parentObject.getJSONArray("VN_PROMOTION");
+                        offersList.clear();
+                        for (int i = 0; i < parentArrayOffers.length(); i++) {
+                            JSONObject finalObject = parentArrayOffers.getJSONObject(i);
 
-                try {
-                    JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
-                    salesmanStationsList.clear();
-                    for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
-                        JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
+                            Offers offer = new Offers();
+                            offer.setPromotionID(finalObject.getInt("PROMOID"));
+                            offer.setPromotionType(finalObject.getInt("PROMOTYPE"));
+                            offer.setFromDate(finalObject.getString("BDTAE"));
+                            offer.setToDate(finalObject.getString("PEDTAE"));
+                            offer.setItemNo(finalObject.getString("ITEMCODE"));
+                            offer.setItemQty(finalObject.getDouble("PQTY"));
+                            offer.setBonusQty(finalObject.getDouble("BQTY"));
+                            offer.setBonusItemNo(finalObject.getString("BITEMCODE"));
+                            try {
+                                int discType = Integer.parseInt(finalObject.getString("VN_DISCOUNT_TYPE"));
+                                offer.setDiscountItemType(discType);
+                            } catch (Exception e) {
+                                offer.setDiscountItemType(0);
+                            }
 
-                        SalesmanStations station = new SalesmanStations();
-                        station.setSalesmanNo(finalObject.getString("SALESMAN_NO"));
-                        station.setDate(finalObject.getString("DATE_"));
-                        station.setLatitude(finalObject.getString("LATITUDE"));
-                        station.setLongitude(finalObject.getString("LONGITUDE"));
-                        station.setSerial(finalObject.getInt("SERIAL"));
-                        station.setCustNo(finalObject.getString("ACCCODE"));
-                        station.setCustName(finalObject.getString("ACCNAME"));
-
-                        salesmanStationsList.add(station);
-                    }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-
-                try {
-                    JSONArray parentArrayQuantityOffers = parentObject.getJSONArray("QTY_OFFERS");
-                    qtyOffersList.clear();
-                    for (int i = 0; i < parentArrayQuantityOffers.length(); i++) {
-                        JSONObject finalObject = parentArrayQuantityOffers.getJSONObject(i);
-
-                        QtyOffers qtyOffers = new QtyOffers();
-                        qtyOffers.setQTY(finalObject.getDouble("QTY"));
-                        qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
-                        qtyOffers.setPaymentType(finalObject.getInt("PAYMENT_TYPE"));
-
-                        qtyOffersList.add(qtyOffers);
-
-                    }
-
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-                try {
-                    JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
-                    //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+parentArrayPrice_List_D.toString());
-                    priceListDpList.clear();
-                    for (int i = 0; i < parentArrayPrice_List_D.length(); i++) {
-                        JSONObject finalObject = parentArrayPrice_List_D.getJSONObject(i);
-
-                        PriceListD item = new PriceListD();
-                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
-                        item.setPrNo(finalObject.getInt("PRNO"));
-                        item.setItemNo(finalObject.getString("ITEMNO"));
-                        // Log.e("itemUnit","itemno==="+item.getItemNo());
-                        item.setUnitId(finalObject.getString("UNITID"));
-                        item.setPrice(finalObject.getDouble("PRICE"));
-                        try {
-                            item.setTaxPerc(finalObject.getDouble("TAXPERC"));
-                        } catch (Exception e) {
-                            item.setTaxPerc(0);
-                        }
-
-                        try {
-                            item.setMinSalePrice(Double.parseDouble(finalObject.getString("MINPRICE")));
-                        } catch (Exception e) {
-                            item.setMinSalePrice(0);
+                            offersList.add(offer);
                         }
 
 
-                        priceListDpList.add(item);
-                        //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+priceListDpList.size());
-
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
 
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
+                    try {
+                        JSONArray parentArraySalesmanStations = parentObject.getJSONArray("SALESMEN_STATIONS");
+                        salesmanStationsList.clear();
+                        for (int i = 0; i < parentArraySalesmanStations.length(); i++) {
+                            JSONObject finalObject = parentArraySalesmanStations.getJSONObject(i);
 
+                            SalesmanStations station = new SalesmanStations();
+                            station.setSalesmanNo(finalObject.getString("SALESMAN_NO"));
+                            station.setDate(finalObject.getString("DATE_"));
+                            station.setLatitude(finalObject.getString("LATITUDE"));
+                            station.setLongitude(finalObject.getString("LONGITUDE"));
+                            station.setSerial(finalObject.getInt("SERIAL"));
+                            station.setCustNo(finalObject.getString("ACCCODE"));
+                            station.setCustName(finalObject.getString("ACCNAME"));
 
-                try {
-                    JSONArray parentArrayItemsQtyOffer = parentObject.getJSONArray("ITEMS_QTY_OFFER");
-                    itemsQtyOfferList.clear();
-                    for (int i = 0; i < parentArrayItemsQtyOffer.length(); i++) {
-                        JSONObject finalObject = parentArrayItemsQtyOffer.getJSONObject(i);
-
-                        ItemsQtyOffer qtyOffers = new ItemsQtyOffer();
-                        qtyOffers.setItem_name(finalObject.getString("ITEMNAME"));
-                        qtyOffers.setItem_no(finalObject.getString("ITEMNO"));
-                        qtyOffers.setItemQty(finalObject.getDouble("AMOUNTQTY"));
-                        qtyOffers.setFromDate(finalObject.getString("FROMDATE"));
-                        qtyOffers.setToDate(finalObject.getString("TODATE"));
-                        qtyOffers.setDiscount_value(finalObject.getDouble("DISCOUNT"));
-                        itemsQtyOfferList.add(qtyOffers);
-
+                            salesmanStationsList.add(station);
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
                     }
-                } catch (JSONException e) {
-                    Log.e("Import Data", e.getMessage().toString());
-                }
-                /*
-                 *
-                 * [{"ITEMNAME":"جلواز أزرق","ITEMNO":"3258170924337","AMOUNTQTY":"20","DISCOUNT":"0.2","FROMDATE":"03\/10\/2019","TODATE":"30\/10\/2019"}]*/
 
-                //*********************************************************************
+                    try {
+                        JSONArray parentArrayQuantityOffers = parentObject.getJSONArray("QTY_OFFERS");
+                        qtyOffersList.clear();
+                        for (int i = 0; i < parentArrayQuantityOffers.length(); i++) {
+                            JSONObject finalObject = parentArrayQuantityOffers.getJSONObject(i);
+
+                            QtyOffers qtyOffers = new QtyOffers();
+                            qtyOffers.setQTY(finalObject.getDouble("QTY"));
+                            qtyOffers.setDiscountValue(finalObject.getDouble("DISC_VALUE"));
+                            qtyOffers.setPaymentType(finalObject.getInt("PAYMENT_TYPE"));
+
+                            qtyOffersList.add(qtyOffers);
+
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+                    try {
+                        JSONArray parentArrayPrice_List_D = parentObject.getJSONArray("Price_List_D");
+                        //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+parentArrayPrice_List_D.toString());
+                        priceListDpList.clear();
+                        for (int i = 0; i < parentArrayPrice_List_D.length(); i++) {
+                            JSONObject finalObject = parentArrayPrice_List_D.getJSONObject(i);
+
+                            PriceListD item = new PriceListD();
+                            item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                            item.setPrNo(finalObject.getInt("PRNO"));
+                            item.setItemNo(finalObject.getString("ITEMNO"));
+                            // Log.e("itemUnit","itemno==="+item.getItemNo());
+                            item.setUnitId(finalObject.getString("UNITID"));
+                            item.setPrice(finalObject.getDouble("PRICE"));
+                            try {
+                                item.setTaxPerc(finalObject.getDouble("TAXPERC"));
+                            } catch (Exception e) {
+                                item.setTaxPerc(0);
+                            }
+
+                            try {
+                                item.setMinSalePrice(Double.parseDouble(finalObject.getString("MINPRICE")));
+                            } catch (Exception e) {
+                                item.setMinSalePrice(0);
+                            }
+
+
+                            priceListDpList.add(item);
+                            //  Log.e("itemUnitDetailsList","parentArrayPrice_List_D"+priceListDpList.size());
+
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+
+
+                    try {
+                        JSONArray parentArrayItemsQtyOffer = parentObject.getJSONArray("ITEMS_QTY_OFFER");
+                        itemsQtyOfferList.clear();
+                        for (int i = 0; i < parentArrayItemsQtyOffer.length(); i++) {
+                            JSONObject finalObject = parentArrayItemsQtyOffer.getJSONObject(i);
+
+                            ItemsQtyOffer qtyOffers = new ItemsQtyOffer();
+                            qtyOffers.setItem_name(finalObject.getString("ITEMNAME"));
+                            qtyOffers.setItem_no(finalObject.getString("ITEMNO"));
+                            qtyOffers.setItemQty(finalObject.getDouble("AMOUNTQTY"));
+                            qtyOffers.setFromDate(finalObject.getString("FROMDATE"));
+                            qtyOffers.setToDate(finalObject.getString("TODATE"));
+                            qtyOffers.setDiscount_value(finalObject.getDouble("DISCOUNT"));
+                            itemsQtyOfferList.add(qtyOffers);
+
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Import Data", e.getMessage().toString());
+                    }
+                    /*
+                     *
+                     * [{"ITEMNAME":"جلواز أزرق","ITEMNO":"3258170924337","AMOUNTQTY":"20","DISCOUNT":"0.2","FROMDATE":"03\/10\/2019","TODATE":"30\/10\/2019"}]*/
+
+                    //*********************************************************************
 //                try {
 //                    JSONArray parentArrayOfferMaster = parentObject.getJSONArray("price_offer_list_master");
 //                    offerListMasterArrayList.clear();
@@ -2827,72 +2829,70 @@ public class ImportJason extends AppCompatActivity {
 //                    Log.e("Import Data", e.getMessage().toString());
 //                }
 
-Log.e("customerList",""+customerList.size());
-            } catch (MalformedURLException e) {
-                Log.e("Customer", "********ex1");
-                progressDialog.dismiss();
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.e("CustomerIOException", e.getMessage().toString());
-                progressDialog.dismiss();
+                    Log.e("customerList",""+customerList.size());
+                } catch (MalformedURLException e) {
+                    Log.e("Customer", "********ex1");
+                    progressDialog.dismiss();
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Log.e("CustomerIOException", e.getMessage().toString());
+                    progressDialog.dismiss();
 //                Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+                    e.printStackTrace();
 
-            } catch (JSONException e) {
-                Log.e("Customer", "********ex3  " + e.toString());
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } finally {
-                Log.e("Customer", "********finally");
-                progressDialog.dismiss();
-                Handler h = new Handler(Looper.getMainLooper());
-                h.post(new Runnable() {
-                    public void run() {
-                        if (customerList.size() == 0) {
-                            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("check Connection")
-                                    .show();
+                } catch (JSONException e) {
+                    Log.e("Customer", "********ex3  " + e.toString());
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } finally {
+                    Log.e("Customer", "********finally");
+                    progressDialog.dismiss();
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable() {
+                        public void run() {
+                            if (customerList.size() == 0) {
+                                new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                        .setTitleText("check Connection")
+                                        .show();
+                            }
+
+
                         }
-
-
-                    }
-                });
+                    });
 //                if (connection != null) {
 //                    Log.e("Customer", "********ex4");
 //                    // connection.disconnect();
 //                }
-                try {
-                    if (reader != null) {
-                        reader.close();
+                    try {
+                        if (reader != null) {
+                            reader.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        progressDialog.dismiss();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    progressDialog.dismiss();
+                }
+                return customerList;
+            }
+
+
+            @Override
+            protected void onPostExecute(final List<Customer> result) {
+                super.onPostExecute(result);
+                progressDialog.dismiss();
+
+                if (result != null && result.size() != 0) {
+                    Log.e("Customerr", "*****************" + customerList.size());
+                    storeInDatabase();
+                } else {
+
+                    // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
                 }
             }
-            return customerList;
         }
 
 
-        @Override
-        protected void onPostExecute(final List<Customer> result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-
-            if (result != null && result.size() != 0) {
-                Log.e("Customerr", "*****************" + customerList.size());
-                storeInDatabase();
-            } else {
-
-                // Toast.makeText(context, "Not able to fetch Customer data from server.", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private class JSONTaskDelphi_Data2 extends AsyncTask<String, String, List<SalesManItemsBalance>> {
-
-        public String salesNo = "";
 
         public JSONTaskDelphi_Data2(String sales) {
             this.salesNo = sales;

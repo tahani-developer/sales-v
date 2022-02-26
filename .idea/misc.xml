@@ -26,6 +26,7 @@
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_dark.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_edit.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/back_border_shape.xml" value="0.5151802656546489" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/background_container.xml" value="0.1486111111111111" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/bg_more_settings.xml" value="0.37833333333333335" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_add_location_black_24dp.xml" value="0.20069444444444445" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.20555555555555555" />
@@ -35,7 +36,7 @@
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-land/inventory_report.xml" value="0.25" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/add_item_dialog_small.xml" value="0.5" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/add_items_dialog2.xml" value="0.33" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/fragment_sales_invoice.xml" value="0.20269016697588127" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/fragment_sales_invoice.xml" value="0.5" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/print_vouchers.xml" value="0.2783333333333333" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/account_row.xml" value="0.1" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.15653495440729484" />
@@ -44,13 +45,14 @@
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/add_items_dialog2.xml" value="0.25" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/cash_report.xml" value="0.22727272727272727" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/fragment_sales_invoice.xml" value="0.1641337386018237" />
-        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/inventory_report.xml" value="0.300556586270872" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/inventory_report.xml" value="0.18" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/item_horizontal_listview.xml" value="0.1" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/print_vouchers.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/vouchers_report.xml" value="0.21706864564007422" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-xhdpi/voucher_info_dialog2.xml" value="0.25" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-xlarge/add_item_serial_dialog.xml" value="0.1" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-xxxhdpi/bluetooth_menu_2.xml" value="0.1359289617486339" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_account__report.xml" value="0.1" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_custom_scanner.xml" value="0.1840277777777778" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_main.xml" value="0.11042944785276074" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_main2.xml" value="0.10531697341513292" />
@@ -161,7 +163,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
