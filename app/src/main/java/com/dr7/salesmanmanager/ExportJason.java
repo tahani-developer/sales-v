@@ -35,6 +35,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -134,6 +135,7 @@ public class ExportJason extends AppCompatActivity {
 
         Log.e("exportReturnUpdateList","exportReturnUpdateList");
         getReturnUpdateObject();
+        updateVoucherExported();// 3
         pdReturnUpdate = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         pdReturnUpdate.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
         pdReturnUpdate.setTitleText("EXPORT_RETURN_UPDATE");
@@ -1556,9 +1558,9 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully"))
                 {
 //                    Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();
-                    exportReturnUpdateList();
 
-           //         updateVoucherExported();// 3
+
+//                    updateVoucherExported();// 3
 
 
                 }
@@ -1568,7 +1570,8 @@ public class ExportJason extends AppCompatActivity {
                 pdVoucher.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
-            exportSerial();// 4
+            exportReturnUpdateList();
+
         }
     }
 
@@ -2056,7 +2059,10 @@ public class ExportJason extends AppCompatActivity {
 
     public void getPassowrdSetting() {
         try {
-            new JSONTask_getPassword().execute();
+
+//            new JSONTask_getPassword().execute();
+            new JSONTask_IIsgetPassword().execute();
+
         }
         catch (Exception e)
         {
@@ -2089,13 +2095,172 @@ public class ExportJason extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
+            String JsonResponse = null;
             try {
 
                 ipAddress = mHandler.getAllSettings().get(0).getIpAddress();
-                if(!ipAddress.equals(""))
+                if(!ipAddress.equals("")) {
+                    if (typaImport == 0)
+                        URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+                    else {
+                        URL_TO_HIT = "http://" + ipAddress + ":" + ipWithPort + headerDll.trim() + "/ADMGetPassword?CONO=" + CONO + "&PASSWORDTYPE=1";
+
+                    }
+                }
+                Log.e("URL_TO_HIT","ADMGetPassword="+URL_TO_HIT);
+            }
+            catch (Exception e)
+            {
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
+
+                    }
+                });
+            }
+            try {
+
+
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+
+
+
+
+                Log.e("rowId","BasicNameValuePair"+passwordValue);
+                if (typaImport == 0)
                 {
-                    URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/admin.php";
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("_ID", "25"));
+
+                    nameValuePairs.add(new BasicNameValuePair("PasswordType", "1"));
+                    request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+                }
+
+                HttpResponse response = client.execute(request);
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tagUpdate", "JsonResponse\t" + JsonResponse);
+
+
+
+
+            }
+            //org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+
+
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        password.setError(null);
+                        passwordFromAdmin.setText("2021000");
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+            }
+            return JsonResponse;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            String impo = "";
+            JSONObject result=null;
+            pdValidation.dismissWithAnimation();
+            if (s != null) {
+                if (s.contains("PasswordKeyValue")) {
+                    try {
+                        result = new JSONObject(s);
+                        JSONArray notificationInfo = null;
+                        notificationInfo = result.getJSONArray("PasswordKeyValue");
+                        JSONObject infoDetail=null;
+                        infoDetail = notificationInfo.getJSONObject(0);
+
+                        Log.e("infoDetail","2-PasswordKeyValue"+infoDetail.get("passwordKey").toString());
+                        passwordFromAdmin.setText(infoDetail.get("passwordKey").toString());
+
+
+                    } catch (JSONException e) {
+//                        progressDialog.dismiss();
+                        e.printStackTrace();
+                    }
+
+
+
+                }
+                else {
+
+                    password.setError(null);
+                    passwordFromAdmin.setText("2021000");
+                    if (s.contains("Not definded id")) {
+                        Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+            else {
+                password.setError(null);
+                passwordFromAdmin.setText("2021000");}
+        }
+
+    }
+
+
+    private class JSONTask_IIsgetPassword extends AsyncTask<String, String, String> {
+
+        public  String passwordValue="";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pdValidation = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdValidation.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdValidation.setTitleText(context.getResources().getString(R.string.process));
+            pdValidation.setCancelable(false);
+            pdValidation.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                if(!ipAddress.equals(""))
+                {  URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/ADMGetPassword?CONO="+CONO+"&PASSWORDTYPE=1";
+
+                    Log.e("URL_TO_HIT",URL_TO_HIT);
                 }
             }
             catch (Exception e)
@@ -2113,23 +2278,9 @@ public class ExportJason extends AppCompatActivity {
 
                 String JsonResponse = null;
                 HttpClient client = new DefaultHttpClient();
-                HttpPost request = new HttpPost();
+                HttpGet request = new  HttpGet();
                 request.setURI(new URI(URL_TO_HIT));
-
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-
-                Log.e("rowId","BasicNameValuePair"+passwordValue);
-                nameValuePairs.add(new BasicNameValuePair("_ID", "25"));
-
-                nameValuePairs.add(new BasicNameValuePair("PasswordType", "1"));
-
-
-                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
-
-
                 HttpResponse response = client.execute(request);
-
-
                 BufferedReader in = new BufferedReader(new
                         InputStreamReader(response.getEntity().getContent()));
 
@@ -2153,83 +2304,76 @@ public class ExportJason extends AppCompatActivity {
             //org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
             catch (HttpHostConnectException ex) {
                 ex.printStackTrace();
-
-
-
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
                         passwordFromAdmin.setText("2021000");
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+
+
                     }
                 });
 
 
                 return null;
             } catch (Exception e) {
-                e.printStackTrace();
-
                 Handler h = new Handler(Looper.getMainLooper());
                 h.post(new Runnable() {
                     public void run() {
                         password.setError(null);
                         passwordFromAdmin.setText("2021000");
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+
+
                     }
                 });
+
+                e.printStackTrace();
+//                progressDialog.dismiss();
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            String impo = "";
-            JSONObject result=null;
+        protected void onPostExecute(String respon) {
+            super.onPostExecute(respon);
             pdValidation.dismissWithAnimation();
-            if (s != null) {
-                if (s.contains("PasswordKeyValue")) {
-                    try {
-                        result = new JSONObject(s);
-                        JSONArray notificationInfo = null;
-                        notificationInfo = result.getJSONArray("PasswordKeyValue");
-                        JSONObject infoDetail=null;
-                        infoDetail = notificationInfo.getJSONObject(0);
-
-                        Log.e("infoDetail","PasswordKeyValue"+infoDetail.get("passwordKey").toString());
-                        passwordFromAdmin.setText(infoDetail.get("passwordKey").toString());
-
+            if (respon!= null) {
+                Log.e("respon",respon);
+                            if (respon.contains("PASSWORDTYPE")) {
+                                try {
+                                    JSONArray notificationInfo = null;
+                                    notificationInfo = new JSONArray(respon);
+                                    JSONObject infoDetail=null;
+                                    infoDetail = notificationInfo.getJSONObject(0);
+                                    Log.e("infoDetail","2-PasswordKeyValue"+infoDetail.get("PASSWORDKEY").toString());
+                                    passwordFromAdmin.setText(infoDetail.get("PASSWORDKEY").toString());
 
 
-
-
-
-
-                    } catch (JSONException e) {
+                                } catch (JSONException e) {
 //                        progressDialog.dismiss();
-                        e.printStackTrace();
-                    }
+                                    e.printStackTrace();
+                                }
 
+                            }
+                            else {
 
+                                password.setError(null);
+                                passwordFromAdmin.setText("2021000");
 
-                }
-
-                else {
-                    password.setError(null);
-                    passwordFromAdmin.setText("2021000");
-                    if (s.contains("Not definded id")) {
-                        Toast.makeText(context, "Check WebServices Id 25", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                            }
 
             }
             else {
                 password.setError(null);
-                passwordFromAdmin.setText("2021000");}
+                passwordFromAdmin.setText("2021000");
+            }
         }
 
+
     }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
     private void showDialogError(String message) {
         new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(context.getResources().getString(R.string.duplicateddata))
@@ -2884,7 +3028,7 @@ public class ExportJason extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 //progressDialog.dismiss();
-pdReturnUpdate.dismiss();
+              pdReturnUpdate.dismiss();
 
             }
 
@@ -2945,7 +3089,8 @@ pdReturnUpdate.dismiss();
 
                 if(result.contains("Saved Successfully"))
                 {
-               updateVoucherExported();// 3
+
+
 
 
                 }
@@ -2963,7 +3108,7 @@ pdReturnUpdate.dismiss();
 
             }
 
-
+            exportSerial();// 4
 
         }
 //                Toast.makeText(context, "onPostExecute"+result, Toast.LENGTH_SHORT).show();

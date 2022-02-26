@@ -133,7 +133,7 @@ public class AddItemsFragment2 extends DialogFragment {
     SimpleDateFormat df, df2;
     Date currentTimeAndDate;
     String userNo="";
-    int itemUnit=0;
+    int itemUnit=0,countListVisible=0;
     private static DatabaseHandler mDbHandler;
 
     public AddItemsInterface getListener() {
@@ -161,21 +161,18 @@ public class AddItemsFragment2 extends DialogFragment {
 //        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDbHandler = new DatabaseHandler(getActivity());
 
+        countListVisible= mDbHandler.getCountVisibleItemSize();
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2= new ArrayList<>();
 //        jsonItemsList_intermidiate = new ArrayList<>();
         List = new ArrayList<Item>();
         List.clear();
 
-
-
-//        voucherDate = convertToEnglish(voucherDate);
-
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(false);
         setCancelable(false);
 
-//        getDialog().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+
         getDialog().getWindow().clearFlags(WindowManager.LayoutParams. SOFT_INPUT_ADJUST_PAN);
 
         int size_firstlist=0;
@@ -860,10 +857,11 @@ try {
 
         }
        // Log.e("fillListItemJson",""+rate_customer);// customer rate to display price of this customer
-
+        Log.e("jsonItemsList","countListVisible"+countListVisible);
         if (mDbHandler.getAllSettings().get(0).getPriceByCust() == 0) {
             Log.e("jsonItemsList","000000");
-            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1);
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
+
            // Log.e("jsonItemsList", "zero"+jsonItemsList.get(0).getItemName()+"\t"+jsonItemsList.get(0).getItemHasSerial());
         }
 
@@ -895,8 +893,7 @@ try {
 //            }
 //            else {// here 1
                // jsonItemsList2 = mDbHandler.getAllJsonItems2(rate_customer);
-                Log.e("jsonItemsList","11111jsonItemsList2.size()="+jsonItemsList2.size());
-                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1); // from price list d
+                jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible); // from price list d
 //            }
             size_firstlist = jsonItemsList2.size();
            // Log.e("size_firstlist",""+size_firstlist);
@@ -909,7 +906,6 @@ try {
 //                    jsonItemsList_intermidiate.add(jsonItemsList2.get(k));
 //                }
 //                jsonItemsList_intermidiate.addAll(jsonItemsList2);
-                Log.e("jsonItemsList_inte","111222"+jsonItemsList_intermidiate.size()+"\t"+jsonItemsList2.size());
                 //****************************************************************************************
 
 

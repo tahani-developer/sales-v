@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import android.util.Log;
 
+import com.dr7.salesmanmanager.Reports.ItemsReport;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
@@ -87,6 +88,11 @@ public class ScanActivity extends AppCompatActivity
                 else if(type.equals("5"))
                 {
                     ReturnByVoucherNo.Serialcode.setText(""+rawResult.getText().toString().trim());
+                    Log.e("RESULT",""+rawResult.getText());
+                }
+                else if(type.equals("6"))
+                {
+                    ItemsReport.item_number.setText(rawResult.getText().trim().replaceAll("\\s+",""));
                     Log.e("RESULT",""+rawResult.getText());
                 }
             }

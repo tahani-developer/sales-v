@@ -5,7 +5,7 @@
     android:layout_height="400dp"
     android:minWidth="1000dp"
     android:minHeight="500dp"
-    android:layoutDirection="locale"
+    android:layoutDirection="rtl"
     android:id="@+id/add_item"
     android:background="@color/layer3"
     android:orientation="vertical">
@@ -18,28 +18,14 @@
 
         android:orientation="horizontal"
         android:padding="5dp">
+        <ImageView
+            android:id="@+id/searchBarcode"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:src="@drawable/search_btn"
+            android:layout_weight="1"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/barcode"
-            android:textColor="@color/done_button"
-            android:textSize="14sp" />
-        <TextView
-            android:id="@+id/clearBarcode"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:drawableRight="@drawable/ic_clear_black_24dp"
-            android:textColor="@color/colorblue_dark"
-            android:textSize="12sp" />
+
 
         <EditText
             android:id="@+id/barcode"
@@ -54,21 +40,27 @@
 
             android:padding="3dp" />
         <TextView
+            android:id="@+id/clearBarcode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="1dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:drawableRight="@drawable/ic_clear_black_24dp"
+            android:textColor="@color/colorblue_dark"
+            android:textSize="12sp" />
+        <TextView
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/scanbarcode"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
-        <ImageView
-            android:id="@+id/searchBarcode"
-            android:layout_height="40dp"
-            android:layout_width="0dp"
-            android:src="@drawable/search_btn"
-            android:layout_weight="1"/>
+            android:text="@string/barcode"
+            android:textColor="@color/done_button"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -1182,8 +1182,8 @@ public class ESCPSample2
 					posPtr.printAndroidFont(null, true, convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getTotalVoucherDiscount()))) + "\t\t" + convertToEnglish(decimalFormat.format(itemDiscount)) + "\t\t" + convertToEnglish(decimalFormat.format((total_Qty))) + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
 
-//					posPtr.printAndroidFont(null, true, "الصافي   " + convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales()))), nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
-					//posPtr.printAndroidFont(null, true,    convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales())))  +"\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
+					posPtr.printAndroidFont(null, true, "الصافي   " + convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales()))), nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//					posPtr.printAndroidFont(null, true,    convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales())))  +"\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
 				}
 			} else {

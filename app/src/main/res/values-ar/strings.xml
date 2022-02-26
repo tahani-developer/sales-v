@@ -570,4 +570,7 @@
     <string name="importplan"> قم باستيراد الخطة اولا</string>
     <string name="showlocation">عرض الخطة على الخريطة</string>
     <string name="duplicate_name">اسم مكرر</string>
+    <string name="allVoucher">كل الفواتير</string>
+    <string name="SalsManPlan">SalsManPlan</string>
+    <string name="posActive">POS Active</string>
 </resources>
