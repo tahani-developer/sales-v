@@ -150,7 +150,7 @@ public class ExportJason extends AppCompatActivity {
         Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
 
         Log.e("getReturnUpdateObject","getReturnUpdateObject");
-
+        ReturnItemsarrayList.clear();
         mHandler.getvocherNumforItemsReturnd();
         Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
 
