@@ -52,6 +52,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -95,7 +96,8 @@ public class bMITP extends Activity {
     private ListView list;
     private com.dr7.salesmanmanager.BluetoothPort bluetoothPort;
     private CheckBox chkDisconnect;
-    private static final String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "//temp";
+
+    private static  String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "//temp";
     private static final String fileName;
     private String lastConnAddr;
     static  String idname;
@@ -157,7 +159,7 @@ public class bMITP extends Activity {
                 tempDir.mkdir();
             }
 
-         FileWriter fWriter = new FileWriter(fileName);
+         FileWriter fWriter = new FileWriter(fileName);// crash
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
             }
@@ -410,7 +412,7 @@ public class bMITP extends Activity {
                 this.unregisterReceiver(this.disconnectReceiver);
             }
 
-       this.saveSettingFile();
+       this.saveSettingFile();// crash
             this.bluetoothPort.disconnect();
         } catch (IOException var2) {
             Log.e("BluetoothConnectMenu2", var2.getMessage(), var2);
@@ -539,6 +541,7 @@ public class bMITP extends Activity {
                 try {
                      settings = obj.getAllSettings().get(0).getNumOfCopy();
                 }catch (Exception e){
+                    Log.e("Exc","print1***"+e.getMessage());
                     settings=0;
                 }
                 try {
@@ -553,6 +556,13 @@ public class bMITP extends Activity {
                       case 0:
                           printVoucher = vouch1;
                           itemPrint = items;
+                          List<Item> itemVOCHER = new ArrayList<>();
+                           itemVOCHER=obj.getAllItemsBYVOCHER(String.valueOf(printVoucher.getVoucherNumber()),printVoucher.getVoucherType());
+                          itemPrint.clear();
+                          itemPrint=itemVOCHER;
+                          Log.e("itemVOCHER==","1"+printVoucher.getVoucherNumber());
+                          Log.e("itemVOCHER==","2"+itemVOCHER.size()+"\t"+itemPrint.size());
+
 //                          convertLayoutToImageW(bMITP.this,sample,settings);
                           if(printShape==0) {//Normal print (Arabic)
                               for (int i = 0; i < settings; i++) {
@@ -744,7 +754,11 @@ public class bMITP extends Activity {
 
 //                    sample.printMultilingualFont();
                 } catch (UnsupportedEncodingException e) {
+                    Log.e("Exc","print1***"+e.getMessage());
                     e.printStackTrace();
+                }
+                catch (Exception e){
+                    Log.e("Exc","print222222***"+e.getMessage());
                 }
                     finish();
 

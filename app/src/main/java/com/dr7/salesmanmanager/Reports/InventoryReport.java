@@ -725,6 +725,8 @@ public class InventoryReport extends AppCompatActivity {
 //                                    convertLayoutToImage();
                                     Intent O= new Intent(InventoryReport.this, bMITP.class);
                                     O.putExtra("printKey", "9");
+                                    O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(O);
 
                                     break;

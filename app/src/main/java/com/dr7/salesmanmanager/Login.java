@@ -159,9 +159,9 @@ public class Login extends AppCompatActivity {
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static  int makeOrders=0;// 1= just orders app
 
-    public  static    int OfferCakeShop=1;// if 0 calck offer many times
+    public  static    int OfferCakeShop=0;// if 0 calck offer many times
 
-    public  static    int offerTalaat=1;
+    public  static    int offerTalaat=0;
     public  static   int  offerQasion=0;
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
