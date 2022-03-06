@@ -324,6 +324,7 @@ public class PrintVoucher extends AppCompatActivity {
 
 
                                     textView.setOnClickListener(new View.OnClickListener() {
+                                        @RequiresApi(api = Build.VERSION_CODES.R)
                                         @Override
                                         public void onClick(View v) {
 
@@ -352,7 +353,7 @@ public class PrintVoucher extends AppCompatActivity {
                                                                 Intent i = new Intent(PrintVoucher.this, BluetoothConnectMenu.class);
                                                                 i.putExtra("printKey", "0");
                                                                 startActivity(i);
-                                                                Log.e("hheere11","hheere11");
+                                                                Log.e("hheere11", "hheere11");
 //                                                             lk30.setChecked(true);
                                                                 break;
                                                             case 1:
@@ -380,14 +381,31 @@ public class PrintVoucher extends AppCompatActivity {
 
 //
                                                             case 3:
-                                                                Log.e("hheere","hheere");
+                                                                Log.e("hheere", "hheere");
                                                                 vouch1 = vouch;
-                                                                voucherPrint=vouch;
-                                                                convertLayoutToImageW();
+                                                                voucherPrint = vouch;
 
-                                                                Intent o = new Intent(PrintVoucher.this, bMITP.class);
-                                                                o.putExtra("printKey", "0");
-                                                                startActivity(o);
+                                                                try {
+//
+                                                                    if(!Environment.isExternalStorageManager()){
+                                                                   Log.e("SDK_INT",""+Build.VERSION.SDK_INT+"\t"+Environment.isExternalStorageManager());
+                                                                        ActivityCompat.requestPermissions(PrintVoucher.this,
+                                                                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+                                                                                1);
+                                                                    }else {
+                                                                        Intent o = new Intent(PrintVoucher.this, bMITP.class);
+                                                                        o.putExtra("printKey", "0");
+                                                                        o.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                        o.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                        startActivity(o);
+                                                                    }
+
+
+
+                                                        }
+                                                                catch (Exception e){
+                                                                    Log.e("bMITP",""+e.getMessage());
+                                                                }
 
 //                                                                try {
 //                                                                    findBT(Integer.parseInt(textView.getText().toString()),vouch);

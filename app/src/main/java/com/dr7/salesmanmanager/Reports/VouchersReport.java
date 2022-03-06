@@ -699,6 +699,8 @@ public class VouchersReport extends AppCompatActivity {
 //                                    convertLayoutToImage();
                                     Intent O1 = new Intent(VouchersReport.this, bMITP.class);
                                     O1.putExtra("printKey", "12");
+                                    O1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    O1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(O1);
                                     break;
 

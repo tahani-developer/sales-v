@@ -141,6 +141,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.contextG;
+import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerQasion;
@@ -1097,6 +1098,10 @@ public class SalesInvoice extends Fragment {
             offerQasion=0;
             OfferCakeShop=1;
 
+        }
+        if(getTotalBalanceInActivities==0){
+            notIncludeTax.setVisibility(View.GONE);
+            linearTotalCashDiscount.setVisibility(View.GONE);
         }
 
         return view;
@@ -2348,6 +2353,8 @@ public class SalesInvoice extends Fragment {
 
                             Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                             O.putExtra("printKey", "7");
+                            O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(O);
 
 
@@ -2360,6 +2367,8 @@ public class SalesInvoice extends Fragment {
 
                             Intent ineer = new Intent(getActivity().getBaseContext(), bMITP.class);
                             ineer.putExtra("printKey", "7");
+                            ineer.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            ineer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(ineer);
 
 
@@ -2908,15 +2917,15 @@ public class SalesInvoice extends Fragment {
 //                            } catch (IOException e) {
 //                                e.printStackTrace();
 //                            }
-                                voucherShow = voucher;
-
-//                                   convertLayoutToImage(voucher);
-                                Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                intent1.putExtra("printKey", "1");
-                                startActivity(intent1);
+//                                voucherShow = voucher;
+//
+////                                   convertLayoutToImage(voucher);
+//                                Intent intent1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+//                                intent1.putExtra("printKey", "1");
+//                                startActivity(intent1);
 
 //                                                             lk31.setChecked(true);
-                                break;
+//                                break;
                             case 2:
 
 //                               try {
@@ -2926,15 +2935,15 @@ public class SalesInvoice extends Fragment {
 //                                   e.printStackTrace();
 //                               }
 //                                                             lk32.setChecked(true);
-                                voucherShow = voucher;
-
-//                                   convertLayoutToImage(voucher);
-                                Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
-                                O1.putExtra("printKey", "1");
-                                startActivity(O1);
-
-
-                                break;
+//                                voucherShow = voucher;
+//
+////                                   convertLayoutToImage(voucher);
+//                                Intent O1 = new Intent(getActivity().getBaseContext(), bMITP.class);
+//                                O1.putExtra("printKey", "1");
+//                                startActivity(O1);
+//
+//
+//                                break;
                             case 3:
 
 //                            try {
@@ -2944,10 +2953,12 @@ public class SalesInvoice extends Fragment {
 //                                e.printStackTrace();
 //                            }
 //
-//                                                                voucherShow = voucher;
+                                 voucherShow = voucher;
 //                                   convertLayoutToImage(voucher);
                                 Intent inte3 = new Intent(getActivity().getBaseContext(), bMITP.class);
                                 inte3.putExtra("printKey", "1");
+                                inte3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                inte3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(inte3);//qs.setChecked(true);
                                 break;
                             case 4:
@@ -2967,6 +2978,8 @@ public class SalesInvoice extends Fragment {
 //                            convertLayoutToImage(voucher);
                                 Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
                                 O.putExtra("printKey", "1");
+                                O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(O);
 
 

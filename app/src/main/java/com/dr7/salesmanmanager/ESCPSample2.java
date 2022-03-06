@@ -1480,16 +1480,17 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 	public void printMultilingualFontEscEjapy(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
 	try{
 		String CusId=(voucherforPrint.getCustNumber());
-
+//		Log.e("HidPriceBluDBaseESC","CusId="+CusId);
 		valueCheckHidPrice=obj.getHideValuForCustomer(CusId);
-		Log.e("HidPriceBluDBaseESC",""+valueCheckHidPrice);
+//		Log.e("HidPriceBluDBaseESC",""+valueCheckHidPrice);
+//		valueCheckHidPrice=1;
 
 
 	}catch(Exception e){
 		valueCheckHidPrice=0;
-		Log.e("HidPriceExceptionESC",""+e.getMessage());
+		Log.e("HidPriceExceptionESC","*****"+e.getMessage());
 	}
-
+		valueCheckHidPrice=1;
 
 		int nLineWidth = 550;
 		double total_Qty=0;
@@ -1520,7 +1521,7 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			if(companyInfo.getLogo()!=null) {
 				posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER,250);
-				Log.e("12222print","pyyy");
+				Log.e("12222print","1pyyy");
 			}
 
 			posPtr.printAndroidFont(null,"\n"+companyInfo.getCompanyName()+"\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1536,6 +1537,7 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 			posPtr.printAndroidFont(null,"--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			if (obj.getAllSettings().get(0).getUseWeightCase() == 1) {
+				Log.e("12222print","2pyyy");
 				total_Qty=0;
 				posPtr.printAndroidFont(null," Item No.                          " + "QTY" + "\t\t\t" + "الوزن" + "\t\t\t" +  "Price" + "\t\t\t" +"Total" /* + "\n" */  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
@@ -1587,21 +1589,28 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 				posPtr.printAndroidFont(  null,"--------------------------------------------------------------------------------" /* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 				for (int i = 0; i < itemforPrint.size(); i++) {
+					Log.e("12222print","3pyyy"+itemforPrint.size());
 					if ((voucherforPrint.getVoucherNumber() == itemforPrint.get(i).getVoucherNumber())&& (itemforPrint.get(i).getVoucherType()== voucherforPrint.getVoucherType())) {
 						total_Qty+=itemforPrint.get(i).getQty();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-						String amounts=convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))));
+						String amounts="";
+						try {
+						 amounts=convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount))));
+					}catch (Exception e){
+							Log.e("Exception","amounts"+e.getMessage());
+						}
+
 //						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
 						String space = itemforPrint.get(i).getItemNo();
 							for (int g = 0; g < (15 - itemforPrint.get(i).getItemNo().length()); g++) {
 								space =  space+"  " ;
 							}
-
+//
 						String Qty = ""+itemforPrint.get(i).getQty();
 						for (int a = 0; a < (6 - (""+itemforPrint.get(i).getQty()).length()); a++) {
 							Qty =  Qty+"  " ;
 						}
-
+//
 						String price = ""+itemforPrint.get(i).getPrice();
 						for (int a = 0; a < (6 - (""+itemforPrint.get(i).getPrice()).length()); a++) {
 							price =  price+"  " ;
@@ -1612,11 +1621,15 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 							sMounts =  sMounts+"  " ;
 						}
 						if(valueCheckHidPrice==1){
-							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" +"\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" +"\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							posPtr.printAndroidFont( null, "\t\t"+  itemforPrint.get(i).getItemName().toString() , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 						}
 						else{
-							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" + price + "\t\t" +sMounts + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+//							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" + price + "\t\t" +sMounts + "\n" + itemforPrint.get(i).getItemName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							posPtr.printAndroidFont( null,space  + "\t\t" + Qty + "\t\t" + price + "\t\t" +sMounts , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
+							posPtr.printAndroidFont( null, itemforPrint.get(i).getItemName().toString(), nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 						}
 
@@ -1627,7 +1640,7 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 			//Log.e("getArabicString",""+getArabicString(voucherforPrint.getSubTotal()+""));
 
 
-
+			Log.e("12222print","4pyyy");
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null, "Total Qty  : " + total_Qty/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			if(valueCheckHidPrice==0){
@@ -1644,12 +1657,13 @@ Log.e("tayaaLayout","=="+tayaaLayout);
                 posPtr.printAndroidFont(  null, "I received : " +   getArabicString(voucherforPrint.getNetSales()+"")/* + "\n" */ , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
             }
+			Log.e("12222print","5pyyy");
 			posPtr.printAndroidFont(  null, "" + "\n"   , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(  null,  "Recipient : ____________  Signature : __________" + "\n"  , nLineWidth, 22, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.printAndroidFont(  null, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
-		} catch (IOException e) {
-			Log.e("posPtr",""+e.getMessage());
+		} catch (Exception e) {
+			Log.e("ExceptionposPtr",""+e.getMessage());
 			e.printStackTrace();
 		}
 

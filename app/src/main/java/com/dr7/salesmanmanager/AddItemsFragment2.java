@@ -22,12 +22,14 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,6 +74,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 //import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
@@ -79,6 +83,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
 import static com.dr7.salesmanmanager.SalesInvoice.addQtyTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
+import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
@@ -98,6 +103,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public static List<Item> jsonItemsList2;
     public static List<Item> jsonItemsList_intermidiate;
     public static List<Item> List;
+    public  static  int endAddItem=0;
     public  static  int size_customerpriceslist=0;
     public  List<Item> itemsList_forFilter;
     Context context;
@@ -161,7 +167,7 @@ public class AddItemsFragment2 extends DialogFragment {
 //        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDbHandler = new DatabaseHandler(getActivity());
 
-        countListVisible= mDbHandler.getCountVisibleItemSize();
+        countListVisible = mDbHandler.getCountVisibleItemSize();
 //        jsonItemsList = new ArrayList<>();
 //        jsonItemsList2= new ArrayList<>();
 //        jsonItemsList_intermidiate = new ArrayList<>();
@@ -173,9 +179,9 @@ public class AddItemsFragment2 extends DialogFragment {
         setCancelable(false);
 
 
-        getDialog().getWindow().clearFlags(WindowManager.LayoutParams. SOFT_INPUT_ADJUST_PAN);
+        getDialog().getWindow().clearFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        int size_firstlist=0;
+        int size_firstlist = 0;
 
         final View view = inflater.inflate(R.layout.add_items_dialog2, container, false);
 
@@ -184,38 +190,31 @@ public class AddItemsFragment2 extends DialogFragment {
             if (languagelocalApp.equals("ar")) {
                 add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             } else {
-                if (languagelocalApp.equals("en"))
-                {
+                if (languagelocalApp.equals("en")) {
                     add_item.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 }
 
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             add_item.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
 
         DatabaseHandler mHandler = new DatabaseHandler(getActivity());
 
-         userNo=mDbHandler.getAllUserNo();
+        userNo = mDbHandler.getAllUserNo();
         try {
-            if(!userNo.equals(""))
-            {
+            if (!userNo.equals("")) {
                 fillListItemJson();
 
-            }
-            else {
+            } else {
                 AddItemsFragment2.this.dismiss();
-                Intent i=new Intent(getActivity(),Login.class);
+                Intent i = new Intent(getActivity(), Login.class);
                 startActivity(i);
             }
-        }catch (Exception e)
-        {
-            Log.e("Exception","getItems"+e.getMessage());
+        } catch (Exception e) {
+            Log.e("Exception", "getItems" + e.getMessage());
 
         }
-
 
 
 //        String rate_customer=mHandler.getRateOfCustomer();  // customer rate to display price of this customer
@@ -262,7 +261,6 @@ public class AddItemsFragment2 extends DialogFragment {
 //       }
 
 
-
         categorySpinner = view.findViewById(R.id.cat);
         List<String> categories = mHandler.getAllExistingCategories();
         categories.add(0, getResources().getString(R.string.all_item));
@@ -276,20 +274,18 @@ public class AddItemsFragment2 extends DialogFragment {
         // ****************************** Kind Item Spenner*****************************************************
 
         Kind_item_Spinner = view.findViewById(R.id.spinner_kind_item);
-        List<String> Kind_item=new ArrayList<>();
+        List<String> Kind_item = new ArrayList<>();
         try {
             Kind_item = mHandler.getAllKindItems();
 
-        }
-        catch (Exception e)
-        {
-            Kind_item.add(0 ,getResources().getString(R.string.all_item));
+        } catch (Exception e) {
+            Kind_item.add(0, getResources().getString(R.string.all_item));
 
 
         }
-        Kind_item.add(0 ,getResources().getString(R.string.all_item));
+        Kind_item.add(0, getResources().getString(R.string.all_item));
 
-        final  ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity() , R.layout.spinner_style, Kind_item);
+        final ArrayAdapter<String> adapter_kind = new ArrayAdapter<>(getActivity(), R.layout.spinner_style, Kind_item);
         Kind_item_Spinner.setAdapter(adapter_kind);
 
         //kind item
@@ -299,17 +295,17 @@ public class AddItemsFragment2 extends DialogFragment {
                 if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                     if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                         filterTow();
-                    }else {
+                    } else {
                         filterKindItem();
                     }
 
 
                 } else {
-                    Log.e("categorySpinner","else"+categorySpinner.getSelectedItemPosition());
+                    Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
                     if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                         filterCategoury();// filter about categoury
 
-                    }else {
+                    } else {
                         fillAllItems();
                     }
 
@@ -331,7 +327,7 @@ public class AddItemsFragment2 extends DialogFragment {
                 if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                     if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                         filterTow();
-                    }else {
+                    } else {
                         filterCategoury();
                     }
 
@@ -339,8 +335,8 @@ public class AddItemsFragment2 extends DialogFragment {
                 } else {
                     if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
                         filterKindItem();
-                    }else
-                    fillAllItems();
+                    } else
+                        fillAllItems();
 
                 }
             }
@@ -371,29 +367,29 @@ public class AddItemsFragment2 extends DialogFragment {
 
                 if (query != null && query.length() > 0) {
                     String[] arrOfStr = query.split(" ");
-                    int [] countResult=new int[arrOfStr.length];
+                    int[] countResult = new int[arrOfStr.length];
 
 
                     ArrayList<Item> filteredList = new ArrayList<>();
 
-                    boolean isFound=false;
-                    for(int i=0;i<jsonItemsList.size();i++){
-                        for(int j=0;j<arrOfStr.length;j++){
-                        String lowers=arrOfStr[j].toLowerCase();
-                        String uppers=arrOfStr[j].toUpperCase();
+                    boolean isFound = false;
+                    for (int i = 0; i < jsonItemsList.size(); i++) {
+                        for (int j = 0; j < arrOfStr.length; j++) {
+                            String lowers = arrOfStr[j].toLowerCase();
+                            String uppers = arrOfStr[j].toUpperCase();
 
-                            if(jsonItemsList.get(i).getItemName().toLowerCase().contains(lowers)||jsonItemsList.get(i).getItemName().toUpperCase().contains(uppers)){
+                            if (jsonItemsList.get(i).getItemName().toLowerCase().contains(lowers) || jsonItemsList.get(i).getItemName().toUpperCase().contains(uppers)) {
 
-                                isFound=true;
+                                isFound = true;
 
-                            }else {
-                                isFound=false;
+                            } else {
+                                isFound = false;
                                 break;
                             }
 
 
                         }
-                        if(isFound){
+                        if (isFound) {
                             filteredList.add(jsonItemsList.get(i));
                         }
 
@@ -404,17 +400,16 @@ public class AddItemsFragment2 extends DialogFragment {
                     recyclerView.setAdapter(adapter);
 
 
-
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 }
                 return false;
             }
         });
         //***************************************************************************************
-        barcode=(EditText)view.findViewById(R.id.barcode);
-        clearBarcode=(TextView) view.findViewById(R.id.clearBarcode);
+        barcode = (EditText) view.findViewById(R.id.barcode);
+        clearBarcode = (TextView) view.findViewById(R.id.clearBarcode);
         clearBarcode.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -423,7 +418,7 @@ public class AddItemsFragment2 extends DialogFragment {
 
             }
         });
-        barcodebtn=(ImageView)view.findViewById(R.id.searchBarcode);
+        barcodebtn = (ImageView) view.findViewById(R.id.searchBarcode);
         barcodebtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -433,70 +428,119 @@ public class AddItemsFragment2 extends DialogFragment {
 //                    searchByBarcodeNo(s + "");
 //                }
 //                else{
-                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(getActivity() , new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
-                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-                        {//just for first time
-                            Log.e("requestresult" ,"PERMISSION_GRANTED");
-                            Intent i=new Intent(getActivity(),ScanActivity.class);
-                            i.putExtra("key","1");
-                            startActivity(i);
-                            try {
-                                searchByBarcodeNo(s + "");
-                            }
-                            catch (Exception e){
-                                Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } else {
-                        Intent i=new Intent(getActivity(),ScanActivity.class);
-                        i.putExtra("key","1");
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_Camera_Barcode);
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {//just for first time
+                        Log.e("requestresult", "PERMISSION_GRANTED");
+                        Intent i = new Intent(getActivity(), ScanActivity.class);
+                        i.putExtra("key", "1");
                         startActivity(i);
                         try {
                             searchByBarcodeNo(s + "");
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
                         }
                     }
+                } else {
+                    Intent i = new Intent(getActivity(), ScanActivity.class);
+                    i.putExtra("key", "1");
+                    startActivity(i);
+                    try {
+                        searchByBarcodeNo(s + "");
+                    } catch (Exception e) {
+                        Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
 
 //                }
 
             }
         });
+        if (POS_ACTIVE == 0) {
+            barcode.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        barcode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
-            }
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                    try {
+                        if (!s.toString().equals("")) {
+                            Log.e("afterTextChanged", "" + s.toString());
 
-                try {
-                    if(!s.toString().equals(""))
-                    {
-                        Log.e("afterTextChanged",""+s.toString());
+                            try {
+                                searchByBarcodeNo(s.toString().trim() + "");
+                            } catch (Exception e) {
+                                Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
+                            }
 
-                        try {
-                            searchByBarcodeNo(s.toString().trim() + "");
                         }
-                        catch (Exception e){
-                            Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
-                        }
-
+                    } catch (Exception e) {
                     }
                 }
-              catch (Exception e){}
+            });
+        } else {
+
+
+
+
+        //********************************************** for POS *********************************************************
+        barcode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT
+                        || actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_NULL) {
+//                    Log.e("setOnEditorActio", "afterTextChangedNOT" +"errorData\t"+actionId);
+                    try {
+                        if (!barcode.getText().toString().trim().equals("")) {
+
+                            try {
+                                searchByBarcodeNo(barcode.getText().toString().trim() + "");
+                            } catch (Exception e) {
+                                Toast.makeText(context, "try Again", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }else {
+
+                            cleanBarcodeLayout();
+
+                        }
+                    } catch (Exception e) {
+                    }
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                            barcode.requestFocus();
+//
+//                        }
+//                    });
+
+                }
+
+
+                return false;
             }
         });
+
+    }
+
+
+
+
+
+
+
+
 //        barcode.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent event) {
@@ -528,11 +572,21 @@ public class AddItemsFragment2 extends DialogFragment {
             public void onFocusChange(View view, boolean hasFocus) {
 
                 try {
-                    if (hasFocus) {
-                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//                   Log.e("Runnable","--"+barcode.getText().toString());
+//                    Log.e("onFocusChange",""+hasFocus+endAddItem);
+//                    if (hasFocus&&endAddItem==1) {
+                    if (POS_ACTIVE == 1) {
+                        if (endAddItem==1) {
+                            endAddItem = 0;
+                            cleanBarcodeLayout();
+                        }
+//                        searchByBarcodeNo("");
+
+//                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     } else {
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(barcode.getWindowToken(), 0);
+                         // endAddItem=0;
+//                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        imm.hideSoftInputFromWindow(barcode.getWindowToken(), 0);
                     }
                 }catch (Exception e){}
 
@@ -783,6 +837,7 @@ try {
 
 
     if (!barcodeValue.equals("")) {
+        Log.e("jsonItemsList","1="+jsonItemsList.size());
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
             if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())) {
@@ -802,11 +857,13 @@ try {
 
             }
         }
-        // Log.e("searchByBarcodeNo","size"+filteredList.size());
+         Log.e("searchByBarcodeNo","size"+filteredList.size());
 
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
+
+
         if (filteredList.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
@@ -819,6 +876,7 @@ try {
 
 
     } else {
+        Log.e("jsonItemsList","2="+jsonItemsList.size());
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
 

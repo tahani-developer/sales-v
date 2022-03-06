@@ -461,7 +461,6 @@ public class Item implements Serializable {
     }
 
     public float getPrice() {
-        Log.e("price Item",""+price);
         return price;
     }
 

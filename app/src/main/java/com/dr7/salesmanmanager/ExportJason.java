@@ -79,8 +79,6 @@ public class ExportJason extends AppCompatActivity {
     JSONObject vouchersObject;
     public static  SweetAlertDialog pd,pdValidation;
     int taxType=0,importDataAfter=0;
-
-
     JSONObject ReturnUpdateObject;
     private JSONArray jsonArrayReturnUpdate;
     SweetAlertDialog pdReturnUpdate;
@@ -147,19 +145,17 @@ public class ExportJason extends AppCompatActivity {
 
 
     private void getReturnUpdateObject() {
+        ReturnItemsarrayList.clear();
         Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
 
         Log.e("getReturnUpdateObject","getReturnUpdateObject");
         ReturnItemsarrayList.clear();
         mHandler.getvocherNumforItemsReturnd();
-        Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
-
         jsonArrayReturnUpdate = new JSONArray();
-        for (int i = 0; i < ReturnItemsarrayList .size(); i++)
-        {
+        for (int i = 0; i < ReturnItemsarrayList .size(); i++)        {
 
                 jsonArrayReturnUpdate.put(ReturnItemsarrayList.get(i).getJSONObject3());
-                Log.e("list elements===", "" + ReturnItemsarrayList.get(i).getJSONObject3());
+
 
         }
         try {

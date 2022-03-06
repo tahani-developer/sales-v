@@ -925,8 +925,16 @@ public class ImportJason extends AppCompatActivity {
                                 voucher.setAvi_Qty(Float.parseFloat(infoDetail.get("AVLQTY").toString()));
 
                                 voucher.setYear(infoDetail.get("VOUCHERYEAR").toString());
-                                listItemsReturn.add(voucher);
-                                CopyForServerVocger_listItemsReturn.add(voucher);
+
+                                if(infoDetail.get("IS_RETURNED").toString().equals("1") && voucher.getAvi_Qty()==0)
+                                {
+
+                                }else
+                                {
+                                    listItemsReturn.add(voucher);
+                                    CopyForServerVocger_listItemsReturn.add(voucher);
+                                }
+
                             }catch (Exception e){
                                 Log.e("voucher", "Exception="+e.getMessage()  );
                             }

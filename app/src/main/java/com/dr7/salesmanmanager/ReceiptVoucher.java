@@ -1465,6 +1465,8 @@ public class ReceiptVoucher extends Fragment {
 //                            convertLayoutToImage(getActivity());
                             Intent O1 = new Intent(getActivity(), bMITP.class);
                             O1.putExtra("printKey", "2");
+                            O1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            O1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(O1);
 //                                                             lk32.setChecked(true);
                             break;
@@ -1490,6 +1492,8 @@ public class ReceiptVoucher extends Fragment {
 //                            convertLayoutToImage(getActivity());
                             Intent O = new Intent(getActivity(), bMITP.class);
                             O.putExtra("printKey", "2");
+                            O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(O);
                             break;
 
@@ -1561,6 +1565,8 @@ public class ReceiptVoucher extends Fragment {
 //                        convertLayoutToImage(payment_rePrint);
                         Intent O = new Intent(getActivity(), bMITP.class);
                         O.putExtra("printKey", "8");
+                        O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(O);
                         Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
 
@@ -1576,7 +1582,7 @@ public class ReceiptVoucher extends Fragment {
 //                            e.printStackTrace();
 //                        }
 //                                                             qs.setChecked(true);
-                        break;
+//                        break;
 
                     case 4:
 //                        printTally();
@@ -1584,6 +1590,7 @@ public class ReceiptVoucher extends Fragment {
 //
 
                     case 5:
+                    case 6:
 
 
                         paymentPrinter = mDbHandler.getRequestedPaymentsPaper(voucherNo);
@@ -1591,8 +1598,11 @@ public class ReceiptVoucher extends Fragment {
 //                        convertLayoutToImage(pay);
                         Intent O1 = new Intent(getActivity(), bMITP.class);
                         O1.putExtra("printKey", "8");
+                        O1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        O1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(O1);
                         Log.e("Pay 0000 ==>", "" + pay1.getPayMethod());
+                        break;
 
 //                                                                MTP.setChecked(true);
 
