@@ -46,12 +46,14 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity
     LocationRequest mLocationRequest;
 
   public String text;
-    int position=0;
+    int position=0,netsalflag=0;
     public  static  double latitude_main, longitude_main;
     boolean isPosted = true,isPostedCustomerMaster=true;
     public  static  int OrderTypeFlage;
@@ -2304,7 +2306,13 @@ saveCurentLocation();
                         else if (flag == 3) {
                             openDeExportDialog();
                         } else if (flag == 4) {
-                            openPrintSetting();
+                            try {
+                                openPrintSetting();
+
+                            }catch (Exception exception){
+                                Log.e("exception",exception.getMessage());
+                            }
+
                         }
                         else if (flag == 5) {
 
@@ -3122,13 +3130,6 @@ saveCurentLocation();
             }
         });
 
-
-
-
-
-
-
-
         lp.gravity = Gravity.CENTER;
         lp.windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setAttributes(lp);
@@ -3155,6 +3156,20 @@ saveCurentLocation();
         final EditText tel = (EditText) dialog.findViewById(R.id.com_tel);
         final EditText tax = (EditText) dialog.findViewById(R.id.tax_no);
         final EditText noteInvoice = (EditText) dialog.findViewById(R.id.notes);
+
+//        tel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int i, KeyEvent event) {
+//
+//                if (i == EditorInfo.IME_ACTION_DONE || i == EditorInfo.IME_ACTION_NEXT || i == EditorInfo.IME_ACTION_SEARCH
+//                        || i == EditorInfo.IME_NULL)
+//                {
+//                    tel.requestFocus();
+//
+//                }
+//                return true;
+//            }
+//        });
         final  TextView savecompanyLocation=(TextView) dialog.findViewById(R.id.savecompanyLocation);
         savecompanyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3255,9 +3270,10 @@ saveCurentLocation();
                 if (!name.getText().toString().equals("") && !tel.getText().toString().equals("") && !tax.getText().toString().equals(""))
                 {
                     String comName = name.getText().toString().trim();
-                    int comTel = 0, taxNo = 0;
+                   String comTel = "0";
+                           int taxNo = 0;
                     try {
-                        comTel = Integer.parseInt(tel.getText().toString());
+                        comTel = tel.getText().toString();
                         taxNo = Integer.parseInt(tax.getText().toString());
                         String companyNote = noteInvoice.getText().toString();
 
@@ -3287,7 +3303,7 @@ saveCurentLocation();
                         }
                         dialog.dismiss();
                     } catch (NumberFormatException e) {
-                        if (comTel == 0) {
+                        if (comTel .equals("0") ) {
                             tel.setError("Invalid No");
                         }
                         if (taxNo == 0) {
@@ -3381,7 +3397,25 @@ saveCurentLocation();
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
         CheckBox short_Invoice,dontPrintHeader,altayee_checkbox;
+        RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
+        RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
+        RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
+        netsal_radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup,
+                                         int radioButtonID) {
+                switch(radioButtonID) {
+                    case R.id.valu_radio:
+                        netsalflag=1;
+                        break;
+                    case R.id.netsal_radio:
+                        netsalflag=0;
+                        break;
+
+                }
+            }
+        });
         short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
         altayee_checkbox=(CheckBox) dialog.findViewById(R.id.altayee_checkbox);
         dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
@@ -3398,7 +3432,21 @@ saveCurentLocation();
         large_name=(RadioButton) dialog.findViewById(R.id.radioButton_large_name);
         List<PrinterSetting> printer = mDbHandler.getPrinterSetting_();
 //        Log.e("printer_Seting",""+printer.get(0).getPrinterName()+"   "+printer.get(0).getPrinterShape());
-if(printer.size()!=0) {
+
+
+
+        if(printer.size()!=0) {
+
+            if(printer.get(0).getNetsalflag()==0) {
+                netsal_radio.setChecked(true);
+                valu_radio.setChecked(false);
+            }else
+            {
+                netsal_radio.setChecked(false);
+                valu_radio.setChecked(true);
+            }
+
+
     switch (printer.get(0).getPrinterName()) {
         case 0:
             lk30.setChecked(true);
@@ -3453,6 +3501,7 @@ if(printer.size()!=0) {
     normalnam.setChecked(true);
     short_Invoice.setChecked(false);
 }
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3523,7 +3572,7 @@ if(printer.size()!=0) {
                     printerSetting.setTayeeLayout(0);
 
                 }
-
+                printerSetting.setNetsalflag(netsalflag);
                 mDbHandler.addPrinterSeting(printerSetting);
                // Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
                 dialog.dismiss();

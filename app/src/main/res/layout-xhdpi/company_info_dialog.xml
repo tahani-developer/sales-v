@@ -86,7 +86,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1.7"
 
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
@@ -108,10 +108,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+
                 android:layout_margin="2dp"
+                android:gravity="start"
+                android:textSize="13sp"
                 android:background="@drawable/back_border_edit"
-                android:inputType="number"
+
 
                 android:textColor="@color/text_view_color"
                />
@@ -188,7 +190,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1.9"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
 
@@ -233,8 +235,6 @@
         </RadioGroup>
 
 </LinearLayout>
-
-
 
     </TableLayout>
     <TableRow

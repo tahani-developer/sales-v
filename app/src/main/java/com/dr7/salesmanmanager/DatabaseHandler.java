@@ -78,7 +78,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 174;
+    private static final int DATABASE_VERSION = 177;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -464,6 +464,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String COMPANY_NAME = "COMPANY_NAME";
     private static final String COMPANY_TEL = "COMPANY_TEL";
+    private static final String COMPANY_PHONE = "phonnum";
     private static final String TAX_NO = "TAX_NO";
     private static final String LOGO = "LOGO";
     private static final String NOTE = "NOTE";
@@ -471,6 +472,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String LONGTUDE_COMPANY = "LONGTUDE_COMPANY";
     private static final String LATITUDE_COMPANY = "LATITUDE_COMPANY";
     private static final String NOTEPOSITION = "NOTEPOSITION";
+    private static final String netsalFLAG = "netsalFLAG";
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
 
@@ -888,8 +891,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + PRINTER_SHAPE + " INTEGER,"
                 + SHORT_INVOICE + " INTEGER,"
                 + DONT_PRINT_HEADER + " INTEGER,"
-                +TAYE_LAYOUT+ " INTEGER"
-
+                +TAYE_LAYOUT+ " INTEGER,"
+                +netsalFLAG+ " TEXT "
                 + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -2371,6 +2374,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
 
+
         try{
             db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanPlan+"'  INTEGER  DEFAULT '0' ");
 
@@ -2407,6 +2411,32 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+
+
+
+
+
+        try{
+
+            String MODIFY1 = "ALTER TABLE COMPANY_INFO ADD COLUMN phonnum TEXT";
+            String MODIFY2 = "UPDATE COMPANY_INFO SET phonnum = CAST(COMPANY_TEL as TEXT)";
+             db.execSQL(MODIFY1);
+            db.execSQL(MODIFY2);
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+netsalFLAG+"' TEXT DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
     }
 
     ////B
@@ -2891,6 +2921,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(SHORT_INVOICE,printer.getShortInvoice());
         values.put(DONT_PRINT_HEADER,printer.getDontPrintHeader());
         values.put(TAYE_LAYOUT,printer.getTayeeLayout());
+        values.put(netsalFLAG,printer.getNetsalflag());
         db.insert(PRINTER_SETTING_TABLE, null, values);
         db.close();
 
@@ -3390,7 +3421,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
 
-    public void addCompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude,int position) {
+    public void addCompanyInfo(String companyName, String companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude,int position) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3402,7 +3433,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         }
 
         values.put(COMPANY_NAME, companyName);
-        values.put(COMPANY_TEL, companyTel);
+        values.put(COMPANY_PHONE, companyTel);
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
         values.put(NOTE, note);
@@ -3808,7 +3839,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 do {
                     CompanyInfo info = new CompanyInfo();
                     info.setCompanyName(cursor.getString(0));
-                    info.setcompanyTel(Integer.parseInt(cursor.getString(1)));
+                    info.setcompanyTel(cursor.getString(8));
                     info.setTaxNo(Integer.parseInt(cursor.getString(2)));
 
                     if (cursor.getBlob(3).length == 0)
@@ -3825,14 +3856,14 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             }
         }catch (Exception e){
             Log.e("Exception","COMPANY_NAME");
-            selectQuery = "SELECT  COMPANY_NAME,COMPANY_TEL,TAX_NO,NOTE FROM  COMPANY_INFO";
+            selectQuery = "SELECT  COMPANY_NAME,COMPANY_PHONE,TAX_NO,NOTE FROM  COMPANY_INFO";
             db = this.getWritableDatabase();
             Cursor cursor2 = db.rawQuery(selectQuery, null);
             if (cursor2.moveToFirst()) {
                 do {
                     CompanyInfo info = new CompanyInfo();
                     info.setCompanyName(cursor2.getString(0));
-                    info.setcompanyTel(Integer.parseInt(cursor2.getString(1)));
+                    info.setcompanyTel(cursor2.getString(1));
                     info.setTaxNo(Integer.parseInt(cursor2.getString(2)));
                     info.setLogo(null);
 
@@ -5644,6 +5675,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 printerSetting.setShortInvoice(cursor.getInt(2));
                 printerSetting.setDontPrintHeader(cursor.getInt(3));
                 printerSetting.setTayeeLayout(cursor.getInt(4));
+                printerSetting.setNetsalflag(cursor.getInt(5));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }

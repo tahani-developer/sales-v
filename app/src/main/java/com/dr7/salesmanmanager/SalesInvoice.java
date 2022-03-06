@@ -2287,7 +2287,7 @@ public class SalesInvoice extends Fragment {
             try {
                 int printer = mDbHandler.getPrinterSetting();
                 companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() .equals("0")  && companyInfo.getTaxNo() != -1) {
                     switch (printer) {
                         case 0:
                             vouchLast = vouchPrint;
@@ -2892,7 +2892,7 @@ public class SalesInvoice extends Fragment {
                 try {
                     int printer = mDbHandler.getPrinterSetting();
                     companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() .equals("0") && companyInfo.getTaxNo() != -1) {
                         switch (printer) {
                             case 0:
                                 Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
@@ -6688,12 +6688,12 @@ try {
             } catch (Exception e) {
                 companyInfo.setCompanyName("Companey Name");
                 companyInfo.setTaxNo(0);
-                companyInfo.setCompanyTel(00000);
+                companyInfo.setCompanyTel("00000");
 //                companyInfo.setLogo();
             }
 
             //&& !companyInfo.getLogo().equals(null)
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
@@ -6815,7 +6815,7 @@ try {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() != 0 && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel().equals("0") && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
 
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
