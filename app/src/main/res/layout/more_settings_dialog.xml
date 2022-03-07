@@ -6,11 +6,11 @@
     android:layout_gravity="center"
     android:layoutDirection="locale"
     android:textDirection="locale"
+    app:cardBackgroundColor="@color/colorblue_dark"
     app:cardElevation="5dp"
     app:cardPreventCornerOverlap="true"
     app:strokeColor="@color/colorPrimary"
-    app:strokeWidth="3dp"
-    app:cardBackgroundColor="@color/colorblue_dark">
+    app:strokeWidth="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,9 +36,9 @@
             android:id="@+id/radioGrpData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:checkedButton="@id/radioBtnIIS"
-            android:layout_marginTop="10dp">
+            android:checkedButton="@id/radioBtnIIS">
 
             <RadioButton
                 android:id="@+id/radioBtnSQL"
@@ -71,215 +71,392 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="400dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+            android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/swExport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/export_stock"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/swExport"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/export_stock"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
 
 
-        <!--    -->
+                    <!--    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <Switch
-                android:id="@+id/swMax"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                        <Switch
+                            android:id="@+id/swMax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/max_voucher"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/max_voucher"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-        </LinearLayout>
+                    </LinearLayout>
 
-        <!--    -->
+                    <!--    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <Switch
-                android:id="@+id/swOrder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                        <Switch
+                            android:id="@+id/swOrder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/make_order"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/make_order"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-        </LinearLayout>
+                    </LinearLayout>
 
-        <!--    -->
+                    <!--    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <Switch
-                android:id="@+id/swPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                        <Switch
+                            android:id="@+id/swPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/password_from_admin"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/password_from_admin"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-        </LinearLayout>
+                    </LinearLayout>
 
-        <!--    -->
+                    <!--    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <Switch
-                android:id="@+id/swTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                        <Switch
+                            android:id="@+id/swTotal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/total_balance"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/total_balance"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-        </LinearLayout>
+                    </LinearLayout>
 
-        <!--    -->
+                    <!--    -->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <Switch
-                android:id="@+id/swReturn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                        <Switch
+                            android:id="@+id/swReturn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voucher_return"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/voucher_return"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                    </LinearLayout>
 
-            <Switch
-                android:id="@+id/SalsManPlan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
-            <TextView
-                android:id="@+id/plan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/SalsManPlan"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                        <Switch
+                            android:id="@+id/SalsManPlan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp">
+                        <TextView
+                            android:id="@+id/plan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/SalsManPlan"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
 
-            <Switch
-                android:id="@+id/activePos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:theme="@style/MySwitch" />
+                    </LinearLayout>
 
-            <TextView
-                android:id="@+id/activPos_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/posActive"
-                android:textColor="#717171"
-                android:textSize="16sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/activePos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
+
+                        <TextView
+                            android:id="@+id/activPos_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/posActive"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/colorblue1" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/cakeshopSW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/textV1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CakeShop Offer - Bonus"
+                            android:textColor="#717171"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toEndOf="@+id/cakeshopSW"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageButton
+                            android:id="@+id/cakeshopInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_info_outline_black2_24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/gray_btn_bg_pressed_color"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/cakeExpandedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:gravity="start"
+                        android:textColor="#3C3C3C"
+                        android:text="This is just for testing purposes\nhuhfund"
+                        android:layout_marginStart="43dp"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="gone"
+                        android:background="@color/white"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/qasionSW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/textV2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Qasion Offer - Discount"
+                            android:textColor="#717171"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toEndOf="@+id/qasionSW"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageButton
+                            android:id="@+id/qasionInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_info_outline_black2_24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/gray_btn_bg_pressed_color"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/qasionExpandedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="5dp"
+                        android:gravity="start"
+                        android:textColor="#3C3C3C"
+                        android:visibility="gone"
+                        android:layout_marginStart="43dp"
+                        android:layout_marginEnd="5dp"
+                        android:text="This is just for testing purposes\nhuhfund"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/talaatSW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/textV3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Talaat Offer - Discount"
+                            android:textColor="#717171"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toEndOf="@+id/talaatSW"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <ImageButton
+                            android:id="@+id/talaatInfo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_info_outline_black2_24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_marginEnd="5dp"
+                            android:backgroundTint="@color/gray_btn_bg_pressed_color"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/talaatExpandedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="5dp"
+                        android:gravity="start"
+                        android:textColor="#3C3C3C"
+                        android:layout_marginStart="43dp"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="gone"
+                        android:text="This is just for testing purposes\nhuhfund"/>
+
+                </LinearLayout>
+
+            </ScrollView>
 
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
             android:gravity="center"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/okBtn"
@@ -289,10 +466,10 @@
                 android:text="@string/ok"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/cancelBtn"/>
+                app:layout_constraintEnd_toStartOf="@id/cancelBtn"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/cancelBtn"
@@ -302,10 +479,10 @@
                 android:text="@string/cancel"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/okBtn"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/okBtn"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
