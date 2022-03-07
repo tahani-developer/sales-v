@@ -174,8 +174,38 @@
             android:textColor="@color/add_button"
             />
     </RadioGroup>
-   </ScrollView>
 
+
+
+   </ScrollView>
+    <RadioGroup
+        android:id="@+id/netsal_radioGrp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <RadioButton
+            android:id="@+id/valu_radio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:text="القيمة المطلوبة"
+            android:textSize="14dp" />
+
+        <RadioButton
+            android:id="@+id/netsal_radio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:checked="true"
+            android:text="الصافي"
+            android:textSize="14dp" />
+    </RadioGroup>
     <Button
         android:id="@+id/save"
         android:layout_width="match_parent"

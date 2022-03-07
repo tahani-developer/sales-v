@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 public class CompanyInfo {
     
     private String companyName;
-    private int companyTel;
+    private String companyTel;
     private int taxNo;
     private Bitmap logo;
     private String noteForPrint;
@@ -40,7 +40,7 @@ public class CompanyInfo {
     public CompanyInfo() {
     }
 
-    public CompanyInfo(String companyName, int companyTel, int taxNo, Bitmap logo, String noteForPrint) {
+    public CompanyInfo(String companyName, String companyTel, int taxNo, Bitmap logo, String noteForPrint) {
         this.companyName = companyName;
         this.companyTel = companyTel;
         this.taxNo = taxNo;
@@ -56,11 +56,11 @@ public class CompanyInfo {
         this.companyName = companyName;
     }
 
-    public int getcompanyTel() {
+    public String getcompanyTel() {
         return companyTel;
     }
 
-    public void setcompanyTel(int companyTel) {
+    public void setcompanyTel(String companyTel) {
         this.companyTel = companyTel;
     }
 
@@ -68,7 +68,7 @@ public class CompanyInfo {
         return taxNo;
     }
 
-    public void setCompanyTel(int companyTel) {
+    public void setCompanyTel(String companyTel) {
         this.companyTel = companyTel;
     }
 
@@ -84,7 +84,7 @@ public class CompanyInfo {
         this.logo = logo;
     }
 
-    public int getCompanyTel() {
+    public String getCompanyTel() {
         return companyTel;
     }
 

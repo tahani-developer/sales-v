@@ -8,6 +8,15 @@ public class PrinterSetting {
     private int shortInvoice;
     private int dontPrintHeader;
     private int tayeeLayout;
+    private int netsalflag;
+
+    public int getNetsalflag() {
+        return netsalflag;
+    }
+
+    public void setNetsalflag(int netsalflag) {
+        this.netsalflag = netsalflag;
+    }
 
     public int getTayeeLayout() {
         return tayeeLayout;

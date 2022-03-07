@@ -427,7 +427,7 @@ if(doc!=null)            doc.add(  pdfPTableHeader);
 if( companyInfo!=null)
         if (
                 !companyInfo.getCompanyName().equals("")&&
-               companyInfo.getcompanyTel()!=0) {
+               companyInfo.getcompanyTel().equals("0")) {
 
             createvocherPDF("Invoice" + ".pdf", list);
         }else
@@ -481,7 +481,7 @@ if( companyInfo!=null)
         if( companyInfo!=null)
             if (
                     !companyInfo.getCompanyName().equals("")&&
-                            companyInfo.getcompanyTel()!=0) {
+                            companyInfo.getcompanyTel().equals("0")) {
 
                 createSalevocherPDF("Invoice" + ".pdf", list);
             }else

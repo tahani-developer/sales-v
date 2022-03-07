@@ -146,6 +146,10 @@ public class ExportJason extends AppCompatActivity {
 
     private void getReturnUpdateObject() {
         ReturnItemsarrayList.clear();
+        Log.e("ReturnItemsarrayList===",ReturnItemsarrayList.size()+"getReturnUpdateObject");
+
+        Log.e("getReturnUpdateObject","getReturnUpdateObject");
+        ReturnItemsarrayList.clear();
         mHandler.getvocherNumforItemsReturnd();
         jsonArrayReturnUpdate = new JSONArray();
         for (int i = 0; i < ReturnItemsarrayList .size(); i++)        {
