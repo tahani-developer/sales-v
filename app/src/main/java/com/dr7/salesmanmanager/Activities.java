@@ -62,6 +62,7 @@ import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.price;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialValue;
+import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.price_serial_edit;
 import static com.dr7.salesmanmanager.SalesInvoice.serialValueUpdated;
@@ -961,7 +962,7 @@ public class Activities extends AppCompatActivity implements
                              {
                                  if(checkInTotalList(serialBarcode.trim()))
                                  {
-                                     if(updatedSerial==1)
+                                     if(updatedSerial==1||addNewSerial==1)
                                      {
                                          serialValueUpdated.setText(serialBarcode.toString().trim());
                                      }else {
@@ -1051,7 +1052,7 @@ public class Activities extends AppCompatActivity implements
                                  {
 
                                      updatePaymentTypeForVoucher(serialBarcode.trim());
-                                     if(updatedSerial==1)
+                                     if(updatedSerial==1||addNewSerial==1)
                                      {
                                          serialValueUpdated.setText(serialBarcode.toString().trim());
                                      }else {

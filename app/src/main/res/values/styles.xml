@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorblue_dark</item>
         <item name="colorPrimaryDark">@color/colorblue_dark</item>
         <item name="colorAccent">@color/colorblue_dark</item>
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+        <item name="fontFamily">@font/quicksand_regular</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -88,4 +90,5 @@
 
     <style name="customCheckBoxStyle" parent="@android:style/Widget.Holo.Light.CompoundButton.CheckBox">
     </style>
+
 </resources>

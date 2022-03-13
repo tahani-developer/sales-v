@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/mainlyout"
     android:layoutDirection="locale"
-android:padding="5dp"
+    android:padding="5dp"
 
     tools:context="com.dr7.salesmanmanager.SalesInvoice"
 
@@ -42,17 +42,24 @@ android:padding="5dp"
                     android:background="@color/layer7"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/addSerial"
 
                         android:layout_width="match_parent"
-                        android:visibility="invisible"
+                        android:visibility="visible"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/back_border_edit"
 
                         android:layout_height="match_parent"
                         android:layout_weight="10"
-                        android:text="@string/save"
-                        android:gravity="top|center"
+
+
+                        android:text="@string/scanSerial"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:textColor="@color/colorblue1"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:elevation="2dp"/>
                     <TextView
                         android:id="@+id/finishPrint"
                         android:layout_width="wrap_content"
@@ -109,7 +116,6 @@ android:padding="5dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2.2"
                         android:layout_gravity="center"
-
                         android:layout_margin="2dp"
                         app:borderWidth="0dp"
                         android:scaleType="center"
@@ -121,7 +127,6 @@ android:padding="5dp"
                         android:backgroundTint="@color/white"
                         android:src="@drawable/ic_done_black_24dp"
                         app:maxImageSize ="46dp"
-
                         android:visibility="visible"
                         app:fabSize="normal" />
                     <TextView

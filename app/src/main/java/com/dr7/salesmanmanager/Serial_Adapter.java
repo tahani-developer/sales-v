@@ -715,16 +715,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    private boolean checkInTotalBarcode(String serial) {
-        for(int i=0;i<listSerialTotal.size();i++)
-        {
-            if(listSerialTotal.get(i).getSerialCode().equals(serial))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+//    private boolean checkInTotalBarcode(String serial) {
+//        for(int i=0;i<listSerialTotal.size();i++)
+//        {
+//            if(listSerialTotal.get(i).getSerialCode().equals(serial))
+//            {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     private void openeditDialog() {
         final EditText editText = new EditText(context);

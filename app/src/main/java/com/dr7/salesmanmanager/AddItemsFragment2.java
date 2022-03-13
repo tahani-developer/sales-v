@@ -81,10 +81,13 @@ import static com.dr7.salesmanmanager.MainActivity.PICK_IMAGE;
 
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.item_serial;
 import static com.dr7.salesmanmanager.SalesInvoice.addItemImgButton2;
+import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.addQtyTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.canChangePrice;
 import static com.dr7.salesmanmanager.SalesInvoice.checkQtyServer;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList;
+import static com.dr7.salesmanmanager.SalesInvoice.jsonItemsList2;
 import static com.dr7.salesmanmanager.SalesInvoice.listItemImage;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
@@ -99,9 +102,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 
 public class AddItemsFragment2 extends DialogFragment {
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
-    public static  List<Item> jsonItemsList;
-    public static List<Item> jsonItemsList2;
-    public static List<Item> jsonItemsList_intermidiate;
+
     public static List<Item> List;
     public  static  int endAddItem=0;
     public  static  int size_customerpriceslist=0;
@@ -164,7 +165,7 @@ public class AddItemsFragment2 extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 //        new LocaleAppUtils().changeLayot(context);
-//        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mDbHandler = new DatabaseHandler(getActivity());
 
         countListVisible = mDbHandler.getCountVisibleItemSize();
@@ -585,8 +586,8 @@ public class AddItemsFragment2 extends DialogFragment {
 //                        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     } else {
                          // endAddItem=0;
-//                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                        imm.hideSoftInputFromWindow(barcode.getWindowToken(), 0);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(barcode.getWindowToken(), 0);
                     }
                 }catch (Exception e){}
 
@@ -903,9 +904,9 @@ try {
 
     private void fillListItemJson() {// test
         String s = "";
-        jsonItemsList = new ArrayList<>();
-        jsonItemsList2 = new ArrayList<>();
-        jsonItemsList_intermidiate = new ArrayList<>();
+//        jsonItemsList              = new ArrayList<>();
+//        jsonItemsList2             = new ArrayList<>();
+//        jsonItemsList_intermidiate = new ArrayList<>();
         String dateCurent=getCurentTimeDate(1);
         String rate_customer = mDbHandler.getRateOfCustomer();
         itemUnit=mDbHandler.getAllSettings().get(0).getItemUnit();
@@ -1337,6 +1338,10 @@ try {
 
             }
 
+//            if(addNewSerial==1)
+//            {
+//                listener.addItemsToList(List);
+//            }
 
             return true;
 

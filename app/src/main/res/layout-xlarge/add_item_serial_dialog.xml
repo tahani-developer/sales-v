@@ -79,6 +79,7 @@
         android:layout_marginTop="5dp"
         android:layout_weight="5"
         android:gravity="center"
+        android:id="@+id/linearUnit"
         android:orientation="horizontal"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"

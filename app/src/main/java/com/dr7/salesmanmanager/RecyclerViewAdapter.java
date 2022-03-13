@@ -83,6 +83,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
+import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
@@ -135,7 +136,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     List<String> listSerialValue = new ArrayList<>();
     public static serialModel serial;
     public static EditText unitQty, bonus;
-    LinearLayout bonusLinearLayout;
+    LinearLayout bonusLinearLayout,linearPrice;
     String discountCustomer = "", updateDiscountValue = "";
     public static Button addToList;
     public String exist = "";
@@ -223,7 +224,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Log.e("getVivible", "" + allItemsList.get(position).getItemNo() + "\t" + allItemsList.size()
         );
         Log.e("getVivible", "" + allItemsList.get(position).getVivible());
-        if (allItemsList.get(position).getVivible() == 1) {
+        if ((allItemsList.get(position).getVivible() == 1)||(Separation_of_the_serial==1&&allItemsList.get(position).getItemHasSerial().equals("1"))) {
 
             holder.cardView.setVisibility(View.GONE);
         } else holder.cardView.setVisibility(View.VISIBLE);
@@ -325,8 +326,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.price.setText(convertToEnglish(threeDForm.format(priceUnit)) + "\t\tJD");
 
 //            }
-
-//            items.get(position).setPrice(priceUnit);
         } else {
             holder.price.setText(convertToEnglish(threeDForm.format(allItemsList.get(position).getPrice())) + "\t\tJD");
 
@@ -423,6 +422,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
                                                                    mainRequestLinear.setVisibility(View.VISIBLE);
                                                                    unitQty = dialog.findViewById(R.id.unitQty);
+
                                                                    unitQty.setEnabled(false);
 
                                                                    if (contiusReading == 0) {
@@ -1611,7 +1611,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     dialog.setContentView(R.layout.add_item_serial_dialog);
                     serialValue = dialog.findViewById(R.id.serialValue);
-
+                    linearPrice= dialog.findViewById(R.id.linearPrice);
+                    linearPrice.setVisibility(View.VISIBLE);
                     mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                     checkStateResult = dialog.findViewById(R.id.checkStateResult);
                     rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
@@ -1693,6 +1694,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     addToList.setVisibility(View.INVISIBLE);
                     bonus.setEnabled(false);
                     addToList.setEnabled(false);
+
                     serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
                     final LinearLayout unitWeightLinearLayout = dialog.findViewById(R.id.linearWeight);
                     unitWeightLinearLayout.setVisibility(View.GONE);
@@ -1925,6 +1927,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } catch (Exception e) {
 
             }
+            linearPrice= dialog.findViewById(R.id.linearPrice);
+            linearPrice.setVisibility(View.VISIBLE);
             serialValue = dialog.findViewById(R.id.serialValue);
             resultLinear = dialog.findViewById(R.id.resultLinear);
             acceptDiscount = dialog.findViewById(R.id.acceptDiscount);

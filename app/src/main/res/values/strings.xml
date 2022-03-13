@@ -574,5 +574,6 @@
     <string name="allVoucher">All Voucher</string>
     <string name="SalsManPlan">SalsManPlan</string>
     <string name="posActive">POS Active</string>
+    <string name="scanSerial">Add Serial</string>
 
 </resources>

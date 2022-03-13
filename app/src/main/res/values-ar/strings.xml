@@ -573,4 +573,5 @@
     <string name="allVoucher">كل الفواتير</string>
     <string name="SalsManPlan">SalsManPlan</string>
     <string name="posActive">POS Active</string>
+    <string name="scanSerial">اضافة سيريال</string>
 </resources>

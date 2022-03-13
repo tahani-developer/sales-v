@@ -69,6 +69,7 @@ import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
+import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
 import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
@@ -7131,22 +7132,30 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             count = cursor.getString(0);
             itemNoExist = cursor.getString(1);
         }
-        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t"+itemNoExist);
+//        Log.e("isSerialCodeExist", "isSerialCodeExistFrom +SerialItemMaster+\t" + count + "\t"+itemNoExist);
         if(cursor != null)
         {
             cursor.close();
             cursor=null;
             db.close();
         }
-
-        if(itemNoExist.toString().trim().equals(itemNo.trim()))
+        Log.e("1**itemNoExist","="+itemNoExist+"\titemNo="+itemNo+"\tcount="+count);
+        if(itemNoExist.toString().trim().equals(itemNo.trim())&&addNewSerial==0 )
         {
             count="not";// valid serial not error
         }
         else {
-            count=itemNoExist;// exist for another item
+            try {
+                if(addNewSerial==1 && !itemNoExist.equals(""))
+                    count="not";// valid serial not error
+                else      count=itemNoExist;// exist for another item
+            }catch (Exception e){
+
+            }
+
         }
-        // Log.e("itemNoExist","="+itemNoExist+"\titemNo="+itemNo+"\tcount="+count);
+
+         Log.e("1**itemNoExist","="+itemNoExist+"\titemNo="+itemNo+"\tcount="+count);
 //        if(!count.equals("not"))// exist in DataBase
 //        {
 //

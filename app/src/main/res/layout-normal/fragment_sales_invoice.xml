@@ -44,6 +44,25 @@
                     android:gravity="center"
                     android:background="@color/layer7"
                     android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/addSerial"
+
+                        android:layout_width="match_parent"
+                        android:visibility="visible"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/back_border_edit"
+
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+
+
+                        android:text="@string/scanSerial"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/colorblue1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:elevation="2dp"/>
 
                 <RelativeLayout
 

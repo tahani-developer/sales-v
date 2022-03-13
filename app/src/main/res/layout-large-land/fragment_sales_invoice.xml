@@ -41,6 +41,25 @@
                     android:gravity="center"
                     android:background="@color/layer7"
                     android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/addSerial"
+
+                        android:layout_width="match_parent"
+                        android:visibility="visible"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/back_border_edit"
+
+                        android:layout_height="match_parent"
+                        android:layout_weight="10"
+
+
+                        android:text="@string/scanSerial"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:textColor="@color/colorblue1"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:elevation="2dp"/>
 
                     <RelativeLayout
 
@@ -53,6 +72,7 @@
                         android:gravity="center"
 
                         >
+
 
                         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/addItemImgButton2"
@@ -68,14 +88,14 @@
                             android:id="@+id/items_quntity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/addItemImgButton2"
                             android:layout_alignLeft="@+id/addItemImgButton2"
+                            android:layout_alignTop="@+id/addItemImgButton2"
                             android:layout_alignRight="@+id/addItemImgButton2"
 
 
                             android:layout_marginLeft="30dp"
-                            android:layout_marginRight="30dp"
                             android:layout_marginTop="10dp"
+                            android:layout_marginRight="30dp"
                             android:padding="3dp"
                             android:text="+"
                             android:textColor="@color/cancel_button"

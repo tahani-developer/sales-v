@@ -135,11 +135,11 @@ import static com.dr7.salesmanmanager.Activities.discvalue_static;
 
 import static com.dr7.salesmanmanager.Activities.locationPermissionRequestAc;
 import static com.dr7.salesmanmanager.AddItemsFragment2.REQUEST_Camera_Barcode;
-import static com.dr7.salesmanmanager.AddItemsFragment2.jsonItemsList;
 import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
+import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
@@ -148,6 +148,7 @@ import static com.dr7.salesmanmanager.Login.offerQasion;
 import static com.dr7.salesmanmanager.Login.offerTalaat;
 import static com.dr7.salesmanmanager.Login.talaatLayoutAndPassowrd;
 import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
+import static com.dr7.salesmanmanager.RecyclerViewAdapter.price;
 import static com.dr7.salesmanmanager.RecyclerViewAdapter.serialListitems;
 import static com.dr7.salesmanmanager.Serial_Adapter.barcodeValue;
 import static com.dr7.salesmanmanager.Serial_Adapter.errorData;
@@ -176,14 +177,20 @@ import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
+    public static  List<Item> jsonItemsList = new ArrayList<>();
+
+
+    public static List<Item> jsonItemsList2 = new ArrayList<>();
+    public static List<Item> jsonItemsList_intermidiate= new ArrayList<>();
+    public  TextView addSerial;
     ArrayList<OfferGroupModel> listGroup;
     ArrayList<MainGroup_Id_Count> listMainIdCount;
     List<Integer> listAppliedGroup;
     RecyclerView serial_No_recyclerView;
-    public static int noTax=0;
+    public static int noTax=0,priceByCustomer=0;
     SimpleDateFormat dateFormat, timeformat;
     String dateCurent="",timevocher;
-    public static  int updatedSerial=0;
+    public static  int updatedSerial=0,addNewSerial=0;
     int typeRequest = 0, haveResult = 0, approveAdmin = 0,countNormalQty=0,countBunosQty=0,contiusReading=0;
     int counterSerial;
 
@@ -423,7 +430,7 @@ public class SalesInvoice extends Fragment {
         try {
             if (!generalMethod.checkDeviceDate()) {
 
-               new SweetAlertDialog(getContext(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+               new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                        .setTitleText(getString(R.string.invalidDate))
                        .setContentText(getString(R.string.invalidDate_msg))
                        .setCustomImage(R.drawable.date_error)
@@ -441,6 +448,18 @@ public class SalesInvoice extends Fragment {
         }
 
         getTimeAndDate();
+        addSerial=view.findViewById(R.id.addSerial);
+        if(Separation_of_the_serial==0)
+        {
+            addSerial.setVisibility(View.GONE);
+        }
+        addSerial.setOnClickListener(view1 -> {
+            addSerial.setEnabled(false);
+            addNewSerial=1;
+            updatedSerial=0;
+            showDialogSerial(getActivity(),0,"",1);
+
+        });
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -503,6 +522,7 @@ public class SalesInvoice extends Fragment {
 
         itemCountTable = mDbHandler.getCountItemsMaster();
         listItemImage=new ArrayList<>();
+       priceByCustomer= mDbHandler.getAllSettings().get(0).getPriceByCust() ;
 //        listItemImage=mDbHandler.getItemsImage();
 //        Log.e("listItemImage",""+listItemImage.get(0).toString());
 //        jsonItemsList = new ArrayList<>();
@@ -1106,6 +1126,8 @@ public class SalesInvoice extends Fragment {
 
         return view;
     }
+
+
 
     private void checkGroupOffer(int flagDel){
         Log.e("checkGroupOffer","flagDel= "+flagDel);
@@ -2846,6 +2868,7 @@ public class SalesInvoice extends Fragment {
                 if(items.get(i).getItemNo().equals(listSerialTotal.get(j).getItemNo()))
                 {
                     listSerialTotal.get(j).setCounterSerial(i+1);
+                    listSerialTotal.get(j).setPriceItem(items.get(i).getPrice());
                 }
 
             }
@@ -3171,7 +3194,8 @@ public class SalesInvoice extends Fragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
                                     case 0://update  qty
-
+                                        updatedSerial=1;
+                                        addNewSerial=0;
                                         showDialogSerial(getContext(),position,itemNoForDelete,priceCurrentItem);
                                         break;
                                     case 1:// delete item
@@ -3652,46 +3676,49 @@ public class SalesInvoice extends Fragment {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.add_item_serial_dialog);
 
+        editOpen = true;
+        addSerial.setEnabled(true);
 
-        updatedSerial=1;
-
-        editOpen=true;
-
-        TextView item_number,item_name,discount;
-        EditText  bonus;
-        LinearLayout   bonusLinearLayout,_linear_switch,discount_linear,linear_bonus,mainRequestLinear,mainLinearAddItem;
-       listTemporarySerial=new ArrayList<>();
-        listTemporarySerial=getserialForItem(itemNo,priceUpdated);
+        TextView item_number, item_name, discount,pricee_label;
+        EditText bonus;
+        LinearLayout bonusLinearLayout, _linear_switch, discount_linear, linear_bonus, mainRequestLinear, mainLinearAddItem, linearPrice, linearUnit;
+        listTemporarySerial = new ArrayList<>();
+        if(addNewSerial==0)
+        listTemporarySerial = getserialForItem(itemNo, priceUpdated);
+        Log.e("listTemporarySerial","="+listTemporarySerial.size());
         discPercRadioButton = dialog.findViewById(R.id.discPercRadioButton);
         discValueRadioButton = dialog.findViewById(R.id.discValueRadioButton);
-        radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+        radioDiscountSerial = dialog.findViewById(R.id.discTypeRadioGroup);
         radioDiscountSerial.setVisibility(View.VISIBLE);
+        linearPrice = dialog.findViewById(R.id.linearPrice);
+
+        linearUnit = dialog.findViewById(R.id.linearUnit);
+
 
         //radioDiscountSerial.setEnabled(false);
-        itemNoSelected=itemNo;
+        itemNoSelected = itemNo;
 
 
         //**********************************************
-        int   current_itemHasSerial = 1;
+        int current_itemHasSerial = 1;
 
         dialog.setContentView(R.layout.add_item_serial_dialog);
         final LinearLayoutManager layoutManager;
         layoutManager = new LinearLayoutManager(context);
         ImageView addEditBarcode;
-         serial_No_recyclerView=dialog.findViewById(R.id.serial_No_recyclerView);
+        serial_No_recyclerView = dialog.findViewById(R.id.serial_No_recyclerView);
         serial_No_recyclerView.setLayoutManager(layoutManager);
-        if(listTemporarySerial.size()!=0)
-        {
+        Log.e("listTemporarySerial","2="+listTemporarySerial.size());
+        if (listTemporarySerial.size() != 0) {
             serial_No_recyclerView.setAdapter(new Serial_Adapter(listTemporarySerial, context));
         }
 
         mainRequestLinear_serial = dialog.findViewById(R.id.mainRequestLinear);
-        mainLinearAddItem= dialog.findViewById(R.id.mainLinearAddItem);
-        if(mDbHandler.getAllSettings().get(0).getContinusReading()==1)
-        {
+        mainLinearAddItem = dialog.findViewById(R.id.mainLinearAddItem);
+        if (mDbHandler.getAllSettings().get(0).getContinusReading() == 1) {
 
-            contiusReading=1;
-            Log.e("contiusReading","update==="+contiusReading);
+            contiusReading = 1;
+            Log.e("contiusReading", "update===" + contiusReading);
         }
 
         try {
@@ -3710,67 +3737,93 @@ public class SalesInvoice extends Fragment {
             mainLinearAddItem.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
         TextView textQty;
-        mainRequestLinear= dialog.findViewById(R.id.mainRequestLinear);
-        textQty= dialog.findViewById(R.id.textQty);
-        unitQtyEdit= dialog.findViewById(R.id.unitQty);
-        discount_linear= dialog.findViewById(R.id.discount_linear);
-        linear_bonus= dialog.findViewById(R.id.linear_bonus);
-        addEditBarcode= dialog.findViewById(R.id.addEditBarcode);
+        mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
+        textQty = dialog.findViewById(R.id.textQty);
+        unitQtyEdit = dialog.findViewById(R.id.unitQty);
+        discount_linear = dialog.findViewById(R.id.discount_linear);
+        linear_bonus = dialog.findViewById(R.id.linear_bonus);
+        addEditBarcode = dialog.findViewById(R.id.addEditBarcode);
 
-        discount= dialog.findViewById(R.id.discount);
-        item_number= dialog.findViewById(R.id.item_number);
-        item_name= dialog.findViewById(R.id.item_name);
-        price_serial_edit= dialog.findViewById(R.id.price);
+        discount = dialog.findViewById(R.id.discount);
+        item_number = dialog.findViewById(R.id.item_number);
+        item_name = dialog.findViewById(R.id.item_name);
+        price_serial_edit = dialog.findViewById(R.id.price);
         price_serial_edit.setEnabled(false);
         price_serial_edit.setAlpha(0.8f);
-        _linear_switch= dialog.findViewById(R.id._linear_switch);
+        _linear_switch = dialog.findViewById(R.id._linear_switch);
         checkStateResult = dialog.findViewById(R.id.checkStateResult);
         rejectDiscount = dialog.findViewById(R.id.rejectDiscount);
         mainRequestLinear_serial.setVisibility(View.VISIBLE);
-        serialValueUpdated= dialog.findViewById(R.id.serialValue);
+        serialValueUpdated = dialog.findViewById(R.id.serialValue);
         mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
         bonusLinearLayout = dialog.findViewById(R.id.linear_bonus);
         Button addToList = dialog.findViewById(R.id.addToList);
         Button cancel = dialog.findViewById(R.id.cancelAdd);
+        if(jsonItemsList.size()==0){
+            getAllItems();
+        }
+
+
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editOpen=false;
-                updatedSerial=0;
+                editOpen = false;
+                updatedSerial = 0;
+                addNewSerial=0;
                 updateQtyBasket();
                 dialog.dismiss();
 
             }
         });
         bonus = dialog.findViewById(R.id.bonus);
+        Log.e("addNewSerial","="+addNewSerial);
+        if (addNewSerial == 1) {
+            discount_linear.setVisibility(View.GONE);
+            linear_bonus.setVisibility(View.GONE);
+            _linear_switch.setVisibility(View.GONE);
+            linearPrice.setVisibility(View.GONE);
+            linearUnit.setVisibility(View.GONE);
+            item_name.setVisibility(View.GONE);
+            item_number.setVisibility(View.GONE);
+            price_serial_edit.setVisibility(View.GONE);
+            linearUnit.setVisibility(View.GONE);
+            linearPrice.setVisibility(View.GONE);
+            pricee_label= dialog.findViewById(R.id.pricee);
+            pricee_label.setVisibility(View.GONE);
 
-        if(items.get(position).getDiscType()==1)// percent
+        }
+        if (addNewSerial == 0) {
+
+
+        if (items.get(position).getDiscType() == 1)// percent
         {
-            Log.e("discountP************","1 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
+            Log.e("discountP************", "1 \t" + items.get(position).getDisc() + "\t getDiscType" + items.get(position).getDiscType() + "\t getDiscPerc" + items.get(position).getDiscPerc());
 
-            discount.setText(items.get(position).getDiscPerc()+"");
-            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+            discount.setText(items.get(position).getDiscPerc() + "");
+            radioDiscountSerial = dialog.findViewById(R.id.discTypeRadioGroup);
             radioDiscountSerial.check(R.id.discPercRadioButton);
 
 
-        }
-        else {
-            Log.e("discountV************","2 \t"+items.get(position).getDisc()+"\t getDiscType"+items.get(position).getDiscType()+"\t getDiscPerc"+items.get(position).getDiscPerc());
-            discount.setText(items.get(position).getDisc()+"");
-            radioDiscountSerial= dialog.findViewById(R.id.discTypeRadioGroup);
+        } else {
+            Log.e("discountV************", "2 \t" + items.get(position).getDisc() + "\t getDiscType" + items.get(position).getDiscType() + "\t getDiscPerc" + items.get(position).getDiscPerc());
+            discount.setText(items.get(position).getDisc() + "");
+            radioDiscountSerial = dialog.findViewById(R.id.discTypeRadioGroup);
             radioDiscountSerial.check(R.id.discValueRadioButton);
 
 
         }
+            item_number.setText(items.get(position).getItemNo()+"");
+
+            item_name.setText(items.get(position).getItemName());
+            price_serial_edit.setText((items.get(position).getPrice()+""));
+    }
         mainRequestLinear.setVisibility(View.GONE);
        // discount_linear.setVisibility(View.GONE);
 
         linear_bonus.setVisibility(View.GONE);
 
-        item_number.setText(items.get(position).getItemNo()+"");
 
-        item_name.setText(items.get(position).getItemName());
-        price_serial_edit.setText((items.get(position).getPrice()+""));
        countNormalQty= getNumberOfNormalQty(listTemporarySerial);
         unitQtyEdit.setText(countNormalQty+"");
         textQty.setText(context.getResources().getString(R.string.qty));
@@ -3890,12 +3943,26 @@ public class SalesInvoice extends Fragment {
         addToList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(verifyNotEmpty(listTemporarySerial)){
-                    countNormalQty= getNumberOfNormalQty(listTemporarySerial);
-                    if( updateListSerialTotal(listTemporarySerial,position,priceUpdated, discount.getText().toString()))
-                    {   editOpen=false;
-                        updatedSerial=0;
-                        dialog.dismiss();}
+                if(verifyNotEmpty(listTemporarySerial)) {
+                    countNormalQty = getNumberOfNormalQty(listTemporarySerial);
+                    if (addNewSerial == 1 && updatedSerial == 0) {
+                        addNewSerial = 0;
+                        addSerialToItems();
+                        addForListMasterSerial(listTemporarySerial);
+                        updateQtyBasket();// check item amount
+                        refreshDataItems();
+                        calculateTotals(0);
+                        dialog.dismiss();
+
+                    } else {
+
+                    if (updateListSerialTotal(listTemporarySerial, position, priceUpdated, discount.getText().toString())) {
+                        editOpen = false;
+                        updatedSerial = 0;
+                        dialog.dismiss();
+                    }
+                }
+
                 }else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText(getActivity().getString(R.string.warning_message))
@@ -3992,21 +4059,147 @@ public class SalesInvoice extends Fragment {
 
     }
 
+     private void getAllItems() {// test
+        String s = "";
+        String dateCurent=getCurentTimeDate(1);
+        String rate_customer = mDbHandler.getRateOfCustomer();
+        if(rate_customer.equals(""))
+        {
+            rate_customer="0";
+
+        }
+       int   countListVisible = mDbHandler.getCountVisibleItemSize();
+        Log.e("fillListItemJson","rate_customer="+rate_customer);// customer rate to display price of this customer
+        Log.e("jsonItemsList","countListVisible="+countListVisible);
+
+            jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
+
+            Log.e("jsonItemsList", "="+jsonItemsList.size());
+
+
+    }
+
+    private void  refreshDataItems() {
+        Log.e("refreshDataItems","items="+items.size());
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // landscape
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,0);// if screen is landscape =====> 0
+
+        } else {
+            // portrait
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
+
+        }
+        itemsListView.setAdapter(itemsListAdapter);
+
+
+    }
+
+    private void addSerialToItems() {
+        for(int i=0;i<listTemporarySerial.size();i++) {
+
+            if (itemsContain(listTemporarySerial.get(i).getItemNo())) {
+//                itemsListAdapter.notifyDataSetChanged();
+
+            } else {
+
+                String itemNumber="",itemName,price;
+                Item item=getItemByNumber(listTemporarySerial.get(i).getItemNo());
+
+                if(item!=null){
+                    item.setQty(1);
+                    if (priceByCustomer==1) {// for ejabi ***** test
+                        String priceCus = mDbHandler.getItemPrice(item.getItemNo());
+                        Log.e("priceCus",""+priceCus+"\t"+item.getItemNo());
+                        if (!priceCus.equals("")) {
+
+                            item.setPrice(Float.parseFloat(priceCus));
+                        }
+
+                    }
+                    item.setAmount(1*item.getPrice());
+                    item.setUnit("1");
+                    item.setDiscPerc("0");
+                    item.setDescreption("");
+                    item.setWhich_unit("0");
+                    item.setEnter_qty(item.getQty()+"");
+                    item.setWhichu_qty(item.getQty()+"");
+                    item.setEnter_price(item.getPrice()+"");
+                    item.setUnit_barcode("");
+
+                    Log.e("item","1***"+item.getItemName()+"\t"+  listTemporarySerial.get(i).getPriceItem());
+                    listTemporarySerial.get(i).setPriceItem(item.getPrice());
+                    items.add(item);
+                    Log.e("item","1***"+item.getItemName()+"\t"+ listTemporarySerial.get(i).getPriceItem());
+                }else {//test here
+                     }
+
+
+        }
+        }
+    }
+
+    private Item getItemByNumber(String itemNo) {
+        for(int i=0;i<jsonItemsList.size();i++)
+        {
+            if(  jsonItemsList.get(i).getItemNo().trim().equals(itemNo.trim()))
+            {
+                Log.e("getItemByNumber","itemNo="+itemNo+"\t"+jsonItemsList.get(i).getItemName());
+                Log.e("getItemByNumber","getQty="+"\t"+jsonItemsList.get(i).getQty());
+                return jsonItemsList.get(i);
+            }
+        }
+        return  null;
+
+    }
+
+    private boolean itemsContain(String itemNo) {
+        boolean found=false;
+        Log.e("itemsContain","="+itemNo);
+
+        for(int i=0;i<items.size();i++){
+            if(items.get(i).getItemNo().trim().equals(itemNo.trim())){
+                Log.e("itemsContain","1found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
+                items.get(i).setQty(items.get(i).getQty()+1);
+                items.get(i).setAmount(items.get(i).getQty()*items.get(i).getPrice());
+                items.get(i).setEnter_qty(items.get(i).getQty()+"");
+                items.get(i).setWhichu_qty(items.get(i).getQty()+"");
+                items.get(i).setEnter_price(items.get(i).getPrice()+"");
+                Log.e("itemsContain","2found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
+
+                found=true;
+                break;
+            }
+        }
+        Log.e("itemsContain","found="+found);
+        return  found;
+    }
+
+
     @SuppressLint("WrongConstant")
     private void fillSerial(Context context , String itemNo, int position) {
-        counterSerial++;
         serial = new serialModel();
+        counterSerial++;
+        if(addNewSerial==1)
+        {
+            itemNo=getItemNo(barcodeValue);
+//            serial.setPriceItem(1);
+        }else {
+            serial.setPriceItem(items.get(position).getPrice());
+        }
+
+
         serial.setCounterSerial(counterSerial);
         serial.setSerialCode(barcodeValue);
         serial.setIsBonus("0");
         serial.setIsDeleted("0");
-        Log.e("voucherNo",""+voucherNumber);
+        Log.e("itemNo",""+itemNo);
         serial.setVoucherNo(voucherNumber+"");
         serial.setKindVoucher(voucherType+"");
         serial.setStoreNo(Login.salesMan);
         serial.setDateVoucher(voucherDate);
         serial.setItemNo(itemNo);
-        serial.setPriceItem(items.get(position).getPrice());
+
         listTemporarySerial.add(serial);
         unitQtyEdit.setText(counterSerial + "");
         serialValueUpdated.setText("");
@@ -4038,6 +4231,11 @@ public class SalesInvoice extends Fragment {
 
         serial_No_recyclerView.setAdapter(new Serial_Adapter(listTemporarySerial, context));
         Log.e("listTemporarySerial6",""+listTemporarySerial.size());
+    }
+
+    private String getItemNo(String barcodeValue) {
+        Log.e("getItemNo",""+barcodeValue);
+        return  mDbHandler.getItemNoForSerial(barcodeValue);
     }
 
     public void openSmallScanerTextView() {
@@ -4118,7 +4316,7 @@ public class SalesInvoice extends Fragment {
                 }
 
 
-                //Log.e("errorSerial2", "isFoundSerial" +"position\t"+isFoundSerial);
+                Log.e("errorSerial2", "isFoundSerial" +"addNewSerial=\t"+addNewSerial);
 //            if ((databaseHandler.isSerialCodeExist(data).equals("not")) && (isFoundSerial == false)) {
                 if (mDbHandler.isSerialCodeExist(data).equals("not")||voucherType==506||mDbHandler.getLastTransactionOfSerial(data.trim()).equals("506")) {
                     if((mDbHandler.isSerialCodePaied(data+"").equals("not")&&voucherType==504)||
@@ -4257,6 +4455,7 @@ public class SalesInvoice extends Fragment {
             countBunosQty=listTemporarySerial.size()-countNormalQty;
             deleteFromListMasterSerial(listTemporarySerial.get(0).getItemNo(),price);
             addForListMasterSerial(listTemporarySerial);
+            if(items.size()!=0)
             updateQtyInItemsList(countNormalQty,countBunosQty,position);
             for(int k=0;k<listMasterSerialForBuckup.size();k++)
             {
