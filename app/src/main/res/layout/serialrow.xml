@@ -42,7 +42,7 @@
 
         <TextView
             android:id="@+id/SE_vocherkind3"
-            android:layout_width="match_parent"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
 
             android:layout_weight="1"

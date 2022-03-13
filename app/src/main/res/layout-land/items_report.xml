@@ -215,6 +215,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="10dp"
                     app:boxBackgroundColor="@color/white"
+                    app:boxStrokeColor="@color/gray_btn_bg_pressed_color"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/itemGroupSpinner"
                     app:layout_constraintHorizontal_weight="0.9"

@@ -35,6 +35,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -254,6 +255,9 @@ public class Login extends AppCompatActivity {
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
             SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
             POS_ACTIVE=flag_settingsList.get(0).getPos_active();
+            OfferCakeShop = flag_settingsList.get(0).getOfferCakeShop();
+            offerQasion = flag_settingsList.get(0).getOfferQasion();
+            offerTalaat = flag_settingsList.get(0).getOfferTalaat();
             Log.e(" SalsManPlanFlage",""+ SalsManPlanFlage);
         } else {
 
@@ -555,7 +559,12 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
-        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,activePos;
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,activePos,
+                cakeshopSW, qasionSW, talaatSW;
+
+        ImageButton cakeshopInfo, qasionInfo, talaatInfo;
+        TextView cakeExpandedText, qasionExpandedText, talaatExpandedText;
+
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         swOrder = moreDialog.findViewById(R.id.swOrder);
@@ -564,6 +573,16 @@ public class Login extends AppCompatActivity {
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
         activePos= moreDialog.findViewById(R.id.activePos);
+        cakeshopSW = moreDialog.findViewById(R.id.cakeshopSW);
+        qasionSW = moreDialog.findViewById(R.id.qasionSW);
+        talaatSW = moreDialog.findViewById(R.id.talaatSW);
+        cakeshopInfo = moreDialog.findViewById(R.id.cakeshopInfo);
+        qasionInfo = moreDialog.findViewById(R.id.qasionInfo);
+        talaatInfo = moreDialog.findViewById(R.id.talaatInfo);
+        cakeExpandedText = moreDialog.findViewById(R.id.cakeExpandedText);
+        qasionExpandedText = moreDialog.findViewById(R.id.qasionExpandedText);
+        talaatExpandedText = moreDialog.findViewById(R.id.talaatExpandedText);
+
         flag_settingsList = mDHandler.getFlagSettings();
 
         if (flag_settingsList.size() != 0) {
@@ -586,10 +605,47 @@ public class Login extends AppCompatActivity {
             swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
             plan.setChecked((flag_settingsList.get(0).getActiveSlasmanPlan() == 1));
             activePos.setChecked((flag_settingsList.get(0).getPos_active() == 1));
+            cakeshopSW.setChecked((flag_settingsList.get(0).getOfferCakeShop() == 1));
+            qasionSW.setChecked((flag_settingsList.get(0).getOfferQasion() == 1));
+            talaatSW.setChecked((flag_settingsList.get(0).getOfferTalaat() == 1));
         }
 
+        OnClickListener infoClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (v.getId() == R.id.cakeshopInfo) {
+
+                    if (cakeExpandedText.getVisibility() == View.GONE)
+                        cakeExpandedText.setVisibility(View.VISIBLE);
+                    else
+                        cakeExpandedText.setVisibility(View.GONE);
+
+                } else if (v.getId() == R.id.talaatInfo) {
+
+                    if (talaatExpandedText.getVisibility() == View.GONE)
+                        talaatExpandedText.setVisibility(View.VISIBLE);
+                    else
+                        talaatExpandedText.setVisibility(View.GONE);
+
+                } else if (v.getId() == R.id.qasionInfo) {
+
+                    if (qasionExpandedText.getVisibility() == View.GONE)
+                        qasionExpandedText.setVisibility(View.VISIBLE);
+                    else
+                        qasionExpandedText.setVisibility(View.GONE);
+
+                }
+
+            }
+        };
+
+        cakeshopInfo.setOnClickListener(infoClickListener);
+        talaatInfo.setOnClickListener(infoClickListener);
+        qasionInfo.setOnClickListener(infoClickListener);
+
         okBtn.setOnClickListener(v1 -> {
-Log.e("okBtn","okBtn");
+            Log.e("okBtn", "okBtn");
             //update flag_settings
             //update variables
             String dataType1;
@@ -609,14 +665,20 @@ Log.e("okBtn","okBtn");
             voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
             SalsManPlanFlage = plan.isChecked() ? 1 : 0;
             POS_ACTIVE = activePos.isChecked() ? 1 : 0;
+            OfferCakeShop = cakeshopSW.isChecked() ? 1 : 0;
+            offerQasion = qasionSW.isChecked() ? 1 : 0;
+            offerTalaat = talaatSW.isChecked() ? 1 : 0;
+
 
             if(flag_settingsList.size()==0)
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE));
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
+                        OfferCakeShop, offerTalaat, offerQasion));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
-                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE);
+                        makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
+                        OfferCakeShop, offerTalaat, offerQasion);
             }
 
 

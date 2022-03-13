@@ -37,6 +37,7 @@ import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.inventoryReportItem;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.dr7.salesmanmanager.Reports.SerialReport;
 import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -273,6 +274,10 @@ if(doc!=null)            doc.add(  pdfPTableHeader);
 
 
                 break;
+            case 15:
+                Log.e("createserials",""+list.size());
+                tableContent=createSerialsReport((List<serialModel>) list);
+                break;
         }
         return  tableContent;
     }
@@ -427,7 +432,7 @@ if(doc!=null)            doc.add(  pdfPTableHeader);
 if( companyInfo!=null)
         if (
                 !companyInfo.getCompanyName().equals("")&&
-               companyInfo.getcompanyTel()!=0) {
+               companyInfo.getcompanyTel().equals("0")) {
 
             createvocherPDF("Invoice" + ".pdf", list);
         }else
@@ -481,7 +486,7 @@ if( companyInfo!=null)
         if( companyInfo!=null)
             if (
                     !companyInfo.getCompanyName().equals("")&&
-                            companyInfo.getcompanyTel()!=0) {
+                            companyInfo.getcompanyTel().equals("0")) {
 
                 createSalevocherPDF("Invoice" + ".pdf", list);
             }else
@@ -534,6 +539,35 @@ if( companyInfo!=null)
             insertCell(pdfPTable, String.valueOf(list.get(i).getQty()), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
 //            insertCell(pdfPTable, String.valueOf(String.format("%.3f", (list.get(i).getSalesManId()))), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+        }
+        return pdfPTable;
+
+    }
+    private PdfPTable createSerialsReport(List<serialModel> list)
+    {
+        createPDF("SerialsReport" + ".pdf");
+        PdfPTable pdfPTable = new PdfPTable(5);
+        pdfPTable.setWidthPercentage(100f);
+        pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        insertCell(pdfPTable,context.getString(R.string.voucher_date)                    , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getString(R.string.voucher_type)                      , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.serialcode)                       , ALIGN_CENTER   , 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.item_number)  , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,context.getResources().getString(R.string.voucher_number)  , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+        pdfPTable.setHeaderRows(1);
+        for (int i = 0; i < list.size(); i++) {
+            insertCell(pdfPTable, String.valueOf(list.get(i).getDateVoucher() ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getKindVoucher())       , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getSerialCode()       ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getItemNo()        ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(list.get(i).getVoucherNo()        ) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+
+
 
         }
         return pdfPTable;

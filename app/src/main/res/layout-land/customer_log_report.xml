@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:id="@+id/linearMain"
     android:orientation="vertical">
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_weight="2.5"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
         android:layout_width="match_parent">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/expotTpExcel"
@@ -33,7 +34,7 @@
         android:layout_height="match_parent"
 
         android:layout_weight="2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="2dp"
         android:layout_gravity="center"
         android:gravity="center"
 
@@ -42,7 +43,103 @@
         android:textSize="20sp"
         android:textStyle="bold" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
 
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="@string/from_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/from_date"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="12sp"
+            android:inputType="date"
+            android:focusable="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/to_date"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/to_date"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/add_button"
+            android:textSize="12sp"
+            android:inputType="date"
+            android:focusable="false"/>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/row20"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <EditText
+            android:id="@+id/customer_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/back_border_edit"
+            android:drawableStart="@drawable/ic_search_black_24dp"
+            android:gravity="center_vertical"
+            android:hint="@string/SearchByCustomerName"
+            android:inputType="text"
+            android:padding="2dp"
+            android:textColor="@color/done_button"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_margin="5dp"
+            android:layout_weight="1.5"
+            android:background="@drawable/done_button"
+            android:text="@string/preview"
+            android:textColor="@color/layer5" />
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_weight="1"

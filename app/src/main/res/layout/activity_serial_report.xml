@@ -8,6 +8,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
    >
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_weight="1.5"
@@ -74,44 +79,61 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="70dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/date"
-
+                    android:layout_marginRight="5dp"
+                    android:text="@string/from_date"
+                    android:layout_weight="1.1"
                     android:gravity="center"
                     android:textColor="@color/colorBlack"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/SE_date"
-                    android:layout_width="115dp"
+                    android:id="@+id/from_date"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="date"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:textColor="@color/add_button"
+                    android:drawableStart="@drawable/ic_date_range_black_24dp"
+                    android:textSize="12sp"
+                    android:drawableLeft="@drawable/ic_date_range_black_24dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/to_date"
+                    android:layout_weight="1.1"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/to_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="date"
+                    android:layout_weight="1"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="@color/add_button"
                     android:drawableStart="@drawable/ic_date_range_black_24dp"
                     android:textSize="12sp"
                     android:drawableLeft="@drawable/ic_date_range_black_24dp" />
-                <EditText
-                    android:id="@+id/dat"
-                    android:layout_width="30dp"
-                    android:visibility="invisible"
-                    android:layout_height="match_parent"
-                    android:inputType="date"
-                    android:textColor="@color/add_button"
-                    android:textSize="14sp" />
+
 
 
                 <Button
-                    android:id="@+id/SE_preview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
+                    android:id="@+id/preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"  android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginEnd="3dp"
                     android:textSize="14sp"
+                    android:layout_weight="1"
                     android:background="@drawable/done_button"
                     android:text="@string/preview"
                     android:textColor="@color/white" />
@@ -125,6 +147,7 @@
                 android:layout_width="match_parent">
                 <Button
                     android:id="@+id/export"
+android:visibility="gone"
                     android:layout_height="35dp"
                     android:layout_width="30dp"
                     android:layout_weight="1"
@@ -152,7 +175,7 @@
                     android:drawableEnd="@drawable/ic_search_black_24dp"
                     android:gravity="top"
 
-
+android:visibility="gone"
                     android:drawableRight="@drawable/ic_search_black_24dp" />
             </LinearLayout>
             <HorizontalScrollView
@@ -189,7 +212,7 @@
 
                     <TextView
                         android:id="@+id/textView_voucherNo"
-                        android:layout_width="match_parent"
+                        android:layout_width="80dp"
                         android:layout_height="match_parent"
 
                         android:layout_weight="1"
@@ -200,19 +223,12 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+
 
 
                     <TextView
                         android:id="@+id/textView_transName"
-                        android:layout_width="match_parent"
+                        android:layout_width="120dp"
                         android:layout_height="match_parent"
 
                         android:layout_weight="1"
@@ -220,19 +236,12 @@
                         android:text="@string/kindvoucher"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+
 
 
                     <TextView
                         android:id="@+id/textView_date_voucher"
-                        android:layout_width="match_parent"
+                        android:layout_width="170dp"
                         android:layout_height="match_parent"
                         android:textSize="12sp"
                         android:layout_weight="1"
@@ -240,18 +249,11 @@
                         android:text="@string/serialcode"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+
 
                     <TextView
                         android:id="@+id/textView_debit"
-                        android:layout_width="match_parent"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
 
                         android:layout_weight="1"
@@ -260,18 +262,10 @@
                         android:text="@string/item_number"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textView_cridit"
-                        android:layout_width="match_parent"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:textSize="12sp"
                         android:layout_weight="1"
@@ -279,18 +273,10 @@
                         android:text="@string/voucherNo"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                    <TextView
+                      <TextView
                         android:id="@+id/textView_customerNo"
                         android:text="@string/customer_number"
-                        android:layout_width="match_parent"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:textSize="12sp"
                         android:layout_weight="1"
@@ -300,18 +286,11 @@
                         android:textStyle="bold"
 
                         />
-                    <TextView
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@color/colorblue1"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+
 
                     <TextView
                         android:id="@+id/textView_customerName"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="match_parent"
                         android:textSize="12sp"
                         android:layout_weight="1"
@@ -390,5 +369,15 @@
 
         </LinearLayout>
     </LinearLayout>
+    <com.nightonke.boommenu.BoomMenuButton
+        android:id="@+id/bmb"
 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bmb_normalColor="@color/colorblue1"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        app:bmb_draggable="true"
+        />
+    </RelativeLayout>
 </LinearLayout>

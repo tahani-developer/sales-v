@@ -232,7 +232,6 @@
                         android:layout_height="wrap_content"
                         android:inputType="textAutoComplete"
                         android:textAlignment="center"
-
                         android:completionHint="@string/CUS_NAME"
                         android:textColor="#000"
                         android:padding="1dp"/>

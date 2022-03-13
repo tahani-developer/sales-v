@@ -11,6 +11,9 @@ public class Flag_Settings {
     private int Voucher_Return;
     private int ActiveSlasmanPlan;
     private int pos_active;
+    private int offerCakeShop;
+    private int offerTalaat;
+    private int offerQasion;
 
     public int getPos_active() {
         return pos_active;
@@ -20,7 +23,21 @@ public class Flag_Settings {
         this.pos_active = pos_active;
     }
 
-    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance, int voucher_Return, int activeSlasmanPlan,int posAactive) {
+//    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance, int voucher_Return, int activeSlasmanPlan,int posAactive) {
+//        Data_Type = data_Type;
+//        Export_Stock = export_Stock;
+//        Max_Voucher = max_Voucher;
+//        Make_Order = make_Order;
+//        Admin_Password = admin_Password;
+//        Total_Balance = total_Balance;
+//        Voucher_Return = voucher_Return;
+//        ActiveSlasmanPlan = activeSlasmanPlan;
+//        pos_active=posAactive;
+//    }
+
+    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance,
+                         int voucher_Return, int activeSlasmanPlan, int pos_active,
+                         int offerCakeShop, int offerTalaat, int offerQasion) {
         Data_Type = data_Type;
         Export_Stock = export_Stock;
         Max_Voucher = max_Voucher;
@@ -29,17 +46,34 @@ public class Flag_Settings {
         Total_Balance = total_Balance;
         Voucher_Return = voucher_Return;
         ActiveSlasmanPlan = activeSlasmanPlan;
-        pos_active=posAactive;
+        this.pos_active = pos_active;
+        this.offerCakeShop = offerCakeShop;
+        this.offerTalaat = offerTalaat;
+        this.offerQasion = offerQasion;
     }
-    public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance, int voucher_Return) {
-        Data_Type = data_Type;
-        Export_Stock = export_Stock;
-        Max_Voucher = max_Voucher;
-        Make_Order = make_Order;
-        Admin_Password = admin_Password;
-        Total_Balance = total_Balance;
-        Voucher_Return = voucher_Return;
 
+    public int getOfferCakeShop() {
+        return offerCakeShop;
+    }
+
+    public void setOfferCakeShop(int offerCakeShop) {
+        this.offerCakeShop = offerCakeShop;
+    }
+
+    public int getOfferTalaat() {
+        return offerTalaat;
+    }
+
+    public void setOfferTalaat(int offerTalaat) {
+        this.offerTalaat = offerTalaat;
+    }
+
+    public int getOfferQasion() {
+        return offerQasion;
+    }
+
+    public void setOfferQasion(int offerQasion) {
+        this.offerQasion = offerQasion;
     }
 
     public int getActiveSlasmanPlan() {
