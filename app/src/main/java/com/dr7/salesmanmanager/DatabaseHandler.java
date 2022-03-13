@@ -7604,10 +7604,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         // String Date_Vocher=getCurentTimeDate(1);
         // String Date_Vocher="14/02/2021";
         //       select serial.DATE_VOUCHER,serial.KIND_VOUCHER,serial.SERIAL_CODE_NO,serial.ITEMNO_SERIAL,serial.VOUCHER_NO,master.CUST_NUMBER,master.CUST_NAME  from SERIAL_ITEMS_TABLE serial,SALES_VOUCHER_MASTER master where serial.VOUCHER_NO=master.VOUCHER_NUMBER and serial.KIND_VOUCHER=master.VOUCHER_TYPE";
-        String selectQuery = "select serial.DATE_VOUCHER,serial.KIND_VOUCHER,serial.SERIAL_CODE_NO,serial.ITEMNO_SERIAL,serial.VOUCHER_NO,master.CUST_NUMBER,master.CUST_NAME  from SERIAL_ITEMS_TABLE serial,SALES_VOUCHER_MASTER master where serial.VOUCHER_NO = master.VOUCHER_NUMBER and serial.KIND_VOUCHER = master.VOUCHER_TYPE ";
+        String selectQuery = "select serial.DATE_VOUCHER,serial.KIND_VOUCHER,serial.SERIAL_CODE_NO,serial.ITEMNO_SERIAL,serial.VOUCHER_NO,master.CUST_NUMBER,master.CUST_NAME  from SERIAL_ITEMS_TABLE serial,SALES_VOUCHER_MASTER master where serial.VOUCHER_NO = master.VOUCHER_NUMBER and serial.KIND_VOUCHER = master.VOUCHER_TYPE";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-
+        Log.e("cursor",""+cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
                 serialModel serialModel = new serialModel();

@@ -103,6 +103,8 @@ public class Reports extends AppCompatActivity {
         Inventory_report.setOnClickListener(onClickListener);
         showplanLin=findViewById(R.id.showplan);
         showplanLin.setOnClickListener(onClickListener);
+     if(Login.SalsManPlanFlage==0)   showplanLin.setVisibility(View.GONE);
+     else  showplanLin.setVisibility(View.VISIBLE);
         inventory_layout=(LinearLayout) findViewById(R.id.inventory_layout);
         if(settings.size() != 0) {
             if (MHandler.getAllSettings().get(0).getHide_qty() == 1) {

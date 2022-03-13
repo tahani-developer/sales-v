@@ -592,7 +592,6 @@ android:visibility="visible"
                             android:gravity="center_horizontal"
                             android:text="@string/showplan"
                             android:textSize="18sp"
-                            android:visibility="gone"
                             android:textColor="@color/colorblue_dark"
                             android:textStyle="bold" />
                     </LinearLayout>

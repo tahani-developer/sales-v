@@ -380,6 +380,15 @@
 
 
                     android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/scan"
+                    android:layout_margin="5dp"
+                    android:layout_width="35dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_scan_black_24dp"
+                    android:layout_height="30dp"
+                    android:textSize="14sp" />
+
                 <EditText
                     android:id="@+id/serialcode"
                     android:layout_weight="5"
@@ -396,14 +405,6 @@ android:hint="@string/serialcode"
                     android:textColor="@color/colorBlack"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/scan"
-                    android:layout_margin="5dp"
-                    android:layout_width="35dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_scan_black_24dp"
-                    android:layout_height="30dp"
-                    android:textSize="14sp" />
 
             </LinearLayout>
             <HorizontalScrollView
