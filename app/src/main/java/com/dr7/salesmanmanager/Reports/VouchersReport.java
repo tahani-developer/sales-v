@@ -637,7 +637,7 @@ public class VouchersReport extends AppCompatActivity {
                 try {
                     int printer = dataBase.getPrinterSetting();
                     companyInfo = dataBase.getAllCompanyInfo().get(0);
-                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
+                    if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
                         if (printer != -1) {
                             switch (printer) {
                                 case 0:

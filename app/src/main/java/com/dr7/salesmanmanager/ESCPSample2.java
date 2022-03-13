@@ -897,7 +897,7 @@ public class ESCPSample2
 	public void printMultilingualFontEsc3(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
 
 		int dontShowHeader=0;
-		int tayaaLayout=0;
+		int tayaaLayout=0,net_requiredValue=0;
 		try {
 			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
             notePosition=obj.getAllCompanyInfo().get(0).getNotePosition();
@@ -907,6 +907,7 @@ public class ESCPSample2
 				printerType = printerSettings.get(0).getPrinterName();
 				dontShowHeader=printerSettings.get(0).getDontPrintHeader();
 				tayaaLayout=printerSettings.get(0).getTayeeLayout();
+				net_requiredValue=printerSettings.get(0).getNetsalflag();
 				Log.e("printerType",""+printerType+"\ttayaaLayout="+tayaaLayout);
 			}
 		}catch (Exception e)
@@ -1173,15 +1174,27 @@ public class ESCPSample2
 
 					posPtr.printAndroidFont(null, true, "الكمية       " + " المجموع      " + " الخصم  " + "\n", nLineWidth, 26, alignment);
 					posPtr.printAndroidFont(null, true, +voucherforPrint.getTotalVoucherDiscount() + "\t\t\t\t" + convertToEnglish(decimalFormat.format(voucherforPrint.getSubTotal())) + "\t\t\t\t" + convertToEnglish(total_Qty + "") + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
-					posPtr.printAndroidFont(null, true, "ا " +
-							"لضريبة       " + "الصافي " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					if(net_requiredValue==1)
+					{
+						posPtr.printAndroidFont(null, true, "الضريبة       "+"القيمة المطلوبة   : "+  "\n" , nLineWidth, 26, alignment);
+
+					}else {
+						posPtr.printAndroidFont(null, true, "ا " +
+								"لضريبة       " + "الصافي " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
+					}
+
+
 					posPtr.printAndroidFont(null, true, convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales()))) + "\t\t\t\t" + convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getTax()))) + "" + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 				} else {
 
 					posPtr.printAndroidFont(null, true, "الكمية " + " خصم.س  " + " خصم.ك  " + "\n", nLineWidth, 26, alignment);
 					posPtr.printAndroidFont(null, true, convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getTotalVoucherDiscount()))) + "\t\t" + convertToEnglish(decimalFormat.format(itemDiscount)) + "\t\t" + convertToEnglish(decimalFormat.format((total_Qty))) + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
+					if(net_requiredValue==1)
+					{
+						posPtr.printAndroidFont(null, true, "القيمة المطلوبة   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales()) )+ "\n", nLineWidth, 26, alignment);
 
+					}else
 					posPtr.printAndroidFont(null, true, "الصافي   " + convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales()))), nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
 //					posPtr.printAndroidFont(null, true,    convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales())))  +"\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
@@ -1208,8 +1221,14 @@ public class ESCPSample2
 					posPtr.printAndroidFont(null, true, " خصم سطري    : " + convertToEnglish(decimalFormat.format(itemDiscount)) + "\n", nLineWidth, 26, alignment);
 				posPtr.printAndroidFont(null, true, " خصم كلي    : " + voucherforPrint.getTotalVoucherDiscount() + "\n", nLineWidth, 26, alignment);
 
-				posPtr.printAndroidFont(null, true, "الصافي   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales()) )+ "\n", nLineWidth, 26, alignment);
 
+				if(net_requiredValue==1)
+				{
+					posPtr.printAndroidFont(null, true, "القيمة المطلوبة   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales()) )+ "\n", nLineWidth, 26, alignment);
+
+				}else {
+					posPtr.printAndroidFont(null, true, "الصافي   : " + convertToEnglish(decimalFormat.format(voucherforPrint.getNetSales())) + "\n", nLineWidth, 26, alignment);
+				}
 
 		}
 

@@ -2314,7 +2314,7 @@ public class SalesInvoice extends Fragment {
             try {
                 int printer = mDbHandler.getPrinterSetting();
                 companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() .equals("0")  && companyInfo.getTaxNo() != -1) {
+                if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0")  && companyInfo.getTaxNo() != -1) {
                     switch (printer) {
                         case 0:
                             vouchLast = vouchPrint;
@@ -2924,7 +2924,7 @@ public class SalesInvoice extends Fragment {
                 try {
                     int printer = mDbHandler.getPrinterSetting();
                     companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                    if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() .equals("0") && companyInfo.getTaxNo() != -1) {
+                    if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel() .equals("0") && companyInfo.getTaxNo() != -1) {
                         switch (printer) {
                             case 0:
                                 Intent i = new Intent(getActivity().getBaseContext(), BluetoothConnectMenu.class);
@@ -4098,7 +4098,7 @@ public class SalesInvoice extends Fragment {
     private void addSerialToItems() {
         for(int i=0;i<listTemporarySerial.size();i++) {
 
-            if (itemsContain(listTemporarySerial.get(i).getItemNo())) {
+            if (itemsContain(listTemporarySerial.get(i).getItemNo(),i)) {
 //                itemsListAdapter.notifyDataSetChanged();
 
             } else {
@@ -4126,11 +4126,13 @@ public class SalesInvoice extends Fragment {
                     item.setWhichu_qty(item.getQty()+"");
                     item.setEnter_price(item.getPrice()+"");
                     item.setUnit_barcode("");
-
-                    Log.e("item","1***"+item.getItemName()+"\t"+  listTemporarySerial.get(i).getPriceItem());
+//                    Log.e("item","1***"+item.getItemName()+"\t"+  listTemporarySerial.get(i).getPriceItem());
                     listTemporarySerial.get(i).setPriceItem(item.getPrice());
+                    listTemporarySerial.get(i).setQty("1");
+                    listTemporarySerial.get(i).setIsPosted("0");
+                    listTemporarySerial.get(i).setPriceItemSales(item.getPrice()+"");
                     items.add(item);
-                    Log.e("item","1***"+item.getItemName()+"\t"+ listTemporarySerial.get(i).getPriceItem());
+//                    Log.e("item","1***"+item.getItemName()+"\t"+ listTemporarySerial.get(i).getPriceItem());
                 }else {//test here
                      }
 
@@ -4153,9 +4155,10 @@ public class SalesInvoice extends Fragment {
 
     }
 
-    private boolean itemsContain(String itemNo) {
+    private boolean itemsContain(String itemNo ,int position) {
         boolean found=false;
         Log.e("itemsContain","="+itemNo);
+        float priceItem=1;
 
         for(int i=0;i<items.size();i++){
             if(items.get(i).getItemNo().trim().equals(itemNo.trim())){
@@ -4167,9 +4170,16 @@ public class SalesInvoice extends Fragment {
                 items.get(i).setEnter_price(items.get(i).getPrice()+"");
                 Log.e("itemsContain","2found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
 
+                priceItem=items.get(i).getPrice();
                 found=true;
                 break;
             }
+        }
+        if(found){
+            listTemporarySerial.get(position).setQty("1");
+            listTemporarySerial.get(position).setIsPosted("0");
+            listTemporarySerial.get(position).setPriceItem(priceItem);
+            listTemporarySerial.get(position).setPriceItemSales(priceItem+"");
         }
         Log.e("itemsContain","found="+found);
         return  found;
@@ -4199,6 +4209,8 @@ public class SalesInvoice extends Fragment {
         serial.setStoreNo(Login.salesMan);
         serial.setDateVoucher(voucherDate);
         serial.setItemNo(itemNo);
+        serial.setIsPosted("0");
+        serial.setQty("1");
 
         listTemporarySerial.add(serial);
         unitQtyEdit.setText(counterSerial + "");
@@ -6905,7 +6917,7 @@ try {
             }
 
             //&& !companyInfo.getLogo().equals(null)
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && companyInfo.getTaxNo() != -1) {
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
                 Bitmap bitmap = pic.getDrawingCache();
@@ -7027,7 +7039,7 @@ try {
 
             int numOfCopy = mDbHandler.getAllSettings().get(0).getNumOfCopy();
             CompanyInfo companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-            if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel().equals("0") && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
+            if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel().equals("0") && !companyInfo.getLogo().equals(null) && companyInfo.getTaxNo() != -1) {
 
                 pic.setImageBitmap(companyInfo.getLogo());
                 pic.setDrawingCacheEnabled(true);
