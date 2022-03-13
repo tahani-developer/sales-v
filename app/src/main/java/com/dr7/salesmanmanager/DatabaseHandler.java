@@ -630,6 +630,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Voucher_Return = "Voucher_Return";
     private static final String ActiveSlasmanPlan = "ActiveSlasmanPlan";
     private static final String POS_ACTIVE = "POS_ACTIVE";
+    private static final String CakeShop_Offer = "CakeShop_Offer";
+    private static final String Talaat_Offer = "Talaat_Offer";
+    private static final String Qasion_Offer = "Qasion_Offer";
+
 
 
     //----------------------------------------------------------------------
@@ -1268,9 +1272,11 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + Total_Balance + " INTEGER,"
                 + Voucher_Return + " INTEGER,"
                 + ActiveSlasmanPlan + " INTEGER DEFAULT '0' ,"
-                +POS_ACTIVE+ " INTEGER DEFAULT '0'" +
-
-                ")";
+                + POS_ACTIVE + " INTEGER DEFAULT '0' ,"
+                + CakeShop_Offer + " INTEGER DEFAULT '0' ,"
+                + Talaat_Offer + " INTEGER DEFAULT '0' ,"
+                + Qasion_Offer + " INTEGER DEFAULT '0' "
+                + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -2391,6 +2397,27 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try {
+            db.execSQL("ALTER TABLE Flag_Settings ADD '" + CakeShop_Offer + "' INTEGER DEFAULT '0'");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try {
+            db.execSQL("ALTER TABLE Flag_Settings ADD '" + Talaat_Offer + "' INTEGER DEFAULT '0'");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try {
+            db.execSQL("ALTER TABLE Flag_Settings ADD '" + Qasion_Offer + "' INTEGER DEFAULT '0'");
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
         try{
             db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LATITUDE+"'  Text");
             db.execSQL("ALTER TABLE SalesMenLogIn ADD '"+LONGITUDE+"'  Text");
@@ -2454,6 +2481,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(Voucher_Return, flag_settings.getVoucher_Return());
         values.put(ActiveSlasmanPlan, flag_settings.getActiveSlasmanPlan());
         values.put(POS_ACTIVE, flag_settings.getPos_active());
+        values.put(CakeShop_Offer, flag_settings.getOfferCakeShop());
+        values.put(Talaat_Offer, flag_settings.getOfferTalaat());
+        values.put(Qasion_Offer, flag_settings.getOfferQasion());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2478,7 +2508,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                         cursor.getInt(5),
                         cursor.getInt(6),
                         cursor.getInt(7),
-                        cursor.getInt(8)
+                        cursor.getInt(8),
+                        cursor.getInt(9),
+                        cursor.getInt(10),
+                        cursor.getInt(11)
 
                 );
 
@@ -2493,7 +2526,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void updateFlagSettings (String dataType, int export, int max, int order,
-                                    int password, int total, int vReturn,int SalPlan,int pos) {
+                                    int password, int total, int vReturn,int SalPlan,int pos,
+                                    int csOffer, int tOffer, int qOffer) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2507,6 +2541,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(Voucher_Return, vReturn);
         values.put(ActiveSlasmanPlan, SalPlan);
         values.put(POS_ACTIVE, pos);
+        values.put(CakeShop_Offer, csOffer);
+        values.put(Talaat_Offer, tOffer);
+        values.put(Qasion_Offer, qOffer);
 
 
         db.update(Flag_Settings, values, null, null);
