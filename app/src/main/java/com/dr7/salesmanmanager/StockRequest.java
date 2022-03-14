@@ -436,7 +436,7 @@ public class StockRequest extends Fragment {
             try {
                 int printer = mDbHandler.getPrinterSetting();
                 companyInfo = mDbHandler.getAllCompanyInfo().get(0);
-                if (!companyInfo.getCompanyName().equals("") && companyInfo.getcompanyTel() .equals("") && companyInfo.getTaxNo() != -1) {
+                if (!companyInfo.getCompanyName().equals("") && !companyInfo.getcompanyTel() .equals("") && companyInfo.getTaxNo() != -1) {
                     switch (printer) {
                         case 0:
                             listItemStock = items;
