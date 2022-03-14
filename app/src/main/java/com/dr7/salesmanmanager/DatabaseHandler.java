@@ -7176,22 +7176,36 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     //  select SERIAL_CODE_NO from SERIAL_ITEMS_TABLE where  SERIAL_CODE_NO='11'
     public String isSerialCodeExist(String serial) {
 //  select VOUCHER_NUMBER from SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER = '147370'
-        String count = "not",isPaid="";
-        String itemNo="",itemNoExist="",serialCode="";
-        if(itemNoSelected.equals(""))
-        {itemNo=itemNoStock.trim();}
-        else {
-            itemNo=itemNoSelected.trim();
+        int addSerialCurrent=0;
+        String count = "not", isPaid = "";
+        String itemNo = "", itemNoExist = "", serialCode = "";
+        if (itemNoSelected.equals("")) {
+            itemNo = itemNoStock.trim();
+        } else {
+            itemNo = itemNoSelected.trim();
         }
 
 
-        serialCode=serial.trim();
-        String salesNo=getAllUserNo();
+        serialCode = serial.trim();
+        String salesNo = getAllUserNo();
 
-
+        String selectQuery = "";
+        try {
+            addSerialCurrent=addNewSerial;
+        }catch (Exception e){
+            addSerialCurrent=0;
+        }
 //    String selectQuery = "select SerialCode from SerialItemMaster where  SerialCode='"+serialCode+"' and StoreNo='"+Login.salesMan+"' and  ITEM_OCODE_M='"+itemNo+"'  ";
-        String selectQuery = "select SerialCode,ITEM_OCODE_M from SerialItemMaster where  trim(SerialCode)='"+serialCode.trim()+"' and StoreNo='"+salesNo.trim()+"'";
+        if (addSerialCurrent == 0)
+        {
+            selectQuery = "select SerialCode,ITEM_OCODE_M from SerialItemMaster where  trim(SerialCode)='" + serialCode.trim() + "' and StoreNo='" + salesNo.trim() + "'";
 
+        }
+        else {
+            selectQuery = " select serialM.SerialCode,serialM.ITEM_OCODE_M,balance.ItemNo from SerialItemMaster  serialM ,SalesMan_Items_Balance balance" +
+                    " where  trim(SerialCode)='" + serialCode.trim() + "' and StoreNo='" + salesNo.trim() + "'  and  balance.ItemNo  =serialM.ITEM_OCODE_M and balance.Qty >0";
+
+        }
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

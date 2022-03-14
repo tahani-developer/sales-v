@@ -82,6 +82,7 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
      public static String itemNoStock="",barcodeValue_inventory="";
      boolean isFoundSerial=false;
 
+
     public StockRecyclerViewAdapter(List<Item> items, Context context) {
         this.items = items;
 //        this.itemsRequiredList=items;
