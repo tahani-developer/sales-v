@@ -79,7 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 177;
+    private static final int DATABASE_VERSION = 178;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
