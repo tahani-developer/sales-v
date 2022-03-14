@@ -3826,6 +3826,8 @@ public class SalesInvoice extends Fragment {
 
        countNormalQty= getNumberOfNormalQty(listTemporarySerial);
         unitQtyEdit.setText(countNormalQty+"");
+        Log.e("unitQtyEdit","1="+countNormalQty);
+        Log.e("unitQtyEdit","2="+counterSerial);
         textQty.setText(context.getResources().getString(R.string.qty));
         unitQtyEdit.setEnabled(false);
         unitQtyEdit.setAlpha(0.8f);
@@ -3952,6 +3954,7 @@ public class SalesInvoice extends Fragment {
                         updateQtyBasket();// check item amount
                         refreshDataItems();
                         calculateTotals(0);
+                        editOpen = false;
                         dialog.dismiss();
 
                     } else {
@@ -4099,8 +4102,6 @@ public class SalesInvoice extends Fragment {
         for(int i=0;i<listTemporarySerial.size();i++) {
 
             if (itemsContain(listTemporarySerial.get(i).getItemNo(),i)) {
-//                itemsListAdapter.notifyDataSetChanged();
-
             } else {
 
                 String itemNumber="",itemName,price;
@@ -4122,6 +4123,7 @@ public class SalesInvoice extends Fragment {
                     item.setDiscPerc("0");
                     item.setDescreption("");
                     item.setWhich_unit("0");
+                    item.setWhich_unit_str("");
                     item.setEnter_qty(item.getQty()+"");
                     item.setWhichu_qty(item.getQty()+"");
                     item.setEnter_price(item.getPrice()+"");
@@ -4130,6 +4132,7 @@ public class SalesInvoice extends Fragment {
                     listTemporarySerial.get(i).setPriceItem(item.getPrice());
                     listTemporarySerial.get(i).setQty("1");
                     listTemporarySerial.get(i).setIsPosted("0");
+                    listTemporarySerial.get(i).setIsBonus("0");
                     listTemporarySerial.get(i).setPriceItemSales(item.getPrice()+"");
                     items.add(item);
 //                    Log.e("item","1***"+item.getItemName()+"\t"+ listTemporarySerial.get(i).getPriceItem());
@@ -4157,20 +4160,22 @@ public class SalesInvoice extends Fragment {
 
     private boolean itemsContain(String itemNo ,int position) {
         boolean found=false;
-        Log.e("itemsContain","="+itemNo);
+//        Log.e("itemsContain","="+itemNo);
         float priceItem=1;
 
         for(int i=0;i<items.size();i++){
             if(items.get(i).getItemNo().trim().equals(itemNo.trim())){
-                Log.e("itemsContain","1found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
+//                Log.e("itemsContain","1found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
                 items.get(i).setQty(items.get(i).getQty()+1);
-                items.get(i).setAmount(items.get(i).getQty()*items.get(i).getPrice());
+                items.get(i).setAmount((items.get(i).getQty()*items.get(i).getPrice())-items.get(i).getDisc());
                 items.get(i).setEnter_qty(items.get(i).getQty()+"");
                 items.get(i).setWhichu_qty(items.get(i).getQty()+"");
                 items.get(i).setEnter_price(items.get(i).getPrice()+"");
-                Log.e("itemsContain","2found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
+                items.get(i).setWhich_unit_str("");
+//                Log.e("itemsContain","2found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
 
                 priceItem=items.get(i).getPrice();
+//                priceItem=items.get(i).getPrice();
                 found=true;
                 break;
             }
@@ -4213,7 +4218,8 @@ public class SalesInvoice extends Fragment {
         serial.setQty("1");
 
         listTemporarySerial.add(serial);
-        unitQtyEdit.setText(counterSerial + "");
+        Log.e("unitQtyEdit",""+counterSerial);
+        unitQtyEdit.setText(listTemporarySerial.size() + "");
         serialValueUpdated.setText("");
         if(contiusReading==0)
         {
