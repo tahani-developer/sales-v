@@ -477,15 +477,39 @@ public class SalesInvoice extends Fragment {
 
                 Log.e("LocationIn","GoToMain"+locCheck);
                 if(locCheck){
-                    saveVoucherData();
+                    String all_itemValid="";
+                    if(Separation_of_the_serial==1){
+                        all_itemValid=validQty();
+                        if(all_itemValid.equals("")){
+                            saveVoucherData();
+                        }else {
+                            showNotQtyValid(all_itemValid);
+                        }
+                    }else {
+
+                        saveVoucherData();
+                    }
                 }else {
+                    Toast.makeText(getContext(), "check Permision Location ", Toast.LENGTH_SHORT).show();
                     //
                 }
 
 
         }else{
+            String all_itemValid="";
+            if(Separation_of_the_serial==1){
+                 all_itemValid=validQty();
+                if(all_itemValid.equals("")){
+                    saveVoucherData();
+                }else {
+                    showNotQtyValid(all_itemValid);
+                }
+            }else {
 
-            saveVoucherData();
+                saveVoucherData();
+            }
+
+//            saveVoucherData();
         }
 
             }
@@ -1094,7 +1118,14 @@ public class SalesInvoice extends Fragment {
 
 
                 }else{
-                    saveVoucherData();
+//                    if(Separation_of_the_serial==1){
+//                        if(validQty()){
+//                            saveVoucherData();
+//                        }
+//                    }else {
+//                        saveVoucherData();
+//                    }
+
                 }
 
 
@@ -1127,6 +1158,33 @@ public class SalesInvoice extends Fragment {
         return view;
     }
 
+    private String validQty() {
+        int count=0,position=-1;
+        String itemName="";
+        for(int i=0;i<items.size();i++){
+            for(int j=0;j<jsonItemsList.size();j++)
+            {
+                if(items.get(i).getItemNo().trim().equals(jsonItemsList.get(j).getItemNo().trim())){
+                    Log.e("validQty","count="+items.get(i).getQty()+"getQty=\t"+jsonItemsList.get(j).getQty());
+                    if(items.get(i).getQty()>jsonItemsList.get(j).getQty()){
+                        count++;
+                        position=i;
+                        itemName=items.get(i).getItemName();
+                        break;
+                    }
+                }
+            }
+
+        }
+        Log.e("validQty","count="+count+"\t"+itemName);
+        if(count==0)
+        {
+//            itemsListAdapter.get
+            return itemName;
+        }
+
+        else return  itemName;
+    }
 
 
     private void checkGroupOffer(int flagDel){
@@ -1482,6 +1540,13 @@ public class SalesInvoice extends Fragment {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText(getResources().getString(R.string.last_visit))
                 .setContentText(lastVisit)
+                .show();
+
+    }
+    public  void showNotQtyValid(String itemNa){
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(getResources().getString(R.string.not_enouf_qty))
+                .setContentText(itemNa)
                 .show();
 
     }
@@ -4163,22 +4228,33 @@ public class SalesInvoice extends Fragment {
 //        Log.e("itemsContain","="+itemNo);
         float priceItem=1;
 
-        for(int i=0;i<items.size();i++){
-            if(items.get(i).getItemNo().trim().equals(itemNo.trim())){
+        for(int i=0;i<items.size();i++) {
+            if (items.get(i).getItemNo().trim().equals(itemNo.trim())) {
 //                Log.e("itemsContain","1found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
-                items.get(i).setQty(items.get(i).getQty()+1);
-                items.get(i).setAmount((items.get(i).getQty()*items.get(i).getPrice())-items.get(i).getDisc());
-                items.get(i).setEnter_qty(items.get(i).getQty()+"");
-                items.get(i).setWhichu_qty(items.get(i).getQty()+"");
-                items.get(i).setEnter_price(items.get(i).getPrice()+"");
-                items.get(i).setWhich_unit_str("");
+
+//                for (int j = 0; j < jsonItemsList.size(); j++) {
+//                    Log.e("itemsContain","***2found="+items.get(i).getQty()+"\tjsonItemsList="+jsonItemsList.get(j).getQty());
+
+//                    if (items.get(i).getQty() < jsonItemsList.get(j).getQty()) {
+                    items.get(i).setQty(items.get(i).getQty() + 1);
+                    items.get(i).setAmount((items.get(i).getQty() * items.get(i).getPrice()) - items.get(i).getDisc());
+                    items.get(i).setEnter_qty(items.get(i).getQty() + "");
+                    items.get(i).setWhichu_qty(items.get(i).getQty() + "");
+                    items.get(i).setEnter_price(items.get(i).getPrice() + "");
+                    items.get(i).setWhich_unit_str("");
 //                Log.e("itemsContain","2found="+items.get(i).getQty()+"\tamount"+items.get(i).getAmount());
 
-                priceItem=items.get(i).getPrice();
+                    priceItem = items.get(i).getPrice();
 //                priceItem=items.get(i).getPrice();
-                found=true;
-                break;
-            }
+                    found = true;
+                    break;
+//                }
+//                    else{
+//                        Log.e("itemsContain","noooot="+items.get(i).getQty()+"\tjsonItemsList="+jsonItemsList.get(j).getQty());
+//
+//                    }
+//            }
+        }
         }
         if(found){
             listTemporarySerial.get(position).setQty("1");
@@ -4350,8 +4426,14 @@ public class SalesInvoice extends Fragment {
 //                            isClicked.set(position + 1, 1);
 
                         // notifyDataSetChanged();
-
+//                        if(validQtyItem(data))
+//                        {
+//                            return true;
+//                        }else {
+//
+//                        }
                         return true;
+
 
                     }
                     else {// duplicated
@@ -4442,6 +4524,12 @@ public class SalesInvoice extends Fragment {
         }
 
     }
+
+//    private boolean validQtyItem(String data) {
+//        String itemNo=mDbHandler.getItemNoForSerial(data);
+////        for (int i=0;i<listitem)
+//    }
+
     private int getNumberOfNormalQty(ArrayList<serialModel> listTemporarySerial) {
         int qty=0;
         for(int i=0;i<listTemporarySerial.size();i++)

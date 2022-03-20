@@ -574,4 +574,5 @@
     <string name="SalsManPlan">SalsManPlan</string>
     <string name="posActive">POS Active</string>
     <string name="scanSerial">اضافة سيريال</string>
+    <string name="not_enouf_qty">"لا يوجد كمية كافية من المادة "</string>
 </resources>

@@ -575,5 +575,6 @@
     <string name="SalsManPlan">SalsManPlan</string>
     <string name="posActive">POS Active</string>
     <string name="scanSerial">Add Serial</string>
+    <string name="not_enouf_qty">"Not Enouf Qty From "</string>
 
 </resources>
