@@ -50,6 +50,7 @@ public class CustomerLogReport extends AppCompatActivity {
     CircleImageView expotTpExcel,expotTpPdf;
   TextView  from_date,to_date;
   EditText customer_name;
+  TableRow header_row;
   Button preview;
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -58,6 +59,7 @@ public class CustomerLogReport extends AppCompatActivity {
         new LocaleAppUtils().changeLayot(CustomerLogReport.this);
         setContentView(R.layout.customer_log_report);
 //
+
         LinearLayout linearMain = findViewById(R.id.linearMain);
 
         try {
@@ -72,6 +74,7 @@ public class CustomerLogReport extends AppCompatActivity {
         } catch (Exception e) {
             linearMain.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+        header_row=findViewById(R.id. header);
         transactionList = new ArrayList<Transaction>();
         DatabaseHandler obj = new DatabaseHandler(CustomerLogReport.this);
         transactionList = obj.getAlltransactions();
@@ -131,8 +134,8 @@ public class CustomerLogReport extends AppCompatActivity {
             }
         });
 
-        filltabel( transactionList);
-
+     //   filltabel( transactionList);
+        filter();
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
     }
@@ -197,6 +200,8 @@ Log.e("transactionList=",transactionList.size()+"");
 
         TableLayout TableCustomerLogReport = (TableLayout) findViewById(R.id.TableCustomerLogReport);
         TableCustomerLogReport.removeAllViews();
+        header_row.setPadding(5, 10, 5, 10);
+        TableCustomerLogReport.addView(header_row);
         for (int n = 0; n < transactionList.size(); n++) {
             TableRow row = new TableRow(this);
             row.setPadding(5, 10, 5, 10);
@@ -225,7 +230,7 @@ Log.e("transactionList=",transactionList.size()+"");
                 textView.setTextColor(ContextCompat.getColor(CustomerLogReport.this, R.color.colorblue_dark));
                 textView.setGravity(Gravity.CENTER);
 
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                 textView.setLayoutParams(lp2);
 
                 row.addView(textView);

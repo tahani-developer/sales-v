@@ -258,34 +258,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="7dp"
-            android:padding="5dp"
+
             android:background="@color/white">
 
             <TableRow
                 android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/header"
                 android:layout_height="match_parent"
                 android:background="@color/colorblue_dark"
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/SALES_MAN_ID"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
-                <TextView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:layout_margin="3dp"
-                    android:visibility="gone"
+<!--                <TextView-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/white"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:visibility="gone"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -293,17 +295,17 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="1.3dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:visibility="gone"
-                    android:background="@color/colorblue1"
+<!--                <TextView-->
+<!--                    android:layout_width="1.3dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:background="@color/colorblue1"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -311,17 +313,17 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="1.3dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:visibility="gone"
-                    android:background="@color/colorblue1"
+<!--                <TextView-->
+<!--                    android:layout_width="1.3dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:background="@color/colorblue1"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -329,16 +331,16 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="1.3dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:background="@color/colorblue1"
+<!--                <TextView-->
+<!--                    android:layout_width="1.3dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:background="@color/colorblue1"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -346,16 +348,16 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="1.3dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:background="@color/colorblue1"
+<!--                <TextView-->
+<!--                    android:layout_width="1.3dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:background="@color/colorblue1"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -363,32 +365,32 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="1.3dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="3dp"
-                    android:background="@color/colorblue1"
+<!--                <TextView-->
+<!--                    android:layout_width="1.3dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_margin="3dp"-->
+<!--                    android:background="@color/colorblue1"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="@string/CHECK_OUT_TIME"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
-                <TextView
-                    android:layout_width="2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorblue1"
-                    android:layout_margin="3dp"
+<!--                <TextView-->
+<!--                    android:layout_width="2dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@color/colorblue1"-->
+<!--                    android:layout_margin="3dp"-->
 
-                    />
+<!--                    />-->
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -396,12 +398,12 @@
                     android:textColor="@color/white"
                     android:textStyle="bold" />
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="130dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:gravity="center"
                     android:text="@string/STATUS"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
             </TableRow>
