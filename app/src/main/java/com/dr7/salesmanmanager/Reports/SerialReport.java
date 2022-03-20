@@ -328,6 +328,7 @@ int[] listImageIcone=new int[]{
                    else
                        search(allseriallist);*/
                 else {
+
                  fillAdapterData(Filterdseriallist);
 
                 }
@@ -359,7 +360,6 @@ int[] listImageIcone=new int[]{
     private void exportToPdf(List<serialModel> serialModels) {
 
         PdfConverter pdf =new PdfConverter(SerialReport.this);
-
         pdf.exportListToPdf(serialModels,"SerialsReport","",15);
 
 
