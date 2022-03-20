@@ -79,7 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 178;
+    private static final int DATABASE_VERSION = 180;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -1086,7 +1086,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + NOTE + " TEXT,"
                 + LONGTUDE_COMPANY + " REAL,"
                 + LATITUDE_COMPANY + " REAL,"
-                + NOTEPOSITION + " TEXT "
+                + NOTEPOSITION + " TEXT,"
+                + COMPANY_PHONE + " TEXT "
                 + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
@@ -3462,7 +3463,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     public void addCompanyInfo(String companyName, String companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude,int position) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-
+Log.e("addCompanyInfo","addCompanyInfo");
         byte[] byteImage = {};
         if (logo != null) {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -3472,6 +3473,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
         values.put(COMPANY_NAME, companyName);
         values.put(COMPANY_PHONE, companyTel);
+        values.put(COMPANY_TEL, companyTel);
         values.put(TAX_NO, taxNo);
         values.put(LOGO, byteImage);
         values.put(NOTE, note);
@@ -6550,6 +6552,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     }
 
     public void deleteAllCompanyInfo() {
+        Log.e("deleteAllCompanyInfo","deleteAllCompanyInfo");
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + COMPANY_INFO);
         db.close();

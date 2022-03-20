@@ -85,7 +85,7 @@
 
 
 
-                        android:inputType="number"
+
                         android:text=""
                         android:textSize="15sp" />
                     <TextView
