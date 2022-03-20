@@ -4139,10 +4139,12 @@ public class SalesInvoice extends Fragment {
        int   countListVisible = mDbHandler.getCountVisibleItemSize();
         Log.e("fillListItemJson","rate_customer="+rate_customer);// customer rate to display price of this customer
         Log.e("jsonItemsList","countListVisible="+countListVisible);
+            jsonItemsList=new ArrayList<>();
 
             jsonItemsList = mDbHandler.getAllJsonItems(rate_customer,1,countListVisible);
 
             Log.e("jsonItemsList", "="+jsonItemsList.size());
+         Log.e("jsonItemsList", "="+jsonItemsList.get(jsonItemsList.size()-1).getQty());
 
 
     }
@@ -4210,13 +4212,34 @@ public class SalesInvoice extends Fragment {
     }
 
     private Item getItemByNumber(String itemNo) {
+        Item selectItem=null;
         for(int i=0;i<jsonItemsList.size();i++)
         {
             if(  jsonItemsList.get(i).getItemNo().trim().equals(itemNo.trim()))
-            {
-                Log.e("getItemByNumber","itemNo="+itemNo+"\t"+jsonItemsList.get(i).getItemName());
-                Log.e("getItemByNumber","getQty="+"\t"+jsonItemsList.get(i).getQty());
-                return jsonItemsList.get(i);
+            {   selectItem=new Item();
+                selectItem.setItemNo(jsonItemsList.get(i).getItemNo().trim());
+                selectItem.setItemName(jsonItemsList.get(i).getItemName().trim());
+                selectItem.setWhich_unit_str("");
+                selectItem.setQty(jsonItemsList.get(i).getQty());
+                selectItem.setItemHasSerial(jsonItemsList.get(i).getItemHasSerial().trim());
+                selectItem.setAmount(jsonItemsList.get(i).getAmount());
+                selectItem.setTax(jsonItemsList.get(i).getTaxPercent());
+                selectItem.setTaxPercent(jsonItemsList.get(i).getTaxPercent());
+                selectItem.setTaxValue(jsonItemsList.get(i).getTaxValue());
+                selectItem.setBarcode(jsonItemsList.get(i).getBarcode());
+                selectItem.setWhich_unit("");
+                selectItem.setAvi_Qty(jsonItemsList.get(i).getAvi_Qty());
+                selectItem.setBonus(jsonItemsList.get(i).getBonus());
+                selectItem.setDisc(jsonItemsList.get(i).getDisc());
+                selectItem.setDiscPerc(jsonItemsList.get(i).getDiscPerc());
+                selectItem.setCategory(jsonItemsList.get(i).getCategory().trim());
+                selectItem.setDiscType(jsonItemsList.get(i).getDiscType());
+                selectItem.setPosPrice(jsonItemsList.get(i).getPosPrice());
+                selectItem.setPrice(jsonItemsList.get(i).getPrice());
+                selectItem.setMinSalePrice(jsonItemsList.get(i).getMinSalePrice());
+//                Log.e("getItemByNumber","itemNo="+itemNo+"\t"+jsonItemsList.get(i).getItemName());
+//                Log.e("getItemByNumber","getQty="+"\t"+jsonItemsList.get(i).getQty());
+                return selectItem;
             }
         }
         return  null;
