@@ -15,6 +15,7 @@ public class Settings {
     private int printMethod;
     private int allowOutOfRange;
     private int canChangePrice;
+    private int canChangePrice_returnonly;
     private int readDiscountFromOffers;
     private int workOnline;
     private int paymethodCheck;
@@ -52,6 +53,14 @@ public class Settings {
     private  int itemUnit;
     private  int sumCurrentQty;
     private  int dontduplicateItem;
+
+    public int getCanChangePrice_returnonly() {
+        return canChangePrice_returnonly;
+    }
+
+    public void setCanChangePrice_returnonly(int canChangePrice_returnonly) {
+        this.canChangePrice_returnonly = canChangePrice_returnonly;
+    }
 
     public int getSumCurrentQty() {
         return sumCurrentQty;

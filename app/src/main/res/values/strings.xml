@@ -179,6 +179,7 @@
     <string name="use_weight_case">Use Weight Case</string>
     <string name="allow_sale_with_minus">Allow Sale With Minus</string>
     <string name="can_change_price">Can Change Price</string>
+    <string name="can_change_priceReturn">Can Change Price in Return Vochers</string>
     <string name="get_salesman_customers_only">Get SalesMan Customers Only</string>
     <string name="min_sale_price">Min Sale Price</string>
     <string name="allow_cust_check_out_range">Validate customer location</string>
