@@ -174,8 +174,8 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManPlanFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Separation_of_the_serial=1;
-   //public  static  String headerDll = "";
-   public  static  String  headerDll = "/Falcons/VAN.dll";
+   public  static  String headerDll = "";
+  // public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

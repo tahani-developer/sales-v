@@ -79,7 +79,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 180;
+    private static final int DATABASE_VERSION = 181;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -423,6 +423,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String PRINT_METHOD = "PRINT_METHOD";
     private static final String ALLOW_OUT_OF_RANGE = "ALLOW_OUT_OF_RANGE";
     private static final String CAN_CHANGE_PRICE = "CAN_CHANGE_PRICE";
+    private static final String CAN_CHANGE_PRICE_RETURNONLY = "CAN_CHANGE_PRICE_RETURNONLY";
     private static final String READ_DISCOUNT_FROM_OFFERS = "READ_DISCOUNT_FROM_OFFERS";
     private static final String WORK_ONLINE = "WORK_ONLINE";
     private static final String PAYMETHOD_CHECK = "PAYMETHOD_CHECK";
@@ -1071,8 +1072,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + STORE_NO + " INTEGER, "
                 + Item_Unit + " INTEGER ,"
                 +SUM_CURRENT_QTY+ " INTEGER, "
-                +DONT_DUPLICATE_ITEMS+ " INTEGER "
-
+                +DONT_DUPLICATE_ITEMS+ " INTEGER, "
+                + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2465,7 +2466,13 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+        try{
+            db.execSQL("ALTER TABLE SETTING ADD '"+CAN_CHANGE_PRICE_RETURNONLY+"'  INTEGER  DEFAULT '0' ");
 
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
     }
 
     ////B
@@ -3326,7 +3333,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
 
     public void addSetting(String ipAddress, int taxCalcKind, int transKind, int serialNumber, int priceByCust, int useWeightCase,
-                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice,int readDiscount,
+                           int allowMinus, int numOfCopy, int salesManCustomers, int minSalePrice, int printMethod, int allowOutOfRange,int canChangePrice, int canChangePrice_RETURNONLY,int readDiscount,
                            int workOnline,int  payMethodCheck,int bonusNotAlowed,int noOfferForCredid,int amountOfMaxDiscount,int customerOthoriz,
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
@@ -3348,6 +3355,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(MIN_SALE_PRICE, minSalePrice);
         values.put(PRINT_METHOD, printMethod);
         values.put(CAN_CHANGE_PRICE, canChangePrice);
+        values.put(CAN_CHANGE_PRICE_RETURNONLY, canChangePrice_RETURNONLY);
+
         values.put(ALLOW_OUT_OF_RANGE, allowOutOfRange);
         values.put(READ_DISCOUNT_FROM_OFFERS, readDiscount);
         values.put(WORK_ONLINE, workOnline);
@@ -3414,6 +3423,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(MIN_SALE_PRICE, defaultValue);
         values.put(PRINT_METHOD, defaultValue);
         values.put(CAN_CHANGE_PRICE, defaultValue);
+        values.put(CAN_CHANGE_PRICE_RETURNONLY, defaultValue);
+
         values.put(ALLOW_OUT_OF_RANGE, defaultValue);
         values.put(READ_DISCOUNT_FROM_OFFERS, defaultValue);
         values.put(WORK_ONLINE, defaultValue);
@@ -3860,7 +3871,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setItemUnit((cursor.getInt(47)));
                 setting.setSumCurrentQty((cursor.getInt(48)));
                 setting.setDontduplicateItem((cursor.getInt(49)));
-
+                setting.setCanChangePrice_returnonly(cursor.getInt(50));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
