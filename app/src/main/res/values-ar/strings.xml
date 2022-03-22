@@ -575,4 +575,10 @@
     <string name="posActive">POS Active</string>
     <string name="scanSerial">اضافة سيريال</string>
     <string name="not_enouf_qty">"لا يوجد كمية كافية من المادة "</string>
+    <string name="explain_offer_cakeshop_bonus">تشغيل : (كمية العرض * 1)   إطفاء : (كمية المادة / حد الكميات للعرض)* كمية العرض </string>
+    <string name="qasion_explain_discount">تشغيل : (كمية المادة * الخصم على المادة )</string>
+
+    <string name="talaat_offer_discount">
+    تشغيل : (كمية المادة/  حد الكميات للعرض  )* الخصم على المادة
+    </string>
 </resources>

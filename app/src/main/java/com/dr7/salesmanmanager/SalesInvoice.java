@@ -465,52 +465,67 @@ public class SalesInvoice extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+                try {
+                    if (!generalMethod.checkDeviceDate()) {
+                        showMessageInvalidDate();
 
-       try {
-            approveAdmin = settingsList.get(0).getApproveAdmin();
-       }catch (Exception e){
-            approveAdmin=0;
-       }
-        if(approveAdmin==1) {
-
-                boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
-
-                Log.e("LocationIn","GoToMain"+locCheck);
-                if(locCheck){
-                    String all_itemValid="";
-                    if(Separation_of_the_serial==1){
-                        all_itemValid=validQty();
-                        if(all_itemValid.equals("")){
-                            saveVoucherData();
-                        }else {
-                            showNotQtyValid(all_itemValid);
-                        }
                     }else {
+                        try {
+                            approveAdmin = settingsList.get(0).getApproveAdmin();
+                        }catch (Exception e){
+                            approveAdmin=0;
+                        }
+                        if(approveAdmin==1) {
 
-                        saveVoucherData();
+                            boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
+
+                            Log.e("LocationIn","GoToMain"+locCheck);
+                            if(locCheck){
+                                String all_itemValid="";
+                                if(Separation_of_the_serial==1){
+                                    all_itemValid=validQty();
+                                    if(all_itemValid.equals("")){
+                                        saveVoucherData();
+                                    }else {
+                                        showNotQtyValid(all_itemValid);
+                                    }
+                                }else {
+
+                                    saveVoucherData();
+                                }
+                            }else {
+                                Toast.makeText(getContext(), "check Permision Location ", Toast.LENGTH_SHORT).show();
+                                //
+                            }
+
+
+                        }else{
+                            String all_itemValid="";
+                            if(Separation_of_the_serial==1){
+                                all_itemValid=validQty();
+                                if(all_itemValid.equals("")){
+                                    saveVoucherData();
+                                }else {
+                                    showNotQtyValid(all_itemValid);
+                                }
+                            }else {
+
+                                saveVoucherData();
+                            }
+
+
+                        }
+
+
                     }
-                }else {
-                    Toast.makeText(getContext(), "check Permision Location ", Toast.LENGTH_SHORT).show();
-                    //
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
 
 
-        }else{
-            String all_itemValid="";
-            if(Separation_of_the_serial==1){
-                 all_itemValid=validQty();
-                if(all_itemValid.equals("")){
-                    saveVoucherData();
-                }else {
-                    showNotQtyValid(all_itemValid);
-                }
-            }else {
 
-                saveVoucherData();
-            }
 
-//            saveVoucherData();
-        }
+
 
             }
         });
@@ -1156,6 +1171,20 @@ public class SalesInvoice extends Fragment {
         }
 
         return view;
+    }
+
+    private void showMessageInvalidDate() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText(getString(R.string.invalidDate))
+                .setContentText(getString(R.string.invalidDate_msg))
+                .setCustomImage(R.drawable.date_error)
+                .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
     }
 
     private String validQty() {
@@ -3569,7 +3598,7 @@ public class SalesInvoice extends Fragment {
                                 }
 
                                 List<Offers> offer = checkOffers(items.get(position).getItemNo());
-                                if (offer.size() > 0) {
+                                if (offer.size() > 0&&voucherType==504) {
                                     appliedOffer = getAppliedOffer(items.get(position).getItemNo(), updaQty + "", 1);
                                     Log.e("appliedOffer",""+appliedOffer.getItemNo()+"offer="+offer.size());
                                     if (!appliedOffer.getItemNo().equals("-1"))
@@ -3972,8 +4001,8 @@ public class SalesInvoice extends Fragment {
                 public void afterTextChanged(Editable s) {
                     if(!s.toString().equals(""))
                     {
-                        Log.e("listTemporarySerial5",""+listTemporarySerial.size());
-                        Log.e("afterTextChanged","serialValueUpdated"+serialValueUpdated.getText().toString());
+//                        Log.e("listTemporarySerial5",""+listTemporarySerial.size());
+//                        Log.e("afterTextChanged","serialValueUpdated"+serialValueUpdated.getText().toString());
                         barcodeValue=s.toString().trim();
                         if(validbarcodeValue(barcodeValue,listTemporarySerial,(counterSerial-1)))
                         {
@@ -4858,6 +4887,7 @@ public class SalesInvoice extends Fragment {
         itemsListAdapter.setItemsList(items);
         itemsListAdapter.notifyDataSetChanged();
         listSerialTotal.clear();
+        jsonItemsList.clear();
     }
 
     private void clearLayoutData(int flag) {

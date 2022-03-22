@@ -108,11 +108,12 @@ public class GeneralMethod {
         Log.e("Device_Date", deviceDate + "");
 
         boolean valid = false;
-
+        Date lastV_Date_d = null;
         String lastV_Date = databaseHandler.getLastVoucherDate();
-        Date lastV_Date_d = dateFormat.parse(lastV_Date);
+        if(!lastV_Date.equals(""))
+         lastV_Date_d = dateFormat.parse(lastV_Date);
 
-        Log.e("LastV_Date", lastV_Date + "");
+//        Log.e("LastV_Date", lastV_Date + "");
 
         if (lastV_Date.equals(""))
             valid = true;

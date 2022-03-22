@@ -552,7 +552,19 @@ public class ReceiptVoucher extends Fragment {
 
         return view;
     }
-
+    private void showMessageInvalidDate() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                .setTitleText(getString(R.string.invalidDate))
+                .setContentText(getString(R.string.invalidDate_msg))
+                .setCustomImage(R.drawable.date_error)
+                .setConfirmButton(getString(R.string.ok), new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
     private void clearDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(getResources().getString(R.string.app_confirm_dialog_clear));
@@ -574,39 +586,44 @@ public class ReceiptVoucher extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
-        builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
+        try {
+            if (!generalMethod.checkDeviceDate()) {
+                showMessageInvalidDate();
 
-        builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(DialogInterface dialogInterface, int l) {
+            }else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getResources().getString(R.string.app_confirm_dialog_save));
+                builder.setTitle(getResources().getString(R.string.app_confirm_dialog));
 
-                String s = amountEditText.getText().toString();
-                String spinner = paymentKindSpinner.getSelectedItem().toString();
-                if (spinner == getResources().getString(R.string.cash)) {
-                    if (!s.equals("") && Double.parseDouble(s) != 0) {
-                        voucherType = 1;
-                        saveAmount(voucherType);
+                builder.setPositiveButton(getResources().getString(R.string.app_ok), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int l) {
 
-                    } else {
-                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                    }
-                } else if (spinner == getResources().getString(R.string.app_creditCard)) {
-                    if (!s.equals("") && Double.parseDouble(s) != 0) {
-                        voucherType = 2;
-                        saveAmount(voucherType);
+                        String s = amountEditText.getText().toString();
+                        String spinner = paymentKindSpinner.getSelectedItem().toString();
+                        if (spinner == getResources().getString(R.string.cash)) {
+                            if (!s.equals("") && Double.parseDouble(s) != 0) {
+                                voucherType = 1;
+                                saveAmount(voucherType);
 
-                    } else {
-                        Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    if (!checkValue())
-                        Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
-                    else {
+                            } else {
+                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                            }
+                        } else if (spinner == getResources().getString(R.string.app_creditCard)) {
+                            if (!s.equals("") && Double.parseDouble(s) != 0) {
+                                voucherType = 2;
+                                saveAmount(voucherType);
 
-                        saveChequ();
+                            } else {
+                                Toast.makeText(getActivity(), "Please Enter amount value", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            if (!checkValue())
+                                Toast.makeText(getActivity(), "Amount Value not matches Cheque Total", Toast.LENGTH_SHORT).show();
+                            else {
+
+                                saveChequ();
 
 //                                if(!Login.salesMan.equals(""))
 //                                {
@@ -620,13 +637,20 @@ public class ReceiptVoucher extends Fragment {
 //                                }
 
 
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
 
-        builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
-        builder.create().show();
+                builder.setNegativeButton(getResources().getString(R.string.app_cancel), null);
+                builder.create().show();
+
+
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
