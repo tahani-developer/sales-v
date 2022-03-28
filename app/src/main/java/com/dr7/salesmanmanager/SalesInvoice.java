@@ -3451,12 +3451,19 @@ public class SalesInvoice extends Fragment {
         else {
             price_update.setText(items.get(position).getPrice()+"");
         }
-
-        if(mDbHandler.getAllSettings().get(0).getCanChangePrice()==0)
-        {
-            price_update.setEnabled(false);
-            price_update.setAlpha(0.8f);
+        if (mDbHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+            if (voucherType == 506) {
+                price.setEnabled(true);
+            }
+        }else {
+            if(mDbHandler.getAllSettings().get(0).getCanChangePrice()==0)
+            {
+                price_update.setEnabled(false);
+                price_update.setAlpha(0.8f);
+            }
         }
+
+
         discount_update.setText(items.get(position).getDisc()+"");
         try {
             if (languagelocalApp.equals("ar")) {
@@ -3882,7 +3889,6 @@ public class SalesInvoice extends Fragment {
             item_number.setVisibility(View.GONE);
             price_serial_edit.setVisibility(View.GONE);
             linearUnit.setVisibility(View.GONE);
-            linearPrice.setVisibility(View.GONE);
             pricee_label= dialog.findViewById(R.id.pricee);
             pricee_label.setVisibility(View.GONE);
 

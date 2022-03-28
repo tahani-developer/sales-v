@@ -582,4 +582,7 @@
     <string name="talaat_offer_discount">
     تشغيل : (كمية المادة/  حد الكميات للعرض  )* الخصم على المادة
     </string>
+    <string name="progress_getPlan">Get  New Plan</string>
+    <string name="no_plan">"No Plan Available "</string>
+    <string name="greatZero">Great Zero</string>
 </resources>

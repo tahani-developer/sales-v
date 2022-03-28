@@ -43,6 +43,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -103,9 +104,10 @@ import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
 public class AddItemsFragment2 extends DialogFragment {
     public   AllItemRecyclerListViewAdapter allItemAdapterList;
 
+    public  CheckBox greaterZero_checkbox;
     public static List<Item> List;
     public  static  int endAddItem=0;
-    public  static  int size_customerpriceslist=0;
+    public  static  int size_customerpriceslist=0,qtyGreatZero=0;
     public  List<Item> itemsList_forFilter;
     Context context;
     GeneralMethod generalMethod;
@@ -391,7 +393,22 @@ public class AddItemsFragment2 extends DialogFragment {
 
                         }
                         if (isFound) {
-                            filteredList.add(jsonItemsList.get(i));
+
+                            if(qtyGreatZero==1)
+                            {
+                                if(jsonItemsList.get(i).getQty()>0)
+                                {
+                                    filteredList.add(jsonItemsList.get(i));
+
+                                }
+                            }else {
+                                filteredList.add(jsonItemsList.get(i));
+                            }
+
+
+
+
+
                         }
 
 
@@ -402,7 +419,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
                 } else {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+                    ArrayList<Item> filteredList = new ArrayList<>();
+                    filteredList=   getFilteredZero();
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
                     recyclerView.setAdapter(adapter);
                 }
                 return false;
@@ -682,14 +701,52 @@ public class AddItemsFragment2 extends DialogFragment {
 
           }
         });
+
+        greaterZero_checkbox=view.findViewById(R.id.greaterZero_checkbox);
+        greaterZero_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.e("onCheckedChanged",""+b);
+
+                if(b){qtyGreatZero=1;}else {
+                    qtyGreatZero=0;
+                }
+                doAllFilters();
+            }
+        });
+
+
         return view;
+    }
+
+    private void doAllFilters() {
+        if (!Kind_item_Spinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+            if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                filterTow();
+            } else {
+                filterKindItem();
+            }
+
+
+        } else {
+            Log.e("categorySpinner", "else" + categorySpinner.getSelectedItemPosition());
+            if (!categorySpinner.getSelectedItem().toString().equals(getResources().getString(R.string.all_item))) {
+                filterCategoury();// filter about categoury
+
+            } else {
+                fillAllItems();
+            }
+
+        }
     }
 
     private void cleanBarcodeLayout() {
         barcode.setText("");
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.setVisibility(View.GONE);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+        ArrayList<Item> filteredList = new ArrayList<>();
+        filteredList=   getFilteredZero();
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -733,7 +790,19 @@ public class AddItemsFragment2 extends DialogFragment {
         for (int j = 0; j < jsonItemsList.size(); j++) {
             if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString())&&
                     jsonItemsList.get(j).getCategory().equals(categorySpinner.getSelectedItem().toString()))
-                filteredList.add(jsonItemsList.get(j));
+            {
+                if(qtyGreatZero==1)
+                {
+                    if(jsonItemsList.get(j).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(j));
+
+                    }
+                }else {
+                    filteredList.add(jsonItemsList.get(j));
+                }
+            }
+
         }
         Log.e("filterTow",filteredList.size()+ "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
         Log.e("filterTow",filteredList.size()+ "     *    "  +categorySpinner.getSelectedItem().toString() );
@@ -741,12 +810,44 @@ public class AddItemsFragment2 extends DialogFragment {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
+    public  ArrayList<Item> getFilteredZero(){
+        ArrayList<Item> filteredList = new ArrayList<>();
+        for (int j = 0; j < jsonItemsList.size(); j++) {
+
+                if(qtyGreatZero==1)
+                {
+                    if(jsonItemsList.get(j).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(j));
+
+                    }
+                }else {
+                    filteredList.add(jsonItemsList.get(j));
+                }
+
+
+        }
+        return  filteredList;
+
+    }
 
     private void filterKindItem() {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int j = 0; j < jsonItemsList.size(); j++) {
             if (jsonItemsList.get(j).getKind_item().equals(Kind_item_Spinner.getSelectedItem().toString()))
-                filteredList.add(jsonItemsList.get(j));
+            {
+                if(qtyGreatZero==1)
+                {
+                    if(jsonItemsList.get(j).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(j));
+
+                    }
+                }else {
+                    filteredList.add(jsonItemsList.get(j));
+                }
+            }
+
         }
         Log.e("filterKindItem",filteredList.size() + "     *    "  +Kind_item_Spinner.getSelectedItem().toString() );
 
@@ -755,7 +856,18 @@ public class AddItemsFragment2 extends DialogFragment {
     }
 
     private void fillAllItems() {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList,AddItemsFragment2.this);
+        ArrayList<Item> filteredList = new ArrayList<>();
+        for (int k = 0; k < jsonItemsList.size(); k++) {
+            if (qtyGreatZero == 1) {
+                if (jsonItemsList.get(k).getQty() > 0) {
+                    filteredList.add(jsonItemsList.get(k));
+
+                }
+            } else {
+                filteredList.add(jsonItemsList.get(k));
+            }
+        }
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList,AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -763,7 +875,19 @@ public class AddItemsFragment2 extends DialogFragment {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
             if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
-                filteredList.add(jsonItemsList.get(k));
+            {
+                if(qtyGreatZero==1)
+                {
+                    if(jsonItemsList.get(k).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(k));
+
+                    }
+                }else {
+                    filteredList.add(jsonItemsList.get(k));
+                }
+            }
+
         }
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
@@ -842,16 +966,34 @@ try {
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
             if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())) {
-                filteredList.add(jsonItemsList.get(k));
-                break;
+                if(qtyGreatZero==1){
+                    if(jsonItemsList.get(k).getQty()>0)
+                    {
+                        filteredList.add(jsonItemsList.get(k));
+                        break;
+                    }
+                }else {
+                    filteredList.add(jsonItemsList.get(k));
+                    break;
+                }
+
+
 
             } else {
 
                 if (!itemNo.equals("")) {
                     if (itemNo.equals(jsonItemsList.get(k).getItemNo())) {
 
-                        filteredList.add(jsonItemsList.get(k));
-                        break;
+                        if(qtyGreatZero==1){
+                            if(jsonItemsList.get(k).getQty()>0)
+                            {
+                                filteredList.add(jsonItemsList.get(k));
+                                break;
+                            }
+                        }else {
+                            filteredList.add(jsonItemsList.get(k));
+                            break;
+                        }
                     }
                 }
 
@@ -878,7 +1020,9 @@ try {
 
     } else {
         Log.e("jsonItemsList","2="+jsonItemsList.size());
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(jsonItemsList, AddItemsFragment2.this);
+        ArrayList<Item> filteredList = new ArrayList<>();
+        filteredList=   getFilteredZero();
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);
 
 

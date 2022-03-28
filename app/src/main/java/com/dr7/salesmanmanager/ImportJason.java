@@ -117,6 +117,7 @@ import static com.dr7.salesmanmanager.Login.previousIp;
 import static com.dr7.salesmanmanager.Login.salesMan;
 import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
+import static com.dr7.salesmanmanager.MainActivity.enter;
 import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.Methods.getDecimal;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.loadSerial;
@@ -5031,7 +5032,7 @@ Log.e("customerList",""+customerList.size());
             super.onPreExecute();
             progressDialog = new ProgressDialog(context);
             progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(context.getResources().getString(R.string.progress_getPlan));
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setProgress(0);
             progressDialog.show();
@@ -5217,6 +5218,9 @@ Log.e("customerList",""+customerList.size());
 
                  getSuccsesfuly();
 
+             }
+             else  if(array.contains("No Data Found")){
+                 Toast.makeText(context, ""+context.getResources().getString(R.string.no_plan), Toast.LENGTH_SHORT).show();
              }
          } else {
 

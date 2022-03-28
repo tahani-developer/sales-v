@@ -137,6 +137,7 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_R
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
+import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
@@ -150,10 +151,12 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+    int salesMan = 1;
     RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
     public static String    CusId;
     public static int menuItemState;
+    public static boolean enter=false;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
     public  static  EditText passwordFromAdmin, password ;
@@ -223,6 +226,7 @@ public class MainActivity extends AppCompatActivity
     String ipAddress="";
     NavigationView navigationView;
 
+    GeneralMethod generalMethod;
 
 
 
@@ -356,7 +360,7 @@ saveCurentLocation();
 //                }
 //            }
 //        });
-
+        generalMethod=new GeneralMethod(this);
 
 
 
@@ -673,14 +677,30 @@ saveCurentLocation();
     }
 
     void customerCheckInDialog(){
+
+        if(SalsManPlanFlage==1) {
+            checkPlan();
+        }
+
         if (CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
-            checknum = 1;
-            menuItemState = 1;
-            openSelectCustDialog();
+              checknum = 1;
+              menuItemState = 1;
+              openSelectCustDialog();
+
         } else {
             Toast.makeText(MainActivity.this, CustomerListShow.Customer_Name + " is checked in", Toast.LENGTH_SHORT).show();
 //                        checkInImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_in_black));
         }
+    }
+
+    private void checkPlan() {
+        int count =mDbHandler.getCountPlan(generalMethod.getCurentTimeDate(1));
+        if(count==0)
+        {
+            importPlanForCurrentSalesMan();
+
+        }
+
     }
 
     public  void getlocationForCheckIn() {
@@ -1264,16 +1284,9 @@ saveCurentLocation();
 
        if(id == R.id.getplan){
            if(Login.SalsManPlanFlage==1) {
-               int salesMan = 1;
-               try {
-                   salesMan = Integer.parseInt(Login.salesMan.trim());
-               } catch (NumberFormatException e) {
-                   Log.e("NumberFormatException", "" + e.getMessage());
-                   salesMan = 1;
-               }
-               ImportJason obj = new ImportJason(MainActivity.this);
 
-               obj.getSalesmanPlan(salesMan);
+               importPlanForCurrentSalesMan();
+
 
            }else{
 
@@ -1535,6 +1548,18 @@ saveCurentLocation();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void importPlanForCurrentSalesMan() {
+        try {
+            salesMan = Integer.parseInt(Login.salesMan.trim());
+        } catch (NumberFormatException e) {
+            Log.e("NumberFormatException", "" + e.getMessage());
+            salesMan = 1;
+        }
+        ImportJason obj = new ImportJason(MainActivity.this);
+
+        obj.getSalesmanPlan(salesMan);
     }
 
     private void passwordDataClearDialog() {
