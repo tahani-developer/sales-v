@@ -27,9 +27,12 @@ import com.itextpdf.text.BaseColor;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import jxl.Workbook;
+import jxl.format.Alignment;
 import jxl.write.Label;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -180,24 +183,60 @@ public class ExportToExcel {
 
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
 
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.app_bank_name))); // column and row
-                sheet.addCell(new Label(1, 0, context.getString(R.string.check_number)));
 
-                sheet.addCell(new Label(2, 0, context.getString(R.string.chaequeDate)));
-                sheet.addCell(new Label(3, 0, context.getString(R.string.app_amount)));
+                sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                sheet.mergeCells(2, 0, 3, 0);
+                sheet.mergeCells(4, 0, 5, 0);
+                sheet.mergeCells(6, 0, 7, 0);
+                sheet.mergeCells(0, 1, 7, 1);
 
-                sheet.mergeCells(0, 1, 3, 1);// col , row, to col , to row
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getBank() + ""));
-                    sheet.addCell(new Label(1, i + 2, list.get(i).getCheckNumber() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getDueDate() + ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getAmount() + ""));
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.app_bank_name), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.check_number), format));
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.chaequeDate), format));
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.app_amount), format));
 
 
-                    //sheet.mergeCells(0,i + 2, 1, i + 2);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getBank() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getCheckNumber() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getDueDate() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getAmount() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.app_bank_name), format)); // column and row
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.check_number), format));
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.chaequeDate), format));
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.app_amount), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getBank() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getCheckNumber() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getDueDate() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getAmount() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+
+                    }
 
                 }
 
@@ -213,7 +252,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -226,41 +265,103 @@ public class ExportToExcel {
 
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
-
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.SALES_MAN_ID))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.CUS_CODE)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.cust_name)));
-                sheet.addCell(new Label(5, 0, context.getString(R.string.CHECK_IN_DATE)));
-                sheet.addCell(new Label(6, 0, context.getString(R.string.CHECK_IN_TIME)));
-                sheet.addCell(new Label(8, 0, context.getString(R.string.CHECK_OUT_DATE)));
-                sheet.addCell(new Label(9, 0, context.getString(R.string.CHECK_OUT_TIME)));
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.SALES_MAN_ID), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.CUS_CODE), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.cust_name), format));
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.CHECK_IN_DATE), format));
+                    sheet.addCell(new Label(8, 0, context.getString(R.string.CHECK_IN_TIME), format));
+                    sheet.addCell(new Label(10, 0, context.getString(R.string.CHECK_OUT_DATE), format));
+                    sheet.addCell(new Label(12, 0, context.getString(R.string.CHECK_OUT_TIME), format));
 //                sheet.addCell(new Label(10, 0, "Bundles"));
 //                sheet.addCell(new Label(11, 0, "Cubic"));
-                sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
-                sheet.mergeCells(3, 0, 4, 0);// col , row, to col , to row
-                sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
-                sheet.mergeCells(11, 0, 12, 0);// col , row, to col , to row
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+                    sheet.mergeCells(10, 0, 11, 0);// col , row, to col , to row
+                    sheet.mergeCells(12, 0, 13, 0);// col , row, to col , to row
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
-                sheet.mergeCells(3, 1, 4, 1);// col , row, to col , to row
-                sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
-                sheet.mergeCells(11, 1, 12, 1);// col , row, to col , to row
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
+                    sheet.mergeCells(10, 1, 11, 1);// col , row, to col , to row
+                    sheet.mergeCells(12, 1, 13, 1);// col , row, to col , to row
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getSalesManId() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getCusCode()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getCusName()));
-                    sheet.addCell(new Label(5, i + 2, list.get(i).getCheckInDate()));
-                    sheet.addCell(new Label(6, i + 2, list.get(i).getCheckInTime()));
-                    sheet.addCell(new Label(8, i + 2, list.get(i).getCheckOutDate()));
-                    sheet.addCell(new Label(9, i + 2, "" + list.get(i).getCheckOutTime()));
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getSalesManId() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getCusCode(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getCusName(), format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getCheckInDate(), format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getCheckInTime(), format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getCheckOutDate(), format));
+                        sheet.addCell(new Label(12, i + 2, "" + list.get(i).getCheckOutTime(), format));
 //                    sheet.addCell(new Label(10, i + 2, "" + list.get(i).getStatus()));
 //                    sheet.addCell(new Label(11, i + 2, "" +  String.format("%.3f", (list.get(i).getCubic()))));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
-                    sheet.mergeCells(3, i + 2, 4, i + 2);// col , row, to col , to row
-                    sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
-                    sheet.mergeCells(11, i + 2, 12, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 5, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(8, i + 2, 9, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(10, i + 2, 11, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(12, i + 2, 13, i + 2);// col , row, to col , to row
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.CHECK_OUT_TIME), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.CHECK_OUT_DATE), format));
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.CHECK_IN_TIME), format));
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.CHECK_IN_DATE), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.cust_name), format));
+                    sheet.addCell(new Label(10, 0, context.getString(R.string.CUS_CODE), format));
+                    sheet.addCell(new Label(12, 0, context.getString(R.string.SALES_MAN_ID), format));
+
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+                    sheet.mergeCells(10, 0, 11, 0);// col , row, to col , to row
+                    sheet.mergeCells(12, 0, 13, 0);// col , row, to col , to row
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
+                    sheet.mergeCells(10, 1, 11, 1);// col , row, to col , to row
+                    sheet.mergeCells(12, 1, 13, 1);// col , row, to col , to row
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(0, i + 2, "" + list.get(i).getCheckOutTime(), format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getCheckOutDate(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getCheckInTime(), format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getCheckInDate(), format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getCusName(), format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getCusCode(), format));
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getSalesManId() + "", format));
+
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 5, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(8, i + 2, 9, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(10, i + 2, 11, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(12, i + 2, 13, i + 2);// col , row, to col , to row
+
+                    }
+
                 }
 
             } catch (RowsExceededException e) {
@@ -275,7 +376,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -287,22 +388,61 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.item_name))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.item_number)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.unit_qty)));
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.item_name), format)); // column and row
+                    sheet.addCell(new Label(3, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.unit_qty), format));
+
+                    sheet.mergeCells(0, 0, 2, 0);// col , row, to col , to row
+                    sheet.mergeCells(3, 0, 4, 0);// col , row, to col , to row
+                    sheet.mergeCells(5, 0, 6, 0);// col , row, to col , to row
 
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(0, 1, 2, 1);// col , row, to col , to row
+                    sheet.mergeCells(3, 1, 4, 1);// col , row, to col , to row
+                    sheet.mergeCells(5, 1, 6, 1);// col , row, to col , to row
 
-
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getName() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getQty() + ""));
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getName() + "", format));
+                        sheet.addCell(new Label(3, i + 2, list.get(i).getItemNo(), format));
+                        sheet.addCell(new Label(5, i + 2, list.get(i).getQty() + "", format));
 
 //                    sheet.addCell(new Label(11, i + 2, "" +  String.format("%.3f", (list.get(i).getCubic()))));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(0, i + 2, 2, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(3, i + 2, 4, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(5, i + 2, 6, i + 2);// col , row, to col , to row
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.unit_qty), format));
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.item_name), format)); // column and row
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 6, 0);// col , row, to col , to row
+
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 6, 1);// col , row, to col , to row
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getQty() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getName() + "", format));
+
+
+//                    sheet.addCell(new Label(11, i + 2, "" +  String.format("%.3f", (list.get(i).getCubic()))));
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 6, i + 2);// col , row, to col , to row
+                    }
 
                 }
 
@@ -318,7 +458,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -330,32 +470,112 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.cust_name))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.customer_number)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.voucher_date)));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.pay_method)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.app_disc)));
-                sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.sub_total)));
-                sheet.addCell(new Label(7, 0, context.getResources().getString(R.string.tax)));
-                sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.net_sales)));
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.cust_name), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.voucher_date), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.pay_method), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.app_disc), format));
+                    sheet.addCell(new Label(10, 0, context.getResources().getString(R.string.sub_total), format));
+                    sheet.addCell(new Label(12, 0, context.getResources().getString(R.string.tax), format));
+                    sheet.addCell(new Label(14, 0, context.getResources().getString(R.string.net_sales), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+                    sheet.mergeCells(10, 0, 11, 0);// col , row, to col , to row
+                    sheet.mergeCells(12, 0, 13, 0);// col , row, to col , to row
+                    sheet.mergeCells(14, 0, 15, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
+                    sheet.mergeCells(10, 1, 11, 1);// col , row, to col , to row
+                    sheet.mergeCells(12, 1, 13, 1);// col , row, to col , to row
+                    sheet.mergeCells(14, 1, 15, 1);// col , row, to col , to row
 
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
-
-
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getCustName() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getCustNumber()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getVoucherDate() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getPayMethod() + ""));
-                    sheet.addCell(new Label(5, i + 2, list.get(i).getVoucherDiscount() + ""));
-                    sheet.addCell(new Label(6, i + 2, list.get(i).getSubTotal() + ""));
-                    sheet.addCell(new Label(7, i + 2, list.get(i).getTax() + ""));
-                    sheet.addCell(new Label(8, i + 2, list.get(i).getNetSales() + ""));
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getCustName() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getCustNumber(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getVoucherDate() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getPayMethod() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getVoucherDiscount() + "", format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getSubTotal() + "", format));
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getTax() + "", format));
+                        sheet.addCell(new Label(14, i + 2, list.get(i).getNetSales() + "", format));
 
 //                    sheet.addCell(new Label(11, i + 2, "" +  String.format("%.3f", (list.get(i).getCubic()))));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+                        sheet.mergeCells(10, i + 2, 11, i + 2);
+                        sheet.mergeCells(12, i + 2, 13, i + 2);
+                        sheet.mergeCells(14, i + 2, 15, i + 2);
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(14, 0, context.getString(R.string.cust_name), format)); // column and row
+                    sheet.addCell(new Label(12, 0, context.getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(10, 0, context.getResources().getString(R.string.voucher_date), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.pay_method), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.app_disc), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.sub_total), format));
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.tax), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.net_sales), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+                    sheet.mergeCells(10, 0, 11, 0);// col , row, to col , to row
+                    sheet.mergeCells(12, 0, 13, 0);// col , row, to col , to row
+                    sheet.mergeCells(14, 0, 15, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
+                    sheet.mergeCells(10, 1, 11, 1);// col , row, to col , to row
+                    sheet.mergeCells(12, 1, 13, 1);// col , row, to col , to row
+                    sheet.mergeCells(14, 1, 15, 1);// col , row, to col , to row
+
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(14, i + 2, list.get(i).getCustName() + "", format));
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getCustNumber(), format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getVoucherDate() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getPayMethod() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getVoucherDiscount() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getSubTotal() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getTax() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getNetSales() + "", format));
+
+//                    sheet.addCell(new Label(11, i + 2, "" +  String.format("%.3f", (list.get(i).getCubic()))));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 5, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(8, i + 2, 9, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(10, i + 2, 11, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(12, i + 2, 13, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(14, i + 2, 15, i + 2);
+                    }
 
                 }
 
@@ -371,7 +591,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -383,23 +603,64 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_number))); // column and row
 
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.voucher_date)));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.remark)));
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_number), format)); // column and row
+
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.voucher_date), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.remark), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getVoucherDate() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getRemark() + "", format));
 
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.voucher_number), format)); // column and row
+
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.voucher_date), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.remark), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getVoucherNumber() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getVoucherDate() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getRemark() + "", format));
 
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getVoucherDate() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getRemark() + ""));
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
 
-
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                    }
 
                 }
 
@@ -415,7 +676,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -427,43 +688,132 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-                sheet.mergeCells(0, 0, 1, 0);
-                sheet.addCell(new Label(2, 0, context.getString(R.string.sales))); // column and row
 
-                sheet.addCell(new Label(1, 2, context.getResources().getString(R.string.cash_sale)));
-                sheet.addCell(new Label(3, 2, T_cash + ""));
+                sheet.mergeCells(0, 0, 3, 0);
+                sheet.addCell(new Label(0, 0, context.getString(R.string.sales), format)); // column and row
 
-                sheet.addCell(new Label(1, 4, context.getResources().getString(R.string.credit_sales)));
-                sheet.addCell(new Label(3, 4, T_credit + ""));
+                sheet.mergeCells(0, 1, 3, 1);// col , row, to col , to row
 
-                sheet.addCell(new Label(1, 6, context.getResources().getString(R.string.total_sales)));
-                sheet.addCell(new Label(3, 6, total + ""));
+                sheet.mergeCells(0, 2, 1, 2);
+                sheet.mergeCells(2, 2, 3, 2);
 
-                sheet.mergeCells(0, 1, 5, 1);// col , row, to col , to row
-                //***************************************************************************
-                sheet.mergeCells(0, 7, 5, 7);
-                sheet.mergeCells(0, 8, 1, 8);
-                sheet.addCell(new Label(2, 8, context.getString(R.string.payment))); // column and row
+                sheet.mergeCells(0, 3, 1, 3);
+                sheet.mergeCells(2, 3, 3, 3);
 
-                sheet.addCell(new Label(1, 10, context.getResources().getString(R.string.cash)));
-                sheet.addCell(new Label(3, 10, cashPayment + ""));
+                sheet.mergeCells(0, 4, 1, 4);
+                sheet.mergeCells(2, 4, 3, 4);
 
-                sheet.addCell(new Label(1, 12, context.getResources().getString(R.string.app_cheque)));
-                sheet.addCell(new Label(3, 12, creditPayment + ""));
+                sheet.mergeCells(0, 5, 1, 5);
+                sheet.mergeCells(2, 5, 3, 5);
 
-                sheet.addCell(new Label(1, 14, context.getResources().getString(R.string.netpayment)));
-                sheet.addCell(new Label(3, 14, net + ""));
-                //********************************************************************************
-                sheet.mergeCells(0, 15, 5, 15);
+                sheet.mergeCells(0, 6, 1, 6);
+                sheet.mergeCells(2, 6, 3, 6);
 
-                sheet.addCell(new Label(2, 16, context.getString(R.string.app_creditCard))); // column and row
+                sheet.mergeCells(0, 7, 3, 7);
+                sheet.mergeCells(0, 8, 3, 8);
+                sheet.addCell(new Label(0, 8, context.getString(R.string.payment), format)); // column and row
 
-                sheet.addCell(new Label(1, 18, context.getResources().getString(R.string.credit_value)));
-                sheet.addCell(new Label(3, 18, (credit - returnCridet) + ""));
+                sheet.mergeCells(0, 9, 3, 9);
 
-                sheet.addCell(new Label(1, 20, context.getResources().getString(R.string.total_cash)));
-                sheet.addCell(new Label(3, 20, total_cash + ""));
+                sheet.mergeCells(0, 10, 1, 10);
+                sheet.mergeCells(2, 10, 3, 10);
+
+                sheet.mergeCells(0, 11, 1, 11);
+                sheet.mergeCells(2, 11, 3, 11);
+
+                sheet.mergeCells(0, 12, 1, 12);
+                sheet.mergeCells(2, 12, 3, 12);
+
+                sheet.mergeCells(0, 13, 1, 13);
+                sheet.mergeCells(2, 13, 3, 13);
+
+                sheet.mergeCells(0, 14, 1, 14);
+                sheet.mergeCells(2, 14, 3, 14);
+
+                sheet.mergeCells(0, 15, 3, 15);
+                sheet.mergeCells(0, 16, 3, 16);
+
+                sheet.addCell(new Label(0, 16, context.getString(R.string.app_creditCard), format)); // column and row
+
+                sheet.mergeCells(0, 17, 3, 17);
+
+                sheet.mergeCells(0, 18, 1, 18);
+                sheet.mergeCells(2, 18, 3, 18);
+
+                sheet.mergeCells(0, 19, 1, 19);
+                sheet.mergeCells(2, 19, 3, 19);
+
+                sheet.mergeCells(0, 20, 1, 20);
+                sheet.mergeCells(2, 20, 3, 20);
+
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+
+                    sheet.addCell(new Label(0, 2, context.getResources().getString(R.string.cash_sale), format));
+                    sheet.addCell(new Label(2, 2, T_cash + "", format));
+
+                    sheet.addCell(new Label(0, 4, context.getResources().getString(R.string.credit_sales), format));
+                    sheet.addCell(new Label(2, 4, T_credit + "", format));
+
+                    sheet.addCell(new Label(0, 6, context.getResources().getString(R.string.total_sales), format));
+                    sheet.addCell(new Label(2, 6, total + "", format));
+
+                    //***************************************************************************
+
+                    sheet.addCell(new Label(0, 10, context.getResources().getString(R.string.cash), format));
+                    sheet.addCell(new Label(2, 10, cashPayment + "", format));
+
+                    sheet.addCell(new Label(0, 12, context.getResources().getString(R.string.app_cheque), format));
+                    sheet.addCell(new Label(2, 12, creditPayment + "", format));
+
+                    sheet.addCell(new Label(0, 14, context.getResources().getString(R.string.netpayment), format));
+                    sheet.addCell(new Label(2, 14, net + "", format));
+
+                    //********************************************************************************
+
+                    sheet.addCell(new Label(0, 18, context.getResources().getString(R.string.credit_value), format));
+                    sheet.addCell(new Label(2, 18, (credit - returnCridet) + "", format));
+
+                    sheet.addCell(new Label(0, 20, context.getResources().getString(R.string.total_cash), format));
+                    sheet.addCell(new Label(2, 20, total_cash + "", format));
+
+
+                } else {
+
+                    sheet.addCell(new Label(2, 2, context.getResources().getString(R.string.cash_sale), format));
+                    sheet.addCell(new Label(0, 2, T_cash + "", format));
+
+
+                    sheet.addCell(new Label(2, 4, context.getResources().getString(R.string.credit_sales), format));
+                    sheet.addCell(new Label(0, 4, T_credit + "", format));
+
+                    sheet.addCell(new Label(2, 6, context.getResources().getString(R.string.total_sales), format));
+                    sheet.addCell(new Label(0, 6, total + "", format));
+
+                    //***************************************************************************
+
+                    sheet.addCell(new Label(2, 10, context.getResources().getString(R.string.cash), format));
+                    sheet.addCell(new Label(0, 10, cashPayment + "", format));
+
+                    sheet.addCell(new Label(2, 12, context.getResources().getString(R.string.app_cheque), format));
+                    sheet.addCell(new Label(0, 12, creditPayment + "", format));
+
+                    sheet.addCell(new Label(2, 14, context.getResources().getString(R.string.netpayment), format));
+                    sheet.addCell(new Label(0, 14, net + "", format));
+
+                    //********************************************************************************
+
+                    sheet.addCell(new Label(2, 18, context.getResources().getString(R.string.credit_value), format));
+                    sheet.addCell(new Label(0, 18, (credit - returnCridet) + "", format));
+
+                    sheet.addCell(new Label(2, 20, context.getResources().getString(R.string.total_cash), format));
+                    sheet.addCell(new Label(0, 20, total_cash + "", format));
+
+                }
 
 
 //
@@ -492,7 +842,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -504,23 +854,81 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.item_number))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.item_name)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.total_sold_qty2)));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.total_bonus_qty2)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.total_sales_noTax)));
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.item_number), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_name), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.total_sold_qty2), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.total_bonus_qty2), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.total_sales_noTax), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
 
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getItemNo() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getItemName()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getQty() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getBonus() + ""));
-                    sheet.addCell(new Label(5, i + 2, ((list.get(i).getQty() * list.get(i).getPrice()) - list.get(i).getDisc()) + ""));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemName(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getQty() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getBonus() + "", format));
+                        sheet.addCell(new Label(8, i + 2, ((list.get(i).getQty() * list.get(i).getPrice()) - list.get(i).getDisc()) + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 5, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(8, 0, context.getString(R.string.item_number), format)); // column and row
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.item_name), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.total_sold_qty2), format));
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.total_bonus_qty2), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.total_sales_noTax), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);// col , row, to col , to row
+                    sheet.mergeCells(4, 0, 5, 0);// col , row, to col , to row
+                    sheet.mergeCells(6, 0, 7, 0);// col , row, to col , to row
+                    sheet.mergeCells(8, 0, 9, 0);// col , row, to col , to row
+
+                    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    sheet.mergeCells(2, 1, 3, 1);// col , row, to col , to row
+                    sheet.mergeCells(4, 1, 5, 1);// col , row, to col , to row
+                    sheet.mergeCells(6, 1, 7, 1);// col , row, to col , to row
+                    sheet.mergeCells(8, 1, 9, 1);// col , row, to col , to row
+
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getItemName(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getQty() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getBonus() + "", format));
+                        sheet.addCell(new Label(0, i + 2, ((list.get(i).getQty() * list.get(i).getPrice()) - list.get(i).getDisc()) + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(4, i + 2, 5, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(6, i + 2, 7, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
 
                 }
 
@@ -536,7 +944,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -548,20 +956,60 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.item_number))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.item_name)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.qty)));
+
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.item_number), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_name), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.qty), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
 
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemName(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getQty() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(4, 0, context.getString(R.string.item_number), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_name), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.qty), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
 
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getItemNo() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getItemName()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getQty() + ""));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemName(), format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getQty() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                    }
 
                 }
 
@@ -577,7 +1025,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -589,26 +1037,99 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_number))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.pay_date)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.cust_name)));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.app_amount)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.remark)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.sale_man_number)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.pay_method)));
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getPayDate()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getCustName() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getAmount() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getRemark()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getSaleManNumber() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getPayMethod() + ""));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_number), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.pay_date), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.cust_name), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.app_amount), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.remark), format));
+                    sheet.addCell(new Label(10, 0, context.getResources().getString(R.string.sale_man_number), format));
+                    sheet.addCell(new Label(12, 0, context.getResources().getString(R.string.pay_method), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+                    sheet.mergeCells(6, 0, 7, 0);
+                    sheet.mergeCells(8, 0, 9, 0);
+                    sheet.mergeCells(10, 0, 11, 0);
+                    sheet.mergeCells(12, 0, 13, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
+                    sheet.mergeCells(6, 1, 7, 1);
+                    sheet.mergeCells(8, 1, 9, 1);
+                    sheet.mergeCells(10, 1, 11, 1);
+                    sheet.mergeCells(12, 1, 13, 1);
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getPayDate(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getCustName() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getAmount() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getRemark(), format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getSaleManNumber() + "", format));
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getPayMethod() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+                        sheet.mergeCells(10, i + 2, 11, i + 2);
+                        sheet.mergeCells(12, i + 2, 13, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(12, 0, context.getString(R.string.voucher_number), format)); // column and row
+                    sheet.addCell(new Label(10, 0, context.getString(R.string.pay_date), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.cust_name), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.app_amount), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.remark), format));
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.sale_man_number), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.pay_method), format));
+
+                    sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                    sheet.mergeCells(2, 0, 3, 0);
+                    sheet.mergeCells(4, 0, 5, 0);
+                    sheet.mergeCells(6, 0, 7, 0);
+                    sheet.mergeCells(8, 0, 9, 0);
+                    sheet.mergeCells(10, 0, 11, 0);
+                    sheet.mergeCells(12, 0, 13, 0);
+
+                    sheet.mergeCells(0, 1, 1, 1);
+                    sheet.mergeCells(2, 1, 3, 1);
+                    sheet.mergeCells(4, 1, 5, 1);
+                    sheet.mergeCells(6, 1, 7, 1);
+                    sheet.mergeCells(8, 1, 9, 1);
+                    sheet.mergeCells(10, 1, 11, 1);
+                    sheet.mergeCells(12, 1, 13, 1);
+
+                    for (int i = 0; i < list.size(); i++) {
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getVoucherNumber() + "", format));
+                        sheet.addCell(new Label(10, i + 2, list.get(i).getPayDate(), format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getCustName() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getAmount() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getRemark(), format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getSaleManNumber() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getPayMethod() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+                        sheet.mergeCells(10, i + 2, 11, i + 2);
+                        sheet.mergeCells(12, i + 2, 13, i + 2);
+
+                    }
 
                 }
 
@@ -624,7 +1145,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -681,23 +1202,72 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-                sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_date))); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.voucher_type)));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.serialcode)));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.item_number)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.voucher_number)));
+
+                sheet.mergeCells(0, 0, 1, 0);// col , row, to col , to row
+                sheet.mergeCells(2, 0, 3, 0);
+                sheet.mergeCells(4, 0, 5, 0);
+                sheet.mergeCells(6, 0, 7, 0);
+                sheet.mergeCells(8, 0, 9, 0);
+
+                sheet.mergeCells(0, 1, 1, 1);
+                sheet.mergeCells(2, 1, 3, 1);
+                sheet.mergeCells(4, 1, 5, 1);
+                sheet.mergeCells(6, 1, 7, 1);
+                sheet.mergeCells(8, 1, 9, 1);
+
+                if (!Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.voucher_date), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.voucher_type), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.serialcode), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.item_number), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.voucher_number), format));
 
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getDateVoucher() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getKindVoucher()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getSerialCode() + ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getItemNo()+ ""));
-                    sheet.addCell(new Label(5, i + 2, list.get(i).getVoucherNo()));
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getDateVoucher() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getKindVoucher(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getSerialCode() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getVoucherNo(), format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(8, 0, context.getString(R.string.voucher_date), format)); // column and row
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.voucher_type), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.serialcode), format));
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.item_number), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.voucher_number), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getDateVoucher() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getKindVoucher(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getSerialCode() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo(), format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
 
                 }
 
@@ -715,42 +1285,85 @@ public class ExportToExcel {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (WriteException e) {
+            e.printStackTrace();
         }
         return workbook;
     }
+
     WritableWorkbook ReturnSerialitemList(WritableWorkbook workbook, List<Item> list) {
 
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-           /*     sheet.addCell(new Label(0, 0, context.getString(R.string.voucherNo) )); // column and row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.item_number      ) ));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.item_name   ) ));
-                sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.qty)));
-                sheet.addCell(new Label(5, 0, context.getResources().getString(R.string.app_price) ));*/
-                sheet.addCell(new Label(0, 0,  context.getResources().getString(R.string.app_price))); // column and row
-                sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.qty) ));
-                sheet.addCell(new Label(3, 0, context.getResources().getString(R.string.item_name   ) ));
-                sheet.addCell(new Label(4, 0, context.getString(R.string.item_number      ) ));
-                sheet.addCell(new Label(5, 0, context.getString(R.string.voucherNo)));
 
-                sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                sheet.mergeCells(0, 0, 1, 0);
+                sheet.mergeCells(2, 0, 3, 0);
+                sheet.mergeCells(4, 0, 5, 0);
+                sheet.mergeCells(6, 0, 7, 0);
+                sheet.mergeCells(8, 0, 9, 0);
 
-                for (int i = 0; i < list.size(); i++) {
-                /*    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + ""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo()));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getItemName()+ ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getQty()+ ""));
-                    sheet.addCell(new Label(5, i + 2, String.valueOf(list.get(i).getPrice())));*/
+                sheet.mergeCells(0, 0, 1, 1);
+                sheet.mergeCells(2, 0, 3, 1);
+                sheet.mergeCells(4, 0, 5, 1);
+                sheet.mergeCells(6, 0, 7, 1);
+                sheet.mergeCells(8, 0, 9, 1);
 
-                    sheet.addCell(new Label(0, i + 2, String.valueOf(list.get(i).getPrice())));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getQty()+ ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getItemName()+ ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getItemNo()+ ""));
-                    sheet.addCell(new Label(5, i + 2,list.get(i).getVoucherNumber()+"" ));
 
-                    sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                if (Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.app_price), format)); // column and row
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.qty), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.item_name), format));
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.voucherNo), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(8, i + 2, String.valueOf(list.get(i).getPrice()), format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getQty() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getItemName() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNumber() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
+
+                } else {
+
+
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.app_price), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.qty), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.item_name), format));
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(8, 0, context.getString(R.string.voucherNo), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(0, i + 2, String.valueOf(list.get(i).getPrice()), format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getQty() + "", format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getItemName() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getItemNo() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getVoucherNumber() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
 
                 }
 
@@ -766,40 +1379,95 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
     }
+
     WritableWorkbook accountStatmentReport(WritableWorkbook workbook, List<Account__Statment_Model> list) {
 
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-               // sheet.mergeCells(0, 0, 6, 0);// col , row, to col , to row
-                sheet.addCell(new Label(2, 0, context.getString(R.string.AccountStatment)+" : \t "+CustomerListShow.Customer_Name)); // column and row
-            //    sheet.mergeCells(0, 1, 6, 1);
-                sheet.addCell(new Label(0, 1, context.getString(R.string.balance))); // column and row
-                sheet.addCell(new Label(1, 1, context.getString(R.string.debit)));
-                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.credit)));
-                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.date_voucher)));
-                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.transName)));
-                sheet.addCell(new Label(5, 1, context.getResources().getString(R.string.voucherNo)));
+
+                sheet.mergeCells(0, 0, 11, 0);// col , row, to col , to row
+
+                sheet.mergeCells(0, 1, 1, 1);
+                sheet.mergeCells(2, 1, 3, 1);
+                sheet.mergeCells(4, 1, 5, 1);
+                sheet.mergeCells(6, 1, 7, 1);
+                sheet.mergeCells(8, 1, 9, 1);
+                sheet.mergeCells(10, 1, 11, 1);
+
+                sheet.mergeCells(0, 2, 1, 2);
+                sheet.mergeCells(2, 2, 3, 2);
+                sheet.mergeCells(4, 2, 5, 2);
+                sheet.mergeCells(6, 2, 7, 2);
+                sheet.mergeCells(8, 2, 9, 2);
+                sheet.mergeCells(10, 2, 11, 2);
+
+                sheet.addCell(new Label(0, 0, context.getString(R.string.AccountStatment) + " : \t " + CustomerListShow.Customer_Name, format)); // column and row
+
+                if (Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(10, 2, context.getString(R.string.balance), format)); // column and row
+                    sheet.addCell(new Label(8, 2, context.getString(R.string.debit), format));
+                    sheet.addCell(new Label(6, 2, context.getResources().getString(R.string.credit), format));
+                    sheet.addCell(new Label(4, 2, context.getResources().getString(R.string.date_voucher), format));
+                    sheet.addCell(new Label(2, 2, context.getResources().getString(R.string.transName), format));
+                    sheet.addCell(new Label(0, 2, context.getResources().getString(R.string.voucherNo), format));
 
 
-            //    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getBalance() + ""));
-                    sheet.addCell(new Label(1, i + 2, list.get(i).getCredit()+""));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getDebit() + ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getDate_voucher()+ ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getTranseNmae()+""));
+                        sheet.addCell(new Label(10, i + 3, list.get(i).getBalance() + "", format));
+                        sheet.addCell(new Label(8, i + 3, list.get(i).getCredit() + "", format));
+                        sheet.addCell(new Label(6, i + 3, list.get(i).getDebit() + "", format));
+                        sheet.addCell(new Label(4, i + 3, list.get(i).getDate_voucher() + "", format));
+                        sheet.addCell(new Label(2, i + 3, list.get(i).getTranseNmae() + "", format));
+                        sheet.addCell(new Label(0, i + 3, list.get(i).getVoucherNo() + "", format));
 
-                    sheet.addCell(new Label(5, i + 2, list.get(i).getVoucherNo()+""));
+                        sheet.mergeCells(0, i + 3, 1, i + 3);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 3, 3, i + 3);
+                        sheet.mergeCells(4, i + 3, 5, i + 3);
+                        sheet.mergeCells(6, i + 3, 7, i + 3);
+                        sheet.mergeCells(8, i + 3, 9, i + 3);
+                        sheet.mergeCells(10, i + 3, 11, i + 3);
 
-                 //   sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(0, 2, context.getString(R.string.balance), format)); // column and row
+                    sheet.addCell(new Label(2, 2, context.getString(R.string.debit), format));
+                    sheet.addCell(new Label(4, 2, context.getResources().getString(R.string.credit), format));
+                    sheet.addCell(new Label(6, 2, context.getResources().getString(R.string.date_voucher), format));
+                    sheet.addCell(new Label(8, 2, context.getResources().getString(R.string.transName), format));
+                    sheet.addCell(new Label(10, 2, context.getResources().getString(R.string.voucherNo), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(0, i + 3, list.get(i).getBalance() + "", format));
+                        sheet.addCell(new Label(2, i + 3, list.get(i).getCredit() + "", format));
+                        sheet.addCell(new Label(4, i + 3, list.get(i).getDebit() + "", format));
+                        sheet.addCell(new Label(6, i + 3, list.get(i).getDate_voucher() + "", format));
+                        sheet.addCell(new Label(8, i + 3, list.get(i).getTranseNmae() + "", format));
+                        sheet.addCell(new Label(10, i + 3, list.get(i).getVoucherNo() + "", format));
+
+                        sheet.mergeCells(0, i + 3, 1, i + 3);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 3, 3, i + 3);
+                        sheet.mergeCells(4, i + 3, 5, i + 3);
+                        sheet.mergeCells(6, i + 3, 7, i + 3);
+                        sheet.mergeCells(8, i + 3, 9, i + 3);
+                        sheet.mergeCells(10, i + 3, 11, i + 3);
+
+                    }
 
                 }
 
@@ -815,7 +1483,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
@@ -826,28 +1494,74 @@ public class ExportToExcel {
         try {
             WritableSheet sheet = workbook.createSheet("Sheet1", 0);//Excel sheet name. 0 represents first sheet
 
+            WritableCellFormat format = new WritableCellFormat();
+            format.setAlignment(Alignment.CENTRE);
+
             try {
-                // sheet.mergeCells(0, 0, 6, 0);// col , row, to col , to row
-               // sheet.addCell(new Label(2, 0, context.getString(R.string.shelf_inventory_report)+" : \t "+CustomerListShow.Customer_Name)); // column and row
-                //    sheet.mergeCells(0, 1, 6, 1);
-                sheet.addCell(new Label(0, 1, context.getString(R.string.voucherNo))); // column and row
-                sheet.addCell(new Label(1, 1, context.getString(R.string.item_number)));
-                sheet.addCell(new Label(2, 1, context.getResources().getString(R.string.serialcode)));
-                sheet.addCell(new Label(3, 1, context.getResources().getString(R.string.customer_number)));
-                sheet.addCell(new Label(4, 1, context.getResources().getString(R.string.voucher_date)));
+
+                sheet.mergeCells(0, 0, 1, 0);
+                sheet.mergeCells(2, 0, 3, 0);
+                sheet.mergeCells(4, 0, 5, 0);
+                sheet.mergeCells(6, 0, 7, 0);
+                sheet.mergeCells(8, 0, 9, 0);
+
+                sheet.mergeCells(0, 0, 1, 1);
+                sheet.mergeCells(2, 0, 3, 1);
+                sheet.mergeCells(4, 0, 5, 1);
+                sheet.mergeCells(6, 0, 7, 1);
+                sheet.mergeCells(8, 0, 9, 1);
+
+
+                if (Locale.getDefault().getLanguage().equals("ar")) {
+
+                    sheet.addCell(new Label(8, 0, context.getString(R.string.voucherNo), format)); // column and row
+                    sheet.addCell(new Label(6, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.serialcode), format));
+                    sheet.addCell(new Label(2, 0, context.getResources().getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(0, 0, context.getResources().getString(R.string.voucher_date), format));
 
 
 
-                //    sheet.mergeCells(0, 1, 1, 1);// col , row, to col , to row
+                    for (int i = 0; i < list.size(); i++) {
 
-                for (int i = 0; i < list.size(); i++) {
-                    sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo() + ""));
-                    sheet.addCell(new Label(1, i + 2, list.get(i).getItemNo()));
-                    sheet.addCell(new Label(2, i + 2, list.get(i).getSerialCode() + ""));
-                    sheet.addCell(new Label(3, i + 2, list.get(i).getCustomerNo()+ ""));
-                    sheet.addCell(new Label(4, i + 2, list.get(i).getDateVoucher()+""));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getVoucherNo() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getItemNo(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getSerialCode() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getCustomerNo() + "", format));
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getDateVoucher() + "", format));
 
-                    //   sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
+
+                } else {
+
+                    sheet.addCell(new Label(0, 0, context.getString(R.string.voucherNo), format)); // column and row
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.item_number), format));
+                    sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.serialcode), format));
+                    sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.voucher_date), format));
+
+
+                    for (int i = 0; i < list.size(); i++) {
+
+                        sheet.addCell(new Label(0, i + 2, list.get(i).getVoucherNo() + "", format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getItemNo(), format));
+                        sheet.addCell(new Label(4, i + 2, list.get(i).getSerialCode() + "", format));
+                        sheet.addCell(new Label(6, i + 2, list.get(i).getCustomerNo() + "", format));
+                        sheet.addCell(new Label(8, i + 2, list.get(i).getDateVoucher() + "", format));
+
+                        sheet.mergeCells(0, i + 2, 1, i + 2);// col , row, to col , to row
+                        sheet.mergeCells(2, i + 2, 3, i + 2);
+                        sheet.mergeCells(4, i + 2, 5, i + 2);
+                        sheet.mergeCells(6, i + 2, 7, i + 2);
+                        sheet.mergeCells(8, i + 2, 9, i + 2);
+
+                    }
 
                 }
 
@@ -863,7 +1577,7 @@ public class ExportToExcel {
             } catch (WriteException e) {
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (IOException | WriteException e) {
             e.printStackTrace();
         }
         return workbook;
