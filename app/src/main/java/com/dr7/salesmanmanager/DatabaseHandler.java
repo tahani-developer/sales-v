@@ -8667,6 +8667,28 @@ Log.e("addCompanyInfo","addCompanyInfo");
         db.close();
     }
 
+    public int getCountPlan(String curentTimeDate) {
+        //
+        int count=0;
+
+        String selectQuery = "select count(*) from SalesMan_Plan where DATE='"+curentTimeDate+"'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            try {
+
+                count =  cursor.getInt(0);
+
+                Log.e("getCountPlan", ""+count);
+
+            } catch ( Exception e)
+            {
+            }
+        }
+        return count;
+
+    }
+
 //    delete from SALES_VOUCHER_MASTER where VOUCHER_DATE LIKE '%2021%'
 //delete from SALES_VOUCHER_DETAILS where ITEM_YEAR LIKE '%2021%'
 }

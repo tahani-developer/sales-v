@@ -218,7 +218,7 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="5dp"
         android:layout_height="match_parent"
-
+        android:id="@+id/linearPrice"
         android:layout_weight="5.3"
         android:layout_marginTop="5dp"
         android:gravity="center"

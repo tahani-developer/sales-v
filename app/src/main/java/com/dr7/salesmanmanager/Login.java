@@ -167,15 +167,15 @@ public class Login extends AppCompatActivity {
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
 
-    public  static   int  talaatLayoutAndPassowrd=0;
+    public  static   int  talaatLayoutAndPassowrd=1;
     public  static    int voucherReturn_spreat=0;
     public  static  int updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   POS_ACTIVE=0;
-    public  static    int   Separation_of_the_serial=1;
+    public  static    int   Separation_of_the_serial=0;// for oppo
    public  static  String headerDll = "";
-  // public  static  String  headerDll = "/Falcons/VAN.dll";
+//   public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,7 +455,7 @@ public class Login extends AppCompatActivity {
         editIp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPasswordDialog();
+                showPasswordDialog(1);
 
 
             }
@@ -470,7 +470,11 @@ public class Login extends AppCompatActivity {
 
         //////B
         more.setOnClickListener(v -> {
-            showMoreSettingDialog();
+
+           showPasswordDialog(2);
+
+
+
 
 
 
@@ -691,7 +695,7 @@ public class Login extends AppCompatActivity {
         cancelBtn.setOnClickListener(v12 -> moreDialog.dismiss());
     }
 
-    private void showPasswordDialog() {
+    private void showPasswordDialog(int flag ) {
         final EditText editText = new EditText(Login.this);
         editText.setTextColor(getResources().getColor(R.color.text_view_color));
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -706,13 +710,22 @@ public class Login extends AppCompatActivity {
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(editText.getText().toString().equals("2021000"))
                 {
-                    ipEditText.setAlpha(1f);
-                    ipEditText.setEnabled(true);
-                    ipEditText.requestFocus();
+                    if(flag==1){
+                        ipEditText.setAlpha(1f);
+                        ipEditText.setEnabled(true);
+                        ipEditText.requestFocus();
+                    }else {
+                        if(flag==2){
+                            showMoreSettingDialog();
+                        }
+                    }
+
                     sweetAlertDialog.dismissWithAnimation();
+
                 }
                 else {
                     editText.setError("Incorrect");
+
                 }
             }
         })

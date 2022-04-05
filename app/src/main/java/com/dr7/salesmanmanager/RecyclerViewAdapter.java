@@ -912,9 +912,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                        bonus.setText("");
                                                                        addToList.setEnabled(true);
                                                                        unitQty.setEnabled(true);
-                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                                                                           price.setEnabled(true);
+                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                           if (voucherType == 506) {
+                                                                               price.setEnabled(true);
+                                                                           }else {  price.setEnabled(false);}
+                                                                       } else {
+                                                                           if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                               price.setEnabled(true);
+                                                                           }
                                                                        }
+
 
                                                                        discPercRadioButton.setEnabled(true);
                                                                        discValueRadioButton.setEnabled(true);
@@ -1084,8 +1091,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    discount.setError("required");
                                                                                    discount.requestFocus();
                                                                                    unitQty.setEnabled(true);
-                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                                                                                       price.setEnabled(true);
+                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                       if (voucherType == 506) {
+                                                                                           price.setEnabled(true);
+                                                                                       }else {  price.setEnabled(false);}
+                                                                                   } else {
+
+
+                                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                           price.setEnabled(true);
+                                                                                       }
                                                                                    }
                                                                                }
 
@@ -1113,8 +1128,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                    bonus.setError("required");
                                                                                    bonus.requestFocus();
                                                                                    unitQty.setEnabled(true);
-                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                                                                                       price.setEnabled(true);
+                                                                                   if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                                                       if (voucherType == 506) {
+                                                                                           price.setEnabled(true);
+                                                                                       }else {  price.setEnabled(false);}
+                                                                                   } else {
+                                                                                       if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                                                                           price.setEnabled(true);
+                                                                                       }
                                                                                    }
                                                                                }
 
@@ -1184,7 +1205,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            itemName.setText(allItemsList.get(position).getItemName());
                                                            final DatabaseHandler mHandler = new DatabaseHandler(cont);
                                                            //*********************************** change Price with customer or not accourding to setting  ************************************
-                                                           if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
+
+                                                           if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                                               price.setText("" + allItemsList.get(position).getPrice());
+                                                               if (voucherType == 506) {
+                                                                   price.setEnabled(true);
+                                                               }else {  price.setEnabled(false);}
+                                                           } else {
+                                                               if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                                price.setEnabled(false);
                                                                //    price.setText("Desable");
@@ -1192,6 +1220,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                            } else {
                                                                price.setText("" + allItemsList.get(position).getPrice());
                                                            }
+                                                       }
                                                            if (mHandler.getAllSettings().get(0).getItemUnit() == 1) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
@@ -1315,7 +1344,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                            Offers appliedOffer = null;
                                                                                                            Log.e("appliedOffer", "1111===" + offer.size());
 //
-                                                                                                           if (offer.size() != 0) {
+                                                                                                           if (offer.size() != 0 && voucherType==504) {
 
                                                                                                                if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
@@ -1412,7 +1441,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                        current_itemHasSerial, oneUnit);
                                                                                                            }
                                                                                                            if (added) {
-                                                                                                               if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                                                               if (offer.size() != 0 && voucherType==504 &&!appliedOffer.getItemNo().equals("-1"))
                                                                                                                    openOfferDialog(appliedOffer);
 
                                                                                                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
@@ -1454,7 +1483,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                    List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                                    Offers appliedOffer = null;
 
-                                                                                                                   if (offer.size() != 0) {
+                                                                                                                   if (offer.size() != 0&& voucherType==504 ) {
                                                                                                                        if (offer.get(0).getPromotionType() == 0) {
 
                                                                                                                            added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -1496,7 +1525,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                                useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
                                                                                                                    }
                                                                                                                    if (added) {
-                                                                                                                       if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                                                                       if (offer.size() != 0 &&  voucherType==504 && !appliedOffer.getItemNo().equals("-1"))
                                                                                                                            openOfferDialog(appliedOffer);
                                                                                                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
                                                                                                                        isClicked.set(position, 1);
@@ -1611,7 +1640,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     dialog.setContentView(R.layout.add_item_serial_dialog);
                     serialValue = dialog.findViewById(R.id.serialValue);
-                    linearPrice= dialog.findViewById(R.id.linearPrice);
+                    linearPrice = dialog.findViewById(R.id.linearPrice);
                     linearPrice.setVisibility(View.VISIBLE);
                     mainRequestLinear = dialog.findViewById(R.id.mainRequestLinear);
                     checkStateResult = dialog.findViewById(R.id.checkStateResult);
@@ -1927,8 +1956,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } catch (Exception e) {
 
             }
-            linearPrice= dialog.findViewById(R.id.linearPrice);
-            linearPrice.setVisibility(View.VISIBLE);
+            linearPrice = dialog.findViewById(R.id.linearPrice);
+            linearPrice.setVisibility(View.VISIBLE);//**************اثقث
             serialValue = dialog.findViewById(R.id.serialValue);
             resultLinear = dialog.findViewById(R.id.resultLinear);
             acceptDiscount = dialog.findViewById(R.id.acceptDiscount);
@@ -2080,8 +2109,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         bonus.setText("");
                         addToList.setEnabled(true);
                         unitQty.setEnabled(true);
-                        if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                            price.setEnabled(true);
+                        if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                            if (voucherType == 506) {
+                                price.setEnabled(true);
+                            }else {  price.setEnabled(false);}
+                        } else {
+                            if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                price.setEnabled(true);
+                            }
                         }
 
                         discPercRadioButton.setEnabled(true);
@@ -2245,8 +2280,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     discount.setError("required");
                                     discount.requestFocus();
                                     unitQty.setEnabled(true);
-                                    if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                                        price.setEnabled(true);
+                                    if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                        if (voucherType == 506) {
+                                            price.setEnabled(true);
+                                        }else {  price.setEnabled(false);}
+                                    } else {
+                                        if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                            price.setEnabled(true);
+                                        }
                                     }
                                 }
 
@@ -2274,8 +2315,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     bonus.setError("required");
                                     bonus.requestFocus();
                                     unitQty.setEnabled(true);
-                                    if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
-                                        price.setEnabled(true);
+                                    if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                                        if (voucherType == 506) {
+                                            price.setEnabled(true);
+                                        }else {  price.setEnabled(false);}
+                                    } else {
+                                        if (MHandler.getAllSettings().get(0).getCanChangePrice() == 1) {
+                                            price.setEnabled(true);
+                                        }
                                     }
                                 }
 
@@ -2345,7 +2392,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
 
 
-
                     }
 
 
@@ -2355,6 +2401,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemName.setText(allItemsList.get(position).getItemName());
             final DatabaseHandler mHandler = new DatabaseHandler(cont);
             //*********************************** change Price with customer or not accourding to setting  ************************************
+            if (MHandler.getAllSettings().get(0).getCanChangePrice_returnonly() == 1) {
+                price.setText("" + allItemsList.get(position).getPrice());
+                if (voucherType == 506) {
+                    price.setEnabled(true);
+                }else {  price.setEnabled(false);}
+            } else {
             if (mHandler.getAllSettings().get(0).getCanChangePrice() == 0) {
                 price.setText("" + allItemsList.get(position).getPrice());
                 price.setEnabled(false);
@@ -2363,6 +2415,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             } else {
                 price.setText("" + allItemsList.get(position).getPrice());
             }
+        }
             if (mHandler.getAllSettings().get(0).getItemUnit() == 1) {
 //                                                           if(items.get(position).getPrice()!=0)
 //                                                           {
@@ -2486,7 +2539,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                             Offers appliedOffer = null;
                                                             Log.e("appliedOffer", "1111===" + offer.size());
 //
-                                                            if (offer.size() != 0) {
+                                                            if (offer.size() != 0&& voucherType==504 ) {
 
                                                                 if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
@@ -2583,7 +2636,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                         current_itemHasSerial, oneUnit);
                                                             }
                                                             if (added) {
-                                                                if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                if (offer.size() != 0&& voucherType==504  && !appliedOffer.getItemNo().equals("-1"))
                                                                     openOfferDialog(appliedOffer);
 
 //                                                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
@@ -2642,7 +2695,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                     List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                     Offers appliedOffer = null;
 
-                                                                    if (offer.size() != 0) {
+                                                                    if (offer.size() != 0&& voucherType==504 ) {
                                                                         if (offer.get(0).getPromotionType() == 0) {
 
                                                                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -2684,7 +2737,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                 useWeight, context.getActivity(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
                                                                     }
                                                                     if (added) {
-                                                                        if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
+                                                                        if (offer.size() != 0 && voucherType==504 && !appliedOffer.getItemNo().equals("-1"))
                                                                             openOfferDialog(appliedOffer);
 //                                                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
                                                                         isClicked.set(position, 1);

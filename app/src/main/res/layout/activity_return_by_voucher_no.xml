@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:background="@color/layer7"
     android:id="@+id/linearMain"
     tools:context=".ReturnByVoucherNo">
@@ -38,6 +39,7 @@
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_weight="1.5"
+
         android:orientation="vertical"
         android:layout_width="match_parent">
         <TextView
@@ -50,7 +52,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
             <TextView
                 android:layout_weight="5"
@@ -59,8 +63,8 @@
                 android:layout_height="match_parent"
                 android:textStyle="bold"
 
-                android:gravity="center"
-                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp" />
             <TextView
@@ -83,7 +87,8 @@
                 android:layout_width="match_parent"
                 android:inputType="text"
                 android:background="@drawable/back_border_edit"
-
+                android:textColorHint="@color/layer1"
+                android:hint="@string/serialcode_type"
                 android:layout_height="40dp"
                 android:elevation="5dp"
 
@@ -111,7 +116,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
             <TextView
                 android:layout_weight="5"
@@ -120,8 +127,8 @@
                 android:layout_height="match_parent"
                 android:textStyle="bold"
 
-                android:gravity="center"
-                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp" />
             <TextView
@@ -147,7 +154,8 @@
                 android:background="@drawable/back_border_edit"
                 android:elevation="5dp"
                 android:layout_height="40dp"
-
+                android:hint="@string/voucherNo_origin"
+                android:textColorHint="@color/layer1"
                 android:gravity="center"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/colorBlack"
@@ -159,7 +167,7 @@
                 android:layout_margin="5dp"
                 android:layout_width="35dp"
                 android:layout_gravity="center"
-                android:background="@drawable/refresh2"
+                android:background="@drawable/refresh_1"
 
 
                 android:layout_height="30dp"
@@ -173,7 +181,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
             <TextView
                 android:layout_weight="5"
@@ -181,8 +191,8 @@
                 android:text="@string/pay_method"
                 android:layout_height="match_parent"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:layout_marginRight="5dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp" />
             <TextView
@@ -265,7 +275,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
             <TextView
                 android:layout_weight="5"
@@ -275,12 +287,12 @@
                 android:layout_height="match_parent"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:layout_marginRight="10dp"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp" />
          <CheckBox
              android:layout_width="match_parent"
              android:layout_height="30dp"
+             android:gravity="right|center"
              android:id="@+id/returnall"
              android:textColor="@color/colorBlack"
           android:buttonTint="@color/colorBlack"
@@ -352,7 +364,9 @@
                 android:layout_width="match_parent"
                android:background="@drawable/border"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_weight="5"
@@ -367,7 +381,7 @@
                     android:textSize="14sp" />
                 <TextView
 
-                    android:visibility="invisible"
+                    android:visibility="gone"
 
                     android:layout_margin="5dp"
                     android:layout_width="35dp"
@@ -399,9 +413,12 @@
                     android:background="@drawable/back_border_edit"
                     android:elevation="5dp"
                     android:layout_height="40dp"
-android:hint="@string/serialcode"
+                    android:hint="@string/serialcode"
+                    android:textColorHint="@color/layer1"
                     android:gravity="center"
-                    android:layout_marginRight="10dp"
+
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:textColor="@color/colorBlack"
                     android:textSize="14sp" />
 
@@ -566,7 +583,7 @@ android:hint="@string/serialcode"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
-                        android:layout_weight="1.5"
+                        android:layout_weight="1.7"
                         android:padding="2dp"
                         android:layout_margin="2dp"
                         android:background="@drawable/back_border_edit"

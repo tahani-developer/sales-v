@@ -333,7 +333,7 @@
                         android:padding="5dp"
                         android:gravity="start"
                         android:textColor="#3C3C3C"
-                        android:text="This is just for testing purposes\nhuhfund"
+                        android:text="@string/explain_offer_cakeshop_bonus"
                         android:layout_marginStart="43dp"
                         android:layout_marginEnd="5dp"
                         android:visibility="gone"
@@ -389,7 +389,7 @@
                         android:visibility="gone"
                         android:layout_marginStart="43dp"
                         android:layout_marginEnd="5dp"
-                        android:text="This is just for testing purposes\nhuhfund"/>
+                        android:text="@string/qasion_explain_discount"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -441,7 +441,7 @@
                         android:layout_marginStart="43dp"
                         android:layout_marginEnd="5dp"
                         android:visibility="gone"
-                        android:text="This is just for testing purposes\nhuhfund"/>
+                        android:text="@string/talaat_offer_discount"/>
 
                 </LinearLayout>
 

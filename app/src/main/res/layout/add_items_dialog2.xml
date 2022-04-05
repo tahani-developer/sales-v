@@ -18,12 +18,25 @@
 
         android:orientation="horizontal"
         android:padding="5dp">
+        <CheckBox
+            android:id="@+id/greaterZero_checkbox"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="1dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="0"
+            android:text="@string/greatZero"
+            android:textColor="@color/text_view_color"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            />
         <ImageView
             android:id="@+id/searchBarcode"
             android:layout_height="40dp"
-            android:layout_width="0dp"
+            android:layout_width="30dp"
             android:src="@drawable/search_btn"
-            android:layout_weight="1"/>
+            android:layout_weight="0"/>
 
 
 
@@ -32,8 +45,8 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
             android:layout_weight="3"
             android:inputType="text"
             android:lines="1"
@@ -58,6 +71,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:gravity="center"
             android:text="@string/barcode"
             android:textColor="@color/done_button"

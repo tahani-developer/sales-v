@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.10</string>
+    <string name="version"> V 200.13</string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -578,5 +578,13 @@
     <string name="posActive">POS Active</string>
     <string name="scanSerial">Add Serial</string>
     <string name="not_enouf_qty">"Not Enouf Qty From "</string>
+    <string name="explain_offer_cakeshop_bonus">On: (bonus * 1)   Of: (qty/bonusLimit ) * bonus</string>
+    <string name="qasion_explain_discount">On:(qty*discount)</string>
+    <string name="talaat_offer_discount">On:(qty/discountLimit)* discount</string>
+    <string name="progress_getPlan">Get  New Plan</string>
+    <string name="no_plan">"No Plan Available "</string>
+    <string name="greatZero">Qty Great Zero</string>
+    <string name="voucherNo_origin">Voucher No Origin</string>
+    <string name="serialcode_type">Type Serial code ... </string>
 
 </resources>
