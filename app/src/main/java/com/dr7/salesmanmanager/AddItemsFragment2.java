@@ -971,6 +971,8 @@ try {
                     {
                         filteredList.add(jsonItemsList.get(k));
                         break;
+                    }else {
+                        filteredList.clear();
                     }
                 }else {
                     filteredList.add(jsonItemsList.get(k));
@@ -990,6 +992,7 @@ try {
                                 filteredList.add(jsonItemsList.get(k));
                                 break;
                             }
+                            else  filteredList.clear();
                         }else {
                             filteredList.add(jsonItemsList.get(k));
                             break;

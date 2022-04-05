@@ -566,14 +566,14 @@
     <string name="allCustomers">جميع العملاء</string>
     <string name="allCategories">جميع الفئات</string>
 
-    <string name="TYPEPOFPLAN1">الترتيب حسب   </string>
+    <string name="TYPEPOFPLAN1">ترتيب يدوي   </string>
     <string name="TYPEPOFPLAN2">الترتيب حسب موقع العميل  </string>
     <string name="importplan"> قم باستيراد الخطة اولا</string>
-    <string name="showlocation">عرض الخطة على الخريطة</string>
+    <string name="showlocation"><u>عرض الخطة على الخريطة</u></string>
     <string name="duplicate_name">اسم مكرر</string>
     <string name="allVoucher">كل الفواتير</string>
-    <string name="SalsManPlan">SalsManPlan</string>
-    <string name="posActive">POS Active</string>
+    <string name="SalsManPlan">خطة المندوب </string>
+    <string name="posActive">POS تفعيل</string>
     <string name="scanSerial">اضافة سيريال</string>
     <string name="not_enouf_qty">"لا يوجد كمية كافية من المادة "</string>
     <string name="explain_offer_cakeshop_bonus">تشغيل : (كمية العرض * 1)   إطفاء : (كمية المادة / حد الكميات للعرض)* كمية العرض </string>
@@ -583,6 +583,8 @@
     تشغيل : (كمية المادة/  حد الكميات للعرض  )* الخصم على المادة
     </string>
     <string name="progress_getPlan">Get  New Plan</string>
-    <string name="no_plan">"No Plan Available "</string>
-    <string name="greatZero">Great Zero</string>
+    <string name="no_plan">لا يوجد خطة </string>
+    <string name="greatZero">أكبر من الصفر</string>
+    <string name="voucherNo_origin">رقم الفاتورة الأصل</string>
+    <string name="serialcode_type">البحث عن سيريال</string>
 </resources>

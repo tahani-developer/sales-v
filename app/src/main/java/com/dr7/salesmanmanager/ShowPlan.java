@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,9 @@ import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class ShowPlan extends AppCompatActivity {
 public static RecyclerView planRec;
-LinearLayout linearPlan;
+LinearLayout linearPlan, showlocation_lin;
 TextView salManName,date,plantype,showlocation;
+RadioButton TYPEPOFPLAN1,TYPEPOFPLAN2;
     public static   PolylineOptions rectLine;
     public static SalesManPlanAdapter planAdapter;
     public static  ArrayList<LatLng>  directionPoint =new ArrayList<>();;
@@ -64,9 +66,11 @@ TextView salManName,date,plantype,showlocation;
         showlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                directionPoint.clear();
+//          for(int i=0; i<MainActivity.DB_salesManPlanList.size();i++)
+//                directionPoint.add(new LatLng( MainActivity.DB_salesManPlanList.get(i).getLatitud(),MainActivity.DB_salesManPlanList.get(i).getLongtude()));
 
-
-              directionPoint.add(new LatLng(31.974571023429526, 35.913833717317296));
+          directionPoint.add(new LatLng(31.974571023429526, 35.913833717317296));
                 directionPoint.add(new LatLng(31.98185160760809, 35.89726839457524));
                 directionPoint.add(new LatLng(31.986146881335287, 35.87924395014088 ));
 
@@ -96,7 +100,10 @@ TextView salManName,date,plantype,showlocation;
 
     }
     public void  init() {
-        showlocation = findViewById(R.id.showlocation );
+        showlocation_lin = findViewById(R.id.showlocation_lin );
+                showlocation = findViewById(R.id.showlocation );
+        TYPEPOFPLAN1 = findViewById(R.id.TYPEPOFPLAN1 );
+                TYPEPOFPLAN2 = findViewById(R.id.TYPEPOFPLAN2 );
         planRec = findViewById(R.id.planRec);
         linearPlan=findViewById(R.id.linearPlan);
         salManName = findViewById(R.id.sales_man_name1);
@@ -106,9 +113,18 @@ TextView salManName,date,plantype,showlocation;
             salManName.setText(MainActivity.DB_salesManPlanList.get(0).getSaleManNumber()+"");
             date.setText(MainActivity.DB_salesManPlanList.get(0).getDate());
             if(MainActivity.DB_salesManPlanList.get(0).getTypeOrder()==0)
+            {
                 plantype.setText(getResources().getString(R.string.TYPEPOFPLAN1));
-            else
+                TYPEPOFPLAN1.setChecked(true);
+                TYPEPOFPLAN2.setChecked(false);
+                showlocation_lin.setVisibility(View.GONE);
+            }
+            else {
                 plantype.setText(getResources().getString(R.string.TYPEPOFPLAN2));
+                TYPEPOFPLAN1.setChecked(false);
+                TYPEPOFPLAN2.setChecked(true);
+                showlocation_lin.setVisibility(View.VISIBLE);
+            }
         }else
         {
             new SweetAlertDialog(ShowPlan.this, SweetAlertDialog.WARNING_TYPE)

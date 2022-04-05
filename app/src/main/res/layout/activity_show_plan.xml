@@ -75,8 +75,9 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight=".8"
         android:padding="3dp"
+
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
@@ -88,11 +89,13 @@
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:text="@string/plantype"
+
             android:textColor="@color/text_view_color"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/plantype"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:padding="3dp"
@@ -103,11 +106,44 @@
             android:textColor="@color/done_button"
             android:textSize="14sp"
             />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+
+            android:layout_height="match_parent">
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/TYPEPOFPLAN1"
+                android:layout_weight="1"
+                android:outlineAmbientShadowColor="@color/main_blue_stroke_color"
+
+                android:button="@drawable/radiobuttonstyle"
+                android:enabled="false"
+                android:textColor="@color/colorBlack"
+                android:text="@string/TYPEPOFPLAN1"
+                />
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/TYPEPOFPLAN2"
+                android:layout_weight="1"
+                android:button="@drawable/radiobuttonstyle"
+                android:outlineAmbientShadowColor="@color/main_blue_stroke_color"
+
+                android:enabled="false"
+                android:textColor="@color/colorBlack"
+                android:text="@string/TYPEPOFPLAN2"
+                />
+
+        </RadioGroup>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight=".9"
         android:padding="3dp"
+        android:id="@+id/showlocation_lin"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
@@ -122,6 +158,7 @@
             android:text="@string/showlocation"
             android:textStyle="bold"
             android:textColor="@color/red_background"
+
             android:textSize="20sp"/>
 
         <TextView
@@ -153,7 +190,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:gravity="center"
                             android:padding="5dp"
                             android:text="@string/order"
@@ -174,7 +211,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="2.5"
                             android:gravity="center"
                             android:padding="1dp"
                             android:text="@string/customers_locations"
@@ -187,7 +224,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

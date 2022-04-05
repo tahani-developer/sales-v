@@ -5022,9 +5022,6 @@ public class SalesInvoice extends Fragment {
                 limit_offer = 0;
             }
             for (int i = 0; i < items.size(); i++) {
-
-                discount_oofers_total_cash = 0;
-                discount_oofers_total_credit = 0;
                 disc_items_total = 0;
                 disc_items_value = 0;
 
@@ -5079,7 +5076,8 @@ public class SalesInvoice extends Fragment {
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
+                                if (allItemQtyWithDisc>=list_discount_offers.get(j).getQTY()  ) {
+                                    discount_oofers_total_cash=0;
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
 
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
@@ -5087,7 +5085,8 @@ public class SalesInvoice extends Fragment {
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
+                                if ( allItemQtyWithDisc>=  list_discount_offers.get(j).getQTY() ) {
+                                    discount_oofers_total_credit=0;
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
@@ -5169,8 +5168,7 @@ public class SalesInvoice extends Fragment {
             }
 
             for (int i = 0; i < items.size(); i++) {
-                discount_oofers_total_cash = 0;
-                discount_oofers_total_credit = 0;
+
                 disc_items_total = 0;
                 disc_items_value = 0;
 
@@ -5237,18 +5235,21 @@ public class SalesInvoice extends Fragment {
 
 
                     }
-                    for (int j = 0; j < list_discount_offers.size(); j++) {
+                    for (int j = 0; j < list_discount_offers.size(); j++) {// here to test   offer by cash  *****************
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
+                                if ( allItemQtyWithDisc>=  list_discount_offers.get(j).getQTY()  ) {
+                                    discount_oofers_total_cash = 0;
+
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if (list_discount_offers.get(j).getQTY()>=allItemQtyWithDisc  ) {
+                                if (allItemQtyWithDisc >=list_discount_offers.get(j).getQTY() ) {
+                                    discount_oofers_total_credit = 0;
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
                             }
@@ -5409,6 +5410,7 @@ public class SalesInvoice extends Fragment {
             if (payMethod == 1) {
                 if (list_discount_offers.get(j).getPaymentType() == 1) {
                     if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                        discount_oofers_total_cash = 0;
                         discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                     }
@@ -5416,11 +5418,13 @@ public class SalesInvoice extends Fragment {
             } else {
                 if (list_discount_offers.get(j).getPaymentType() == 0) {
                     if (totalQty >= list_discount_offers.get(j).getQTY()) {
+                        discount_oofers_total_credit=0;
                         discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                     }
                 }
             }
         }
+        Log.e("disc_items_value","else22=totalQty"+discount_oofers_total_cash+"\t"+discount_oofers_total_credit);
         if(payMethod==1)
         {
             return discount_oofers_total_cash;

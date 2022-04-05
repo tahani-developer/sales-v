@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.dr7.salesmanmanager.Modles.GMapV2Direction;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -23,7 +27,8 @@ import java.util.ArrayList;
 public class SalesManPlanLocations extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    private LatLngBounds.Builder builder;
+    LatLngBounds bounds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +37,17 @@ public class SalesManPlanLocations extends FragmentActivity implements OnMapRead
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+try {
+    builder = new LatLngBounds.Builder();
+    for(int i=0;i<ShowPlan.directionPoint.size();i++ )
+        builder.include(ShowPlan.directionPoint.get(i));
+
+
+}catch (Exception exception){
+
+}
+
+
     }
 
     /**
@@ -46,16 +62,34 @@ public class SalesManPlanLocations extends FragmentActivity implements OnMapRead
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 30));
+            }
+        });
         LatLng sydney;
         // Add a marker in Sydney and move the camera
         for(int i=0;i<ShowPlan.directionPoint.size();i++ ) {
             sydney = ShowPlan.directionPoint.get(i);
             mMap.addMarker(new MarkerOptions().position(sydney)
                     .icon(BitmapDescriptorFactory.fromBitmap(iconSize()))
-                    .title("Marker in Sydney"));
+                    .title(getSalesmanName(i)));
 
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
         }
+
+
+        try {
+            bounds = builder.build();
+             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+            mMap.animateCamera(cu);
+        }
+        catch (Exception exception){
+            }
+
+
+     //   mMap.moveCamera(CameraUpdateFactory.newLatLng(ShowPlan.directionPoint.get(0)));
         GMapV2Direction md = new GMapV2Direction();
         //   mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync();
      //   SupportMapFragment mapFragment = (SupportMapFragment)this.getSupportFragmentManager().findFragmentById(R.id.map);
@@ -67,6 +101,13 @@ public class SalesManPlanLocations extends FragmentActivity implements OnMapRead
         Polyline polylin;
         if(ShowPlan.directionPoint.size()!=0)
 polylin = mMap.addPolyline(ShowPlan.rectLine);
+
+
+
+
+
+
+
 
     }
 
@@ -80,5 +121,13 @@ polylin = mMap.addPolyline(ShowPlan.rectLine);
         return smallMarker;
     }
 
+String getSalesmanName(int i){
+try {
+    return MainActivity.DB_salesManPlanList.get(i).getCustName();
+}
+    catch (Exception exception){
+        return " ";
+    }
 
+}
 }
