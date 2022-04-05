@@ -566,10 +566,10 @@
     <string name="allCustomers">جميع العملاء</string>
     <string name="allCategories">جميع الفئات</string>
 
-    <string name="TYPEPOFPLAN1">الترتيب حسب   </string>
+    <string name="TYPEPOFPLAN1">ترتيب يدوي   </string>
     <string name="TYPEPOFPLAN2">الترتيب حسب موقع العميل  </string>
     <string name="importplan"> قم باستيراد الخطة اولا</string>
-    <string name="showlocation">عرض الخطة على الخريطة</string>
+    <string name="showlocation"><u>عرض الخطة على الخريطة</u></string>
     <string name="duplicate_name">اسم مكرر</string>
     <string name="allVoucher">كل الفواتير</string>
     <string name="SalsManPlan">SalsManPlan</string>

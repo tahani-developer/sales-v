@@ -513,7 +513,8 @@
     <string name="ReturnAll">Return All Items In Vocher</string>
     <string name="Noloction">No Location For This Customer</string>
     <string name="showplan">Show Plan </string>
-    <string name="TYPEPOFPLAN1">Order By  </string>
+    <string name="TYPEPOFPLAN1">Ordered manually</string>
+
     <string name="TYPEPOFPLAN2">Order By Customers Location  </string>
     <string name="GetPlan"> Get Plan</string>
     <string name="altayaa_shape">Altayaa Shape</string>
@@ -522,7 +523,7 @@
     <string name="title_activity_maps2">MapsActivity2</string>
     <string name="title_activity_sales_man_plan_locations">SalesManPlanLocations</string>
     <string name="title_activity_maps3">MapsActivity3</string>
-    <string name="showlocation">Show Plan In Map</string>
+    <string name="showlocation"><u>Show Plan In Map</u></string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
