@@ -23,8 +23,63 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_weight="5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:text="@string/from_date"
+                android:layout_weight="1.1"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/from_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="date"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/add_button"
+                android:drawableStart="@drawable/ic_date_range_black_24dp"
+                android:textSize="12sp"
+                android:drawableLeft="@drawable/ic_date_range_black_24dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:text="@string/to_date"
+                android:layout_weight="1.1"
+                android:gravity="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/to_date"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="date"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/add_button"
+                android:drawableStart="@drawable/ic_date_range_black_24dp"
+                android:textSize="12sp"
+                android:drawableLeft="@drawable/ic_date_range_black_24dp" />
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_weight="1.1"
                 android:layout_width="match_parent"
                 android:text="@string/itemkind"
                 android:layout_height="match_parent"
@@ -44,14 +99,18 @@
 
                 />
 
-            <TextView
-                android:layout_weight="6"
+            <Button
+                android:id="@+id/preview"
                 android:layout_width="match_parent"
-                android:visibility="invisible"
-                android:layout_height="match_parent"
-                android:inputType="date"
+                android:layout_height="match_parent"  android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="3dp"
+                android:textSize="14sp"
+                android:layout_weight="1"
+                android:background="@drawable/done_button"
+                android:text="@string/preview"
+                android:textColor="@color/white" />
 
-                android:textSize="14sp" />
 
         </LinearLayout>
         <LinearLayout
@@ -72,74 +131,7 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/from_date"
-                    android:layout_weight="1.1"
-                    android:gravity="center"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/from_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="date"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:textColor="@color/add_button"
-                    android:drawableStart="@drawable/ic_date_range_black_24dp"
-                    android:textSize="12sp"
-                    android:drawableLeft="@drawable/ic_date_range_black_24dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/to_date"
-                    android:layout_weight="1.1"
-                    android:gravity="center"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/to_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="date"
-                    android:layout_weight="1"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="@color/add_button"
-                    android:drawableStart="@drawable/ic_date_range_black_24dp"
-                    android:textSize="12sp"
-                    android:drawableLeft="@drawable/ic_date_range_black_24dp" />
-
-
-
-                <Button
-                    android:id="@+id/preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"  android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="3dp"
-                    android:textSize="14sp"
-                    android:layout_weight="1"
-                    android:background="@drawable/done_button"
-                    android:text="@string/preview"
-                    android:textColor="@color/white" />
-
-
-            </LinearLayout>
             <LinearLayout
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

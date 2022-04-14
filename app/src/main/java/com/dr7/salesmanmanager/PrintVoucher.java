@@ -265,7 +265,7 @@ public class PrintVoucher extends AppCompatActivity {
                         if (filters(n)) {
 
                             final TableRow row = new TableRow(PrintVoucher.this);
-                           row.setPadding(5, 5, 10, 5);
+                           row.setPadding(2, 2, 2, 2);
                           //  row.setPadding(10, 10, 10, 10);
 
                             if (n % 2 == 0)
@@ -306,7 +306,7 @@ public class PrintVoucher extends AppCompatActivity {
                                     textView.setTextColor(ContextCompat.getColor(PrintVoucher.this, R.color.colorPrimary));
                                     textView.setGravity(Gravity.CENTER);
                                     TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                  lp2.height=70;
+                                //  lp2.height=70;
                                     textView.setLayoutParams(lp2);
 
 

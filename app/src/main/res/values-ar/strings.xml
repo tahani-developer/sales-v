@@ -147,6 +147,8 @@
     <string name="customer_log_report">تقرير دخول العميل</string>
     <string name="transactions_report">تقرير العمليات</string>
     <string name="vouchers_report">تقرير الفواتير</string>
+    <string name="OrgPricevouchers_report">تقرير الفواتير بسعر البيع الأصلي</string>
+
     <string name="items_report">تقرير المواد</string>
     <string name="stock_request_vouchers_report">تقرير فواتير طلب المخزون</string>
     <string name="stock_request_items_report">تقرير مواد طلب المخزون</string>
@@ -224,6 +226,8 @@
     <string name="total_sold_qty">مجموع الكمية المباعة</string>
     <string name="total_sold_qty2">الكمية المباعة</string>
     <string name="total_bonus_qty">المجاني</string>
+    <string name="SALEprice">سعر الحبة المباع</string>
+    <string name="originalprice">السعر الأصلي</string>
     <string name="total_bonus_qty2">الكمية المجانية</string>
     <string name="total_sales_noTax"> المبيعات(بدون ضريبة)</string>
     <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
@@ -231,7 +235,8 @@
     <string name="print">طباعة</string>
     <string name="show">اظهار</string>
     <string name="all">الكل</string>
-
+    <string name="ReturnVocher">فاتورة مرتجع</string>
+    <string name="saleVocher">فاتورة بيع</string>
     <string name="trade_mark">Trade Mark</string>
     <string name="category">الفئة</string>
     <string name="barcode">الباركود</string>
