@@ -191,17 +191,22 @@
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="0dp"
                     android:theme="@style/Theme.MaterialComponents.Light"
+                    app:boxStrokeColor="@color/colorblue_dark"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/colorblue_dark"
+
                     >
 
                     <AutoCompleteTextView
                         android:id="@+id/customerEdt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:inputType="textAutoComplete"
                         android:textAlignment="center"
                         android:completionHint="@string/CUS_NAME"
                         android:textColor="#000"
-                        android:padding="1dp"/>
+                        android:padding="1dp"
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
