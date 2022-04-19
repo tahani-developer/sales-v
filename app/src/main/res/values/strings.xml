@@ -151,6 +151,8 @@
     <string name="customer_log_report">Customer Log Report</string>
     <string name="transactions_report">Transactions Report</string>
     <string name="vouchers_report">Vouchers Report</string>
+    <string name="OrgPricevouchers_report">Original Price Vouchers Report</string>
+
     <string name="items_report">Items Report</string>
     <string name="stock_request_vouchers_report">Stock Request Voucher Report</string>
     <string name="stock_request_items_report">Stock Request Items Report</string>
@@ -229,6 +231,8 @@
     <string name="total_sold_qty">Total Sold Qty</string>
     <string name="total_sold_qty2">Sold Qty</string>
     <string name="total_bonus_qty">Total Bonus Qty</string>
+    <string name="SALEprice">unit Sale price</string>
+    <string name="originalprice">Original price</string>
     <string name="total_bonus_qty2">Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
     <string name="total_sales_noTax2">Sales (No Tax)</string>
@@ -236,7 +240,8 @@
     <string name="print">Print</string>
     <string name="show">Show</string>
     <string name="all">All</string>
-
+    <string name="ReturnVocher">Return Vocher</string>
+    <string name="saleVocher">Sale Vocher</string>
     <string name="trade_mark">Trade Mark</string>
     <string name="category">Category</string>
     <string name="barcode">Barcode</string>
@@ -513,7 +518,8 @@
     <string name="ReturnAll">Return All Items In Vocher</string>
     <string name="Noloction">No Location For This Customer</string>
     <string name="showplan">Show Plan </string>
-    <string name="TYPEPOFPLAN1">Order By  </string>
+    <string name="TYPEPOFPLAN1">Ordered manually</string>
+
     <string name="TYPEPOFPLAN2">Order By Customers Location  </string>
     <string name="GetPlan"> Get Plan</string>
     <string name="altayaa_shape">Altayaa Shape</string>
@@ -522,8 +528,28 @@
     <string name="title_activity_maps2">MapsActivity2</string>
     <string name="title_activity_sales_man_plan_locations">SalesManPlanLocations</string>
     <string name="title_activity_maps3">MapsActivity3</string>
-    <string name="showlocation">Show Plan In Map</string>
+    <string name="showlocation"><u>Show Plan In Map</u></string>
 
+    <string name="invalidDate">Invalid Date !</string>
+    <string name="invalidDate_msg">Your phone date is inaccurate!\n Adjust your date settings please.</string>
+    <string name="allCustomers">All Customers</string>
+    <string name="allCategories">All Categories</string>
+
+    ////B
+    <string name="duplicate_name">Duplicate Name</string>
+    <string name="allVoucher">All Voucher</string>
+    <string name="SalsManPlan">SalsManPlan</string>
+    <string name="posActive">POS Active</string>
+    <string name="scanSerial">Add Serial</string>
+    <string name="not_enouf_qty">"Not Enouf Qty From "</string>
+    <string name="explain_offer_cakeshop_bonus">On: (bonus * 1)   Of: (qty/bonusLimit ) * bonus</string>
+    <string name="qasion_explain_discount">On:(qty*discount)</string>
+    <string name="talaat_offer_discount">On:(qty/discountLimit)* discount</string>
+    <string name="progress_getPlan">Get  New Plan</string>
+    <string name="no_plan">"No Plan Available "</string>
+    <string name="greatZero">Qty Great Zero</string>
+    <string name="voucherNo_origin">Voucher No Origin</string>
+    <string name="serialcode_type">Type Serial code ... </string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
@@ -565,25 +591,5 @@
         <item>Al-Rajhi Bank</item>
 
     </string-array>
-
-    ////B
-    <string name="invalidDate">Invalid Date !</string>
-    <string name="invalidDate_msg">Your phone date is inaccurate!\n Adjust your date settings please.</string>
-    <string name="allCustomers">All Customers</string>
-    <string name="allCategories">All Categories</string>
-    <string name="duplicate_name">Duplicate Name</string>
-    <string name="allVoucher">All Voucher</string>
-    <string name="SalsManPlan">SalsManPlan</string>
-    <string name="posActive">POS Active</string>
-    <string name="scanSerial">Add Serial</string>
-    <string name="not_enouf_qty">"Not Enouf Qty From "</string>
-    <string name="explain_offer_cakeshop_bonus">On: (bonus * 1)   Of: (qty/bonusLimit ) * bonus</string>
-    <string name="qasion_explain_discount">On:(qty*discount)</string>
-    <string name="talaat_offer_discount">On:(qty/discountLimit)* discount</string>
-    <string name="progress_getPlan">Get  New Plan</string>
-    <string name="no_plan">"No Plan Available "</string>
-    <string name="greatZero">Qty Great Zero</string>
-    <string name="voucherNo_origin">Voucher No Origin</string>
-    <string name="serialcode_type">Type Serial code ... </string>
 
 </resources>

@@ -30,6 +30,7 @@ android:orientation="vertical"
         android:textSize="18sp"
         android:layout_weight="1"
         android:padding="3dp"
+        android:gravity="center"
         android:textColor="@color/colorblue_dark"
         android:layout_height="match_parent">
 
@@ -39,8 +40,9 @@ android:orientation="vertical"
         android:layout_width="match_parent"
         android:textSize="18sp"
         android:background="@drawable/ic_baseline_add_location_24"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:padding="3dp"
+
         android:textColor="@color/colorblue_dark"
         android:layout_height="30dp">
 

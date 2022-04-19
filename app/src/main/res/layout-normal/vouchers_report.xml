@@ -11,38 +11,52 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:orientation="vertical"
             android:padding="3dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:orientation="vertical"
+            android:padding="3dp">
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:padding="3dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:gravity="center"
                 android:text="@string/vouchers_report"
                 android:textColor="@color/colorblue_dark"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/row2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="1"
                 android:orientation="horizontal"
                 android:padding="3dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center"
                     android:layout_weight="1.1"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:text="@string/from_date"
                     android:textColor="@color/text_view_color"
                     android:textSize="14sp" />
@@ -64,12 +78,12 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_weight="1.1"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:text="@string/to_date"
                     android:textColor="@color/text_view_color"
                     android:textSize="14sp" />
@@ -97,7 +111,7 @@
                 android:id="@+id/row3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5.9"
+                android:layout_weight=".9"
                 android:orientation="horizontal">
 
                 <Spinner
@@ -121,7 +135,7 @@
                 android:id="@+id/row20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="1"
 
                 android:orientation="horizontal"
                 android:padding="3dp">
@@ -152,18 +166,18 @@
                     android:text="@string/preview"
                     android:textColor="@color/layer5" />
             </LinearLayout>
-
+        </LinearLayout>
             <HorizontalScrollView
                 android:id="@+id/HorizontalScrollView01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="2.4"
                 android:padding="4dp">
 
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="10dp"
+                    android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:background="@color/layer6"
                     android:padding="2dp">
@@ -215,6 +229,15 @@
                                 android:gravity="center"
                                 android:padding="5dp"
                                 android:text="@string/pay_method"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:padding="5dp"
+                                android:text="@string/voucher_type"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
 

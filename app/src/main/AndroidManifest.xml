@@ -7,18 +7,17 @@
 
     <application
         android:allowBackup="true"
+        android:configChanges="orientation|screenSize"
         android:hardwareAccelerated="true"
-        android:requestLegacyExternalStorage="true"
         android:icon="@drawable/logo_vansales"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:configChanges="orientation|screenSize"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/logo_vansales"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -27,7 +26,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <activity
             android:name=".SalesManPlanLocations"
             android:exported="false"
@@ -121,8 +119,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Reports.CustomerLogReport"
-            android:label="@string/title_activity_main"
             android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Reports.VouchersReport"
@@ -197,6 +195,7 @@
         <!-- android:screenOrientation="landscape" -->
         <!-- android:theme="@style/AppTheme.NoActionBar" /> -->
         <activity android:name=".noThingNotifi" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -234,14 +233,12 @@
         android:resizeable="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the "MyLocation" functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -258,7 +255,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />

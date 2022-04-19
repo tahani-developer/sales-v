@@ -4819,6 +4819,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setUnit(cursor.getString(4));
                 item.setQty(Float.parseFloat(cursor.getString(5)));
                 item.setPrice(Float.parseFloat(cursor.getString(6)));
+              Log.e("setPrice",""+cursor.getString(5));
                 item.setBonus(Float.parseFloat(cursor.getString(7)));
                 item.setDisc(Float.parseFloat(cursor.getString(8)));
                 item.setDiscPerc(cursor.getString(9));
@@ -8216,7 +8217,32 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return  itemUnit;
     }
+    public String getOriginalItemPrice(String itemNo) {
+        Log.e("getItemName","getItemName="+itemNo);
 
+        String selectQuery = " select F_D from Items_Master  where ItemNo='"+itemNo.trim()+"' ";
+        String itemPrice="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToNext()) {
+                if (cursor.getString(0) == null) {
+                    return "";
+                } else {
+                    itemPrice = (cursor.getString(0));
+                    Log.e("getItemPrice","getItemPrice="+itemPrice);
+                    return itemPrice;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  itemPrice;
+    }
     public ArrayList<ItemsReturn >getItemsReturn() {
         ArrayList<ItemsReturn > allItemReturn=new ArrayList<>();
 

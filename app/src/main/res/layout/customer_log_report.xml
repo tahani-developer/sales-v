@@ -10,7 +10,7 @@
         android:orientation="vertical"
 
         android:layout_height="match_parent"
-        android:layout_weight="4"
+        android:layout_weight="3.9"
         android:layout_margin="5dp"
         android:layout_width="match_parent"
 
@@ -51,12 +51,12 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:layout_margin="5dp"
+        android:layout_margin="2dp"
 
         android:layout_weight="2"
         android:text="@string/customer_log_report"
         android:textColor="@color/colorblue_dark3"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
  />
     </LinearLayout>

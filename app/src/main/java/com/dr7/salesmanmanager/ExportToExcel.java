@@ -476,7 +476,7 @@ public class ExportToExcel {
                 if (!Locale.getDefault().getLanguage().equals("ar")) {
 
                     sheet.addCell(new Label(0, 0, context.getString(R.string.cust_name), format)); // column and row
-                    sheet.addCell(new Label(2, 0, context.getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(2, 0, context.getString(R.string.No), format));
                     sheet.addCell(new Label(4, 0, context.getResources().getString(R.string.voucher_date), format));
                     sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.pay_method), format));
                     sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.app_disc), format));
@@ -505,7 +505,7 @@ public class ExportToExcel {
 
                     for (int i = 0; i < list.size(); i++) {
                         sheet.addCell(new Label(0, i + 2, list.get(i).getCustName() + "", format));
-                        sheet.addCell(new Label(2, i + 2, list.get(i).getCustNumber(), format));
+                        sheet.addCell(new Label(2, i + 2, list.get(i).getVoucherNumber()+"", format));
                         sheet.addCell(new Label(4, i + 2, list.get(i).getVoucherDate() + "", format));
                         sheet.addCell(new Label(6, i + 2, list.get(i).getPayMethod() + "", format));
                         sheet.addCell(new Label(8, i + 2, list.get(i).getVoucherDiscount() + "", format));
@@ -528,7 +528,7 @@ public class ExportToExcel {
                 } else {
 
                     sheet.addCell(new Label(14, 0, context.getString(R.string.cust_name), format)); // column and row
-                    sheet.addCell(new Label(12, 0, context.getString(R.string.customer_number), format));
+                    sheet.addCell(new Label(12, 0, context.getString(R.string.No), format));
                     sheet.addCell(new Label(10, 0, context.getResources().getString(R.string.voucher_date), format));
                     sheet.addCell(new Label(8, 0, context.getResources().getString(R.string.pay_method), format));
                     sheet.addCell(new Label(6, 0, context.getResources().getString(R.string.app_disc), format));
@@ -557,7 +557,7 @@ public class ExportToExcel {
 
                     for (int i = 0; i < list.size(); i++) {
                         sheet.addCell(new Label(14, i + 2, list.get(i).getCustName() + "", format));
-                        sheet.addCell(new Label(12, i + 2, list.get(i).getCustNumber(), format));
+                        sheet.addCell(new Label(12, i + 2, list.get(i).getVoucherNumber()+"", format));
                         sheet.addCell(new Label(10, i + 2, list.get(i).getVoucherDate() + "", format));
                         sheet.addCell(new Label(8, i + 2, list.get(i).getPayMethod() + "", format));
                         sheet.addCell(new Label(6, i + 2, list.get(i).getVoucherDiscount() + "", format));

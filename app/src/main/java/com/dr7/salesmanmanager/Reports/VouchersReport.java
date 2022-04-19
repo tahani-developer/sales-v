@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
@@ -170,9 +171,14 @@ public class VouchersReport extends AppCompatActivity {
                     subTotal = 0;
                     tax = 0;
                     netSales = 0;
-                    //type=voucherType;
-                    for (int n = 0; n < vouchers.size(); n++) {
+                   type=voucherType;
+                   String vochtype="";
 
+                    for (int n = 0; n < vouchers.size(); n++) {
+                        if(vouchers.get(n).getVoucherType()==504) vochtype=getString(R.string.saleVocher);
+                        else vochtype=getString(R.string.ReturnVocher);
+
+                        type= vouchers.get(n).getVoucherType();
                         if (filters(n)) {
                             filteredVouchers.add(vouchers.get(n));
 
@@ -184,17 +190,18 @@ public class VouchersReport extends AppCompatActivity {
                             else
                                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
 
-                            for (int i = 0; i < 10; i++) {
+                            for (int i = 0; i < 11; i++) {
                                 String[] record = {vouchers.get(n).getCustName() + "",
                                         vouchers.get(n).getVoucherNumber() + "",
                                         vouchers.get(n).getVoucherDate() + "",
                                         vouchers.get(n).getPayMethod() + "",
+                                        vochtype   + "",
                                         vouchers.get(n).getRemark() + "",
                                         vouchers.get(n).getVoucherDiscount() + "",
                                         vouchers.get(n).getSubTotal() + "",
                                         vouchers.get(n).getTax() + "",
                                         vouchers.get(n).getNetSales() + "",
-                                        vouchers.get(n).getVoucherType() + ""
+                                        vouchers.get(n).getVoucherType() + "",
 
                                 };
 
@@ -212,7 +219,7 @@ public class VouchersReport extends AppCompatActivity {
                                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                                 row.setLayoutParams(lp);
 
-                                if (i != 4 && i != 9) {
+                                if (i != 5) {
                                     TextView textView = new TextView(VouchersReport.this);
                                     textView.setText(record[i]);
                                     textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
@@ -224,16 +231,7 @@ public class VouchersReport extends AppCompatActivity {
                                     row.addView(textView);
 
                                 } else {
-                                    if (i == 9) {
-                                        TextView textView = new TextView(VouchersReport.this);
-                                        textView.setText(record[i]);
-                                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
-                                        textView.setGravity(Gravity.CENTER);
-                                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                        textView.setLayoutParams(lp2);
-                                        textView.setVisibility(View.INVISIBLE);
-                                        row.addView(textView);
-                                    } else {
+
 
 
                                         TextView textView = new TextView(VouchersReport.this);
@@ -249,17 +247,17 @@ public class VouchersReport extends AppCompatActivity {
                                             @Override
                                             public void onClick(View v) {
                                                 TextView textView = (TextView) row.getChildAt(1);
-                                                TextView textViewVoucherNo = (TextView) row.getChildAt(9);
-                                                int type = Integer.parseInt(textViewVoucherNo.getText().toString());
+                                                TextView textViewVoucherNo = (TextView) row.getChildAt(10);
+                                           int type = Integer.parseInt(textViewVoucherNo.getText().toString());
                                                 Log.e("type", "" + type);
                                                 voucherInfoDialog(Integer.parseInt(textView.getText().toString()), type);
                                             }
                                         });
                                         row.addView(textView);
-                                    }
+
                                 }
                             }
-
+                            Log.e("vochtype", "" + vochtype);
                             subTotal = subTotal + vouchers.get(n).getSubTotal();
                             tax = tax + vouchers.get(n).getTax();
                             netSales = netSales + vouchers.get(n).getNetSales();
@@ -412,142 +410,312 @@ public class VouchersReport extends AppCompatActivity {
         pdf.exportListToPdf(filteredVouchers, "VouchersReport", from_date.getText().toString(), 3);
     }
 
-    public void voucherInfoDialog(int voucherNumber, int voucherType) {
+//    public void voucherInfoDialog(int voucherNumber, int voucherType) {
+//
+//        Log.e("voucherInfoDialog", "" + voucherNumber + "\t" + voucherType);
+//        final Dialog dialog = new Dialog(VouchersReport.this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        //       new LocaleAppUtils().changeLayot(PrintVoucher.this);
+//        dialog.setCancelable(true);
+//        dialog.setContentView(R.layout.voucher_info_dialog2);
+//
+//
+//        LinearLayout Main_linear = dialog.findViewById(R.id.Main_linear);
+//        try {
+//            if (languagelocalApp.equals("ar")) {
+//
+//                dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+//
+//            } else {
+//                if (languagelocalApp.equals("en")) {
+//                    dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+//
+//                }
+//
+//            }
+//        } catch (Exception e) {
+//            dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+//
+//        }
+//        Window window = dialog.getWindow();
+//        EditText VochNum, PayMth, CusName, VochDate;
+//        TextView subTotal, tax, netSales;
+//        subTotal = dialog.findViewById(R.id.subTotalTextView);
+//        tax = dialog.findViewById(R.id.taxTextView);
+//        netSales = dialog.findViewById(R.id.netSalesTextView1);
+//        VochNum = dialog.findViewById(R.id.vochernum);
+//        PayMth = dialog.findViewById(R.id.paymethod);
+//        CusName = dialog.findViewById(R.id.customername);
+//        VochDate = dialog.findViewById(R.id.vocherdate);
+//        dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                printLayout(obj);
+//            }
+//        });
+////        window.setLayout(800, 400);
+//
+//
+//        for (int k = 0; k < vouchers.size(); k++) {
+//            if (voucherNumber == vouchers.get(k).getVoucherNumber() &&
+//                    voucherType == vouchers.get(k).getVoucherType()) {
+//
+//                VocherToPrint = vouchers.get(k);
+//                Log.e("VocherToPrint", "" + VocherToPrint.getVoucherDate());
+//                VochNum.setText(vouchers.get(k).getVoucherNumber() + "");
+//                if (vouchers.get(k).getPayMethod() == 1)
+//                    PayMth.setText(getResources().getString(R.string.cash) + "");
+//                else if (vouchers.get(k).getPayMethod() == 0)
+//                    PayMth.setText(getResources().getString(R.string.credit) + "");
+//                CusName.setText(vouchers.get(k).getCustName());
+//                VochDate.setText(vouchers.get(k).getVoucherDate() + "");
+//                subTotal.setText(vouchers.get(k).getSubTotal() + "");
+//
+//                tax.setText(vouchers.get(k).getTax() + "");
+//                netSales.setText(vouchers.get(k).getNetSales() + "");
+//
+//            }
+//        }
+//
+//
+//        TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
+//
+//        for (int k = 0; k < items.size(); k++) {
+//
+//            if (voucherNumber == items.get(k).getVoucherNumber() && voucherType == items.get(k).getVoucherType()) {
+//
+//                itemsToPrint.add(items.get(k));
+//                TableRow row = new TableRow(VouchersReport.this);
+//                row.setPadding(5, 10, 5, 10);
+//
+//                if (k % 2 == 0)
+//                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
+//                else
+//                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
+//
+//                for (int i = 0; i < 7; i++) {
+//                    String[] record = {
+//                            items.get(k).getItemNo() + "",
+//                            items.get(k).getItemName() + "",
+//                            items.get(k).getQty() + "",
+//
+//                            items.get(k).getBonus() + "",
+//
+//                            items.get(k).getPrice() + "",
+//                          getOriginalPrice(items.get(k).getItemNo() ) + "",
+//                            ""};
+//                    Log.e( "gggggg1=",(items.get(k).getPrice()/items.get(k).getQty())+"" );
+//                    Log.e( "gggggg2=",items.get(k).getQty()+"" );
+//                    Log.e( "gggggg3=",items.get(k).getEnter_qty()+"" );
+//                    Log.e( "gggggg4=",items.get(k).getPrice()+"" );
+//                    double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
+//                    Log.e( "calTotalSales=",calTotalSales+"" );
+//                    record[4] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales));
+//
+//                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+//                    row.setLayoutParams(lp);
+//                    if (i == 1) {
+//                        TextView textView = new TextView(VouchersReport.this);
+//                        textView.setText(record[i]);
+//                        textView.setTextSize(12);
+//                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+//                        textView.setGravity(Gravity.CENTER);
+//                        Log.e( "record1=",record[i]+"" );
+//                        // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(1, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//                        lp2.width = 120;
+//                        textView.setLayoutParams(lp2);
+//                        row.addView(textView);
+//                    }
+//                    else if (i==4) {
+//                        TextView textView = new TextView(VouchersReport.this);
+//                        textView.setText(record[i]);
+//                        Log.e( "record4=",record[i]+"" );
+//                        textView.setTextSize(12);
+//                        textView.setTextColor(Color.RED);
+//                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+//                        textView.setGravity(Gravity.CENTER);
+//
+//                        // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(1, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//                        lp2.width = 90;
+//                        textView.setLayoutParams(lp2);
+//                        row.addView(textView);
+//                    }else
+//                    {
+//                            TextView textView = new TextView(VouchersReport.this);
+//                            textView.setText(record[i]);
+//                            Log.e( "record=",record[i]+"   "+i+"" );
+//                            textView.setTextSize(12);
+//                            textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+//                            textView.setGravity(Gravity.CENTER);
+//
+//                            // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(1, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//                            lp2.width = 90;
+//                            textView.setLayoutParams(lp2);
+//                            row.addView(textView);
+//
+//                    }
+//                }
+//
+//                TableItemInfo.addView(row);
+//            }
+//        }
+//        Button okButton = (Button) dialog.findViewById(R.id.button11);
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//
+//        dialog.show();
+//    }
+public void voucherInfoDialog(int voucherNumber, int voucherType) {
 
-        Log.e("voucherInfoDialog", "" + voucherNumber + "\t" + voucherType);
-        final Dialog dialog = new Dialog(VouchersReport.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //       new LocaleAppUtils().changeLayot(PrintVoucher.this);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.voucher_info_dialog2);
+    Log.e("voucherInfoDialog", "" + voucherNumber + "\t" + voucherType);
+    final Dialog dialog = new Dialog(VouchersReport.this);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    //       new LocaleAppUtils().changeLayot(PrintVoucher.this);
+    dialog.setCancelable(true);
+    dialog.setContentView(R.layout.voucher_info_dialog2);
 
 
-        LinearLayout Main_linear = dialog.findViewById(R.id.Main_linear);
-        try {
-            if (languagelocalApp.equals("ar")) {
+    LinearLayout Main_linear = dialog.findViewById(R.id.Main_linear);
+    try {
+        if (languagelocalApp.equals("ar")) {
 
-                dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-
-            } else {
-                if (languagelocalApp.equals("en")) {
-                    dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-
-                }
-
-            }
-        } catch (Exception e) {
             dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
 
-        }
-        Window window = dialog.getWindow();
-        EditText VochNum, PayMth, CusName, VochDate;
-        TextView subTotal, tax, netSales;
-        subTotal = dialog.findViewById(R.id.subTotalTextView);
-        tax = dialog.findViewById(R.id.taxTextView);
-        netSales = dialog.findViewById(R.id.netSalesTextView1);
-        VochNum = dialog.findViewById(R.id.vochernum);
-        PayMth = dialog.findViewById(R.id.paymethod);
-        CusName = dialog.findViewById(R.id.customername);
-        VochDate = dialog.findViewById(R.id.vocherdate);
-        dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                printLayout(obj);
+        } else {
+            if (languagelocalApp.equals("en")) {
+                dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
             }
-        });
+
+        }
+    } catch (Exception e) {
+        dialog.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+
+    }
+    Window window = dialog.getWindow();
+    EditText VochNum, PayMth, CusName, VochDate;
+    TextView subTotal, tax, netSales;
+    subTotal = dialog.findViewById(R.id.subTotalTextView);
+    tax = dialog.findViewById(R.id.taxTextView);
+    netSales = dialog.findViewById(R.id.netSalesTextView1);
+    VochNum = dialog.findViewById(R.id.vochernum);
+    PayMth = dialog.findViewById(R.id.paymethod);
+    CusName = dialog.findViewById(R.id.customername);
+    VochDate = dialog.findViewById(R.id.vocherdate);
+    dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            printLayout(obj);
+        }
+    });
 //        window.setLayout(800, 400);
 
 
-        for (int k = 0; k < vouchers.size(); k++) {
-            if (voucherNumber == vouchers.get(k).getVoucherNumber() &&
-                    voucherType == vouchers.get(k).getVoucherType()) {
+    for (int k = 0; k < vouchers.size(); k++) {
+        if (voucherNumber == vouchers.get(k).getVoucherNumber() &&
+                voucherType == vouchers.get(k).getVoucherType()) {
 
-                VocherToPrint = vouchers.get(k);
-                Log.e("VocherToPrint", "" + VocherToPrint.getVoucherDate());
-                VochNum.setText(vouchers.get(k).getVoucherNumber() + "");
-                if (vouchers.get(k).getPayMethod() == 1)
-                    PayMth.setText(getResources().getString(R.string.cash) + "");
-                else if (vouchers.get(k).getPayMethod() == 0)
-                    PayMth.setText(getResources().getString(R.string.credit) + "");
-                CusName.setText(vouchers.get(k).getCustName());
-                VochDate.setText(vouchers.get(k).getVoucherDate() + "");
-                subTotal.setText(vouchers.get(k).getSubTotal() + "");
+            VocherToPrint = vouchers.get(k);
+            Log.e("VocherToPrint", "" + VocherToPrint.getVoucherDate());
+            VochNum.setText(vouchers.get(k).getVoucherNumber() + "");
+            if (vouchers.get(k).getPayMethod() == 1)
+                PayMth.setText(getResources().getString(R.string.cash) + "");
+            else if (vouchers.get(k).getPayMethod() == 0)
+                PayMth.setText(getResources().getString(R.string.credit) + "");
+            CusName.setText(vouchers.get(k).getCustName());
+            VochDate.setText(vouchers.get(k).getVoucherDate() + "");
+            subTotal.setText(vouchers.get(k).getSubTotal() + "");
 
-                tax.setText(vouchers.get(k).getTax() + "");
-                netSales.setText(vouchers.get(k).getNetSales() + "");
+            tax.setText(vouchers.get(k).getTax() + "");
+            netSales.setText(vouchers.get(k).getNetSales() + "");
 
-            }
         }
-
-
-        TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
-
-        for (int k = 0; k < items.size(); k++) {
-
-            if (voucherNumber == items.get(k).getVoucherNumber() && voucherType == items.get(k).getVoucherType()) {
-
-                itemsToPrint.add(items.get(k));
-                TableRow row = new TableRow(VouchersReport.this);
-                row.setPadding(5, 10, 5, 10);
-
-                if (k % 2 == 0)
-                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
-                else
-                    row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
-
-                for (int i = 0; i < 5; i++) {
-                    String[] record = {
-                            items.get(k).getItemNo() + "",
-                            items.get(k).getItemName() + "",
-                            items.get(k).getQty() + "",
-                            items.get(k).getBonus() + "",
-                            ""};
-
-                    double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
-                    record[4] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales));
-
-                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                    row.setLayoutParams(lp);
-                    if (i == 1) {
-                        TextView textView = new TextView(VouchersReport.this);
-                        textView.setText(record[i]);
-                        textView.setTextSize(12);
-                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
-                        textView.setGravity(Gravity.CENTER);
-
-                        // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 4.0f);
-                        lp2.width = 120;
-                        textView.setLayoutParams(lp2);
-                        row.addView(textView);
-                    } else {
-                        TextView textView = new TextView(VouchersReport.this);
-                        textView.setText(record[i]);
-                        textView.setTextSize(12);
-                        textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
-                        textView.setGravity(Gravity.CENTER);
-
-                        // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-                        lp2.width = 90;
-                        textView.setLayoutParams(lp2);
-                        row.addView(textView);
-                    }
-                }
-
-                TableItemInfo.addView(row);
-            }
-        }
-        Button okButton = (Button) dialog.findViewById(R.id.button11);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
+
+
+    TableItemInfo = (TableLayout) dialog.findViewById(R.id.TableItemsInfo1);
+
+    for (int k = 0; k < items.size(); k++) {
+
+        if (voucherNumber == items.get(k).getVoucherNumber() && voucherType == items.get(k).getVoucherType()) {
+
+            itemsToPrint.add(items.get(k));
+            TableRow row = new TableRow(VouchersReport.this);
+            row.setPadding(5, 10, 5, 10);
+
+            if (k % 2 == 0)
+                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
+            else
+                row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
+
+            for (int i = 0; i < 7; i++) {
+                String[] record = {
+                        items.get(k).getItemNo() + "",
+                        items.get(k).getItemName() + "",
+                     items.get(k).getQty() + "",
+//
+                       items.get(k).getBonus() + "",
+//
+                     items.get(k).getPrice() + "",
+                       getOriginalPrice(items.get(k).getItemNo() ) + "",
+                        ""};
+                double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
+                Log.e( "calTotalSales=",calTotalSales+"" );
+                record[6] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales));
+
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                row.setLayoutParams(lp);
+                if (i == 1) {
+                    TextView textView = new TextView(VouchersReport.this);
+                    textView.setText(record[i]);
+                    textView.setTextSize(12);
+                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+                    Log.e( "record1=",record[i]+"" );
+                    // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(1, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                    lp2.width = 120;
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
+                }
+             else
+                {
+                    TextView textView = new TextView(VouchersReport.this);
+                    textView.setText(record[i]);
+                    Log.e( "record=",record[i]+"   "+i+"" );
+                    textView.setTextSize(12);
+                    textView.setTextColor(ContextCompat.getColor(VouchersReport.this, R.color.colorPrimary));
+                    textView.setGravity(Gravity.CENTER);
+
+                    // TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(1, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                    lp2.width = 90;
+                    textView.setLayoutParams(lp2);
+                    row.addView(textView);
+
+                }
+            }
+
+            TableItemInfo.addView(row);
+        }
+    }
+    Button okButton = (Button) dialog.findViewById(R.id.button11);
+    okButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dialog.dismiss();
+        }
+    });
+
+    dialog.show();
+}
 
     public void clear() {
         int childCount = TableTransactionsReport.getChildCount();
@@ -728,4 +896,9 @@ public class VouchersReport extends AppCompatActivity {
         }
 
     }
+   String getOriginalPrice(String ItemNo ){
+        String orgPrice="";
+       orgPrice=obj.getOriginalItemPrice(ItemNo);
+        return orgPrice;
+   }
 }
