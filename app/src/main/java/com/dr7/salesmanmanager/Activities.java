@@ -666,9 +666,20 @@ public class Activities extends AppCompatActivity implements
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                finish();
-                                Intent inte=new Intent(Activities.this,AccountStatment.class);
-                                startActivity(inte);
+
+                                if(allDataPosted()||typaImport==0)
+                                {
+                                    finish();
+                                    Intent inte=new Intent(Activities.this,AccountStatment.class);
+                                    startActivity(inte);
+                                }else {
+                                    showDialogExportData();
+                                }
+
+
+//                                finish();
+//                                Intent inte=new Intent(Activities.this,AccountStatment.class);
+//                                startActivity(inte);
                             }
                         });
 

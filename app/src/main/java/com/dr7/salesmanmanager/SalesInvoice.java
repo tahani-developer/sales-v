@@ -75,6 +75,7 @@ import android.widget.Toast;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
+import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.ItemsQtyOffer;
 import com.dr7.salesmanmanager.Modles.MainGroup_Id_Count;
@@ -178,7 +179,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList = new ArrayList<>();
-
+    List<Flag_Settings> flag_settingsList;
 
     public static List<Item> jsonItemsList2 = new ArrayList<>();
     public static List<Item> jsonItemsList_intermidiate= new ArrayList<>();
@@ -460,6 +461,7 @@ public class SalesInvoice extends Fragment {
             showDialogSerial(getActivity(),0,"",1);
 
         });
+
         save_floatingAction=view.findViewById(R.id.save_floatingAction);
         save_floatingAction.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -470,51 +472,17 @@ public class SalesInvoice extends Fragment {
                         showMessageInvalidDate();
 
                     }else {
-                        try {
-                            approveAdmin = settingsList.get(0).getApproveAdmin();
-                        }catch (Exception e){
-                            approveAdmin=0;
+
+
+
+                        if(flag_settingsList.get(0).getMax_Voucher()==1)
+                        {
+                        validateCurrentVoucherNo();// go to validate voucherno then return to  saveValidVoucherNo()
+
+                        }else {
+                            saveValidVoucherNo();// valid voucher no
                         }
-                        if(approveAdmin==1) {
 
-                            boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
-
-                            Log.e("LocationIn","GoToMain"+locCheck);
-                            if(locCheck){
-                                String all_itemValid="";
-                                if(Separation_of_the_serial==1){
-                                    all_itemValid=validQty();
-                                    if(all_itemValid.equals("")){
-                                        saveVoucherData();
-                                    }else {
-                                        showNotQtyValid(all_itemValid);
-                                    }
-                                }else {
-
-                                    saveVoucherData();
-                                }
-                            }else {
-                                Toast.makeText(getContext(), "check Permision Location ", Toast.LENGTH_SHORT).show();
-                                //
-                            }
-
-
-                        }else{
-                            String all_itemValid="";
-                            if(Separation_of_the_serial==1){
-                                all_itemValid=validQty();
-                                if(all_itemValid.equals("")){
-                                    saveVoucherData();
-                                }else {
-                                    showNotQtyValid(all_itemValid);
-                                }
-                            }else {
-
-                                saveVoucherData();
-                            }
-
-
-                        }
 
 
                     }
@@ -538,7 +506,8 @@ public class SalesInvoice extends Fragment {
 
         decimalFormat = new DecimalFormat("00.000");
         mDbHandler = new DatabaseHandler(getActivity());
-        totalDiscount_checkbox= (CheckBox)view. findViewById(R.id.totalDiscount_checkbox);
+        flag_settingsList = mDbHandler.getFlagSettings();
+            totalDiscount_checkbox= (CheckBox)view. findViewById(R.id.totalDiscount_checkbox);
         totalDiscount_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -1171,6 +1140,80 @@ public class SalesInvoice extends Fragment {
         }
 
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void saveValidVoucherNo() {
+        try {
+            approveAdmin = settingsList.get(0).getApproveAdmin();
+        }catch (Exception e){
+            approveAdmin=0;
+        }
+        if(approveAdmin==1) {
+
+            boolean locCheck= locationPermissionRequestAc.checkLocationPermission();
+
+            Log.e("LocationIn","GoToMain"+locCheck);
+            if(locCheck){
+                String all_itemValid="";
+                if(Separation_of_the_serial==1){
+                    all_itemValid=validQty();
+                    if(all_itemValid.equals("")){
+                        saveVoucherData();
+                    }else {
+                        showNotQtyValid(all_itemValid);
+                    }
+                }else {
+
+                    saveVoucherData();
+                }
+            }else {
+                Toast.makeText(getContext(), "check Permision Location ", Toast.LENGTH_SHORT).show();
+                //
+            }
+
+
+        }
+        else{
+            String all_itemValid="";
+            if(Separation_of_the_serial==1){
+                all_itemValid=validQty();
+                if(all_itemValid.equals("")){
+                    saveVoucherData();
+                }else {
+                    showNotQtyValid(all_itemValid);
+                }
+            }else {
+
+                saveVoucherData();
+            }
+
+
+        }
+    }
+
+    private void validateCurrentVoucherNo() {
+        ImportJason importData=new ImportJason(getContext());
+        importData.getMaxVoucherNo(1);
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public  void refreshVoucherNo(){
+
+       int curentVoucher=mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType);
+
+       Log.e("refreshVoucherNo","curentVoucher="+curentVoucher+"\tvoucherNumber="+voucherNumber);
+       if(curentVoucher>voucherNumber)
+       {
+           voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+           String vn = voucherNumber + "";
+           voucherNumberTextView.setText(vn);
+       }
+
+           voucherNumberTextView.setText(voucherNumber+"");
+           saveValidVoucherNo();
+
+
+
     }
 
     private void showMessageInvalidDate() {
@@ -1934,6 +1977,28 @@ public class SalesInvoice extends Fragment {
     private void initialView(View view) {
         connect = (ImageView) view.findViewById(R.id.balanceImgBtn);
         voucherNumberTextView = (TextView) view.findViewById(R.id.voucherNumber);
+        voucherNumberTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(editable.toString().trim().length()!=0){
+                    if(editable.toString().trim().equals("refresh"))
+                    {
+                        refreshVoucherNo();
+                    }
+                }
+
+            }
+        });
         Customer_nameSales = (TextView) view.findViewById(R.id.invoiceCustomerName);
         Customer_nameSales.setMovementMethod(new ScrollingMovementMethod());
         paymentTermRadioGroup = (RadioGroup) view.findViewById(R.id.paymentTermRadioGroup);
@@ -3655,11 +3720,16 @@ public class SalesInvoice extends Fragment {
                                                 disount_totalnew=Float.parseFloat(appliedOffer.getBonusQty()+"")*updaQty;
 
                                             }
-
-                                            if(offerTalaat==1)
-                                            {
-                                                disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty())+"");
+                                            else {
+                                                if(offerTalaat==1)
+                                                {
+                                                    disount_totalnew = Float.parseFloat((((int) (updaQty / appliedOffer.getItemQty())) * appliedOffer.getBonusQty())+"");
+                                                } else {
+                                                    disount_totalnew=Float.parseFloat(appliedOffer.getBonusQty()+"")*updaQty;
+                                                }
                                             }
+
+
 
                                         }
                                     }
@@ -4991,7 +5061,7 @@ public class SalesInvoice extends Fragment {
         netTotalTextView.setText("0.0");
 //        calculateTotals_cridit();
         double itemTax, itemTotal, itemTotalAfterTax,
-                itemTotalPerc, itemDiscVal, posPrice, totalQty = 0,allItemQtyWithDisc=0;
+                itemTotalPerc, itemDiscVal, posPrice, totalQty = 0,allItemQtyWithDisc=0,itemsQty=0;
         //**********************************************************************
         list_discount_offers = mDbHandler.getDiscountOffers();// total discount
         itemsQtyOfferList = mDbHandler.getItemsQtyOffer();
@@ -5021,12 +5091,17 @@ public class SalesInvoice extends Fragment {
             } catch (Exception e) {
                 limit_offer = 0;
             }
+
+            allItemQtyWithDisc=0;
             for (int i = 0; i < items.size(); i++) {
+                allItemQtyWithDisc+=items.get(i).getQty();
+
                 disc_items_total = 0;
                 disc_items_value = 0;
 
                 if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
-
+                    discount_oofers_total_credit=0;
+                    discount_oofers_total_cash=0;
                     for (int b = 0; b < items.size(); b++) {
                         if (checkOffers_no(items.get(b).getItemNo())) {
 //                                    if (items.get(b).getItemNo().equals(itemsQtyOfferList.get(k).getItem_no())&&limit_offer==itemsQtyOfferList.get(k).getItemQty()) {
@@ -5046,6 +5121,8 @@ public class SalesInvoice extends Fragment {
 
 
 //
+                        }else {
+
                         }
 
                     }
@@ -5076,7 +5153,7 @@ public class SalesInvoice extends Fragment {
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if (allItemQtyWithDisc>=list_discount_offers.get(j).getQTY()  ) {
+                                if (total_items_quantity>=list_discount_offers.get(j).getQTY()  ) {
                                     discount_oofers_total_cash=0;
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
 
@@ -5085,7 +5162,7 @@ public class SalesInvoice extends Fragment {
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if ( allItemQtyWithDisc>=  list_discount_offers.get(j).getQTY() ) {
+                                if ( total_items_quantity>=  list_discount_offers.get(j).getQTY() ) {
                                     discount_oofers_total_credit=0;
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
@@ -5171,8 +5248,28 @@ public class SalesInvoice extends Fragment {
 
                 disc_items_total = 0;
                 disc_items_value = 0;
+                totalQty = 0.0;allItemQtyWithDisc=0;
+                for (int x = 0; x < items.size(); x++) {
+                    allItemQtyWithDisc+=items.get(i).getQty();
+                    if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
+                        if (items.get(x).getItemName().equals("(bonus)")) {
+                            flagBonus = items.get(x - 1).getQty();
+                            amountBonus = items.get(x).getQty();
+                            totalQty = totalQty - flagBonus;
 
+                        } else {//item without discount
+                            totalQty = totalQty + items.get(x).getQty();
+                        }
+
+                    }
+
+
+                }
+
+//                Log.e("allItemQtyWithDisc=",total_items_quantity+""+"\ttotalQty="+totalQty);
                 if (total_items_quantity >= limit_offer && limit_offer != 0 && payMethod == 1) {// all item without bonus item
+                    discount_oofers_total_credit=0;
+                    discount_oofers_total_cash=0;
                     for (int b = 0; b < items.size(); b++) {
 
                         if (checkOffers_no(items.get(b).getItemNo())) {
@@ -5180,29 +5277,32 @@ public class SalesInvoice extends Fragment {
 
 
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
-//                                disount_totalnew = 0;
-//                                items.get(b).setDisc(disount_totalnew);
-//                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
-//                                itemsListView.setAdapter(itemsListAdapter);
+                                disount_totalnew = 0;
+                                items.get(b).setDisc(disount_totalnew);
+                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
+                                itemsListView.setAdapter(itemsListAdapter);
 
                             }
                             else {// zero descount for this item
-                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
+//                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
 
-                                Log.e("disc_items_value","else="+disc_items_value);
+
                             }
+                            Log.e("disc_items_value","else="+disc_items_value);
+                            disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
+
 
 
                         }
                         else{
                             if(items.get(b).getDisc()==0)
-                            {
-                                totalQty=items.get(b).getQty();
+                            {// test all items without discount and without offer table 50
+
                                 if(payMethod==1)
-                                {discount_oofers_total_cash = getCashCreditOffer(totalQty,list_discount_offers,payMethod);
+                                {discount_oofers_total_cash = getCashCreditOffer(total_items_quantity,list_discount_offers,payMethod,items.get(b).getQty());
                                 }
                                 else {
-                                    discount_oofers_total_credit= getCashCreditOffer(totalQty,list_discount_offers,payMethod);
+                                    discount_oofers_total_credit= getCashCreditOffer(total_items_quantity,list_discount_offers,payMethod,items.get(b).getQty());
                                 }
 
 
@@ -5218,28 +5318,12 @@ public class SalesInvoice extends Fragment {
 
 
                 } else {// all item without discount item
-                    totalQty = 0.0;allItemQtyWithDisc=0;
-                    for (int x = 0; x < items.size(); x++) {
-                        allItemQtyWithDisc+=items.get(i).getQty();
-                        if (items.get(x).getDisc() == 0) {// if not exist discount on item x and type off offer is bonus ===> disc type =0
-                            if (items.get(x).getItemName().equals("(bonus)")) {
-                                flagBonus = items.get(x - 1).getQty();
-                                amountBonus = items.get(x).getQty();
-                                totalQty = totalQty - flagBonus;
 
-                            } else {//item without discount
-                                totalQty = totalQty + items.get(x).getQty();
-                            }
-
-                        }
-
-
-                    }
                     for (int j = 0; j < list_discount_offers.size(); j++) {// here to test   offer by cash  *****************
 //                            totalDiscount=0;
                         if (payMethod == 1) {
                             if (list_discount_offers.get(j).getPaymentType() == 1) {
-                                if ( allItemQtyWithDisc>=  list_discount_offers.get(j).getQTY()  ) {
+                                if ( total_items_quantity>=  list_discount_offers.get(j).getQTY()  ) {
                                     discount_oofers_total_cash = 0;
 
                                     discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
@@ -5248,7 +5332,7 @@ public class SalesInvoice extends Fragment {
                             }
                         } else {
                             if (list_discount_offers.get(j).getPaymentType() == 0) {
-                                if (allItemQtyWithDisc >=list_discount_offers.get(j).getQTY() ) {
+                                if (total_items_quantity >=list_discount_offers.get(j).getQTY() ) {
                                     discount_oofers_total_credit = 0;
                                     discount_oofers_total_credit = totalQty * list_discount_offers.get(j).getDiscountValue();
                                 }
@@ -5259,7 +5343,7 @@ public class SalesInvoice extends Fragment {
             }
 
 //
-
+//                Log.e("allItemQtyWithDisc222=",allItemQtyWithDisc+""+"\ttotalQty="+totalQty);
             disc_items_total += disc_items_value;
             totalDiscount += disc_items_total;
 
@@ -5402,7 +5486,7 @@ public class SalesInvoice extends Fragment {
         return 0;
     }
 
-    private double getCashCreditOffer(double totalQty, List<QtyOffers> list_discount_offers, int payMethod) {
+    private double getCashCreditOffer(double totalQty, List<QtyOffers> list_discount_offers, int payMethod,double curenQty) {
         Log.e("disc_items_value","else22=totalQty"+totalQty);
        // discount_oofers_total_cash=0,discount_oofers_total_credit=0;
         for (int j = 0; j < list_discount_offers.size(); j++) {
@@ -5411,7 +5495,7 @@ public class SalesInvoice extends Fragment {
                 if (list_discount_offers.get(j).getPaymentType() == 1) {
                     if (totalQty >= list_discount_offers.get(j).getQTY()) {
                         discount_oofers_total_cash = 0;
-                        discount_oofers_total_cash = totalQty * list_discount_offers.get(j).getDiscountValue();
+                        discount_oofers_total_cash = curenQty * list_discount_offers.get(j).getDiscountValue();
 //                                discount_oofers_total_cash =( totalQty /list_discount_offers.get(j).getQTY()) * list_discount_offers.get(j).getDiscountValue();
                     }
                 }

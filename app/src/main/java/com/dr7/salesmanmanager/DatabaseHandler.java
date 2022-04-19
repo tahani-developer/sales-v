@@ -5671,7 +5671,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
     public List<QtyOffers> getDiscountOffers()
     {
         List<QtyOffers> qtyOffers = new ArrayList<>();
-        String selectQuery = "select * from " + QTY_OFFERS;
+        String selectQuery = "select * from   QTY_OFFERS ORDER BY QTY ASC " ;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

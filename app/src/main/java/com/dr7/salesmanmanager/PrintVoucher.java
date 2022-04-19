@@ -470,6 +470,7 @@ public class PrintVoucher extends AppCompatActivity {
 
                                     TableRow.LayoutParams lp25 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
                                    lp25.width=50;
+                                   lp25.height=60;
                                     textView.setLayoutParams(lp25);
 
                                     row.addView(textView);

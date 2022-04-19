@@ -240,9 +240,9 @@ public class ImportJason extends AppCompatActivity {
         }
     }
 
-    public void getMaxVoucherNo() {
+    public void getMaxVoucherNo(int type) {
         // getDataVolley(salesMan,504 );
-        new JSONTask_maxVoucherNo(salesMan, 504).execute();
+        new JSONTask_maxVoucherNo(salesMan, 504,type).execute();
 
     }
 
@@ -1116,7 +1116,6 @@ public class ImportJason extends AppCompatActivity {
                         } else {
 
                             mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
-
                             goMainText.setText("main");
 
                         }
@@ -1154,11 +1153,12 @@ public class ImportJason extends AppCompatActivity {
     public class JSONTask_maxVoucherNo extends AsyncTask<String, String, String> {
 
         private String salesMan_no = "", JsonResponse;
-        int voucherTyp = 0;
+        int voucherTyp = 0,typeResponse=0;
 
-        public JSONTask_maxVoucherNo(String salesMan_no, int voucherType) {
+        public JSONTask_maxVoucherNo(String salesMan_no, int voucherType,int type) {
             this.salesMan_no = salesMan_no;
             this.voucherTyp = voucherType;
+            this.typeResponse=type;
         }
 
         @Override
@@ -1176,7 +1176,7 @@ public class ImportJason extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            Log.e("doInBackground", "" + ipAddress);
+            Log.e("doInBackground", "typeResponse" +typeResponse);
             try {
                 if (!ipAddress.equals("")) {
 
@@ -1262,6 +1262,7 @@ public class ImportJason extends AppCompatActivity {
             if (result != null) {
 
                 if (result.length() != 0) {
+                    Log.e("onPostExecute", "typeResponse" +typeResponse);
                     if (result.contains("MAXVHFNO")) {
                         try {
                             String maxVoucher = "";
@@ -1274,8 +1275,8 @@ public class ImportJason extends AppCompatActivity {
                             // maxVoucher = jresponse.getString("MAXVHFNO");
                             long maxVoucherLong=0;
                             if(!maxVoucher.equals(""))
-                            {                             maxVoucherLong = Long.parseLong(maxVoucher);
-
+                            {
+                                maxVoucherLong = Long.parseLong(maxVoucher);
 
                             }else {
                                 maxVoucherLong=0;
@@ -1293,12 +1294,13 @@ public class ImportJason extends AppCompatActivity {
                             } else {
                                 if (voucherTyp == 506)
                                 {
-                                    mHandler.updateVoucherNo(maxVoucherLong, 506, 0);
+                                    mHandler.updateVoucherNo(maxVoucherLong, 506, typeResponse);
 
                                    // goMainText.setText("main");
                                 }else {
-                                    mHandler.updateVoucherNo(maxVoucherLong, 508, 0);
+                                    mHandler.updateVoucherNo(maxVoucherLong, 508, typeResponse);
 
+                                    if(typeResponse==0)
                                     goMainText.setText("main");
                                 }
 
@@ -1311,13 +1313,20 @@ public class ImportJason extends AppCompatActivity {
                                 getDataProgress.dismissWithAnimation();
 
 //                                    getDataVolley(salesMan,506);
-                                new JSONTask_maxVoucherNo(salesMan_no, 506).execute();
+                                new JSONTask_maxVoucherNo(salesMan_no, 506,typeResponse).execute();
                             } else {
                                 if (voucherTyp == 506){
                                     getDataProgress.dismissWithAnimation();
-                                    new JSONTask_maxVoucherNo(salesMan_no, 508).execute();
+                                    new JSONTask_maxVoucherNo(salesMan_no, 508,typeResponse).execute();
                                 }else
                                 getDataProgress.dismissWithAnimation();
+                            }
+                            try {
+                                if(typeResponse==1)
+                                SalesInvoice.voucherNumberTextView.setText("refresh");
+                            }
+                            catch (Exception e){
+                                Log.e("Exception","importVoucherNo"+e.getMessage());
                             }
 
 
@@ -1326,6 +1335,7 @@ public class ImportJason extends AppCompatActivity {
                         }
                     } else {
                         getDataProgress.dismissWithAnimation();
+                        if(typeResponse==0)
                         goMainText.setText("main");
                     }
 
@@ -1334,6 +1344,7 @@ public class ImportJason extends AppCompatActivity {
 
             } else {
                 getDataProgress.dismissWithAnimation();
+                if(typeResponse==0)
                 goMainText.setText("main");
             }
         }

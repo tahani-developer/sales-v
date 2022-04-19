@@ -167,15 +167,16 @@ public class Login extends AppCompatActivity {
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
 
-    public  static   int  talaatLayoutAndPassowrd=1;
+    public  static   int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
-    public  static  int updateOnlySelectedCustomer=0;// just for OneOOne
+    public  static  int   updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   POS_ACTIVE=0;
+    public  static    int   Plan_ACTIVE=0;
     public  static    int   Separation_of_the_serial=0;// for oppo
-   public  static  String headerDll = "";
-//   public  static  String  headerDll = "/Falcons/VAN.dll";
+//   public  static     String headerDll = "";
+    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -549,6 +550,7 @@ public class Login extends AppCompatActivity {
         final Dialog moreDialog = new Dialog(Login.this);
         moreDialog.setCancelable(false);
         moreDialog.setContentView(R.layout.more_settings_dialog);
+        moreDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(moreDialog.getWindow().getAttributes());
         lp.width = (int)(getResources().getDisplayMetrics().widthPixels/1.15);
@@ -556,6 +558,7 @@ public class Login extends AppCompatActivity {
         moreDialog.show();
 
         Button okBtn = moreDialog.findViewById(R.id.okBtn);
+        LinearLayout plan_linear= moreDialog.findViewById(R.id.plan_linear);
 
         Button cancelBtn = moreDialog.findViewById(R.id.cancelBtn);
 
@@ -576,6 +579,10 @@ public class Login extends AppCompatActivity {
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
+        if(Plan_ACTIVE==0)
+        {
+            plan_linear.setVisibility(View.GONE);
+        }else plan_linear.setVisibility(View.VISIBLE);
         activePos= moreDialog.findViewById(R.id.activePos);
         cakeshopSW = moreDialog.findViewById(R.id.cakeshopSW);
         qasionSW = moreDialog.findViewById(R.id.qasionSW);
@@ -1276,7 +1283,7 @@ public class Login extends AppCompatActivity {
 
     private void getMaxVoucherFromServer(int salesManInt) {
         importData=new ImportJason(Login.this);
-        importData.getMaxVoucherNo();
+        importData.getMaxVoucherNo(0);
     }
 //    }
 
