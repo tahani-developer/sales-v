@@ -1241,6 +1241,7 @@ public class ImportJason extends AppCompatActivity {
                         getDataProgress.dismissWithAnimation();
 
                         Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                        if(typeResponse==1)    SalesInvoice.voucherNumberTextView.setText("refresh");
                     }
                 });
 
@@ -1337,6 +1338,7 @@ public class ImportJason extends AppCompatActivity {
                         getDataProgress.dismissWithAnimation();
                         if(typeResponse==0)
                         goMainText.setText("main");
+                        else      SalesInvoice.voucherNumberTextView.setText("refresh");
                     }
 
                 }
@@ -1346,6 +1348,7 @@ public class ImportJason extends AppCompatActivity {
                 getDataProgress.dismissWithAnimation();
                 if(typeResponse==0)
                 goMainText.setText("main");
+                else     SalesInvoice.voucherNumberTextView.setText("refresh");
             }
         }
     }

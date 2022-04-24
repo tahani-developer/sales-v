@@ -992,7 +992,7 @@ public class AddItemsFragment2 extends DialogFragment {
             {
                 itemNo=mDbHandler.getItemNoForSerial(barcodeValue);
             }
-            Log.e("searchByBarcodeNo",""+itemNo);
+
        }catch (Exception e)
        {
            itemNo="";
@@ -1001,10 +1001,9 @@ try {
 
 
     if (!barcodeValue.equals("")) {
-        Log.e("jsonItemsList","1="+jsonItemsList.size());
         ArrayList<Item> filteredList = new ArrayList<>();
         for (int k = 0; k < jsonItemsList.size(); k++) {
-            if (jsonItemsList.get(k).getBarcode().equals(barcodeValue.trim())) {
+            if (jsonItemsList.get(k).getBarcode().trim().equals(barcodeValue.trim())) {
                 if(qtyGreatZero==1){
                     if(jsonItemsList.get(k).getQty()>0)
                     {
@@ -1023,7 +1022,7 @@ try {
             } else {
 
                 if (!itemNo.equals("")) {
-                    if (itemNo.equals(jsonItemsList.get(k).getItemNo())) {
+                    if (itemNo.trim().equals(jsonItemsList.get(k).getItemNo().trim())) {
 
                         if(qtyGreatZero==1){
                             if(jsonItemsList.get(k).getQty()>0)
@@ -1042,8 +1041,6 @@ try {
 
             }
         }
-         Log.e("searchByBarcodeNo","size"+filteredList.size());
-
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(filteredList, AddItemsFragment2.this);
         recyclerView.setAdapter(adapter);

@@ -1968,6 +1968,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             TextView bonuss_text = dialog.findViewById(R.id.bonuss_text);
             checkState_recycler = dialog.findViewById(R.id.checkState);
             mainLinear = dialog.findViewById(R.id.mainLinearAddItem);
+            unitQty.requestFocus();
 
             try {
                 if (languagelocalApp.equals("ar")) {

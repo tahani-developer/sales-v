@@ -472,16 +472,17 @@ public class SalesInvoice extends Fragment {
                         showMessageInvalidDate();
 
                     }else {
+                        saveValidVoucherNo();// valid voucher no
 
 
-
-                        if(flag_settingsList.get(0).getMax_Voucher()==1)
-                        {
-                        validateCurrentVoucherNo();// go to validate voucherno then return to  saveValidVoucherNo()
-
-                        }else {
-                            saveValidVoucherNo();// valid voucher no
-                        }
+//
+//                        if(flag_settingsList.get(0).getMax_Voucher()==1)
+//                        {
+//                        validateCurrentVoucherNo();// go to validate voucherno then return to  saveValidVoucherNo()
+//
+//                        }else {
+//                            saveValidVoucherNo();// valid voucher no
+//                        }
 
 
 
@@ -3528,6 +3529,12 @@ public class SalesInvoice extends Fragment {
             }
         }
 
+        if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1){
+            discount_update.setEnabled(false);
+            price_update.setAlpha(0.8f);
+            discTypeRadioGroup_up.setEnabled(false);
+//            discValueRadioButton_update.set
+        }
 
         discount_update.setText(items.get(position).getDisc()+"");
         try {
@@ -5172,6 +5179,12 @@ public class SalesInvoice extends Fragment {
                 }
 
             }
+            if(items.size()==0){
+                disc_items_total = 0;
+                disc_items_value = 0;
+                discount_oofers_total_credit=0;
+                discount_oofers_total_cash=0;
+            }
 //            }
             //**********************************************************************************************************************************************
 
@@ -5342,6 +5355,12 @@ public class SalesInvoice extends Fragment {
                 }
             }
 
+                if(items.size()==0){
+                    disc_items_total = 0;
+                    disc_items_value = 0;
+                    discount_oofers_total_credit=0;
+                    discount_oofers_total_cash=0;
+                }
 //
 //                Log.e("allItemQtyWithDisc222=",allItemQtyWithDisc+""+"\ttotalQty="+totalQty);
             disc_items_total += disc_items_value;

@@ -163,13 +163,13 @@ public class Login extends AppCompatActivity {
     public  static    int OfferCakeShop=0;// if 0 calck offer many times
 
     public  static    int offerTalaat=0;
-    public  static   int  offerQasion=0;
+    public  static    int  offerQasion=0;
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
 
-    public  static   int  talaatLayoutAndPassowrd=0;
+    public  static    int  talaatLayoutAndPassowrd=1;
     public  static    int voucherReturn_spreat=0;
-    public  static  int   updateOnlySelectedCustomer=0;// just for OneOOne
+    public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   POS_ACTIVE=0;
