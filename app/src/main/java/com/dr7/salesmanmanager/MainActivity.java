@@ -347,13 +347,13 @@ saveCurentLocation();
         endtripText=findViewById(R.id.   endtripText);
         starttripText=findViewById(R.id.   starttripText);;
 
-//      if(Login.SalsManTripFlage==1)
-//      {
-//          if(  databaseHandler.getLastSaleManTrip().equals("2"))
-//          checkInLinearLayout.setEnabled(false);
-//        checkOutLinearLayout.setEnabled(false);
-//
-//      }
+      if(Login.SalsManTripFlage==1)
+      {
+          if(  databaseHandler.getLastSaleManTrip().equals("2"))
+          checkInLinearLayout.setEnabled(false);
+        checkOutLinearLayout.setEnabled(false);
+
+      }
 
         endtripText.setOnClickListener(new View.OnClickListener() {
             @Override

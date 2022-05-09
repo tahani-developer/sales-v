@@ -305,7 +305,23 @@ android:textSize="11sp"
             android:id="@+id/originalprice"
             android:textColor="@color/colorblue1"
             android:textStyle="bold" />
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/deffirentPrice2"
+            android:textColor="@color/colorblue1"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/deff"
 
+            android:textColor="@color/colorblue1"
+            android:textStyle="bold" />
     </LinearLayout>
     <HorizontalScrollView
 
