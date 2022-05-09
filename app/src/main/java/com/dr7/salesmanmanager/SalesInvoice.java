@@ -475,7 +475,7 @@ public class SalesInvoice extends Fragment {
                         saveValidVoucherNo();// valid voucher no
 
 
-//
+
 //                        if(flag_settingsList.get(0).getMax_Voucher()==1)
 //                        {
 //                        validateCurrentVoucherNo();// go to validate voucherno then return to  saveValidVoucherNo()
@@ -1135,10 +1135,10 @@ public class SalesInvoice extends Fragment {
             OfferCakeShop=1;
 
         }
-        if(getTotalBalanceInActivities==0){
-            notIncludeTax.setVisibility(View.GONE);
-            linearTotalCashDiscount.setVisibility(View.GONE);
-        }
+//        if(getTotalBalanceInActivities==0){
+//            notIncludeTax.setVisibility(View.GONE);
+//            linearTotalCashDiscount.setVisibility(View.GONE);
+//        }
 
         return view;
     }
@@ -1193,6 +1193,7 @@ public class SalesInvoice extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void validateCurrentVoucherNo() {
         ImportJason importData=new ImportJason(getContext());
         importData.getMaxVoucherNo(1);
@@ -2533,7 +2534,9 @@ public class SalesInvoice extends Fragment {
                             vouchLast = vouchPrint;
 //                            convertLayoutToImage(vouchPrint);
 
-                            Intent O = new Intent(getActivity().getBaseContext(), bMITP.class);
+                            Intent O = new Intent(getActivity(), bMITP.class);
+//                            getPackageManager().getLaunchIntentForPackage("com.android.chrome");
+
                             O.putExtra("printKey", "7");
                             O.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             O.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
