@@ -104,9 +104,22 @@ android:visibility="gone"
         android:layout_weight="7"
         android:layout_gravity="center"
         android:gravity="center"
+        android:visibility="invisible"
         android:orientation="vertical"
         android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/starttripText"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
 
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/starttrip"
+            android:textSize="18sp"
+            android:textColor="@color/main_green_stroke_color"
+            android:textStyle="bold" />
     </LinearLayout>
     <LinearLayout
 
@@ -342,7 +355,20 @@ android:visibility="gone"
     <LinearLayout android:orientation="horizontal"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:visibility="invisible"
         android:layout_weight="7">
+        <TextView
+            android:id="@+id/endtripText"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/endtrip"
+            android:textSize="18sp"
+            android:textColor="@color/red_background"
+            android:textStyle="bold" />
     </LinearLayout>
 
 

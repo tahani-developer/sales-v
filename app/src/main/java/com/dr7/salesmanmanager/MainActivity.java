@@ -21,6 +21,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.http.DelegatingSSLSession;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -85,6 +86,7 @@ import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
+import com.dr7.salesmanmanager.Modles.SaleManTrips;
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
 
+    TextView endtripText,starttripText;
   public String text;
     int position=0,netsalflag=0;
     public  static  double latitude_main, longitude_main;
@@ -308,6 +311,10 @@ public class MainActivity extends AppCompatActivity
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
 
+
+        checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
+        checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
+
      try {
 saveCurentLocation();
 
@@ -334,6 +341,74 @@ saveCurentLocation();
 
       }
         hideItem();
+
+
+
+        endtripText=findViewById(R.id.   endtripText);
+        starttripText=findViewById(R.id.   starttripText);;
+
+//      if(Login.SalsManTripFlage==1)
+//      {
+//          if(  databaseHandler.getLastSaleManTrip().equals("2"))
+//          checkInLinearLayout.setEnabled(false);
+//        checkOutLinearLayout.setEnabled(false);
+//
+//      }
+
+        endtripText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(  databaseHandler.getLastSaleManTrip().equals("1"))
+               OpenAuthenticDailog();
+else
+                {
+
+                }
+            }
+        });
+
+        starttripText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (databaseHandler.getLastSaleManTrip().equals("2"))
+                {
+                    Log.e("case1","case1");
+                    SaleManTrips trip=new SaleManTrips();
+
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+                String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+                String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+
+
+
+                trip.setTripEndDate("00");
+                trip.setTripEndTime("00");
+                trip.setTripstartDate(currentDate);
+                trip.setTripstartTime(currentTime);
+                trip.setTripStatus("1");
+
+
+                databaseHandler.insertSaleManTrip(trip);
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.tripisstarting), Toast.LENGTH_SHORT).show();
+                    checkInLinearLayout.setEnabled(true);
+                    checkOutLinearLayout.setEnabled(true);
+
+
+            }else{
+                    Log.e("case2","case2");
+                    new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText(getResources().getString(R.string.warning_message))
+                            .setContentText(getResources().getString(R.string.newtripMsg))
+                            .show();
+                }
+            }
+
+        });
+
+
 
 //////////////// salesman plan for cake shop
         salesmanPlanRespon=findViewById(R.id.   salesmanPlanRespon);
@@ -572,8 +647,7 @@ saveCurentLocation();
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);
         settext2();
-        checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
-        checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
+
 //        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
 //        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
 //        if (!CustomerListShow.Customer_Name.equals("No Customer Selected !"))//test after change language
@@ -4118,4 +4192,52 @@ saveCurentLocation();
 
      customerArrayList =databaseHandler. getAllCustomer();
     }
+   void  OpenAuthenticDailog(){
+       final Dialog dialog = new Dialog(MainActivity.this);
+       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+       dialog.setCancelable(true);
+       dialog.setContentView(R.layout.authenticdailog);
+       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+       lp.copyFrom(dialog.getWindow().getAttributes());
+       validPassowrdSetting=false;
+       lp.gravity = Gravity.CENTER;
+       lp.windowAnimations = R.style.DialogAnimation;
+       dialog.getWindow().setAttributes(lp);
+
+
+     EditText username,pass;
+       username=dialog.findViewById(R.id.editText2);
+       pass=dialog.findViewById(R.id.editText1);
+
+       Button okButton = (Button) dialog.findViewById(R.id.button1);
+       Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+
+//        EditText et1 = (EditText) this.findViewById(R.id.editText1);
+
+
+       okButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               SaleManTrips trip=new SaleManTrips();
+               Date currentTimeAndDate = Calendar.getInstance().getTime();
+               SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+               SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+               String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+               String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+               trip.setTripEndDate(currentDate);
+               trip.setTripEndTime(currentTime);
+               trip.setTripStatus("2");
+               databaseHandler.UpdateSaleManTrip(trip);
+
+           }
+       });
+
+       cancelButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               dialog.dismiss();
+           }
+       });
+       dialog.show();
+   }
 }

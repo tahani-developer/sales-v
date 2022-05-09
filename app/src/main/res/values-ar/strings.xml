@@ -227,7 +227,9 @@
     <string name="total_sold_qty2">الكمية المباعة</string>
     <string name="total_bonus_qty">المجاني</string>
     <string name="SALEprice">سعر الحبة المباع</string>
+    <string name="SumSALEprice">  مجموع البيع بالسعر المباع </string>
     <string name="originalprice">السعر الأصلي</string>
+    <string name="Sumoriginalprice">مجموع البيع بالسعر الأصلي</string>
     <string name="total_bonus_qty2">الكمية المجانية</string>
     <string name="total_sales_noTax"> المبيعات(بدون ضريبة)</string>
     <string name="total_sales_noTax2"> المبيعات(بدون ضريبة)</string>
@@ -269,6 +271,7 @@
 
     <string name="add_check">اضافة شيك</string>
     <string name="enter_password">ادخل كلمة المرور</string>
+    <string name="password">كلمة المرور</string>
     <string name="enter_qty">ادخل الكمية</string>
 
     <string name="visit_steps">خطوات الزيارة/البيعة</string>
@@ -531,6 +534,7 @@
     <string name="shelf_inventory">جرد الرف</string>
     <string name="totalDiscount">خصم كلي للكاش</string>
     <string name="deffirentPrice">سعر مختلف عن</string>
+    <string name="deffirentPrice2">فرق السعر</string>
     <string name="failImportMaxExportData">قم بتصدير البيانات اولا لتحديث اخر رقم للفاتورة</string>
     <string name="imageNotFound">الصورة غير موجودة</string>
     <string name="storeNumber">رقم المستودع</string>
@@ -592,4 +596,10 @@
     <string name="greatZero">أكبر من الصفر</string>
     <string name="voucherNo_origin">رقم الفاتورة الأصل</string>
     <string name="serialcode_type">البحث عن سيريال</string>
+    <string name="starttrip">بدء الجولة </string>
+    <string name="endtrip">إنهاء الجولة </string>
+    <string name="SalsManTrips">نظام الجولات للمندوب</string>
+    <string name="newtripMsg">  لا يمكنك بدء جولة جديدة بدون إنهاء الجولة الحالية</string>
+    <string name="tripisstarting">تم بدء الجولة</string>
+
 </resources>
