@@ -172,8 +172,9 @@ public class Login extends AppCompatActivity {
     public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
+    public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
-    public  static    int   Plan_ACTIVE=0;
+    public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
 //   public  static     String headerDll = "";
     public  static  String  headerDll = "/Falcons/VAN.dll";
@@ -255,6 +256,7 @@ public class Login extends AppCompatActivity {
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
             voucherReturn_spreat = flag_settingsList.get(0).getVoucher_Return();
             SalsManPlanFlage=flag_settingsList.get(0).getActiveSlasmanPlan();
+            SalsManTripFlage=flag_settingsList.get(0).getActiveSlasmanTrips();
             POS_ACTIVE=flag_settingsList.get(0).getPos_active();
             OfferCakeShop = flag_settingsList.get(0).getOfferCakeShop();
             offerQasion = flag_settingsList.get(0).getOfferQasion();
@@ -566,7 +568,7 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnSQL = moreDialog.findViewById(R.id.radioBtnSQL);
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
-        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,activePos,
+        Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,Trips,activePos,
                 cakeshopSW, qasionSW, talaatSW;
 
         ImageButton cakeshopInfo, qasionInfo, talaatInfo;
@@ -579,6 +581,7 @@ public class Login extends AppCompatActivity {
         swTotal = moreDialog.findViewById(R.id.swTotal);
         swReturn = moreDialog.findViewById(R.id.swReturn);
         plan = moreDialog.findViewById(R.id.SalsManPlan);
+        Trips= moreDialog.findViewById(R.id.SalsManTrips);
         if(Plan_ACTIVE==0)
         {
             plan_linear.setVisibility(View.GONE);
@@ -615,6 +618,7 @@ public class Login extends AppCompatActivity {
             swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
             swReturn.setChecked((flag_settingsList.get(0).getVoucher_Return() == 1));
             plan.setChecked((flag_settingsList.get(0).getActiveSlasmanPlan() == 1));
+            Trips.setChecked((flag_settingsList.get(0).getActiveSlasmanTrips()== 1));
             activePos.setChecked((flag_settingsList.get(0).getPos_active() == 1));
             cakeshopSW.setChecked((flag_settingsList.get(0).getOfferCakeShop() == 1));
             qasionSW.setChecked((flag_settingsList.get(0).getOfferQasion() == 1));
@@ -675,6 +679,7 @@ public class Login extends AppCompatActivity {
             getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
             voucherReturn_spreat = swReturn.isChecked() ? 1 : 0;
             SalsManPlanFlage = plan.isChecked() ? 1 : 0;
+            SalsManTripFlage= Trips.isChecked() ? 1 : 0;
             POS_ACTIVE = activePos.isChecked() ? 1 : 0;
             OfferCakeShop = cakeshopSW.isChecked() ? 1 : 0;
             offerQasion = qasionSW.isChecked() ? 1 : 0;
@@ -685,11 +690,11 @@ public class Login extends AppCompatActivity {
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion));
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion);
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage);
             }
 
 

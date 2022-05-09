@@ -573,7 +573,7 @@ public class VouchersReport extends AppCompatActivity {
 //        dialog.show();
 //    }
 public void voucherInfoDialog(int voucherNumber, int voucherType) {
-
+    String cusnum="";
     Log.e("voucherInfoDialog", "" + voucherNumber + "\t" + voucherType);
     final Dialog dialog = new Dialog(VouchersReport.this);
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -601,7 +601,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
     }
     Window window = dialog.getWindow();
     EditText VochNum, PayMth, CusName, VochDate;
-    TextView subTotal, tax, netSales;
+    TextView subTotal, tax, netSales,SALEprice,originalprice;
     subTotal = dialog.findViewById(R.id.subTotalTextView);
     tax = dialog.findViewById(R.id.taxTextView);
     netSales = dialog.findViewById(R.id.netSalesTextView1);
@@ -609,6 +609,9 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
     PayMth = dialog.findViewById(R.id.paymethod);
     CusName = dialog.findViewById(R.id.customername);
     VochDate = dialog.findViewById(R.id.vocherdate);
+    SALEprice=dialog.findViewById(R.id.SALEprice);
+    originalprice=dialog.findViewById(R.id.originalprice);
+    float  Sum_SALEprice=0,Sum_originalprice=0;
     dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -636,6 +639,9 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
             tax.setText(vouchers.get(k).getTax() + "");
             netSales.setText(vouchers.get(k).getNetSales() + "");
 
+             cusnum=vouchers.get(k).getCustNumber();
+            Log.e( "cusnum===",cusnum+"" );
+
         }
     }
 
@@ -654,7 +660,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer7));
             else
                 row.setBackgroundColor(ContextCompat.getColor(VouchersReport.this, R.color.layer5));
-
+            Log.e( "getCust()=",cusnum);
             for (int i = 0; i < 7; i++) {
                 String[] record = {
                         items.get(k).getItemNo() + "",
@@ -664,10 +670,13 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
                        items.get(k).getBonus() + "",
 //
                      items.get(k).getPrice() + "",
-                       getOriginalPrice(items.get(k).getItemNo() ) + "",
+                       getOriginalPrice(cusnum,  items.get(k).getItemNo()  ) + "",
                         ""};
-                double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
-                Log.e( "calTotalSales=",calTotalSales+"" );
+
+                  double calTotalSales = (items.get(k).getQty() * items.get(k).getPrice()) - items.get(k).getDisc();
+                Log.e( "Sum_originalprice=",Sum_originalprice+"" );
+                Log.e( "Sum_SALEprice=",Sum_SALEprice+"" );
+
                 record[6] = convertToEnglish(generalMethod.getDecimalFormat(calTotalSales));
 
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
@@ -702,10 +711,15 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
 
                 }
             }
+           Sum_originalprice+=(items.get(k).getQty() *   Float.parseFloat(getOriginalPrice(cusnum,items.get(k).getItemNo()))) ;
+            Sum_SALEprice+=(items.get(k).getQty() * items.get(k).getPrice());
 
             TableItemInfo.addView(row);
         }
     }
+
+    SALEprice.setText(Sum_SALEprice+"");
+          originalprice.setText(Sum_originalprice+"");
     Button okButton = (Button) dialog.findViewById(R.id.button11);
     okButton.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -896,9 +910,22 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
         }
 
     }
-   String getOriginalPrice(String ItemNo ){
+   String getOriginalPrice(String cust,String ItemNo ){
+        try{
+        //get rate of customer                AccPrc
+     //  Log.e(" cust", cust);
+     String  AccPrc=    obj.getAccPrc(cust);
+     Log.e(" AccPrc", AccPrc+""+cust);
+       // get price based on rate       PrNo
         String orgPrice="";
-       orgPrice=obj.getOriginalItemPrice(ItemNo);
+       orgPrice=obj.getOriginalItemPriceNEW(ItemNo,AccPrc);
         return orgPrice;
-   }
+
+        }
+        catch (Exception exception){
+            Log.e("exception===", exception.getMessage());
+        }
+  return "0"; }
+
+
 }

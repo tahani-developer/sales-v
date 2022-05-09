@@ -43,6 +43,7 @@ import com.dr7.salesmanmanager.Modles.PriceListM;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
 import com.dr7.salesmanmanager.Modles.QtyOffers;
 import com.dr7.salesmanmanager.Modles.SMItemAvailability;
+import com.dr7.salesmanmanager.Modles.SaleManTrips;
 import com.dr7.salesmanmanager.Modles.SalesManAndStoreLink;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.SalesManPlan;
@@ -79,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 181;
+    private static final int DATABASE_VERSION = 183;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -631,6 +632,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Total_Balance = "Total_Balance";
     private static final String Voucher_Return = "Voucher_Return";
     private static final String ActiveSlasmanPlan = "ActiveSlasmanPlan";
+    private static final String ActiveSlasmanTrips = "ActiveSlasmanTrips";
     private static final String POS_ACTIVE = "POS_ACTIVE";
     private static final String CakeShop_Offer = "CakeShop_Offer";
     private static final String Talaat_Offer = "Talaat_Offer";
@@ -648,6 +650,20 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
  private static final String SalesMan_Item_availability = "SalesMan_Item_availability";
 
     private static final String availability = "AVAILABLITY";
+//-----------------------------------------------------
+private static final String  SalemanTrips="SalemanTrips";
+    private static final String  TripNum="TripNum";
+    private static final String  TripstartDate="TripstartDate";
+    private static final String  TripstartTime="TripstartTime";
+    private static final String  TripEndDate="TripEndDate";
+    private static final String  TripEndTime="TripEndTime";
+    private static final String  TripStatus="TripStatus";
+
+
+
+
+
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -1278,7 +1294,9 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                 + POS_ACTIVE + " INTEGER DEFAULT '0' ,"
                 + CakeShop_Offer + " INTEGER DEFAULT '0' ,"
                 + Talaat_Offer + " INTEGER DEFAULT '0' ,"
-                + Qasion_Offer + " INTEGER DEFAULT '0' "
+                + Qasion_Offer + " INTEGER DEFAULT '0' ,"
+                + ActiveSlasmanTrips + " INTEGER DEFAULT '0' "
+
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
 
@@ -1385,7 +1403,17 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         db.execSQL(SalesMan_Item_availability_TABLE);
 
 
+////////--------------------------------
 
+        String CREATE_SalemanTrips_TABLE = "CREATE TABLE IF NOT EXISTS " + SalemanTrips + "("
+                + TripNum + "  INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + TripstartDate + " TEXT,"
+                + TripstartTime + " TEXT,"
+                + TripEndDate + " TEXT,"
+                + TripEndTime + " TEXT,"
+                + TripStatus + " TEXT"
+                + ")";
+        db.execSQL(CREATE_SalemanTrips_TABLE);
 
     }
 
@@ -2392,6 +2420,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
             Log.e(TAG, e.getMessage().toString());
         }
 
+
         try{
             db.execSQL("ALTER TABLE Flag_Settings ADD '"+POS_ACTIVE+"'  INTEGER  DEFAULT '0' ");
 
@@ -2473,6 +2502,25 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         {
             Log.e(TAG, e.getMessage().toString());
         }
+
+        //////-------------------------
+        String CREATE_SalemanTrips_TABLE = "CREATE TABLE IF NOT EXISTS " + SalemanTrips + "("
+                + TripNum + "  INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + TripstartDate + " TEXT,"
+                + TripstartTime + " TEXT,"
+                + TripEndDate + " TEXT,"
+                + TripEndTime + " TEXT,"
+                + TripStatus + " TEXT"
+                + ")";
+        db.execSQL(CREATE_SalemanTrips_TABLE);
+
+        try{
+            db.execSQL("ALTER TABLE Flag_Settings ADD '"+ActiveSlasmanTrips+"'  INTEGER  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
     }
 
     ////B
@@ -2493,6 +2541,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CakeShop_Offer, flag_settings.getOfferCakeShop());
         values.put(Talaat_Offer, flag_settings.getOfferTalaat());
         values.put(Qasion_Offer, flag_settings.getOfferQasion());
+        values.put(ActiveSlasmanTrips, flag_settings.getActiveSlasmanTrips());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2520,8 +2569,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
                         cursor.getInt(8),
                         cursor.getInt(9),
                         cursor.getInt(10),
-                        cursor.getInt(11)
-
+                        cursor.getInt(11),
+                        cursor.getInt(12)
                 );
 
                 flagSettings.add(mySettings);
@@ -2536,7 +2585,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
-                                    int csOffer, int tOffer, int qOffer) {
+                                    int csOffer, int tOffer, int qOffer,int SalTrip) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2553,7 +2602,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
         values.put(CakeShop_Offer, csOffer);
         values.put(Talaat_Offer, tOffer);
         values.put(Qasion_Offer, qOffer);
-
+        values.put(ActiveSlasmanTrips, SalTrip);
 
         db.update(Flag_Settings, values, null, null);
 
@@ -8715,7 +8764,143 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
     }
 
+  /*  public String getAccPrc(String cust) {
+        String ACCPRC="";
+        ArrayList<Item> items = new ArrayList<Item>();
+        // Select All Query                                                                                                          //AND IS_RETURNED = '0'
+        String selectQuery = "SELECT ACCPRC FROM CUSTOMER_MASTER where CUS_ID='"+cust+"'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.e("cursor2==", cursor.getCount()+"\t\t");
+
+
+        try {
+            if (cursor.moveToNext()) {
+                if (cursor.getString(0) == null) {
+                    return "0";
+                } else {
+                    ACCPRC = (cursor.getString(0));
+                    Log.e("ACCPRC", "ACCPRC=" + ACCPRC);
+                    return ACCPRC;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return ACCPRC;
+   }*/
+  public String getAccPrc(String cust) {
+      //Log.e("cust","cust="+cust);
+
+      String selectQuery = "select ACCPRC from CUSTOMER_MASTER  where CUS_ID='"+cust+"' ";
+      Log.e("selectQuery",selectQuery);
+      String ACCPRC="";
+      db = this.getWritableDatabase();
+      Cursor cursor = db.rawQuery(selectQuery, null);
+      Log.e("cursor2==", cursor.getCount()+"\t\t");
+      try {
+          if (cursor.moveToNext()) {
+              if (cursor.getString(0) == null) {
+                  return "0";
+              } else {
+                  ACCPRC = (cursor.getString(0));
+                  Log.e("ACCPRC","ACCPRC="+ACCPRC);
+                  return ACCPRC;
+              }
+
+          }
+      }
+      catch ( Exception e)
+      {
+          Log.e("Exception","getUnitForItem"+e.getMessage());
+      }
+      return  ACCPRC;
+  }
+    public String getOriginalItemPriceNEW(String itemNo,String AccPrc) {
+        Log.e("getItemName","getItemName="+itemNo);
+
+        String selectQuery = " select Price from Price_List_D  where ItemNo='"+itemNo.trim()+"' And PrNo='"+AccPrc+"'";
+        String itemPrice="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToNext()) {
+                if (cursor.getString(0) == null) {
+                    return "0";
+                } else {
+                    itemPrice = (cursor.getString(0));
+                    Log.e("getItemPrice","getItemPrice="+itemPrice);
+                    return itemPrice;
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            Log.e("Exception","getUnitForItem"+e.getMessage());
+        }
+        return  itemPrice;
+    }
 //    delete from SALES_VOUCHER_MASTER where VOUCHER_DATE LIKE '%2021%'
 //delete from SALES_VOUCHER_DETAILS where ITEM_YEAR LIKE '%2021%'
+
+
+  public  void  insertSaleManTrip(SaleManTrips saleManTrips){
+      Log.e("insertSaleManTrip","insertSaleManTrip");
+      db = this.getReadableDatabase();
+      ContentValues values = new ContentValues();
+
+      values.put(TripEndDate, saleManTrips.getTripEndDate());
+      values.put(TripEndTime, saleManTrips.getTripEndTime());
+      values.put(TripstartDate, saleManTrips.getTripstartDate());
+      values.put(TripstartTime, saleManTrips.getTripstartTime());
+      values.put(TripStatus, saleManTrips.getTripStatus());
+      db.insert(SalemanTrips, null, values);
+      db.close();
+
+
+  }
+    public void UpdateSaleManTrip(SaleManTrips saleManTrips) {
+        Log.e("UpdateSaleManTrip","UpdateSaleManTrip");
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TripEndDate, saleManTrips.getTripEndDate());
+        values.put(TripEndTime, saleManTrips.getTripEndTime());
+        values.put(TripStatus, saleManTrips.getTripStatus());
+
+        // updating row
+        db.update(SalemanTrips, values, TripNum + "=" + "(SELECT MAX(TripNum) FROM SalemanTrips)", null);
+
+    }
+    public void deletefromSalemanTrips() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SalemanTrips);
+        db.close();
+    }
+    public String getLastSaleManTrip() {
+        Log.e("getLastSaleManTrip","getLastSaleManTrip");
+        String selectQuery = " select TripStatus from "+SalemanTrips;
+        String itemPrice="";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        try {
+            if (cursor.moveToLast()) {
+                 return cursor.getString(0);
+
+
+            }
+        }
+        catch ( Exception e)
+        {
+            return "2";
+        }
+        return "2" ;}
 }
 

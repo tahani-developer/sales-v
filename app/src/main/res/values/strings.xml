@@ -232,7 +232,9 @@
     <string name="total_sold_qty2">Sold Qty</string>
     <string name="total_bonus_qty">Total Bonus Qty</string>
     <string name="SALEprice">unit Sale price</string>
+    <string name="SumSALEprice">Total of Sale price</string>
     <string name="originalprice">Original price</string>
+    <string name="Sumoriginalprice">Total of Original price</string>
     <string name="total_bonus_qty2">Bonus Qty</string>
     <string name="total_sales_noTax">Total Sales (No Tax)</string>
     <string name="total_sales_noTax2">Sales (No Tax)</string>
@@ -274,6 +276,7 @@
 
     <string name="add_check">Add Cheque</string>
     <string name="enter_password">Enter Password</string>
+    <string name="password">Password</string>
     <string name="enter_qty">Enter Qty</string>
 
     <string name="visit_steps">Visit/Payment Steps</string>
@@ -550,6 +553,13 @@
     <string name="greatZero">Qty Great Zero</string>
     <string name="voucherNo_origin">Voucher No Origin</string>
     <string name="serialcode_type">Type Serial code ... </string>
+    <string name="starttrip">Start Trip</string>
+    <string name="endtrip">End Trip</string>
+    <string name="SalsManTrips">SalsMan Trips</string>
+    <string name="newtripMsg">you cannot start new trip without ending current trip</string>
+    <string name="tripisstarting">Trip has started</string>
+
+
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>
