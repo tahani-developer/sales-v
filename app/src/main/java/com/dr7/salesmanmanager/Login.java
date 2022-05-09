@@ -167,7 +167,7 @@ public class Login extends AppCompatActivity {
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
 
-    public  static    int  talaatLayoutAndPassowrd=1;
+    public  static    int  talaatLayoutAndPassowrd=0;
     public  static    int voucherReturn_spreat=0;
     public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 

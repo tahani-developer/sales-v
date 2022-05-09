@@ -986,13 +986,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                    bonuss_text.setOnClickListener(new View.OnClickListener() {
                                                                        @Override
                                                                        public void onClick(View v) {
-                                                                           typeRequest = 2;
-                                                                           discountLinearLayout.setVisibility(View.GONE);
-                                                                           bonuss_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_dark));
-                                                                           discount_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_shape));
-                                                                           bonusLinearLayout.setVisibility(View.VISIBLE);
-                                                                           bonus.setText("");
-                                                                           bonus.setEnabled(true);
+                                                                           if(MHandler.getAllSettings().get(0).getBonusNotAlowed()==0)
+                                                                           {
+                                                                               typeRequest = 2;
+                                                                               discountLinearLayout.setVisibility(View.GONE);
+                                                                               bonuss_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_dark));
+                                                                               discount_text.setBackground(context.getResources().getDrawable(R.drawable.back_border_shape));
+                                                                               bonusLinearLayout.setVisibility(View.VISIBLE);
+                                                                               bonus.setText("");
+                                                                               bonus.setEnabled(true);
+                                                                           }
+
 
                                                                        }
                                                                    });
@@ -1004,6 +1008,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                            discountPerVal = 0;
                                                                            if ((typeRequest == 1 && !discount.getText().toString().equals("")))// discount
                                                                            {
+                                                                               bonus.setText("0");
                                                                                Log.e("request", "" + typeRequest);
                                                                                if (!discount.getText().toString().equals("")) {
                                                                                    if (discPercRadioButton.isChecked()) {
@@ -1106,6 +1111,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                                                                            } else if ((typeRequest == 2 && !bonus.getText().toString().equals(""))) {
 
+                                                                               discount.setText("0");
                                                                                if (!bonus.getText().toString().equals("")) {
                                                                                    try {
                                                                                        Log.e("bonus_request=", "" + bonus.getText().toString());

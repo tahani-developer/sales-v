@@ -666,6 +666,8 @@ public class bMITP extends Activity {
                           if(printShape==0) {
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
+//                                  Log.e("printVoucher",""+printVoucher.getSaleManNumber());
+
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
                               }
                           }else {
