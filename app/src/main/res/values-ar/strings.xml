@@ -534,6 +534,7 @@
     <string name="shelf_inventory">جرد الرف</string>
     <string name="totalDiscount">خصم كلي للكاش</string>
     <string name="deffirentPrice">سعر مختلف عن</string>
+    <string name="deffirentPrice2">فرق السعر</string>
     <string name="failImportMaxExportData">قم بتصدير البيانات اولا لتحديث اخر رقم للفاتورة</string>
     <string name="imageNotFound">الصورة غير موجودة</string>
     <string name="storeNumber">رقم المستودع</string>

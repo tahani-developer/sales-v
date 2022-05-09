@@ -8812,6 +8812,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                   return ACCPRC;
               }
 
+          }else {
+              return "0";
           }
       }
       catch ( Exception e)
@@ -8838,6 +8840,10 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     return itemPrice;
                 }
 
+            }
+            else
+            {
+                return "0";
             }
         }
         catch ( Exception e)

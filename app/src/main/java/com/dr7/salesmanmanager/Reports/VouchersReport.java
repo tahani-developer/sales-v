@@ -601,7 +601,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
     }
     Window window = dialog.getWindow();
     EditText VochNum, PayMth, CusName, VochDate;
-    TextView subTotal, tax, netSales,SALEprice,originalprice;
+    TextView subTotal, tax, netSales,SALEprice,originalprice,deff;
     subTotal = dialog.findViewById(R.id.subTotalTextView);
     tax = dialog.findViewById(R.id.taxTextView);
     netSales = dialog.findViewById(R.id.netSalesTextView1);
@@ -611,6 +611,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
     VochDate = dialog.findViewById(R.id.vocherdate);
     SALEprice=dialog.findViewById(R.id.SALEprice);
     originalprice=dialog.findViewById(R.id.originalprice);
+    deff=dialog.findViewById(R.id.deff);
     float  Sum_SALEprice=0,Sum_originalprice=0;
     dialog.findViewById(R.id.Print).setOnClickListener(new View.OnClickListener() {
         @Override
@@ -720,6 +721,7 @@ public void voucherInfoDialog(int voucherNumber, int voucherType) {
 
     SALEprice.setText(Sum_SALEprice+"");
           originalprice.setText(Sum_originalprice+"");
+    deff.setText(Math.abs((Sum_SALEprice-Sum_originalprice))+"");
     Button okButton = (Button) dialog.findViewById(R.id.button11);
     okButton.setOnClickListener(new View.OnClickListener() {
         @Override

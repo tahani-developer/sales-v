@@ -491,6 +491,7 @@
     <string name="shelf_inventory">Shelf Inventory</string>
     <string name="totalDiscount">Total Cash Discount</string>
     <string name="deffirentPrice">Deffirent Price</string>
+    <string name="deffirentPrice2"> price difference</string>
     <string name="failImportMaxExportData">Faill Import MaxVoucher  Export Data</string>
     <string name="imageNotFound">Image Not Found</string>
     <string name="storeNumber">Store Number</string>

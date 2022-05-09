@@ -104,8 +104,8 @@ android:visibility="gone"
         android:layout_weight="7"
         android:layout_gravity="center"
         android:gravity="center"
-        android:orientation="vertical"
         android:visibility="invisible"
+        android:orientation="vertical"
         android:paddingTop="10dp">
         <TextView
             android:id="@+id/starttripText"
@@ -354,8 +354,8 @@ android:visibility="gone"
     </LinearLayout>
     <LinearLayout android:orientation="horizontal"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         android:layout_width="match_parent"
+        android:visibility="invisible"
         android:layout_weight="7">
         <TextView
             android:id="@+id/endtripText"
