@@ -532,6 +532,7 @@
     <string name="toChangeSerialVoucherNumberExportData">لتغيير الرقم التسلسلي للفواتير قم بتصدير البيانات اولا</string>
     <string name="noTax">معفى</string>
     <string name="shelf_inventory">جرد الرف</string>
+    <string name="carstock">جرد السيارة</string>
     <string name="totalDiscount">خصم كلي للكاش</string>
     <string name="deffirentPrice">سعر مختلف عن</string>
     <string name="deffirentPrice2">فرق السعر</string>
@@ -601,5 +602,11 @@
     <string name="SalsManTrips">نظام الجولات للمندوب</string>
     <string name="newtripMsg">  لا يمكنك بدء جولة جديدة بدون إنهاء الجولة الحالية</string>
     <string name="tripisstarting">تم بدء الجولة</string>
-
+    <string name="tripisending">تم إنهاء الجولة</string>
+    <string name="currentqty">الكمية الحالية</string>
+    <string name="actualqty">الكمية الفعلية</string>
+    <string name="deffirntqty">فرق الكمية</string>
+    <string name="savevocher">حفظ كفاتورة باسم المندوب</string>
+    <string name="not_authoriz2"> عفوا , ليس لديك صلاحية</string>
+    <string name="maxvochServer">أكبر رقم تسلسلي للفواتير من السيرفر</string>
 </resources>

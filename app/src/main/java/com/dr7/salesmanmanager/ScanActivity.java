@@ -95,6 +95,11 @@ public class ScanActivity extends AppCompatActivity
                     ItemsReport.item_number.setText(rawResult.getText().trim().replaceAll("\\s+",""));
                     Log.e("RESULT",""+rawResult.getText());
                 }
+                else if(type.equals("7"))
+                {
+                    CarStocking.searchItemsEdt.setText(rawResult.getText().trim().replaceAll("\\s+",""));
+                    Log.e("RESULT",""+rawResult.getText());
+                }
             }
 
             onBackPressed();

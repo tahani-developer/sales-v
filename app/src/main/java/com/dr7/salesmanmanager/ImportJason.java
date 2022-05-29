@@ -2687,6 +2687,7 @@ public class ImportJason extends AppCompatActivity {
                         SalesMan salesMan = new SalesMan();
                         salesMan.setPassword(finalObject.getString("USER_PASSWORD"));
                         salesMan.setUserName(finalObject.getString("SALESNO"));
+                        salesMan.setUserType(finalObject.getInt("USERTYPE"));
 
 //                    Log.e("*******" , finalObject.getString("SALESNO"));
                         salesMenList.add(salesMan);

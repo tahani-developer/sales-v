@@ -316,6 +316,7 @@ public class MainActivity extends AppCompatActivity
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
 
      try {
+
 saveCurentLocation();
 
          databaseHandler = new DatabaseHandler(  MainActivity.this);
@@ -354,6 +355,11 @@ saveCurentLocation();
         checkOutLinearLayout.setEnabled(false);
 
       }
+      else
+      {  starttripText.setVisibility(View.INVISIBLE);
+          endtripText.setVisibility(View.INVISIBLE);
+
+      }
 
         endtripText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,7 +368,7 @@ saveCurentLocation();
                OpenAuthenticDailog();
 else
                 {
-
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.newtripMsg), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1454,6 +1460,10 @@ else
             }
 
 
+        }
+        else if (id == R.id.carstock){
+            Intent i=new Intent(MainActivity.this,CarStocking.class);
+            startActivity(i);
         }
 //        else
 //            if (id == R.id.customers_location) {
@@ -4218,17 +4228,38 @@ else
        okButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               SaleManTrips trip=new SaleManTrips();
-               Date currentTimeAndDate = Calendar.getInstance().getTime();
-               SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-               SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-               String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
-               String currentDate = convertToEnglish(df.format(currentTimeAndDate));
-               trip.setTripEndDate(currentDate);
-               trip.setTripEndTime(currentTime);
-               trip.setTripStatus("2");
-               databaseHandler.UpdateSaleManTrip(trip);
 
+
+               if (!username.getText().toString().trim().equals("")
+               && !pass.getText().toString().trim().equals("")) {
+                   int type = databaseHandler.getAllSalesMentype(username.getText().toString().trim(), pass.getText().toString().trim());
+                   //    username.getText().toString().trim().equals()
+                   //    pass.getText().toString().trim().equals()
+                   if (type == 100) {
+                       SaleManTrips trip = new SaleManTrips();
+                       Date currentTimeAndDate = Calendar.getInstance().getTime();
+                       SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                       SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                       String currentTime = convertToEnglish(tf.format(currentTimeAndDate));
+                       String currentDate = convertToEnglish(df.format(currentTimeAndDate));
+                       trip.setTripEndDate(currentDate);
+                       trip.setTripEndTime(currentTime);
+                       trip.setTripStatus("2");
+                       databaseHandler.UpdateSaleManTrip(trip);
+                       dialog.dismiss();
+                       Toast.makeText(MainActivity.this, getResources().getString(R.string.tripisending), Toast.LENGTH_SHORT).show();
+                   } else {
+                       new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                               .setTitleText("")
+                               .setContentText(getResources().getString(R.string.not_authoriz2))
+                               .show();
+
+                   }
+               }else if(username.getText().toString().trim().equals(""))username.setError("");
+           else if(pass.getText().toString().trim().equals("")) {
+                   pass.setError("");
+                   pass.requestFocus();
+               }
            }
        });
 

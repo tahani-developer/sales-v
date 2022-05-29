@@ -4,26 +4,20 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.KeyguardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 //import android.support.v7.app.AppCompatActivity;
 //import android.support.v7.widget.CardView;
 import android.os.Environment;
-import android.telecom.TelecomManager;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -36,74 +30,52 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
-import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.activeKey;
-import com.dr7.salesmanmanager.Reports.Reports;
 import com.dr7.salesmanmanager.Reports.SalesMan;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
-import static com.dr7.salesmanmanager.AccountStatment.getAccountList_text;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
-import static com.dr7.salesmanmanager.MainActivity.customerLocation_main;
 import static com.dr7.salesmanmanager.MainActivity.latitude_main;
-import static com.dr7.salesmanmanager.MainActivity.location_main;
 import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 
@@ -156,7 +128,7 @@ public class Login extends AppCompatActivity {
 
     public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
     public  static    int getMaxVoucherServer=0;
-
+    public  static    int rawahneh_getMaxVouchFromServer =0;
     public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
     public  static  int makeOrders=0;// 1= just orders app
 
@@ -176,8 +148,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//   public  static     String headerDll = "";
-    public  static  String  headerDll = "/Falcons/VAN.dll";
+  public  static     String headerDll = "";
+ //   public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,6 +223,7 @@ public class Login extends AppCompatActivity {
             typaImport = flag_settingsList.get(0).getData_Type().equals("mysql") ? 0 : 1;
             rawahneh = flag_settingsList.get(0).getExport_Stock();
             getMaxVoucherServer = flag_settingsList.get(0).getMax_Voucher();
+            rawahneh_getMaxVouchFromServer = flag_settingsList.get(0).getMaxvochServer()
             makeOrders = flag_settingsList.get(0).getMake_Order();
             passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
@@ -569,13 +542,14 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
         Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,Trips,activePos,
-                cakeshopSW, qasionSW, talaatSW;
+                cakeshopSW, qasionSW, talaatSW,maxvochServer;
 
         ImageButton cakeshopInfo, qasionInfo, talaatInfo;
         TextView cakeExpandedText, qasionExpandedText, talaatExpandedText;
 
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
+        maxvochServer= moreDialog.findViewById(R.id.maxvochServer);
         swOrder = moreDialog.findViewById(R.id.swOrder);
         swPassword = moreDialog.findViewById(R.id.swPassword);
         swTotal = moreDialog.findViewById(R.id.swTotal);
@@ -613,6 +587,7 @@ public class Login extends AppCompatActivity {
 
             swExport.setChecked((flag_settingsList.get(0).getExport_Stock() == 1));
             swMax.setChecked((flag_settingsList.get(0).getMax_Voucher() == 1));
+            maxvochServer .setChecked((flag_settingsList.get(0).getMaxvochServer() == 1));
             swOrder.setChecked((flag_settingsList.get(0).getMake_Order() == 1));
             swPassword.setChecked((flag_settingsList.get(0).getAdmin_Password() == 1));
             swTotal.setChecked((flag_settingsList.get(0).getTotal_Balance() == 1));
@@ -674,6 +649,7 @@ public class Login extends AppCompatActivity {
 
             rawahneh = swExport.isChecked() ? 1 : 0;
             getMaxVoucherServer = swMax.isChecked() ? 1 : 0;
+            rawahneh_getMaxVouchFromServer = maxvochServer.isChecked() ? 1 : 0;
             makeOrders = swOrder.isChecked() ? 1 : 0;
             passwordSettingAdmin = swPassword.isChecked() ? 1 : 0;
             getTotalBalanceInActivities = swTotal.isChecked() ? 1 : 0;
@@ -690,11 +666,11 @@ public class Login extends AppCompatActivity {
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage));
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage);
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer);
             }
 
 
@@ -1279,8 +1255,13 @@ public class Login extends AppCompatActivity {
 
 
 
-
-
+        if(typaImport==1&&rawahneh_getMaxVouchFromServer==1)//iis
+        {
+            boolean isPosted = mDHandler.isAllVoucher_posted();
+            if (isPosted) {
+                getMaxVoucherFromServer(salesManInt);
+            }
+        }
 
 }
 
