@@ -912,12 +912,14 @@ public class ESCPSample2
 			}
 		}catch (Exception e)
 		{
+			Log.e("printerType","1="+e.getMessage());
 			printerType=5;
 		}
 		try {
 			dontshowTax=obj.getAllSettings().get(0).getDontShowtax();
 
 		}catch (Exception e){
+			Log.e("printerType","2="+e.getMessage());
 			dontshowTax=0;
 		}
 
@@ -943,10 +945,11 @@ public class ESCPSample2
 		}
 		else {
 			nLineWidth=550;
+//			nLineWidth=370;
 //			headerVoucher=" السلعة            " + "العدد " + "\t\t" + "السعر "+"\t\t"+"الخصم " + "\t\t" + "المجموع" + "\n" ;
 			headerVoucher= " العدد    " + "\t\t" + "  السعر "+"\t\t"+"     الخصم     " + "\t\t" + "       المجموع " + "\n" ;
 			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
-			line="--------------------------------------------------------------------------------";
+			line="-------------------------------------------------------";
 //			line="---------------------------------------------------------------";
 		}
 
@@ -1199,7 +1202,8 @@ public class ESCPSample2
 //					posPtr.printAndroidFont(null, true,    convertToEnglish(decimalFormat.format(Double.valueOf(voucherforPrint.getNetSales())))  +"\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_RIGHT);
 
 				}
-			} else {
+			}
+			else {
 
 
 
@@ -1244,7 +1248,7 @@ public class ESCPSample2
 			}
 			posPtr.printAndroidFont(null, true, "المستلم : ________________ " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null, true, "التوقيع : ________________ " + "\n", nLineWidth, 26, ESCPOSConst.LK_ALIGNMENT_LEFT);
-Log.e("tayaaLayout","=="+tayaaLayout);
+//Log.e("tayaaLayout","=="+tayaaLayout);
 			if(tayaaLayout==1)
 			posPtr.printBitmap(getCompanyTayeeLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 300);
 
@@ -1253,6 +1257,7 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 
             posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("printerType","3="+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -2000,7 +2005,7 @@ Log.e("tayaaLayout","=="+tayaaLayout);
 					posPtr.printAndroidFont(  null,true, headerVoucher +  "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);// test Zaid
 
 				}else {
-					Log.e("textContainsArabic","Else"+ textContainsArabic(payList.get(0).getBank()));
+//					Log.e("textContainsArabic","Else"+ textContainsArabic(payList.get(0).getBank()));
 
 					posPtr.printAndroidFont(  null,true, headerVoucher+ "\n" , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 

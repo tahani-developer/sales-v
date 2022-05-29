@@ -179,7 +179,7 @@ public class Login extends AppCompatActivity {
 //   public  static     String headerDll = "";
     public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Override
+//    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleAppUtils.setConfigChange(Login.this);

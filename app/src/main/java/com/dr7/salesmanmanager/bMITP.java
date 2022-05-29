@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,6 +21,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -75,6 +79,9 @@ import static com.dr7.salesmanmanager.SalesInvoice.vouchLast;
 import static com.dr7.salesmanmanager.SalesInvoice.voucher;
 import static com.dr7.salesmanmanager.StockRequest.clearData;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 // Source code recreated from a .class file by IntelliJ IDEA
 // (powered by Fernflower decompiler)
 
@@ -94,6 +101,8 @@ public class bMITP extends Activity {
     private Button connectButton;
     private Button searchButton;
     private ListView list;
+    public   ProgressDialog dialog;
+    SweetAlertDialog pdValidation;
     private com.dr7.salesmanmanager.BluetoothPort bluetoothPort;
     private CheckBox chkDisconnect;
 
@@ -158,8 +167,7 @@ public class bMITP extends Activity {
             if (!tempDir.exists()) {
                 tempDir.mkdir();
             }
-
-         FileWriter fWriter = new FileWriter(fileName);// crash
+            FileWriter fWriter = new FileWriter(fileName);// crash
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
             }
@@ -169,6 +177,9 @@ public class bMITP extends Activity {
             }
 
             fWriter.close();
+
+
+
         } catch (FileNotFoundException var3) {
             Log.e("BluetoothConnectMenu1", var3.getMessage(), var3);
 
@@ -192,7 +203,29 @@ public class bMITP extends Activity {
         }
 
     }
+    public void onPermission()
+    {
+// Permision can add more at your convinient
+        if ((ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) !=
+                PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]
+                            {
 
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+
+
+                                    Manifest.permission.BLUETOOTH,
+
+                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                            },
+                    0
+            );
+        }
+    }
     private void clearBtDevData() {
         this.remoteDevices = new Vector();
     }
@@ -229,6 +262,12 @@ public class bMITP extends Activity {
 
 //
         getData = getIntent().getStringExtra("printKey");
+        try {
+            onPermission();
+        }catch (Exception e){
+            Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
+        }
+
 //        Bundle bundle = getIntent().getExtras();
 //         allStudents = (List<Item>) bundle.get("ExtraData");
 //
@@ -412,7 +451,7 @@ public class bMITP extends Activity {
                 this.unregisterReceiver(this.disconnectReceiver);
             }
 
-       this.saveSettingFile();// crash
+//       this.saveSettingFile();// crash
             this.bluetoothPort.disconnect();
         } catch (IOException var2) {
             Log.e("BluetoothConnectMenu2", var2.getMessage(), var2);
@@ -487,17 +526,25 @@ public class bMITP extends Activity {
     }
 
     class connTask extends AsyncTask<BluetoothDevice, Void, Integer> {
-        private final ProgressDialog dialog = new ProgressDialog(bMITP.this);
 
         connTask() {
         }
 
         protected void onPreExecute() {
-           String s="";
-            this.dialog.setTitle(" Try Connect ");
-            this.dialog.setMessage("Please Wait ....");
-            this.dialog.show();
             super.onPreExecute();
+           String s="";
+           dialog=new ProgressDialog(bMITP.this);
+            Handler h = new Handler(Looper.getMainLooper());
+            h.post(new Runnable() {
+                public void run() {
+                  dialog.setTitle(" Try Connect ");
+                  dialog.setMessage("Please Wait ....");
+                  dialog.setTitle(" Try Connect ");
+                  dialog.show();
+                }
+            });
+
+
         }
 
         protected Integer doInBackground(BluetoothDevice... params) {
@@ -521,14 +568,21 @@ public class bMITP extends Activity {
                 RequestHandler rh = new RequestHandler();
                 bMITP.this.hThread = new Thread(rh);
                 bMITP.this.hThread.start();
-                bMITP.this.connectButton.setText("Connect");
+
                 bMITP.this.connectButton.setEnabled(false);
                 bMITP.this.list.setEnabled(false);
                 bMITP.this.btAddrBox.setEnabled(false);
                 bMITP.this.searchButton.setEnabled(false);
-                if (this.dialog.isShowing()) {
-                    this.dialog.dismiss();
-                }
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        bMITP.this.connectButton.setText("Connect");
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
 
 //                Toast toast = Toast.makeText(bMITP.this.context, "Now Printing ", Toast.LENGTH_SHORT);
 //                toast.show();
@@ -770,8 +824,8 @@ public class bMITP extends Activity {
                     bMITP.this.registerReceiver(bMITP.this.disconnectReceiver, new IntentFilter("android.bluetooth.device.action.ACL_DISCONNECTED"));
                 }
             } else {
-                if (this.dialog.isShowing()) {
-                    this.dialog.dismiss();
+                if (dialog.isShowing()) {
+                   dialog.dismiss();
                 }
 
                 AlertView.showAlert("Disconnect Bluetoothُ", "Try Again ,,,.", bMITP.this.context);

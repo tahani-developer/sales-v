@@ -30,6 +30,7 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.serialModel;
+import com.google.gson.JsonObject;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -1354,26 +1355,23 @@ public class ExportJason extends AppCompatActivity {
 
 
         @Override
-        protected void onPostExecute(final String result) {
+        protected void onPostExecute( String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
 
 
             pdVoucher.setTitle("Export Added Customer");
-
+//"ErrorCode":"1","ErrorDesc":"ORA-12899: value too large for column "A2022_295"."VE_ADDED_CUSTOMERS"."REMARK" (actual: 51, maximum: 45)"}
             if (result != null && !result.equals("")) {
+
+
                 if(result.contains("Saved Successfully")) {
                     updateAddedCustomer();// 10
 
                    // Toast.makeText(context, context.getResources().getString(R.string.addCusttomerSucssesfuly), Toast.LENGTH_SHORT).show();
 
                 }else {
-                    if(result.contains("Error in Saving"))
-                    {
-                        Toast.makeText(context, "Error in Saving Added Customer", Toast.LENGTH_SHORT).show();
-
-                        //{"ErrorCode":"1","ErrorDesc":"ORA-00001: unique constraint (A2021_555.CUSTSALESM_O0) violated"}
-                    }
+                    Toast.makeText(context, "Error in Saving  Customer ="+result, Toast.LENGTH_LONG).show();
                 }
 
 
@@ -1398,7 +1396,14 @@ public class ExportJason extends AppCompatActivity {
 
         }
     }
-
+    public String convertStandardJSONString(String data_json){
+        data_json = data_json.replace("\"", "");
+//        Log.e("");
+//        data_json = data_json.replace("\"{", "{");
+//        data_json = data_json.replace("}\",", "},");
+//        data_json = data_json.replace("}\"", "}");
+        return data_json;
+    }
     private void updateAddedCustomer() {
         mHandler.updateAddedCustomers();
         Log.e("onPostExecute","updateAddedCustomer---10---");
@@ -1576,6 +1581,11 @@ public class ExportJason extends AppCompatActivity {
         new JSONTaskSaveVouchers().execute();
 
     }
+    private void saveLoadVan() {//15
+        // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5
+        new JSONTaskSaveLoadVan().execute();
+
+    }
     private void saveItemSerials() {
         // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5
         new JSONTaskSerials().execute();
@@ -1691,7 +1701,117 @@ public class ExportJason extends AppCompatActivity {
             saveItemSerials();// 16
         }
     }
+    private class JSONTaskSaveLoadVan extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+        //        SweetAlertDialog pdItem=null;
+        public  String salesNo="",finalJson;
 
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressSave = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            progressSave.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            progressSave.setTitleText(" Save Load");
+            progressSave.setCancelable(false);
+            progressSave.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+//            URLConnection connection = null;
+//            BufferedReader reader = null;
+//
+//            try {
+//
+//                try {
+//                    if (!ipAddress.equals("")) {
+            // URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+salesNo+"&CONO="+CONO;
+            // http://localhost:8082/SaveVouchers?CONO=290&STRNO=5
+
+            //URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/SaveVouchers?CONO="+CONO+"&STRNO="+SalesManLogin;
+
+            try {
+                //  URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/ExportSALES_VOUCHER_D?CONO="+CONO.trim()+"&JSONSTR="+vouchersObject.toString().trim();
+
+//LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
+                String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveLoadVan";
+                // Log.e("ipAdress", "ip -->" + ip);
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                Log.e("tag_link", "ExportData -->" + link);
+                Log.e("tag_data", "ExportData -->" + data);
+
+////
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "ExportData -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+            progressSave.setTitle("Saved Load");
+            progressSave.dismissWithAnimation();
+            Log.e("onPostExecute","---15----"+result);
+
+            if (result != null && !result.equals("")) {
+
+
+            } else {
+                progressSave.dismissWithAnimation();
+
+            }
+            exportStock();// 18
+        }
+    }
     private void updateVoucherExported() {// 3
         Log.e("updateVoucherExported","trueee");
         mHandler.updateVoucher();
@@ -1796,7 +1916,8 @@ public class ExportJason extends AppCompatActivity {
                 progressSave.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
-            exportStock();// 18
+            exportLoadVan();
+
         }
     }
 
@@ -1933,6 +2054,10 @@ public class ExportJason extends AppCompatActivity {
         getLoadVanBalance();
         new  JSONTask_LoadVanDelphi().execute(); //14
     }
+    public void exportLoadVan_temp(){// 13
+        getLoadVanBalance();
+        new  JSONTask_LoadVanDelphi().execute(); //14
+    }
 
     private void getLoadVanBalance() {
         try {
@@ -1954,7 +2079,7 @@ public class ExportJason extends AppCompatActivity {
         try {
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArrayBalance);
-            Log.e("getSerialetail",""+jsonArrayBalance);
+            Log.e("salesManItemsBalan",""+jsonArrayBalance.length()+"\t"+jsonArrayBalance);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -2736,8 +2861,8 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_EXPORTLOADVAN---132"+result);
-            pdVoucher.setTitle("Export LOADVAN");
-            pdVoucher.dismissWithAnimation();
+//            pdVoucher.setTitle("Export LOADVAN");
+//            pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
@@ -2746,7 +2871,10 @@ public class ExportJason extends AppCompatActivity {
 
 
             }
-            updatePosted(); //14
+            saveLoadVan();
+
+
+//            updatePosted(); //14
         }
     }
     private void updatePosted() {
@@ -2768,20 +2896,22 @@ public class ExportJason extends AppCompatActivity {
             new JSONTaskEXPORT_STOCK().execute();
         }
          else {
-
                     if(importDataAfter==0)
                     {
                         if(workOnLine==1)
                         {
                             getData();
                         }else {
-                           showSavedSucces();
+                            showSavedSucces();
                         }
                     }  else if(importDataAfter==2)
                     {
                         ImportJason obj = new ImportJason(context);
                         obj.getSerialData(voucherNo_ReturnNo);
                     }
+
+
+//
 
 
 

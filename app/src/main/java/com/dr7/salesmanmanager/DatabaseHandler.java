@@ -6157,6 +6157,37 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return items;
     }
+    public List<Item> getStockRequestItems_temp() {
+        List<Item> items = new ArrayList<Item>();
+        // Select All Query
+
+        String selectQuery = "SELECT  detail.ITEM_NUMBER , detail.ITEM_NAME  , detail.UNIT_QTY , master.VOUCHER_DATE," +
+                " master.VOUCHER_NUMBER ,master.SALES_MAN_NUMBER" +
+                "FROM " + "where IS_POSTED=0\n" +
+                "        and master.VOUCHER_NUMBER=detail.VOUCHER_NUMBER ";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Item item = new Item();
+
+                item.setItemNo(cursor.getString(0));
+                item.setItemName(cursor.getString(1));
+                item.setQty(Integer.parseInt(cursor.getString(2)));
+                item.setDate(cursor.getString(3));
+                item.setVoucherNumber(Integer.parseInt(cursor.getString(4)));
+                item.setSalesmanNo(cursor.getString(5));
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+
+        return items;
+    }
+
 
     public List<AddedCustomer> getAllAddedCustomer() {
         List<AddedCustomer> customers = new ArrayList<>();
@@ -6239,7 +6270,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 //            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(1).getQty());
 
         }
-        //Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+        Log.e("ListItemBalance",""+salesManItemsBalanceList.size());
 
         return salesManItemsBalanceList;
     }

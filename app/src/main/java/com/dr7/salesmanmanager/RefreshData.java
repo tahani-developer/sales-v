@@ -1,19 +1,30 @@
 package com.dr7.salesmanmanager;
 
+import static com.dr7.salesmanmanager.Login.headerDll;
+import static com.dr7.salesmanmanager.Login.makeOrders;
+import static com.dr7.salesmanmanager.Login.salesMan;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.SalesManItemsBalance;
 import com.dr7.salesmanmanager.Modles.Settings;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +35,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 // public class RefreshData extends AppCompatActivity {
 public class RefreshData {
@@ -38,22 +53,48 @@ public class RefreshData {
     private ProgressDialog progressDialog;
     DatabaseHandler mHandler;
     boolean start=false;
-
+    String ipAddress = "", ipWithPort = "", SalesManLogin,userNo,CONO;
     public static List<Customer> customerList = new ArrayList<>();
     public static List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
 
     public RefreshData(Context context) {
         this.context = context;
         this.mHandler = new DatabaseHandler(context);
+        List<Settings> settings = mHandler.getAllSettings();
+        System.setProperty("http.keepAlive", "false");
+
+        SalesManLogin = mHandler.getAllUserNo();
+        //Log.e("SalesManLogin", "" + SalesManLogin);
+        if (settings.size() != 0) {
+            ipAddress = settings.get(0).getIpAddress();
+            ipWithPort = settings.get(0).getIpPort();
+            Log.e("ipWithPort", "" + ipWithPort);
+            if (makeOrders == 1) {
+
+                userNo = mHandler.getAllSettings().get(0).getStoreNo();
+                Log.e("userNo", "getAllSettings==" + userNo);
+            } else {
+                userNo = mHandler.getAllUserNo();
+            }
+
+            CONO = mHandler.getAllSettings().get(0).getCoNo();
+        } else {
+            Toast.makeText(context, "Check Setting Ip", Toast.LENGTH_SHORT).show();
+        }
+
+//        generalMethod=new GeneralMethod(context);
     }
 
     public void startParsing() {
         List<Settings> settings = mHandler.getAllSettings();
         if (settings.size() != 0) {
+//            if(settings.get(0).get)
             String ipAddress = settings.get(0).getIpAddress();
             URL_TO_HIT = "http://" + ipAddress + "/VANSALES_WEB_SERVICE/index.php";
+
+          new   JSONTaskDelphi_customer().execute();
 //            new SQLTask_unpostVoucher().execute(URL_TO_HIT);
-            new JSONTask().execute(URL_TO_HIT);
+//            new JSONTask().execute(URL_TO_HIT);
 
 
 
@@ -402,6 +443,280 @@ public class RefreshData {
             Toast.makeText(context, s, Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }
+    }
+
+
+
+    private class JSONTaskDelphi_customer extends AsyncTask<String, String, List<Customer>> {
+
+
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(true);
+            progressDialog.setMessage(context.getResources().getString(R.string.refresh_customerData));
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+        @Override
+        protected List<Customer> doInBackground(String... params) {
+            URLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+
+                try {
+
+
+                    //+custId
+
+                    if (!ipAddress.equals("")) {
+                        //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
+                        //  URL_TO_HIT = "http://" + ipAddress +"/Falcons/VAN.dll/GetACCOUNTSTATMENT?ACCNO=402001100";
+                        if (ipAddress.contains(":")) {
+                            int ind = ipAddress.indexOf(":");
+                            ipAddress = ipAddress.substring(0, ind);
+                        }
+//                    URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetTheUnCollectedCheques?ACCNO=1224";
+
+                        //   URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+
+                        URL_TO_HIT = "http://" + ipAddress.trim() + ":" + ipWithPort.trim() + headerDll.trim() + "/GetVanAllData?STRNO=" + SalesManLogin + "&CONO=" + CONO;
+
+                        //URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/Falcons/VAN.dll/GetVanAllData?STRNO="+SalesManLogin+"&CONO="+CONO;
+
+                        Log.e("URL_TO_HIT", "getCustomerList=" + URL_TO_HIT);
+                    }
+                } catch (Exception e) {
+                    progressDialog.dismiss();
+
+                    Handler h = new Handler(Looper.getMainLooper());
+                    h.post(new Runnable() {
+                        public void run() {
+                            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("check Connection")
+                                    .show();
+
+
+//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+
+
+                String link = URL_TO_HIT;
+                URL url = new URL(link);
+
+                //*************************************
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpGet request = new HttpGet();
+                request.setURI(new URI(URL_TO_HIT));
+
+//
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+//                Log.e("finalJson***Import", sb.toString());
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                // JsonResponse = sb.toString();
+
+                String finalJson = sb.toString();
+//                Log.e("finalJson***Import", finalJson);
+                String rate_customer = "";
+                String HideVal = "";
+
+                JSONObject parentObject = new JSONObject(finalJson);
+                try {
+                    JSONArray parentArrayCustomers = parentObject.getJSONArray("CUSTOMERS");
+                    customerList.clear();
+                    for (int i = 0; i < parentArrayCustomers.length(); i++) {
+                        JSONObject finalObject = parentArrayCustomers.getJSONObject(i);
+
+                        Customer Customer = new Customer();
+                        Customer.setCompanyNumber(finalObject.getString("COMAPNYNO"));
+                        Customer.setCustId(finalObject.getString("CUSTID"));
+                        Customer.setCustName(finalObject.getString("CUSTNAME"));
+                        Customer.setAddress(finalObject.getString("ADDRESS"));
+//                    if (finalObject.getString("IsSuspended") == null)
+                        Customer.setIsSuspended(0);
+//                    else
+//                        Customer.setIsSuspended(finalObject.getInt("IsSuspended"));
+                        Customer.setPriceListId(finalObject.getString("PRICELISTID"));
+                        Customer.setCashCredit(finalObject.getInt("CASHCREDIT"));
+                        Customer.setSalesManNumber(finalObject.getString("SALESMANNO"));
+                        Customer.setCreditLimit(finalObject.getDouble("CREDITLIMIT"));
+                        try {
+                            Customer.setPayMethod(finalObject.getInt("PAYMETHOD"));
+                        } catch (Exception e) {
+                            Customer.setPayMethod(-1);
+
+                        }
+                        Customer.setCustLat(finalObject.getString("LATITUDE"));
+                        Customer.setCustLong(finalObject.getString("LONGITUDE"));
+
+
+                        try {
+                            rate_customer = finalObject.getString("ACCPRC");
+                            if (!rate_customer.equals("null"))
+                                Customer.setACCPRC(rate_customer);
+                            else {
+                                Customer.setACCPRC("0");
+
+                            }
+                        } catch (Exception e) {
+                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            Customer.setACCPRC("0");
+
+                        }
+                        //*******************************
+                        try {
+                            HideVal = finalObject.getString("HIDE_VAL");
+                            if (!HideVal.equals("null") && !HideVal.equals("") && !HideVal.equals("NULL"))
+                                Customer.setHide_val(Integer.parseInt(HideVal));
+                            else {
+                                Customer.setACCPRC("0");
+
+                            }
+                            Customer.setCustomerIdText(finalObject.getString("CUSTID"));
+                        } catch (Exception e) {
+                            Log.e("ImportError", "Null_ACCPRC" + e.getMessage());
+                            Customer.setACCPRC("0");
+
+                        }
+                        //*******************************
+
+                        customerList.add(Customer);
+                    }
+                } catch (JSONException e) {
+                    Log.e("Import Data", e.getMessage().toString());
+                }
+
+                try {
+
+                    JSONArray parentArraySalesMan_Items_Balance = parentObject.getJSONArray("SalesMan_Items_Balance");
+                    salesManItemsBalanceList.clear();
+
+                    for (int i = 0; i < parentArraySalesMan_Items_Balance.length(); i++) {
+                        JSONObject finalObject = parentArraySalesMan_Items_Balance.getJSONObject(i);
+                        // Log.e("salesManItems","GsonSalesMan_Items_Balance"+finalObject.toString());
+                        String qty = "";
+                        SalesManItemsBalance item = new SalesManItemsBalance();
+                        item.setCompanyNo(finalObject.getString("COMAPNYNO"));
+                        item.setSalesManNo(finalObject.getString("STOCK_CODE"));
+                        item.setItemNo(finalObject.getString("ItemOCode"));
+
+                        qty = finalObject.getString("QTY");
+                        try {
+                            double qtydoubl = Double.parseDouble(qty);
+                            item.setQty(qtydoubl);
+
+                        } catch (Exception e) {
+                            item.setQty(0);
+                            Log.e("Exception", "" + qty);
+                        }
+//                        item.setQty(finalObject.getDouble("QTY"));
+
+                        salesManItemsBalanceList.add(item);
+                    }
+
+                } catch (Exception e) {
+                    Log.e("Exception", "GsonSalesMan_Items_Balance" + e.getMessage());
+                }
+
+
+            } catch (MalformedURLException e) {
+                Log.e("Customer", "********ex1");
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.e("CustomerIOException", e.getMessage().toString());
+                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("check Connection")
+                                .show();
+
+
+//                        Toast.makeText(context, "check Connection", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                e.printStackTrace();
+
+            } catch (JSONException e) {
+                Log.e("Customer", "********ex3  " + e.toString());
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } finally {
+                Log.e("Customer", "********finally");
+
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                }
+            }
+            return customerList;
+        }
+
+
+        @Override
+        protected void onPostExecute(final List<Customer> result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+            if (result != null) {
+                if (result.size() != 0) {
+                    // Log.e("result","storeInDatabase_customer="+result.size());
+
+
+//                    storeInDatabase_customer();
+
+                    new SQLTask().execute();
+
+                    Toast.makeText(context, "Customers list is ready" + customerList.size(), Toast.LENGTH_SHORT).show();
+                } else {
+
+                }
+            } else {
+                Toast.makeText(context, "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void storeInDatabase_customer() {
+        // Log.e("storeInDatabase_cust",""+customerList.size());
+        if (customerList.size() != 0) {
+            mHandler.deleteAllCustomers();
+            mHandler.addCustomer(customerList);
+        }
+
+
     }
 }
 

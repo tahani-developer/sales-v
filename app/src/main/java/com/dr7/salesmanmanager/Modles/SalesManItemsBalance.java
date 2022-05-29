@@ -82,20 +82,39 @@ public class SalesManItemsBalance {
     public JSONObject getJSONObject() {
         JSONObject obj = new JSONObject();
         try {
-
-
             obj.put("LOADTYPE", "1");
             obj.put("VANCODE", SalesManNo);
             obj.put("ITEMCODE", ItemNo);
             obj.put("LOADQTY", Qty);
             obj.put("NETQTY", Qty);
             obj.put("LOADDATE",today);
+            obj.put("EXPORTED","0");
+            obj.put("ADD_SALESMEN","0");
         } catch (JSONException e) {
             Log.e("TagSalesmanBalance" , "JSONException");
         }
         return obj;
     }
+    public JSONObject getJSONObject_tempLoadVan() {
+//        http://localhost:8085/SaveTempLoadVan?CONO=295&JSONSTR={JSN:[{LOADTYPE:2,VANCODE:0002,LOADQTY:50
+        // ,ITEMCODE:123456,ADD_SALESMEN:0,NETQTY:50,EXPORTED:0,LOADDATE:22/05/2022}]}
+        JSONObject obj = new JSONObject();
+        try {
 
+
+            obj.put("LOADTYPE", "2");
+            obj.put("VANCODE", SalesManNo);
+            obj.put("ITEMCODE", ItemNo);
+            obj.put("LOADQTY", Qty);
+            obj.put("NETQTY", Qty);
+            obj.put("LOADDATE",today);
+            obj.put("EXPORTED","0");
+            obj.put("ADD_SALESMEN","0");
+        } catch (JSONException e) {
+            Log.e("TagSalesmanBalance" , "JSONException");
+        }
+        return obj;
+    }
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
         return newValue;

@@ -18,6 +18,7 @@ import android.os.Handler;
 //import android.support.annotation.RequiresApi;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
@@ -43,6 +44,7 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.LocaleAppUtils;
 import com.dr7.salesmanmanager.Login;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
@@ -80,6 +82,8 @@ import java.util.UUID;
 
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.ReceiptVoucher.savebitmap;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 //import com.dr7.salesmanmanager.Pos;
 
@@ -277,9 +281,10 @@ public class CashReport  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                new DatePickerDialog(CashReport.this, openDatePickerDialog(0), myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+                openPasswordDialog();
+
             }
         });
 
@@ -387,6 +392,37 @@ public class CashReport  extends AppCompatActivity {
             }
         });
     }
+
+    private void openPasswordDialog()  {
+        final EditText editText = new EditText(CashReport.this);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(CashReport.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+
+                    sweetAlertDialog.dismissWithAnimation();
+                    new DatePickerDialog(CashReport.this, openDatePickerDialog(0), myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+                }
+                else {
+                    editText.setError("Incorrect");
+                }
+            }
+        })
+
+                .show();
+    }
+
     private void inflateBoomMenu() {
         BoomMenuButton bmb = (BoomMenuButton)findViewById(R.id.bmb);
 

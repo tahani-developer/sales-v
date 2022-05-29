@@ -5293,19 +5293,19 @@ public class SalesInvoice extends Fragment {
 
 
                             if (items.get(b).getDisc() != 0) {// delete the discount(table bromotion vs ) from this item
-                                disount_totalnew = 0;
-                                items.get(b).setDisc(disount_totalnew);
-                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
-                                itemsListView.setAdapter(itemsListAdapter);
+//                                disount_totalnew = 0;
+//                                items.get(b).setDisc(disount_totalnew);
+//                                items.get(b).setAmount(items.get(b).getQty() * items.get(b).getPrice());
+//                                itemsListView.setAdapter(itemsListAdapter);
 
                             }
                             else {// zero descount for this item
 //                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
 
+                                disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
 
                             }
-                            Log.e("disc_items_value","else="+disc_items_value);
-                            disc_items_value += items.get(b).getQty() * mDbHandler.getDiscValue_From_ItemsQtyOffer(items.get(b).getItemNo(), limit_offer);
+//                            Log.e("disc_items_value","else="+disc_items_value);
 
 
 
