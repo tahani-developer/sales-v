@@ -80,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 183;
+    private static final int DATABASE_VERSION = 185;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -355,6 +355,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
 
     private static final String UserName = "UserName";
     private static final String Password = "Password";
+    private static final String UserType = "UserType";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String CustomerPrices = "CustomerPrices";
@@ -627,6 +628,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Data_Type = "Data_Type";
     private static final String Export_Stock = "Export_Stock";
     private static final String Max_Voucher = "Max_Voucher";
+    private static final String Max_VoucherSever = "Max_VoucherSever";
     private static final String Make_Order = "Make_Order";
     private static final String Admin_Password = "Admin_Password";
     private static final String Total_Balance = "Total_Balance";
@@ -972,7 +974,9 @@ private static final String  SalemanTrips="SalemanTrips";
 
         String CREATE_TABLE_Salesmen = "CREATE TABLE IF NOT EXISTS " + SalesMen + "("
                 + UserName + " TEXT,"
-                + Password + " TEXT" + ")";
+                + Password + " TEXT," +
+              UserType+" INTEGER"
+               + ")";
         db.execSQL(CREATE_TABLE_Salesmen);
 
         //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1295,7 +1299,8 @@ private static final String  SalemanTrips="SalemanTrips";
                 + CakeShop_Offer + " INTEGER DEFAULT '0' ,"
                 + Talaat_Offer + " INTEGER DEFAULT '0' ,"
                 + Qasion_Offer + " INTEGER DEFAULT '0' ,"
-                + ActiveSlasmanTrips + " INTEGER DEFAULT '0' "
+                + ActiveSlasmanTrips + " INTEGER DEFAULT '0' ,"
+                + Max_VoucherSever + " INTEGER DEFAULT '0' "
 
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
@@ -2521,6 +2526,23 @@ private static final String  SalemanTrips="SalemanTrips";
         {
             Log.e(TAG, e.getMessage().toString());
         }
+/////////
+        try{
+            db.execSQL("ALTER TABLE SalesMen ADD UserType INTEGER");
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+
+        try{
+            db.execSQL("ALTER TABLE Flag_Settings ADD '"+Max_VoucherSever+"'  INTEGER  DEFAULT '0' ");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
     }
 
     ////B
@@ -2542,6 +2564,7 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Talaat_Offer, flag_settings.getOfferTalaat());
         values.put(Qasion_Offer, flag_settings.getOfferQasion());
         values.put(ActiveSlasmanTrips, flag_settings.getActiveSlasmanTrips());
+        values.put(Max_VoucherSever, flag_settings.getMaxvochServer());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2585,7 +2608,7 @@ private static final String  SalemanTrips="SalemanTrips";
 
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
-                                    int csOffer, int tOffer, int qOffer,int SalTrip) {
+                                    int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2603,7 +2626,7 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Talaat_Offer, tOffer);
         values.put(Qasion_Offer, qOffer);
         values.put(ActiveSlasmanTrips, SalTrip);
-
+        values.put(Max_VoucherSever, mavVoServer);
         db.update(Flag_Settings, values, null, null);
 
         Log.e("Flag Settings", "UPDATE");
@@ -3246,7 +3269,7 @@ private static final String  SalemanTrips="SalemanTrips";
 
         values.put(UserName, salesMan.getUserName());
         values.put(Password, salesMan.getPassword());
-
+        values.put(UserType, salesMan.getUserType());
         db.insert(SalesMen, null, values);
         db.close();
     }
@@ -3547,7 +3570,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
     public void addVoucher(Voucher voucher) {
         // 2 add time
-
+        Log.e("addVoucher","addVoucher");
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3636,7 +3659,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
 
 
-        // Log.e("addItem",""+item.getDescription());
+         Log.e("addItem",""+item.getBarcode());
         //********************************************************
 
         db.insert(SALES_VOUCHER_DETAILS, null, values);
@@ -4333,7 +4356,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
                 salesMan.setUserName(cursor.getString(0));
                 salesMan.setPassword(cursor.getString(1));
-
+                salesMan.setUserType(cursor.getInt(2));
                 // Adding transaction to list
                 salesMen.add(salesMan);
                 Log.e("getAllSalesMen",""+salesMen.size());
@@ -4341,7 +4364,28 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
         return salesMen;
     }
+    public int getAllSalesMentype(String username,String password) {
+        int usertype=-1;    // Select All Query
+        String selectQuery = "SELECT  UserType FROM " + SalesMen+ " WHERE UserName= '"+username+"' AND Password= '"+password+"' ";
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        Log.e("*****", "" + cursor.getCount());
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+
+
+                usertype= cursor.getInt(0);
+                // Adding transaction to list
+
+
+            } while (cursor.moveToNext());
+        }
+        return usertype;
+    }
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<Customer>();
         // Select All Query
@@ -4654,6 +4698,33 @@ Log.e("addCompanyInfo","addCompanyInfo");
             while(cursor.moveToNext());
         }
         return  masters;
+    }
+    public ItemsMaster getItemMasterForItem(String ItemNo2 ) {
+        Log.e("getItemMasterForItem===","getItemMasterForItem");
+        ItemsMaster itemsMaster = new ItemsMaster();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + Items_Master+" WHERE ItemNo= '" + ItemNo2+"'";
+        Log.e("selectQuery===",selectQuery);
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+
+                itemsMaster.setCompanyNo(cursor.getString(0));
+                itemsMaster.setItemNo(cursor.getString(1));
+                itemsMaster.setName(cursor.getString(2));
+                itemsMaster.setCategoryId(cursor.getString(3));
+                itemsMaster.setBarcode(cursor.getString(4));
+                itemsMaster.setIsSuspended(Integer.parseInt(cursor.getString(5)));
+                itemsMaster.setItemL(Double.parseDouble(cursor.getString(6)));
+                itemsMaster.setPosPrice(cursor.getDouble(7));
+                Log.e("getPosPrice===",itemsMaster.getPosPrice()+"");
+            }
+            while(cursor.moveToNext());
+        }
+        return  itemsMaster;
     }
     public List<ItemsMaster> getItemkinds(String KINDITEM) {
         List<ItemsMaster> mastersItemkinds = new ArrayList<ItemsMaster>();
@@ -5534,7 +5605,31 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 "\n" +
                 ")";*/
 
+    public String gettaxpercforItem(String itemNo) {
 
+        // Select All Query
+        String salesMan = getAllUserNo();
+        String TaxPerc="";
+        String selectQuery2 ="select  TaxPerc from PRICE_LIST_D where ItemNo = '"+itemNo+"'";
+
+        db = this.getWritableDatabase();
+        Cursor cursor_TaxPerc = db.rawQuery(selectQuery2, null);
+        if (cursor_TaxPerc.moveToFirst()){
+            TaxPerc=cursor_TaxPerc.getString(0);
+        }
+
+        cursor_TaxPerc.close();
+
+        return TaxPerc;
+
+
+
+
+
+//            } while (cursor_price.moveToNext());
+//        }*/
+
+    }
     private String getPriceforItem(String itemNo,String rate) {
 
         // Select All Query
@@ -7963,7 +8058,9 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
 
     public ItemUnitDetails getItemUnitDetails(String itemNumber) {
+
         String selectQuery = "select * from Item_Unit_Details where ItemNo='"+itemNumber.trim()+"'";
+        Log.e("selectQuery===",selectQuery);
         ItemUnitDetails itemUnit=new ItemUnitDetails();
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -7976,7 +8073,9 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     itemUnit.setUnitPrice(cursor.getString(4));
                     itemUnit.setItemBarcode(cursor.getString(5));
                     Log.e("getUnitForItem","price="+itemUnit);
-
+                    Log.e("getUnitForItem","getConvRate="+    itemUnit.getConvRate());
+                    Log.e("getUnitForItem","getUnitId="+    itemUnit.getUnitId());
+                    Log.e("getUnitForItem","price="+    itemUnit.getUnitPrice());
                 }while (cursor.moveToNext());
 
             }
@@ -8939,5 +9038,33 @@ Log.e("addCompanyInfo","addCompanyInfo");
             return "2";
         }
         return "2" ;}
+
+
+    public List<SalesManItemsBalance> getSalesManItemsQTY(String salesmanNo) {
+        List<SalesManItemsBalance> salesManItemsBalanceList = new ArrayList<>();
+        String selectQuery = "SELECT  distinct SalesManNo , ItemNo , Qty  FROM "+ SalesMan_Items_Balance
+                +" Where SalesManNo = " + salesmanNo + "";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+
+
+            do {
+                SalesManItemsBalance salesManItemsBalance = new SalesManItemsBalance();
+                salesManItemsBalance.setSalesManNo(cursor.getString(0));
+                salesManItemsBalance.setItemNo(cursor.getString(1));
+                salesManItemsBalance.setQty(Double.parseDouble(cursor.getString(2)));
+                salesManItemsBalanceList.add(salesManItemsBalance);
+            } while (cursor.moveToNext());
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(0).getQty());
+//            Log.e("ListItemBalance",""+salesManItemsBalanceList.get(1).getQty());
+
+        }
+      Log.e("getSalesManItemsQTY",""+salesManItemsBalanceList.get(0).getQty());
+
+        return salesManItemsBalanceList;
+    }
+
 }
 

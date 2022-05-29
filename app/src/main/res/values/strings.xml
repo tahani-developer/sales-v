@@ -490,6 +490,7 @@
     <string name="toChangeSerialVoucherNumberExportData">To Change Serial Voucher Number Export Data</string>
     <string name="noTax">No Tax</string>
     <string name="shelf_inventory">Shelf Inventory</string>
+    <string name="carstock">Car Stocking</string>
     <string name="totalDiscount">Total Cash Discount</string>
     <string name="deffirentPrice">Deffirent Price</string>
     <string name="deffirentPrice2"> price difference</string>
@@ -561,6 +562,13 @@
     <string name="newtripMsg">you cannot start new trip without ending current trip</string>
     <string name="tripisstarting">Trip has started</string>
 
+    <string name="tripisending">Trip has ended</string>
+    <string name="currentqty">Current qty</string>
+    <string name="actualqty">Actual qty</string>
+    <string name="deffirntqty">deff Qty</string>
+    <string name="savevocher">Save as Vocher</string>
+    <string name="not_authoriz2">Sorry, you are not authorized </string>
+    <string name="maxvochServer">Max Vocher From Server</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

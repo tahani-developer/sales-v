@@ -16,7 +16,7 @@ public class SalesManItemsBalance {
     private String SalesManNo;
     private String ItemNo;
     private double Qty;
-
+    private double Act_Qty;
     public SalesManItemsBalance(){
 
     }
@@ -30,6 +30,14 @@ public class SalesManItemsBalance {
         this.SalesManNo = salesManNo;
         this.ItemNo = itemNo;
         this.Qty = qty;
+    }
+
+    public double getAct_Qty() {
+        return Act_Qty;
+    }
+
+    public void setAct_Qty(double act_Qty) {
+        Act_Qty = act_Qty;
     }
 
     public String getCompanyNo() {
