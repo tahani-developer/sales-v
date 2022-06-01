@@ -5450,9 +5450,20 @@ public class SalesInvoice extends Fragment {
 
         if(noTax==0)
         {
-            totalTaxValue=0;
-            taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-            subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+            if(mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 1){// شامل
+
+                Log.e("getTaxClarcKind","totalTaxValue="+totalTaxValue+"\tnetTotal="+netTotal);
+                netTotal=netTotal-totalTaxValue;
+                subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+
+                totalTaxValue=0;
+                taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+            }else{// خاضع
+                totalTaxValue=0;
+                taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+                subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+            }
+
         }else
         {
             taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
