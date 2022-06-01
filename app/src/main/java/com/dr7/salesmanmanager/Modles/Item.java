@@ -649,4 +649,22 @@ public class Item implements Serializable {
         }
         return obj;
     }
+    public JSONObject getJSONObject_VanLoad() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("LOADTYPE", "2");
+            obj.put("VANCODE", salesmanNo);
+            obj.put("LOADQTY", qty);
+            obj.put("ITEMCODE", itemNo);
+            obj.put("NETQTY", qty);
+            obj.put("EXPORTED", "0");
+            obj.put("LOADDATE", date);
+            obj.put("ADD_SALESMEN", "0");
+
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 }

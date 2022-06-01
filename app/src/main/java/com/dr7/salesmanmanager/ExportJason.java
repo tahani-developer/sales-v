@@ -75,9 +75,9 @@ public class ExportJason extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private JSONArray jsonArrayVouchers, jsonArrayItems, jsonArrayPayments , jsonArrayPaymentsPaper , jsonArrayAddedCustomer,
             jsonArrayTransactions, jsonArrayBalance ,jsonArrayStockRequest,jsonArrayLocation,jsonArraySerial,
-            jsonArrayStockRequestMaster,jsonArrayInventory;
+            jsonArrayStockRequestMaster,jsonArrayInventory,UpdateloadvanArray,VanRequstsjsonArray;
     DatabaseHandler mHandler;
-    JSONObject vouchersObject;
+    JSONObject vouchersObject,VanRequstsjsonobject,Updateloadvanobject;
     public static  SweetAlertDialog pd,pdValidation;
     int taxType=0,importDataAfter=0;
     JSONObject ReturnUpdateObject;
@@ -167,6 +167,32 @@ public class ExportJason extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void  getVanRequstObject(List<Item>itemsRequsts) {
+        VanRequstsjsonArray = new JSONArray();
+        for (int i = 0; i < itemsRequsts.size(); i++)
+        {
+
+            VanRequstsjsonArray.put(itemsRequsts.get(i).getJSONObject_VanLoad());
+
+        }
+        try {
+
+            VanRequstsjsonobject =new JSONObject();
+            VanRequstsjsonobject.put("JSN", VanRequstsjsonArray);
+            Log.e("Object",""+ VanRequstsjsonArray.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void IIs_SaveVanRequst(List<Item>itemsRequsts){
+
+        getVanRequstObject(itemsRequsts);
+        new JSONTaskIIs_SaveVanRequst(itemsRequsts).execute();
+
+    }
+
     private void fillIpAddressWithPort() {
         if (!ipAddress.equals("")) {
             //http://10.0.0.22:8082/GetTheUnCollectedCheques?ACCNO=1224
@@ -3189,5 +3215,113 @@ public class ExportJason extends AppCompatActivity {
 
     }
 
+    private class JSONTaskIIs_SaveVanRequst extends AsyncTask<String, String, String> {
 
+        JSONObject jsonObject;
+        List<Item>itemsRequsts=new ArrayList<>();
+
+        public JSONTaskIIs_SaveVanRequst(List<Item> itemsRequsts) {
+            this.itemsRequsts = itemsRequsts;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String do_ = "my";
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+//            ipAddress = "";
+            try {
+
+
+                if (!ipAddress.equals("")) {
+                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
+                    Log.e("URL_TO_HIT",URL_TO_HIT);
+                }
+            } catch (Exception e) {
+
+            }
+
+            try {
+
+                String JsonResponse = null;
+                HttpClient client = new DefaultHttpClient();
+                HttpPost request = new HttpPost();
+                request.setURI(new URI(URL_TO_HIT));
+//
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("CONO", CONO));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR",VanRequstsjsonobject.toString().trim()));
+
+
+                request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
+
+
+                HttpResponse response = client.execute(request);
+
+
+                BufferedReader in = new BufferedReader(new
+                        InputStreamReader(response.getEntity().getContent()));
+
+                StringBuffer sb = new StringBuffer("");
+                String line = "";
+
+                while ((line = in.readLine()) != null) {
+                    sb.append(line);
+                }
+
+                in.close();
+
+
+                JsonResponse = sb.toString();
+                Log.e("tag_requestState", "JsonResponse\t" + JsonResponse);
+
+                return JsonResponse;
+
+
+            }//org.apache.http.conn.HttpHostConnectException: Connection to http://10.0.0.115 refused
+            catch (HttpHostConnectException ex) {
+                ex.printStackTrace();
+//                progressDialog.dismiss();
+
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+
+                        Toast.makeText(context, "Ip Connection Failed ", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+//                progressDialog.dismiss();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if (s != null) {
+                if (s.contains("Saved Successfully")) {
+
+
+                 //   RequstReport. exportrespon.setText("Saved Successfully");
+
+                }
+                else {
+
+                }
+//                progressDialog.dismiss();
+            }
+        }
+
+    }
 }
