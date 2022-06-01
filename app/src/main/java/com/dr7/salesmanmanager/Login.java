@@ -148,8 +148,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-  public  static     String headerDll = "";
- //   public  static  String  headerDll = "/Falcons/VAN.dll";
+//  public  static     String headerDll = "";
+    public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,7 +223,7 @@ public class Login extends AppCompatActivity {
             typaImport = flag_settingsList.get(0).getData_Type().equals("mysql") ? 0 : 1;
             rawahneh = flag_settingsList.get(0).getExport_Stock();
             getMaxVoucherServer = flag_settingsList.get(0).getMax_Voucher();
-            rawahneh_getMaxVouchFromServer = flag_settingsList.get(0).getMaxvochServer()
+            rawahneh_getMaxVouchFromServer = flag_settingsList.get(0).getMaxvochServer();
             makeOrders = flag_settingsList.get(0).getMake_Order();
             passwordSettingAdmin = flag_settingsList.get(0).getAdmin_Password();
             getTotalBalanceInActivities = flag_settingsList.get(0).getTotal_Balance();
@@ -1255,13 +1255,13 @@ public class Login extends AppCompatActivity {
 
 
 
-        if(typaImport==1&&rawahneh_getMaxVouchFromServer==1)//iis
-        {
-            boolean isPosted = mDHandler.isAllVoucher_posted();
-            if (isPosted) {
-                getMaxVoucherFromServer(salesManInt);
-            }
-        }
+//        if(typaImport==1&&rawahneh_getMaxVouchFromServer==1)//iis
+//        {
+//            boolean isPosted = mDHandler.isAllVoucher_posted();
+//            if (isPosted) {
+//                getMaxVoucherFromServer(salesManInt);
+//            }
+//        }
 
 }
 

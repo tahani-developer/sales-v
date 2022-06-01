@@ -111,7 +111,7 @@ public class DeExportJason extends AppCompatActivity {
 
         if (flag == 0) {
             vouchers = mHandler.getAllVouchers();
-            items = mHandler.getAllItems();
+            items = mHandler.getAllItems(1);
             filterInvoice();
 
             for (int i = 0; i < vouchers.size(); i++) {
@@ -170,7 +170,7 @@ public class DeExportJason extends AppCompatActivity {
         } else {
 
             vouchers = mHandler.getAllVouchers();
-            items = mHandler.getAllItems();
+            items = mHandler.getAllItems(1);
             payments = mHandler.getAllPayments();
             paymentsPaper = mHandler.getAllPaymentsPaper();
 //            serialModelList = mHandler.getAllSerialItems();

@@ -67,6 +67,7 @@ import java.util.List;
 
 import static com.dr7.salesmanmanager.ExportJason.ReturnItemsarrayList;
 import static com.dr7.salesmanmanager.Login.makeOrders;
+import static com.dr7.salesmanmanager.Login.rawahneh_getMaxVouchFromServer;
 import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
@@ -2593,7 +2594,8 @@ private static final String  SalemanTrips="SalemanTrips";
                         cursor.getInt(9),
                         cursor.getInt(10),
                         cursor.getInt(11),
-                        cursor.getInt(12)
+                        cursor.getInt(12),
+                        cursor.getInt(13)
                 );
 
                 flagSettings.add(mySettings);
@@ -2688,7 +2690,7 @@ private static final String  SalemanTrips="SalemanTrips";
     public void addSerialVoucherNo( long saleVoucher,long retVoucher,long order) {
         long curentMaxVoucher=getMaxFromVoucherMaster(504);
         Log.e("getMaxSerialNumber", "FromSetting" + curentMaxVoucher+"\t"+saleVoucher);
-        if (curentMaxVoucher > saleVoucher) {
+        if (curentMaxVoucher > saleVoucher&&rawahneh_getMaxVouchFromServer==0) {
         } else {
 
 
@@ -2725,7 +2727,7 @@ private static final String  SalemanTrips="SalemanTrips";
         {
             long curentMaxVoucher=getMaxFromVoucherMaster(type);
             Log.e("getMaxSerialNumber", "updateVoucherNo" + curentMaxVoucher+"\t"+saleVoucher);
-            if (curentMaxVoucher > saleVoucher) {// dont change
+            if (curentMaxVoucher > saleVoucher&&rawahneh_getMaxVouchFromServer==0) {// dont change
             } else {
                 if(type==506)
                 {
@@ -4542,6 +4544,55 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return vouchers;
     }
+    public List<Voucher> getAllVouchers_NotPosted() {
+        List<Voucher> vouchers = new ArrayList<Voucher>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM  SALES_VOUCHER_MASTER where IS_POSTED=0";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Voucher Voucher = new Voucher();
+
+                Voucher.setCompanyNumber(Integer.parseInt(cursor.getString(0)));
+                Voucher.setVoucherNumber(Integer.parseInt(cursor.getString(1)));
+                Voucher.setVoucherType(Integer.parseInt(cursor.getString(2)));
+                Voucher.setVoucherDate(cursor.getString(3));
+                Voucher.setSaleManNumber(Integer.parseInt(cursor.getString(4)));
+                Voucher.setVoucherDiscount(Double.parseDouble(cursor.getString(10)));//5
+                Voucher.setVoucherDiscountPercent(Double.parseDouble(cursor.getString(6)));
+                Voucher.setRemark(cursor.getString(7));
+                Voucher.setPayMethod(Integer.parseInt(cursor.getString(8)));
+                Voucher.setIsPosted(Integer.parseInt(cursor.getString(9)));
+                Voucher.setTotalVoucherDiscount(Double.parseDouble(cursor.getString(10)));
+                Voucher.setSubTotal(Double.parseDouble(cursor.getString(11)));
+                try {
+                    Voucher.setTax(Double.parseDouble(cursor.getString(12)));
+                    Voucher.setNetSales(Double.parseDouble(cursor.getString(13)));
+                }catch (NullPointerException e)
+                {
+                    Voucher.setTax(0);
+                    Voucher.setNetSales(-1);
+                    Log.e("NullPointerException","tax and netsales");
+                }
+
+
+                Voucher.setCustName(cursor.getString(14));
+                Voucher.setCustNumber(cursor.getString(15));
+                Voucher.setVoucherYear(Integer.parseInt(cursor.getString(16)));
+                Voucher.setTime(cursor.getString(17));
+
+
+                // Adding transaction to list
+                vouchers.add(Voucher);
+            } while (cursor.moveToNext());
+        }
+
+        return vouchers;
+    }
     //****************************getAllVoucherBy Customer No ***************************************
     public List<Voucher> getAllVouchers_CustomerNo(String CustomerNo) {
         List<Voucher> vouchers = new ArrayList<Voucher>();
@@ -4912,16 +4963,28 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
 
 
-    public List<Item> getAllItems() {
+    public List<Item> getAllItems(int type) {
         List<Item> items = new ArrayList<Item>();
+        String selectQuery="";
         // Select All Query
-        String selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
-                " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
-                "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE ," +
-                " D.ITEM_DESCRIPTION ,D.SERIAL_CODE , D.WHICH_UNIT    , D.WHICH_UNIT_STR , D.WHICHU_QTY    , D.ENTER_QTY ," +
-                " D.ENTER_PRICE , D.UNIT_BARCODE ,D.ORIGINALVOUCHER_NUMBER " +
-                "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
-                "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
+        if(type==1){
+             selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
+                    " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
+                    "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE ," +
+                    " D.ITEM_DESCRIPTION ,D.SERIAL_CODE , D.WHICH_UNIT    , D.WHICH_UNIT_STR , D.WHICHU_QTY    , D.ENTER_QTY ," +
+                    " D.ENTER_PRICE , D.UNIT_BARCODE ,D.ORIGINALVOUCHER_NUMBER " +
+                    "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
+                    "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE";
+        }else {
+            selectQuery = "select D.VOUCHER_NUMBER , D.VOUCHER_TYPE , D.ITEM_NUMBER ,D.ITEM_NAME ," +
+                    " D.UNIT ,D.UNIT_QTY , D.UNIT_PRICE ,D.BONUS  ,D.ITEM_DISCOUNT_VALUE ,D.ITEM_DISCOUNT_PERC ," +
+                    "D.VOUCHER_DISCOUNT , D.TAX_VALUE , D.TAX_PERCENT , D.COMPANY_NUMBER , D.ITEM_YEAR , D.IS_POSTED , M.VOUCHER_DATE ," +
+                    " D.ITEM_DESCRIPTION ,D.SERIAL_CODE , D.WHICH_UNIT    , D.WHICH_UNIT_STR , D.WHICHU_QTY    , D.ENTER_QTY ," +
+                    " D.ENTER_PRICE , D.UNIT_BARCODE ,D.ORIGINALVOUCHER_NUMBER " +
+                    "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
+                    "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE and M.IS_POSTED = 0";
+        }
+
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

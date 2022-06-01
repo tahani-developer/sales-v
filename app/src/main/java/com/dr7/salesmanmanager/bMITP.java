@@ -764,7 +764,7 @@ public class bMITP extends Activity {
                               printVoucher =databaseHandler.getAllVouchers_VoucherNo(x,506);
                               Log.e("printVoucher==",printVoucher.getVoucherNumber()+"");
 
-                              returblistItemsMain=databaseHandler.getAllItems();
+                              returblistItemsMain=databaseHandler.getAllItems(1);
                               itemPrint = returblistItemsMain;
 
                               if(printShape==0) {//Normal print (Arabic)

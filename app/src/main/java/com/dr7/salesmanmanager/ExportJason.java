@@ -281,24 +281,24 @@ public class ExportJason extends AppCompatActivity {
         //********************************************
         //********************************************
 
-        vouchers = mHandler.getAllVouchers();// from voucher master
+        vouchers = mHandler.getAllVouchers_NotPosted();// from voucher master
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
             {
-                if (vouchers.get(i).getIsPosted() == 0) {
+
                     jsonArrayVouchers.put(vouchers.get(i).getJSONObject());
-                }
+
             }
 
-        items = mHandler.getAllItems();
+        items = mHandler.getAllItems(0);
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
            {
-               if (items.get(i).getIsPosted() == 0) {
+
 
                    jsonArrayItems.put(items.get(i).getJSONObject());
 
-               }
+
 
             }
 
@@ -374,7 +374,8 @@ public class ExportJason extends AppCompatActivity {
     void startExportDelPhi()throws JSONException {
 
 //        startExportDatabase();
-        exportSalesVoucherM();// 1
+
+        exportVoucherDetail();// 2
 //        savePayment();
 //        exportVoucherDetail();
 //        exportSerial();
@@ -459,11 +460,11 @@ public class ExportJason extends AppCompatActivity {
     private void exportSalesVoucherM() {
         getVouchers();
 
-        pdVoucher = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-        pdVoucher.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-        pdVoucher.setTitleText(" Start export Vouchers");
-        pdVoucher.setCancelable(false);
-        pdVoucher.show();
+//        pdVoucher = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+//        pdVoucher.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+//        pdVoucher.setTitleText(" Start export Vouchers");
+//        pdVoucher.setCancelable(false);
+//        pdVoucher.show();
         new JSONTaskDelphi().execute();
 
     }
@@ -471,18 +472,19 @@ public class ExportJason extends AppCompatActivity {
 
     private void getVouchers() {
 
-        vouchers = mHandler.getAllVouchers();// from voucher master
+        vouchers = mHandler.getAllVouchers_NotPosted();// from voucher master
+//        Log.e("getVouchersDetail",""+vouchers.size());
         jsonArrayVouchers = new JSONArray();
         for (int i = 0; i < vouchers.size(); i++)
         {
-            if (vouchers.get(i).getIsPosted() == 0) {
+
                 jsonArrayVouchers.put(vouchers.get(i).getJSONObjectDelphi());
-            }
+
         }
         try {
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArrayVouchers);
-            Log.e("vouchersObject",""+vouchersObject.toString());
+//            Log.e("vouchersObject",""+vouchersObject.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -969,7 +971,7 @@ public class ExportJason extends AppCompatActivity {
 
 
                 JsonResponse = sb.toString();
-                Log.e("JsonResponse", "ExporVoucher" + JsonResponse);
+//                Log.e("JsonResponse", "ExporVoucher" + JsonResponse);
 
 
 
@@ -993,7 +995,7 @@ public class ExportJason extends AppCompatActivity {
                 if(result.contains("Saved Successfully"))
                 {
 
-                    exportVoucherDetail();// 2
+                    exportReturnUpdateList();
                 }else {
                     pdVoucher.dismissWithAnimation();
                 }
@@ -1419,76 +1421,19 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            pdItem = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
-//            pdItem.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
-//            pdItem.setTitleText("export");
-//            pdItem.setCancelable(false);
-//            pdItem.show();
+            pdVoucher = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+        pdVoucher.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+        pdVoucher.setTitleText(" Start export Vouchers");
+        pdVoucher.setCancelable(false);
+        pdVoucher.show();
         }
 
         @Override
         protected String doInBackground(String... params) {
 
-//                try {
-                  //  URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/ExportSALES_VOUCHER_D?CONO="+CONO.trim()+"&JSONSTR="+vouchersObject.toString().trim();
-
-//
                     String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +headerDll.trim()+ "/ExportSALES_VOUCHER_D";
             Log.e("link==", link+"");
 
-
-                    //                   // Log.e("ipAdress", "ip -->" + ip);
-//                    String data = "CONO="+CONO.trim()+"&JSONSTR=" + URLEncoder.encode(vouchersObject.toString(), "UTF-8") ;
-//                    Log.e("tag_link", "ExportData -->" + link);
-//                    Log.e("tag_data", "ExportData -->" + data);
-//
-//////
-//                    URL url = new URL(link);
-//
-//                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-//                    httpURLConnection.setDoOutput(true);
-//                    httpURLConnection.setDoInput(true);
-//                    httpURLConnection.setRequestMethod("POST");
-//
-//
-//
-//                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-//                    wr.writeBytes(data);
-//                    wr.flush();
-//                    wr.close();
-//
-//                    InputStream inputStream = httpURLConnection.getInputStream();
-//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-//
-//                    StringBuffer stringBuffer = new StringBuffer();
-//
-//                    while ((JsonResponse = bufferedReader.readLine()) != null) {
-//                        stringBuffer.append(JsonResponse + "\n");
-//                    }
-//
-//                    bufferedReader.close();
-//                    inputStream.close();
-//                    httpURLConnection.disconnect();
-//
-//                    Log.e("tag", "ExportData -->" + stringBuffer.toString());
-//
-//                    return stringBuffer.toString();
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    if (urlConnection != null) {
-//                        urlConnection.disconnect();
-//                    }
-//                    if (reader != null) {
-//                        try {
-//                            reader.close();
-//                        } catch (final IOException e) {
-//                            Log.e("tag", "Error closing stream", e);
-//                        }
-//                    }
-//                }
-//                return null;
             String ipAddress = "";
             Log.e("tagexPORT", "JsonResponse");
 
@@ -1551,7 +1496,7 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-           // Log.e("onPostExecute","---2---"+result);
+            Log.e("onPostExecute","---2---__");
 //            pdItem.dismiss();
            // Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
             pdVoucher.setTitle("Export SALES_VOUCHER_Detail");
@@ -1563,6 +1508,8 @@ public class ExportJason extends AppCompatActivity {
 
 //                    updateVoucherExported();// 3
 
+                    exportSalesVoucherM();// 1
+
 
                 }
 
@@ -1571,7 +1518,7 @@ public class ExportJason extends AppCompatActivity {
                 pdVoucher.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
-            exportReturnUpdateList();
+
 
         }
     }
@@ -2038,7 +1985,7 @@ public class ExportJason extends AppCompatActivity {
         new JSONTaskDelphiDetail().execute();
     }
     public void exportSerial(){ // 4
-        pdVoucher.setTitle("Export Serial");
+//        pdVoucher.setTitle("Export Serial");
         getSerialTables();
        new  JSONTask_SerialDelphi().execute();
     }
@@ -2091,21 +2038,19 @@ public class ExportJason extends AppCompatActivity {
     }
 
     private void getVouchersDetail() {
-        items = mHandler.getAllItems();
+        items = mHandler.getAllItems(0);
+//        Log.e("getVouchersDetail",""+items.size());
         jsonArrayItems = new JSONArray();
         for (int i = 0; i < items.size(); i++)
         {
-            if (items.get(i).getIsPosted() == 0) {
 
                 jsonArrayItems.put(items.get(i).getJSONObjectDelphi());
-
-            }
 
         }
         try {
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArrayItems);
-            Log.e("getVouchersDetail",""+vouchersObject);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -3200,7 +3145,7 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
 //            progressDialog.dismiss();
-            Log.e("onPostExecuteReturnVocherDeatials",""+result);
+            Log.e("onPostExecuteReturn",""+result);
 
 
             pdReturnUpdate.dismiss();

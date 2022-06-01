@@ -117,7 +117,7 @@ public class VouchersReport extends AppCompatActivity {
         obj = new DatabaseHandler(VouchersReport.this);
         vouchers = obj.getAllVouchers();
 //        filteredVouchers = vouchers;
-        items = obj.getAllItems();
+        items = obj.getAllItems(1);
 
         TableTransactionsReport = (TableLayout) findViewById(R.id.TableTransactionsReport);
         Customer_nameSales = (TextView) findViewById(R.id.invoiceCustomerName);

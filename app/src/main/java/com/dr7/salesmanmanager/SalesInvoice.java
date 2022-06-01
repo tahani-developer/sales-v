@@ -2403,7 +2403,7 @@ public class SalesInvoice extends Fragment {
 
     private void refrechItemForReprint() {
         itemForPrintLast = new ArrayList<Item>();
-        itemForPrintLast = mDbHandler.getAllItems();//test
+        itemForPrintLast = mDbHandler.getAllItems(1);//test
 
     }
 

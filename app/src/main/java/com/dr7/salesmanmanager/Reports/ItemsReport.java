@@ -121,7 +121,7 @@ public class ItemsReport extends AppCompatActivity {
         filteredItems = new ArrayList<>();
         //B
         obj = new DatabaseHandler(ItemsReport.this);
-        items = obj.getAllItems();
+        items = obj.getAllItems(1);
         inflateBoomMenu();
         TableItemsReport = (TableLayout) findViewById(R.id.TableItemsBalanceReport);
         voucherTypeRadioGroup = (RadioGroup) findViewById(R.id.transKindRadioGroup);

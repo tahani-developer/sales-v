@@ -194,7 +194,7 @@ public class PrintVoucher extends AppCompatActivity {
 
         obj = new DatabaseHandler(PrintVoucher.this);
         vouchers = obj.getAllVouchers();
-        items = obj.getAllItems();
+        items = obj.getAllItems(1);
         try {
             companeyinfo = obj.getAllCompanyInfo();
         }catch(Exception e){}
