@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.Modles.CompanyInfo;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.PdfConverter;
@@ -58,7 +60,7 @@ import java.util.Locale;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 
 public class VouchersReport extends AppCompatActivity {
-
+    private ArrayList<String> customersSpinnerArray = new ArrayList<>();
     //B
     List<Voucher> filteredVouchers;
 
@@ -67,7 +69,8 @@ public class VouchersReport extends AppCompatActivity {
     List<Item> items;
     public static List<Item> itemsToPrint;
     TextView Customer_nameSales, textSubTotal, textTax, textNetSales;
-    EditText from_date, to_date, cust_number;
+    EditText from_date, to_date;
+    AutoCompleteTextView cust_number;
     Button preview;
     TableLayout TableTransactionsReport;
     TableLayout TableItemInfo;
@@ -124,7 +127,7 @@ public class VouchersReport extends AppCompatActivity {
 
         from_date = (EditText) findViewById(R.id.from_date);
         to_date = (EditText) findViewById(R.id.to_date);
-        cust_number = (EditText) findViewById(R.id.customer_number);
+        cust_number = findViewById(R.id.customer_number);
         preview = (Button) findViewById(R.id.preview);
         voucherKindSpinner = (Spinner) findViewById(R.id.payKindSpinner);
         payMethodSpinner = (Spinner) findViewById(R.id.payMethodSpinner);
@@ -287,7 +290,10 @@ public class VouchersReport extends AppCompatActivity {
 //                return false;
 //            }
 //        });
+        ArrayAdapter<String> customerSpinnerAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_dropdown_item_1line, MainActivity.customersSpinnerArray);
 
+        cust_number.setAdapter(customerSpinnerAdapter);
     }
 
     private void getPayMethod() {

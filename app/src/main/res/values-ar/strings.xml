@@ -426,6 +426,7 @@
     <string name="workSerial">تفعيل الرقم التسلسلي</string>
     <string name="AreYouSuretodelete">هل تريد الحذف ?</string>
     <string name="backupData">نسخ البيانات</string>
+    <string name="importexternaldatabase">import external database</string>
     <string name="backup_failed">تعذر نسخ البيانات</string>
     <string name="Printing">جاري الطباعة</string>
     <string name="duplicate">رقم مكرر</string>

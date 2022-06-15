@@ -9128,6 +9128,30 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return salesManItemsBalanceList;
     }
+    public ArrayList<String> getvocherDoesNotReturned() {
+        ArrayList<String> Vochers = new ArrayList<>();
+        // Select All Query                                                                                                          //AND IS_RETURNED = '0'
+        String selectQuery = "SELECT DISTINCT SALES_VOUCHER_MASTER.VOUCHER_NUMBER from SALES_VOUCHER_MASTER INNER JOIN SALES_VOUCHER_DETAILS d ON SALES_VOUCHER_MASTER.VOUCHER_NUMBER==d.VOUCHER_NUMBER WHERE d.IS_RETURNED==0";
 
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.e("cursor2==", cursor.getCount()+"\t\t");
+
+
+        if (cursor.moveToFirst()) {
+            Log.i("DatabaseHandler", "************************" + selectQuery);
+            do {
+
+
+
+                Vochers.add(cursor.getString(0));
+
+
+            } while (cursor.moveToNext());
+        }
+
+
+       return Vochers;
+    }
 }
 

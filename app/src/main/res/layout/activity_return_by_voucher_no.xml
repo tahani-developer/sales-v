@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    android:background="@color/layer7"
+
+    android:background="@color/white"
     android:id="@+id/linearMain"
     tools:context=".ReturnByVoucherNo">
 <!--    <ScrollView-->
@@ -83,7 +84,7 @@
                 android:textSize="14sp" />
             <EditText
                 android:id="@+id/serial_text"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:layout_width="match_parent"
                 android:inputType="text"
                 android:background="@drawable/back_border_edit"
@@ -146,20 +147,44 @@
 
 
                 android:textSize="14sp" />
-            <EditText
-                android:id="@+id/voucherNo_text"
-                android:layout_weight="5"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vochTextField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:inputType="number"
-                android:background="@drawable/back_border_edit"
-                android:elevation="5dp"
-                android:layout_height="40dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                app:boxBackgroundColor="@color/blue2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/itemGroupSpinner"
+                app:layout_constraintHorizontal_weight="0.7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:boxStrokeWidth="0dp"
                 android:hint="@string/voucherNo_origin"
-                android:textColorHint="@color/layer1"
-                android:gravity="center"
-                android:layout_marginRight="10dp"
-                android:textColor="@color/colorBlack"
-                android:textSize="14sp" />
+                app:boxStrokeWidthFocused="0dp"
+                android:theme="@style/Theme.MaterialComponents.Light"
+                app:boxStrokeColor="@color/colorblue_dark"
+                app:endIconMode="dropdown_menu"
+                app:hintTextColor="@color/layer1"
+                app:endIconTint="@color/colorblue_dark"
+
+                >
+
+                <AutoCompleteTextView
+                    android:id="@+id/voucherNo_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textAutoComplete"
+                    android:textAlignment="center"
+                    android:completionHint="@string/voucherNo"
+                    android:textColor="#000"
+                    android:padding="1dp"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <TextView
                 android:id="@+id/getDataVoucher"
@@ -212,7 +237,7 @@
                 android:textSize="14sp" />
             <TextView
                 android:id="@+id/payMethod_textView"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:layout_width="match_parent"
                 android:elevation="3dp"
                 android:background="@drawable/background_container"
