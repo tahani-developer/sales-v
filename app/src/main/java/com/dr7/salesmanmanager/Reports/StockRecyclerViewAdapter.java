@@ -113,7 +113,9 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 //            holder.cardView.setCardBackgroundColor(R.color.layer5);
 
         holder.editQty.setTag(position);
-        holder.editQty.setText(itemsRequiredList.get(holder.getAdapterPosition()).getQty()+"");
+
+        holder.editQty.setText(getQty(items.get(holder.getAdapterPosition()).getItemNo()));
+//        holder.editQty.setText(itemsRequiredList.get(holder.getAdapterPosition()).getQty()+"");
 
         holder.itemNumber.setText(items.get(holder.getAdapterPosition()).getItemNo());
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
@@ -256,6 +258,32 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
 
     }
+    private String getQty(String itemNo){
+        Log.e("getQty","itemNo="+itemNo);
+        for(int i=0;i<itemsRequiredList.size();i++){
+            Log.e("getQty","itemNo22="+itemsRequiredList.get(i).getItemNo());
+            if(itemsRequiredList.get(i).getItemNo().trim().equals(itemNo))
+            {
+                Log.e("getQty","getQty="+itemsRequiredList.get(i).getQty());
+                return itemsRequiredList.get(i).getQty()+"";
+            }
+        }
+        return "0";
+
+    }
+    private int getPositionInRequiredList(String itemNo){
+        Log.e("getPositionInRequ","itemNo="+itemNo);
+        for(int i=0;i<itemsRequiredList.size();i++){
+            Log.e("getPositionInRequ","itemNo22="+itemsRequiredList.get(i).getItemNo());
+            if(itemsRequiredList.get(i).getItemNo().trim().equals(itemNo))
+            {
+                Log.e("getPositionInRequ","getQty="+i);
+                return i;
+            }
+        }
+        return -1;
+
+    }
 
     private boolean notExistInTotalList(String itemNo) {
         Log.e("notExistInTotalList","itemNosize="+itemsNoList.size());
@@ -377,10 +405,12 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
                 @Override
                 public void afterTextChanged(Editable s) {
                     int tagPosition=Integer.parseInt(editQty.getTag().toString());
-                    Log.e("tagPosition",""+tagPosition);
+
+                    String itemNo=items.get(tagPosition).getItemNo();
+                    Log.e("tagPosition",""+tagPosition+"\t"+itemNo);
                     if(!s.toString().equals("")&&!s.toString().equals("0"))
                     {
-                       updateList(tagPosition,s.toString());
+                       updateList(tagPosition,s.toString(),itemNo);
 
                     }
 
@@ -398,18 +428,21 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
 
 
     }
-    private void updateList(int tagPosition, String qty) {
+    private void updateList(int tagPosition, String qty,String itemNo) {
         float qt=0;
         try {
             qt=Float.parseFloat(qty);
         }
         catch (Exception e){qt=0;}
         float oldQty=0,updateQty=0;
-        oldQty=itemsRequiredList.get(tagPosition).getQty();
+        int positionRequired=getPositionInRequiredList(itemNo);
+        Log.e("positionRequired",""+positionRequired);
+
+        oldQty=itemsRequiredList.get(positionRequired).getQty();
         updateQty=qt;
         if(oldQty!=updateQty)
         {
-            itemsRequiredList.get(tagPosition).setQty(qt);
+            itemsRequiredList.get(positionRequired).setQty(qt);
         }
 
 //            AddItemsStockFragment obj = new AddItemsStockFragment();

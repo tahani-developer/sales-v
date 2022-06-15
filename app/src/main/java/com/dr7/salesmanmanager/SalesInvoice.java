@@ -521,8 +521,10 @@ public class SalesInvoice extends Fragment {
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
                 calculateTotals(0);
+                if(mDbHandler.getAllSettings().get(0).getTaxClarcKind()==1)
+                refreshAdapterItems();
             }
         });
 
@@ -1050,16 +1052,7 @@ public class SalesInvoice extends Fragment {
 //        }
 
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // landscape
-            itemsListAdapter = new ItemsListAdapter(getActivity(), items,0);// if screen is landscape =====> 0
-
-        } else {
-            // portrait
-            itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
-
-        }
-        itemsListView.setAdapter(itemsListAdapter);
+   refreshAdapterItems();
 
 //        totalQty_textView.setText(items.size()+"");
 
@@ -1141,6 +1134,19 @@ public class SalesInvoice extends Fragment {
 //        }
 
         return view;
+    }
+
+    private void refreshAdapterItems() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // landscape
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,0);// if screen is landscape =====> 0
+
+        } else {
+            // portrait
+            itemsListAdapter = new ItemsListAdapter(getActivity(), items,1);// if screen is landscape =====> 0
+
+        }
+        itemsListView.setAdapter(itemsListAdapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -5450,9 +5456,20 @@ public class SalesInvoice extends Fragment {
 
         if(noTax==0)
         {
-            totalTaxValue=0;
-            taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
-            subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+            if(mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 1){// شامل
+
+                Log.e("getTaxClarcKind","totalTaxValue="+totalTaxValue+"\tnetTotal="+netTotal);
+                netTotal=netTotal-totalTaxValue;
+                subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+
+                totalTaxValue=0;
+                taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+            }else{// خاضع
+                totalTaxValue=0;
+                taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
+                subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));
+            }
+
         }else
         {
             taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));

@@ -167,8 +167,9 @@ public class ExportJason extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void  getVanRequstObject(List<Item>itemsRequsts) {
+    private void  getVanRequstObject() {
         VanRequstsjsonArray = new JSONArray();
+        List<Item>itemsRequsts=mHandler.getStockRequestItems_temp();
         for (int i = 0; i < itemsRequsts.size(); i++)
         {
 
@@ -179,15 +180,17 @@ public class ExportJason extends AppCompatActivity {
 
             VanRequstsjsonobject =new JSONObject();
             VanRequstsjsonobject.put("JSN", VanRequstsjsonArray);
-            Log.e("Object",""+ VanRequstsjsonArray.toString());
+            Log.e("Object","getVanRequstObjec="+ VanRequstsjsonArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void IIs_SaveVanRequst(List<Item>itemsRequsts){
+    public void IIs_SaveVanRequst(){
 
+//        getVanRequstObject();
+        new JSONTaskIIs_SaveVanRequst().execute();
           getVanRequstObject(itemsRequsts);
         new JSONTaskIIs_SaveVanRequst(itemsRequsts).execute();
 
@@ -2024,7 +2027,8 @@ public class ExportJason extends AppCompatActivity {
         new  JSONTask_InventoryShelfDelphi().execute();
     }
     public void exportLoadVan(){// 13
-        getLoadVanBalance();
+//        getLoadVanBalance();
+        getVanRequstObject();
         new  JSONTask_LoadVanDelphi().execute(); //14
     }
     public void exportLoadVan_temp(){// 13
@@ -2754,7 +2758,7 @@ public class ExportJason extends AppCompatActivity {
             super.onPostExecute(result);
             Log.e("onPostExecuteTrans","JSONTask_InventoryShelfDelphi---13"+result);
             pdVoucher.setTitle("Export Transaction");
-            pdVoucher.dismissWithAnimation();
+//            pdVoucher.dismissWithAnimation();
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
@@ -2788,8 +2792,11 @@ public class ExportJason extends AppCompatActivity {
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
-                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                // Log.e("nameValuePairs","JSONSTR"+vouchersObject.toString().trim());
+//                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+                nameValuePairs.add(new BasicNameValuePair("JSONSTR", VanRequstsjsonobject.toString().trim()));
+
+
+//                 Log.e("nameValuePairs","JSONSTR"+VanRequstsjsonobject.toString().trim());
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -2837,7 +2844,14 @@ public class ExportJason extends AppCompatActivity {
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully"))
                 {
-//                    mHandler.updateInventoryShelf();
+
+
+
+                        mHandler.updateRequestStockMaster();
+                        mHandler.updateRequestStockDetail();
+                        //   RequstReport. exportrespon.setText("Saved Successfully");
+
+
                 }
 
 
@@ -2855,9 +2869,10 @@ public class ExportJason extends AppCompatActivity {
 
        // mHandler.updateRequestStockMaster();
        // mHandler.updateRequestStockDetail();
+        IIs_SaveVanRequst();
 
         Log.e("onPostExecute","updatePostedAll---14---");
-       saveExpot(); //15
+
 
     }
      void exportStock(){//18
@@ -3216,19 +3231,9 @@ public class ExportJason extends AppCompatActivity {
     }
 
     private class JSONTaskIIs_SaveVanRequst extends AsyncTask<String, String, String> {
-
-        JSONObject jsonObject;
-        List<Item>itemsRequsts=new ArrayList<>();
-
-        public JSONTaskIIs_SaveVanRequst(List<Item> itemsRequsts) {
-            this.itemsRequsts = itemsRequsts;
-        }
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            String do_ = "my";
-
         }
 
         @Override
@@ -3239,7 +3244,9 @@ public class ExportJason extends AppCompatActivity {
 
 
                 if (!ipAddress.equals("")) {
-                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
+
+//                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
+                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/EXPORTLOADVAN";
                     Log.e("URL_TO_HIT",URL_TO_HIT);
                 }
             } catch (Exception e) {
@@ -3308,11 +3315,13 @@ public class ExportJason extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
+            pdVoucher.dismissWithAnimation();
             if (s != null) {
                 if (s.contains("Saved Successfully")) {
 
 
+//                    mHandler.updateRequestStockMaster();
+//                    mHandler.updateRequestStockDetail();
                  //   RequstReport. exportrespon.setText("Saved Successfully");
 
                 }
@@ -3321,6 +3330,7 @@ public class ExportJason extends AppCompatActivity {
                 }
 //                progressDialog.dismiss();
             }
+            saveExpot(); //15
         }
 
     }
