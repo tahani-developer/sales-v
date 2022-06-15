@@ -116,7 +116,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     SimpleDateFormat df, df2, formatTime;
     String voucherDate, voucherYear, time;
     CompanyInfo companyInfo;
-    String ipAddress = "";
+    String ipAddress = "",ipWithPort="";
     boolean added = false, haveCstomerDisc = false, haveChangeCustDisc = false;
     DatabaseHandler MHandler;
     DecimalFormat threeDForm;
@@ -196,6 +196,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         generalMethod = new GeneralMethod(cont);
 //        this.listBitmap=listItemImage;
         ipAddress = MHandler.getAllSettings().get(0).getIpAddress();
+        ipWithPort = MHandler.getAllSettings().get(0).getIpPort();
         itemUnit = MHandler.getAllSettings().get(0).getItemUnit();
         rate_customer = MHandler.getRateOfCustomer();
         dontDuplicateItems = MHandler.getAllSettings().get(0).getDontduplicateItem();
@@ -289,7 +290,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     String url = allItemsList.get(position).getItemPhoto();
                     Log.e("url", "imagespecial" + url);
                     if (url.contains("Products")) {
-                        int index = url.indexOf("P");
+                        int index = url.indexOf("Products");
                         url = url.substring(index);
                     }
                     Log.e("url", "imagespecial2" + url);
@@ -2923,7 +2924,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                String urlStr = "http://" + ipAddress.trim() + "//FALCONS/" + imgUrl.trim();
+                String urlStr = "http://" + ipAddress.trim() +":"+ipWithPort.trim()+ "//FALCONS/" + imgUrl.trim();
                 Log.e("urlTask", "" + urlStr);
 
 //                URL url = new URL("http://46.185.138.63//falcons/Products%20Photo%202021/Be%20Clean/4-Be%20Clean%20Foam%20Hand%20Sanitizer.jpg");

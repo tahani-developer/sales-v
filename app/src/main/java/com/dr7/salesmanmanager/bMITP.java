@@ -451,7 +451,7 @@ public class bMITP extends Activity {
                 this.unregisterReceiver(this.disconnectReceiver);
             }
 
-//       this.saveSettingFile();// crash
+       this.saveSettingFile();// crash
             this.bluetoothPort.disconnect();
         } catch (IOException var2) {
             Log.e("BluetoothConnectMenu2", var2.getMessage(), var2);

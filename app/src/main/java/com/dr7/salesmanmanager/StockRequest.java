@@ -229,7 +229,8 @@ public class StockRequest extends Fragment {
 
 
         if(intentData.equals("read"))
-        {itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
+        {
+            itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
         }
         else {
             itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);

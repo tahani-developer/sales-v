@@ -457,8 +457,7 @@ public class PdfConverter {
 
         if (companyInfo != null)
             if (
-                    !companyInfo.getCompanyName().equals("") &&
-                            companyInfo.getcompanyTel().equals("0")) {
+                    !companyInfo.getCompanyName().equals("") &&!companyInfo.getcompanyTel().equals("0")) {
 
                 createvocherPDF("Invoice" + ".pdf", list);
             } else {
@@ -513,7 +512,7 @@ public class PdfConverter {
         if (companyInfo != null)
             if (
                     !companyInfo.getCompanyName().equals("") &&
-                            companyInfo.getcompanyTel().equals("0")) {
+                           ! companyInfo.getcompanyTel().equals("0")) {
 
                 createSalevocherPDF("Invoice" + ".pdf", list);
             } else {
@@ -903,7 +902,8 @@ public class PdfConverter {
         PdfPTable pdfPTableHeader = new PdfPTable(7);
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
-        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+//        pdfPTableHeader.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
         if (reportType != 13 && reportType != 14)
             insertCell(pdfPTableHeader, context.getString(R.string.date) + " : " + date, Element.ALIGN_LEFT, 7, arabicFontHeader, BaseColor.BLACK);
         if (reportType == 10)
@@ -938,7 +938,7 @@ public class PdfConverter {
 
             Log.e("path44", "" + targetPdf);
             pdfFileName = path;
-            Log.e("pdfFileName", "" + pdfFileName);
+            Log.e("pdfFileName", "pdfFileName=" + pdfFileName);
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -988,6 +988,7 @@ public class PdfConverter {
 
 
             PdfPTable headertable = new PdfPTable(1);
+            headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
             PdfPCell cell13 = new PdfPCell(new Paragraph("                    " + companyInfo.getCompanyName() + "\n", arabicFontHeaderVochprint));
             cell13.setBorder(Rectangle.NO_BORDER);
             headertable.addCell(cell13);
@@ -1033,14 +1034,14 @@ public class PdfConverter {
                 table.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
                 pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
                 pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
-
+             //   headertable.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
 
             } else {
 
                 table.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
                 pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
                 pdfPTable3.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
-
+           //     headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
 //                PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + date, arabicFontHeaderprint));
 //                PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 //
@@ -1306,6 +1307,7 @@ public class PdfConverter {
 
 
             PdfPTable headertable = new PdfPTable(1);
+            headertable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
             PdfPCell cell13 = new PdfPCell(new Paragraph("                    " + companyInfo.getCompanyName() + "\n", arabicFontHeaderVochprint));
             cell13.setBorder(Rectangle.NO_BORDER);
             headertable.addCell(cell13);
@@ -1355,6 +1357,8 @@ public class PdfConverter {
             cell5.setBorder(Rectangle.NO_BORDER);
             cell6.setBorder(Rectangle.NO_BORDER);
             cell14.setBorder(Rectangle.NO_BORDER);
+
+
 
             table.addCell(cell1);
             table.addCell(cell2);

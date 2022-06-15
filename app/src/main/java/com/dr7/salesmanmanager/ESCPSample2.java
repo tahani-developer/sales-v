@@ -1155,7 +1155,7 @@ public class ESCPSample2
 
 						itemDiscount += itemforPrint.get(i).getDisc();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice() + "", convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))), itemforPrint.get(i).getQty() + "", itemforPrint.get(i).getItemName(), itemforPrint.get(i).getDisc()), ESCPOSConst.LK_ALIGNMENT_CENTER, nLineWidth);
+						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice() + "", Double.valueOf(convertToEnglish(amount)), itemforPrint.get(i).getQty() + "", itemforPrint.get(i).getItemName(), itemforPrint.get(i).getDisc(),itemforPrint.get(i).getItemNo(),itemforPrint.get(i).getTaxValue()), ESCPOSConst.LK_ALIGNMENT_CENTER, nLineWidth);
 
 					}
 				}
@@ -1694,7 +1694,7 @@ public class ESCPSample2
 
 	}
 
-	Bitmap itemPrint (String prices,String totals,String qtys,String items,float discount){
+	Bitmap itemPrint (String prices,double totals,String qtys,String items,float discount,String itemNo,double taxValue){
 
 
 	final Dialog dialogs = new Dialog(context);
@@ -1723,7 +1723,18 @@ public class ESCPSample2
 //		prices=convertToEnglish(decimalFormat.format(prices));
 	price.setText(prices);
 	price.setTextSize(textSize);
-	total.setText(totals);
+	try {
+		if(noTax==0){
+
+			total.setText(convertToEnglish(decimalFormat.format((totals-taxValue)))+"");
+		}else {
+			total.setText(totals+"");
+		}
+	}catch (Exception e){
+		total.setText(totals+"");
+	}
+
+
 	total.setTextSize(textSize);
 	qty.setText(qtys);
 	qty.setTextSize(textSize);
@@ -1735,7 +1746,9 @@ public class ESCPSample2
 
 		item_largeName.setVisibility(View.VISIBLE);
 		if(items.contains("(bonus)")) {
-			item_largeName.setText("مجاني");
+			String itemName_str=obj.getItemName(itemNo);
+			Log.e("itemName_str",""+itemName_str);
+			item_largeName.setText(itemName_str+"\t"+"مجاني");
 		}else
 		item_largeName.setText(items);
 		item_largeName.setTextSize(textSize);

@@ -6321,7 +6321,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         String selectQuery = "SELECT  detail.ITEM_NUMBER , detail.ITEM_NAME  , detail.UNIT_QTY , master.VOUCHER_DATE," +
                 " master.VOUCHER_NUMBER ,master.SALES_MAN_NUMBER" +
-                "FROM " + "where IS_POSTED=0\n" +
+                " FROM  REQUEST_DETAILS detail,REQUEST_MASTER master " + "where IS_POSTED=0\n" +
                 "        and master.VOUCHER_NUMBER=detail.VOUCHER_NUMBER ";
 
         db = this.getWritableDatabase();
@@ -7096,7 +7096,17 @@ Log.e("addCompanyInfo","addCompanyInfo");
         }
 
 
+        selectQuery = "SELECT count(*) FROM " + REQUEST_MASTER + " where  IS_POSTED = 0 ";
 
+        db = this.getWritableDatabase();
+        Cursor cursor5 = db.rawQuery(selectQuery, null);
+        if (cursor5.moveToFirst()) {
+            int y = cursor5.getInt(0);
+            if (y > 0) {
+                x++;
+                Log.e("selectQuery", "y4Added" + y);
+            }
+        }
 
 
         Log.e("selectQuery", "x==" + x);

@@ -1206,7 +1206,7 @@ try {
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
         ItemUnitDetails unitDetail;
-        int unitInt=0;float priceItem=0,qtyFloat=1;
+        float priceItem=0,unitInt=0,qtyFloat=1;
        // Log.e("addItem","addItem=unit="+unit+"\tqty"+qty+"\tuseWeight"+useWeight);
         boolean existItem = false;
         float previousePrice=0,curentPrice=0;
@@ -1277,7 +1277,7 @@ try {
                     priceItem=0;
                 }
                 try{
-                     unitInt=Integer.parseInt(unit);
+                     unitInt=Float.parseFloat(unit);
                 }
                 catch (Exception e)
                 {
@@ -1380,9 +1380,15 @@ try {
                     item.setEnter_price((priceItem*qtyFloat)+"");
                     item.setUnit_barcode("");
                 }
+
                 //***************************************************
 
+                if(useWeight==1){
 
+
+                }else {
+
+                }
                 item.setItemHasSerial(hasSerial+"");
 
 
