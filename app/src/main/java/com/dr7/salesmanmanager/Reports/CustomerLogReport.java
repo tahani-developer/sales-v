@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,9 +27,11 @@ import com.dr7.salesmanmanager.DatabaseHandler;
 import com.dr7.salesmanmanager.ExportToExcel;
 import com.dr7.salesmanmanager.GeneralMethod;
 import com.dr7.salesmanmanager.LocaleAppUtils;
+import com.dr7.salesmanmanager.MainActivity;
 import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,7 +53,7 @@ public class CustomerLogReport extends AppCompatActivity {
     List<Transaction> FilterdtransactionList =new ArrayList<>();
     CircleImageView expotTpExcel,expotTpPdf;
   TextView  from_date,to_date;
-  EditText customer_name;
+  AutoCompleteTextView customer_name;
   TableRow header_row;
   Button preview;
     @TargetApi(Build.VERSION_CODES.M)
@@ -138,6 +142,12 @@ public class CustomerLogReport extends AppCompatActivity {
         filter();
        // Toast.makeText(CustomerLogReport.this, transactionList.get(1).cusCode, Toast.LENGTH_LONG).show();
 
+
+
+        ArrayAdapter<String> customerSpinnerAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_dropdown_item_1line, MainActivity.customersSpinnerArray);
+
+        customer_name.setAdapter(customerSpinnerAdapter);
     }
 
     private void exportToEx( List<Transaction> transactionList) {

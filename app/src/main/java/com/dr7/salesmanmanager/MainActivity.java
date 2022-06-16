@@ -108,12 +108,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
         CustomerCheckInFragment.CustomerCheckInInterface, CustomerListShow.CustomerListShow_interface {
     private static final int REQ_CODE_SPEECH_INPUT = 100;
+    boolean isKitKat = false;
     int salesMan = 1;
     RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
@@ -299,7 +303,9 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    public static ArrayList<String> customersSpinnerArray = new ArrayList<>();
 
+    public static   List<Customer> allCustomersList = new ArrayList<>();
 
     @TargetApi(Build.VERSION_CODES.M)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -311,7 +317,7 @@ public class MainActivity extends AppCompatActivity
         mDbHandler = new DatabaseHandler(MainActivity.this);
         setContentView(R.layout.activity_main);
 
-
+        getcustomer();
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
 
@@ -1628,7 +1634,38 @@ else
             i.putExtra("serial","stock");
            startActivity(i);
 
-        }
+        }else
+            if(id==R.id.nav_importexternal_data){
+                //exportDB(MainActivity.this);
+                File Db =  getApplicationContext().getDatabasePath("VanSalesDatabase");
+                Date d = new Date();
+
+                File file =  getApplicationContext().getDatabasePath("VanSalesDatabase_backup");
+                file.setWritable(true);
+
+//try {
+//    copyFile(new FileInputStream(Db), new FileOutputStream(file));
+//}catch (Exception exception)
+//{
+//    Log.e("copyFile==", exception.getMessage());
+//}
+
+
+              importdb("VanSalesDatabasenew",MainActivity.this);
+
+                //importdb(getApplicationInfo().dataDir + "/VanSalesDatabasenew/",MainActivity.this);
+              //  showFileChooser();
+
+
+                try {
+
+                    importDatabase("VanSalesDatabase_backup");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("Exception2==",e.getMessage());
+                }
+
+            }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -3315,6 +3352,7 @@ else
                 tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+                itemBitmapPic= mDbHandler.getAllCompanyInfo().get(0).getLogo();
                 noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
                 if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
                 {
@@ -3399,7 +3437,7 @@ else
 
 
 
-
+                       Log.e("addCompanyInfo",comName+" "+comTel+" "+taxNo+" "+itemBitmapPic+" ");
                         mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position);
                         try {
                             if(isNetworkAvailable())
@@ -4271,4 +4309,169 @@ else
        });
        dialog.show();
    }
+   void getcustomer(){
+       customersSpinnerArray.clear();
+       allCustomersList.clear();
+
+       allCustomersList = mDbHandler.getAllCustomers();
+
+//        customersSpinnerArray.add(getString(R.string.allCustomers));
+       for (int r = 0; r < allCustomersList.size(); r++) {
+           customersSpinnerArray.add(allCustomersList.get(r).getCustName());
+
+       }
+   }
+    private void importDB() {
+        try {
+
+
+//
+//            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+//            File backupDB = new File(sd, backupDBPath);
+//
+//            if (currentDB.exists()&&isPresent) {
+//                FileChannel src = new FileInputStream(currentDB).getChannel();
+//                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+//                dst.transferFrom(src, 0, src.size());
+//                src.close();
+//                dst.close();
+//
+
+            ////////
+
+            File sd = Environment.getExternalStorageDirectory();
+            File data = Environment.getDataDirectory();
+
+            if (sd.canWrite()) {
+                String currentDBPath = "//data//" + "PackageName"
+                        + "//databases//" + "DatabaseName";
+                String backupDBPath = "/BackupFolder/DatabaseName";
+                File backupDB = new File(data, currentDBPath);
+                File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
+                FileChannel src = new FileInputStream(currentDB).getChannel();
+                FileChannel dst = new FileOutputStream(backupDB).getChannel();
+                dst.transferFrom(src, 0, src.size());
+                src.close();
+                dst.close();
+                Toast.makeText(getBaseContext(), backupDB.toString(),
+
+
+                        Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+    public static boolean exportDB(Context context) {
+        String DATABASE_NAME = "VanSalesDatabase";
+        String databasePath = context.getDatabasePath(DATABASE_NAME).getPath();
+        String inFileName = databasePath;
+        try {
+            File dbFile = new File(inFileName);
+            FileInputStream fis = new FileInputStream(dbFile);
+
+            String outFileName = Environment.getExternalStorageDirectory() + "/" + DATABASE_NAME;
+
+            OutputStream output = new FileOutputStream(outFileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            //Close the streams
+            output.flush();
+            output.close();
+            fis.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
+        FileChannel fromChannel = null;
+        FileChannel toChannel = null;
+        try {
+            fromChannel = fromFile.getChannel();
+            toChannel = toFile.getChannel();
+            fromChannel.transferTo(0, fromChannel.size(), toChannel);
+        } finally {
+            try {
+                if (fromChannel != null) {
+                    Log.e("fromChannel==", "fromChannel");
+                    fromChannel.close();
+                }
+            } finally {
+                if (toChannel != null) {
+                    Log.e("toChannel==", "toChannel");
+                    toChannel.close();
+                }
+            }
+        }
+    }
+    private void importdb( String db_path,Context context) {
+        try {
+            File file=new File(db_path);
+
+            InputStream mInputStream = new DataInputStream(new FileInputStream(file));
+            String outFileName = context.getDatabasePath("VanSalesDatabase").getAbsolutePath();
+            OutputStream mOutputStream = new FileOutputStream(outFileName);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = mInputStream.read(buffer)) > 0) {
+                mOutputStream.write(buffer, 0, length);
+            }
+            mOutputStream.flush();
+            mOutputStream.close();
+            mInputStream.close();
+
+            Toast.makeText(context, "Database replaced sucessfully", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+Log.e("Exception==",e.getMessage());
+
+            Toast.makeText(context, "WORKING_STOP", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void showFileChooser() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/*");
+            isKitKat = true;
+            startActivityForResult(Intent.createChooser(intent, "Select file"), 1);
+
+        } else {
+            isKitKat = false;
+            Intent intent = new Intent();
+            intent.setType("application/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select file"), 1);
+        }
+    }
+    private void importDatabase(String inputFileName) throws IOException
+    {
+        InputStream mInput = new FileInputStream(inputFileName);
+   String outFileName = "VanSalesDatabase";
+  //      String outFileName =   getApplicationContext().getDatabasePath("VanSalesDatabase");
+        OutputStream mOutput = new FileOutputStream(outFileName);
+        byte[] mBuffer = new byte[1024];
+        int mLength;
+        while ((mLength = mInput.read(mBuffer))>0)
+        {
+            mOutput.write(mBuffer, 0, mLength);
+        }
+        mOutput.flush();
+        mOutput.close();
+        mInput.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("onDestroy","onDestroy");
+
+    }
 }

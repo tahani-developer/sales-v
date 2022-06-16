@@ -189,8 +189,10 @@ public class ExportJason extends AppCompatActivity {
 
     public void IIs_SaveVanRequst(){
 
-//        getVanRequstObject();
+       getVanRequstObject();
         new JSONTaskIIs_SaveVanRequst().execute();
+
+
 
     }
 
@@ -3242,7 +3244,7 @@ public class ExportJason extends AppCompatActivity {
 
 
                 if (!ipAddress.equals("")) {
-                    
+
 //                    URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
                     URL_TO_HIT = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/EXPORTLOADVAN";
                     Log.e("URL_TO_HIT",URL_TO_HIT);

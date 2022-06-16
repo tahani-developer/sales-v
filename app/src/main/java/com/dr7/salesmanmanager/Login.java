@@ -81,6 +81,9 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 
 @SuppressWarnings("unchecked")
 public class Login extends AppCompatActivity {
+
+    public EditText storeNo_edit;
+
     List<Flag_Settings> flag_settingsList;
     private String username, password, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
@@ -148,8 +151,8 @@ public class Login extends AppCompatActivity {
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-//  public  static     String headerDll = "";
-    public  static  String  headerDll = "/Falcons/VAN.dll";
+public  static     String headerDll = "";
+   // public  static  String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,7 +296,7 @@ public class Login extends AppCompatActivity {
                 } else {//item in list
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
-
+                   if(userNo.equals(usernameEditText.getText().toString().trim()))     {
                         if (passwordEditText.getText().toString().equals("2240m")) {
                             exist = true;
                             index = 1;
@@ -316,6 +319,12 @@ public class Login extends AppCompatActivity {
                             }
                         }
                         checkExistToLogin();
+                    }
+                    else
+                   {
+                       Log.e("userNo",userNo+"   "+usernameEditText.getText().toString().trim());
+                       usernameEditText.setError("");
+                   }
                     } else {
                         if (TextUtils.isEmpty(user))
                             usernameEditText.setError("Required");
@@ -404,9 +413,9 @@ public class Login extends AppCompatActivity {
         //****************************
         ipEditText = (EditText) dialog.findViewById(R.id.ipEditText);
         final EditText portSetting = (EditText) dialog.findViewById(R.id.portSetting);
-        final EditText storeNo_edit = (EditText) dialog.findViewById(R.id.storeNo_edit);
+       storeNo_edit = (EditText) dialog.findViewById(R.id.storeNo_edit);
          TextView editIp= (TextView) dialog.findViewById(R.id.editIp);
-
+        TextView editUserno= (TextView) dialog.findViewById(R.id.editUserNum);
         final EditText cono = (EditText) dialog.findViewById(R.id.cono);
 
         final Button cancel_button = (Button) dialog.findViewById(R.id.cancelBtn);
@@ -424,9 +433,11 @@ public class Login extends AppCompatActivity {
 
             ipEditText.setClickable(false);
             ipEditText.setEnabled(false);
+            storeNo_edit.setEnabled(false);
 //            ipEditText.setAlpha(0.5f);
         } else {
             ipEditText.setEnabled(true);
+            storeNo_edit.setEnabled(true);
         }
         editIp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -436,7 +447,14 @@ public class Login extends AppCompatActivity {
 
             }
         });
+        editUserno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showIdetUuseNumPasswordDialog();
 
+
+            }
+        });
         cancel_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -708,6 +726,34 @@ public class Login extends AppCompatActivity {
                         }
                     }
 
+                    sweetAlertDialog.dismissWithAnimation();
+
+                }
+                else {
+                    editText.setError("Incorrect");
+
+                }
+            }
+        })
+
+                .show();
+    }
+    private void showIdetUuseNumPasswordDialog( ) {
+        final EditText editText = new EditText(Login.this);
+        editText.setTextColor(getResources().getColor(R.color.text_view_color));
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(Login.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("2021000"))
+                {
+                    storeNo_edit.setEnabled(true);
                     sweetAlertDialog.dismissWithAnimation();
 
                 }

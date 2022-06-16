@@ -124,20 +124,42 @@
                 android:orientation="horizontal"
                 android:padding="3dp">
 
-                <EditText
-                    android:id="@+id/customer_number"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/custTextField"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:background="@drawable/back_border_edit"
-                    android:drawableStart="@drawable/ic_search_black_24dp"
-                    android:gravity="center_vertical"
-                    android:hint="@string/SearchByCustomerName"
-                    android:inputType="text"
-                    android:padding="2dp"
-                    android:textColor="@color/done_button"
-                    android:textSize="14sp" />
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    app:boxBackgroundColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/itemGroupSpinner"
+                    app:layout_constraintHorizontal_weight="0.7"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:boxStrokeWidth="0dp"
+                    android:hint="@string/cust_name"
+                    app:boxStrokeWidthFocused="0dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:boxStrokeColor="@color/colorblue_dark"
+                    app:endIconMode="dropdown_menu"
+                    app:endIconTint="@color/colorblue_dark"
+
+                    >
+
+                    <AutoCompleteTextView
+                        android:id="@+id/customer_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textAutoComplete"
+                        android:textAlignment="center"
+                        android:completionHint="@string/CUS_NAME"
+                        android:textColor="#000"
+                        android:padding="1dp"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <Button
                     android:id="@+id/preview"

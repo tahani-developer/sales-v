@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -65,6 +66,8 @@ import java.util.Set;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ReturnByVoucherNo extends AppCompatActivity {
+    public  ArrayList<String> SpinnerArray = new ArrayList<>();
+
     public static  List<Item> ReturnupdateditemList=new ArrayList<>();
     public static   RecyclerView recyclerView;
     public static List<serialModel> allseriallist =new ArrayList<>();
@@ -73,7 +76,8 @@ public class ReturnByVoucherNo extends AppCompatActivity {
     public static String VOCHdat="";
     DatabaseHandler databaseHandler;
     public static ReturnItemAdapter adapter;
-    EditText serial_text,voucherNo_text;
+    EditText serial_text;
+    AutoCompleteTextView voucherNo_text;
     public TextView date,getDataVoucher,payMethod_textView,textView_save,textView_cancel,getserialData,editSerial;
     int   max_voucherNumber=0;
     GeneralMethod generalMethod;
@@ -135,6 +139,14 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         textView_save.setEnabled(false);
        // getLocalData();
 // PDF
+        SpinnerArray.clear();
+        SpinnerArray=dataBase.getvocherDoesNotReturned();
+        ArrayAdapter<String> SpinnerAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_dropdown_item_1line,SpinnerArray);
+
+        voucherNo_text.setAdapter(SpinnerAdapter);
+
+
     }
 
     private void getVoucherNo() {

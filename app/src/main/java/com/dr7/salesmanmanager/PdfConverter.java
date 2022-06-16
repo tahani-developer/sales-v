@@ -1154,7 +1154,7 @@ public class PdfConverter {
             PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + date, arabicFontHeaderprint));
             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
-            PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + PrintVoucher.vouchPrinted.getTax(), arabicFontHeaderprint));
+            PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + companyInfo.getTaxNo(), arabicFontHeaderprint));
             PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " + PrintVoucher.vouchPrinted.getVoucherNumber(), arabicFontHeaderprint));
             PdfPCell cell5 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " + PrintVoucher.vouchPrinted.getCustName(), arabicFontHeaderprint));
             PdfPCell cell6 = new PdfPCell(new Paragraph(context.getString(R.string.note) + " : " + companyInfo.getNoteForPrint(), arabicFontHeaderprint));
@@ -1343,7 +1343,7 @@ public class PdfConverter {
             PdfPCell cell1 = new PdfPCell(new Paragraph(context.getString(R.string.date) + " : " + date, arabicFontHeaderprint));
             PdfPCell cell2 = new PdfPCell(new Paragraph(context.getString(R.string.company_tel) + " : " + companyInfo.getcompanyTel(), arabicFontHeaderprint));
 
-            PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) + SalesInvoice.SaleInvoicePrinted.getTax(), arabicFontHeaderprint));
+            PdfPCell cell3 = new PdfPCell(new Paragraph(context.getString(R.string.tax_no) +  companyInfo.getTaxNo(), arabicFontHeaderprint));
             PdfPCell cell4 = new PdfPCell(new Paragraph(context.getString(R.string.voucherNo) + " : " + SalesInvoice.SaleInvoicePrinted.getVoucherNumber(), arabicFontHeaderprint));
             PdfPCell cell5 = new PdfPCell(new Paragraph(context.getString(R.string.cust_name) + " : " + SalesInvoice.SaleInvoicePrinted.getCustName(), arabicFontHeaderprint));
             PdfPCell cell6 = new PdfPCell(new Paragraph(context.getString(R.string.note) + " : " + companyInfo.getNoteForPrint(), arabicFontHeaderprint));
