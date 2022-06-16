@@ -87,6 +87,7 @@
                 android:title="@string/backupData" />
             <item
                 android:id="@+id/nav_importexternal_data"
+               android:visible="false"
                 android:icon="@drawable/ic_backup_black_24dp"
                 android:title="@string/importexternaldatabase" />
         </menu>

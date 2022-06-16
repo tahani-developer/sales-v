@@ -3352,6 +3352,7 @@ else
                 tax.setText("" + mDbHandler.getAllCompanyInfo().get(0).getTaxNo());
 //            logo.setImageDrawable(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
                 logo.setBackground(new BitmapDrawable(getResources(), mDbHandler.getAllCompanyInfo().get(0).getLogo()));
+                itemBitmapPic= mDbHandler.getAllCompanyInfo().get(0).getLogo();
                 noteInvoice.setText(""+mDbHandler.getAllCompanyInfo().get(0).getNoteForPrint());
                 if(mDbHandler.getAllCompanyInfo().get(0).getNotePosition().equals("1"))
                 {
@@ -3436,7 +3437,7 @@ else
 
 
 
-
+                       Log.e("addCompanyInfo",comName+" "+comTel+" "+taxNo+" "+itemBitmapPic+" ");
                         mDbHandler.addCompanyInfo(comName, comTel, taxNo, itemBitmapPic, companyNote,0,0,position);
                         try {
                             if(isNetworkAvailable())
@@ -4465,5 +4466,12 @@ Log.e("Exception==",e.getMessage());
         mOutput.flush();
         mOutput.close();
         mInput.close();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e("onDestroy","onDestroy");
+
     }
 }
