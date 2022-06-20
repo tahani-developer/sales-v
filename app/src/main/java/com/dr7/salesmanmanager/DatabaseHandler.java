@@ -4982,7 +4982,9 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     " D.ITEM_DESCRIPTION ,D.SERIAL_CODE , D.WHICH_UNIT    , D.WHICH_UNIT_STR , D.WHICHU_QTY    , D.ENTER_QTY ," +
                     " D.ENTER_PRICE , D.UNIT_BARCODE ,D.ORIGINALVOUCHER_NUMBER " +
                     "from SALES_VOUCHER_DETAILS D , SALES_VOUCHER_MASTER M " +
-                    "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE and M.IS_POSTED = 0";
+                    "where D.VOUCHER_NUMBER  = M.VOUCHER_NUMBER and D.VOUCHER_TYPE = M.VOUCHER_TYPE and M.IS_POSTED = 0 " +
+                    " ORDER BY  D.VOUCHER_NUMBER  ,  D.ITEM_NUMBER , D.TAX_PERCENT DESC ";
+            //	ORDER BY  D.VOUCHER_NUMBER  ,  D.ITEM_NUMBER , D.TAX_PERCENT DESC
         }
 
 
@@ -9140,8 +9142,9 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
     public ArrayList<String> getvocherDoesNotReturned() {
         ArrayList<String> Vochers = new ArrayList<>();
-        // Select All Query                                                                                                          //AND IS_RETURNED = '0'
-        String selectQuery = "SELECT DISTINCT SALES_VOUCHER_MASTER.VOUCHER_NUMBER from SALES_VOUCHER_MASTER INNER JOIN SALES_VOUCHER_DETAILS d ON SALES_VOUCHER_MASTER.VOUCHER_NUMBER==d.VOUCHER_NUMBER WHERE d.IS_RETURNED==0";
+        // Select All Query
+        String custNo=CustomerListShow.Customer_Account;
+        String selectQuery = "SELECT DISTINCT SALES_VOUCHER_MASTER.VOUCHER_NUMBER from SALES_VOUCHER_MASTER INNER JOIN SALES_VOUCHER_DETAILS d ON SALES_VOUCHER_MASTER.VOUCHER_NUMBER==d.VOUCHER_NUMBER WHERE d.IS_RETURNED==0 and  CUST_NUMBER= '"+custNo+"' and SALES_VOUCHER_MASTER.VOUCHER_TYPE=504  and d.VOUCHER_TYPE=504";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -9151,7 +9154,6 @@ Log.e("addCompanyInfo","addCompanyInfo");
         if (cursor.moveToFirst()) {
             Log.i("DatabaseHandler", "************************" + selectQuery);
             do {
-
 
 
                 Vochers.add(cursor.getString(0));

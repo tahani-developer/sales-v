@@ -144,15 +144,15 @@ public class Login extends AppCompatActivity {
 
     public  static    int  talaatLayoutAndPassowrd=0;
     public  static    int  voucherReturn_spreat=0;
-    public  static    int  updateOnlySelectedCustomer=1;// just for OneOOne
+    public  static    int  updateOnlySelectedCustomer=0;// just for OneOOne
 
     public  static    int   SalsManPlanFlage=0;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=1;
     public  static    int   Separation_of_the_serial=0;// for oppo
-public  static     String headerDll = "";
-   // public  static  String  headerDll = "/Falcons/VAN.dll";
+//  public  static    String headerDll = "";
+    public  static    String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,9 +294,11 @@ public  static     String headerDll = "";
                     }
 
                 } else {//item in list
+                    int order_make=mDHandler.getFlagSettings().get(0).getMake_Order();
+//                    userNo=mDHandler.getAllSettings().get(0).getStoreNo().trim();
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
-                   if(userNo.equals(usernameEditText.getText().toString().trim()))     {
+//                   if(userNo.equals(usernameEditText.getText().toString().trim())&&order_make==0)     {
                         if (passwordEditText.getText().toString().equals("2240m")) {
                             exist = true;
                             index = 1;
@@ -320,12 +322,13 @@ public  static     String headerDll = "";
                         }
                         checkExistToLogin();
                     }
-                    else
-                   {
-                       Log.e("userNo",userNo+"   "+usernameEditText.getText().toString().trim());
-                       usernameEditText.setError("");
-                   }
-                    } else {
+//                    else
+//                   {
+//                       Log.e("userNo",userNo+"   "+usernameEditText.getText().toString().trim());
+//                       usernameEditText.setError("");
+//                   }
+//                    }
+                else {
                         if (TextUtils.isEmpty(user))
                             usernameEditText.setError("Required");
                         if (TextUtils.isEmpty(password)) {

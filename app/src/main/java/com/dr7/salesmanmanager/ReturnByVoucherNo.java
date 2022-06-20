@@ -139,13 +139,17 @@ public class ReturnByVoucherNo extends AppCompatActivity {
         textView_save.setEnabled(false);
        // getLocalData();
 // PDF
+      fillSpinerVoucherNo();
+
+    }
+
+    private void fillSpinerVoucherNo() {
         SpinnerArray.clear();
         SpinnerArray=dataBase.getvocherDoesNotReturned();
         ArrayAdapter<String> SpinnerAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_dropdown_item_1line,SpinnerArray);
 
         voucherNo_text.setAdapter(SpinnerAdapter);
-
 
     }
 
@@ -867,6 +871,7 @@ exportData(2);
           dataBase.updateVoucherNo(max_voucherNumber, 506, 0);
           clearData();
           saveSuccses();
+          fillSpinerVoucherNo();
           // exportData();
           showprintDialog();
 //            exportData(1);
