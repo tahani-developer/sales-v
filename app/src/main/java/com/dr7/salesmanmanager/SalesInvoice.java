@@ -1117,7 +1117,8 @@ public class SalesInvoice extends Fragment {
         }
         Log.e("canChangePrice",""+canChangePrice);
 
-
+        notIncludeTax.setVisibility(View.GONE);
+        linearTotalCashDiscount.setVisibility(View.GONE);
         if(talaatLayoutAndPassowrd==1)
         {
             notIncludeTax.setVisibility(View.GONE);
@@ -2477,7 +2478,6 @@ public class SalesInvoice extends Fragment {
     private void printLastVoucher(int voucher_no, Voucher vouchPrint) {
         getTimeAndDate();
         if (mDbHandler.getAllSettings().get(0).getPrintMethod() == 0) {
-
             try {
                 int printer = mDbHandler.getPrinterSetting();
                 companyInfo = mDbHandler.getAllCompanyInfo().get(0);
@@ -3051,8 +3051,9 @@ public class SalesInvoice extends Fragment {
         {
             items.get(i).setORIGINALvoucherNo(voucherNumber);
 
+
             Item item = new Item(0, voucherYear, voucherNumber, voucherType, items.get(i).getUnit(),
-                    items.get(i).getItemNo(), items.get(i).getItemName(), items.get(i).getQty(), items.get(i).getPrice(),
+                    items.get(i).getItemNo(), items.get(i).getItemName(),items.get(i).getQty(), items.get(i).getPrice(),
                     items.get(i).getDisc(), items.get(i).getDiscPerc(), items.get(i).getBonus(), items.get(i).getVoucherDiscount(),// was 0 in credit
                     items.get(i).getTaxValue(), items.get(i).getTaxPercent(), 0, items.get(i).getDescription(), items.get(i).getSerialCode()
 

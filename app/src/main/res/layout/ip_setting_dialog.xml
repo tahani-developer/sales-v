@@ -136,9 +136,8 @@
                         android:text=""
                         android:textColor="@color/colorblue_dark"
                         android:textSize="13sp" />
-
                     <TextView
-                        android:id="@+id/editIp542"
+                        android:id="@+id/editPort"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="2.5"
@@ -146,8 +145,9 @@
                         android:padding="2dp"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:visibility="invisible" />
+                        android:textStyle="bold" />
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -182,7 +182,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/editIp50142"
+                        android:id="@+id/editCono"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="2.5"
@@ -190,8 +190,7 @@
                         android:padding="2dp"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:visibility="invisible" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout

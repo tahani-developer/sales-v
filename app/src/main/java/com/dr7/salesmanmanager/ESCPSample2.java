@@ -738,6 +738,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("IOException","printevoucherforPrint="+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -981,7 +982,7 @@ public class ESCPSample2
 						posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 200);
 					}
 				} catch (Exception e) {
-					Log.e("Exception", "" + e.getMessage());
+					Log.e("Exception", "getLogo=" + e.getMessage());
 				}
 
 				Log.e("12222print", "pyyy");
@@ -1044,6 +1045,7 @@ public class ESCPSample2
 			if (salesmanName.equals("")) {
 				salesmanName = obj.getSalesmanName_fromSalesTeam();
 			}
+			Log.e("salesmanName",""+salesmanName);
 
 			posPtr.printAndroidFont(null, true, "اسم  المندوب    : " + salesmanName + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			posPtr.printAndroidFont(null, true, "اسم العميل   : " + voucherforPrint.getCustName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
@@ -1070,6 +1072,7 @@ public class ESCPSample2
 				if (voucherNote.trim().length() != 0)
 					posPtr.printAndroidFont(null, true, "ملاحظة        : " + voucherforPrint.getRemark() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 			} catch (Exception e) {
+				Log.e("IOException","printegetRemark="+e.getMessage());
 			}
 			posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1205,9 +1208,6 @@ public class ESCPSample2
 			}
 			else {
 
-
-
-				Log.e("", "");
 				if (tayaaLayout == 0)
 				posPtr.printAndroidFont(null, true, "اجمالي الكمية  : " + convertToEnglish(decimalFormat.format(total_Qty)) + "\n", nLineWidth, 26, alignment);
 				if (dontshowTax == 0) {//MORMAL PRINT
@@ -1256,7 +1256,14 @@ public class ESCPSample2
             posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
             posPtr.lineFeed(4);
-		} catch (IOException e) {
+
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e) {
+				Log.e("IOException","printeThread.sleep="+e.getMessage());
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
 			Log.e("printerType","3="+e.getMessage());
 			e.printStackTrace();
 		}
@@ -1386,6 +1393,7 @@ public class ESCPSample2
 			posPtr.printAndroidFont(  null,true, "--------------------------------------------------------------------------------" + "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("IOException","posPtr=e="+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -1408,6 +1416,7 @@ public class ESCPSample2
 			posPtr.printBitmap(convertToImage_inventoryFooter(totalqty),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
 
 		} catch (IOException e) {
+			Log.e("IOException","posPtrprintBitmap=e="+e.getMessage());
 			e.printStackTrace();
 		}
 //		posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice()+"",convertToEnglish(decimalFormat.format(Double.valueOf(convertToEnglish(amount)))),itemforPrint.get(i).getQty()+"",itemforPrint.get(i).getItemName()),ESCPOSConst.LK_ALIGNMENT_CENTER,550);
@@ -1732,6 +1741,7 @@ public class ESCPSample2
 		}
 	}catch (Exception e){
 		total.setText(totals+"");
+		Log.e("IOException","printtotal=e="+e.getMessage());
 	}
 
 
@@ -1787,15 +1797,22 @@ public class ESCPSample2
 	linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
 
 	Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
-	Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
-	Canvas canvas = new Canvas(bitmap);
-	Drawable bgDrawable = linearView.getBackground();
-	if (bgDrawable != null) {
-		bgDrawable.draw(canvas);
-	} else {
-		canvas.drawColor(Color.WHITE);
-	}
-	linearView.draw(canvas);
+
+		Bitmap bitmap=null;
+		try {
+			bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+			Canvas canvas = new Canvas(bitmap);
+			Drawable bgDrawable = linearView.getBackground();
+			if (bgDrawable != null) {
+				bgDrawable.draw(canvas);
+			} else {
+				canvas.drawColor(Color.WHITE);
+			}
+			linearView.draw(canvas);
+		}catch (Exception e){
+			Log.e("Exception","printebitmap="+e.getMessage());
+		}
+
 	return bitmap;
 
 }
@@ -1881,15 +1898,22 @@ public class ESCPSample2
 		 linearView.layout(0, 0, linearView.getMeasuredWidth(), linearView.getMeasuredHeight());
 
 		 Log.e("size of img ", "width=" + linearView.getMeasuredWidth() + "      higth =" + linearView.getHeight());
-		 Bitmap bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
-		 Canvas canvas = new Canvas(bitmap);
-		 Drawable bgDrawable = linearView.getBackground();
-		 if (bgDrawable != null) {
-			 bgDrawable.draw(canvas);
-		 } else {
-			 canvas.drawColor(Color.WHITE);
-		 }
-		 linearView.draw(canvas);
+
+		 Bitmap bitmap=null;
+		 try {
+			 bitmap = Bitmap.createBitmap(linearView.getWidth(), linearView.getHeight(), Bitmap.Config.ARGB_8888);
+			Canvas canvas = new Canvas(bitmap);
+			Drawable bgDrawable = linearView.getBackground();
+			if (bgDrawable != null) {
+				bgDrawable.draw(canvas);
+			} else {
+				canvas.drawColor(Color.WHITE);
+			}
+			linearView.draw(canvas);
+		}catch (Exception e){
+			Log.e("Exception","printedraw="+e.getMessage());
+		}
+
 		 return bitmap;
 		 //**************************************
 
@@ -1908,6 +1932,7 @@ public class ESCPSample2
 		}catch (Exception e)
 		{
 			printerType=5;
+			Log.e("IOException","printerType=e="+e.getMessage());
 		}
 
 
@@ -2088,6 +2113,7 @@ public class ESCPSample2
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e("IOException","valueCheckHidPrice=e="+e.getMessage());
 		}
 
 
@@ -2213,6 +2239,7 @@ public class ESCPSample2
 
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("IOException","Recipient=e="+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -2230,6 +2257,7 @@ public class ESCPSample2
 		}catch (Exception e)
 		{
 			printerType=5;
+			Log.e("IOException","printerType=e="+e.getMessage());
 		}
 
 		if(count==0) {
@@ -2341,6 +2369,7 @@ public class ESCPSample2
 			totalQty.setText("0.00");
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e("IOException","printertotalQty=e="+e.getMessage());
 		}
 
 
@@ -2387,7 +2416,7 @@ public class ESCPSample2
             }
 			catch (Exception e)
             {
-
+				Log.e("IOException","printerprintBitmap=e="+e.getMessage());
             }
 
 
@@ -2433,12 +2462,14 @@ public class ESCPSample2
 				posPtr.printAndroidFont(  null,true,"اجمالي المقبوضات :     " + convertToEnglish(decimalFormat.format(total_cash)) + " \n\n \n "  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 			}catch (Exception e){
+				Log.e("IOException","printerprintBitmaptotal_cash=e="+e.getMessage());
 //				Toast.makeText(context, R.string.error_companey_info, Toast.LENGTH_SHORT).show();
 			}
 
 			posPtr.printAndroidFont(  null,true, line+ "\n"  , nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
+			Log.e("IOException","printerprintBitmaptotal_cash2=e="+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -2702,6 +2733,7 @@ for(int i=0;i<28;i++){
 
                 posPtr.lineFeed(4);
             } catch (IOException e) {
+				Log.e("IOException","printerppayListe="+e.getMessage());
                 e.printStackTrace();
             }
 
@@ -2710,6 +2742,7 @@ for(int i=0;i<28;i++){
 			posPtr.lineFeed(4);
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e("IOException","printerppayListe="+e.getMessage());
 		}
 	}
 }

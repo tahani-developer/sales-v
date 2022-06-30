@@ -5502,7 +5502,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
         String selectQuery="";
 //        String cusNo="5";
         String PriceListId = CustomerListShow.PriceListId;
-        if(flag==2)// just items has serial
+        Log.e("getAllJsonItemsStock","=="+flag);
+        if(flag==200)// just items has serial
         {
 
             selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
@@ -5511,9 +5512,19 @@ Log.e("addCompanyInfo","addCompanyInfo");
             //+"' and M.ITEM_HAS_SERIAL='"+1+"'"
 
         }else {
-            selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
-                    "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
-                    "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+            if(flag==0){
+                selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                        "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                        "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+
+            }else {
+                salesMan=flag+"";
+                selectQuery = "select DISTINCT  M.ItemNo ,M.Name ,M.CateogryID ,S.Qty ,P.Price ,P.TaxPerc ,P.MinSalePrice ,M.Barcode ,M.ITEM_L, M.F_D, M.KIND_ITEM, cusMaster.ACCPRC \n" +
+                        "                from Items_Master M , SalesMan_Items_Balance S ,CUSTOMER_MASTER cusMaster, Price_List_D P\n" +
+                        "                where M.ItemNo  = S.ItemNo and M.ItemNo = P.ItemNo and P.PrNo ='"+0+"'  and cusMaster.ACCPRC = '"+0+"' and S.SalesManNo = '" + salesMan +"'";
+            }
+
+
         }
 
 
@@ -5530,15 +5541,15 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
                 item.setCategory(cursor.getString(2));
-                if(flag==0||flag==2)
-                {
+//                if(flag==0||flag==2)
+//                {
                     item.setQty(0);
 
-                }
-                else {
-                    item.setQty(Float.parseFloat(cursor.getString(3)));
-
-                }
+//                }
+//                else {
+//                    item.setQty(Float.parseFloat(cursor.getString(3)));
+//
+//                }
                 item.setCurrentQty(Float.parseFloat(cursor.getString(3)));
                 item.setPrice(Float.parseFloat(cursor.getString(4)));
                 item.setTaxPercent(Float.parseFloat(cursor.getString(5)));
@@ -7887,6 +7898,19 @@ Log.e("addCompanyInfo","addCompanyInfo");
         // updating row
         db.update(TABLE_SETTING, values, null, null);
     }
+
+    public void updateSalesManNameSetting(String name) {
+
+        Log.e("updateSalesManName",""+name);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(salesManName, name);
+        // updating row
+        db.update(TABLE_SETTING, values, null, null);
+    }
+
+
 
     public void updatIpDevice(String ipDevice) {
         Log.e("updateIpSetting",""+ipDevice);

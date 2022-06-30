@@ -121,7 +121,8 @@ public class StockRecyclerViewAdapter extends RecyclerView.Adapter<StockRecycler
         holder.itemName.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.tradeMark.setText(items.get(holder.getAdapterPosition()).getItemName());
         holder.category.setText("" + items.get(holder.getAdapterPosition()).getCategory());
-        holder.unitQty.setText("" + itemsRequiredList.get(holder.getAdapterPosition()).getCurrentQty());
+//        holder.unitQty.setText("" + itemsRequiredList.get(holder.getAdapterPosition()).getCurrentQty());
+        holder.unitQty.setText("" + items.get(holder.getAdapterPosition()).getCurrentQty());
         holder.tax.setText("" + items.get(holder.getAdapterPosition()).getTaxPercent());
         holder.barcode.setText(items.get(holder.getAdapterPosition()).getBarcode());
         holder.price.setVisibility(View.GONE);
