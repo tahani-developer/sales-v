@@ -18,6 +18,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.dr7.salesmanmanager.Modles.Item;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class AddItemsFragment extends DialogFragment {
 
     Button addToListButton, doneButton;
     private List<Item> itemsList;
+    private DecimalFormat decimalFormat;
     private Item item;
     private EditText itemNoEditText, descEditText, qtyEditText, priceEditText,
             bonusEditText, discEditText, taxEditText;
@@ -56,6 +58,7 @@ public class AddItemsFragment extends DialogFragment {
         getDialog().setTitle(getResources().getString(R.string.app_add_items));
         final View view = inflater.inflate(R.layout.add_items_dialog, container, false);
         itemsList = new ArrayList<Item>();
+        decimalFormat = new DecimalFormat("00.000");
         addToListButton = (Button) view.findViewById(R.id.addToListButton);
         doneButton = (Button) view.findViewById(R.id.doneButton);
         itemNoEditText = (EditText) view.findViewById(R.id.itemCodeEditText);
@@ -92,7 +95,8 @@ public class AddItemsFragment extends DialogFragment {
                         item.setTax(Float.parseFloat(taxEditText.getText().toString().trim()));
 
                         try {
-                            item.setQty(Float.parseFloat(qtyEditText.getText().toString().trim()));
+
+                            item.setQty(Float.parseFloat(decimalFormat.format(Float.parseFloat(qtyEditText.getText().toString().trim()))));
                             item.setPrice(Float.parseFloat(priceEditText.getText().toString().trim()));
                             if (bonusEditText.getText().toString() == "")
                                 item.setBonus(Float.parseFloat("0.0"));

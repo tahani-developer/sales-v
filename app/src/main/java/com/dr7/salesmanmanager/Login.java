@@ -149,10 +149,10 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManPlanFlage=0;
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
-    public  static    int   Plan_ACTIVE=1;
+    public  static    int   Plan_ACTIVE=0;
     public  static    int   Separation_of_the_serial=0;// for oppo
-public  static     String headerDll = "";
-   // public  static  String  headerDll = "/Falcons/VAN.dll";
+//  public  static    String headerDll = "";
+    public  static    String  headerDll = "/Falcons/VAN.dll";
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,9 +294,11 @@ public  static     String headerDll = "";
                     }
 
                 } else {//item in list
+//                    int order_make=mDHandler.getFlagSettings().get(0).getMake_Order();
+//                    userNo=mDHandler.getAllSettings().get(0).getStoreNo().trim();
                     if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
 
-                   if(userNo.equals(usernameEditText.getText().toString().trim()))     {
+//                   if(userNo.equals(usernameEditText.getText().toString().trim())&&order_make==0)     {
                         if (passwordEditText.getText().toString().equals("2240m")) {
                             exist = true;
                             index = 1;
@@ -320,12 +322,13 @@ public  static     String headerDll = "";
                         }
                         checkExistToLogin();
                     }
-                    else
-                   {
-                       Log.e("userNo",userNo+"   "+usernameEditText.getText().toString().trim());
-                       usernameEditText.setError("");
-                   }
-                    } else {
+//                    else
+//                   {
+//                       Log.e("userNo",userNo+"   "+usernameEditText.getText().toString().trim());
+//                       usernameEditText.setError("");
+//                   }
+//                    }
+                else {
                         if (TextUtils.isEmpty(user))
                             usernameEditText.setError("Required");
                         if (TextUtils.isEmpty(password)) {
@@ -423,6 +426,10 @@ public  static     String headerDll = "";
 
         //B
         final TextView more = dialog.findViewById(R.id.more);
+        TextView editPort= (TextView) dialog.findViewById(R.id.editPort);
+        TextView editCono= (TextView) dialog.findViewById(R.id.editCono);
+
+
 
         //********************************fill data******************************************
         if (mDHandler.getAllSettings().size() != 0) {
@@ -434,10 +441,14 @@ public  static     String headerDll = "";
             ipEditText.setClickable(false);
             ipEditText.setEnabled(false);
             storeNo_edit.setEnabled(false);
+            cono.setEnabled(false);
+            portSetting.setEnabled(false);
 //            ipEditText.setAlpha(0.5f);
         } else {
             ipEditText.setEnabled(true);
             storeNo_edit.setEnabled(true);
+            portSetting.setEnabled(true);
+            cono.setEnabled(true);
         }
         editIp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,10 +458,27 @@ public  static     String headerDll = "";
 
             }
         });
+        editPort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showIdetUuseNumPasswordDialog(portSetting);
+
+
+            }
+        });
+        editCono.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showIdetUuseNumPasswordDialog(cono);
+
+
+            }
+        });
+
         editUserno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showIdetUuseNumPasswordDialog();
+                showIdetUuseNumPasswordDialog(storeNo_edit);
 
 
             }
@@ -504,10 +532,14 @@ public  static     String headerDll = "";
                   //  mDHandler.deletAllSalesLogIn();
 
                     mDHandler.addUserNO(storeNo_edit.getText().toString());
+                    refreshSalesName();
+
                    Log.e("mDHandler1=",mDHandler.getAllUserNo());
                    if( mDHandler.getAllUserNo()!=null) {
                         if ( mDHandler.getAllUserNo().equals(""))
-                            mDHandler.addUserNO(storeNo_edit.getText().toString());
+                        {        mDHandler.addUserNO(storeNo_edit.getText().toString());
+                            refreshSalesName();}
+
                         else{
                             Log.e("mDHandler6=",mDHandler.getAllUserNo());
                             mDHandler.updateUserNO(storeNo_edit.getText().toString());
@@ -536,6 +568,17 @@ public  static     String headerDll = "";
 
             }
         });
+    }
+
+    private void refreshSalesName() {
+        try {
+            String name=mDHandler.getSalesmanName_fromSalesTeam();
+            mDHandler.updateSalesManNameSetting(name.trim());
+        }
+
+        catch(Exception e){
+
+        }
     }
 
     private void showMoreSettingDialog() {
@@ -738,7 +781,7 @@ public  static     String headerDll = "";
 
                 .show();
     }
-    private void showIdetUuseNumPasswordDialog( ) {
+    private void showIdetUuseNumPasswordDialog( TextView textInput) {
         final EditText editText = new EditText(Login.this);
         editText.setTextColor(getResources().getColor(R.color.text_view_color));
         editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -753,7 +796,7 @@ public  static     String headerDll = "";
             public void onClick(SweetAlertDialog sweetAlertDialog) {
                 if(editText.getText().toString().equals("2021000"))
                 {
-                    storeNo_edit.setEnabled(true);
+                    textInput.setEnabled(true);
                     sweetAlertDialog.dismissWithAnimation();
 
                 }
@@ -1250,7 +1293,10 @@ public  static     String headerDll = "";
      //   mDHandler.addUserNO(Login.salesMan);
         if( mDHandler.getAllUserNo()!=null) {
             if ( mDHandler.getAllUserNo().equals(""))
-                mDHandler.addUserNO(Login.salesMan);
+            {  mDHandler.addUserNO(Login.salesMan);
+
+            }
+
             else{
                 Log.e("mDHandler3=",mDHandler.getAllUserNo());
                 mDHandler.updateUserNO(Login.salesMan);
@@ -1259,6 +1305,7 @@ public  static     String headerDll = "";
             Log.e("mDHandler4=",mDHandler.getAllUserNo());
             mDHandler.updateUserNO(Login.salesMan);
         }
+        refreshSalesName();
 
 
 //        try {

@@ -174,6 +174,14 @@ public class bMITP extends Activity {
             else {
                 Log.e("lastConnAddr",""+lastConnAddr);
                 fWriter.close();
+                if(getData.equals("6"))
+                {
+                    clearData.setText("1");
+                    finish();
+
+//                Intent i=new Intent(context,Stock_Activity.class);
+//                startActivity(i);
+                }
             }
 
             fWriter.close();
@@ -263,7 +271,7 @@ public class bMITP extends Activity {
 //
         getData = getIntent().getStringExtra("printKey");
         try {
-            onPermission();
+//            onPermission();
         }catch (Exception e){
             Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
         }
@@ -621,6 +629,7 @@ public class bMITP extends Activity {
                           if(printShape==0) {//Normal print (Arabic)
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
+                                  Log.e("printShape==","1printMultilingualFontEsc3== "+i);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
 
                               }
@@ -721,8 +730,10 @@ public class bMITP extends Activity {
                               for (int i = 0; i < settings; i++) {
 //                              sample.printMultilingualFontEsc(0);
 //                                  Log.e("printVoucher",""+printVoucher.getSaleManNumber());
-
+                                  Log.e("printShape==","1printMultilingualFontEsc3== "+i);
                                   sample.printMultilingualFontEsc3(0, printVoucher, itemPrint);
+
+
                               }
                           }else {
                               for (int i = 0; i < settings; i++) {

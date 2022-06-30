@@ -60,7 +60,7 @@
         <activity
             android:name=".ReturnByVoucherNo"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Reports.ShelfInventoeryReport"

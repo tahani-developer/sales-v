@@ -7,6 +7,8 @@ import android.os.Bundle;
 //import android.support.v4.content.ContextCompat;
 //import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -32,6 +34,12 @@ import com.dr7.salesmanmanager.PdfConverter;
 import com.dr7.salesmanmanager.R;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.google.android.material.textfield.TextInputEditText;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,6 +64,7 @@ public class CustomerLogReport extends AppCompatActivity {
   AutoCompleteTextView customer_name;
   TableRow header_row;
   Button preview;
+    int[] listImageIcone = new int[]{R.drawable.pdf_icon, R.drawable.excel_small};
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,19 +131,13 @@ public class CustomerLogReport extends AppCompatActivity {
         expotTpPdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(FilterdtransactionList.size()!=0)
-                exportToPdf(FilterdtransactionList);
-                else
-                    exportToPdf(transactionList);
+
             }
         });
         expotTpExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(FilterdtransactionList.size()!=0)
-                exportToEx(FilterdtransactionList);
-               else
-                   exportToEx(transactionList);
+
             }
         });
 
@@ -148,6 +151,52 @@ public class CustomerLogReport extends AppCompatActivity {
                 this, android.R.layout.simple_dropdown_item_1line, MainActivity.customersSpinnerArray);
 
         customer_name.setAdapter(customerSpinnerAdapter);
+
+
+        inflateBoomMenu();
+    }
+
+    private void inflateBoomMenu() {
+        BoomMenuButton bmb = (BoomMenuButton) findViewById(R.id.bmb);
+
+        bmb.setButtonEnum(ButtonEnum.SimpleCircle);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.DOT_2_2);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.SC_2_2);
+//        SimpleCircleButton.Builder b1 = new SimpleCircleButton.Builder();
+
+
+        for (int i = 0; i < bmb.getButtonPlaceEnum().buttonNumber(); i++) {
+            bmb.addBuilder(new SimpleCircleButton.Builder()
+                    .normalImageRes(listImageIcone[i])
+
+                    .listener(new OnBMClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onBoomButtonClick(int index) {
+                            // When the boom-button corresponding this builder is clicked.
+                            switch (index) {
+                                case 0:
+                                    if(FilterdtransactionList.size()!=0)
+                                        exportToPdf(FilterdtransactionList);
+                                    else
+                                        exportToPdf(transactionList);
+
+                                    break;
+                                case 1:
+                                    if(FilterdtransactionList.size()!=0)
+                                        exportToEx(FilterdtransactionList);
+                                    else
+                                        exportToEx(transactionList);
+                                    break;
+
+
+                            }
+                        }
+                    }));
+//            bmb.addBuilder(builder);
+
+
+        }
     }
 
     private void exportToEx( List<Transaction> transactionList) {

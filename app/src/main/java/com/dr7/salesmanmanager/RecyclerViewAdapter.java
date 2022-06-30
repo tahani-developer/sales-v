@@ -1350,8 +1350,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                            List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                            Offers appliedOffer = null;
                                                                                                            Log.e("appliedOffer", "1111===" + offer.size());
-//
-                                                                                                           if (offer.size() != 0 && voucherType==504) {
+////&& voucherType==504
+                                                                                                           if (offer.size() != 0 ) {
 
                                                                                                                if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
@@ -1448,7 +1448,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                        current_itemHasSerial, oneUnit);
                                                                                                            }
                                                                                                            if (added) {
-                                                                                                               if (offer.size() != 0 && voucherType==504 &&!appliedOffer.getItemNo().equals("-1"))
+                                                                                                               if (offer.size() != 0  &&!appliedOffer.getItemNo().equals("-1"))
                                                                                                                    openOfferDialog(appliedOffer);
 
                                                                                                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
@@ -1532,7 +1532,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                                useWeight, view.getContext(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
                                                                                                                    }
                                                                                                                    if (added) {
-                                                                                                                       if (offer.size() != 0 &&  voucherType==504 && !appliedOffer.getItemNo().equals("-1"))
+                                                                                                                       if (offer.size() != 0  && !appliedOffer.getItemNo().equals("-1"))
                                                                                                                            openOfferDialog(appliedOffer);
                                                                                                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
                                                                                                                        isClicked.set(position, 1);
@@ -2644,7 +2644,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                         current_itemHasSerial, oneUnit);
                                                             }
                                                             if (added) {
-                                                                if (offer.size() != 0&& voucherType==504  && !appliedOffer.getItemNo().equals("-1"))
+                                                                if (offer.size() != 0 && !appliedOffer.getItemNo().equals("-1"))
                                                                     openOfferDialog(appliedOffer);
 
 //                                                                holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.layer5));
@@ -2745,7 +2745,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                 useWeight, context.getActivity(), item_remark.getText().toString(), serialListitems, current_itemHasSerial, oneUnit);
                                                                     }
                                                                     if (added) {
-                                                                        if (offer.size() != 0 && voucherType==504 && !appliedOffer.getItemNo().equals("-1"))
+                                                                        if (offer.size() != 0  && !appliedOffer.getItemNo().equals("-1"))
                                                                             openOfferDialog(appliedOffer);
 //                                                                        holder.linearLayout.setBackgroundColor(R.color.done_button);
                                                                         isClicked.set(position, 1);

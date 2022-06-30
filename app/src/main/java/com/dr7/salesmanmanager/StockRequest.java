@@ -228,13 +228,8 @@ public class StockRequest extends Fragment {
         });
 
 
-        if(intentData.equals("read"))
-        {
-            itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
-        }
-        else {
-            itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
-        }
+        getData();
+
 //        itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
         items = new ArrayList<>();
         listItemStock = new ArrayList<>();
@@ -355,6 +350,30 @@ public class StockRequest extends Fragment {
 
 
         return view;
+    }
+
+    private void getData() {
+        if(intentData.equals("read"))
+        {
+            itemsRequiredList= mDbHandler.getAllJsonItemsStock(200);
+        }
+        else {
+            if(mDbHandler.getFlagSettings().get(0).getMake_Order()==1)
+            {
+                int store=1;
+                try {
+                    store= Integer.parseInt( mDbHandler.getAllSettings().get(0).getStoreNo());
+                }catch (Exception e){
+                    store=1;
+                }
+
+                itemsRequiredList= mDbHandler.getAllJsonItemsStock(store);
+
+            }else {
+                itemsRequiredList= mDbHandler.getAllJsonItemsStock(0);
+            }
+
+        }
     }
 
     private void openClearDialog() {
@@ -599,8 +618,8 @@ public class StockRequest extends Fragment {
 
 
         try {
-            itemsRequiredList= mDbHandler.getAllJsonItemsStock(2);
-
+//            itemsRequiredList= mDbHandler.getAllJsonItemsStock(200);
+            getData();
             listItemStock = new ArrayList<>();
             listSerialInventory.clear();
             serialListitems_stock.clear();

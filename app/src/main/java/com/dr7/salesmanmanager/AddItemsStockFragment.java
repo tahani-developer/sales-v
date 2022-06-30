@@ -188,6 +188,9 @@ public class AddItemsStockFragment extends DialogFragment {
 
                 if (!categorySpinner.getSelectedItem().toString().equals("no filter")) {
                     ArrayList<Item> filteredList = new ArrayList<>();
+                    jsonItemsList.clear();
+                    jsonItemsList.addAll(itemsRequiredList);
+//                    jsonItemsList=itemsRequiredList;
                     for (int k = 0; k < jsonItemsList.size(); k++) {
                         if (jsonItemsList.get(k).getCategory().equals(categorySpinner.getSelectedItem().toString()))
                             filteredList.add(jsonItemsList.get(k));

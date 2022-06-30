@@ -183,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
-                    android:layout_margin="5dp"
+                    android:layout_margin="1dp"
                     android:layout_weight="1.5"
                     android:background="@drawable/done_button"
                     android:text="@string/preview"
@@ -194,14 +194,14 @@
                 android:id="@+id/HorizontalScrollView01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
-                android:padding="4dp">
+                android:layout_weight="1.8"
+                android:padding="2dp">
 
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:background="@color/layer6"
                     android:padding="2dp">
 
@@ -393,7 +393,7 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            </LinearLayout>
 
         <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmb"

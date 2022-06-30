@@ -1467,10 +1467,10 @@ else
 
 
         }
-        else if (id == R.id.carstock){
-            Intent i=new Intent(MainActivity.this,CarStocking.class);
-            startActivity(i);
-        }
+//        else if (id == R.id.carstock){
+//            Intent i=new Intent(MainActivity.this,CarStocking.class);
+//            startActivity(i);
+//        }
 //        else
 //            if (id == R.id.customers_location) {
 ////            locationPermissionRequest.closeLocation();
@@ -3058,7 +3058,9 @@ else
         }
 
         private void getSalesManName() {
+
             String salesName=mDbHandler.getSalesmanName_fromSalesTeam();
+            Log.e("getSalesManName",""+salesName);
             if(salesName.equals(""))
             {
                 salesmanNmae.setEnabled(true);
