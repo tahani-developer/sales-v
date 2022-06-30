@@ -1636,34 +1636,26 @@ else
 
         }else
             if(id==R.id.nav_importexternal_data){
-                //exportDB(MainActivity.this);
-                File Db =  getApplicationContext().getDatabasePath("VanSalesDatabase");
-                Date d = new Date();
-
-                File file =  getApplicationContext().getDatabasePath("VanSalesDatabase_backup");
-                file.setWritable(true);
-
-//try {
-//    copyFile(new FileInputStream(Db), new FileOutputStream(file));
-//}catch (Exception exception)
-//{
-//    Log.e("copyFile==", exception.getMessage());
-//}
 
 
-              importdb("VanSalesDatabasenew",MainActivity.this);
+
+
+                showPasswordDialog();
+             // String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSalesDatabase_backup/";
+//                String directory_path="/storage/emulated/0/Documents/VanSalesDatabase";
+//              importdb(directory_path,MainActivity.this);
 
                 //importdb(getApplicationInfo().dataDir + "/VanSalesDatabasenew/",MainActivity.this);
               //  showFileChooser();
 
 
-                try {
-
-                    importDatabase("VanSalesDatabase_backup");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("Exception2==",e.getMessage());
-                }
+//                try {
+//
+//                importDatabase("VanSalesDatabase_backup");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Log.e("Exception2==",e.getMessage());
+//                }
 
             }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -3904,6 +3896,22 @@ else
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("startVoiceInput2","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
+
+   if(requestCode == 3333 && resultCode == RESULT_OK ){
+       Log.e("aya","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
+       Uri content_describer = data.getData();
+       String src = content_describer.getPath();
+
+       Log.e("aya","src=="+src);
+
+       Log.e("content_describer","content_describer=="+src);
+      // String directory_path="/storage/emulated/0/Documents/VanSalesDatabase";
+       importdb(src,MainActivity.this);
+
+   }
+
+   else
+
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -4129,6 +4137,7 @@ else
             isPresent=false;
 
 
+            Log.e("backupDB.getAbsolutePath()", backupDB.getAbsolutePath());
         }
         catch (Exception e) {
             Log.e("Settings Backup", e.getMessage());
@@ -4321,96 +4330,9 @@ else
 
        }
    }
-    private void importDB() {
-        try {
 
 
-//
-//            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
-//            File backupDB = new File(sd, backupDBPath);
-//
-//            if (currentDB.exists()&&isPresent) {
-//                FileChannel src = new FileInputStream(currentDB).getChannel();
-//                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-//                dst.transferFrom(src, 0, src.size());
-//                src.close();
-//                dst.close();
-//
-
-            ////////
-
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-
-            if (sd.canWrite()) {
-                String currentDBPath = "//data//" + "PackageName"
-                        + "//databases//" + "DatabaseName";
-                String backupDBPath = "/BackupFolder/DatabaseName";
-                File backupDB = new File(data, currentDBPath);
-                File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-                Toast.makeText(getBaseContext(), backupDB.toString(),
-
-
-                        Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_LONG)
-                    .show();
-        }
-    }
-    public static boolean exportDB(Context context) {
-        String DATABASE_NAME = "VanSalesDatabase";
-        String databasePath = context.getDatabasePath(DATABASE_NAME).getPath();
-        String inFileName = databasePath;
-        try {
-            File dbFile = new File(inFileName);
-            FileInputStream fis = new FileInputStream(dbFile);
-
-            String outFileName = Environment.getExternalStorageDirectory() + "/" + DATABASE_NAME;
-
-            OutputStream output = new FileOutputStream(outFileName);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-            //Close the streams
-            output.flush();
-            output.close();
-            fis.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    public static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
-        FileChannel fromChannel = null;
-        FileChannel toChannel = null;
-        try {
-            fromChannel = fromFile.getChannel();
-            toChannel = toFile.getChannel();
-            fromChannel.transferTo(0, fromChannel.size(), toChannel);
-        } finally {
-            try {
-                if (fromChannel != null) {
-                    Log.e("fromChannel==", "fromChannel");
-                    fromChannel.close();
-                }
-            } finally {
-                if (toChannel != null) {
-                    Log.e("toChannel==", "toChannel");
-                    toChannel.close();
-                }
-            }
-        }
-    }
-    private void importdb( String db_path,Context context) {
+     private void importdb( String db_path,Context context) {
         try {
             File file=new File(db_path);
 
@@ -4473,5 +4395,38 @@ Log.e("Exception==",e.getMessage());
         super.onDestroy();
         Log.e("onDestroy","onDestroy");
 
+    }
+    private void showPasswordDialog( ) {
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setTextColor(getResources().getColor(R.color.text_view_color));
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("303090"))
+                {
+                    Intent chooseFile;
+                    Intent intent;
+                    chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                    chooseFile.setType("*/*");
+                    intent = Intent.createChooser(chooseFile, "Choose a file");
+                    startActivityForResult(intent, 3333);
+                    sweetAlertDialog.dismissWithAnimation();
+
+                }
+                else {
+
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+            }
+        })
+
+                .show();
     }
 }
