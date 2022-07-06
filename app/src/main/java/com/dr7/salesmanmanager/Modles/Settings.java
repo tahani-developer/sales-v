@@ -53,6 +53,24 @@ public class Settings {
     private  int itemUnit;
     private  int sumCurrentQty;
     private  int dontduplicateItem;
+    private  int  OffersJustForSales;
+    private  int  CheckQtyinOrder;
+
+    public int getOffersJustForSales() {
+        return OffersJustForSales;
+    }
+
+    public void setOffersJustForSales(int offersJustForSales) {
+        OffersJustForSales = offersJustForSales;
+    }
+
+    public int getCheckQtyinOrder() {
+        return CheckQtyinOrder;
+    }
+
+    public void setCheckQtyinOrder(int checkQtyinOrder) {
+        CheckQtyinOrder = checkQtyinOrder;
+    }
 
     public int getCanChangePrice_returnonly() {
         return canChangePrice_returnonly;

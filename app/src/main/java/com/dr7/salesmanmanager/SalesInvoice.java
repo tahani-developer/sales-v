@@ -248,7 +248,7 @@ public class SalesInvoice extends Fragment {
     public  static CircleImageView addItemImgButton2;
     private ImageView connect, pic;
     private RadioGroup paymentTermRadioGroup, voucherTypeRadioGroup;
-    private  static  RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
+    public   static  RadioButton cash, credit, retSalesRadioButton, salesRadioButton, orderRadioButton;
     private EditText remarkEditText,valueTotalDiscount;
     private ImageButton newImgBtn;
     private double subTotal, totalTaxValue, netTotal;

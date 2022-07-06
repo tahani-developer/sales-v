@@ -897,7 +897,7 @@ public class ESCPSample2
 	int  printerType=5,dontshowTax=0; String notePosition="0";
 	public void printMultilingualFontEsc3(int count, Voucher voucherforPrint, List<Item>itemforPrint) throws UnsupportedEncodingException {
 
-		int dontShowHeader=0;
+		int dontShowHeader=0,dontShowHeaderinOrders=0;
 		int tayaaLayout=0,net_requiredValue=0;
 		try {
 			List<PrinterSetting> printerSettings = obj.getPrinterSetting_();
@@ -907,6 +907,7 @@ public class ESCPSample2
 			if (printerSettings.size() != 0) {
 				printerType = printerSettings.get(0).getPrinterName();
 				dontShowHeader=printerSettings.get(0).getDontPrintHeader();
+				dontShowHeaderinOrders=printerSettings.get(0).getDontrprintheadeInOrders();
 				tayaaLayout=printerSettings.get(0).getTayeeLayout();
 				net_requiredValue=printerSettings.get(0).getNetsalflag();
 				Log.e("printerType",""+printerType+"\ttayaaLayout="+tayaaLayout);
@@ -977,7 +978,7 @@ public class ESCPSample2
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			if (companyInfo.getLogo() != null) {
 				try {
-					if (dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+					if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
 					} else {
 						posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 200);
 					}
@@ -987,13 +988,13 @@ public class ESCPSample2
 
 				Log.e("12222print", "pyyy");
 			}
-			if (dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+			if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
 			} else {
 				posPtr.printAndroidFont(null, true, companyInfo.getCompanyName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			}
 			if (printerType == 6) {
-				if (dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+				if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
 				} else {
 					posPtr.printAndroidFont(null, true, "هاتف : " + companyInfo.getcompanyTel() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1011,7 +1012,7 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			} else {
-				if (dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+				if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
 				} else {
 					if (tayaaLayout == 1) {
 						posPtr.printAndroidFont(null, true,  voucherTyp + "\t\t" + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") +"رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "\t\t" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1055,7 +1056,7 @@ public class ESCPSample2
 			//posPtr.printAndroidFont(null, true, "طريقة الدفع  : " + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 			String noteCompany = companyInfo.getNoteForPrint();
-			if (dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+			if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
 			} else {
 				if (dontshowTax == 0 && (notePosition.equals("0")) && noteCompany.trim().length() != 0) {
 					posPtr.printAndroidFont(null, true, companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);

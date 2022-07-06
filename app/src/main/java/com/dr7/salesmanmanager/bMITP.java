@@ -255,6 +255,7 @@ public class bMITP extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.bluetooth_menu);
+        Log.e("savedInstanceState==",""+savedInstanceState+"");
         this.mainLinearPrinting= (LinearLayout) this.findViewById(R.id.mainLinearPrinting);
         text_hideDialog = (TextView) this.findViewById(R.id.text_hideDialog);
         this.btAddrBox = (EditText)this.findViewById(R.id.EditTextAddressBT);
@@ -271,7 +272,7 @@ public class bMITP extends Activity {
 //
         getData = getIntent().getStringExtra("printKey");
         try {
-//            onPermission();
+            onPermission();
         }catch (Exception e){
             Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
         }
@@ -290,11 +291,11 @@ public class bMITP extends Activity {
                     try {
                         bMITP.this.btConn(bMITP.this.mBluetoothAdapter.getRemoteDevice(bMITP.this.btAddrBox.getText().toString()));
                     } catch (IllegalArgumentException var3) {
-                        Log.e("BluetoothConnectMenu", var3.getMessage(), var3);
+                        Log.e("BluetoothConnectMenu7=", var3.getMessage(), var3);
                         AlertView.showAlert(var3.getMessage(), bMITP.this.context);
                         return;
                     } catch (IOException var4) {
-                        Log.e("BluetoothConnectMenu", var4.getMessage(), var4);
+                        Log.e("BluetoothConnectMenu6=", var4.getMessage(), var4);
                         AlertView.showAlert(var4.getMessage(), bMITP.this.context);
                         return;
                     }
@@ -340,6 +341,7 @@ public class bMITP extends Activity {
                     bMITP.this.btAddrBox.setText(btDev.getAddress());
                     bMITP.this.btConn(btDev);
                 } catch (IOException var8) {
+                    Log.e("BluetoothConnectMenu7=", var8.getMessage(), var8);
                     AlertView.showAlert(var8.getMessage(), bMITP.this.context);
                 }
                     }
@@ -355,7 +357,7 @@ public class bMITP extends Activity {
                         btDev = (BluetoothDevice) bMITP.this.remoteDevices.elementAt(0);
                     }
                     catch (Exception e)
-                    {       }
+                    {     Log.e("BluetoothConnectMenu8=", e.getMessage());    }
 
                     try {
                         if (bMITP.this.mBluetoothAdapter.isDiscovering()) {
@@ -365,6 +367,7 @@ public class bMITP extends Activity {
                         bMITP.this.btAddrBox.setText(btDev.getAddress());
                         bMITP.this.btConn(btDev);
                     } catch (IOException var8) {
+                        Log.e("BluetoothConnectMenu9=", var8.getMessage(), var8);
                         AlertView.showAlert(var8.getMessage(), bMITP.this.context);
                     }
 
@@ -563,7 +566,7 @@ public class bMITP extends Activity {
                 bMITP.this.lastConnAddr = params[0].getAddress();
                 retVal = 0;
             } catch (IOException var4) {
-                Log.e("BluetoothConnectMenu", var4.getMessage());
+                Log.e("BluetoothConnectMenu10", var4.getMessage());
                 retVal = -1;
             }
 
