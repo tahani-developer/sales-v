@@ -9,6 +9,15 @@ public class PrinterSetting {
     private int dontPrintHeader;
     private int tayeeLayout;
     private int netsalflag;
+    private int dontrprintheadeInOrders;
+
+    public int getDontrprintheadeInOrders() {
+        return dontrprintheadeInOrders;
+    }
+
+    public void setDontrprintheadeInOrders(int dontrprintheadeInOrders) {
+        this.dontrprintheadeInOrders = dontrprintheadeInOrders;
+    }
 
     public int getNetsalflag() {
         return netsalflag;

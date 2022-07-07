@@ -11,13 +11,8 @@ import android.os.Build;
 //import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.print.PrintHelper;
 
 import com.dr7.salesmanmanager.Modles.Account_Report;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
@@ -68,20 +63,16 @@ import java.util.List;
 import static com.dr7.salesmanmanager.ExportJason.ReturnItemsarrayList;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.rawahneh_getMaxVouchFromServer;
-import static com.dr7.salesmanmanager.Login.salesManNo;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
 import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
-import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
-import static com.dr7.salesmanmanager.SalesInvoice.voucherType;
-import static com.dr7.salesmanmanager.StockRequest.clearData;
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 185;
+    private static final int DATABASE_VERSION = 189;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -464,6 +455,10 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String Item_Unit = "Item_Unit";
     private static final String SUM_CURRENT_QTY = "SUM_CURRENT_QTY";
     private static final String DONT_DUPLICATE_ITEMS = "DONT_DUPLICATE_ITEMS";
+    private static final String OffersJustForSales= "OffersJustForSales";
+    private static final String CheckQtyinOrder= "CheckQtyinOrder";
+
+
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
 
@@ -478,6 +473,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String LATITUDE_COMPANY = "LATITUDE_COMPANY";
     private static final String NOTEPOSITION = "NOTEPOSITION";
     private static final String netsalFLAG = "netsalFLAG";
+    private static final String HeaderprintInOrders = "HeaderprintInOrders";
+
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -917,7 +914,9 @@ private static final String  SalemanTrips="SalemanTrips";
                 + SHORT_INVOICE + " INTEGER,"
                 + DONT_PRINT_HEADER + " INTEGER,"
                 +TAYE_LAYOUT+ " INTEGER,"
-                +netsalFLAG+ " TEXT "
+                +netsalFLAG+ " TEXTm, "
+                +HeaderprintInOrders+ " INTEGER "
+
                 + ")";
         db.execSQL(CREATE_PRINTER_SETTING_TABLE);
 //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
@@ -1094,7 +1093,10 @@ private static final String  SalemanTrips="SalemanTrips";
                 + Item_Unit + " INTEGER ,"
                 +SUM_CURRENT_QTY+ " INTEGER, "
                 +DONT_DUPLICATE_ITEMS+ " INTEGER, "
-                + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER "
+                + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
+                + OffersJustForSales + " INTEGER, "
+                + CheckQtyinOrder + " INTEGER "
+
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2543,6 +2545,34 @@ private static final String  SalemanTrips="SalemanTrips";
         {
             Log.e(TAG, e.getMessage().toString());
         }
+        try{
+            Log.e("onUpgrade*****", "OffersJustForSales");
+            db.execSQL("ALTER TABLE SETTING ADD '"+OffersJustForSales+"'  INTEGER");
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, e.getMessage().toString());
+        }
+
+        try{
+            Log.e("onUpgrade*****", "CheckQtyinOrder");
+            db.execSQL("ALTER TABLE SETTING ADD '"+CheckQtyinOrder+"'  INTEGER");
+
+        }catch (Exception e)
+        {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+        try{
+            Log.e("onUpgrade*****", "HeaderprintInOrders");
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+HeaderprintInOrders+"'  INTEGER");
+
+        }catch (Exception e)
+        {
+
+            Log.e(TAG, e.getMessage().toString());
+        }
+
 
     }
 
@@ -3042,7 +3072,9 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(DONT_PRINT_HEADER,printer.getDontPrintHeader());
         values.put(TAYE_LAYOUT,printer.getTayeeLayout());
         values.put(netsalFLAG,printer.getNetsalflag());
+        values.put(HeaderprintInOrders,printer.getDontrprintheadeInOrders());
         db.insert(PRINTER_SETTING_TABLE, null, values);
+
         db.close();
 
     }
@@ -3412,7 +3444,7 @@ private static final String  SalemanTrips="SalemanTrips";
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
-                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate) {
+                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,int salesoffersflage,int checkqtyinorderflage) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3473,7 +3505,8 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Item_Unit,itemUnit);
         values.put( SUM_CURRENT_QTY,sumQtys);
         values.put(      DONT_DUPLICATE_ITEMS,noDuplicate);
-
+        values.put(      OffersJustForSales,salesoffersflage);
+        values.put(      CheckQtyinOrder,checkqtyinorderflage);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -3946,6 +3979,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setSumCurrentQty((cursor.getInt(48)));
                 setting.setDontduplicateItem((cursor.getInt(49)));
                 setting.setCanChangePrice_returnonly(cursor.getInt(50));
+                setting.setOffersJustForSales(cursor.getInt(51));
+                setting.setCheckQtyinOrder(cursor.getInt(52));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -5948,6 +5983,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 printerSetting.setDontPrintHeader(cursor.getInt(3));
                 printerSetting.setTayeeLayout(cursor.getInt(4));
                 printerSetting.setNetsalflag(cursor.getInt(5));
+                printerSetting.setDontrprintheadeInOrders(cursor.getInt(6));
                 keyvalue.add(printerSetting);
             } while (cursor.moveToNext());
         }

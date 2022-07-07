@@ -571,6 +571,9 @@
     <string name="savevocher">Save as Vocher</string>
     <string name="not_authoriz2">Sorry, you are not authorized </string>
     <string name="maxvochServer">Max Vocher From Server</string>
+    <string name="salesoffers">Offers just for sales</string>
+    <string name="checkqtyinorder">check qty in orders</string>
+    <string name="headerprint">dont print header in Orders</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

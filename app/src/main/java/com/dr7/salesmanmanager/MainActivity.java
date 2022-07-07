@@ -14,14 +14,12 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.http.DelegatingSSLSession;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,14 +45,12 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -82,7 +78,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
-import com.dr7.salesmanmanager.Modles.Flag_Settings;
 import com.dr7.salesmanmanager.Modles.Item;
 import com.dr7.salesmanmanager.Modles.Payment;
 import com.dr7.salesmanmanager.Modles.PrinterSetting;
@@ -92,7 +87,6 @@ import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
-import com.dr7.salesmanmanager.Modles.serialModel;
 import com.dr7.salesmanmanager.Reports.Reports;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -143,14 +137,11 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.CustomerListShow.customerNameTextView;
 
 import static com.dr7.salesmanmanager.Login.SalsManPlanFlage;
-import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.passwordSettingAdmin;
-import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.updateOnlySelectedCustomer;
-import static com.dr7.salesmanmanager.Login.userNo;
 
 public class MainActivity extends AppCompatActivity
         implements  NavigationView.OnNavigationItemSelectedListener,
@@ -161,7 +152,7 @@ public class MainActivity extends AppCompatActivity
     RadioGroup radioGroup;
     private static final String TAG = "MainActivity";
     public static String    CusId;
-    public static int menuItemState;
+    public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0;
     public static boolean enter=false;
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
@@ -567,6 +558,8 @@ else
         settingsList= mDbHandler.getAllSettings();
         try {
             approveAdmin=settingsList.get(0).getApproveAdmin();
+            OffersJustForSalsFlag=settingsList.get(0).getOffersJustForSales();
+            checkQtyForOrdersFlage=settingsList.get(0).getCheckQtyinOrder();
         }catch (Exception e){
             approveAdmin=0;
         }
@@ -1636,34 +1629,26 @@ else
 
         }else
             if(id==R.id.nav_importexternal_data){
-                //exportDB(MainActivity.this);
-                File Db =  getApplicationContext().getDatabasePath("VanSalesDatabase");
-                Date d = new Date();
-
-                File file =  getApplicationContext().getDatabasePath("VanSalesDatabase_backup");
-                file.setWritable(true);
-
-//try {
-//    copyFile(new FileInputStream(Db), new FileOutputStream(file));
-//}catch (Exception exception)
-//{
-//    Log.e("copyFile==", exception.getMessage());
-//}
 
 
-              importdb("VanSalesDatabasenew",MainActivity.this);
+
+
+                showPasswordDialog();
+             // String directory_path = Environment.getExternalStorageDirectory().getPath() + "/VanSalesDatabase_backup/";
+//                String directory_path="/storage/emulated/0/Documents/VanSalesDatabase";
+//              importdb(directory_path,MainActivity.this);
 
                 //importdb(getApplicationInfo().dataDir + "/VanSalesDatabasenew/",MainActivity.this);
               //  showFileChooser();
 
 
-                try {
-
-                    importDatabase("VanSalesDatabase_backup");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("Exception2==",e.getMessage());
-                }
+//                try {
+//
+//                importDatabase("VanSalesDatabase_backup");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Log.e("Exception2==",e.getMessage());
+//                }
 
             }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -2456,7 +2441,7 @@ else
                                 openPrintSetting();
 
                             }catch (Exception exception){
-                                Log.e("exception",exception.getMessage());
+                                Log.e("exception===",exception.getMessage());
                             }
 
                         }
@@ -2545,7 +2530,7 @@ else
                 passowrdData_checkbox, arabicLanguage_checkbox, hideQty_checkbox, lockcash_checkbox, preventNew_checkbox, note_checkbox, ttotalDisc_checkbox, automaticCheck_checkbox, tafqit_checkbox, preventChange_checkbox,
                 showCustomerList_checkbox, noReturn_checkbox, workSerial_checkbox,
                 showItemImage_checkbox,approveAdmin_checkbox,asaveOnly_checkbox,showSolidQty_checkbox,offerFromAdmin_checkbox,checkQtyServer,dontShowTax_checkbox
-                ,continousReading_checkbox,totalDiscount_checkbox,itemUnit_checkBox,dontDuplicateItems_checkbox,sumCurentQty_checkbox;
+                ,continousReading_checkbox,totalDiscount_checkbox,itemUnit_checkBox,dontDuplicateItems_checkbox,sumCurentQty_checkbox,salesoffers_checkbox,checkqtyinorder_checkbox;
         Dialog dialog;
         LinearLayout linearSetting,linearStore;
         TextView editIp;
@@ -2647,6 +2632,9 @@ else
             offerFromAdmin_checkbox= (CheckBox) dialog.findViewById(R.id.offerFromAdmin_checkbox);
             checkQtyServer= (CheckBox) dialog.findViewById(R.id.qtyFromServer_checkbox);
             dontShowTax_checkbox= (CheckBox) dialog.findViewById(R.id.dontShowTax_checkbox);
+            salesoffers_checkbox= (CheckBox) dialog.findViewById(R.id.salesoffers);
+            checkqtyinorder_checkbox= (CheckBox) dialog.findViewById(R.id.checkqtyinorder);
+
             FloatingActionButton okBut_floatingAction=dialog.findViewById(R.id.okBut_floatingAction);
             okBut_floatingAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2991,7 +2979,22 @@ else
 
 
 
+                if (mDbHandler.getAllSettings().get(0).getOffersJustForSales()== 1) {
+                    salesoffers_checkbox .setChecked(true);
 
+                }
+                else {
+                    salesoffers_checkbox.setChecked(false);
+
+                }
+                if (mDbHandler.getAllSettings().get(0).getCheckQtyinOrder() == 1) {
+                   checkqtyinorder_checkbox.setChecked(true);
+
+                }
+                else {
+                    checkqtyinorder_checkbox.setChecked(false);
+
+                }
 
 
 
@@ -3186,7 +3189,8 @@ else
 
                         int sumCurren_Qty=sumCurentQty_checkbox.isChecked()?1:0;
                         int dontDuplicat_Item=dontDuplicateItems_checkbox.isChecked()?1:0;
-
+                        int salesoffersflage= salesoffers_checkbox.isChecked()?1:0;
+                        int checkqtyinorderflage= checkqtyinorder_checkbox.isChecked()?1:0;
                         double valueOfTotDisc=0;
                         try {
                             valueOfTotDisc=Double.parseDouble(valueTotalDiscount.getText().toString().trim());
@@ -3205,12 +3209,12 @@ else
                         String salesmanname=salesmanNmae.getText().toString();
                         Log.e("salesmanname",""+salesmanname);
                         mDbHandler.deleteAllSettings();
-                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
-                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
-                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
-                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
-                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
-                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item);
+                        mDbHandler.addSetting(link, taxKind,     504, invoice,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
+                        mDbHandler.addSetting(link, taxKind,     506, return1,     priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
+                        mDbHandler.addSetting(link, taxKind,     508, order,       priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
+                        /*cash*/mDbHandler.addSetting(link, taxKind  ,    1    ,    paymentCash, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice,canChangPrice_Returnonly, readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
+                        /*chequ*/mDbHandler.addSetting(link, taxKind  ,     4,       paymentCheque, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
+                /*credit card*/mDbHandler.addSetting(link, taxKind   , 2,         paymentCredit, priceByCust, useWeightCase, alowMinus, numOfCopys, salesManCustomers, minSalePric, pprintMethod, alowOutOfRange, canChangPrice, canChangPrice_Returnonly,readDiscountFromoffer, workOnlin, paymethodCheck, bonusNotalow, noOffer_Credit, amountOfmaxDiscount,Customerauthorized,passordData,arabicLanguage,hideqty,lockcashReport,salesmanname,preventOrder,requiredNote,totalDiscPrevent,automaticCheque,tafqitCheckbox,preventChangPay,showCustlist,noReturnInvoice,workSerial,showImage,approveAdm,saveOnly,showsolidQty,offerAdmin,linkIp,qtyServer,showTax,conoText,continousReading,activeTotalDisc,valueOfTotDisc,storeNo,item_unit,sumCurren_Qty,dontDuplicat_Item,salesoffersflage,checkqtyinorderflage);
 
 
                         finish();
@@ -3553,7 +3557,7 @@ else
         }
 
         final RadioButton lk30, lk32, lk31, qs,dotMatrix,MTPPrinter,normalnam,large_name,innerPrinter;
-        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox;
+        CheckBox short_Invoice,dontPrintHeader,altayee_checkbox,headerprintorder;
         RadioGroup netsal_radioGroup = (RadioGroup) dialog.findViewById(R.id.netsal_radioGrp);
         RadioButton valu_radio =  dialog.findViewById(R.id.valu_radio);
         RadioButton netsal_radio =  dialog.findViewById(R.id.netsal_radio);
@@ -3575,6 +3579,7 @@ else
         });
         short_Invoice=(CheckBox) dialog.findViewById(R.id.shortInvoice);
         altayee_checkbox=(CheckBox) dialog.findViewById(R.id.altayee_checkbox);
+        headerprintorder=(CheckBox) dialog.findViewById(R.id.headerprintorder);
         dontPrintHeader=dialog.findViewById(R.id.dontPrintheader_checkbox);
         lk30 = (RadioButton) dialog.findViewById(R.id.LK30);
         lk31 = (RadioButton) dialog.findViewById(R.id.LK31);
@@ -3653,6 +3658,12 @@ else
         altayee_checkbox.setChecked(true);
 
     }else    altayee_checkbox.setChecked(false);
+
+            if(printer.get(0).getDontrprintheadeInOrders()==1)
+
+                headerprintorder.setChecked(true);
+
+            else    headerprintorder.setChecked(false);
 }else {
     lk30.setChecked(true);
     normalnam.setChecked(true);
@@ -3729,6 +3740,16 @@ else
                     printerSetting.setTayeeLayout(0);
 
                 }
+                if(headerprintorder.isChecked())
+                {
+                    printerSetting.setDontrprintheadeInOrders(1);
+
+                }
+                else {
+                    printerSetting.setDontrprintheadeInOrders(0);
+
+                }
+
                 printerSetting.setNetsalflag(netsalflag);
                 mDbHandler.addPrinterSeting(printerSetting);
                // Log.e("printerSetting ", "setShortInvoice\t"+printerSetting.getShortInvoice());
@@ -3909,6 +3930,22 @@ else
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.e("startVoiceInput2","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
+
+   if(requestCode == 3333 && resultCode == RESULT_OK ){
+       Log.e("aya","requestCode"+requestCode+"\t"+data+"\t"+resultCode);
+       Uri content_describer = data.getData();
+       String src = content_describer.getPath();
+
+       Log.e("aya","src=="+src);
+
+       Log.e("content_describer","content_describer=="+src);
+      // String directory_path="/storage/emulated/0/Documents/VanSalesDatabase";
+       importdb(src,MainActivity.this);
+
+   }
+
+   else
+
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -4134,6 +4171,7 @@ else
             isPresent=false;
 
 
+            Log.e("backupDB.getAbsolutePath()", backupDB.getAbsolutePath());
         }
         catch (Exception e) {
             Log.e("Settings Backup", e.getMessage());
@@ -4326,96 +4364,9 @@ else
 
        }
    }
-    private void importDB() {
-        try {
 
 
-//
-//            File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
-//            File backupDB = new File(sd, backupDBPath);
-//
-//            if (currentDB.exists()&&isPresent) {
-//                FileChannel src = new FileInputStream(currentDB).getChannel();
-//                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-//                dst.transferFrom(src, 0, src.size());
-//                src.close();
-//                dst.close();
-//
-
-            ////////
-
-            File sd = Environment.getExternalStorageDirectory();
-            File data = Environment.getDataDirectory();
-
-            if (sd.canWrite()) {
-                String currentDBPath = "//data//" + "PackageName"
-                        + "//databases//" + "DatabaseName";
-                String backupDBPath = "/BackupFolder/DatabaseName";
-                File backupDB = new File(data, currentDBPath);
-                File currentDB= getApplicationContext().getDatabasePath("VanSalesDatabase");
-                FileChannel src = new FileInputStream(currentDB).getChannel();
-                FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-                Toast.makeText(getBaseContext(), backupDB.toString(),
-
-
-                        Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(getBaseContext(), e.toString(), Toast.LENGTH_LONG)
-                    .show();
-        }
-    }
-    public static boolean exportDB(Context context) {
-        String DATABASE_NAME = "VanSalesDatabase";
-        String databasePath = context.getDatabasePath(DATABASE_NAME).getPath();
-        String inFileName = databasePath;
-        try {
-            File dbFile = new File(inFileName);
-            FileInputStream fis = new FileInputStream(dbFile);
-
-            String outFileName = Environment.getExternalStorageDirectory() + "/" + DATABASE_NAME;
-
-            OutputStream output = new FileOutputStream(outFileName);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-            //Close the streams
-            output.flush();
-            output.close();
-            fis.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    public static void copyFile(FileInputStream fromFile, FileOutputStream toFile) throws IOException {
-        FileChannel fromChannel = null;
-        FileChannel toChannel = null;
-        try {
-            fromChannel = fromFile.getChannel();
-            toChannel = toFile.getChannel();
-            fromChannel.transferTo(0, fromChannel.size(), toChannel);
-        } finally {
-            try {
-                if (fromChannel != null) {
-                    Log.e("fromChannel==", "fromChannel");
-                    fromChannel.close();
-                }
-            } finally {
-                if (toChannel != null) {
-                    Log.e("toChannel==", "toChannel");
-                    toChannel.close();
-                }
-            }
-        }
-    }
-    private void importdb( String db_path,Context context) {
+     private void importdb( String db_path,Context context) {
         try {
             File file=new File(db_path);
 
@@ -4478,5 +4429,38 @@ Log.e("Exception==",e.getMessage());
         super.onDestroy();
         Log.e("onDestroy","onDestroy");
 
+    }
+    private void showPasswordDialog( ) {
+        final EditText editText = new EditText(MainActivity.this);
+        editText.setTextColor(getResources().getColor(R.color.text_view_color));
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        SweetAlertDialog sweetMessage= new SweetAlertDialog(MainActivity.this, SweetAlertDialog.NORMAL_TYPE);
+
+        sweetMessage.setTitleText(getResources().getString(R.string.enter_password));
+        sweetMessage .setConfirmText("Ok");
+        sweetMessage.setCanceledOnTouchOutside(true);
+        sweetMessage.setCustomView(editText);
+        sweetMessage.setConfirmButton(getResources().getString(R.string.app_ok), new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                if(editText.getText().toString().equals("303090"))
+                {
+                    Intent chooseFile;
+                    Intent intent;
+                    chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                    chooseFile.setType("*/*");
+                    intent = Intent.createChooser(chooseFile, "Choose a file");
+                    startActivityForResult(intent, 3333);
+                    sweetAlertDialog.dismissWithAnimation();
+
+                }
+                else {
+
+                    sweetAlertDialog.dismissWithAnimation();
+                }
+            }
+        })
+
+                .show();
     }
 }
