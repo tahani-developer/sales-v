@@ -149,6 +149,7 @@ public class bMITP extends Activity {
             int rin = fReader.read(buf);
             if (rin > 0) {
                 this.lastConnAddr = new String(buf, 0, rin);
+                Log.e("lastConnAddr",""+lastConnAddr);
                 this.btAddrBox.setText(this.lastConnAddr);
             }
 
@@ -170,9 +171,10 @@ public class bMITP extends Activity {
             FileWriter fWriter = new FileWriter(fileName);// crash
             if (this.lastConnAddr != null) {
                 fWriter.write(this.lastConnAddr);
+                Log.e("lastConnAddr","write="+lastConnAddr);
             }
             else {
-                Log.e("lastConnAddr",""+lastConnAddr);
+                Log.e("lastConnAddr","elsewrite"+lastConnAddr);
                 fWriter.close();
                 if(getData.equals("6"))
                 {
@@ -213,6 +215,7 @@ public class bMITP extends Activity {
     }
     public void onPermission()
     {
+        Log.e("onPermission", "request");
 // Permision can add more at your convinient
         if ((ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) !=
@@ -228,7 +231,13 @@ public class bMITP extends Activity {
 
                                     Manifest.permission.BLUETOOTH,
 
-                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE
+                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+
+                                    Manifest.permission.BLUETOOTH,
+                                    Manifest.permission.BLUETOOTH_ADMIN,
+                                    Manifest.permission.BLUETOOTH_PRIVILEGED
+
                             },
                     0
             );
@@ -253,7 +262,8 @@ public class bMITP extends Activity {
     }
 
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            super.onCreate(savedInstanceState);
+//        Log.e("savedInstanceState","1"+savedInstanceState);
         this.setContentView(R.layout.bluetooth_menu);
         this.mainLinearPrinting= (LinearLayout) this.findViewById(R.id.mainLinearPrinting);
         text_hideDialog = (TextView) this.findViewById(R.id.text_hideDialog);
@@ -271,8 +281,9 @@ public class bMITP extends Activity {
 //
         getData = getIntent().getStringExtra("printKey");
         try {
-//            onPermission();
+            onPermission();
         }catch (Exception e){
+            Log.e("onPermission",""+e.getMessage());
             Toast.makeText(context, "check permission", Toast.LENGTH_SHORT).show();
         }
 

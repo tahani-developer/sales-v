@@ -88,6 +88,14 @@ public class DiscountFragment extends DialogFragment {
         this.discountInterface = null;
     }
 
+    public static void setDiscountValue(double discountValue) {
+        DiscountFragment.discountValue = discountValue;
+    }
+
+    public static void setDiscountPerc(double discountPerc) {
+        DiscountFragment.discountPerc = discountPerc;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)

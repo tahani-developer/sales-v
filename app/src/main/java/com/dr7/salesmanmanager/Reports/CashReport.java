@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.print.PrintHelper;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -133,6 +134,7 @@ public class CashReport  extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(CashReport.this);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.cash_report);
         mailLayout = (ConstraintLayout)findViewById(R.id.mailLayout);
 

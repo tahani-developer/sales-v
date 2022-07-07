@@ -43,6 +43,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -211,6 +212,7 @@ public class ReceiptVoucher extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ////B
         generalMethod = new GeneralMethod(getActivity().getBaseContext());

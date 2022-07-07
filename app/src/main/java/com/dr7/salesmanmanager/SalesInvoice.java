@@ -393,6 +393,7 @@ public class SalesInvoice extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_sales_invoice, container, false);
         mainlayout = (LinearLayout) view.findViewById(R.id.mainlyout);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         listSerialTotal=new ArrayList<>();
         listMasterSerialForBuckup=new ArrayList<>();
         listSerialTotal.clear();
@@ -1117,7 +1118,8 @@ public class SalesInvoice extends Fragment {
         }
         Log.e("canChangePrice",""+canChangePrice);
 
-        notIncludeTax.setVisibility(View.GONE);
+
+//        notIncludeTax.setVisibility(View.GONE);
         linearTotalCashDiscount.setVisibility(View.GONE);
         if(talaatLayoutAndPassowrd==1)
         {
@@ -2169,9 +2171,9 @@ public class SalesInvoice extends Fragment {
 
                 double discountValue=0;
                 double discountPerc=0;
-                DiscountFragment obj = new DiscountFragment(getActivity().getBaseContext(),"");
-                discountValue = obj.getDiscountValue();
-                discountPerc = obj.getDiscountPerc();
+                DiscountFragment obj_discountFragment = new DiscountFragment(getActivity().getBaseContext(),"");
+                discountValue = obj_discountFragment.getDiscountValue();
+                discountPerc = obj_discountFragment.getDiscountPerc();
 
                 double totalDisc = Double.parseDouble(discTextView.getText().toString());
                 double subTotal = Double.parseDouble(subTotalTextView.getText().toString());
@@ -2239,6 +2241,9 @@ public class SalesInvoice extends Fragment {
                         voucher.setVoucherYear(Integer.parseInt(voucherYear));
                         voucher.setTime(timevocher);
                         voucher.setORIGINALvoucherNo(voucherNumber);
+                        discountValue=0;discountPerc=0;
+                        obj_discountFragment.setDiscountValue(0);
+                        obj_discountFragment.setDiscountPerc(0);
 
 
 
@@ -5001,6 +5006,11 @@ public class SalesInvoice extends Fragment {
             sum_discount = 0.0;
             items.clear();
             itemsList.clear();
+            try {
+                discountValue=0;
+                discountPerc=0;
+            }catch (Exception e){}
+
 //        calculateTotals();
             //***********************************************
         if(makeOrders!=1)
@@ -5241,10 +5251,10 @@ public class SalesInvoice extends Fragment {
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
                     itemTax = (itemTax * items.get(i).getTaxPercent() * 0.01) / (1 + items.get(i).getTaxPercent() * 0.01);
                 } else {
-                    itemTotal = itemTotal - itemDiscVal;
+//                    itemTotal = itemTotal - itemDiscVal;
                     itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
                 }
-
+                itemTotal = itemTotal - itemDiscVal;//for rawat_mazaq
                 items.get(i).setTaxValue(itemTax);
                 totalTaxValue = totalTaxValue + itemTax;
             }
@@ -5429,7 +5439,7 @@ public class SalesInvoice extends Fragment {
                 itemDiscVal = (itemTotalPerc * totalDiscount);
                 items.get(i).setVoucherDiscount((float) itemDiscVal);
                 items.get(i).setTotalDiscVal(itemDiscVal);
-                itemTotal = itemTotal - itemDiscVal;
+//                itemTotal = itemTotal - itemDiscVal;
 
                 if (itemGroup.equals(smokeGA) || itemGroup.equals(smokeGE)) {
                     itemTax = items.get(i).getQty() * items.get(i).getPosPrice();
@@ -5438,7 +5448,7 @@ public class SalesInvoice extends Fragment {
                     itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
                 }
 
-
+                itemTotal = itemTotal - itemDiscVal;// here for rawat mazaq
                 items.get(i).setTaxValue(itemTax);
                 totalTaxValue = totalTaxValue + itemTax;
             }
@@ -5457,6 +5467,7 @@ public class SalesInvoice extends Fragment {
 
         if(noTax==0)
         {
+            Log.e("ayanoTax=====","="+"noTax");
             if(mDbHandler.getAllSettings().get(0).getTaxClarcKind() == 1){// شامل
 
                 Log.e("getTaxClarcKind","totalTaxValue="+totalTaxValue+"\tnetTotal="+netTotal);

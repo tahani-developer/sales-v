@@ -95,6 +95,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.listMasterSerialForBuckup;
 import static com.dr7.salesmanmanager.SalesInvoice.listOfferNo;
 import static com.dr7.salesmanmanager.SalesInvoice.listSerialTotal;
 import static com.dr7.salesmanmanager.SalesInvoice.minusQtyTotal;
+import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 import static com.dr7.salesmanmanager.SalesInvoice.payMethod;
 import static com.dr7.salesmanmanager.SalesInvoice.priceListTypeVoucher;
 import static com.dr7.salesmanmanager.SalesInvoice.totalQty_textView;
@@ -1446,7 +1447,6 @@ try {
                 item.setDisc(0);
                 item.setDiscPerc("0");
             }
-
             try {
                 if (item.getDiscType() == 0) {
 
@@ -1455,12 +1455,12 @@ try {
 
                     item.setAmount(item.getQty() * item.getPrice() - item.getDisc());
 
-
-                  //  Log.e("log =", item.getQty() + " * " + item.getPrice() + " -" + item.getDisc());
 //                    item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - item.getDisc());
                 } else {
 //                item.setAmount(Float.parseFloat(item.getUnit()) * item.getQty() * item.getPrice() - descPerc);
                     item.setAmount(item.getQty() * item.getPrice() - descPerc);
+
+                    Log.e("log222=", "amount==="+item.getAmount() );
                    // Log.e("log ==", item.getQty() + " * " + item.getPrice() + " -" + descPerc);
                 }
             } catch (NumberFormatException e) {

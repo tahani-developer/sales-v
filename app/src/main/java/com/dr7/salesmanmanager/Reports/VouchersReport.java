@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -94,6 +95,7 @@ public class VouchersReport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new LocaleAppUtils().changeLayot(VouchersReport.this);
         setContentView(R.layout.vouchers_report);
+       getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         LinearLayout linearMain = findViewById(R.id.linearMain);
         itemsToPrint = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import static com.dr7.salesmanmanager.Methods.convertToEnglish;
 import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 
 import android.annotation.SuppressLint;

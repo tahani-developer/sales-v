@@ -83,9 +83,9 @@ import static com.dr7.salesmanmanager.MainActivity.longitude_main;
 public class Login extends AppCompatActivity {
 
     public EditText storeNo_edit;
-
+    String user="", password="";
     List<Flag_Settings> flag_settingsList;
-    private String username, password, link, ipAddress;
+    private String username, link, ipAddress;
     private EditText usernameEditText, passwordEditText;
     private CircleImageView logo;
     private CardView loginCardView;
@@ -260,8 +260,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CompanyInfo companyLocation = mDHandler.getCompanyLocation();
-                String user = usernameEditText.getText().toString().trim();
-                String password = passwordEditText.getText().toString().trim();
+                 user = usernameEditText.getText().toString().trim();
+                 password = passwordEditText.getText().toString().trim();
                 salesMenList = mDHandler.getAllSalesMen();
 
                 if (salesMenList.size() == 0)//Empty DB
@@ -994,33 +994,37 @@ public class Login extends AppCompatActivity {
 
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("Location", "granted");
-                    Log.e("LocationIn","GoToMain 1");
+                if(mDHandler.getAllSettings().get(0).getApproveAdmin()==1)
+                {
+                    if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Log.e("Location", "granted");
+                        Log.e("LocationIn","GoToMain 1");
 
-                   // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
-                    startService(new Intent(Login.this, MyServices.class));
-                    Intent main = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(main);
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(Login.this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Log.e("Location", "granted updates");
-                        Log.e("LocationIn","GoToMain 2");
-                        //Request location updates:
+                        // locationPermissionRequest.displayLocationSettingsRequest(Login.this);
+                        startService(new Intent(Login.this, MyServices.class));
+                        Intent main = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(main);
+                        // permission was granted, yay! Do the
+                        // location-related task you need to do.
+                        if (ContextCompat.checkSelfPermission(Login.this,
+                                Manifest.permission.ACCESS_FINE_LOCATION)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            Log.e("Location", "granted updates");
+                            Log.e("LocationIn","GoToMain 2");
+                            //Request location updates:
 //                        locationPermissionRequest.
 //                        locationManager.requestLocationUpdates(provider, 400, 1, (LocationListener) this);
+                        }
+
+                    } else {
+                        Log.e("LocationIn","GoToMain 3");
+                        Log.e("Location", "Deny");
+                        // permission, denied, boo! Disable the
+                        // functionality that depends on this permission.
+
                     }
-
-                } else {
-                    Log.e("LocationIn","GoToMain 3");
-                    Log.e("Location", "Deny");
-                    // permission, denied, boo! Disable the
-                    // functionality that depends on this permission.
-
                 }
+
                 break;
             }
 
@@ -1231,7 +1235,25 @@ public class Login extends AppCompatActivity {
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void  verifyIpDevice(){
-        goToMain();
+        String  userStore=mDHandler.getAllUserNo();
+
+        if(mDHandler.getFlagSettings().get(0).getMake_Order()==0){
+            if(userStore.equals(""))
+                userStore=mDHandler.getAllSettings().get(0).getStoreNo();
+            Log.e("verifyIpDevice","="+userStore+"\tuser="+user);
+            if(user.trim().equals(userStore.trim()))
+                goToMain();
+            else{
+                if(userStore.equals(""))
+                { goToMain();}
+                else usernameEditText.setError("*Invalid");
+            }
+        }else {
+            goToMain();
+        }
+
+
+
 //        getIpDevice();
 //        Log.e("checkIpDevice",""+currentIp+"\t"+previousIp);
 //        if(previousIp.equals(currentIp)||previousIp.equals("")){

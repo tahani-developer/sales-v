@@ -157,6 +157,7 @@ public class PrintVoucher extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new LocaleAppUtils().changeLayot(PrintVoucher.this);
         setContentView(R.layout.print_vouchers);
 
@@ -401,8 +402,8 @@ public class PrintVoucher extends AppCompatActivity {
 //                                                                    }
                                                                     Intent o = new Intent(PrintVoucher.this, bMITP.class);
                                                                         o.putExtra("printKey", "0");
-                                                                        o.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                                        o.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                                                        o.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                                                        o.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                         startActivity(o);
 
 

@@ -59,6 +59,24 @@ public class Item implements Serializable {
     private int   IS_RETURNED;
     private int ORIGINALvoucherNo;
     private  int vivible=0;
+    private  int noTax_item=0;
+    private  float price_noTax;
+
+    public int getNoTax_item() {
+        return noTax_item;
+    }
+
+    public void setNoTax_item(int noTax_item) {
+        this.noTax_item = noTax_item;
+    }
+
+    public float getPrice_noTax() {
+        return price_noTax;
+    }
+
+    public void setPrice_noTax(float price_noTax) {
+        this.price_noTax = price_noTax;
+    }
 
     public int getVivible() {
         return vivible;
@@ -578,12 +596,26 @@ public class Item implements Serializable {
             obj.put("VOUCHERNO", voucherNumber+"");
             obj.put("VOUCHERTYPE", voucherType+"");
             obj.put("ITEMNO", itemNo);
-            obj.put("UNIT", unit);
+            try {
+                if(unit!=null)
+                obj.put("UNIT", unit);
+                else     obj.put("UNIT", "1");
+            }catch ( Exception e){
+                obj.put("UNIT", "1");
+            }
+
             obj.put("QTY", qty);
             obj.put("UNITPRICE", price);
             obj.put("BONUS", bonus);
             obj.put("ITEMDISCOUNTVALUE", disc);
-            obj.put("ITEMDISCOUNTPRC", discPerc);
+            try {
+                if(discPerc!=null)
+                obj.put("ITEMDISCOUNTPRC", discPerc);
+                else   obj.put("ITEMDISCOUNTPRC", "0");
+            }
+            catch (Exception e){
+                obj.put("ITEMDISCOUNTPRC", "0");
+            }
             obj.put("VOUCHERDISCOUNT", voucherDiscount);
             obj.put("TAXVALUE", taxValue);
             obj.put("TAXPERCENT", taxPercent);
@@ -594,17 +626,75 @@ public class Item implements Serializable {
             obj.put("SERIAL_CODE", serialCode);
             obj.put("ITEM_SERIAL_CODE", "");
 
-            obj.put("WHICHUNIT", which_unit);
-            obj.put("WHICHUNITSTR", which_unit_str);
-            if(!whichu_qty.equals(""))
-            obj.put("WHICHUQTY", whichu_qty);
-            else {
+            try {
+                if(which_unit!=null)
+                obj.put("WHICHUNIT", which_unit);
+                else   obj.put("WHICHUNIT", "0");
+            }catch (Exception e){
+                obj.put("WHICHUNIT", "0");
+            }
+            try {
+                if(which_unit_str!=null)
+                obj.put("WHICHUNITSTR", which_unit_str);
+                else   obj.put("WHICHUNITSTR", "0");
+            }catch (Exception e){
+                obj.put("WHICHUNITSTR", "0");
+            }
+
+
+            try {
+                if(!whichu_qty.equals(""))
+                    obj.put("WHICHUQTY", whichu_qty);
+                else {
+                    obj.put("WHICHUQTY", "0");
+                }
+            }catch (Exception e){
                 obj.put("WHICHUQTY", "0");
             }
-            obj.put("ENTERQTY", enter_qty);
-            obj.put("ENTERPRICE", enter_price);
-            obj.put("UNITBARCODE", unit_barcode);
-            obj.put("CALCQTY", enter_qty);
+
+
+            try {
+                if(enter_qty!=null)
+                obj.put("ENTERQTY", enter_qty);
+                else  obj.put("ENTERQTY", "0");
+            }catch (Exception e){
+                obj.put("ENTERQTY", "0");
+            }
+
+
+            try {
+                if(enter_price!=null)
+                obj.put("ENTERPRICE", enter_price);
+                else  obj.put("ENTERPRICE", "0");
+            }catch (Exception e){
+                obj.put("ENTERPRICE", "0");
+            }
+
+
+
+            try {
+                if(unit_barcode!=null)
+                obj.put("UNITBARCODE", unit_barcode);
+                else obj.put("UNITBARCODE", "");
+            }catch (Exception e){
+                obj.put("UNITBARCODE", "");
+            }
+
+
+            try {
+                if(enter_qty!=null)
+                obj.put("CALCQTY", enter_qty);
+                else obj.put("CALCQTY", "0");
+            }catch (Exception e){
+                obj.put("CALCQTY", "0");
+            }
+
+
+
+
+
+
+
             obj.put("ORGVHFNO", ORIGINALvoucherNo);
 
 

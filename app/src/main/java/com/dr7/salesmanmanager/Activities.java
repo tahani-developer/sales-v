@@ -23,6 +23,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -192,6 +193,7 @@ public class Activities extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         new LocaleAppUtils().changeLayot(Activities.this);
         setContentView(R.layout.dashbord_activities);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

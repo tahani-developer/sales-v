@@ -328,7 +328,7 @@ saveCurentLocation();
          databaseHandler = new DatabaseHandler(  MainActivity.this);
 
          databaseHandler.getSalsmanLoc();
-         Log.e(" DatabaseHandler.SalmnLat",""+ DatabaseHandler.SalmnLat+"");
+         Log.e(" DatabaseHandler.",""+ DatabaseHandler.SalmnLat+"");
          if(  DatabaseHandler.SalmnLat==null && DatabaseHandler.SalmnLong==null) {
 
              databaseHandler. setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
@@ -3217,10 +3217,13 @@ else
 //                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
-
+                        if(mDbHandler.getAllSettings().get(0).getApproveAdmin()==1){
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                             startService(new Intent(MainActivity.this, MyServices.class));
+                        }
+
+
 
                     }
                     else
@@ -4173,7 +4176,7 @@ else
 
 
                         databaseHandler.getSalsmanLoc();
-                        Log.e(" DatabaseHandler.SalmnLat", "" + DatabaseHandler.SalmnLat + "");
+                        Log.e(" DatabaseHandle", "" + DatabaseHandler.SalmnLat + "");
                         if (DatabaseHandler.SalmnLat == null && DatabaseHandler.SalmnLong == null) {
 
                             databaseHandler.setSalsemanLocation(latitudeCheckIn + "", longtudeCheckIn + "");
