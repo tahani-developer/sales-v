@@ -574,6 +574,7 @@
     <string name="salesoffers">Offers just for sales</string>
     <string name="checkqtyinorder">check qty in orders</string>
     <string name="headerprint">dont print header in Orders</string>
+    <string name="locationtracker">location tracker</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

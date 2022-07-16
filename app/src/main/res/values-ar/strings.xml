@@ -613,4 +613,5 @@
     <string name="salesoffers">العروض فقط للميعات</string>
     <string name="checkqtyinorder">التأكد من الكمية في الطلبيات</string>
     <string name="headerprint">عدم طباعة الترويسة في الطلبيات </string>
+    <string name="locationtracker">تعقب الموقع</string>
 </resources>

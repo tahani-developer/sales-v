@@ -55,6 +55,15 @@ public class Settings {
     private  int dontduplicateItem;
     private  int  OffersJustForSales;
     private  int  CheckQtyinOrder;
+    private  int  locationtracker;
+
+    public int getLocationtracker() {
+        return locationtracker;
+    }
+
+    public void setLocationtracker(int locationtracker) {
+        this.locationtracker = locationtracker;
+    }
 
     public int getOffersJustForSales() {
         return OffersJustForSales;

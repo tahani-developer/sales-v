@@ -72,7 +72,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 189;
+    private static final int DATABASE_VERSION = 190;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -457,7 +457,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String DONT_DUPLICATE_ITEMS = "DONT_DUPLICATE_ITEMS";
     private static final String OffersJustForSales= "OffersJustForSales";
     private static final String CheckQtyinOrder= "CheckQtyinOrder";
-
+    private static final String locationtracker ="LocationTracker";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -1095,8 +1095,8 @@ private static final String  SalemanTrips="SalemanTrips";
                 +DONT_DUPLICATE_ITEMS+ " INTEGER, "
                 + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
                 + OffersJustForSales + " INTEGER, "
-                + CheckQtyinOrder + " INTEGER "
-
+                + CheckQtyinOrder + " INTEGER, "
+                + locationtracker+" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -2572,7 +2572,14 @@ private static final String  SalemanTrips="SalemanTrips";
 
             Log.e(TAG, e.getMessage().toString());
         }
+       try{
+          db.execSQL("ALTER TABLE SETTING ADD '"+locationtracker+"'  INTEGER DEFAULT '0'");
 
+       }catch (Exception e)
+       {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
 
     }
 
@@ -3444,7 +3451,7 @@ private static final String  SalemanTrips="SalemanTrips";
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
-                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,int salesoffersflage,int checkqtyinorderflage) {
+                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3507,6 +3514,7 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(      DONT_DUPLICATE_ITEMS,noDuplicate);
         values.put(      OffersJustForSales,salesoffersflage);
         values.put(      CheckQtyinOrder,checkqtyinorderflage);
+       values.put(      locationtracker,locationtrackerflage);
 
         db.insert(TABLE_SETTING, null, values);
         db.close();
@@ -3570,8 +3578,9 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Item_Unit,defaultValue);
         values.put( SUM_CURRENT_QTY,defaultValue);
         values.put(      DONT_DUPLICATE_ITEMS,defaultValue);
+       values.put(      locationtracker,defaultValue);
 
-        db.insert(TABLE_SETTING, null, values);
+       db.insert(TABLE_SETTING, null, values);
         db.close();
     }
 
@@ -3981,6 +3990,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setCanChangePrice_returnonly(cursor.getInt(50));
                 setting.setOffersJustForSales(cursor.getInt(51));
                 setting.setCheckQtyinOrder(cursor.getInt(52));
+               setting.setLocationtracker(cursor.getInt(53));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

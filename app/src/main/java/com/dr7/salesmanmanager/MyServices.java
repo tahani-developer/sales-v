@@ -33,7 +33,7 @@ public class MyServices extends Service {
     MediaPlayer player;
     int i=0;
     Timer T;
-    public static int approveAdmin=-1;
+    public static int LOCATIONTRACK =-1;
     String userNo="0";
     DatabaseHandler db = new DatabaseHandler(MyServices.this);
     List<Settings> settings=new ArrayList<>();
@@ -48,22 +48,23 @@ public class MyServices extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.e(TAG, "onCreate() , service started...");
         settings = db.getAllSettings();
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
-            approveAdmin= settings.get(0).getApproveAdmin();
-            Log.e(TAG,"spical"+approveAdmin+"   ");
+            LOCATIONTRACK = settings.get(0).getLocationtracker();
+            Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
-        Log.e(TAG, "onCreate() , service started...");
+
 
     }
     public int onStartCommand(Intent intent, int flags, int startId) {
         settings = db.getAllSettings();
         userNo= db.getAllUserNo();
         if (settings.size() != 0) {
-            approveAdmin= settings.get(0).getApproveAdmin();
-            Log.e(TAG,"spical"+approveAdmin+"   ");
+            LOCATIONTRACK = settings.get(0).getLocationtracker();
+            Log.e(TAG,"spical"+ LOCATIONTRACK +"   ");
         }
 
             Timer();
@@ -84,20 +85,20 @@ public class MyServices extends Service {
                 Log.e(TAG, "onStartCommand() , service started..."+i++);
 
 
-                Log.e(TAG,"approveAdmin = "+approveAdmin+"   ="+getApplicationContext().toString());
+                Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
 
-                if(approveAdmin==1) {
-                    Log.e(TAG,"approveAdmin IN  = "+approveAdmin);
+                if(LOCATIONTRACK ==1) {
+                    Log.e(TAG,"approveAdmin IN  = "+ LOCATIONTRACK);
 
                     Handler h = new Handler(Looper.getMainLooper());
                     h.post(new Runnable() {
                         public void run() {
-                            Log.e(TAG,"getLoc = "+approveAdmin);
+                            Log.e(TAG,"getLoc = "+ LOCATIONTRACK);
                             Handler h = new Handler(Looper.getMainLooper());
                             h.post(new Runnable() {
                                 public void run() {
                                     Log.e(TAG, "  tttt");
-                                    if(approveAdmin==1) {
+                                    if(LOCATIONTRACK ==1) {
 
                                         try {
                                             if (TextUtils.isEmpty(userNo)) {
@@ -129,7 +130,7 @@ public class MyServices extends Service {
                     });
 
                 }else {
-                    Log.e(TAG,"no approveAdmin = "+approveAdmin);
+                    Log.e(TAG,"no approveAdmin = "+ LOCATIONTRACK);
 
                 }
             }
@@ -180,7 +181,7 @@ public class MyServices extends Service {
     public void getLoc(){
 
         Log.e(TAG, " first ");
-        Log.e(TAG, "getLocinin = " + approveAdmin);
+        Log.e(TAG, "getLocinin = " + LOCATIONTRACK);
 
         LocationManager locationManager;
         LocationListener locationListener;
@@ -188,7 +189,7 @@ public class MyServices extends Service {
         locationManager = (LocationManager) MyServices.this.getSystemService(LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(MyServices.this, ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "getLocFalse = " + approveAdmin);
+            Log.e(TAG, "getLocFalse = " + LOCATIONTRACK);
 
 //
 //            ActivityCompat.requestPermissions( (Activity) this,
@@ -231,7 +232,7 @@ public class MyServices extends Service {
 
                //     Log.e(TAG,"approveAdminnn = "+approveAdmin+"   "+userNo);
 
-                    Log.e(TAG,"approveAdmin = "+approveAdmin+"   ="+getApplicationContext().toString());
+                    Log.e(TAG,"approveAdmin = "+ LOCATIONTRACK +"   ="+getApplicationContext().toString());
 
 //                Handler h = new Handler(Looper.getMainLooper());
 //                h.post(new Runnable() {
