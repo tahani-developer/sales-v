@@ -1,7 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.35
+    <string name="version"> V 200.38
     </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>

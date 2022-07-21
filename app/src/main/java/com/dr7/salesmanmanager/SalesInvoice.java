@@ -143,6 +143,7 @@ import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
+import static com.dr7.salesmanmanager.Login.gone_noTax_totalDisc;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerQasion;
@@ -520,6 +521,7 @@ public class SalesInvoice extends Fragment {
         valueTotalDiscount.setEnabled(false);
         settingsList= mDbHandler.getAllSettings();
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
+
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
@@ -1200,6 +1202,15 @@ public class SalesInvoice extends Fragment {
 
 
         }
+
+        if(gone_noTax_totalDisc==1){
+            notIncludeTax.setVisibility(View.GONE);
+            linearTotalCashDiscount.setVisibility(View.GONE);
+        }
+        else {
+            notIncludeTax.setVisibility(View.VISIBLE);
+            linearTotalCashDiscount.setVisibility(View.VISIBLE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -1226,6 +1237,7 @@ public class SalesInvoice extends Fragment {
 
 
     }
+
 
     private void showMessageInvalidDate() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)

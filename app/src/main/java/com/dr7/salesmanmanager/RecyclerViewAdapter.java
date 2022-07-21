@@ -1492,7 +1492,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                  List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                                  Offers appliedOffer = null;
 
-                                                                                                                 if (offer.size() != 0 && voucherType == 504) {
+                                                                                                                 if (offer.size() != 0 ) {
                                                                                                                      if (offer.get(0).getPromotionType() == 0) {
 
                                                                                                                          added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -2549,7 +2549,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                             Offers appliedOffer = null;
                                                             Log.e("appliedOffer", "1111===" + offer.size());
 //
-                                                            if (offer.size() != 0&& voucherType==504 ) {
+                                                            if (offer.size() != 0 ) {
 
                                                                 if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
@@ -2705,7 +2705,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                     List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                     Offers appliedOffer = null;
 
-                                                                    if (offer.size() != 0&& voucherType==504 ) {
+                                                                    if (offer.size() != 0 ) {
                                                                         if (offer.get(0).getPromotionType() == 0) {
 
                                                                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -3494,6 +3494,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Offers offer = null;
         List<Offers> offers;
         List<Offers> Offers = new ArrayList<>();
+        Log.e("checkOffers","OffersJustForSalsFlag=="+MainActivity.OffersJustForSalsFlag);
 
                 if( MainActivity.OffersJustForSalsFlag ==0||(MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504)) {
                     try {

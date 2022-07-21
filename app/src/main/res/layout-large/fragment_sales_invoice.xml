@@ -334,7 +334,8 @@
                             <CheckBox
                                 android:id="@+id/notIncludeTax"
                                 android:text="@string/noTax"
-                                android:visibility="visible"
+
+                                android:visibility="gone"
                                 android:textSize="14sp"
                                 android:layout_height="wrap_content"
                                 android:layout_width="match_parent"

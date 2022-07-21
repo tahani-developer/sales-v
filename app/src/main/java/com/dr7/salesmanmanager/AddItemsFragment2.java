@@ -1206,7 +1206,7 @@ try {
         currentTimeAndDate = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("dd/MM/yyyy");
         qty=convertToEnglish(decimalFormat.format(Float.parseFloat(qty)));
-        price=convertToEnglish(decimalFormat.format(Float.parseFloat(price)));
+
         voucherDate = df.format(currentTimeAndDate);
         SalesInvoice obj = new SalesInvoice();
         String itemGroup;
@@ -1223,7 +1223,7 @@ try {
             Log.e("curentPrice","price="+price+"\t"+e.getMessage());
             curentPrice=0;}
 
-
+//        price=convertToEnglish(decimalFormat.format(curentPrice));
 
 
 //        if(obj.getItemsList().size()!=0)// check In total List
@@ -1253,7 +1253,7 @@ try {
         if(!price.equals("0"))
         {
             if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
-                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
+               Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 180);
                 ViewGroup group = (ViewGroup) toast.getView();
                 TextView messageTextView = (TextView) group.getChildAt(0);
@@ -1491,10 +1491,10 @@ try {
 
                 List.add(item);
                 Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.succsesful), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 180);
-                ViewGroup group = (ViewGroup) toast.getView();
-                TextView messageTextView = (TextView) group.getChildAt(0);
-                messageTextView.setTextSize(15);
+//                toast.setGravity(Gravity.CENTER, 0, 180);
+//                ViewGroup group = (ViewGroup) toast.getView();
+//                TextView messageTextView = (TextView) group.getChildAt(0);
+//                messageTextView.setTextSize(15);
                 toast.show();
                 String storeNo=mDbHandler.getAllUserNo();
                 voucherDate=convertToEnglish(voucherDate);
@@ -1544,10 +1544,10 @@ try {
 
         } else {
             Toast toast = Toast.makeText(context, "Items has not been added, insure your entries", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 180);
-            ViewGroup group = (ViewGroup) toast.getView();
-            TextView messageTextView = (TextView) group.getChildAt(0);
-            messageTextView.setTextSize(15);
+//            toast.setGravity(Gravity.CENTER, 0, 180);
+//            ViewGroup group = (ViewGroup) toast.getView();
+//            TextView messageTextView = (TextView) group.getChildAt(0);
+//            messageTextView.setTextSize(15);
             toast.show();
             return false;
         }

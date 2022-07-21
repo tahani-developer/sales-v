@@ -153,6 +153,7 @@ public class Login extends AppCompatActivity {
     public  static    int   Separation_of_the_serial=0;// for oppo
 //  public  static    String headerDll = "";
     public  static    String  headerDll = "/Falcons/VAN.dll";
+    public  static  int gone_noTax_totalDisc=1;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +164,7 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
-        getIpAddressForDevice();
+//        getIpAddressForDevice();
         validLocation();
         try {
 
@@ -940,31 +941,31 @@ public class Login extends AppCompatActivity {
 //        startActivity(intent);
     }
 
-    private String getIpAddressForDevice() {
-        String ipNo="";
-        
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        }
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return "";
-            }
-            else {
-                ipNo = Build.getSerial();
-            }
-
-        }
-        else {
-            ipNo = Build.SERIAL;
-        }
-        Log.e("getMacAddress","MAC Address : " + ipNo);
-
-
-        Log.e("getMacAddress","serialNo2"+ipNo);
-        return ipNo;
-    }
+//    private String getIpAddressForDevice() {
+//        String ipNo="";
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
+//        }
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                return "";
+//            }
+//            else {
+//                ipNo = Build.getSerial();
+//            }
+//
+//        }
+//        else {
+//            ipNo = Build.SERIAL;
+//        }
+//        Log.e("getMacAddress","MAC Address : " + ipNo);
+//
+//
+//        Log.e("getMacAddress","serialNo2"+ipNo);
+//        return ipNo;
+//    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -977,7 +978,7 @@ public class Login extends AppCompatActivity {
                     else {
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
-                            serialNo2 = Build.getSerial();
+//                            serialNo2 = Build.getSerial();
 
 
                         }
@@ -1228,7 +1229,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void getIpDevice() {
-        currentIp=getIpAddressForDevice();
+//        currentIp=getIpAddressForDevice();
         previousIp=getPreviousIpForSalesMen();
         //V22219AQ02457
 
@@ -1283,7 +1284,7 @@ public class Login extends AppCompatActivity {
         Log.e("getPreviousIpFo","ipDevice"+ipDevice);
         if(ipDevice.equals(""))
         {
-          ipDevice= getIpAddressForDevice();
+//          ipDevice= getIpAddressForDevice();
            mDHandler.updatIpDevice(ipDevice);
            addCurentIp(ipDevice);
             return  "";
@@ -1419,7 +1420,7 @@ public class Login extends AppCompatActivity {
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     private boolean validLocation() {

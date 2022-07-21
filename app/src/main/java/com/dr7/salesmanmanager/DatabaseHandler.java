@@ -914,7 +914,7 @@ private static final String  SalemanTrips="SalemanTrips";
                 + SHORT_INVOICE + " INTEGER,"
                 + DONT_PRINT_HEADER + " INTEGER,"
                 +TAYE_LAYOUT+ " INTEGER,"
-                +netsalFLAG+ " TEXTm, "
+                +netsalFLAG+ " TEXT , "
                 +HeaderprintInOrders+ " INTEGER "
 
                 + ")";
@@ -3569,8 +3569,9 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(  STORE_NO,"1");
         values.put(Item_Unit,defaultValue);
         values.put( SUM_CURRENT_QTY,defaultValue);
-        values.put(      DONT_DUPLICATE_ITEMS,defaultValue);
-
+        values.put(DONT_DUPLICATE_ITEMS,defaultValue);
+       values.put( OffersJustForSales,defaultValue);
+       values.put(CheckQtyinOrder,defaultValue);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
