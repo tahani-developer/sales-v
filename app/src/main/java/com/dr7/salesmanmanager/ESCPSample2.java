@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -1276,6 +1277,9 @@ public class ESCPSample2
 	private Bitmap getCompanyTayeeLogo() {
 		Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.logos);
 		Log.e("getCompanyTayeeLogo","largeIcon"+largeIcon);
+	//	Bitmap image =((BitmapDrawable)imageView1.getDrawable()).getBitmap();
+		ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+		largeIcon.compress(Bitmap.CompressFormat.JPEG,50/100,byteArrayOutputStream);
 		return largeIcon;
 	}
 

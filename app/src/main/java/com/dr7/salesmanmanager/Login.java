@@ -124,6 +124,7 @@ public class Login extends AppCompatActivity {
    public static String currentIp="",previousIp="";
     String serialNo2="";
     int approveAdmin=0;
+    int LocationTracker=0;
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
@@ -1302,10 +1303,13 @@ public class Login extends AppCompatActivity {
     private void goToMain() {
        List<Settings>settingsList= mDHandler.getAllSettings();
          approveAdmin=0;
+        LocationTracker=0;
        try {
             approveAdmin = settingsList.get(0).getApproveAdmin();
+           LocationTracker= settingsList.get(0).getLocationtracker();
        }catch (Exception e){
             approveAdmin=0;
+           LocationTracker=0;
        }
         Log.e("uttttttt","ll "+Utils.getIPAddress(true)); // IPv6
 
@@ -1392,16 +1396,16 @@ public class Login extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public  void mainIntent(){
 
-        if(approveAdmin==1) {
+        if(LocationTracker==1) {
             boolean locCheck= locationPermissionRequest.checkLocationPermission();
             boolean isNetworkAvailable=isNetworkAvailable();
             if(!isNetworkAvailable){
                 Toast.makeText(Login.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
             }
 
-            Log.e("LocationIn","GoToMain"+locCheck);
+            Log.e("LocationIn===","GoToMain"+locCheck);
             if(locCheck){
-                Log.e("LocationIn","GoToMain IN "+locCheck);
+                Log.e("LocationIn====","GoToMain IN "+locCheck);
                 startService(new Intent(Login.this, MyServices.class));
                 finish();
                 Intent main = new Intent(Login.this, MainActivity.class);
@@ -1411,7 +1415,7 @@ public class Login extends AppCompatActivity {
             }
 
         }else {
-            Log.e("LocationIn","GoToMain no approve" +approveAdmin);
+            Log.e("LocationIn","GoToMain no LocationTracker =" +LocationTracker);
 //            finish();
             Intent main = new Intent(Login.this, MainActivity.class);
            startActivity(main);
