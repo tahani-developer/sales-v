@@ -83,6 +83,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.offerQasion;
@@ -3315,7 +3316,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private boolean validQty(float qtyCurrent, float qtyRequired) {
         //Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
         if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
-                || SalesInvoice.voucherType == 506 || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)) {
+                || SalesInvoice.voucherType == 506
+                || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)
+
+                ||(Purchase_Order==1)) {
             return true;
         }
 //        if(MHandler.getAllSettings().get(0).getQtyServer()==1)

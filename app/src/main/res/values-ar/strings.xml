@@ -614,4 +614,8 @@
     <string name="checkqtyinorder">التأكد من الكمية في الطلبيات</string>
     <string name="headerprint">عدم طباعة الترويسة في الطلبيات </string>
     <string name="locationtracker">تعقب الموقع</string>
+    <string name="purchaseOrder">طلب شراء</string>
+    <string name="youAreNotConnectedToStock">أنت غير مرتبط مع برنامج المستودعات !!</string>
+    <string name="aqaba_tax_exemption">اعفاء ضريبة العقبة</string>
+    <string name="no_tax">اعفاء ضريبي </string>
 </resources>

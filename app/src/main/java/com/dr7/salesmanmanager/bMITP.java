@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -217,6 +218,9 @@ public class bMITP extends Activity {
     private static final String[] BLE_PERMISSIONS = new String[]{
             Manifest.permission.BLUETOOTH,
             Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE
     };
 
     private static final String[] ANDROID_12_BLE_PERMISSIONS = new String[]{
@@ -234,6 +238,7 @@ public class bMITP extends Activity {
     public void onPermission()
     {
         Log.e("onPermission", "request_SDK_INT"+Build.VERSION.SDK_INT);
+
 
 // Permision can add more at your convinient
         //  ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))

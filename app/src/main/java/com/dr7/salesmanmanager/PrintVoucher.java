@@ -191,7 +191,7 @@ public class PrintVoucher extends AppCompatActivity {
         vouchers = new ArrayList<Voucher>();
         items = new ArrayList<Item>();
         companeyinfo = new ArrayList<CompanyInfo>();
-        verifyStoragePermissions(PrintVoucher.this);
+//        verifyStoragePermissions(PrintVoucher.this);
 
         obj = new DatabaseHandler(PrintVoucher.this);
         vouchers = obj.getAllVouchers();
@@ -490,6 +490,13 @@ public class PrintVoucher extends AppCompatActivity {
                     Toast.makeText(PrintVoucher.this, "Please fill the requested fields", Toast.LENGTH_LONG).show();
             }
         });
+        if (Build.VERSION.SDK_INT >= 30){
+            if (!Environment.isExternalStorageManager()){
+                Intent getpermission = new Intent();
+                getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivity(getpermission);
+            }
+        }
 //
 //        preview.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
@@ -1296,7 +1303,7 @@ public class PrintVoucher extends AppCompatActivity {
             catch (Exception e)
             {
                 pd.dismissWithAnimation();
-                verifyStoragePermissions(PrintVoucher.this);
+//                verifyStoragePermissions(PrintVoucher.this);
 
 
             }
