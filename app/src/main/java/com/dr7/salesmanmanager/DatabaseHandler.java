@@ -67,12 +67,13 @@ import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Reports.StockRecyclerViewAdapter.itemNoStock;
 import static com.dr7.salesmanmanager.SalesInvoice.addNewSerial;
 import static com.dr7.salesmanmanager.SalesInvoice.itemNoSelected;
+import static com.dr7.salesmanmanager.SalesInvoice.noTax;
 
  public class DatabaseHandler extends SQLiteOpenHelper {
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 190;
+    private static final int DATABASE_VERSION = 193;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -458,6 +459,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String OffersJustForSales= "OffersJustForSales";
     private static final String CheckQtyinOrder= "CheckQtyinOrder";
     private static final String locationtracker ="LocationTracker";
+    private static final String AqapaTax ="AqapaTax";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -637,6 +639,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CakeShop_Offer = "CakeShop_Offer";
     private static final String Talaat_Offer = "Talaat_Offer";
     private static final String Qasion_Offer = "Qasion_Offer";
+    private static final String Purchase_Order = "Purchase_Order";
+    private static final String NO_TAX = "NO_TAX";
 
 
 
@@ -914,7 +918,7 @@ private static final String  SalemanTrips="SalemanTrips";
                 + SHORT_INVOICE + " INTEGER,"
                 + DONT_PRINT_HEADER + " INTEGER,"
                 +TAYE_LAYOUT+ " INTEGER,"
-                +netsalFLAG+ " TEXTm, "
+                +netsalFLAG+ " TEXT , "
                 +HeaderprintInOrders+ " INTEGER "
 
                 + ")";
@@ -1096,7 +1100,8 @@ private static final String  SalemanTrips="SalemanTrips";
                 + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
                 + OffersJustForSales + " INTEGER, "
                 + CheckQtyinOrder + " INTEGER, "
-                + locationtracker+" INTEGER DEFAULT 0 "
+                + locationtracker+" INTEGER DEFAULT 0 , "
+                +AqapaTax+" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -1303,7 +1308,9 @@ private static final String  SalemanTrips="SalemanTrips";
                 + Talaat_Offer + " INTEGER DEFAULT '0' ,"
                 + Qasion_Offer + " INTEGER DEFAULT '0' ,"
                 + ActiveSlasmanTrips + " INTEGER DEFAULT '0' ,"
-                + Max_VoucherSever + " INTEGER DEFAULT '0' "
+                + Max_VoucherSever + " INTEGER DEFAULT '0' , "
+                +Purchase_Order+" INTEGER DEFAULT '0', "
+                +NO_TAX+ " INTEGER DEFAULT '0' "
 
                 + ")";
         db.execSQL(CREATE_TABLE_FlAG_SETTINGS);
@@ -2580,6 +2587,30 @@ private static final String  SalemanTrips="SalemanTrips";
 
           Log.e(TAG, e.getMessage().toString());
        }
+       try{
+          db.execSQL("ALTER TABLE Flag_Settings ADD '"+Purchase_Order+"'  INTEGER  DEFAULT '0' ");
+
+       }catch (Exception e)
+       {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try{
+          db.execSQL("ALTER TABLE SETTING ADD '"+AqapaTax+"'  INTEGER DEFAULT '0'");
+
+       }catch (Exception e)
+       {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try{
+          db.execSQL("ALTER TABLE Flag_Settings ADD '"+NO_TAX+"'  INTEGER  DEFAULT '0' ");
+
+       }catch (Exception e)
+       {
+          Log.e(TAG, e.getMessage().toString());
+       }
+
+
 
     }
 
@@ -2603,6 +2634,8 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Qasion_Offer, flag_settings.getOfferQasion());
         values.put(ActiveSlasmanTrips, flag_settings.getActiveSlasmanTrips());
         values.put(Max_VoucherSever, flag_settings.getMaxvochServer());
+        values.put(Purchase_Order,flag_settings.getPurchaseOrder());
+       values.put(NO_TAX,flag_settings.getNoTax());
 
         db.insert(Flag_Settings, null, values);
         db.close();
@@ -2632,7 +2665,10 @@ private static final String  SalemanTrips="SalemanTrips";
                         cursor.getInt(10),
                         cursor.getInt(11),
                         cursor.getInt(12),
-                        cursor.getInt(13)
+                        cursor.getInt(13),
+                        cursor.getInt(14),
+                        cursor.getInt(15)
+
                 );
 
                 flagSettings.add(mySettings);
@@ -2647,7 +2683,8 @@ private static final String  SalemanTrips="SalemanTrips";
 
     public void updateFlagSettings (String dataType, int export, int max, int order,
                                     int password, int total, int vReturn,int SalPlan,int pos,
-                                    int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer) {
+                                    int csOffer, int tOffer, int qOffer,int SalTrip,int mavVoServer,int purchOrder
+    ,int no_tax) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -2666,6 +2703,8 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(Qasion_Offer, qOffer);
         values.put(ActiveSlasmanTrips, SalTrip);
         values.put(Max_VoucherSever, mavVoServer);
+        values.put( Purchase_Order,purchOrder);
+       values.put( NO_TAX,no_tax);
         db.update(Flag_Settings, values, null, null);
 
         Log.e("Flag Settings", "UPDATE");
@@ -3451,7 +3490,8 @@ private static final String  SalemanTrips="SalemanTrips";
                            int passowrdData,int arabicLanguage,int hideQty,int lock_cashreport,String salesman_name,int preventOrder,int requiNote,int preventDiscTotal,
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
-                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage) {
+                           int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
+                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3516,6 +3556,7 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(      CheckQtyinOrder,checkqtyinorderflage);
        values.put(      locationtracker,locationtrackerflage);
 
+       values.put(AqapaTax,aqapaTax);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -3575,13 +3616,15 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(  ActiveTotalDisc,defaultValue);
         values.put(  ValueTotalDisc,defaultValue);
         values.put(  STORE_NO,"1");
-        values.put(Item_Unit,defaultValue);
-        values.put( SUM_CURRENT_QTY,defaultValue);
-        values.put(      DONT_DUPLICATE_ITEMS,defaultValue);
-       values.put(      locationtracker,defaultValue);
-
+       values.put(Item_Unit, defaultValue);
+       values.put(SUM_CURRENT_QTY, defaultValue);
+       values.put(DONT_DUPLICATE_ITEMS, defaultValue);
+       values.put(OffersJustForSales, defaultValue);
+       values.put(CheckQtyinOrder, defaultValue);
+       values.put(locationtracker, defaultValue);
+       values.put(AqapaTax, defaultValue);
        db.insert(TABLE_SETTING, null, values);
-        db.close();
+       db.close();
     }
 
 
@@ -3990,7 +4033,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setCanChangePrice_returnonly(cursor.getInt(50));
                 setting.setOffersJustForSales(cursor.getInt(51));
                 setting.setCheckQtyinOrder(cursor.getInt(52));
-               setting.setLocationtracker(cursor.getInt(53));
+                setting.setLocationtracker(cursor.getInt(53));
+                setting.setAqapaTax(cursor.getInt(54));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }

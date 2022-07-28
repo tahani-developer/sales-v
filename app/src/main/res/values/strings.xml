@@ -1,8 +1,7 @@
 <resources>
 
     <string name="app_name">Salesman Manager</string>
-    <string name="version"> V 200.35
-    </string>
+    <string name="version"> V 200.41    </string>
     <string name="app_username">Username</string>
     <string name="app_password">Password</string>
     <string name="app_dataManagement">Data Management</string>
@@ -575,6 +574,10 @@
     <string name="checkqtyinorder">check qty in orders</string>
     <string name="headerprint">dont print header in Orders</string>
     <string name="locationtracker">location tracker</string>
+    <string name="purchaseOrder">Purchase Order</string>
+    <string name="youAreNotConnectedToStock">You Are Not Connected To Stock!!</string>
+    <string name="aqaba_tax_exemption">Aqaba Tax Exemption</string>
+    <string name="no_tax">No Tax</string>
 
     <string-array name="app_paymentTypeList">
         <item>Cash</item>

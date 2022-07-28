@@ -16,6 +16,26 @@ public class Flag_Settings {
     private int offerTalaat;
     private int offerQasion;
     private int maxvochServer;
+    private int purchaseOrder;
+
+    public int getNoTax() {
+        return noTax;
+    }
+
+    public void setNoTax(int noTax) {
+        this.noTax = noTax;
+    }
+
+    private int noTax;
+
+    public int getPurchaseOrder() {
+        return purchaseOrder;
+    }
+
+    public void setPurchaseOrder(int purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
+
     public int getActiveSlasmanTrips() {
         return ActiveSlasmanTrips;
     }
@@ -54,7 +74,8 @@ public class Flag_Settings {
 
     public Flag_Settings(String data_Type, int export_Stock, int max_Voucher, int make_Order, int admin_Password, int total_Balance,
                          int voucher_Return, int activeSlasmanPlan, int pos_active,
-                         int offerCakeShop, int offerTalaat, int offerQasion,int SalsManTrip,int maxVoServer) {
+                         int offerCakeShop, int offerTalaat, int offerQasion,int SalsManTrip
+            ,int maxVoServer, int purchase_Order,int no_tax) {
         Data_Type = data_Type;
         Export_Stock = export_Stock;
         Max_Voucher = max_Voucher;
@@ -69,6 +90,8 @@ public class Flag_Settings {
         this.offerQasion = offerQasion;
         this.ActiveSlasmanTrips =   SalsManTrip;
         this.maxvochServer=maxVoServer;
+        this.purchaseOrder=purchase_Order;
+        this.noTax=no_tax;
     }
 
     public int getOfferCakeShop() {

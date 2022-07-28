@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 //import android.support.v4.content.ContextCompat;
@@ -979,7 +980,7 @@ public class ESCPSample2
 			CompanyInfo companyInfo = obj.getAllCompanyInfo().get(0);
 			if (companyInfo.getLogo() != null) {
 				try {
-					if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+					if (((dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1) ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) || (dontShowHeader == 1 && noTax == 0)) {
 					} else {
 						posPtr.printBitmap(companyInfo.getLogo(), ESCPOSConst.LK_ALIGNMENT_CENTER, 200);
 					}
@@ -989,13 +990,13 @@ public class ESCPSample2
 
 				Log.e("12222print", "pyyy");
 			}
-			if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+			if (((dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1)  ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) || (dontShowHeader == 1 && noTax == 0)) {
 			} else {
 				posPtr.printAndroidFont(null, true, companyInfo.getCompanyName() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			}
 			if (printerType == 6) {
-				if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+				if (((dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1)  ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) || (dontShowHeader == 1 && noTax == 0)) {
 				} else {
 					posPtr.printAndroidFont(null, true, "هاتف : " + companyInfo.getcompanyTel() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
@@ -1013,7 +1014,7 @@ public class ESCPSample2
 				posPtr.printAndroidFont(null, true, line + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
 
 			} else {
-				if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+				if (((dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1) ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 ))  || (dontShowHeader == 1 && noTax == 0)) {
 				} else {
 					if (tayaaLayout == 1) {
 						posPtr.printAndroidFont(null, true,  voucherTyp + "\t\t" + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") +"رقم الفاتورة : " + voucherforPrint.getVoucherNumber() + "\t\t" + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_CENTER);
@@ -1057,7 +1058,7 @@ public class ESCPSample2
 			//posPtr.printAndroidFont(null, true, "طريقة الدفع  : " + (voucherforPrint.getPayMethod() == 0 ? "ذمم" : "نقدا") + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
 
 			String noteCompany = companyInfo.getNoteForPrint();
-			if ((dontShowHeader == 1 ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 )) && voucherforPrint.getPayMethod() == 1 || (dontShowHeader == 1 && noTax == 0)) {
+			if (((dontShowHeader == 1 && voucherforPrint.getPayMethod() == 1) ||(dontShowHeaderinOrders==1&&voucherforPrint.getVoucherType()==508 ))  || (dontShowHeader == 1 && noTax == 0)) {
 			} else {
 				if (dontshowTax == 0 && (notePosition.equals("0")) && noteCompany.trim().length() != 0) {
 					posPtr.printAndroidFont(null, true, companyInfo.getNoteForPrint() + "\n", nLineWidth, 24, ESCPOSConst.LK_ALIGNMENT_LEFT);
@@ -2749,5 +2750,24 @@ for(int i=0;i<28;i++){
 			e.printStackTrace();
 			Log.e("IOException","printerppayListe="+e.getMessage());
 		}
+	}
+
+	public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+		if (bm != null){
+			int width = bm.getWidth();
+			int height = bm.getHeight();
+			float scaleWidth = ((float) newWidth) / width;
+			float scaleHeight = ((float) newHeight) / height;
+			// CREATE A MATRIX FOR THE MANIPULATION
+			Matrix matrix = new Matrix();
+			// RESIZE THE BIT MAP
+			matrix.postScale(scaleWidth, scaleHeight);
+
+			// "RECREATE" THE NEW BITMAP
+			Bitmap resizedBitmap = Bitmap.createBitmap(
+					bm, 0, 0, width, height, matrix, false);
+			return resizedBitmap;
+		}
+		return null;
 	}
 }

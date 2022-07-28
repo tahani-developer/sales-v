@@ -492,7 +492,50 @@
                         android:layout_marginEnd="5dp"
                         android:visibility="gone"
                         android:text="@string/talaat_offer_discount"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
 
+                        <Switch
+                            android:id="@+id/purchaseOrder_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/purchaseOrder"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingVertical="10dp">
+
+                        <Switch
+                            android:id="@+id/noTax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:theme="@style/MySwitch" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no_tax"
+                            android:textColor="#717171"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
             </ScrollView>

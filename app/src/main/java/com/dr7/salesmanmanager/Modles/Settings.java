@@ -56,6 +56,15 @@ public class Settings {
     private  int  OffersJustForSales;
     private  int  CheckQtyinOrder;
     private  int  locationtracker;
+    private  int  aqapaTax;
+
+    public int getAqapaTax() {
+        return aqapaTax;
+    }
+
+    public void setAqapaTax(int aqapaTax) {
+        this.aqapaTax = aqapaTax;
+    }
 
     public int getLocationtracker() {
         return locationtracker;

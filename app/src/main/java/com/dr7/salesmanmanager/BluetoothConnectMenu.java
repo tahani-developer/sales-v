@@ -1,5 +1,6 @@
 package com.dr7.salesmanmanager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -12,15 +13,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 //import android.support.v4.content.ContextCompat;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -226,7 +231,7 @@ public class BluetoothConnectMenu extends Activity {
         long_listItems = new ArrayList<Item>();
         decimalFormat = new DecimalFormat("##.000");
 
-
+        onPermission();
 //
         getData = getIntent().getStringExtra("printKey");
 //        Bundle bundle = getIntent().getExtras();
@@ -419,8 +424,8 @@ public class BluetoothConnectMenu extends Activity {
         this.list.setEnabled(true);
         this.btAddrBox.setEnabled(true);
         this.searchButton.setEnabled(true);
-        Toast toast = Toast.makeText(this.context, "disconnect", Toast.LENGTH_SHORT);
-        toast.show();
+//        Toast toast = Toast.makeText(this.context, "disconnect", Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
     class connTask extends AsyncTask<BluetoothDevice, Void, Integer> {
@@ -458,18 +463,25 @@ public class BluetoothConnectMenu extends Activity {
                 RequestHandler rh = new RequestHandler();
                 BluetoothConnectMenu.this.hThread = new Thread(rh);
                 BluetoothConnectMenu.this.hThread.start();
-                BluetoothConnectMenu.this.connectButton.setText("Connect");
-                BluetoothConnectMenu.this.connectButton.setEnabled(false);
-                BluetoothConnectMenu.this.list.setEnabled(false);
-                BluetoothConnectMenu.this.btAddrBox.setEnabled(false);
-                BluetoothConnectMenu.this.searchButton.setEnabled(false);
-                if (this.dialog.isShowing()) {
-                    this.dialog.dismiss();
-                }
+//                BluetoothConnectMenu.this.connectButton.setText("Connect");
+//                BluetoothConnectMenu.this.connectButton.setEnabled(false);
+//                BluetoothConnectMenu.this.list.setEnabled(false);
+//                BluetoothConnectMenu.this.btAddrBox.setEnabled(false);
+//                BluetoothConnectMenu.this.searchButton.setEnabled(false);
+                Handler h = new Handler(Looper.getMainLooper());
+                h.post(new Runnable() {
+                    public void run() {
+                        BluetoothConnectMenu.this.connectButton.setText("Connect");
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
                 double total_Qty=0;
 
-                Toast toast = Toast.makeText(BluetoothConnectMenu.this.context, "Now Printing ", Toast.LENGTH_SHORT);
-                toast.show();
+//                Toast toast = Toast.makeText(BluetoothConnectMenu.this.context, "Now Printing ", Toast.LENGTH_SHORT);
+//                toast.show();
                 int count = Integer.parseInt(getData);
                 CPCLSample2 sample = new CPCLSample2(BluetoothConnectMenu.this);
                 sample.selectContinuousPaper();
@@ -814,7 +826,96 @@ public class BluetoothConnectMenu extends Activity {
         }
 
     }
+    public void onPermission()
+    {
+        Log.e("onPermission", "request_SDK_INT"+ Build.VERSION.SDK_INT);
 
+// Permision can add more at your convinient
+        //  ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ){
+            if ((ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED ||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED)||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_PRIVILEGED ))!= PackageManager.PERMISSION_GRANTED)||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_ADMIN ))!= PackageManager.PERMISSION_GRANTED))
+
+            {
+                Log.e("printKey", "" + 111111);
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    new String[]
+//                            {
+//
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//
+//
+//                                    Manifest.permission.BLUETOOTH,
+//
+//                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+////
+//                                    Manifest.permission.BLUETOOTH,
+//                                    Manifest.permission.BLUETOOTH_ADMIN,
+//                                    Manifest.permission.BLUETOOTH_PRIVILEGED,
+//
+//
+//                            },
+//                    0
+//            );
+                requestBlePermissions(this,0);
+            }
+        }else {
+            Log.e("printKey", "" + 222222+"88="+Build.VERSION_CODES.S);
+            if ((ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED ||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
+
+            {
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    new String[]
+//                            {
+//
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//
+//
+//                                    Manifest.permission.BLUETOOTH,
+//
+//                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+////
+//                                    Manifest.permission.BLUETOOTH,
+//                                    Manifest.permission.BLUETOOTH_ADMIN,
+//                                    Manifest.permission.BLUETOOTH_PRIVILEGED,
+//
+//
+//                            },
+//                    0
+//            );
+                requestBlePermissions(this,0);
+            }
+        }
+
+
+
+    }
+    public static void requestBlePermissions(Activity activity, int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
+            ActivityCompat.requestPermissions(activity, ANDROID_12_BLE_PERMISSIONS, requestCode);
+        else
+            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
+    }
+    private static final String[] ANDROID_12_BLE_PERMISSIONS = new String[]{
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+
+
+    };
+    private static final String[] BLE_PERMISSIONS = new String[]{
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+
+    };
     private Bitmap convertToImage_inventoryFooter(double totalqty) {
         Log.e("inventoryFooter",""+totalqty);
         LinearLayout linearView = null;
@@ -1147,7 +1248,7 @@ public class BluetoothConnectMenu extends Activity {
         else{
             img.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher_foreground));
 
-            Toast.makeText(context, "Upload Company Logo For Print ", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Upload Company Logo For Print ", Toast.LENGTH_SHORT).show();
         }
         textView_amount.setText( payforBank.getAmount()+"");
         compname.setText(companyInfo.getCompanyName());

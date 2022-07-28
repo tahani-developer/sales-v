@@ -538,6 +538,8 @@
 
                         android:background="@color/colorblue1"
                         android:orientation="vertical" />
+                </LinearLayout>
+
 
                     <RadioGroup
                         android:id="@+id/printMethod"
@@ -619,7 +621,7 @@
                     </RadioGroup>
 
 
-                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -995,6 +997,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="1dp"
                         android:text="@string/locationtracker"
+                        android:textColor="@color/text_view_color"
+                        android:textSize="14sp" />
+                    <CheckBox
+                        android:id="@+id/aqaba_tax_exemption_checBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/aqaba_tax_exemption"
                         android:textColor="@color/text_view_color"
                         android:textSize="14sp" />
 

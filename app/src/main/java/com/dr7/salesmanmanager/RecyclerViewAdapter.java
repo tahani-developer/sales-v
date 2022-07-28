@@ -83,6 +83,7 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
 
 import static com.dr7.salesmanmanager.Login.POS_ACTIVE;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.offerQasion;
@@ -1492,7 +1493,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                                                                  List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                                                                  Offers appliedOffer = null;
 
-                                                                                                                 if (offer.size() != 0 && voucherType == 504) {
+                                                                                                                 if (offer.size() != 0 ) {
                                                                                                                      if (offer.get(0).getPromotionType() == 0) {
 
                                                                                                                          added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -2549,7 +2550,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                             Offers appliedOffer = null;
                                                             Log.e("appliedOffer", "1111===" + offer.size());
 //
-                                                            if (offer.size() != 0&& voucherType==504 ) {
+                                                            if (offer.size() != 0 ) {
 
                                                                 if (offer.get(0).getPromotionType() == 0) {// bonus promotion
 
@@ -2705,7 +2706,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                                     List<Offers> offer = checkOffers(itemNumber.getText().toString());
                                                                     Offers appliedOffer = null;
 
-                                                                    if (offer.size() != 0&& voucherType==504 ) {
+                                                                    if (offer.size() != 0 ) {
                                                                         if (offer.get(0).getPromotionType() == 0) {
 
                                                                             added = obj.addItem(itemNumber.getText().toString(), itemName.getText().toString(),
@@ -3315,7 +3316,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private boolean validQty(float qtyCurrent, float qtyRequired) {
         //Log.e("validQty", "qtyCurrent=" + qtyCurrent + "\tqtyRequired=" + qtyRequired);
         if (MHandler.getAllSettings().get(0).getAllowMinus() == 1
-                || SalesInvoice.voucherType == 506 || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)) {
+                || SalesInvoice.voucherType == 506
+                || (SalesInvoice.voucherType == 508&&  MainActivity.checkQtyForOrdersFlage==0)
+
+                ||(Purchase_Order==1)) {
             return true;
         }
 //        if(MHandler.getAllSettings().get(0).getQtyServer()==1)
@@ -3494,6 +3498,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         Offers offer = null;
         List<Offers> offers;
         List<Offers> Offers = new ArrayList<>();
+        Log.e("checkOffers","OffersJustForSalsFlag=="+MainActivity.OffersJustForSalsFlag);
 
                 if( MainActivity.OffersJustForSalsFlag ==0||(MainActivity.OffersJustForSalsFlag == 1 &&SalesInvoice.voucherType == 504)) {
                     try {

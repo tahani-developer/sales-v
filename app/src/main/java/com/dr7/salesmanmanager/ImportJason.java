@@ -242,7 +242,13 @@ public class ImportJason extends AppCompatActivity {
 
     public void getMaxVoucherNo(int type) {
         // getDataVolley(salesMan,504 );
-        new JSONTask_maxVoucherNo(salesMan, 504,type).execute();
+        try {
+            new JSONTask_maxVoucherNo(salesMan, 504,type).execute();
+        }catch (Exception e){
+            Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("getMaxVoucherNo",""+e.getMessage());
+        }
+
 
     }
 

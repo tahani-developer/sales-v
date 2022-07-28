@@ -19,10 +19,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -213,35 +215,97 @@ public class bMITP extends Activity {
         }
 
     }
+    private static final String[] BLE_PERMISSIONS = new String[]{
+            Manifest.permission.BLUETOOTH,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE
+    };
+
+    private static final String[] ANDROID_12_BLE_PERMISSIONS = new String[]{
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+    };
+
+    public static void requestBlePermissions(Activity activity, int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S )
+            ActivityCompat.requestPermissions(activity, ANDROID_12_BLE_PERMISSIONS, requestCode);
+        else
+            ActivityCompat.requestPermissions(activity, BLE_PERMISSIONS, requestCode);
+    }
     public void onPermission()
     {
-        Log.e("onPermission", "request");
+        Log.e("onPermission", "request_SDK_INT"+Build.VERSION.SDK_INT);
+
+
 // Permision can add more at your convinient
-        if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) !=
-                PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]
-                            {
+        //  ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ){
+            if ((ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED ||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED)||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_PRIVILEGED ))!= PackageManager.PERMISSION_GRANTED)||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH_ADMIN ))!= PackageManager.PERMISSION_GRANTED))
 
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            {
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    new String[]
+//                            {
+//
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//
+//
+//                                    Manifest.permission.BLUETOOTH,
+//
+//                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+////
+//                                    Manifest.permission.BLUETOOTH,
+//                                    Manifest.permission.BLUETOOTH_ADMIN,
+//                                    Manifest.permission.BLUETOOTH_PRIVILEGED,
+//
+//
+//                            },
+//                    0
+//            );
+                requestBlePermissions(this,0);
+            }
+        }else {
+            if ((ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) != PackageManager.PERMISSION_GRANTED ||
+                    ((ContextCompat.checkSelfPermission(this,Manifest.permission.BLUETOOTH ))!= PackageManager.PERMISSION_GRANTED))
 
-
-                                    Manifest.permission.BLUETOOTH,
-
-                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-
-                                    Manifest.permission.BLUETOOTH,
-                                    Manifest.permission.BLUETOOTH_ADMIN,
-                                    Manifest.permission.BLUETOOTH_PRIVILEGED
-
-                            },
-                    0
-            );
+            {
+//            ActivityCompat.requestPermissions(
+//                    this,
+//                    new String[]
+//                            {
+//
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//
+//
+//                                    Manifest.permission.BLUETOOTH,
+//
+//                                    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+////
+//                                    Manifest.permission.BLUETOOTH,
+//                                    Manifest.permission.BLUETOOTH_ADMIN,
+//                                    Manifest.permission.BLUETOOTH_PRIVILEGED,
+//
+//
+//                            },
+//                    0
+//            );
+                requestBlePermissions(this,0);
+            }
         }
+
+
+
     }
     private void clearBtDevData() {
         this.remoteDevices = new Vector();

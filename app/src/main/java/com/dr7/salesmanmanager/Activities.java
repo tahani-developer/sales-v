@@ -52,6 +52,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.typaImport;
@@ -273,12 +274,16 @@ public class Activities extends AppCompatActivity implements
         uncollectChechue= (CardView) findViewById(R.id.unCollectChequesCardView);
         returnCardView= (CardView) findViewById(R.id.returnCardView);
         linearReturn=findViewById(R.id.linearReturn);
-        if(voucherReturn_spreat==0)
+        if(voucherReturn_spreat==0||(Purchase_Order==1))
         {
             linearReturn.setVisibility(View.GONE);
 
         }
-        else linearReturn.setVisibility(View.VISIBLE);
+        else {
+            if(Purchase_Order==0)
+            linearReturn.setVisibility(View.VISIBLE);
+            else     linearReturn.setVisibility(View.GONE);
+        }
         //  newOrderCardView = (CardView) findViewById(R.id.newOrderCardView);
 //        supplimentCardView = (CardView) findViewById(R.id.supplimentCardView);
 //        switchLayout=findViewById(R.id.switchLayout);
@@ -669,7 +674,7 @@ public class Activities extends AppCompatActivity implements
                             public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                                if(allDataPosted()||typaImport==0)
+                                if(allDataPosted()||typaImport==0 || Purchase_Order==1)
                                 {
                                     finish();
                                     Intent inte=new Intent(Activities.this,AccountStatment.class);
@@ -688,7 +693,7 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        if(allDataPosted()||typaImport==0)
+                        if(allDataPosted()||typaImport==0|| Purchase_Order==1)
                         {
                             finish();
                             Intent inte=new Intent(Activities.this,AccountStatment.class);

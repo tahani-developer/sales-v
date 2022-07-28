@@ -128,17 +128,17 @@ public class Login extends AppCompatActivity {
     public  static  TextView checkIpDevice,goMainText;
     public static Context contextG;
     FloatingActionButton setting_floatingBtn;
-    public static int typaImport=1;//0---- mySql   1-----IIs
-
+    public static  int typaImport=1;//0---- mySql   1-----IIs
+    public static  int Purchase_Order=0;
     public  static int rawahneh=0;// 1= EXPORT STOCK TABLES
-    public  static    int getMaxVoucherServer=0;
-    public  static    int rawahneh_getMaxVouchFromServer =0;
-    public  static  int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
-    public  static  int makeOrders=0;// 1= just orders app
+    public  static int getMaxVoucherServer=0;
+    public  static int rawahneh_getMaxVouchFromServer =0;
+    public  static int passwordSettingAdmin=0;//0 ---> static password   1 ----->password from admin
+    public  static int makeOrders=0;// 1= just orders app
 
-    public  static    int OfferCakeShop=0;// if 0 calck offer many times
+    public  static int OfferCakeShop=0;// if 0 calck offer many times
 
-    public  static    int offerTalaat=0;
+    public  static    int  offerTalaat=0;
     public  static    int  offerQasion=0;
     public  static    int getTotalBalanceInActivities=1;
     public  static    int dateFromToActive=1;
@@ -151,9 +151,10 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=0;
-    public  static    int   Separation_of_the_serial=0;// for oppo
+    public  static    int   Separation_of_the_serial=1;// for oppo
 //  public  static    String headerDll = "";
     public  static    String  headerDll = "/Falcons/VAN.dll";
+    public  static  int gone_noTax_totalDisc=1;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +165,7 @@ public class Login extends AppCompatActivity {
 
         setContentView(R.layout.login_free_size);
         initialView();
-        getIpAddressForDevice();
+//        getIpAddressForDevice();
         validLocation();
         try {
 
@@ -594,6 +595,7 @@ public class Login extends AppCompatActivity {
         moreDialog.getWindow().setAttributes(lp);
         moreDialog.show();
 
+
         Button okBtn = moreDialog.findViewById(R.id.okBtn);
         LinearLayout plan_linear= moreDialog.findViewById(R.id.plan_linear);
 
@@ -604,11 +606,13 @@ public class Login extends AppCompatActivity {
 //            RadioButton radioBtnIIS = moreDialog.findViewById(R.id.radioBtnIIS);
 
         Switch swExport, swMax, swOrder, swPassword, swTotal, swReturn,plan,Trips,activePos,
-                cakeshopSW, qasionSW, talaatSW,maxvochServer;
+                cakeshopSW, qasionSW, talaatSW,maxvochServer,purchaseOrder_switch,noTax_Sw;
 
         ImageButton cakeshopInfo, qasionInfo, talaatInfo;
         TextView cakeExpandedText, qasionExpandedText, talaatExpandedText;
+        noTax_Sw=moreDialog.findViewById(R.id.noTax);
 
+        purchaseOrder_switch=moreDialog.findViewById(R.id.purchaseOrder_switch);
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         maxvochServer= moreDialog.findViewById(R.id.maxvochServer);
@@ -646,7 +650,9 @@ public class Login extends AppCompatActivity {
 //                    radioBtnIIS.setChecked(true);
                 radioGrpData.check(R.id.radioBtnIIS);
             }
+            noTax_Sw.setChecked((flag_settingsList.get(0).getNoTax() == 1));
 
+            purchaseOrder_switch.setChecked((flag_settingsList.get(0).getPurchaseOrder() == 1));
             swExport.setChecked((flag_settingsList.get(0).getExport_Stock() == 1));
             swMax.setChecked((flag_settingsList.get(0).getMax_Voucher() == 1));
             maxvochServer .setChecked((flag_settingsList.get(0).getMaxvochServer() == 1));
@@ -709,6 +715,8 @@ public class Login extends AppCompatActivity {
                 dataType1 = "iis";
             }
 
+            gone_noTax_totalDisc=noTax_Sw.isChecked()?1:0;
+            Purchase_Order=purchaseOrder_switch.isChecked()?1:0;
             rawahneh = swExport.isChecked() ? 1 : 0;
             getMaxVoucherServer = swMax.isChecked() ? 1 : 0;
             rawahneh_getMaxVouchFromServer = maxvochServer.isChecked() ? 1 : 0;
@@ -728,11 +736,11 @@ public class Login extends AppCompatActivity {
             {
                 mDHandler.insertFlagSettings(new Flag_Settings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer));
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc));
             }else {
                 mDHandler.updateFlagSettings(dataType1, rawahneh, getMaxVoucherServer,
                         makeOrders, passwordSettingAdmin, getTotalBalanceInActivities, voucherReturn_spreat,SalsManPlanFlage,POS_ACTIVE,
-                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer);
+                        OfferCakeShop, offerTalaat, offerQasion,SalsManTripFlage, rawahneh_getMaxVouchFromServer,Purchase_Order,gone_noTax_totalDisc);
             }
 
 
@@ -941,31 +949,31 @@ public class Login extends AppCompatActivity {
 //        startActivity(intent);
     }
 
-    private String getIpAddressForDevice() {
-        String ipNo="";
-        
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
-        }
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return "";
-            }
-            else {
-                ipNo = Build.getSerial();
-            }
-
-        }
-        else {
-            ipNo = Build.SERIAL;
-        }
-        Log.e("getMacAddress","MAC Address : " + ipNo);
-
-
-        Log.e("getMacAddress","serialNo2"+ipNo);
-        return ipNo;
-    }
+//    private String getIpAddressForDevice() {
+//        String ipNo="";
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, 101);
+//        }
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                return "";
+//            }
+//            else {
+//                ipNo = Build.getSerial();
+//            }
+//
+//        }
+//        else {
+//            ipNo = Build.SERIAL;
+//        }
+//        Log.e("getMacAddress","MAC Address : " + ipNo);
+//
+//
+//        Log.e("getMacAddress","serialNo2"+ipNo);
+//        return ipNo;
+//    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -978,7 +986,7 @@ public class Login extends AppCompatActivity {
                     else {
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
-                            serialNo2 = Build.getSerial();
+//                            serialNo2 = Build.getSerial();
 
 
                         }
@@ -1229,7 +1237,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void getIpDevice() {
-        currentIp=getIpAddressForDevice();
+//        currentIp=getIpAddressForDevice();
         previousIp=getPreviousIpForSalesMen();
         //V22219AQ02457
 
@@ -1284,7 +1292,7 @@ public class Login extends AppCompatActivity {
         Log.e("getPreviousIpFo","ipDevice"+ipDevice);
         if(ipDevice.equals(""))
         {
-          ipDevice= getIpAddressForDevice();
+//          ipDevice= getIpAddressForDevice();
            mDHandler.updatIpDevice(ipDevice);
            addCurentIp(ipDevice);
             return  "";
@@ -1352,7 +1360,7 @@ public class Login extends AppCompatActivity {
         }catch (Exception e){
             salesManInt=1;
         }
-        if(typaImport==1&&getMaxVoucherServer==1)//iis
+        if(typaImport==1&&getMaxVoucherServer==1&&Purchase_Order==0)//iis
         {
                     boolean isPosted=mDHandler.isAllVoucher_posted();
         if(isPosted)
@@ -1423,7 +1431,7 @@ public class Login extends AppCompatActivity {
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        @SuppressLint("MissingPermission") NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     private boolean validLocation() {

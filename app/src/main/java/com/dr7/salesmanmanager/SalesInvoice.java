@@ -140,9 +140,11 @@ import static com.dr7.salesmanmanager.AddItemsFragment2.total_items_quantity;
 
 import static com.dr7.salesmanmanager.LocationPermissionRequest.MY_PERMISSIONS_REQUEST_LOCATION;
 import static com.dr7.salesmanmanager.Login.OfferCakeShop;
+import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.Separation_of_the_serial;
 import static com.dr7.salesmanmanager.Login.contextG;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
+import static com.dr7.salesmanmanager.Login.gone_noTax_totalDisc;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
 import static com.dr7.salesmanmanager.Login.makeOrders;
 import static com.dr7.salesmanmanager.Login.offerQasion;
@@ -180,6 +182,7 @@ import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 public class SalesInvoice extends Fragment {
     public static  List<Item> jsonItemsList = new ArrayList<>();
     List<Flag_Settings> flag_settingsList;
+    public  int aqapa_tax=0;
 
     public static List<Item> jsonItemsList2 = new ArrayList<>();
     public static List<Item> jsonItemsList_intermidiate= new ArrayList<>();
@@ -196,7 +199,7 @@ public class SalesInvoice extends Fragment {
     int counterSerial;
 
 
-    LinearLayout mainRequestLinear_serial;
+    LinearLayout mainRequestLinear_serial,voucherKindLinear;
     LinearLayout resultLinear;
     LinearLayout mainLinear;
     public static  TextView serialValueUpdated;
@@ -520,6 +523,7 @@ public class SalesInvoice extends Fragment {
         valueTotalDiscount.setEnabled(false);
         settingsList= mDbHandler.getAllSettings();
         notIncludeTax=view.findViewById(R.id.notIncludeTax);
+
         notIncludeTax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged( CompoundButton compoundButton , boolean b ) {
@@ -874,6 +878,8 @@ public class SalesInvoice extends Fragment {
         voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
         String vn = voucherNumber + "";
         voucherNumberTextView.setText(vn);
+
+        refreshLocalVoucherNo();
         if (mDbHandler.getAllSettings().get(0).getPreventTotalDisc() == 1) {
             discountButton.setEnabled(false);
         } else {
@@ -920,7 +926,7 @@ public class SalesInvoice extends Fragment {
                 {
                     if(editable.toString().equals("finish"))
                     {
-                        if(checkQtyServer==1)
+                        if(checkQtyServer==1&& Purchase_Order==0)
                         {
                             ExportJason exportJason= null;
                             try {
@@ -1136,7 +1142,31 @@ public class SalesInvoice extends Fragment {
 //            linearTotalCashDiscount.setVisibility(View.GONE);
 //        }
 
+
+        if(Purchase_Order==1){
+            retSalesRadioButton.setChecked(true);
+            voucherType=506;
+            voucherKindLinear=view.findViewById(R.id.voucherKindLinear);
+            voucherKindLinear.setVisibility(View.GONE);
+            refreshLocalVoucherNo();
+        }
+
+        aqapa_tax=mDbHandler.getAllSettings().get(0).getAqapaTax();
+        Log.e("aqapa_tax","="+aqapa_tax);
+        if (Build.VERSION.SDK_INT >= 30){
+            if (!Environment.isExternalStorageManager()){
+                Intent getpermission = new Intent();
+                getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivity(getpermission);
+            }
+        }
         return view;
+    }
+
+    private void refreshLocalVoucherNo() {
+        voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
+        String vn = voucherNumber + "";
+        voucherNumberTextView.setText(vn);
     }
 
     private void refreshAdapterItems() {
@@ -1200,6 +1230,15 @@ public class SalesInvoice extends Fragment {
 
 
         }
+
+        if(gone_noTax_totalDisc==1){
+            notIncludeTax.setVisibility(View.GONE);
+            linearTotalCashDiscount.setVisibility(View.GONE);
+        }
+        else {
+            notIncludeTax.setVisibility(View.VISIBLE);
+            linearTotalCashDiscount.setVisibility(View.VISIBLE);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -1226,6 +1265,7 @@ public class SalesInvoice extends Fragment {
 
 
     }
+
 
     private void showMessageInvalidDate() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.CUSTOM_IMAGE_TYPE)
@@ -2023,7 +2063,9 @@ public class SalesInvoice extends Fragment {
         salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
 
         orderRadioButton = (RadioButton) view.findViewById(R.id.orderRadioButton);
+        if(Purchase_Order==0)
         salesRadioButton.setChecked(true);
+        else retSalesRadioButton.setChecked(true);
 
 
         remarkEditText = (EditText) view.findViewById(R.id.remarkEditText);
@@ -3073,9 +3115,9 @@ public class SalesInvoice extends Fragment {
             // exportSerialToExcel(listSerialTotal, voucherNo);
 
 
-            if (voucherType == 504)
+            if (voucherType == 504&&(Purchase_Order==0))
                 mDbHandler.updateSalesManItemsBalance1(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
-            else if (voucherType == 506) {
+            else if (voucherType == 506||(Purchase_Order==1)) {
                 mDbHandler.updateSalesManItemsBalance2(items.get(i).getQty(), salesMan, items.get(i).getItemNo());
 
             }
@@ -3205,7 +3247,7 @@ public class SalesInvoice extends Fragment {
             }
         } else {
 
-            if (mDbHandler.getAllSettings().get(0).getQtyServer() == 1) {
+            if (mDbHandler.getAllSettings().get(0).getQtyServer() == 1&&Purchase_Order==0) {
                 try {
                     ExportJason exportJason = new ExportJason(getActivity());
 //                    exportJason.startExportDatabase();
@@ -5013,27 +5055,35 @@ public class SalesInvoice extends Fragment {
 
 //        calculateTotals();
             //***********************************************
-        if(makeOrders!=1)
-        {
+        if(makeOrders!=1) {
+            if (Purchase_Order == 0) {
             voucherType = 504;
             salesRadioButton.setChecked(true);
             salesRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
             retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
             orderRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+        }else {
+                voucherType=506;
+                retSalesRadioButton.setChecked(true);
+            }
         }
         else {
-            voucherType = 508;
-            orderRadioButton.setChecked(true);
-            salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
-            retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
-            orderRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+            if (Purchase_Order == 0) {
+                voucherType = 508;
+                orderRadioButton.setChecked(true);
+                salesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                retSalesRadioButton.setTextColor(getResources().getColor(R.color.text_view_color));
+                orderRadioButton.setTextColor(getResources().getColor(R.color.cancel_button));
+            }else {
+                voucherType=506;
+                retSalesRadioButton.setChecked(true);
+
+            }
         }
 
             //***********************************************
 //        voucherNumber = mDbHandler.getMaxSerialNumber(voucherType) + 1;
-            voucherNumber = mDbHandler.getMaxSerialNumberFromVoucherMaster(voucherType) + 1;
-            String vn = voucherNumber + "";
-            voucherNumberTextView.setText(vn);
+            refreshLocalVoucherNo();
             total_items_quantity = 0;
             totalQty_textView.setText("+0");
             discvalue_static = 0;
@@ -5255,7 +5305,14 @@ public class SalesInvoice extends Fragment {
                     itemTax = itemTotal * items.get(i).getTaxPercent() * 0.01;
                 }
                 itemTotal = itemTotal - itemDiscVal;//for rawat_mazaq
+                if(aqapa_tax==0)
                 items.get(i).setTaxValue(itemTax);
+                else
+                {
+                    items.get(i).setTaxValue(0);
+                    totalTaxValue=0;
+                    itemTax=0;
+                }
                 totalTaxValue = totalTaxValue + itemTax;
             }
             totalDiscount+=getTotalDiscSetting(netTotal);
@@ -5449,12 +5506,19 @@ public class SalesInvoice extends Fragment {
                 }
 
                 itemTotal = itemTotal - itemDiscVal;// here for rawat mazaq
-                items.get(i).setTaxValue(itemTax);
+                if(aqapa_tax==0)
+                    items.get(i).setTaxValue(itemTax);
+                else
+                {
+                    items.get(i).setTaxValue(0);
+                    totalTaxValue=0;
+                    itemTax=0;
+                }
                 totalTaxValue = totalTaxValue + itemTax;
             }
 
 //            totalDiscount+=getTotalDiscSetting(netTotal);
-            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
+//            Log.e("TOTAL", "noTax3totalTaxValue==" +totalTaxValue);
             netTotal = netTotal + subTotal - totalDiscount + totalTaxValue; // tahani -discount_oofers_total
             totalDiscount+=getTotalDiscSetting(netTotal);
 
