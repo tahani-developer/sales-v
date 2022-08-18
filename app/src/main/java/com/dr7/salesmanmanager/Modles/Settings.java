@@ -66,7 +66,7 @@ public class Settings {
         this.aqapaTax = aqapaTax;
     }
 
-    public int getLocationtracker() {
+    public synchronized int getLocationtracker() {
         return locationtracker;
     }
 

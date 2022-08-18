@@ -61,6 +61,7 @@ import java.util.List;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.dr7.salesmanmanager.Login.makeOrders;
+import static com.dr7.salesmanmanager.Login.offerTalaat;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
@@ -188,12 +189,8 @@ public class ExportJason extends AppCompatActivity {
 
 
     public void IIs_SaveVanRequst(){
-
        getVanRequstObject();
         new JSONTaskIIs_SaveVanRequst().execute();
-
-
-
     }
 
     private void fillIpAddressWithPort() {
@@ -1714,11 +1711,16 @@ public class ExportJason extends AppCompatActivity {
                 //  URL_TO_HIT = "http://"+ipAddress.trim()+":" + ipWithPort.trim() +"/ExportSALES_VOUCHER_D?CONO="+CONO.trim()+"&JSONSTR="+vouchersObject.toString().trim();
 
 //LINK : http://localhost:8082/ExportITEMSERIALS?CONO=290&JSONSTR={"JSN":[{"VHFNO":"123","STORENO":"5","TRNSDATE":"01/01/2021","TRANSKIND":"1","ITEMNO":"321","SERIAL_CODE":"369258147852211","QTY":"1","VSERIAL":"1","ISPOSTED":"0"}]}
-                String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveLoadVan";
+                String link="";
+//                if(offerTalaat==0)
+                 link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/SaveLoadVan";
+//                else
+//                  link = "http://" + ipAddress+":"+ipWithPort +  headerDll.trim() +"/SaveTempLoadVan";
+
                 // Log.e("ipAdress", "ip -->" + ip);
                 String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
-                Log.e("tag_link", "ExportData -->" + link);
-                Log.e("tag_data", "ExportData -->" + data);
+                Log.e("JSONTaskSaveLoadVan", "ExportData -->" + link);
+                Log.e("JSONTaskSaveLoadVan", "ExportData -->" + data);
 
 ////
                 URL url = new URL(link);
@@ -1892,6 +1894,11 @@ public class ExportJason extends AppCompatActivity {
                 progressSave.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }
+            if(offerTalaat==0)
+            {
+                exportLoadVan_temp();
+
+            }else// لمحمد طلعت  من ال item balance
             exportLoadVan();
 
         }
@@ -2027,12 +2034,13 @@ public class ExportJason extends AppCompatActivity {
         new  JSONTask_InventoryShelfDelphi().execute();
     }
     public void exportLoadVan(){// 13
-//        getLoadVanBalance();
-        getVanRequstObject();
+        getLoadVanBalance();
+
+
         new  JSONTask_LoadVanDelphi().execute(); //14
     }
     public void exportLoadVan_temp(){// 13
-        getLoadVanBalance();
+        getVanRequstObject();
         new  JSONTask_LoadVanDelphi().execute(); //14
     }
 
@@ -2129,24 +2137,20 @@ public class ExportJason extends AppCompatActivity {
     }
 
     private void getInventoryShelfTables() {
-        try {
-            shelflList = mHandler.getAllINVENTORY_SHELF();
-            Log.e("shelflList",""+shelflList);
-            jsonArrayInventory = new JSONArray();
-            for (int i = 0; i < shelflList.size(); i++)
-            {
+        shelflList = mHandler.getAllINVENTORY_SHELF();
+        Log.e("shelflList",""+shelflList);
+        jsonArrayInventory = new JSONArray();
+        for (int i = 0; i < shelflList.size(); i++)
+        {
 
-                jsonArrayInventory.put(shelflList.get(i).getJSONObjectDelphi());
+            jsonArrayInventory.put(shelflList.get(i).getJSONObjectDelphi());
 
-            }
-            Log.e("jsonArraySerial",""+jsonArrayInventory.getJSONObject(0));
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
         try {
             vouchersObject=new JSONObject();
             vouchersObject.put("JSN",jsonArrayInventory);
-            Log.e("getSerialetail",""+vouchersObject);
+//            Log.e("getSerialetail",""+vouchersObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -2792,11 +2796,18 @@ public class ExportJason extends AppCompatActivity {
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("CONO", CONO.trim()));
-//                nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
-                nameValuePairs.add(new BasicNameValuePair("JSONSTR", VanRequstsjsonobject.toString().trim()));
+                if(offerTalaat==0){
+                    nameValuePairs.add(new BasicNameValuePair("JSONSTR", VanRequstsjsonobject.toString().trim()));
+                }else {
+                    nameValuePairs.add(new BasicNameValuePair("JSONSTR", vouchersObject.toString().trim()));
+                }
+//
 
 
-//                 Log.e("nameValuePairs","JSONSTR"+VanRequstsjsonobject.toString().trim());
+
+                 Log.e("nameValuePairs","JSONSTR1"+VanRequstsjsonobject.toString().trim());
+                Log.e("nameValuePairs","JSONSTR2"+vouchersObject.toString().trim());
+
 
 
                 request.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
@@ -2856,7 +2867,7 @@ public class ExportJason extends AppCompatActivity {
 
 
             }
-            saveLoadVan();
+                saveLoadVan();
 
 
 //            updatePosted(); //14
@@ -2933,6 +2944,102 @@ public class ExportJason extends AppCompatActivity {
 
 
 ////
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "ExportData -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            Log.e("onPostExecute","EXPORT_STOCK---18----"+result);
+
+            if (result != null && !result.equals("")) {
+                if(result.contains("Saved Successfully")) {
+                    Log.e("EXPORT_STOCK","result_start");
+                    pdStosk.setTitle("export Payment start");
+
+                }
+
+
+            } else {
+                pdStosk.dismissWithAnimation();
+            }
+            new  JSONTaskExportItem_Serial().execute();// 19
+
+        }
+    }
+
+    private class JSONTaskExportItem_Serial extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+
+        @Override
+        protected void onPreExecute() {
+
+
+            pdStosk.setTitleText(" Export Item_Serial ");
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                //http://localhost:8082/EXPORTTOSTOCK?CONO=295&STRNO=4
+                String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/ExportItem_Serial";
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin;
+                Log.e("ExportItem_Serial", "ExportData -->" + link);
+
                 URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();

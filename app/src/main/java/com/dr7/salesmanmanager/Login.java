@@ -151,10 +151,10 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=0;
-    public  static    int   Separation_of_the_serial=1;// for oppo
-//  public  static    String headerDll = "";
+    public  static    int   Separation_of_the_serial=0;// for oppo
+//    public  static    String headerDll = "";
     public  static    String  headerDll = "/Falcons/VAN.dll";
-    public  static  int gone_noTax_totalDisc=1;
+    public  static  int gone_noTax_totalDisc=0;
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,6 +364,24 @@ public class Login extends AppCompatActivity {
 
         }
         mDHandler.deleteAllPreviusYear();
+        try {
+            Purchase_Order=0;
+            mDHandler.getFlagSettings().get(0).setPurchaseOrder(0);
+        }catch (Exception e){
+            Log.e("mDHandler","setPurchaseOrder"+e.getMessage());
+        }
+
+//        try {
+//            if (Build.VERSION.SDK_INT >= 30){
+//                if (!Environment.isExternalStorageManager()){
+//                    Intent getpermission = new Intent();
+//                    getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                    startActivity(getpermission);
+//                }
+//            }
+//        }catch (Exception e){
+//
+//        }
 
     }
 
@@ -613,6 +631,7 @@ public class Login extends AppCompatActivity {
         noTax_Sw=moreDialog.findViewById(R.id.noTax);
 
         purchaseOrder_switch=moreDialog.findViewById(R.id.purchaseOrder_switch);
+        purchaseOrder_switch.setVisibility(View.GONE);
         swExport = moreDialog.findViewById(R.id.swExport);
         swMax = moreDialog.findViewById(R.id.swMax);
         maxvochServer= moreDialog.findViewById(R.id.maxvochServer);

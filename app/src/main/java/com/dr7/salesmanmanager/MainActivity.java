@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
     String typeImport="";
     int  approveAdmin=-1,workOnLine=-1;
     public  static  EditText passwordFromAdmin, password ;
-    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan;
+    static public TextView mainTextView,timeTextView,salesmanPlanRespon,getplan,notExportedTextView;
     LinearLayout checkInLinearLayout, checkOutLinearLayout;
     public static ImageView checkInImageView, checkOutImageView;
     static int checknum;
@@ -313,7 +313,23 @@ public class MainActivity extends AppCompatActivity
         checkInLinearLayout = (LinearLayout) findViewById(R.id.checkInLinearLayout);
         checkOutLinearLayout = (LinearLayout) findViewById(R.id.checkOutLinearLayout);
 
+
+        try {
+            if (Build.VERSION.SDK_INT >= 30){
+                if (!Environment.isExternalStorageManager()){
+                    Intent getpermission = new Intent();
+                    getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(getpermission);
+                }
+            }
+        }catch (Exception e){
+
+        }
+
+
+
      try {
+
 
 saveCurentLocation();
 
@@ -653,6 +669,13 @@ else
 
         mainTextView = (TextView) findViewById(R.id.mainTextView);
         settext2();
+        notExportedTextView=findViewById(R.id.notExportedTextView);
+        notExportedTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openExportDialog();
+            }
+        });
 
 //        checkInImageView = (ImageView) findViewById(R.id.checkInImageView);
 //        checkOutImageView = (ImageView) findViewById(R.id.checkOutImageView);
@@ -746,6 +769,175 @@ else
 
 
       //  getLocation();
+    }
+
+    private void openExportDialog() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.pending_invoice);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        validPassowrdSetting=false;
+        lp.gravity = Gravity.CENTER;
+        lp.windowAnimations = R.style.DialogAnimation;
+        dialog.getWindow().setAttributes(lp);
+        passwordFromAdmin=dialog.findViewById(R.id.passwordFromAdmin);
+
+//        passwordFromAdmin.setText("");
+//        passwordFromAdmin.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                if(editable.toString().length()!=0) {
+//                    if (flag == 10) {
+//
+//
+//                        if (passwordFromAdmin.getText().toString().equals("")) {
+//                            getPassword();
+//                        }
+//                        if ((password.getText().toString().trim().equals(passwordFromAdmin.getText().toString())) && (!password.getText().toString().equals(""))) {
+//                            dialog.dismiss();
+//                            openSetting alert = new openSetting();
+//                            alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+//                        } else {
+//                            password.setError(getResources().getString(R.string.invalidPassword));
+//
+//                        }
+//                    }
+//                }
+//
+//            }
+//        });
+        LinearLayout mainLinear=dialog.findViewById(R.id.linearPassword);
+        try{
+            if(languagelocalApp.equals("ar"))
+            {
+                mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            }
+            else{
+                if(languagelocalApp.equals("en"))
+                {
+                    mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+
+            }
+        }
+        catch ( Exception e)
+        {
+            mainLinear.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        }
+        password = (EditText) dialog.findViewById(R.id.editText1);
+
+        Button okButton = (Button) dialog.findViewById(R.id.button1);
+        Button cancelButton = (Button) dialog.findViewById(R.id.button2);
+        final CheckBox cb_show = (CheckBox) dialog.findViewById(R.id.checkBox_showpass);
+//        EditText et1 = (EditText) this.findViewById(R.id.editText1);
+        cb_show.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cb_show.isChecked()) {
+                    password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                } else {
+                    password.setInputType(129);
+                }
+            }
+        });
+//
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(flag == 10)
+//                {
+//
+//                    getPassword();
+//                }
+//                else {
+//
+//                    if (password.getText().toString().equals("303090")&&flag != 10) {
+//                        dialog.dismiss();
+//
+//                        if (flag == 1) {
+//                            openSetting alert = new openSetting();
+//                            alert.showDialog(MainActivity.this, "Error de conexión al servidor");
+//                        } else if (flag == 2)
+//                            openCompanyInfoDialog();
+//
+//                        else if (flag == 3) {
+//                            openDeExportDialog();
+//                        } else if (flag == 4) {
+//                            try {
+//                                openPrintSetting();
+//
+//                            }catch (Exception exception){
+//                                Log.e("exception===",exception.getMessage());
+//                            }
+//
+//                        }
+//                        else if (flag == 5) {
+//
+//                            if (mDbHandler.getAllSettings().get(0).getAllowOutOfRange() == 1)
+//                            {
+//                                isPostedCustomerMaster=mDbHandler.isCustomerMaster_posted();
+//                            }
+//                            else {isPostedCustomerMaster=true;}
+//
+//
+//                            isPosted=mDbHandler.isAllVoucher_posted();
+//                            if(isPostedCustomerMaster)
+//                            {
+//                                if(isPosted==true)
+//                                {
+//                                    ImportJason obj = new ImportJason(MainActivity.this);
+//                                    obj.startParsing("");
+//                                }
+//                                else{
+//                                    Toast.makeText(MainActivity.this,R.string.failImpo_export_data , Toast.LENGTH_SHORT).show();
+//                                }
+//                            }
+//                            else {
+//                                Toast.makeText(MainActivity.this,R.string.failImpo_export_dataCustomerMaster , Toast.LENGTH_SHORT).show();
+//
+//                            }
+//
+//                        }
+//                        else if (flag == 6) {
+//                            ExportJason obj = null;
+//                            try {
+//                                obj = new ExportJason(MainActivity.this);
+//
+////                                obj.startExportDatabase();
+//                                obj.startExport(0);
+//                            } catch (JSONException e) {
+//                                Toast.makeText(MainActivity.this, e.getMessage().toString(), Toast.LENGTH_LONG).show();
+//                                e.printStackTrace();
+//
+//                            }
+//
+//                        }
+//                    } else
+//                        Toast.makeText(MainActivity.this, "Incorrect Password !", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
+//
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+        dialog.show();
     }
 
     private void openReadBarcode() {
@@ -3258,6 +3450,15 @@ else
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                             startService(new Intent(MainActivity.this, MyServices.class));
+                        }else
+                        {
+
+                            Intent BgServiceIntent = new Intent(MainActivity.this, MyServices.class);
+                            BgServiceIntent.putExtra("close",true);
+                            startService(BgServiceIntent);
+
+                            stopService(new Intent(MainActivity.this, MyServices.class));
+
                         }
 
 

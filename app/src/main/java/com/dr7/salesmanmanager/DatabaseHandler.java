@@ -1098,8 +1098,8 @@ private static final String  SalemanTrips="SalemanTrips";
                 +SUM_CURRENT_QTY+ " INTEGER, "
                 +DONT_DUPLICATE_ITEMS+ " INTEGER, "
                 + CAN_CHANGE_PRICE_RETURNONLY + " INTEGER, "
-                + OffersJustForSales + " INTEGER, "
-                + CheckQtyinOrder + " INTEGER, "
+                + OffersJustForSales + " INTEGER  DEFAULT 0 , "
+                + CheckQtyinOrder + " INTEGER  DEFAULT 0 , "
                 + locationtracker+" INTEGER DEFAULT 0 , "
                 +AqapaTax+" INTEGER DEFAULT 0 "
                 + ")";
@@ -2554,7 +2554,7 @@ private static final String  SalemanTrips="SalemanTrips";
         }
         try{
             Log.e("onUpgrade*****", "OffersJustForSales");
-            db.execSQL("ALTER TABLE SETTING ADD '"+OffersJustForSales+"'  INTEGER");
+            db.execSQL("ALTER TABLE SETTING ADD '"+OffersJustForSales+"'  INTEGER  DEFAULT '0' ");
 
         }catch (Exception e)
         {
@@ -2563,7 +2563,7 @@ private static final String  SalemanTrips="SalemanTrips";
 
         try{
             Log.e("onUpgrade*****", "CheckQtyinOrder");
-            db.execSQL("ALTER TABLE SETTING ADD '"+CheckQtyinOrder+"'  INTEGER");
+            db.execSQL("ALTER TABLE SETTING ADD '"+CheckQtyinOrder+"'  INTEGER  DEFAULT '0' ");
 
         }catch (Exception e)
         {
@@ -2572,7 +2572,7 @@ private static final String  SalemanTrips="SalemanTrips";
         }
         try{
             Log.e("onUpgrade*****", "HeaderprintInOrders");
-            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+HeaderprintInOrders+"'  INTEGER");
+            db.execSQL("ALTER TABLE PRINTER_SETTING_TABLE ADD '"+HeaderprintInOrders+"'  INTEGER  DEFAULT '0' ");
 
         }catch (Exception e)
         {
@@ -6437,7 +6437,13 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
                 item.setItemNo(cursor.getString(0));
                 item.setItemName(cursor.getString(1));
-                item.setQty(Integer.parseInt(cursor.getString(2)));
+                try {
+                   item.setQty(Float.parseFloat(cursor.getString(2)));
+                }
+                catch (Exception e){
+                   Log.e("getStockRequestItems_",""+cursor.getString(2));
+                   item.setQty(0);
+                }
                 item.setDate(cursor.getString(3));
                 item.setVoucherNumber(Integer.parseInt(cursor.getString(4)));
                 item.setSalesmanNo(cursor.getString(5));

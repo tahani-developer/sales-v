@@ -1153,13 +1153,7 @@ public class SalesInvoice extends Fragment {
 
         aqapa_tax=mDbHandler.getAllSettings().get(0).getAqapaTax();
         Log.e("aqapa_tax","="+aqapa_tax);
-        if (Build.VERSION.SDK_INT >= 30){
-            if (!Environment.isExternalStorageManager()){
-                Intent getpermission = new Intent();
-                getpermission.setAction(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivity(getpermission);
-            }
-        }
+
         return view;
     }
 
@@ -1237,7 +1231,7 @@ public class SalesInvoice extends Fragment {
         }
         else {
             notIncludeTax.setVisibility(View.VISIBLE);
-            linearTotalCashDiscount.setVisibility(View.VISIBLE);
+//            linearTotalCashDiscount.setVisibility(View.VISIBLE);
         }
     }
 
@@ -5541,6 +5535,7 @@ public class SalesInvoice extends Fragment {
                 totalTaxValue=0;
                 taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
             }else{// خاضع
+                netTotal=netTotal-totalTaxValue;
                 totalTaxValue=0;
                 taxTextView.setText(String.valueOf(decimalFormat.format(totalTaxValue)));
                 subTotalTextView.setText(String.valueOf(decimalFormat.format(netTotal)));

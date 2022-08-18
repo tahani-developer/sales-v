@@ -618,4 +618,5 @@
     <string name="youAreNotConnectedToStock">أنت غير مرتبط مع برنامج المستودعات !!</string>
     <string name="aqaba_tax_exemption">اعفاء ضريبة العقبة</string>
     <string name="no_tax">اعفاء ضريبي </string>
+    <string name="pendingInvoice">Pending Invoice</string>
 </resources>

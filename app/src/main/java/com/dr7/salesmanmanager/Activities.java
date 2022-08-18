@@ -55,6 +55,8 @@ import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
 import static com.dr7.salesmanmanager.Login.languagelocalApp;
+import static com.dr7.salesmanmanager.Login.offerTalaat;
+import static com.dr7.salesmanmanager.Login.talaatLayoutAndPassowrd;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.voucherReturn_spreat;
 import static com.dr7.salesmanmanager.MainActivity.curentDate;
@@ -693,14 +695,21 @@ public class Activities extends AppCompatActivity implements
                         builder2.setNegativeButton(getResources().getString(R.string.app_no), null);
                         builder2.create().show();
                     } else {
-                        if(allDataPosted()||typaImport==0|| Purchase_Order==1)
-                        {
+                        if(offerTalaat==1){
                             finish();
                             Intent inte=new Intent(Activities.this,AccountStatment.class);
                             startActivity(inte);
                         }else {
-                            showDialogExportData();
+                            if(allDataPosted()||typaImport==0|| Purchase_Order==1)
+                            {
+                                finish();
+                                Intent inte=new Intent(Activities.this,AccountStatment.class);
+                                startActivity(inte);
+                            }else {
+                                showDialogExportData();
+                            }
                         }
+
 
 
                     }

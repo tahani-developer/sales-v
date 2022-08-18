@@ -951,7 +951,7 @@ public class ESCPSample2
 			nLineWidth=550;
 //			nLineWidth=370;
 //			headerVoucher=" السلعة            " + "العدد " + "\t\t" + "السعر "+"\t\t"+"الخصم " + "\t\t" + "المجموع" + "\n" ;
-			headerVoucher= " العدد    " + "\t\t" + "  السعر "+"\t\t"+"     الخصم     " + "\t\t" + "       المجموع " + "\n" ;
+			headerVoucher= " العدد  " + "\t\t" + "  السعر "+"\t\t"+"    الخصم  " + "\t\t" +" المجاني   " + "\t\t" + "  المجموع " + "\n" ;
 			alignment=ESCPOSConst.LK_ALIGNMENT_LEFT;
 			line="-------------------------------------------------------";
 //			line="---------------------------------------------------------------";
@@ -1161,7 +1161,11 @@ public class ESCPSample2
 
 						itemDiscount += itemforPrint.get(i).getDisc();
 						String amount = "" + (itemforPrint.get(i).getQty() * itemforPrint.get(i).getPrice() - itemforPrint.get(i).getDisc());
-						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice() + "", Double.valueOf(convertToEnglish(amount)), itemforPrint.get(i).getQty() + "", itemforPrint.get(i).getItemName(), itemforPrint.get(i).getDisc(),itemforPrint.get(i).getItemNo(),itemforPrint.get(i).getTaxValue()), ESCPOSConst.LK_ALIGNMENT_CENTER, nLineWidth);
+						posPtr.printBitmap(itemPrint(itemforPrint.get(i).getPrice() + "",
+								Double.valueOf(convertToEnglish(amount)), itemforPrint.get(i).getQty() + "",
+								itemforPrint.get(i).getItemName(), itemforPrint.get(i).getDisc(),
+								itemforPrint.get(i).getItemNo(),itemforPrint.get(i).getTaxValue(),itemforPrint.get(i).getBonus()),
+								ESCPOSConst.LK_ALIGNMENT_CENTER, nLineWidth);
 
 					}
 				}
@@ -1709,7 +1713,7 @@ public class ESCPSample2
 
 	}
 
-	Bitmap itemPrint (String prices,double totals,String qtys,String items,float discount,String itemNo,double taxValue){
+	Bitmap itemPrint (String prices,double totals,String qtys,String items,float discount,String itemNo,double taxValue,float bonus){
 
 
 	final Dialog dialogs = new Dialog(context);
@@ -1722,7 +1726,7 @@ public class ESCPSample2
 		textSize=20;
 	}
 
-	TextView price,total,qty,item,item_largeName,item_discount;
+	TextView price,total,qty,item,item_largeName,item_discount,item_bonus;
 
 	price=(TextView)dialogs.findViewById(R.id.price);
 	total=(TextView)dialogs.findViewById(R.id.total);
@@ -1730,8 +1734,13 @@ public class ESCPSample2
 	item=(TextView)dialogs.findViewById(R.id.ittem);
 	item_discount=(TextView)dialogs.findViewById(R.id.item_discount);
 	item_largeName=(TextView)dialogs.findViewById(R.id.ittem_largeName);
+		item_bonus=(TextView)dialogs.findViewById(R.id.item_bonus);
 	LinearLayout linearView=(LinearLayout)dialogs.findViewById(R.id.tab);
-
+	if(printerType==6)
+	{
+		item_bonus.setVisibility(View.GONE);
+	}
+		item_bonus.setText(""+bonus);
 //	prices=convertToEnglish(decimalFormat.format(prices));
 //		totals=convertToEnglish(decimalFormat.format(totals));
 		String discountStr=convertToEnglish(decimalFormat.format(discount));
