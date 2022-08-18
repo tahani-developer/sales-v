@@ -151,12 +151,20 @@ public class Login extends AppCompatActivity {
     public  static    int   SalsManTripFlage=0;
     public  static    int   POS_ACTIVE=0;
     public  static    int   Plan_ACTIVE=0;
-    public  static    int   Separation_of_the_serial=1;// for oppo
-//  public  static    String headerDll = "";
-    public  static    String  headerDll = "/Falcons/VAN.dll";
+    public  static    int   Separation_of_the_serial=0;// for oppo
+  //public  static    String headerDll = "";
+  public  static    String  headerDll = "/Falcons/VAN.dll";
     public  static  int gone_noTax_totalDisc=1;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
 //    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleAppUtils.setConfigChange(Login.this);

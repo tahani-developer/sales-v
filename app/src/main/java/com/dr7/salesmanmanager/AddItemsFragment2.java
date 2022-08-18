@@ -847,7 +847,9 @@ public class AddItemsFragment2 extends DialogFragment {
 
 
     public  ArrayList<Item> getFilteredZero(){
+        Log.e("getFilteredZero","getFilteredZero");
         ArrayList<Item> filteredList = new ArrayList<>();
+        Log.e("filteredList","filteredList=="+filteredList.size());
         if(filteredList_allItem.size()==0){
             filteredList_allItem.addAll(jsonItemsList);
         }

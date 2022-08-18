@@ -3254,10 +3254,14 @@ else
 //                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
-                        if(mDbHandler.getAllSettings().get(0).getLocationtracker()==1){
+                        if(locationtrackerflage==1){
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                             startService(new Intent(MainActivity.this, MyServices.class));
+                        }
+                        else
+                        {
+                            stopService(new Intent(MainActivity.this, MyServices.class));
                         }
 
 
@@ -4461,6 +4465,7 @@ Log.e("Exception==",e.getMessage());
     protected void onDestroy() {
         super.onDestroy();
         Log.e("onDestroy","onDestroy");
+        stopService(new Intent(MainActivity.this, MyServices.class));
 
     }
     private void showPasswordDialog( ) {

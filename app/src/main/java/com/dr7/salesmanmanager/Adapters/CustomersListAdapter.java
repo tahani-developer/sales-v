@@ -90,7 +90,7 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.custNameTextView = (TextView) view.findViewById(R.id.custNameTextView);
         holder. showloction= (TextView) view.findViewById(R.id.showloction);
 
-        holder. showloction.setVisibility(View.INVISIBLE);
+       // holder. showloction.setVisibility(View.INVISIBLE);
         holder. showloction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
