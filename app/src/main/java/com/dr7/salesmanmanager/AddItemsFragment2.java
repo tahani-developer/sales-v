@@ -1256,10 +1256,6 @@ try {
         {
             if((existItem)&&(canChangePrice==0)||(canChangePrice==1&&previousePrice==curentPrice)) {
                Toast toast = Toast.makeText(context, ""+context.getResources().getString(R.string.itemadedbefor), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 180);
-                ViewGroup group = (ViewGroup) toast.getView();
-                TextView messageTextView = (TextView) group.getChildAt(0);
-                messageTextView.setTextSize(15);
                 toast.show();
 
                 return false;

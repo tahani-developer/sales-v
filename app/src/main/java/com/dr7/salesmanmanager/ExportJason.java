@@ -1480,6 +1480,7 @@ public class ExportJason extends AppCompatActivity {
                 try {
                     request.setURI(new URI(link));
                 } catch (URISyntaxException e) {
+                    Log.e("ExportSALES_VOUCHER_DEURISyntaxException",e.getMessage()+"");
                     e.printStackTrace();
                 }
 
@@ -1517,6 +1518,7 @@ public class ExportJason extends AppCompatActivity {
 
 
             } catch (Exception e) {
+                Log.e("ExportSALES_VOUCHER_DException",e.getMessage()+"");
             }
             return JsonResponse;
         }
@@ -1526,6 +1528,7 @@ public class ExportJason extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
             Log.e("onPostExecute","---2---__");
+            Log.e("onPostExecute,result",result+"");
 //            pdItem.dismiss();
            // Log.e("onPostExecute","ExportSALES_VOUCHER_D"+result);
             pdVoucher.setTitle("Export SALES_VOUCHER_Detail");
@@ -1544,6 +1547,7 @@ public class ExportJason extends AppCompatActivity {
 
 
             } else {
+                Log.e("elseExportSALES_VOUCHER_D","---3---__");
                 pdVoucher.dismissWithAnimation();
 //                Toast.makeText(context, "onPostExecute", Toast.LENGTH_SHORT).show();
             }

@@ -46,6 +46,7 @@ import com.dr7.salesmanmanager.Modles.SalesTeam;
 import com.dr7.salesmanmanager.Modles.SalesmanStations;
 import com.dr7.salesmanmanager.Modles.Settings;
 import com.dr7.salesmanmanager.Modles.Transaction;
+import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.VisitRate;
 import com.dr7.salesmanmanager.Modles.Voucher;
 import com.dr7.salesmanmanager.Modles.activeKey;
@@ -73,7 +74,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.noTax;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 193;
+    private static final int DATABASE_VERSION = 194;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -663,11 +664,14 @@ private static final String  SalemanTrips="SalemanTrips";
     private static final String  TripEndTime="TripEndTime";
     private static final String  TripStatus="TripStatus";
 
+//-----------------------------------------------------
+private static final String  TransactionInfo="TransactionInfo_tabel";
+    private static final String  Reson="Reson";
+    private static final String  PersonName="PersonName";
+    private static final String  PhoneNum="PhoneNum";
 
-
-
-
-
+    private static final String  Cust_num="Cust_num";
+    private static final String  Cust_name="Cust_name";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -1429,7 +1433,19 @@ private static final String  SalemanTrips="SalemanTrips";
                 + TripStatus + " TEXT"
                 + ")";
         db.execSQL(CREATE_SalemanTrips_TABLE);
+        ///////-------------------------
 
+
+       String CREATE_STransactionInfo_TABLE = "CREATE TABLE IF NOT EXISTS " + TransactionInfo + "("
+                + " Serial INTEGER PRIMARY KEY AUTOINCREMENT,"
+               + Reson + " TEXT,"
+               + PersonName + " TEXT,"
+               + PhoneNum + " TEXT,"
+               + Cust_num + " TEXT,"
+               + Cust_name + " TEXT,"
+               + DATE_ + " TEXT"
+               + ")";
+       db.execSQL(CREATE_STransactionInfo_TABLE );
     }
 
 
@@ -2610,7 +2626,16 @@ private static final String  SalemanTrips="SalemanTrips";
           Log.e(TAG, e.getMessage().toString());
        }
 
-
+       String CREATE_STransactionInfo_TABLE = "CREATE TABLE IF NOT EXISTS " + TransactionInfo + "("
+               + " Serial INTEGER PRIMARY KEY AUTOINCREMENT,"
+               + Reson + " TEXT,"
+               + PersonName + " TEXT,"
+               + PhoneNum + " TEXT,"
+               + Cust_num + " TEXT,"
+               + Cust_name + " TEXT,"
+               + DATE_ + " TEXT"
+               + ")";
+       db.execSQL(CREATE_STransactionInfo_TABLE );
 
     }
 
@@ -4387,6 +4412,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
         return transactionList;
     }
+
     //*******************************************************************
     public List<Transaction> getLoginSalesman() {
         List<Transaction> transactionList = new ArrayList<Transaction>();
@@ -9279,5 +9305,73 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
        return Vochers;
     }
-}
+    public void insertTrans_info(TransactionsInfo transactionsInfo) {
+
+       db = this.getReadableDatabase();
+       ContentValues values = new ContentValues();
+
+       values.put(PersonName, transactionsInfo.getPersonname());
+       values.put( Reson, transactionsInfo.getReson());
+       values.put(PhoneNum, transactionsInfo.getPhoneNum());
+       values.put(Cust_num, transactionsInfo.getCust_num());
+       values.put(Cust_name, transactionsInfo.getCust_name());
+       values.put(DATE_, transactionsInfo.getDate());
+       db.insert(TransactionInfo, null, values);
+       db.close();
+    }
+    public ArrayList< TransactionsInfo> getTrans_info() {
+       ArrayList<TransactionsInfo>transactionsInfos = new ArrayList<>();
+       // Select All Query
+
+       String selectQuery = "SELECT * from TransactionInfo_tabel";
+
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+       Log.e("cursor2==", cursor.getCount()+"\t\t");
+
+
+       if (cursor.moveToFirst()) {
+          Log.i("DatabaseHandler", "************************" + selectQuery);
+          do {
+
+
+
+             TransactionsInfo transactionsInfo=new TransactionsInfo();
+             transactionsInfo.setReson(cursor.getString(1));
+             transactionsInfo.setPersonname(cursor.getString(2));
+             transactionsInfo.setPhoneNum(cursor.getString(3));
+             transactionsInfo.setCust_num(cursor.getString(4));
+             transactionsInfo.setCust_name(cursor.getString(5));
+             transactionsInfo.setDate(cursor.getString(6));
+             transactionsInfos.add(transactionsInfo);
+
+
+          } while (cursor.moveToNext());
+       }
+
+
+       return transactionsInfos;
+    }
+    public Voucher getLastVoucher() {
+       String cutomer = "",time="";
+       Voucher voucher=new Voucher();
+       String selectQuery = "select CUST_NUMBER,VOUCHER_time FROM SALES_VOUCHER_MASTER WHERE VOUCHER_NUMBER= (select max(VOUCHER_NUMBER) FROM SALES_VOUCHER_MASTER)";
+       db = this.getWritableDatabase();
+       Cursor cursor = db.rawQuery(selectQuery, null);
+
+       if (cursor.moveToFirst()) {
+
+          cursor.moveToLast();
+          cutomer = cursor.getString(0);
+          time= cursor.getString(1);
+          voucher.setCustNumber(cursor.getString(0));
+          voucher.setTime(cursor.getString(1));
+          Log.e("cutomer=", "" + cutomer + "\t");
+
+       }
+       return voucher;
+
+    }
+
+ }
 

@@ -578,7 +578,11 @@
     <string name="youAreNotConnectedToStock">You Are Not Connected To Stock!!</string>
     <string name="aqaba_tax_exemption">Aqaba Tax Exemption</string>
     <string name="no_tax">No Tax</string>
-
+    <string name="reson">The reason for not making Vochers </string>
+    <string name="NameofPerson">Name of Person </string>
+    <string name="phoneNum">Phone Num </string>
+    <string name="enterdata">Please Enter data </string>
+    <string name="custwithouttrans">Customers visited without Vochers</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

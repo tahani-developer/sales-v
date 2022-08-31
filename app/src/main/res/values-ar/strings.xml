@@ -618,4 +618,10 @@
     <string name="youAreNotConnectedToStock">أنت غير مرتبط مع برنامج المستودعات !!</string>
     <string name="aqaba_tax_exemption">اعفاء ضريبة العقبة</string>
     <string name="no_tax">اعفاء ضريبي </string>
+    <string name="reson">السبب لعدم عمل فواتير </string>
+    <string name="NameofPerson">اسم الشخص </string>
+    <string name="phoneNum">رقم الهاتف</string>
+    <string name="enterdata">يرجى إدخال المعلومات </string>
+    <string name="custwithouttrans">العملاء الذين تمت زيارتهم دون عمل فواتير</string>
+
 </resources>
