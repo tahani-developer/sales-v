@@ -139,20 +139,25 @@ public class CustomersListAdapter extends BaseAdapter implements Filterable {
         holder.custAccountTextView.setText("" + custList.get(i).getCustId());
         holder.custNameTextView.setText(custList.get(i).getCustName());
         if(Login.SalsManPlanFlage==1) {
+            if(MainActivity.plantype==2){
 
-            if( MainActivity.DB_salesManPlanList .size()==0){
                 holder.linearLayout.setEnabled(true);
-            }else{
-            if (IsCkeckOut(custList.get(i).getCustId()))
-                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
+            }else
+            {
+                if (MainActivity.DB_salesManPlanList.size() == 0) {
+                holder.linearLayout.setEnabled(true);
+            } else {
+                if (IsCkeckOut(custList.get(i).getCustId()))
+                    holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.red_background));
 
-            holder. showloction.setVisibility(View.VISIBLE);
-            if (Integer.parseInt(custList.get(i).getCustId()) == getAllowedCust()) {
-                holder.linearLayout.setEnabled(true);
-                holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorblue_dark));
-            } else
-                holder.linearLayout.setEnabled(false);}
-        }else
+                holder.showloction.setVisibility(View.VISIBLE);
+                if (Integer.parseInt(custList.get(i).getCustId()) == getAllowedCust()) {
+                    holder.linearLayout.setEnabled(true);
+                    holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.colorblue_dark));
+                } else
+                    holder.linearLayout.setEnabled(false);
+            }
+        }   }else
 
             {
 

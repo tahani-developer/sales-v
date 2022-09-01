@@ -82,6 +82,7 @@ import com.dr7.salesmanmanager.Adapters.Pending_item_Adapter;
 import com.dr7.salesmanmanager.Adapters.Pending_seriak_adapter;
 import com.dr7.salesmanmanager.Adapters.ReturnItemAdapter;
 import com.dr7.salesmanmanager.Modles.AddedCustomer;
+import com.dr7.salesmanmanager.Modles.TransactionsInfo;
 import com.dr7.salesmanmanager.Modles.Customer;
 import com.dr7.salesmanmanager.Modles.CustomerLocation;
 import com.dr7.salesmanmanager.Modles.Item;
@@ -123,7 +124,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity
     public  static  boolean openDialog=false;
     int salesMan = 1;
     RadioGroup radioGroup;
+    public   static int plantype=0;
     private static final String TAG = "MainActivity";
     public static String    CusId;
     public static int menuItemState,OffersJustForSalsFlag=0,checkQtyForOrdersFlage=0;
@@ -184,7 +188,7 @@ public class MainActivity extends AppCompatActivity
 
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
-
+Dialog dialog1;
     TextView endtripText,starttripText;
   public String text;
     int position=0,netsalflag=0;
@@ -732,6 +736,7 @@ else
 //                    checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.cus_check_out));
                     if (!CustomerListShow.Customer_Name.equals("No Customer Selected !")) {
                         openCustCheckOut();
+
                     } else {
                         Toast.makeText(MainActivity.this, "No Customer Selected !", Toast.LENGTH_SHORT).show();
 //                        checkOutImageView.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.cus_check_out_black));
@@ -2332,6 +2337,8 @@ else
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 checknum = 0;
+                String cutm_num= CustomerListShow.Customer_Account;
+                String cutm_name = CustomerListShow.Customer_Name;
                 CustomerListShow.Customer_Name = "No Customer Selected !";
                 CustomerListShow.longtude="";
                 CustomerListShow.latitude="";
@@ -2380,8 +2387,11 @@ else
 
                 }
 
+                if (!chechTransctionsForCustomer(cutm_num)) {
+                    openTransInfo(cutm_num, cutm_name);
 
 
+                }
 
                // openVisitRateDialog();  stopped just for new customer
             }
@@ -3445,7 +3455,7 @@ else
 //                        locationPermissionRequest.closeLocation();
                         startActivity(getIntent());
                         dialog.dismiss();
-                        if(mDbHandler.getAllSettings().get(0).getLocationtracker()==1){
+                        if(locationtrackerflage==1){
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
                             startService(new Intent(MainActivity.this, MyServices.class));
@@ -3458,6 +3468,10 @@ else
 
                             stopService(new Intent(MainActivity.this, MyServices.class));
 
+                        }
+                        else
+                        {
+                            stopService(new Intent(MainActivity.this, MyServices.class));
                         }
 
 
@@ -4427,7 +4441,7 @@ else
                 Collections.sort(DB_salesManPlanList);
                 OrderTypeFlage = 0;
 
-            } else {
+            } else if(DB_salesManPlanList.get(0).getTypeOrder() == 1){
                 for (int i = 0; i < DB_salesManPlanList.size(); i++) {
                     Location locationA = new Location("point A");
 
@@ -4483,6 +4497,10 @@ else
                     Log.e("DB_salesManPlan===", DB_salesManPlanList.get(x).getCustName() + "       " + DB_salesManPlanList.get(x).getDistance());
 
             }
+            else
+                if(DB_salesManPlanList.get(0).getTypeOrder() == 2){
+                    plantype=2;
+                }
 
         }catch (Exception e){
 
@@ -4668,6 +4686,7 @@ Log.e("Exception==",e.getMessage());
     protected void onDestroy() {
         super.onDestroy();
         Log.e("onDestroy","onDestroy");
+        stopService(new Intent(MainActivity.this, MyServices.class));
 
     }
     private void showPasswordDialog( ) {
@@ -4703,4 +4722,127 @@ Log.e("Exception==",e.getMessage());
 
                 .show();
     }
+    void openTransInfo(String cutm_num,String cutm_name ){
+        databaseHandler = new DatabaseHandler(  MainActivity.this);
+        dialog1 = new Dialog(MainActivity.this);
+        dialog1.setCancelable(true);
+        dialog1.setContentView(R.layout.client_info);
+
+        EditText reson,personname,phonenum;
+        reson=dialog1.findViewById(R.id.reson);
+        personname=dialog1.findViewById(R.id.NameofPerson);
+        phonenum=dialog1.findViewById(R.id.phoneNum);
+
+        dialog1.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!personname.getText().toString().equals(""))
+                if(!reson.getText().toString().equals(""))
+                    if(!phonenum.getText().toString().equals(""))
+                {
+                    phonenum.setError(null);
+                    reson.setError(null);
+                    personname.setError(null);
+                    TransactionsInfo transactionsInfo=new TransactionsInfo();
+                transactionsInfo.setPersonname(personname.getText().toString().trim());
+                transactionsInfo.setReson(reson.getText().toString().trim());
+                transactionsInfo.setPhoneNum(phonenum.getText().toString().trim());
+                transactionsInfo.setCust_name(cutm_name);
+                transactionsInfo.setCust_num(cutm_num);
+                transactionsInfo.setDate(convertToEnglish(curentDate.toString()));
+               databaseHandler. insertTrans_info(transactionsInfo);
+                dialog1.dismiss();}
+                else
+                    {
+                        phonenum.setError("");
+                    }
+                else
+                {
+                    reson.setError("");
+                }   else{
+                    personname.setError("");
+                }
+            }
+        });
+        dialog1.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                dialog1.dismiss();
+            }
+        });
+        dialog1.show();
+    }
+    boolean chechTransctionsForCustomer(String name){
+       Voucher voucher=databaseHandler.getLastVoucher();
+      String  cus_num=voucher.getCustNumber();
+        String  time=voucher.getTime();
+        if(cus_num.equals(name))
+
+        {
+            try {
+
+                      List<Transaction> transactions= databaseHandler.getAlltransactions();
+                Transaction transaction=transactions.get(transactions.size()-1);
+                if(chechTransctionstime(transaction.getCheckInTime(),time))
+                    return true;
+                else return false;
+            }catch (Exception e){
+                Log.e("Exception==",e.getMessage()+"") ;
+                return false;
+            }
+
+
+
+        }
+        else
+        {
+            return false;
+
+        }
+          }
+
+    public static boolean chechTransctionstime(String checkintime, String vochertime) throws ParseException {
+
+        String reg = "^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+        Log.e("checkintime==",checkintime);
+        Log.e("vochertime==",vochertime);
+        Log.e("match1==",""+checkintime.matches(reg));
+        Log.e("match2==",""+vochertime.matches(reg));
+        if (checkintime.matches(reg) && vochertime.matches(reg) )
+
+        {
+            boolean valid = false;
+            //check Time
+            //all times are from java.util.Date
+            Date inTime = new SimpleDateFormat("HH:mm:ss").parse(checkintime);
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.setTime(inTime);
+            Log.e("calendar1==",""+calendar1.getTime());
+
+            //voch Time
+            Date finTime = new SimpleDateFormat("HH:mm:ss").parse(vochertime);
+            Calendar Vochcalendar = Calendar.getInstance();
+            Vochcalendar.setTime(finTime);
+            Log.e("Vochcalendar==",""+Vochcalendar.getTime()+" calendar1==    "+calendar1.getTime());
+//            if (vochertime.compareTo(checkintime) < 0)
+//            {
+//                Vochcalendar.add(Calendar.DATE, 1);
+//
+//            }
+
+
+            if (calendar1.getTime().before(Vochcalendar.getTime()))
+            {
+                Log.e("true==","true");
+
+                valid = true;
+                return valid;
+            } else {
+                Log.e("false==","false");
+                return false;
+            }
+        }
+        return false;    }
 }

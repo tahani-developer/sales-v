@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:background="@color/layer7"
+    android:orientation="vertical"
+    android:layout_height="350dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:textStyle="bold"
+
+                android:textColor="@color/colorblue_dark"
+                android:text="@string/enterdata"
+
+                android:gravity="center"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+
+                android:text="@string/reson"
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/reson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/back_border_edit"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/NameofPerson"
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/NameofPerson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/back_border_edit"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_weight="1.1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/phoneNum"
+                android:textColor="@color/colorblue_dark"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/phoneNum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/back_border_edit"
+                android:text=""
+                android:textColor="@color/text_view_color"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="3dp"
+            android:layout_weight="1">
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:background="@drawable/done_button"
+                android:textColor="@color/layer7"
+                android:layout_weight="1"
+                android:id="@+id/save"
+                android:layout_marginStart="5dp"
+                android:textStyle="bold"
+                android:layout_marginEnd="5dp"
+                android:layout_height="wrap_content"
+                android:text="@string/save"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+
+                android:id="@+id/cancel"
+                android:textColor="@color/layer7"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_button"
+                android:text="@string/cancel"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

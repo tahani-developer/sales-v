@@ -586,6 +586,11 @@
     <string name="national_id">National Id</string>
     <string name="carNo">Car Number</string>
 
+    <string name="reson">The reason for not making Vochers </string>
+    <string name="NameofPerson">Name of Person </string>
+    <string name="phoneNum">Phone Num </string>
+    <string name="enterdata">Please Enter data </string>
+    <string name="custwithouttrans">Customers visited without Vochers</string>
     <string-array name="app_paymentTypeList">
         <item>Cash</item>
         <item>Cheque</item>

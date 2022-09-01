@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/linearMain"
+    tools:context=".Reports.CustomerWithoutTrasn_Report">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:id="@+id/row2"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="9"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/from_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/from_date"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/add_button"
+                android:textSize="12sp"
+                android:inputType="date"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/to_date"
+                android:textColor="@color/text_view_color"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/to_date"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/add_button"
+                android:textSize="12sp"
+                android:inputType="date"
+                android:focusable="false"/>
+
+            <Button
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_marginLeft="3dp"
+                android:textSize="14sp"
+                android:background="@drawable/done_button"
+                android:text="@string/preview"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="7.8"
+            android:layout_margin="5dp"
+
+            android:gravity="center"
+            android:id="@+id/serialtable"
+            android:background="@drawable/back_border_shape"
+            >
+
+            <TextView
+                android:id="@+id/textView_cridit"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cust_name"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:background="@color/colorblue1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+
+
+            <TextView
+                android:id="@+id/textView_date_voucher"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/reson"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:background="@color/colorblue1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/textView_debit"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:text="@string/NameofPerson"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:background="@color/colorblue1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView_voucherNo"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/phoneNum"
+
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_margin="10dp"
+                android:background="@color/colorblue1"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+
+
+
+
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_report"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="1.3"
+            android:padding="2dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/back_border_edit"
+
+            android:orientation="vertical"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+</LinearLayout>

@@ -625,4 +625,10 @@
     <string name="showCustomerLocation">اظهار موقع العميل</string>
     <string name="national_id">الرقم الوطني</string>
     <string name="carNo">رقم السيارة</string>
+    <string name="reson">السبب لعدم عمل فواتير </string>
+    <string name="NameofPerson">اسم الشخص </string>
+    <string name="phoneNum">رقم الهاتف</string>
+    <string name="enterdata">يرجى إدخال المعلومات </string>
+    <string name="custwithouttrans">العملاء الذين تمت زيارتهم دون عمل فواتير</string>
+
 </resources>

@@ -2180,7 +2180,7 @@ public class SalesInvoice extends Fragment {
         else {
             if(flag==2)// return time
             {
-                timeformat = new SimpleDateFormat("hh:mm:ss");
+                timeformat = new SimpleDateFormat("HH:mm:ss");
                 dateCurent = timeformat.format(currentTimeAndDate);
                 dateTime=convertToEnglish(dateCurent);
             }

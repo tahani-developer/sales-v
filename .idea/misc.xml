@@ -3,9 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/add_items_dialog2.xml" value="0.5" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-large/fragment_sales_invoice.xml" value="0.25" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-mdpi/activity_account_statment.xml" value="0.15653495440729484" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/add_item_dialog_small.xml" value="0.14432989690721648" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/add_item_serial_dialog.xml" value="0.14583333333333334" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-normal/add_items_dialog2.xml" value="0.18" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout-xhdpi/add_items_dialog2.xml" value="0.5154185022026432" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/activity_return_by_voucher_no.xml" value="0.23397435897435898" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/add_item_dialog_small.xml" value="0.8546255506607929" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/add_item_serial_dialog.xml" value="0.8546255506607929" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/add_items_dialog2.xml" value="0.8" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/app_bar_main.xml" value="0.10625" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/content_main.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/customers_item.xml" value="0.20618556701030927" />
         <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/de_export_dialog.xml" value="0.23515769944341372" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/fragment_sales_invoice.xml" value="0.5154185022026432" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/nav_header_main.xml" value="0.10625" />
+        <entry key="..\:/Users/FALCONS_1/AndroidStudioProjects/SalesmanManager/app/src/main/res/layout/voucher_info_dialog2.xml" value="0.25" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable-xhdpi/cancel_button.xml" value="0.1775" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable-xhdpi/done_button.xml" value="0.2078125" />
         <entry key="..\:/Users/dell54/AndroidStudioProjects/SalesmanManager/app/src/main/res/drawable/background_container.xml" value="0.20052083333333334" />
