@@ -383,7 +383,7 @@
         android:paddingLeft="5dp"
         android:layout_weight="5.3"
         android:orientation="horizontal"
-        android:visibility="gone">
+     >
 
         <TextView
             android:id="@+id/bonuss"

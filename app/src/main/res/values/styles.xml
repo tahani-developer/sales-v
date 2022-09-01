@@ -51,6 +51,7 @@
 
     </style>
 
+
     <style name="MySwitch" parent="@style/Widget.AppCompat.CompoundButton.Switch">
         <item name="android:textColorPrimaryDisableOnly">#807B7B</item>
         <item name="android:colorControlActivated">@color/colorblue_dark</item>

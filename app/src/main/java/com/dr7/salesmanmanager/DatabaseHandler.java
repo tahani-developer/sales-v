@@ -73,7 +73,7 @@ import static com.dr7.salesmanmanager.SalesInvoice.noTax;
     public static String SalmnLat,SalmnLong;
     private static String TAG = "DatabaseHandler";
     // Database Version
-    private static final int DATABASE_VERSION = 193;
+    private static final int DATABASE_VERSION = 195;
 
     // Database Name
     private static final String DATABASE_NAME = "VanSalesDatabase";
@@ -460,6 +460,7 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String CheckQtyinOrder= "CheckQtyinOrder";
     private static final String locationtracker ="LocationTracker";
     private static final String AqapaTax ="AqapaTax";
+    private static final String SHOW_CUSTOMER_LOCATION ="SHOW_CUSTOMER_LOCATION";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String COMPANY_INFO = "COMPANY_INFO";
@@ -476,7 +477,8 @@ Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedStri
     private static final String NOTEPOSITION = "NOTEPOSITION";
     private static final String netsalFLAG = "netsalFLAG";
     private static final String HeaderprintInOrders = "HeaderprintInOrders";
-
+    private static final String NATIONAL_ID="NATIONAL_ID";
+     private static final String CAR_NO="CAR_NO";
 
     //ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ
     private static final String SALES_VOUCHER_MASTER = "SALES_VOUCHER_MASTER";
@@ -1101,7 +1103,8 @@ private static final String  SalemanTrips="SalemanTrips";
                 + OffersJustForSales + " INTEGER  DEFAULT 0 , "
                 + CheckQtyinOrder + " INTEGER  DEFAULT 0 , "
                 + locationtracker+" INTEGER DEFAULT 0 , "
-                +AqapaTax+" INTEGER DEFAULT 0 "
+                +AqapaTax+" INTEGER DEFAULT 0 , "
+                +SHOW_CUSTOMER_LOCATION+" INTEGER DEFAULT 0 "
                 + ")";
         db.execSQL(CREATE_TABLE_SETTING);
 
@@ -1116,7 +1119,9 @@ private static final String  SalemanTrips="SalemanTrips";
                 + LONGTUDE_COMPANY + " REAL,"
                 + LATITUDE_COMPANY + " REAL,"
                 + NOTEPOSITION + " TEXT,"
-                + COMPANY_PHONE + " TEXT "
+                + COMPANY_PHONE + " TEXT,"
+                + NATIONAL_ID + " TEXT, "
+                + CAR_NO + " TEXT "
                 + ")";
         db.execSQL(CREATE_TABLE_COMPANY_INFO);
 
@@ -2609,8 +2614,30 @@ private static final String  SalemanTrips="SalemanTrips";
        {
           Log.e(TAG, e.getMessage().toString());
        }
+       try{
+          db.execSQL("ALTER TABLE SETTING ADD '"+SHOW_CUSTOMER_LOCATION+"'  INTEGER DEFAULT '0'");
+
+       }catch (Exception e)
+       {
+
+          Log.e(TAG, e.getMessage().toString());
+       }
 
 
+       try{
+          db.execSQL("ALTER TABLE  COMPANY_INFO ADD   NATIONAL_ID  TEXT  DEFAULT '0' ");
+
+       }catch (Exception e)
+       {
+          Log.e(TAG, e.getMessage().toString());
+       }
+       try{
+          db.execSQL("ALTER TABLE  COMPANY_INFO ADD   CAR_NO  TEXT  DEFAULT '0' ");
+
+       }catch (Exception e)
+       {
+          Log.e(TAG, e.getMessage().toString());
+       }
 
     }
 
@@ -3491,7 +3518,7 @@ private static final String  SalemanTrips="SalemanTrips";
                            int automaticCheque,int tafqit,int preventChangPayMeth,int showCustomer,int noReturnInvoi,
                            int Work_serialNo,int itemPhoto , int approveAddmin ,int saveOnly,int showSolidQty,int offerFromAdmin,String ipPort,int checkServer,
                            int dontShowTax,String cono,int contireading,int activeTotDisc,double valueDisc,String store,int itemUnit,int sumQtys,int noDuplicate,
-                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax) {
+                           int salesoffersflage,int checkqtyinorderflage,int locationtrackerflage,int aqapaTax,int show_location) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
@@ -3556,7 +3583,9 @@ private static final String  SalemanTrips="SalemanTrips";
         values.put(      CheckQtyinOrder,checkqtyinorderflage);
        values.put(      locationtracker,locationtrackerflage);
 
+
        values.put(AqapaTax,aqapaTax);
+       values.put(SHOW_CUSTOMER_LOCATION,show_location);
         db.insert(TABLE_SETTING, null, values);
         db.close();
     }
@@ -3623,6 +3652,7 @@ private static final String  SalemanTrips="SalemanTrips";
        values.put(CheckQtyinOrder, defaultValue);
        values.put(locationtracker, defaultValue);
        values.put(AqapaTax, defaultValue);
+       values.put( SHOW_CUSTOMER_LOCATION, defaultValue);
        db.insert(TABLE_SETTING, null, values);
        db.close();
     }
@@ -3630,7 +3660,8 @@ private static final String  SalemanTrips="SalemanTrips";
 
 
 
-    public void addCompanyInfo(String companyName, String companyTel, int taxNo, Bitmap logo,String note,double longtude,double latitude,int position) {
+    public void addCompanyInfo(String companyName, String companyTel, int taxNo, Bitmap logo,String note,
+                               double longtude,double latitude,int position,String national_id,String car_no) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 Log.e("addCompanyInfo","addCompanyInfo");
@@ -3650,6 +3681,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
         values.put(LONGTUDE_COMPANY,longtude);
         values.put(LATITUDE_COMPANY,latitude);
         values.put(NOTEPOSITION,position);
+       values.put( NATIONAL_ID ,national_id);
+       values.put( CAR_NO ,car_no);
 
         db.insert(COMPANY_INFO, null, values);
         db.close();
@@ -4035,6 +4068,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
                 setting.setCheckQtyinOrder(cursor.getInt(52));
                 setting.setLocationtracker(cursor.getInt(53));
                 setting.setAqapaTax(cursor.getInt(54));
+                setting.setShowCustomerLocation(cursor.getInt(55));
                 settings.add(setting);
             } while (cursor.moveToNext());
         }
@@ -4065,6 +4099,8 @@ Log.e("addCompanyInfo","addCompanyInfo");
                     info.setLongtudeCompany(cursor.getDouble(5));
                     info.setLatitudeCompany(cursor.getDouble(6));
                     info.setNotePosition(cursor.getString(7));
+                   info.setNational_id(cursor.getString(9));
+                   info.setCarNo(cursor.getString(10));
                     infos.add(info);
                 } while (cursor.moveToNext());
             }
@@ -7370,10 +7406,12 @@ Log.e("addCompanyInfo","addCompanyInfo");
     }
     public String getSalesmanName_fromSalesTeam() {
         String name="";
-        if(!Login.salesMan.equals(""))
-        {
+        String salesno=Login.salesMan;
+        if(salesno.equals("")) {
+           salesno = getAllUserNo();
+        }
             String selectQuery ="select S.salesManName \n" +
-                    "from Sales_Team S WHERE  S.SalesManNo ='"+Login.salesMan+"' ";
+                    "from Sales_Team S WHERE  S.SalesManNo ='"+salesno+"' ";
 
 
             db = this.getWritableDatabase();
@@ -7386,7 +7424,7 @@ Log.e("addCompanyInfo","addCompanyInfo");
 
                 } while (cursor.moveToNext());
             }
-        }
+//        }
 
 
 

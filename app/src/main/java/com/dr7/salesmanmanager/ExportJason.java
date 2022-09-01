@@ -65,6 +65,7 @@ import static com.dr7.salesmanmanager.Login.offerTalaat;
 import static com.dr7.salesmanmanager.Login.rawahneh;
 import static com.dr7.salesmanmanager.Login.typaImport;
 import static com.dr7.salesmanmanager.Login.userNo;
+import static com.dr7.salesmanmanager.MainActivity.fill_Pending_inv;
 import static com.dr7.salesmanmanager.MainActivity.password;
 import static com.dr7.salesmanmanager.MainActivity.passwordFromAdmin;
 import static com.dr7.salesmanmanager.ReturnByVoucherNo.ReturnupdateditemList;
@@ -106,7 +107,7 @@ public class ExportJason extends AppCompatActivity {
     private RequestQueue requestQueue;
     public static String CONO="",SalesManLogin;
     SweetAlertDialog pdVoucher=null;
-    SweetAlertDialog pdStosk=null,progressSave=null;
+    SweetAlertDialog pdStosk=null,progressSave=null,pdexpo_serial=null;
 
     boolean isPosted = true;
 //    getCustomerLocation
@@ -380,7 +381,7 @@ public class ExportJason extends AppCompatActivity {
     }
     public  void startExport(int expoAndImpo) throws JSONException {
         Log.e("startExport","typaImport"+typaImport);
-        importDataAfter=expoAndImpo;
+        importDataAfter=expoAndImpo;//1- from activity balance 0- from all export
 
         if(typaImport==0)//mysql
         {
@@ -1787,7 +1788,7 @@ public class ExportJason extends AppCompatActivity {
                 progressSave.dismissWithAnimation();
 
             }
-            exportStock();// 18
+            exportStock(0);// 18
         }
     }
     private void updateVoucherExported() {// 3
@@ -2886,11 +2887,16 @@ public class ExportJason extends AppCompatActivity {
 
 
     }
-     void exportStock(){//18
+     public  void exportStock(int flag){//18
                 if(rawahneh==1)
         {
 
-            new JSONTaskEXPORT_STOCK().execute();
+         if(flag==0)
+            new JSONTaskEXPORT_STOCK(flag).execute();
+         else {
+             new JSONTask_RE_EXPORT_STOCK(flag).execute();
+
+         }
         }
          else {
                     if(importDataAfter==0)
@@ -2906,21 +2912,125 @@ public class ExportJason extends AppCompatActivity {
                         ImportJason obj = new ImportJason(context);
                         obj.getSerialData(voucherNo_ReturnNo);
                     }
+                    if(flag==2)
+                    {
+                        new JSONTask_RE_EXPORT_STOCK(flag).execute();
+
+                    }
+                }
+    }
+    private class JSONTask_RE_EXPORT_STOCK extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+        int flag_export=0;//0 from normal export /// 2 from dialog  re export
+
+        public JSONTask_RE_EXPORT_STOCK(int floag) {
+            this.flag_export=floag;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            pdStosk = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+            pdStosk.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+            pdStosk.setTitleText(" Export Stock ");
+            pdStosk.setCancelable(false);
+            pdStosk.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                //http://localhost:8082/EXPORTTOSTOCK?CONO=295&STRNO=4
+                String link = "http://"+ipAddress.trim()+":" + ipWithPort.trim() + headerDll.trim()+"/EXPORTTOSTOCK";
+                String data = "CONO="+CONO.trim()+"&STRNO=" +SalesManLogin+"&VHFTYPE="+taxType;
+                Log.e("tag_link", "ExportData -->" + link);Log.e("tag_data", "ExportData -->" + data);
 
 
-//
+////
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
 
 
 
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
 
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "ExportData -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            Log.e("onPostExecute","EXPORT_STOCK---18----"+result);
+            pdStosk.dismissWithAnimation();
+            if (result != null && !result.equals("")) {
+                if(result.contains("Saved Successfully")) {
+                    Log.e("Re_EXPORT_STOCK","result_start");
+                    fill_Pending_inv.setText("refresh");
 
                 }
+
+
+            } else {
+                pdStosk.dismissWithAnimation();
+            }
+
+
+        }
     }
     private class JSONTaskEXPORT_STOCK extends AsyncTask<String, String, String> {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        int flag_export=0;//0 from normal export /// 2 from dialog  re export
 
+        public JSONTaskEXPORT_STOCK(int floag) {
+            this.flag_export=floag;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -3011,22 +3121,40 @@ public class ExportJason extends AppCompatActivity {
             } else {
                 pdStosk.dismissWithAnimation();
             }
-            new  JSONTaskExportItem_Serial().execute();// 19
+            new  JSONTaskExportItem_Serial(flag_export).execute();// 19
+
 
         }
+    }
+    public  void  exportSerial_stock(){// just for serial
+        new  JSONTaskExportItem_Serial(1).execute();// 19
     }
 
     private class JSONTaskExportItem_Serial extends AsyncTask<String, String, String> {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        public  int typeExport=0;//2 from dialog
 
+
+        public JSONTaskExportItem_Serial(int type) {
+            this.typeExport=type;
+        }
 
         @Override
         protected void onPreExecute() {
 
 
+            if(typeExport==0||typeExport==2)
             pdStosk.setTitleText(" Export Item_Serial ");
+            else {
+                pdexpo_serial= new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
+                pdexpo_serial.getProgressHelper().setBarColor(Color.parseColor("#FDD835"));
+                pdexpo_serial.setTitleText(" Export Serial Stock ");
+                pdexpo_serial.setCancelable(false);
+                pdexpo_serial.show();
+
+            }
 
             super.onPreExecute();
         }
@@ -3098,16 +3226,25 @@ public class ExportJason extends AppCompatActivity {
 
             if (result != null && !result.equals("")) {
                 if(result.contains("Saved Successfully")) {
+
                     Log.e("EXPORT_STOCK","result_start");
+                    if(typeExport==0||typeExport==2)
                     pdStosk.setTitle("export Payment start");
+                    else {
+                        fill_Pending_inv.setText("refresh");
+//                        showSavedSucces();
+                    }
 
                 }
 
 
             } else {
+                if(typeExport==0||typeExport==2)
                 pdStosk.dismissWithAnimation();
             }
-            new  JSONTaskEXPORT_STOCK_Payment().execute();// 19
+            if(typeExport==0||typeExport==2)
+            new  JSONTaskEXPORT_STOCK_Payment(typeExport).execute();// 19
+            else pdexpo_serial.dismissWithAnimation();
 
         }
     }
@@ -3115,7 +3252,13 @@ public class ExportJason extends AppCompatActivity {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        int type_Export=0;// 0 fromexport pending data //1 from normal
 
+        public JSONTaskEXPORT_STOCK_Payment(int expo) {
+            this.type_Export=expo;
+            Log.e("JSONTaskEXPORT_STOCK_Payment",""+type_Export);
+
+        }
 
         @Override
         protected void onPreExecute() {
@@ -3203,9 +3346,9 @@ public class ExportJason extends AppCompatActivity {
             }
             pdStosk.dismissWithAnimation();
             Log.e("importDataAfter",""+importDataAfter);
-            if(importDataAfter==0)
+            if(importDataAfter==0&&type_Export==0)
             getData();
-            else if(importDataAfter==2)
+            else if(importDataAfter==2&&type_Export==0)
             {Log.e("importDataAfter","else"+importDataAfter);
                 ImportJason obj = new ImportJason(context);
                 obj.getSerialData(voucherNo_ReturnNo);
@@ -3217,6 +3360,10 @@ public class ExportJason extends AppCompatActivity {
         new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText(context.getResources().getString(R.string.saveSuccessfuly))
                 .show();
+        ImportJason obj = new ImportJason(context);
+
+            obj.getInitialDataPending(context);
+
     }
     public class JSONTask_ReturnVocherDeatials extends AsyncTask<String, String, String> {
         private String JsonResponse = null;

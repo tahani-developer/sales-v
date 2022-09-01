@@ -51,6 +51,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.dr7.salesmanmanager.DiscountFragment.discountPerc;
 import static com.dr7.salesmanmanager.LocationPermissionRequest.openDialog;
 import static com.dr7.salesmanmanager.Login.Purchase_Order;
 import static com.dr7.salesmanmanager.Login.getTotalBalanceInActivities;
@@ -176,15 +177,18 @@ public class Activities extends AppCompatActivity implements
         }
     }
 
- public  static   double discvalue_static=0;
+ public  static   double discvalue_static=0,discType_static=0;
     @Override
     public void addDiscount(double discount, int iDiscType) {
 
 //        salesInvoice.sum_discount+=discount;
 
 //        salesInvoice.sum_discount=0;
-        Log.e("addDiscount","discount"+discount);
+
         discvalue_static=discount;
+        discType_static=iDiscType;
+        DiscountFragment.setDiscountPerc(discountPerc);
+        Log.e("addDiscount","discount"+discount+"\tdiscType_static="+discType_static);
 //        salesInvoice.discTextView.setText(decimalFormat.format(discount));
         salesInvoice.calculateTotals(0);
     }

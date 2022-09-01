@@ -51,7 +51,7 @@ public class DiscountFragment extends DialogFragment {
     public ImageView requestDiscount;
     public  static TextView checkState;
     private DiscountInterface discountInterface;
-    private static double discountValue = 0 , discountPerc = 0;
+    public static double discountValue = 0 , discountPerc = 0;
     public int discType;
     public double invoiceTotal;
     private DecimalFormat decimalFormat;
